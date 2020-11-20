@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'StytchSDK_Example' do
+  pod 'StytchSDK', :path => '../'
+
+  target 'StytchSDK_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

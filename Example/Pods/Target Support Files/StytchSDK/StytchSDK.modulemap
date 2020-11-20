@@ -1,0 +1,6 @@
+framework module StytchSDK {
+  umbrella header "StytchSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}
