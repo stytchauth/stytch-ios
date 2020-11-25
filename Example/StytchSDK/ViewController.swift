@@ -36,7 +36,42 @@ class ViewController: UIViewController {
     }
     
     @objc func handleStartSDK() {
-        StytchSDK.shared.start(from: self, delegate: self)
+        customizeStytch()
+        
+        StytchUI.shared.showUI(from: self, delegate: self)
+    }
+    
+    func customizeStytch() {
+        let customizaton = StytchUI.shared.customization
+        
+        customizaton.mainTitleStyle.color = .red
+        customizaton.mainTitleStyle.size = 11
+        
+        customizaton.subtitleStyle.color = .cyan
+        customizaton.subtitleStyle.size = 25
+        customizaton.subtitleStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        
+        customizaton.inputTextStyle.color = .yellow
+        customizaton.inputTextStyle.size = 13
+        customizaton.inputTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        
+        customizaton.inputPlaceholderStyle.color = .orange
+        customizaton.inputPlaceholderStyle.size = 21
+        customizaton.inputPlaceholderStyle.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        
+        customizaton.buttonTextStyle.color = .blue
+        customizaton.buttonTextStyle.size = 9
+        customizaton.buttonTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        
+        customizaton.buttonColor = .systemPink
+        customizaton.buttonCornerRadius = 24
+        
+        customizaton.backgroundColor = .green
+        customizaton.inputBackgroundColor = .magenta
+        
+//        customizaton.showMainTitle = false
+//        customizaton.showSubtitle = false
+        customizaton.showStytchLogo = false
     }
 
     func showAlert(title: String, message: String) {
@@ -49,14 +84,14 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: StytchSDKDelegate {
+extension ViewController: StytchUIDelegate {
     
     func onEvent(_ event: StytchEvent) {
         
     }
     
-    func onSuccess(requstId: String, userId: String) {
-        showAlert(title: "Success", message: "Request ID: \(requstId)\nUser ID: \(userId)")
+    func onSuccess(_ result: StytchResult) {
+        showAlert(title: "Success", message: "Request ID: \(result.requestId)\nUser ID: \(result.userId)")
     }
     
     func onFailure() {

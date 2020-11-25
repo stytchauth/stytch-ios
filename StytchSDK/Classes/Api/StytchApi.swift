@@ -9,15 +9,22 @@ import Foundation
 
 class StytchApi {
     
-    static let shared = StytchApi()
+    static private(set) var shared: StytchApi = StytchApi()
     
-    let host = "https://test.stytch.com/v1"
+    static func initialize(projectID: String, secretKey: String) {
+        let api = StytchApi()
+        api.projectID = projectID
+        api.secretKey = secretKey
+        StytchApi.shared = api
+    }
     
-    let authKey = "Authorization"
-    let projectID = "project-test-d0dbafe6-a019-47ea-8550-d021c1c76ea9"
-    let secretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhLFObauXx07c="
+    private let host = "https://test.stytch.com/v1"
     
-    var authHeader: [String: String] {
+    private let authKey = "Authorization"
+    private var projectID = ""
+    private var secretKey = ""
+    
+    private var authHeader: [String: String] {
         let value = "\(projectID):\(secretKey)"
         
         let utf8str = value.data(using: .utf8)?.base64EncodedString() ?? ""

@@ -12,6 +12,7 @@ enum ErrorType: String, Codable {
     case emailNotFound = "email_not_found"
     case duplicateEmail = "duplicate_email"
     case unableToAuthMagicLink = "unable_to_auth_magic_link"
+    case unauthorizedCredentials = "unauthorized_credentials"
     
     var message: String {
         switch self {
@@ -23,6 +24,8 @@ enum ErrorType: String, Codable {
             return "A user with the specified email already exists for this project"
         case .unableToAuthMagicLink:
             return "Magic link could not be authenticated"
+        case .unauthorizedCredentials:
+            return "Unauthorized credentials"
         }
     }
 }

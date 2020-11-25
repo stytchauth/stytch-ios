@@ -12,23 +12,28 @@ import StytchSDK
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let stytchProjectID = "project-test-d0dbafe6-a019-47ea-8550-d021c1c76ea9"
+    let stytchSecretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhL"//FObauXx07c="
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        Stytch.shared.configure(projectID: stytchProjectID, secret: stytchSecretKey, scheme: "exampleapp")
+        
         return true
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        return StytchSDK.shared.handleMagicLinkUrl(userActivity.webpageURL)
+        return Stytch.shared.handleMagicLinkUrl(userActivity.webpageURL)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return StytchSDK.shared.handleMagicLinkUrl(url)
+        return Stytch.shared.handleMagicLinkUrl(url)
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return StytchSDK.shared.handleMagicLinkUrl(url)
+        return Stytch.shared.handleMagicLinkUrl(url)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

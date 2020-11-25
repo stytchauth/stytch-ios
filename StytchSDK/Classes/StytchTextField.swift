@@ -12,7 +12,7 @@ class StytchTextField: UIView {
     private var borderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = StytchUI.shared.customization.inputBackgroundColor
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.withAlphaComponent(0.22).cgColor
         view.layer.cornerRadius = 6
@@ -23,8 +23,8 @@ class StytchTextField: UIView {
     lazy var textField: UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.textColor = .black
-        field.font = UIFont.systemFont(ofSize: 16)
+        field.textColor = StytchUI.shared.customization.inputTextStyle.color
+        field.font = StytchUI.shared.customization.inputTextStyle.font.withSize(StytchUI.shared.customization.inputTextStyle.size)
         field.delegate = self
         field.addTarget(self, action: #selector(fieldDidChanged), for: .valueChanged)
         field.autocorrectionType = .no
@@ -39,8 +39,9 @@ class StytchTextField: UIView {
     
     var placeholderText = "" {
         didSet {
-            let placeholderColor = UIColor(red: 146.0/255.0, green: 142.0/255.0, blue: 142.0/255.0, alpha: 1.0)
-            let attributedText = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor : placeholderColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)])
+            let placeholderColor = StytchUI.shared.customization.inputPlaceholderStyle.color
+            let placeholderFont = StytchUI.shared.customization.inputPlaceholderStyle.font.withSize(StytchUI.shared.customization.inputPlaceholderStyle.size)
+            let attributedText = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor : placeholderColor, NSAttributedString.Key.font: placeholderFont])
             textField.attributedPlaceholder = attributedText
         }
     }
@@ -57,7 +58,7 @@ class StytchTextField: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = StytchUI.shared.customization.backgroundColor
         checkStatus()
         setupViews()
     }

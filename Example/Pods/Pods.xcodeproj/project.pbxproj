@@ -15,29 +15,37 @@
 		64B4E3A3FBDE9BE3E29DAAA47AE9CCE7 /* Pods-StytchSDK_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D5C2CF390C176A8B4DA1123D8484C65E /* Pods-StytchSDK_Tests-dummy.m */; };
 		6F25022BCC5DD4D6000AB8463A2381AA /* StytchSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 22CC8974DA37301DF7F4C6619571A0A2 /* StytchSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		83544AADA0B68EFF18E9EFE034400FCD /* Pods-StytchSDK_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E6DF6711F84D69B6583F4FDC777945BE /* Pods-StytchSDK_Example-dummy.m */; };
-		8542F8712568044A004C6101 /* StytchSDKDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8702568044A004C6101 /* StytchSDKDelegate.swift */; };
+		851BF8F9256E465D00A682D8 /* StytchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF8F5256E465D00A682D8 /* StytchEvent.swift */; };
+		851BF8FA256E465D00A682D8 /* StytchLoginResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF8F6256E465D00A682D8 /* StytchLoginResult.swift */; };
+		851BF8FB256E465D00A682D8 /* StytchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF8F7256E465D00A682D8 /* StytchResult.swift */; };
+		851BF8FC256E465D00A682D8 /* StytchConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF8F8256E465D00A682D8 /* StytchConstants.swift */; };
+		851BF907256E469700A682D8 /* StytchAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF901256E469700A682D8 /* StytchAuthViewController.swift */; };
+		851BF909256E469700A682D8 /* StytchCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF903256E469700A682D8 /* StytchCustomization.swift */; };
+		851BF90A256E469700A682D8 /* StytchUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF904256E469700A682D8 /* StytchUIDelegate.swift */; };
+		851BF90B256E469700A682D8 /* StytchUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF905256E469700A682D8 /* StytchUI.swift */; };
+		851BF91E256E46A100A682D8 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF911256E46A100A682D8 /* BaseRequest.swift */; };
+		851BF91F256E46A100A682D8 /* BaseApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF912256E46A100A682D8 /* BaseApi.swift */; };
+		851BF920256E46A100A682D8 /* StytchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF913256E46A100A682D8 /* StytchApi.swift */; };
+		851BF921256E46A100A682D8 /* BaseResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF914256E46A100A682D8 /* BaseResponseModel.swift */; };
+		851BF922256E46A100A682D8 /* MagicLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF916256E46A100A682D8 /* MagicLinkModel.swift */; };
+		851BF923256E46A100A682D8 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF917256E46A100A682D8 /* UserModel.swift */; };
+		851BF924256E46A100A682D8 /* AttributesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF919256E46A100A682D8 /* AttributesModel.swift */; };
+		851BF925256E46A100A682D8 /* PostCreateUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF91A256E46A100A682D8 /* PostCreateUserModel.swift */; };
+		851BF926256E46A100A682D8 /* PostMagicLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF91B256E46A100A682D8 /* PostMagicLinkModel.swift */; };
+		851BF927256E46A100A682D8 /* ErrorResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF91C256E46A100A682D8 /* ErrorResponseModel.swift */; };
+		851BF928256E46A100A682D8 /* MultipartObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF91D256E46A100A682D8 /* MultipartObject.swift */; };
+		851BF933256E483400A682D8 /* StytchServerFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF932256E483400A682D8 /* StytchServerFlowManager.swift */; };
+		851BF938256E48FE00A682D8 /* StytchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF937256E48FE00A682D8 /* StytchDelegate.swift */; };
+		851BF93D256E499000A682D8 /* StytchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF93C256E499000A682D8 /* StytchError.swift */; };
 		8542F8782568045F004C6101 /* UIViewController+Keyoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8752568045F004C6101 /* UIViewController+Keyoard.swift */; };
 		8542F8792568045F004C6101 /* String+Validations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8762568045F004C6101 /* String+Validations.swift */; };
 		8542F87A2568045F004C6101 /* URL+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8772568045F004C6101 /* URL+Query.swift */; };
-		8598DC482567AE4B00634138 /* ErrorResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8598DC472567AE4B00634138 /* ErrorResponseModel.swift */; };
-		8598DC4D2567B46800634138 /* StytchModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8598DC4C2567B46800634138 /* StytchModelViewController.swift */; };
-		85B795D8256513DC006B8CE6 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795D4256513DC006B8CE6 /* BaseRequest.swift */; };
-		85B795D9256513DC006B8CE6 /* BaseApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795D5256513DC006B8CE6 /* BaseApi.swift */; };
-		85B795DA256513DC006B8CE6 /* BaseResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795D6256513DC006B8CE6 /* BaseResponseModel.swift */; };
-		85B795DB256513DC006B8CE6 /* MultipartObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795D7256513DC006B8CE6 /* MultipartObject.swift */; };
-		85B795E0256513F9006B8CE6 /* StytchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795DF256513F9006B8CE6 /* StytchApi.swift */; };
-		85B795E7256514CF006B8CE6 /* PostCreateUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795E6256514CF006B8CE6 /* PostCreateUserModel.swift */; };
-		85B795EF2565156A006B8CE6 /* AttributesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795EE2565156A006B8CE6 /* AttributesModel.swift */; };
-		85B795F425651AFA006B8CE6 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795F325651AFA006B8CE6 /* UserModel.swift */; };
-		85B795F925651BCF006B8CE6 /* PostMagicLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B795F825651BCF006B8CE6 /* PostMagicLinkModel.swift */; };
+		857D481A256D313A00048C4D /* Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857D4819256D313A00048C4D /* Stytch.swift */; };
 		85B92EEC2563BBD0009FE959 /* StytchActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92EEB2563BBD0009FE959 /* StytchActionButton.swift */; };
-		85B92EF12563BBF9009FE959 /* StytchSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92EF02563BBF9009FE959 /* StytchSDK.swift */; };
 		85B92EF62563BC00009FE959 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92EF52563BC00009FE959 /* UIView+Constraints.swift */; };
-		85B92EFB2563BC07009FE959 /* StytchAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92EFA2563BC07009FE959 /* StytchAuthViewController.swift */; };
 		85B92F012563C015009FE959 /* stytch_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 85B92F002563C015009FE959 /* stytch_logo.png */; };
 		85B92F072563C079009FE959 /* StytchPoweredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92F062563C079009FE959 /* StytchPoweredView.swift */; };
 		85B92F0C2563C307009FE959 /* StytchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B92F0B2563C307009FE959 /* StytchTextField.swift */; };
-		85FAC46925656428000CC981 /* MagicLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FAC46825656428000CC981 /* MagicLinkModel.swift */; };
 		E4465D32AE5B2437200985A9C242EB3B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -78,29 +86,37 @@
 		7D659696C32091097E30BA6A1EDC256B /* StytchSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = StytchSDK.modulemap; sourceTree = "<group>"; };
 		7EA3E6CCA9E549E5F68D4B38D746EFE2 /* StytchSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StytchSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		805420EB774C49E05748CB346CF0418D /* Pods-StytchSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-StytchSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
-		8542F8702568044A004C6101 /* StytchSDKDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StytchSDKDelegate.swift; path = StytchSDK/Classes/StytchSDKDelegate.swift; sourceTree = "<group>"; };
+		851BF8F5256E465D00A682D8 /* StytchEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchEvent.swift; sourceTree = "<group>"; };
+		851BF8F6256E465D00A682D8 /* StytchLoginResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchLoginResult.swift; sourceTree = "<group>"; };
+		851BF8F7256E465D00A682D8 /* StytchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchResult.swift; sourceTree = "<group>"; };
+		851BF8F8256E465D00A682D8 /* StytchConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchConstants.swift; sourceTree = "<group>"; };
+		851BF901256E469700A682D8 /* StytchAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchAuthViewController.swift; sourceTree = "<group>"; };
+		851BF903256E469700A682D8 /* StytchCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchCustomization.swift; sourceTree = "<group>"; };
+		851BF904256E469700A682D8 /* StytchUIDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUIDelegate.swift; sourceTree = "<group>"; };
+		851BF905256E469700A682D8 /* StytchUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUI.swift; sourceTree = "<group>"; };
+		851BF911256E46A100A682D8 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
+		851BF912256E46A100A682D8 /* BaseApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseApi.swift; sourceTree = "<group>"; };
+		851BF913256E46A100A682D8 /* StytchApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchApi.swift; sourceTree = "<group>"; };
+		851BF914256E46A100A682D8 /* BaseResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseResponseModel.swift; sourceTree = "<group>"; };
+		851BF916256E46A100A682D8 /* MagicLinkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicLinkModel.swift; sourceTree = "<group>"; };
+		851BF917256E46A100A682D8 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		851BF919256E46A100A682D8 /* AttributesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributesModel.swift; sourceTree = "<group>"; };
+		851BF91A256E46A100A682D8 /* PostCreateUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCreateUserModel.swift; sourceTree = "<group>"; };
+		851BF91B256E46A100A682D8 /* PostMagicLinkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMagicLinkModel.swift; sourceTree = "<group>"; };
+		851BF91C256E46A100A682D8 /* ErrorResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorResponseModel.swift; sourceTree = "<group>"; };
+		851BF91D256E46A100A682D8 /* MultipartObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartObject.swift; sourceTree = "<group>"; };
+		851BF932256E483400A682D8 /* StytchServerFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchServerFlowManager.swift; sourceTree = "<group>"; };
+		851BF937256E48FE00A682D8 /* StytchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchDelegate.swift; path = StytchSDK/Classes/StytchDelegate.swift; sourceTree = "<group>"; };
+		851BF93C256E499000A682D8 /* StytchError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchError.swift; sourceTree = "<group>"; };
 		8542F8752568045F004C6101 /* UIViewController+Keyoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+Keyoard.swift"; path = "StytchSDK/Classes/UIViewController+Keyoard.swift"; sourceTree = "<group>"; };
 		8542F8762568045F004C6101 /* String+Validations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Validations.swift"; path = "StytchSDK/Classes/String+Validations.swift"; sourceTree = "<group>"; };
 		8542F8772568045F004C6101 /* URL+Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "URL+Query.swift"; path = "StytchSDK/Classes/URL+Query.swift"; sourceTree = "<group>"; };
-		8598DC472567AE4B00634138 /* ErrorResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponseModel.swift; sourceTree = "<group>"; };
-		8598DC4C2567B46800634138 /* StytchModelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchModelViewController.swift; path = StytchSDK/Classes/StytchModelViewController.swift; sourceTree = "<group>"; };
-		85B795D4256513DC006B8CE6 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
-		85B795D5256513DC006B8CE6 /* BaseApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseApi.swift; sourceTree = "<group>"; };
-		85B795D6256513DC006B8CE6 /* BaseResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseResponseModel.swift; sourceTree = "<group>"; };
-		85B795D7256513DC006B8CE6 /* MultipartObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartObject.swift; sourceTree = "<group>"; };
-		85B795DF256513F9006B8CE6 /* StytchApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchApi.swift; sourceTree = "<group>"; };
-		85B795E6256514CF006B8CE6 /* PostCreateUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateUserModel.swift; sourceTree = "<group>"; };
-		85B795EE2565156A006B8CE6 /* AttributesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributesModel.swift; sourceTree = "<group>"; };
-		85B795F325651AFA006B8CE6 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
-		85B795F825651BCF006B8CE6 /* PostMagicLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMagicLinkModel.swift; sourceTree = "<group>"; };
+		857D4819256D313A00048C4D /* Stytch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stytch.swift; path = StytchSDK/Classes/Stytch.swift; sourceTree = "<group>"; };
 		85B92EEB2563BBD0009FE959 /* StytchActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchActionButton.swift; path = StytchSDK/Classes/StytchActionButton.swift; sourceTree = "<group>"; };
-		85B92EF02563BBF9009FE959 /* StytchSDK.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StytchSDK.swift; path = StytchSDK/Classes/StytchSDK.swift; sourceTree = "<group>"; };
 		85B92EF52563BC00009FE959 /* UIView+Constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+Constraints.swift"; path = "StytchSDK/Classes/UIView+Constraints.swift"; sourceTree = "<group>"; };
-		85B92EFA2563BC07009FE959 /* StytchAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StytchAuthViewController.swift; path = StytchSDK/Classes/StytchAuthViewController.swift; sourceTree = "<group>"; };
 		85B92F002563C015009FE959 /* stytch_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stytch_logo.png; path = StytchSDK/Assets/stytch_logo.png; sourceTree = "<group>"; };
 		85B92F062563C079009FE959 /* StytchPoweredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchPoweredView.swift; path = StytchSDK/Classes/StytchPoweredView.swift; sourceTree = "<group>"; };
 		85B92F0B2563C307009FE959 /* StytchTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchTextField.swift; path = StytchSDK/Classes/StytchTextField.swift; sourceTree = "<group>"; };
-		85FAC46825656428000CC981 /* MagicLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkModel.swift; sourceTree = "<group>"; };
 		8761608EAB98B92C6A141AB45B0B6D3A /* Pods-StytchSDK_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-StytchSDK_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		8E403E361B4ADCECA0EC98020E15C3DF /* Pods-StytchSDK_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-StytchSDK_Example-umbrella.h"; sourceTree = "<group>"; };
 		95C6177E98E2F64A846F19C657FDAEA6 /* Pods-StytchSDK_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-StytchSDK_Example.modulemap"; sourceTree = "<group>"; };
@@ -158,11 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				85B92EFF2563BFED009FE959 /* Resources */,
-				85B92EF02563BBF9009FE959 /* StytchSDK.swift */,
-				8542F8702568044A004C6101 /* StytchSDKDelegate.swift */,
-				85B92EFA2563BC07009FE959 /* StytchAuthViewController.swift */,
-				8598DC4C2567B46800634138 /* StytchModelViewController.swift */,
-				85B795D3256513DC006B8CE6 /* Api */,
 				85B92ED52563BB2E009FE959 /* Helpers */,
 				85B92ED42563BB25009FE959 /* Views */,
 				3F36BC088760394A2740EC86AEBF1703 /* Pod */,
@@ -215,37 +226,63 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		85B795D3256513DC006B8CE6 /* Api */ = {
+		851BF8F4256E465D00A682D8 /* SupportClasses */ = {
 			isa = PBXGroup;
 			children = (
-				85B795D4256513DC006B8CE6 /* BaseRequest.swift */,
-				85B795D5256513DC006B8CE6 /* BaseApi.swift */,
-				85B795D6256513DC006B8CE6 /* BaseResponseModel.swift */,
-				8598DC472567AE4B00634138 /* ErrorResponseModel.swift */,
-				85B795D7256513DC006B8CE6 /* MultipartObject.swift */,
-				85B795DF256513F9006B8CE6 /* StytchApi.swift */,
-				85B795E5256514B2006B8CE6 /* RequestModels */,
-				85B795E4256514B1006B8CE6 /* ResponseModels */,
+				851BF8F5256E465D00A682D8 /* StytchEvent.swift */,
+				851BF8F6256E465D00A682D8 /* StytchLoginResult.swift */,
+				851BF8F7256E465D00A682D8 /* StytchResult.swift */,
+				851BF93C256E499000A682D8 /* StytchError.swift */,
+				851BF8F8256E465D00A682D8 /* StytchConstants.swift */,
+				851BF932256E483400A682D8 /* StytchServerFlowManager.swift */,
+			);
+			name = SupportClasses;
+			path = StytchSDK/Classes/SupportClasses;
+			sourceTree = "<group>";
+		};
+		851BF900256E469700A682D8 /* StytchUI */ = {
+			isa = PBXGroup;
+			children = (
+				851BF905256E469700A682D8 /* StytchUI.swift */,
+				851BF904256E469700A682D8 /* StytchUIDelegate.swift */,
+				851BF901256E469700A682D8 /* StytchAuthViewController.swift */,
+				851BF903256E469700A682D8 /* StytchCustomization.swift */,
+			);
+			name = StytchUI;
+			path = StytchSDK/Classes/StytchUI;
+			sourceTree = "<group>";
+		};
+		851BF910256E46A100A682D8 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				851BF911256E46A100A682D8 /* BaseRequest.swift */,
+				851BF912256E46A100A682D8 /* BaseApi.swift */,
+				851BF913256E46A100A682D8 /* StytchApi.swift */,
+				851BF914256E46A100A682D8 /* BaseResponseModel.swift */,
+				851BF915256E46A100A682D8 /* ResponseModels */,
+				851BF918256E46A100A682D8 /* RequestModels */,
+				851BF91C256E46A100A682D8 /* ErrorResponseModel.swift */,
+				851BF91D256E46A100A682D8 /* MultipartObject.swift */,
 			);
 			name = Api;
 			path = StytchSDK/Classes/Api;
 			sourceTree = "<group>";
 		};
-		85B795E4256514B1006B8CE6 /* ResponseModels */ = {
+		851BF915256E46A100A682D8 /* ResponseModels */ = {
 			isa = PBXGroup;
 			children = (
-				85B795F325651AFA006B8CE6 /* UserModel.swift */,
-				85FAC46825656428000CC981 /* MagicLinkModel.swift */,
+				851BF916256E46A100A682D8 /* MagicLinkModel.swift */,
+				851BF917256E46A100A682D8 /* UserModel.swift */,
 			);
 			path = ResponseModels;
 			sourceTree = "<group>";
 		};
-		85B795E5256514B2006B8CE6 /* RequestModels */ = {
+		851BF918256E46A100A682D8 /* RequestModels */ = {
 			isa = PBXGroup;
 			children = (
-				85B795EE2565156A006B8CE6 /* AttributesModel.swift */,
-				85B795E6256514CF006B8CE6 /* PostCreateUserModel.swift */,
-				85B795F825651BCF006B8CE6 /* PostMagicLinkModel.swift */,
+				851BF919256E46A100A682D8 /* AttributesModel.swift */,
+				851BF91A256E46A100A682D8 /* PostCreateUserModel.swift */,
+				851BF91B256E46A100A682D8 /* PostMagicLinkModel.swift */,
 			);
 			path = RequestModels;
 			sourceTree = "<group>";
@@ -275,6 +312,11 @@
 			isa = PBXGroup;
 			children = (
 				85B92F002563C015009FE959 /* stytch_logo.png */,
+				857D4819256D313A00048C4D /* Stytch.swift */,
+				851BF937256E48FE00A682D8 /* StytchDelegate.swift */,
+				851BF8F4256E465D00A682D8 /* SupportClasses */,
+				851BF900256E469700A682D8 /* StytchUI */,
+				851BF910256E46A100A682D8 /* Api */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -491,29 +533,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85B795D8256513DC006B8CE6 /* BaseRequest.swift in Sources */,
-				85FAC46925656428000CC981 /* MagicLinkModel.swift in Sources */,
-				85B795DA256513DC006B8CE6 /* BaseResponseModel.swift in Sources */,
-				8598DC4D2567B46800634138 /* StytchModelViewController.swift in Sources */,
-				8598DC482567AE4B00634138 /* ErrorResponseModel.swift in Sources */,
-				85B795E7256514CF006B8CE6 /* PostCreateUserModel.swift in Sources */,
+				851BF91E256E46A100A682D8 /* BaseRequest.swift in Sources */,
+				851BF8FB256E465D00A682D8 /* StytchResult.swift in Sources */,
+				851BF907256E469700A682D8 /* StytchAuthViewController.swift in Sources */,
 				85B92EEC2563BBD0009FE959 /* StytchActionButton.swift in Sources */,
+				851BF927256E46A100A682D8 /* ErrorResponseModel.swift in Sources */,
 				8542F87A2568045F004C6101 /* URL+Query.swift in Sources */,
-				85B795E0256513F9006B8CE6 /* StytchApi.swift in Sources */,
-				85B92EF12563BBF9009FE959 /* StytchSDK.swift in Sources */,
+				851BF933256E483400A682D8 /* StytchServerFlowManager.swift in Sources */,
+				851BF938256E48FE00A682D8 /* StytchDelegate.swift in Sources */,
+				857D481A256D313A00048C4D /* Stytch.swift in Sources */,
+				851BF928256E46A100A682D8 /* MultipartObject.swift in Sources */,
+				851BF923256E46A100A682D8 /* UserModel.swift in Sources */,
+				851BF8FC256E465D00A682D8 /* StytchConstants.swift in Sources */,
+				851BF8FA256E465D00A682D8 /* StytchLoginResult.swift in Sources */,
 				8542F8782568045F004C6101 /* UIViewController+Keyoard.swift in Sources */,
 				85B92F0C2563C307009FE959 /* StytchTextField.swift in Sources */,
 				8542F8792568045F004C6101 /* String+Validations.swift in Sources */,
+				851BF920256E46A100A682D8 /* StytchApi.swift in Sources */,
 				85B92F072563C079009FE959 /* StytchPoweredView.swift in Sources */,
+				851BF921256E46A100A682D8 /* BaseResponseModel.swift in Sources */,
+				851BF91F256E46A100A682D8 /* BaseApi.swift in Sources */,
+				851BF93D256E499000A682D8 /* StytchError.swift in Sources */,
+				851BF909256E469700A682D8 /* StytchCustomization.swift in Sources */,
 				019326965F354501237E1A1DDAD6679B /* StytchSDK-dummy.m in Sources */,
-				85B795F925651BCF006B8CE6 /* PostMagicLinkModel.swift in Sources */,
-				85B92EFB2563BC07009FE959 /* StytchAuthViewController.swift in Sources */,
-				85B795DB256513DC006B8CE6 /* MultipartObject.swift in Sources */,
+				851BF924256E46A100A682D8 /* AttributesModel.swift in Sources */,
+				851BF926256E46A100A682D8 /* PostMagicLinkModel.swift in Sources */,
 				85B92EF62563BC00009FE959 /* UIView+Constraints.swift in Sources */,
-				85B795EF2565156A006B8CE6 /* AttributesModel.swift in Sources */,
-				85B795F425651AFA006B8CE6 /* UserModel.swift in Sources */,
-				8542F8712568044A004C6101 /* StytchSDKDelegate.swift in Sources */,
-				85B795D9256513DC006B8CE6 /* BaseApi.swift in Sources */,
+				851BF90A256E469700A682D8 /* StytchUIDelegate.swift in Sources */,
+				851BF925256E46A100A682D8 /* PostCreateUserModel.swift in Sources */,
+				851BF90B256E469700A682D8 /* StytchUI.swift in Sources */,
+				851BF8F9256E465D00A682D8 /* StytchEvent.swift in Sources */,
+				851BF922256E46A100A682D8 /* MagicLinkModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
