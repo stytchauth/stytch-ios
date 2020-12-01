@@ -37,6 +37,8 @@
 		851BF933256E483400A682D8 /* StytchServerFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF932256E483400A682D8 /* StytchServerFlowManager.swift */; };
 		851BF938256E48FE00A682D8 /* StytchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF937256E48FE00A682D8 /* StytchDelegate.swift */; };
 		851BF93D256E499000A682D8 /* StytchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851BF93C256E499000A682D8 /* StytchError.swift */; };
+		851ED8EF2576752D00A8E89B /* StytchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851ED8EE2576752D00A8E89B /* StytchColors.swift */; };
+		851ED8F4257675B300A8E89B /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 851ED8F3257675B300A8E89B /* Colors.xcassets */; };
 		8542F8782568045F004C6101 /* UIViewController+Keyoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8752568045F004C6101 /* UIViewController+Keyoard.swift */; };
 		8542F8792568045F004C6101 /* String+Validations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8762568045F004C6101 /* String+Validations.swift */; };
 		8542F87A2568045F004C6101 /* URL+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8542F8772568045F004C6101 /* URL+Query.swift */; };
@@ -108,6 +110,8 @@
 		851BF932256E483400A682D8 /* StytchServerFlowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchServerFlowManager.swift; sourceTree = "<group>"; };
 		851BF937256E48FE00A682D8 /* StytchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StytchDelegate.swift; path = StytchSDK/Classes/StytchDelegate.swift; sourceTree = "<group>"; };
 		851BF93C256E499000A682D8 /* StytchError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchError.swift; sourceTree = "<group>"; };
+		851ED8EE2576752D00A8E89B /* StytchColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchColors.swift; sourceTree = "<group>"; };
+		851ED8F3257675B300A8E89B /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = StytchSDK/Assets/Colors.xcassets; sourceTree = "<group>"; };
 		8542F8752568045F004C6101 /* UIViewController+Keyoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+Keyoard.swift"; path = "StytchSDK/Classes/UIViewController+Keyoard.swift"; sourceTree = "<group>"; };
 		8542F8762568045F004C6101 /* String+Validations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Validations.swift"; path = "StytchSDK/Classes/String+Validations.swift"; sourceTree = "<group>"; };
 		8542F8772568045F004C6101 /* URL+Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "URL+Query.swift"; path = "StytchSDK/Classes/URL+Query.swift"; sourceTree = "<group>"; };
@@ -235,6 +239,7 @@
 				851BF93C256E499000A682D8 /* StytchError.swift */,
 				851BF8F8256E465D00A682D8 /* StytchConstants.swift */,
 				851BF932256E483400A682D8 /* StytchServerFlowManager.swift */,
+				851ED8EE2576752D00A8E89B /* StytchColors.swift */,
 			);
 			name = SupportClasses;
 			path = StytchSDK/Classes/SupportClasses;
@@ -314,6 +319,7 @@
 				85B92F002563C015009FE959 /* stytch_logo.png */,
 				857D4819256D313A00048C4D /* Stytch.swift */,
 				851BF937256E48FE00A682D8 /* StytchDelegate.swift */,
+				851ED8F3257675B300A8E89B /* Colors.xcassets */,
 				851BF8F4256E465D00A682D8 /* SupportClasses */,
 				851BF900256E469700A682D8 /* StytchUI */,
 				851BF910256E46A100A682D8 /* Api */,
@@ -516,6 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85B92F012563C015009FE959 /* stytch_logo.png in Resources */,
+				851ED8F4257675B300A8E89B /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +570,7 @@
 				851BF925256E46A100A682D8 /* PostCreateUserModel.swift in Sources */,
 				851BF90B256E469700A682D8 /* StytchUI.swift in Sources */,
 				851BF8F9256E465D00A682D8 /* StytchEvent.swift in Sources */,
+				851ED8EF2576752D00A8E89B /* StytchColors.swift in Sources */,
 				851BF922256E46A100A682D8 /* MagicLinkModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

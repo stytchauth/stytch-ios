@@ -11,41 +11,41 @@ import UIKit
     
     @objc public let titleStyle: StytchTextStyle = StytchTextStyle(font: UIFont.systemFont(ofSize: 30, weight: .medium),
                                                                        size: 30,
-                                                                       color: .black)
+                                                                       color: StytchColors.TitleTextColor.uiColor)
     
     @objc public var showTitle: Bool = true
     
     @objc public let subtitleStyle: StytchTextStyle = StytchTextStyle(font: UIFont.systemFont(ofSize: 16, weight: .regular),
                                                                        size: 16,
-                                                                       color: .black)
+                                                                       color: StytchColors.SubtitleTextColor.uiColor)
     
     @objc public var showSubtitle: Bool = true
     
     @objc public let inputTextStyle: StytchTextStyle = StytchTextStyle(font: UIFont.systemFont(ofSize: 16, weight: .regular),
                                                                        size: 16,
-                                                                       color: .black)
+                                                                       color: StytchColors.InputTextColor.uiColor)
     
     @objc public let inputPlaceholderStyle: StytchTextStyle = StytchTextStyle(font: UIFont.systemFont(ofSize: 16, weight: .regular),
                                                                        size: 16,
-                                                                       color: UIColor(red: 146.0/255.0, green: 142.0/255.0, blue: 142.0/255.0, alpha: 1.0))
+                                                                       color: StytchColors.InputPlaceholderColor.uiColor)
     
-    @objc public var inputBackgroundColor: UIColor = .white
+    @objc public var inputBackgroundColor: UIColor = StytchColors.InputBackgroundColor.uiColor
     
-    @objc public var inputBorderColor: UIColor =  UIColor.black.withAlphaComponent(0.22)
+    @objc public var inputBorderColor: UIColor = StytchColors.InputBorderColor.uiColor
     
     @objc public var inputCornerRadius: CGFloat = 5
     
     @objc public let buttonTextStyle: StytchTextStyle = StytchTextStyle(font: UIFont.systemFont(ofSize: 18, weight: .medium),
                                                                        size: 18,
-                                                                       color: .white)
+                                                                       color: StytchColors.ButtonTextColor.uiColor)
     
-    @objc public var buttonBackgroundColor: UIColor = .black
+    @objc public var buttonBackgroundColor: UIColor = StytchColors.ButtonBackgroundColor.uiColor
     
     @objc public var buttonCornerRadius: CGFloat = 5
     
     @objc public var showBrandLogo: Bool = true
     
-    @objc public var backgroundColor: UIColor = .white
+    @objc public var backgroundColor: UIColor = StytchColors.BackgroundColor.uiColor
     
 }
 

@@ -24,7 +24,8 @@ class StytchPoweredView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         let bundle = Bundle(for: StytchAuthViewController.self)
-        imageView.image = UIImage(named: "stytch_logo", in: bundle, compatibleWith: nil)
+        imageView.image = UIImage(named: "stytch_logo", in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = StytchColors.BackgroundColor.uiColor.invertedWhiteBlack
         return imageView
     }()
     
