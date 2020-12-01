@@ -21,10 +21,10 @@ class StytchAuthViewController: UIViewController {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StytchUI.shared.customization.mainTitleStyle.font.withSize(StytchUI.shared.customization.mainTitleStyle.size)
+        label.font = StytchUI.shared.customization.titleStyle.font.withSize(StytchUI.shared.customization.titleStyle.size)
         label.numberOfLines = 0
         label.text = "Sign up or log in"
-        label.textColor = StytchUI.shared.customization.mainTitleStyle.color
+        label.textColor = StytchUI.shared.customization.titleStyle.color
         return label
     }()
     
@@ -96,7 +96,7 @@ class StytchAuthViewController: UIViewController {
         var lastTopAnchor = view.safeAreaLayoutGuide.topAnchor
         var lastTopPadding: CGFloat = 32
         
-        if StytchUI.shared.customization.showMainTitle {
+        if StytchUI.shared.customization.showTitle {
             view.addSubview(titleLabel)
             titleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
             
@@ -124,7 +124,7 @@ class StytchAuthViewController: UIViewController {
         buttonTopToTextFieldConstraint = actionButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24)
         buttonTopToTextFieldConstraint.isActive = true
         
-        if StytchUI.shared.customization.showStytchLogo {
+        if StytchUI.shared.customization.showBrandLogo {
             view.addSubview(poweredView)
             poweredView.anchor(top: actionButton.bottomAnchor, left: nil, bottom: nil, right: nil, padding: .init(top: 0, left: 24, bottom: 0, right: 24))
             poweredView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -145,12 +145,7 @@ class StytchAuthViewController: UIViewController {
         
     @objc func handleActionButton() {
         showLoading()
-        #warning("Call Stytch resend")
-        if self.textField.isHidden {
-            
-        } else {
-            Stytch.shared.login(email: self.textField.text)
-        }
+        Stytch.shared.login(email: self.textField.text)
     }
     
     func showLoading() {
@@ -240,11 +235,20 @@ extension StytchAuthViewController: StytchDelegate {
         
         showAlert(title: "Error!", message: "\(error.message)")
         
-        #warning("Change on some error")
-        changeUI(buttonText: "Sign in with Email",
-                 titleText: "Sign up or log in",
-                 subtitleText: "Sign up or log in with your email, no password needed.",
-                 showInputField: true)
+        switch error {
+        case .unknown,
+             .invalidEmail:
+            self.changeUI(buttonText: "Sign in with Email",
+                          titleText: "Sign up or log in",
+                          subtitleText: "Sign up or log in with your email, no password needed.",
+                          showInputField: true)
+        case .invalidConfiguration:
+            dismiss(animated: true) {
+                StytchUI.shared.delegate?.onFailure()
+            }
+        default:
+            break
+        }        
     }
     
     func onVerifcationEmailLinkSent(_ email: String) {

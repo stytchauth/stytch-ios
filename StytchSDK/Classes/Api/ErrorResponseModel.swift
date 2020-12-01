@@ -13,6 +13,7 @@ enum ErrorType: String, Codable {
     case duplicateEmail = "duplicate_email"
     case unableToAuthMagicLink = "unable_to_auth_magic_link"
     case unauthorizedCredentials = "unauthorized_credentials"
+    case internalServerError = "internal_server_error"
     
     var message: String {
         switch self {
@@ -26,6 +27,8 @@ enum ErrorType: String, Codable {
             return "Magic link could not be authenticated"
         case .unauthorizedCredentials:
             return "Unauthorized credentials"
+        case .internalServerError:
+            return "Oops, something seems to have gone wrong"
         }
     }
 }

@@ -259,10 +259,10 @@
 				851BF912256E46A100A682D8 /* BaseApi.swift */,
 				851BF913256E46A100A682D8 /* StytchApi.swift */,
 				851BF914256E46A100A682D8 /* BaseResponseModel.swift */,
-				851BF915256E46A100A682D8 /* ResponseModels */,
-				851BF918256E46A100A682D8 /* RequestModels */,
 				851BF91C256E46A100A682D8 /* ErrorResponseModel.swift */,
 				851BF91D256E46A100A682D8 /* MultipartObject.swift */,
+				851BF915256E46A100A682D8 /* ResponseModels */,
+				851BF918256E46A100A682D8 /* RequestModels */,
 			);
 			name = Api;
 			path = StytchSDK/Classes/Api;

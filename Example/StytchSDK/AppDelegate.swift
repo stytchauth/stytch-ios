@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     let stytchProjectID = "project-test-d0dbafe6-a019-47ea-8550-d021c1c76ea9"
-    let stytchSecretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhL"//FObauXx07c="
+    let stytchSecretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhLFObauXx07c="
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

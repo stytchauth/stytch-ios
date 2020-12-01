@@ -25,12 +25,18 @@ import UIKit
     var emailVerificationLink: String {
         return "\(magicScheme)://\(StytchConstants.MAGIC_HOST)\(StytchConstants.EMAIL_VERIFICATION_PATH)"
     }
+    
+    func clearData() {
+        serverManager = StytchServerFlowManager()
+        delegate = nil
+    }
 
     @objc var delegate: StytchDelegate?
     
-    @objc public func configure(projectID: String, secret: String, scheme: String, verifyNewUserEmail: Bool = false) {
+    //configure(projectID: String, secret: String, scheme: String, verifyNewUserEmail: Bool = false)
+    @objc public func configure(projectID: String, secret: String, scheme: String) {
         self.magicScheme = scheme
-        self.verifyNewUserEmail = verifyNewUserEmail
+        self.verifyNewUserEmail = false //verifyNewUserEmail
         StytchApi.initialize(projectID: projectID, secretKey: secret)
     }
     
@@ -38,10 +44,10 @@ import UIKit
         guard let url = url else { return false }
         
         
-        if let token = Stytch.handleMagicLink(url, scheme: magicScheme, path: StytchConstants.EMAIL_VERIFICATION_PATH) {
-            // Send verify email
-            return true
-        }
+//        if let token = Stytch.handleMagicLink(url, scheme: magicScheme, path: StytchConstants.EMAIL_VERIFICATION_PATH) {
+//            // Send verify email
+//            return true
+//        }
         
         if let token = Stytch.handleMagicLink(url, scheme: magicScheme, path: StytchConstants.MAGIC_PATH) {
             self.delegate?.onDeepLinkHandled?()
@@ -50,6 +56,7 @@ import UIKit
                     self.delegate?.onFailure?(error)
                 } else if let model = model {
                     self.delegate?.onSuccess?(StytchResult(userId: model.userId, requestId: model.requestId))
+                    self.clearData()
                 }
             }
             return true
@@ -65,11 +72,17 @@ import UIKit
             return
         }
         
-        #warning("Wrap method, can be verification email sent")
         serverManager.sendMagicLink(to: email) { error in
             if let error = error {
                 self.delegate?.onFailure?(error)
             } else {
+                
+                if let newUser = self.serverManager.userResponse {
+                    StytchUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: newUser.userId))
+                } else if let user = self.serverManager.magicLinkResponse {
+                    StytchUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: user.userId))
+                }
+                
                 self.delegate?.onMagicLinkSent?(email)
             }
         }

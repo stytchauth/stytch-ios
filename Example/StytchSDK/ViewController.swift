@@ -36,7 +36,7 @@ class ViewController: UIViewController {
     }
     
     @objc func handleStartSDK() {
-        customizeStytch()
+//        customizeStytch()
         
         StytchUI.shared.showUI(from: self, delegate: self)
     }
@@ -44,8 +44,8 @@ class ViewController: UIViewController {
     func customizeStytch() {
         let customizaton = StytchUI.shared.customization
         
-        customizaton.mainTitleStyle.color = .red
-        customizaton.mainTitleStyle.size = 11
+        customizaton.titleStyle.color = .red
+        customizaton.titleStyle.size = 11
         
         customizaton.subtitleStyle.color = .cyan
         customizaton.subtitleStyle.size = 25
@@ -63,15 +63,15 @@ class ViewController: UIViewController {
         customizaton.buttonTextStyle.size = 9
         customizaton.buttonTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         
-        customizaton.buttonColor = .systemPink
+        customizaton.buttonBackgroundColor = .systemPink
         customizaton.buttonCornerRadius = 24
         
         customizaton.backgroundColor = .green
         customizaton.inputBackgroundColor = .magenta
         
-//        customizaton.showMainTitle = false
-//        customizaton.showSubtitle = false
-        customizaton.showStytchLogo = false
+        customizaton.showTitle = false
+        customizaton.showSubtitle = false
+        customizaton.showBrandLogo = false
     }
 
     func showAlert(title: String, message: String) {
@@ -87,7 +87,9 @@ class ViewController: UIViewController {
 extension ViewController: StytchUIDelegate {
     
     func onEvent(_ event: StytchEvent) {
-        
+        print("Event Type: \(event.type)")
+        print("Is user created: \(event.created)")
+        print("User ID: \(event.userId)")
     }
     
     func onSuccess(_ result: StytchResult) {

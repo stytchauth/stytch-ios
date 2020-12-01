@@ -11,13 +11,11 @@ import UIKit
     
     @objc public static let shared: StytchUI = StytchUI()
     
-    @objc public let customization = StytchCustomization()
+    private override init() {}
+    
+    @objc public let customization = StytchUICustomization()
     
     var delegate: StytchUIDelegate?
-    
-    private override init() {
-    
-    }
     
     @objc public func showUI(from presenter: UIViewController, delegate: StytchUIDelegate) {
         self.delegate = delegate

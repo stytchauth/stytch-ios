@@ -12,6 +12,8 @@ class StytchServerFlowManager {
     var magicLinkResponse: MagicLinkModel?
     var userResponse: UserModel?
     
+    var email: String = ""
+    
     func sendMagicLink(to email: String, handler: @escaping (StytchError?)->() ) {
         
         let linkModel = PostMagicLinkModel()
@@ -21,6 +23,7 @@ class StytchServerFlowManager {
         StytchApi.shared.sendMagicLink(model: linkModel) { (response) in
             if let model = response.data {
                 self.magicLinkResponse = model
+                self.email = email
                 handler(nil)
             } else {
                 
@@ -97,6 +100,8 @@ class StytchServerFlowManager {
             return StytchError.invalidMagicToken
         case .unauthorizedCredentials:
             return StytchError.invalidConfiguration
+        case .internalServerError:
+            return StytchError.unknown
         }
     }
 }

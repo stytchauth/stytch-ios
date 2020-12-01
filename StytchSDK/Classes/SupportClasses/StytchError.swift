@@ -12,7 +12,7 @@ import Foundation
     case invalidEmail
     case connection
     case invalidMagicToken
-    case invalidEmailToken
+//    case invalidEmailToken
     case invalidConfiguration
     
     var message: String {
@@ -25,8 +25,8 @@ import Foundation
             return "Could not connect to the server"
         case .invalidMagicToken:
             return "Magic link could not be authenticated"
-        case .invalidEmailToken:
-            return "Email verification link could not be authenticated"
+//        case .invalidEmailToken:
+//            return "Email verification link could not be authenticated"
         case .invalidConfiguration:
             return "Bad SDK configuration"
         }

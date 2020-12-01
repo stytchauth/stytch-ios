@@ -13,7 +13,7 @@ class StytchActionButton: UIButton {
         super.init(frame: frame)
         
         layer.cornerRadius = StytchUI.shared.customization.buttonCornerRadius
-        backgroundColor = StytchUI.shared.customization.buttonColor
+        backgroundColor = StytchUI.shared.customization.buttonBackgroundColor
         setTitleColor(StytchUI.shared.customization.buttonTextStyle.color, for: .normal)
         setTitleColor(UIColor(white: 0.5, alpha: 1.0), for: .highlighted)
         

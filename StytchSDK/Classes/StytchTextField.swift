@@ -14,8 +14,8 @@ class StytchTextField: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StytchUI.shared.customization.inputBackgroundColor
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.black.withAlphaComponent(0.22).cgColor
-        view.layer.cornerRadius = 6
+        view.layer.borderColor = StytchUI.shared.customization.inputBorderColor.cgColor
+        view.layer.cornerRadius = StytchUI.shared.customization.inputCornerRadius
         return view
     }()
 
