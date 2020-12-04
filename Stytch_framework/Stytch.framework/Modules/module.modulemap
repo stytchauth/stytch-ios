@@ -1,0 +1,11 @@
+framework module Stytch {
+  umbrella header "Stytch.h"
+
+  export *
+  module * { export * }
+}
+
+module Stytch.Swift {
+    header "Stytch-Swift.h"
+    requires objc
+}

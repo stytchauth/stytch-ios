@@ -1,0 +1,103 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.1 (swiftlang-1200.0.41 clang-1200.0.32.8)
+// swift-module-flags: -target x86_64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name Stytch
+import Foundation
+@_exported import Stytch
+import Swift
+import UIKit
+import WebKit
+@objc(StytchDelegate) public protocol StytchDelegate {
+  @objc optional func onSuccess(_ result: Stytch.StytchResult)
+  @objc optional func onFailure(_ error: Stytch.StytchError)
+  @objc optional func onMagicLinkSent(_ email: Swift.String)
+  @objc optional func onDeepLinkHandled()
+}
+@objc(StytchEnvironment) public enum StytchEnvironment : Swift.Int {
+  case test
+  case live
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(Stytch) public class Stytch : ObjectiveC.NSObject {
+  @objc public static var shared: Stytch.Stytch
+  @objc public var environment: Stytch.StytchEnvironment
+  @objc public var delegate: Stytch.StytchDelegate?
+  @objc public func configure(projectID: Swift.String, secret: Swift.String, scheme: Swift.String)
+  @objc public func handleMagicLinkUrl(_ url: Foundation.URL?) -> Swift.Bool
+  @objc public func login(email: Swift.String)
+  @objc deinit
+}
+@objc(StytchSDKDelegate) public protocol StytchUIDelegate {
+  @objc optional func onEvent(_ event: Stytch.StytchEvent)
+  @objc func onSuccess(_ result: Stytch.StytchResult)
+  @objc func onFailure()
+}
+@_inheritsConvenienceInitializers @objc(StytchUICustomization) public class StytchUICustomization : ObjectiveC.NSObject {
+  @objc final public let titleStyle: Stytch.StytchTextStyle
+  @objc public var showTitle: Swift.Bool
+  @objc final public let subtitleStyle: Stytch.StytchTextStyle
+  @objc public var showSubtitle: Swift.Bool
+  @objc final public let inputTextStyle: Stytch.StytchTextStyle
+  @objc final public let inputPlaceholderStyle: Stytch.StytchTextStyle
+  @objc public var inputBackgroundColor: UIKit.UIColor
+  @objc public var inputBorderColor: UIKit.UIColor
+  @objc public var inputCornerRadius: CoreGraphics.CGFloat
+  @objc final public let buttonTextStyle: Stytch.StytchTextStyle
+  @objc public var buttonBackgroundColor: UIKit.UIColor
+  @objc public var buttonCornerRadius: CoreGraphics.CGFloat
+  @objc public var showBrandLogo: Swift.Bool
+  @objc public var backgroundColor: UIKit.UIColor
+  @objc deinit
+  @objc override dynamic public init()
+}
+@_hasMissingDesignatedInitializers @objc(StytchTextStyle) public class StytchTextStyle : ObjectiveC.NSObject {
+  @objc public var font: UIKit.UIFont
+  @objc public var size: CoreGraphics.CGFloat
+  @objc public var color: UIKit.UIColor
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(StytchUI) public class StytchUI : ObjectiveC.NSObject {
+  @objc public static var shared: Stytch.StytchUI
+  @objc final public let customization: Stytch.StytchUICustomization
+  @objc public func showUI(from presenter: UIKit.UIViewController, delegate: Stytch.StytchUIDelegate)
+  @objc deinit
+}
+@objc(StytchLoginResult) public enum StytchLoginResult : Swift.Int {
+  case userCreated
+  case userFound
+  case error
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc(StytchError) public enum StytchError : Swift.Int {
+  case unknown
+  case invalidEmail
+  case connection
+  case invalidMagicToken
+  case invalidConfiguration
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc(StytchEvent) public class StytchEvent : ObjectiveC.NSObject {
+  @objc public var type: Swift.String
+  @objc public var created: Swift.Bool
+  @objc public var userId: Swift.String
+  @objc deinit
+  @objc override dynamic public init()
+}
+@_hasMissingDesignatedInitializers @objc(StytchResult) public class StytchResult : ObjectiveC.NSObject {
+  @objc public var userId: Swift.String
+  @objc public var requestId: Swift.String
+  @objc deinit
+  @objc override dynamic public init()
+}
