@@ -18,8 +18,16 @@ import UIKit
     
     var serverManager = StytchServerFlowManager()
     
-    var magicLink: String {
-        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.MAGIC_PATH)"
+    var loginMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.LOGIN_MAGIC_PATH)"
+    }
+    
+    var signUpMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.SIGNUP_MAGIC_PATH)"
+    }
+    
+    var inviteMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.INVITE_MAGIC_PATH)"
     }
     
     func clearData() {
@@ -28,6 +36,7 @@ import UIKit
     }
     
     @objc public var environment: StytchEnvironment = .live
+    @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
 
     @objc public var delegate: StytchDelegate?
 
@@ -37,20 +46,34 @@ import UIKit
         StytchApi.initialize(projectID: projectID, secretKey: secret)
     }
     
+    private func acceptToken(token: String) {
+        self.delegate?.onDeepLinkHandled?()
+        self.serverManager.authenticateMagicLink(with: token) { model, error in
+            if let error = error {
+                self.delegate?.onFailure?(error)
+            } else if let model = model {
+                self.delegate?.onSuccess?(StytchResult(userId: model.userId, requestId: model.requestId))
+                self.clearData()
+            }
+        }
+    }
+    
     @objc public func handleMagicLinkUrl(_ url: URL?) -> Bool {
         guard let url = url else { return false }
         
         
-        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.MAGIC_PATH) {
-            self.delegate?.onDeepLinkHandled?()
-            self.serverManager.authenticateMagicLink(with: token) { model, error in
-                if let error = error {
-                    self.delegate?.onFailure?(error)
-                } else if let model = model {
-                    self.delegate?.onSuccess?(StytchResult(userId: model.userId, requestId: model.requestId))
-                    self.clearData()
-                }
-            }
+        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.LOGIN_MAGIC_PATH) {
+            acceptToken(token: token)
+            return true
+        }
+        
+        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.SIGNUP_MAGIC_PATH) {
+            acceptToken(token: token)
+            return true
+        }
+        
+        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.INVITE_MAGIC_PATH) {
+            acceptToken(token: token)
             return true
         }
         
@@ -69,10 +92,13 @@ import UIKit
                 self.delegate?.onFailure?(error)
             } else {
                 
-                if let newUser = self.serverManager.userResponse {
-                    StytchUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: newUser.userId))
-                } else if let user = self.serverManager.magicLinkResponse {
-                    StytchUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: user.userId))
+                if let userModel = self.serverManager.userResponse {
+                    if userModel.userCreated {
+                        StytchUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
+                    } else {
+                        StytchUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
+                    }
+                    
                 }
                 
                 self.delegate?.onMagicLinkSent?(email)

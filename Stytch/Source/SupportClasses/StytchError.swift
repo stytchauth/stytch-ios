@@ -17,15 +17,15 @@ import Foundation
     var message: String {
         switch self {
         case .unknown:
-            return "Something went wrong"
+            return "stytch_error_unknown".localized
         case .invalidEmail:
-            return "Wrong email format"
+            return "stytch_error_invalid_input".localized
         case .connection:
-            return "Could not connect to the server"
+            return "stytch_error_no_internet".localized
         case .invalidMagicToken:
-            return "Magic link could not be authenticated"
+            return "stytch_error_invalid_magic_token".localized
         case .invalidConfiguration:
-            return "Bad SDK configuration"
+            return "stytch_error_bad_token".localized
         }
     }
 }

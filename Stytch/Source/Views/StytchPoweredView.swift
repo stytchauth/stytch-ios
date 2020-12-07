@@ -14,7 +14,7 @@ class StytchPoweredView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.numberOfLines = 1
-        label.text = "Powered by"
+        label.text = "stytch_watermark_powered_by".localized
         label.textColor = UIColor(red: 146.0/255.0, green: 142.0/255.0, blue: 142.0/255.0, alpha: 1.0)
         return label
     }()

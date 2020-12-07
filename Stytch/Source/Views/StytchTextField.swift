@@ -77,21 +77,11 @@ class StytchTextField: UIView {
     }
     
     private func checkStatus() {
-        
-//        if textField.isEditing {
-//            borderView.layer.borderColor = Colors.TintColor.cgColor
-//        } else {
-//            if text.isEmpty == true {
-//                borderView.layer.borderColor = Colors.ComponentBorderColor.cgColor
-//            } else {
-//                borderView.layer.borderColor = Colors.ComponentBorderColor.cgColor
-//            }
-//        }
-
+    
     }
     
     func setupErrorState() {
-//        borderView.layer.borderColor = Colors.AppRedColor.cgColor
+
     }
 }
 

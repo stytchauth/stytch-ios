@@ -23,7 +23,7 @@ class StytchAuthViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StytchUI.shared.customization.titleStyle.font.withSize(StytchUI.shared.customization.titleStyle.size)
         label.numberOfLines = 0
-        label.text = "Sign up or log in"
+        label.text = "stytch_login_title".localized
         label.textColor = StytchUI.shared.customization.titleStyle.color
         return label
     }()
@@ -33,7 +33,7 @@ class StytchAuthViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StytchUI.shared.customization.subtitleStyle.font.withSize(StytchUI.shared.customization.subtitleStyle.size)
         label.numberOfLines = 0
-        label.text = "Sign up or log in with your email, no password needed."
+        label.text = "stytch_login_description".localized
         label.textColor = StytchUI.shared.customization.subtitleStyle.color
         return label
     }()
@@ -41,7 +41,7 @@ class StytchAuthViewController: UIViewController {
     var textField: StytchTextField = {
         let textField = StytchTextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholderText = "example@email.com"
+        textField.placeholderText = "stytch_login_email_hint".localized
 //        textField.text = "edgar@logicants.com"
         return textField
     }()
@@ -49,7 +49,7 @@ class StytchAuthViewController: UIViewController {
     lazy var actionButton: StytchActionButton = {
         let button = StytchActionButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Sign in with Email", for: .normal)
+        button.setTitle("stytch_login_button_title".localized, for: .normal)
         button.addTarget(self, action: #selector(handleActionButton), for: .touchUpInside)
         return button
     }()
@@ -148,10 +148,7 @@ class StytchAuthViewController: UIViewController {
         if self.textField.isHidden == false {
             Stytch.shared.login(email: self.textField.text)
         } else {
-            self.changeUI(buttonText: "Sign in with Email",
-                          titleText: "Sign up or log in",
-                          subtitleText: "Sign up or log in with your email, no password needed.",
-                          showInputField: true)
+            self.changeToLoginUI()
         }
     }
     
@@ -228,6 +225,20 @@ class StytchAuthViewController: UIViewController {
         
         hideLoading()
     }
+    
+    func changeToLoginUI() {
+        self.changeUI(buttonText: "stytch_login_button_title".localized,
+                      titleText: "stytch_login_title".localized,
+                      subtitleText: "stytch_login_description".localized,
+                      showInputField: true)
+    }
+    
+    func changeMagicLinkSentUI(email: String) {
+        self.changeUI(buttonText: "stytch_login_waiting_verification_button_title".localized,
+                      titleText: String(format: "stytch_login_waiting_verification_title".localized, email),
+                      subtitleText: "stytch_login_waiting_verification_description".localized,
+                 showInputField: false)
+    }
 }
 
 extension StytchAuthViewController: StytchDelegate {
@@ -240,36 +251,24 @@ extension StytchAuthViewController: StytchDelegate {
     
     func onFailure(_ error: StytchError) {
         
-        showAlert(title: "Error!", message: "\(error.message)")
-        
         switch error {
         case .unknown,
              .invalidEmail:
-            self.changeUI(buttonText: "Sign in with Email",
-                          titleText: "Sign up or log in",
-                          subtitleText: "Sign up or log in with your email, no password needed.",
-                          showInputField: true)
+            self.changeToLoginUI()
         case .invalidConfiguration:
             dismiss(animated: true) {
                 StytchUI.shared.delegate?.onFailure()
             }
+            return
         default:
             break
-        }        
-    }
-    
-    func onVerifcationEmailLinkSent(_ email: String) {
-        changeUI(buttonText: "Resend email",
-                 titleText: "Email sent to \(email)",
-                 subtitleText: "Didn’t get email? Check your spam folder, or",
-                 showInputField: false)
+        }
+        
+        showAlert(title: "Error!", message: "\(error.message)")
     }
     
     func onMagicLinkSent(_ email: String) {
-        changeUI(buttonText: "Resend magic link",
-                 titleText: "Email sent to \(email)",
-                 subtitleText: "Didn’t get email? Check your spam folder, or",
-                 showInputField: false)
+        self.changeMagicLinkSentUI(email: email)
     }
     
     func onDeepLinkHandled() {

@@ -39,6 +39,7 @@ class ViewController: UIViewController {
 //        customizeStytch()
         
         Stytch.shared.environment = .test
+        Stytch.shared.loginMethod = .loginOrInvite
         StytchUI.shared.showUI(from: self, delegate: self)
     }
     
