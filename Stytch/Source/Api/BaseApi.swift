@@ -72,15 +72,11 @@ class BaseApi: NSObject {
     
     private func baseCompletionHandler<T: Codable>(data: Data?, urlResponse: URLResponse?, error: Error?) -> BaseResponseModel<T> {
         if let error = error {
-            #if DEBUG
-            print("Server error:", error)
-            #endif
+            StytchLog.show("Server error:", error)
             return BaseResponseModel<T>(ErrorResponseModel())
         } else if let data = data {
             
-            #if DEBUG
-            print("Response:", String(data: data, encoding: String.Encoding.utf8)!)
-            #endif
+            StytchLog.show("Response:", String(data: data, encoding: String.Encoding.utf8)!)
             
             let jsonDecoder = JSONDecoder()
             
@@ -88,9 +84,7 @@ class BaseApi: NSObject {
                 let model = try jsonDecoder.decode(T.self, from: data)
                 return BaseResponseModel<T>(model)
             } catch let parseError {
-                #if DEBUG
-                print("Parse error:", parseError)
-                #endif
+                StytchLog.show("Parse error:", parseError)
             }
             
             do {

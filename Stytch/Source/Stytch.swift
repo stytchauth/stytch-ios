@@ -18,6 +18,8 @@ import UIKit
     
     var serverManager = StytchServerFlowManager()
     
+    var DEBUG: Bool = true
+    
     var loginMagicLink: String {
         return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.LOGIN_MAGIC_PATH)"
     }

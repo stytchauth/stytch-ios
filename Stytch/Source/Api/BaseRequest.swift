@@ -23,9 +23,7 @@ class BaseRequest<RequestModel: Codable, ResponseModel: Codable>: BaseApi {
         urlRequest = URLRequest(url: url)
         
         for header in headers {
-            #if DEBUG
-            print("Header:", header.key, header.value)
-            #endif
+            StytchLog.show("Header:", header.key, header.value)
             urlRequest.setValue(header.value, forHTTPHeaderField: header.key)
         }
         
@@ -39,9 +37,7 @@ class BaseRequest<RequestModel: Codable, ResponseModel: Codable>: BaseApi {
             let boundary = BaseRequest.generateBoundaryString()
             
             urlRequest.setValue("multipart/form-data; boundary=" + boundary, forHTTPHeaderField: "Content-Type")
-            #if DEBUG
-            print("Header:", "Content-Type", "multipart/form-data; boundary=" + boundary)
-            #endif
+            StytchLog.show("Header:", "Content-Type", "multipart/form-data; boundary=" + boundary)
             
             for part in multipart {
                 
@@ -50,41 +46,31 @@ class BaseRequest<RequestModel: Codable, ResponseModel: Codable>: BaseApi {
 
             body = BaseRequest.closeBody(body, boundary: boundary)
             urlRequest.setValue(String(body.count), forHTTPHeaderField: "Content-Length")
-            #if DEBUG
-            print("Header:", "Content-Length", String(body.count))
-            #endif
+            StytchLog.show("Header:", "Content-Length", String(body.count))
             urlRequest.httpShouldHandleCookies = false
             
             urlRequest.httpBody = body
         } else {
             
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            #if DEBUG
-            print("Header:", "Content-Type", "application/json")
-            #endif
+            StytchLog.show("Header:", "Content-Type", "application/json")
             
             if let obj = object {
                 do {
                     let data = try encoder.encode(obj)
                     urlRequest.httpBody = data
                 } catch let ecodeError {
-                    #if DEBUG
-                    print("Parse error:", ecodeError)
-                    #endif
+                    StytchLog.show("Parse error:", ecodeError)
                 }
             }
         }
         
         urlRequest.httpMethod = method.rawValue
-        #if DEBUG
-        print("URLRequest:", method.rawValue, urlRequest.url?.absoluteString ?? "")
-        #endif
+        StytchLog.show("URLRequest:", method.rawValue, urlRequest.url?.absoluteString ?? "")
         
-        #if DEBUG
         if (urlRequest.httpBody?.count ?? 10001) < 10000 {
-            print("HttpBody:", String(data: urlRequest.httpBody ?? Data(), encoding: String.Encoding.utf8) ?? "none string")
+            StytchLog.show("HttpBody:", String(data: urlRequest.httpBody ?? Data(), encoding: String.Encoding.utf8) ?? "none string")
         }
-        #endif
         super.init()
     }
     
