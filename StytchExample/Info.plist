@@ -23,7 +23,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>stytchexample</string>
+				<string>stytchapp</string>
 			</array>
 		</dict>
 	</array>

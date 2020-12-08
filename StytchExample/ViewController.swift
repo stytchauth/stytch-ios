@@ -36,7 +36,7 @@ class ViewController: UIViewController {
     }
     
     @objc func handleStartSDK() {
-//        customizeStytch()
+        customizeStytch()
         
         Stytch.shared.environment = .test
         Stytch.shared.loginMethod = .loginOrInvite
@@ -46,34 +46,43 @@ class ViewController: UIViewController {
     func customizeStytch() {
         let customizaton = StytchUI.shared.customization
         
-        customizaton.titleStyle.color = .red
-        customizaton.titleStyle.size = 11
+        let textColor = UIColor(red: 110.0/255.0, green: 71.0/255.0, blue: 31.0/255.0, alpha: 1.0)
+        let placeholderTextColor = UIColor(red: 138.0/255.0, green: 90.0/255.0, blue: 40.0/255.0, alpha: 1.0)
+        let inputBackgroundColor = UIColor(red: 232.0/255.0, green: 189.0/255.0, blue: 144.0/255.0, alpha: 1.0)
+        let backgroundColor = UIColor(red: 245.0/255.0, green: 212.0/255.0, blue: 176.0/255.0, alpha: 1.0)
         
-        customizaton.subtitleStyle.color = .cyan
-        customizaton.subtitleStyle.size = 25
-        customizaton.subtitleStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        customizaton.titleStyle.color = textColor
+        customizaton.titleStyle.size = 25
+        customizaton.titleStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
         
-        customizaton.inputTextStyle.color = .yellow
-        customizaton.inputTextStyle.size = 13
+        customizaton.subtitleStyle.color = textColor
+        customizaton.subtitleStyle.size = 18
+        customizaton.subtitleStyle.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        
+        customizaton.inputTextStyle.color = textColor
+        customizaton.inputTextStyle.size = 16
         customizaton.inputTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         
-        customizaton.inputPlaceholderStyle.color = .orange
-        customizaton.inputPlaceholderStyle.size = 21
-        customizaton.inputPlaceholderStyle.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        customizaton.inputPlaceholderStyle.color = placeholderTextColor
+        customizaton.inputPlaceholderStyle.size = 15
+        customizaton.inputPlaceholderStyle.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         
-        customizaton.buttonTextStyle.color = .blue
-        customizaton.buttonTextStyle.size = 9
-        customizaton.buttonTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        customizaton.inputBackgroundColor = inputBackgroundColor
+        customizaton.inputBorderColor = textColor
+        customizaton.inputCornerRadius = 8
         
-        customizaton.buttonBackgroundColor = .systemPink
-        customizaton.buttonCornerRadius = 24
+        customizaton.buttonTextStyle.color = .white
+        customizaton.buttonTextStyle.size = 20
+        customizaton.buttonTextStyle.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         
-        customizaton.backgroundColor = .green
-        customizaton.inputBackgroundColor = .magenta
+        customizaton.buttonBackgroundColor = textColor
+        customizaton.buttonCornerRadius = 8
         
-        customizaton.showTitle = false
-        customizaton.showSubtitle = false
-        customizaton.showBrandLogo = false
+        customizaton.backgroundColor = backgroundColor
+        
+        customizaton.showTitle = true
+        customizaton.showSubtitle = true
+        customizaton.showBrandLogo = true
     }
 
     func showAlert(title: String, message: String) {

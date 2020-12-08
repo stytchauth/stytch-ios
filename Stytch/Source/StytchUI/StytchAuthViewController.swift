@@ -63,7 +63,7 @@ class StytchAuthViewController: UIViewController {
     var activityIndicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .whiteLarge)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.color = StytchColors.BackgroundColor.uiColor.invertedWhiteBlack
+        view.color = StytchUI.shared.customization.backgroundColor.invertedWhiteBlack
         view.isHidden = true
         return view
     }()

@@ -11,5 +11,5 @@ class PostMagicLinkModel: Codable {
     var email: String?
     var magic_link_url: String?
     var expiration_minutes: Int = 5
-    var attrubutes = AttributesModel()
+//    var attrubutes = AttributesModel()
 }

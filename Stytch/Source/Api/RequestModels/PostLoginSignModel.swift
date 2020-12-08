@@ -13,7 +13,7 @@ class PostLoginSignModel: Codable {
     var signup_magic_link_url: String = Stytch.shared.signUpMagicLink
     var login_expiration_minutes: Int = 60
     var signup_expiration_minutes: Int = 60 * 24 * 7
-    var attrubutes = AttributesModel()
+//    var attrubutes = AttributesModel()
     
     init(email: String) {
         self.email = email

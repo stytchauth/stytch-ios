@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Stytch'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'Stytch is a platform for user authentication.'
   s.homepage         = 'https://stytch.com'
 

@@ -9,5 +9,5 @@ import Foundation
 
 class PostCreateUserModel: Codable {
     var email: String?
-    var attrubutes = AttributesModel()
+//    var attrubutes = AttributesModel()
 }

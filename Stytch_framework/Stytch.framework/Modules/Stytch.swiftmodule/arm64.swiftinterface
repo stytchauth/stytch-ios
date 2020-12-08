@@ -24,11 +24,21 @@ import WebKit
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(Stytch) public class Stytch : ObjectiveC.NSObject {
   @objc public static var shared: Stytch.Stytch
   @objc public var environment: Stytch.StytchEnvironment
+  @objc public var loginMethod: Stytch.StytchLoginMethod
   @objc public var delegate: Stytch.StytchDelegate?
-  @objc public func configure(projectID: Swift.String, secret: Swift.String, scheme: Swift.String)
+  @objc public func configure(projectID: Swift.String, secret: Swift.String, scheme: Swift.String, host: Swift.String)
   @objc public func handleMagicLinkUrl(_ url: Foundation.URL?) -> Swift.Bool
   @objc public func login(email: Swift.String)
   @objc deinit
+}
+@objc(StytchLoginMethod) public enum StytchLoginMethod : Swift.Int {
+  case loginOrSignUp
+  case loginOrInvite
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
 }
 @objc(StytchSDKDelegate) public protocol StytchUIDelegate {
   @objc optional func onEvent(_ event: Stytch.StytchEvent)

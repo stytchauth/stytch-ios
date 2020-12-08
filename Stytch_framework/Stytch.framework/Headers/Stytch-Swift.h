@@ -211,6 +211,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 
 enum StytchEnvironment : NSInteger;
+enum StytchLoginMethod : NSInteger;
 @protocol StytchDelegate;
 
 SWIFT_CLASS_NAMED("Stytch")
@@ -220,8 +221,9 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) Stytch * _No
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @property (nonatomic) enum StytchEnvironment environment;
+@property (nonatomic) enum StytchLoginMethod loginMethod;
 @property (nonatomic, strong) id <StytchDelegate> _Nullable delegate;
-- (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme;
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host;
 - (BOOL)handleMagicLinkUrl:(NSURL * _Nullable)url SWIFT_WARN_UNUSED_RESULT;
 - (void)loginWithEmail:(NSString * _Nonnull)email;
 @end
@@ -260,6 +262,11 @@ SWIFT_CLASS_NAMED("StytchEvent")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
+
+typedef SWIFT_ENUM_NAMED(NSInteger, StytchLoginMethod, "StytchLoginMethod", open) {
+  StytchLoginMethodLoginOrSignUp = 0,
+  StytchLoginMethodLoginOrInvite = 1,
+};
 
 typedef SWIFT_ENUM_NAMED(NSInteger, StytchLoginResult, "StytchLoginResult", open) {
   StytchLoginResultUserCreated = 0,
