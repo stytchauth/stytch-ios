@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Stytch'
-  s.version          = '1.0.0'
+  s.version          = '0.1.1'
   s.summary          = 'Stytch is a platform for user authentication.'
   s.homepage         = 'https://stytch.com'
 
@@ -10,10 +10,11 @@ The Stytch iOS SDK makes it quick and easy to build user authentication for your
 
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Edgar' => 'edgar@stytch.com' }
-  s.source           = { :git => 'https://github.com/stytch/StytchSDK.git', :tag => s.version.to_s }
+  s.source           = { :http => 'https://github.com/stytchauth/stytch-ios-example/releases/download/0.1.1/Stytch.zip' }
 
   s.ios.deployment_target = '12.0'
 
   s.ios.vendored_frameworks = 'Stytch.framework'
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 
 end

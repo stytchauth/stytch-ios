@@ -264,7 +264,7 @@ extension StytchAuthViewController: StytchDelegate {
             break
         }
         
-        showAlert(title: "Error!", message: "\(error.message)")
+        showAlert(title: "stytch_error_title".localized, message: "\(error.message)")
     }
     
     func onMagicLinkSent(_ email: String) {

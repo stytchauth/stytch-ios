@@ -36,7 +36,7 @@ class ViewController: UIViewController {
     }
     
     @objc func handleStartSDK() {
-        customizeStytch()
+//        customizeStytch()
         
         Stytch.shared.environment = .test
         Stytch.shared.loginMethod = .loginOrInvite
