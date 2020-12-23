@@ -21,7 +21,8 @@ import UIKit
         self.delegate = delegate
         let stytchViewController = StytchAuthViewController()
         stytchViewController.modalPresentationStyle = .fullScreen
-        presenter.present(stytchViewController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: stytchViewController)
+        presenter.present(navigationController, animated: true, completion: nil)
     }
     
 }

@@ -1,14 +1,14 @@
 //
-//  StytchAuthViewController.swift
-//  StytchSDK
+//  MagicLinkConfirmationPage.swift
+//  Stytch
 //
-//  Created by Edgar Kroman on 2020-11-17.
+//  Created by Ethan Furstoss on 12/22/20.
 //
 
 import UIKit
 import WebKit
 
-class StytchAuthViewController: UIViewController {
+class ConfirmationPageViewController: UIViewController {
     
     // MARK: UI Components
     
@@ -80,7 +80,6 @@ class StytchAuthViewController: UIViewController {
         
         view.backgroundColor = StytchUI.shared.customization.backgroundColor
         
-        Stytch.shared.delegate = self
         
         hideKeyboardWhenTappedAround()
         
@@ -150,23 +149,9 @@ class StytchAuthViewController: UIViewController {
     }
     
     @objc func handleActionButton() {
-        showLoading()
-        if self.textField.isHidden == false {
-            Stytch.shared.login(email: self.textField.text)
-        } else {
-            self.changeToLoginUI()
-        }
+
     }
     
-    func showLoading() {
-        activityIndicatorView.isHidden = false
-        activityIndicatorView.startAnimating()
-    }
-    
-    func hideLoading() {
-        activityIndicatorView.stopAnimating()
-        activityIndicatorView.isHidden = true
-    }
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -232,13 +217,6 @@ class StytchAuthViewController: UIViewController {
         hideLoading()
     }
     
-    func changeToLoginUI() {
-        self.changeUI(buttonText: "stytch_login_button_title".localized,
-                      titleText: "stytch_login_title".localized,
-                      subtitleText: "stytch_login_description".localized,
-                      showInputField: true)
-    }
-    
     func changeMagicLinkSentUI(email: String) {
         self.changeUI(buttonText: "stytch_login_waiting_verification_button_title".localized,
                       titleText: String(format: "stytch_login_waiting_verification_title".localized, email),
@@ -247,45 +225,3 @@ class StytchAuthViewController: UIViewController {
     }
 }
 
-extension StytchAuthViewController: StytchDelegate {
-    
-    func onSuccess(_ result: StytchResult) {
-        hideLoading()
-        dismiss(animated: true) {
-            StytchUI.shared.delegate?.onSuccess(result)
-        }
-    }
-    
-    func onFailure(_ error: StytchError) {
-        
-        onMagicLinkSent("ethan@gmail.com")
-        hideLoading()
-        return
-        switch error {
-        case .unknown,
-             .invalidEmail:
-            self.changeToLoginUI()
-        case .invalidConfiguration:
-            dismiss(animated: true) {
-                StytchUI.shared.delegate?.onFailure()
-            }
-            return
-        default:
-            break
-        }
-        
-        showAlert(title: "stytch_error_title".localized, message: "\(error.message)")
-    }
-    
-    func onMagicLinkSent(_ email: String) {
-        //Present a new VC here. Rather than just changing the UI
-        let confirmationPage = ConfirmationPageViewController()
-        self.navigationController?.pushViewController(confirmationPage, animated: false)
-     //   self.changeMagicLinkSentUI(email: email)
-    }
-    
-    func onDeepLinkHandled() {
-        showLoading()
-    }
-    
-}
