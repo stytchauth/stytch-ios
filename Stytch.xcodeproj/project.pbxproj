@@ -21,11 +21,11 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		4D7406292592F25700E99058 /* MagicLinkConfirmationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7406282592F25700E99058 /* MagicLinkConfirmationPage.swift */; };
+		4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */; };
 		8578A776257A53AE00C3E894 /* Stytch.h in Headers */ = {isa = PBXBuildFile; fileRef = 8578A774257A53AE00C3E894 /* Stytch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8578A77F257A53C100C3E894 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8578A77E257A53C100C3E894 /* Colors.xcassets */; };
 		8578A782257A53C500C3E894 /* stytch_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8578A781257A53C500C3E894 /* stytch_logo.png */; };
-		8578A7AB257A53CA00C3E894 /* StytchAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A786257A53CA00C3E894 /* StytchAuthViewController.swift */; };
+		8578A7AB257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */; };
 		8578A7AC257A53CA00C3E894 /* StytchCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A787257A53CA00C3E894 /* StytchCustomization.swift */; };
 		8578A7AD257A53CA00C3E894 /* StytchUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */; };
 		8578A7AE257A53CA00C3E894 /* StytchUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A789257A53CA00C3E894 /* StytchUI.swift */; };
@@ -97,13 +97,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4D7406282592F25700E99058 /* MagicLinkConfirmationPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkConfirmationPage.swift; sourceTree = "<group>"; };
+		4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkConfirmationPageViewController.swift; sourceTree = "<group>"; };
 		8578A771257A53AE00C3E894 /* Stytch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stytch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8578A774257A53AE00C3E894 /* Stytch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stytch.h; sourceTree = "<group>"; };
 		8578A775257A53AE00C3E894 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8578A77E257A53C100C3E894 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		8578A781257A53C500C3E894 /* stytch_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stytch_logo.png; sourceTree = "<group>"; };
-		8578A786257A53CA00C3E894 /* StytchAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchAuthViewController.swift; sourceTree = "<group>"; };
+		8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicLinkInitialPageViewController.swift; sourceTree = "<group>"; };
 		8578A787257A53CA00C3E894 /* StytchCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchCustomization.swift; sourceTree = "<group>"; };
 		8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUIDelegate.swift; sourceTree = "<group>"; };
 		8578A789257A53CA00C3E894 /* StytchUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUI.swift; sourceTree = "<group>"; };
@@ -218,8 +218,8 @@
 		8578A785257A53CA00C3E894 /* StytchUI */ = {
 			isa = PBXGroup;
 			children = (
-				8578A786257A53CA00C3E894 /* StytchAuthViewController.swift */,
-				4D7406282592F25700E99058 /* MagicLinkConfirmationPage.swift */,
+				8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */,
+				4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */,
 				8578A787257A53CA00C3E894 /* StytchCustomization.swift */,
 				8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */,
 				8578A789257A53CA00C3E894 /* StytchUI.swift */,
@@ -472,7 +472,7 @@
 				85B19F8F257E1F7400E088B1 /* PostLoginSignModel.swift in Sources */,
 				8578A7AF257A53CA00C3E894 /* StytchDelegate.swift in Sources */,
 				8578A7C0257A53CB00C3E894 /* PostMagicLinkModel.swift in Sources */,
-				4D7406292592F25700E99058 /* MagicLinkConfirmationPage.swift in Sources */,
+				4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */,
 				8578A7BB257A53CB00C3E894 /* BaseResponseModel.swift in Sources */,
 				8578A7BF257A53CB00C3E894 /* PostCreateUserModel.swift in Sources */,
 				8578A7B6257A53CB00C3E894 /* StytchServerFlowManager.swift in Sources */,
@@ -505,7 +505,7 @@
 				8578A7BD257A53CB00C3E894 /* UserModel.swift in Sources */,
 				8578A7C3257A53CB00C3E894 /* StytchTextField.swift in Sources */,
 				8578A7B0257A53CA00C3E894 /* StytchColors.swift in Sources */,
-				8578A7AB257A53CA00C3E894 /* StytchAuthViewController.swift in Sources */,
+				8578A7AB257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift in Sources */,
 				8578A7BC257A53CB00C3E894 /* MagicLinkModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

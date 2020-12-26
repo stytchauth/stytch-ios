@@ -257,10 +257,7 @@ extension StytchAuthViewController: StytchDelegate {
     }
     
     func onFailure(_ error: StytchError) {
-        
-        onMagicLinkSent("ethan@gmail.com")
         hideLoading()
-        return
         switch error {
         case .unknown,
              .invalidEmail:
@@ -279,9 +276,8 @@ extension StytchAuthViewController: StytchDelegate {
     
     func onMagicLinkSent(_ email: String) {
         //Present a new VC here. Rather than just changing the UI
-        let confirmationPage = ConfirmationPageViewController()
-        self.navigationController?.pushViewController(confirmationPage, animated: false)
-     //   self.changeMagicLinkSentUI(email: email)
+        let confirmationPage = ConfirmationPageViewController(email: email)
+        self.navigationController?.pushViewController(confirmationPage, animated: true)
     }
     
     func onDeepLinkHandled() {
