@@ -96,6 +96,8 @@ class StytchAuthViewController: UIViewController {
         var lastTopAnchor = view.safeAreaLayoutGuide.topAnchor
         var lastTopPadding: CGFloat = 32
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancelButton))
+        
         if StytchUI.shared.customization.showTitle {
             view.addSubview(titleLabel)
             titleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
@@ -143,6 +145,10 @@ class StytchAuthViewController: UIViewController {
     
     // MARK: Actions
         
+    @objc func handleCancelButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     @objc func handleActionButton() {
         showLoading()
         if self.textField.isHidden == false {
@@ -244,13 +250,14 @@ class StytchAuthViewController: UIViewController {
 extension StytchAuthViewController: StytchDelegate {
     
     func onSuccess(_ result: StytchResult) {
+        hideLoading()
         dismiss(animated: true) {
             StytchUI.shared.delegate?.onSuccess(result)
         }
     }
     
     func onFailure(_ error: StytchError) {
-        
+        hideLoading()
         switch error {
         case .unknown,
              .invalidEmail:
@@ -268,7 +275,9 @@ extension StytchAuthViewController: StytchDelegate {
     }
     
     func onMagicLinkSent(_ email: String) {
-        self.changeMagicLinkSentUI(email: email)
+        //Present a new VC here. Rather than just changing the UI
+        let confirmationPage = ConfirmationPageViewController(email: email)
+        self.navigationController?.pushViewController(confirmationPage, animated: true)
     }
     
     func onDeepLinkHandled() {
