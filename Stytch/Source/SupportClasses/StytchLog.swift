@@ -10,7 +10,7 @@ import Foundation
 class StytchLog: NSObject {
     
     static func show(_ items: Any...) {
-        if Stytch.shared.DEBUG {
+        if StytchMagicLink.shared.DEBUG {
             #if DEBUG
             print("[Stytch]  ", separator: " ", terminator: " ")
             for item in items {

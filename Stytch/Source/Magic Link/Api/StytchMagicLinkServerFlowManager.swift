@@ -7,7 +7,7 @@
 
 import Foundation
 
-class StytchServerFlowManager {
+class StytchMagicLinkServerFlowManager {
     
     var userResponse: UserModel?
     
@@ -15,7 +15,7 @@ class StytchServerFlowManager {
     
     func sendMagicLink(to email: String, handler: @escaping (StytchError?)->() ) {
         
-        switch Stytch.shared.loginMethod {
+        switch StytchMagicLink.shared.loginMethod {
         case .loginOrSignUp:
             sendLoginOrSignUp(email: email, handler: handler)
         case .loginOrInvite:
@@ -40,7 +40,7 @@ class StytchServerFlowManager {
         
         let linkModel = PostLoginSignModel(email: email)
         
-        StytchApi.shared.loginOrSignUp(model: linkModel) { (response) in
+        StytchMagicLinkApi.shared.loginOrSignUp(model: linkModel) { (response) in
             self.email = email
             self.loginHandler(response: response, handler: handler)
         }
@@ -50,7 +50,7 @@ class StytchServerFlowManager {
         
         let linkModel = PostLoginSignModel(email: email)
         
-        StytchApi.shared.loginOrSignUp(model: linkModel) { (response) in
+        StytchMagicLinkApi.shared.loginOrSignUp(model: linkModel) { (response) in
             self.email = email
             self.loginHandler(response: response, handler: handler)
         }
@@ -58,7 +58,7 @@ class StytchServerFlowManager {
     
     func authenticateMagicLink(with token: String, handler: @escaping (MagicLinkModel?, StytchError?)->()) {
         
-        StytchApi.shared.authenticateMagicLink(token: token) { (response) in
+        StytchMagicLinkApi.shared.authenticateMagicLink(token: token) { (response) in
             if let model = response.data {
                 handler(model, nil)
             } else {

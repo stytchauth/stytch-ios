@@ -9,6 +9,8 @@ import UIKit
 
 class StytchPoweredView: UIView {
     
+    var customization: StytchUICustomization
+    
     var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -23,20 +25,20 @@ class StytchPoweredView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        let bundle = Bundle(for: StytchAuthViewController.self)
+        let bundle = Bundle(for: StytchUICustomization.self)
         imageView.image = UIImage(named: "stytch_logo", in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = StytchUI.shared.customization.backgroundColor.invertedWhiteBlack
+        imageView.tintColor = customization.backgroundColor.invertedWhiteBlack
         return imageView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        setupViews()
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(frame: CGRect = .zero, customization: StytchUICustomization) {
+        self.customization = customization
+        super.init(frame: frame)
+        setupViews()
     }
     
     func setupViews() {
