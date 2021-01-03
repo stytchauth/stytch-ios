@@ -38,13 +38,14 @@ class ViewController: UIViewController {
     @objc func handleStartSDK() {
 //        customizeStytch()
         
-        Stytch.shared.environment = .test
-        Stytch.shared.loginMethod = .loginOrInvite
-        StytchUI.shared.showUI(from: self, delegate: self)
+        StytchMagicLink.shared.environment = .test
+        StytchMagicLink.shared.loginMethod = .loginOrInvite
+        StytchMagicLinkUI.shared.delegate = self
+        StytchMagicLinkUI.shared.showUI(from: self)
     }
     
     func customizeStytch() {
-        let customizaton = StytchUI.shared.customization
+        let customizaton = StytchMagicLinkUI.shared.customization
         
         let textColor = UIColor(red: 110.0/255.0, green: 71.0/255.0, blue: 31.0/255.0, alpha: 1.0)
         let placeholderTextColor = UIColor(red: 138.0/255.0, green: 90.0/255.0, blue: 40.0/255.0, alpha: 1.0)

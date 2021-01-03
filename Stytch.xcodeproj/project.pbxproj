@@ -22,25 +22,25 @@
 
 /* Begin PBXBuildFile section */
 		4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */; };
+		4DE89F6825A2609500F92D6B /* StytchMagicLinkApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */; };
 		8578A776257A53AE00C3E894 /* Stytch.h in Headers */ = {isa = PBXBuildFile; fileRef = 8578A774257A53AE00C3E894 /* Stytch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8578A77F257A53C100C3E894 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8578A77E257A53C100C3E894 /* Colors.xcassets */; };
 		8578A782257A53C500C3E894 /* stytch_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8578A781257A53C500C3E894 /* stytch_logo.png */; };
-		8578A7AB257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */; };
+		8578A7AB257A53CA00C3E894 /* MagicLinkInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A786257A53CA00C3E894 /* MagicLinkInitialViewController.swift */; };
 		8578A7AC257A53CA00C3E894 /* StytchCustomization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A787257A53CA00C3E894 /* StytchCustomization.swift */; };
 		8578A7AD257A53CA00C3E894 /* StytchUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */; };
-		8578A7AE257A53CA00C3E894 /* StytchUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A789257A53CA00C3E894 /* StytchUI.swift */; };
-		8578A7AF257A53CA00C3E894 /* StytchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78A257A53CA00C3E894 /* StytchDelegate.swift */; };
+		8578A7AE257A53CA00C3E894 /* StytchMagicLinkUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A789257A53CA00C3E894 /* StytchMagicLinkUI.swift */; };
+		8578A7AF257A53CA00C3E894 /* StytchMagicLinkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78A257A53CA00C3E894 /* StytchMagicLinkDelegate.swift */; };
 		8578A7B0257A53CA00C3E894 /* StytchColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78C257A53CA00C3E894 /* StytchColors.swift */; };
 		8578A7B1257A53CA00C3E894 /* StytchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78D257A53CA00C3E894 /* StytchError.swift */; };
 		8578A7B2257A53CA00C3E894 /* StytchEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78E257A53CA00C3E894 /* StytchEvent.swift */; };
 		8578A7B3257A53CB00C3E894 /* StytchLoginResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A78F257A53CA00C3E894 /* StytchLoginResult.swift */; };
 		8578A7B4257A53CB00C3E894 /* StytchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A790257A53CA00C3E894 /* StytchResult.swift */; };
 		8578A7B5257A53CB00C3E894 /* StytchConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A791257A53CA00C3E894 /* StytchConstants.swift */; };
-		8578A7B6257A53CB00C3E894 /* StytchServerFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A792257A53CA00C3E894 /* StytchServerFlowManager.swift */; };
-		8578A7B7257A53CB00C3E894 /* Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A793257A53CA00C3E894 /* Stytch.swift */; };
+		8578A7B6257A53CB00C3E894 /* StytchMagicLinkServerFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A792257A53CA00C3E894 /* StytchMagicLinkServerFlowManager.swift */; };
+		8578A7B7257A53CB00C3E894 /* StytchMagicLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A793257A53CA00C3E894 /* StytchMagicLink.swift */; };
 		8578A7B8257A53CB00C3E894 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A795257A53CA00C3E894 /* BaseRequest.swift */; };
 		8578A7B9257A53CB00C3E894 /* BaseApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A796257A53CA00C3E894 /* BaseApi.swift */; };
-		8578A7BA257A53CB00C3E894 /* StytchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A797257A53CA00C3E894 /* StytchApi.swift */; };
 		8578A7BB257A53CB00C3E894 /* BaseResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A798257A53CA00C3E894 /* BaseResponseModel.swift */; };
 		8578A7BC257A53CB00C3E894 /* MagicLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A79A257A53CA00C3E894 /* MagicLinkModel.swift */; };
 		8578A7BD257A53CB00C3E894 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A79B257A53CA00C3E894 /* UserModel.swift */; };
@@ -98,27 +98,27 @@
 
 /* Begin PBXFileReference section */
 		4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkConfirmationPageViewController.swift; sourceTree = "<group>"; };
+		4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkApi.swift; sourceTree = "<group>"; };
 		8578A771257A53AE00C3E894 /* Stytch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stytch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8578A774257A53AE00C3E894 /* Stytch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stytch.h; sourceTree = "<group>"; };
 		8578A775257A53AE00C3E894 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8578A77E257A53C100C3E894 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		8578A781257A53C500C3E894 /* stytch_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stytch_logo.png; sourceTree = "<group>"; };
-		8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicLinkInitialPageViewController.swift; sourceTree = "<group>"; };
+		8578A786257A53CA00C3E894 /* MagicLinkInitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicLinkInitialViewController.swift; sourceTree = "<group>"; };
 		8578A787257A53CA00C3E894 /* StytchCustomization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchCustomization.swift; sourceTree = "<group>"; };
 		8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUIDelegate.swift; sourceTree = "<group>"; };
-		8578A789257A53CA00C3E894 /* StytchUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchUI.swift; sourceTree = "<group>"; };
-		8578A78A257A53CA00C3E894 /* StytchDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchDelegate.swift; sourceTree = "<group>"; };
+		8578A789257A53CA00C3E894 /* StytchMagicLinkUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkUI.swift; sourceTree = "<group>"; };
+		8578A78A257A53CA00C3E894 /* StytchMagicLinkDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkDelegate.swift; sourceTree = "<group>"; };
 		8578A78C257A53CA00C3E894 /* StytchColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchColors.swift; sourceTree = "<group>"; };
 		8578A78D257A53CA00C3E894 /* StytchError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchError.swift; sourceTree = "<group>"; };
 		8578A78E257A53CA00C3E894 /* StytchEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchEvent.swift; sourceTree = "<group>"; };
 		8578A78F257A53CA00C3E894 /* StytchLoginResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchLoginResult.swift; sourceTree = "<group>"; };
 		8578A790257A53CA00C3E894 /* StytchResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchResult.swift; sourceTree = "<group>"; };
 		8578A791257A53CA00C3E894 /* StytchConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchConstants.swift; sourceTree = "<group>"; };
-		8578A792257A53CA00C3E894 /* StytchServerFlowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchServerFlowManager.swift; sourceTree = "<group>"; };
-		8578A793257A53CA00C3E894 /* Stytch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stytch.swift; sourceTree = "<group>"; };
+		8578A792257A53CA00C3E894 /* StytchMagicLinkServerFlowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkServerFlowManager.swift; sourceTree = "<group>"; };
+		8578A793257A53CA00C3E894 /* StytchMagicLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchMagicLink.swift; sourceTree = "<group>"; };
 		8578A795257A53CA00C3E894 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		8578A796257A53CA00C3E894 /* BaseApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseApi.swift; sourceTree = "<group>"; };
-		8578A797257A53CA00C3E894 /* StytchApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchApi.swift; sourceTree = "<group>"; };
 		8578A798257A53CA00C3E894 /* BaseResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseResponseModel.swift; sourceTree = "<group>"; };
 		8578A79A257A53CA00C3E894 /* MagicLinkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagicLinkModel.swift; sourceTree = "<group>"; };
 		8578A79B257A53CA00C3E894 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -169,6 +169,65 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D9390CD25A0C7B800C86642 /* Magic Link */ = {
+			isa = PBXGroup;
+			children = (
+				4DE89F6625A25D6600F92D6B /* Api */,
+				4D9390DD25A0D16200C86642 /* UI */,
+				8578A78A257A53CA00C3E894 /* StytchMagicLinkDelegate.swift */,
+				8578A793257A53CA00C3E894 /* StytchMagicLink.swift */,
+			);
+			path = "Magic Link";
+			sourceTree = "<group>";
+		};
+		4D9390DD25A0D16200C86642 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8578A789257A53CA00C3E894 /* StytchMagicLinkUI.swift */,
+				4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */,
+				8578A786257A53CA00C3E894 /* MagicLinkInitialViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		4DE89F5D25A0D5C100F92D6B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8578A787257A53CA00C3E894 /* StytchCustomization.swift */,
+				8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		4DE89F6625A25D6600F92D6B /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				4DE89F7425A270BE00F92D6B /* RequestModels */,
+				4DE89F7325A2708A00F92D6B /* ResponseModels */,
+				8578A792257A53CA00C3E894 /* StytchMagicLinkServerFlowManager.swift */,
+				4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		4DE89F7325A2708A00F92D6B /* ResponseModels */ = {
+			isa = PBXGroup;
+			children = (
+				8578A79A257A53CA00C3E894 /* MagicLinkModel.swift */,
+			);
+			path = ResponseModels;
+			sourceTree = "<group>";
+		};
+		4DE89F7425A270BE00F92D6B /* RequestModels */ = {
+			isa = PBXGroup;
+			children = (
+				8578A79F257A53CA00C3E894 /* PostMagicLinkModel.swift */,
+				85B19F8E257E1F7400E088B1 /* PostLoginSignModel.swift */,
+				85B19F92257E1F7D00E088B1 /* PostLoginInviteModel.swift */,
+			);
+			path = RequestModels;
+			sourceTree = "<group>";
+		};
 		8578A767257A53AE00C3E894 = {
 			isa = PBXGroup;
 			children = (
@@ -203,28 +262,15 @@
 		8578A784257A53CA00C3E894 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				4D9390CD25A0C7B800C86642 /* Magic Link */,
 				85B19F72257E0E4100E088B1 /* Strings */,
-				8578A793257A53CA00C3E894 /* Stytch.swift */,
-				8578A78A257A53CA00C3E894 /* StytchDelegate.swift */,
 				8578A78B257A53CA00C3E894 /* SupportClasses */,
-				8578A785257A53CA00C3E894 /* StytchUI */,
 				8578A794257A53CA00C3E894 /* Api */,
+				4DE89F5D25A0D5C100F92D6B /* UI */,
 				8578A7A2257A53CA00C3E894 /* Views */,
 				8578A7A6257A53CA00C3E894 /* Helpers */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		8578A785257A53CA00C3E894 /* StytchUI */ = {
-			isa = PBXGroup;
-			children = (
-				8578A786257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift */,
-				4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */,
-				8578A787257A53CA00C3E894 /* StytchCustomization.swift */,
-				8578A788257A53CA00C3E894 /* StytchUIDelegate.swift */,
-				8578A789257A53CA00C3E894 /* StytchUI.swift */,
-			);
-			path = StytchUI;
 			sourceTree = "<group>";
 		};
 		8578A78B257A53CA00C3E894 /* SupportClasses */ = {
@@ -236,7 +282,6 @@
 				8578A78F257A53CA00C3E894 /* StytchLoginResult.swift */,
 				8578A790257A53CA00C3E894 /* StytchResult.swift */,
 				8578A791257A53CA00C3E894 /* StytchConstants.swift */,
-				8578A792257A53CA00C3E894 /* StytchServerFlowManager.swift */,
 				8578A7ED257A553E00C3E894 /* StytchEnvironment.swift */,
 				85B19F79257E0FAD00E088B1 /* StytchLocalizeController.swift */,
 				85B19F8A257E1DD200E088B1 /* StytchLoginMethod.swift */,
@@ -248,7 +293,6 @@
 		8578A794257A53CA00C3E894 /* Api */ = {
 			isa = PBXGroup;
 			children = (
-				8578A797257A53CA00C3E894 /* StytchApi.swift */,
 				8578A795257A53CA00C3E894 /* BaseRequest.swift */,
 				8578A796257A53CA00C3E894 /* BaseApi.swift */,
 				8578A798257A53CA00C3E894 /* BaseResponseModel.swift */,
@@ -263,7 +307,6 @@
 		8578A799257A53CA00C3E894 /* ResponseModels */ = {
 			isa = PBXGroup;
 			children = (
-				8578A79A257A53CA00C3E894 /* MagicLinkModel.swift */,
 				8578A79B257A53CA00C3E894 /* UserModel.swift */,
 			);
 			path = ResponseModels;
@@ -274,9 +317,6 @@
 			children = (
 				8578A79D257A53CA00C3E894 /* AttributesModel.swift */,
 				8578A79E257A53CA00C3E894 /* PostCreateUserModel.swift */,
-				8578A79F257A53CA00C3E894 /* PostMagicLinkModel.swift */,
-				85B19F8E257E1F7400E088B1 /* PostLoginSignModel.swift */,
-				85B19F92257E1F7D00E088B1 /* PostLoginInviteModel.swift */,
 			);
 			path = RequestModels;
 			sourceTree = "<group>";
@@ -470,17 +510,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				85B19F8F257E1F7400E088B1 /* PostLoginSignModel.swift in Sources */,
-				8578A7AF257A53CA00C3E894 /* StytchDelegate.swift in Sources */,
+				8578A7AF257A53CA00C3E894 /* StytchMagicLinkDelegate.swift in Sources */,
 				8578A7C0257A53CB00C3E894 /* PostMagicLinkModel.swift in Sources */,
 				4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */,
+				4DE89F6825A2609500F92D6B /* StytchMagicLinkApi.swift in Sources */,
 				8578A7BB257A53CB00C3E894 /* BaseResponseModel.swift in Sources */,
 				8578A7BF257A53CB00C3E894 /* PostCreateUserModel.swift in Sources */,
-				8578A7B6257A53CB00C3E894 /* StytchServerFlowManager.swift in Sources */,
+				8578A7B6257A53CB00C3E894 /* StytchMagicLinkServerFlowManager.swift in Sources */,
 				8578A7C9257A53CB00C3E894 /* URL+Query.swift in Sources */,
 				8578A7EE257A553E00C3E894 /* StytchEnvironment.swift in Sources */,
 				85B19F97257E247A00E088B1 /* StytchLog.swift in Sources */,
-				8578A7B7257A53CB00C3E894 /* Stytch.swift in Sources */,
-				8578A7BA257A53CB00C3E894 /* StytchApi.swift in Sources */,
+				8578A7B7257A53CB00C3E894 /* StytchMagicLink.swift in Sources */,
 				85B19F8B257E1DD200E088B1 /* StytchLoginMethod.swift in Sources */,
 				8578A7AD257A53CA00C3E894 /* StytchUIDelegate.swift in Sources */,
 				8578A7AC257A53CA00C3E894 /* StytchCustomization.swift in Sources */,
@@ -488,7 +528,7 @@
 				8578A7C7257A53CB00C3E894 /* UIView+Constraints.swift in Sources */,
 				8578A7C8257A53CB00C3E894 /* String+Validations.swift in Sources */,
 				85B19F93257E1F7D00E088B1 /* PostLoginInviteModel.swift in Sources */,
-				8578A7AE257A53CA00C3E894 /* StytchUI.swift in Sources */,
+				8578A7AE257A53CA00C3E894 /* StytchMagicLinkUI.swift in Sources */,
 				8578A7B3257A53CB00C3E894 /* StytchLoginResult.swift in Sources */,
 				8578A7C4257A53CB00C3E894 /* StytchPoweredView.swift in Sources */,
 				85B19F7A257E0FAD00E088B1 /* StytchLocalizeController.swift in Sources */,
@@ -505,7 +545,7 @@
 				8578A7BD257A53CB00C3E894 /* UserModel.swift in Sources */,
 				8578A7C3257A53CB00C3E894 /* StytchTextField.swift in Sources */,
 				8578A7B0257A53CA00C3E894 /* StytchColors.swift in Sources */,
-				8578A7AB257A53CA00C3E894 /* MagicLinkInitialPageViewController.swift in Sources */,
+				8578A7AB257A53CA00C3E894 /* MagicLinkInitialViewController.swift in Sources */,
 				8578A7BC257A53CB00C3E894 /* MagicLinkModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

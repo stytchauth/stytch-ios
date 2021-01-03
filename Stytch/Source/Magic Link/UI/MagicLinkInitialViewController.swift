@@ -1,5 +1,5 @@
 //
-//  StytchAuthViewController.swift
+//  MagicLinkInitialViewController.swift
 //  StytchSDK
 //
 //  Created by Edgar Kroman on 2020-11-17.
@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class StytchAuthViewController: UIViewController {
+class MagicLinkInitialViewController: UIViewController {
     
     // MARK: UI Components
     
@@ -21,25 +21,25 @@ class StytchAuthViewController: UIViewController {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StytchUI.shared.customization.titleStyle.font.withSize(StytchUI.shared.customization.titleStyle.size)
+        label.font = StytchMagicLinkUI.shared.customization.titleStyle.font.withSize(StytchMagicLinkUI.shared.customization.titleStyle.size)
         label.numberOfLines = 0
         label.text = "stytch_login_title".localized
-        label.textColor = StytchUI.shared.customization.titleStyle.color
+        label.textColor = StytchMagicLinkUI.shared.customization.titleStyle.color
         return label
     }()
     
     var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StytchUI.shared.customization.subtitleStyle.font.withSize(StytchUI.shared.customization.subtitleStyle.size)
+        label.font = StytchMagicLinkUI.shared.customization.subtitleStyle.font.withSize(StytchMagicLinkUI.shared.customization.subtitleStyle.size)
         label.numberOfLines = 0
         label.text = "stytch_login_description".localized
-        label.textColor = StytchUI.shared.customization.subtitleStyle.color
+        label.textColor = StytchMagicLinkUI.shared.customization.subtitleStyle.color
         return label
     }()
     
     var textField: StytchTextField = {
-        let textField = StytchTextField()
+        let textField = StytchTextField(customization: StytchMagicLinkUI.shared.customization)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholderText = "stytch_login_email_hint".localized
 //        textField.text = "edgar@logicants.com"
@@ -47,7 +47,7 @@ class StytchAuthViewController: UIViewController {
     }()
     
     lazy var actionButton: StytchActionButton = {
-        let button = StytchActionButton()
+        let button = StytchActionButton(customization: StytchMagicLinkUI.shared.customization)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("stytch_login_button_title".localized, for: .normal)
         button.addTarget(self, action: #selector(handleActionButton), for: .touchUpInside)
@@ -55,7 +55,7 @@ class StytchAuthViewController: UIViewController {
     }()
     
     var poweredView: StytchPoweredView = {
-        let view = StytchPoweredView()
+        let view = StytchPoweredView(customization: StytchMagicLinkUI.shared.customization)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -63,7 +63,7 @@ class StytchAuthViewController: UIViewController {
     var activityIndicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .whiteLarge)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.color = StytchUI.shared.customization.backgroundColor.invertedWhiteBlack
+        view.color = StytchMagicLinkUI.shared.customization.backgroundColor.invertedWhiteBlack
         view.isHidden = true
         return view
     }()
@@ -78,9 +78,9 @@ class StytchAuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = StytchUI.shared.customization.backgroundColor
+        view.backgroundColor = StytchMagicLinkUI.shared.customization.backgroundColor
         
-        Stytch.shared.delegate = self
+        StytchMagicLink.shared.delegate = self
         
         hideKeyboardWhenTappedAround()
         
@@ -98,7 +98,7 @@ class StytchAuthViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancelButton))
         
-        if StytchUI.shared.customization.showTitle {
+        if StytchMagicLinkUI.shared.customization.showTitle {
             view.addSubview(titleLabel)
             titleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
             
@@ -106,7 +106,7 @@ class StytchAuthViewController: UIViewController {
             lastTopPadding = 24
         }
         
-        if StytchUI.shared.customization.showSubtitle {
+        if StytchMagicLinkUI.shared.customization.showSubtitle {
             view.addSubview(subtitleLabel)
             subtitleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
             
@@ -126,7 +126,7 @@ class StytchAuthViewController: UIViewController {
         buttonTopToTextFieldConstraint = actionButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 24)
         buttonTopToTextFieldConstraint.isActive = true
         
-        if StytchUI.shared.customization.showBrandLogo {
+        if StytchMagicLinkUI.shared.customization.showBrandLogo {
             view.addSubview(poweredView)
             poweredView.anchor(top: actionButton.bottomAnchor, left: nil, bottom: nil, right: nil, padding: .init(top: 0, left: 24, bottom: 0, right: 24))
             poweredView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -152,7 +152,7 @@ class StytchAuthViewController: UIViewController {
     @objc func handleActionButton() {
         showLoading()
         if self.textField.isHidden == false {
-            Stytch.shared.login(email: self.textField.text)
+            StytchMagicLink.shared.login(email: self.textField.text)
         } else {
             self.changeToLoginUI()
         }
@@ -247,12 +247,12 @@ class StytchAuthViewController: UIViewController {
     }
 }
 
-extension StytchAuthViewController: StytchDelegate {
+extension MagicLinkInitialViewController: StytchMagicLinkDelegate {
     
     func onSuccess(_ result: StytchResult) {
         hideLoading()
         dismiss(animated: true) {
-            StytchUI.shared.delegate?.onSuccess(result)
+            StytchMagicLinkUI.shared.delegate?.onSuccess(result)
         }
     }
     
@@ -264,7 +264,7 @@ extension StytchAuthViewController: StytchDelegate {
             self.changeToLoginUI()
         case .invalidConfiguration:
             dismiss(animated: true) {
-                StytchUI.shared.delegate?.onFailure()
+                StytchMagicLinkUI.shared.delegate?.onFailure()
             }
             return
         default:
@@ -276,7 +276,7 @@ extension StytchAuthViewController: StytchDelegate {
     
     func onMagicLinkSent(_ email: String) {
         //Present a new VC here. Rather than just changing the UI
-        let confirmationPage = ConfirmationPageViewController(email: email)
+        let confirmationPage = MagicLinkConfirmationViewController(email: email)
         self.navigationController?.pushViewController(confirmationPage, animated: true)
     }
     

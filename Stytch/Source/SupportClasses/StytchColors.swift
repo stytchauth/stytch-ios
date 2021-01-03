@@ -19,7 +19,7 @@ enum StytchColors: String {
     case BackgroundColor
     
     var uiColor: UIColor {
-        return UIColor(named: self.rawValue, in: Bundle(for: StytchAuthViewController.self), compatibleWith: nil) ?? UIColor.black
+        return UIColor(named: self.rawValue, in: Bundle(for: StytchUICustomization.self), compatibleWith: nil) ?? UIColor.black
     }
     
     var cgColor: CGColor {

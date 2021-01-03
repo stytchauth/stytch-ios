@@ -9,13 +9,15 @@ import UIKit
 
 class StytchTextField: UIView {
     
-    private var borderView: UIView = {
+    var customization: StytchUICustomization
+    
+    lazy private var borderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StytchUI.shared.customization.inputBackgroundColor
+        view.backgroundColor = customization.inputBackgroundColor
         view.layer.borderWidth = 1
-        view.layer.borderColor = StytchUI.shared.customization.inputBorderColor.cgColor
-        view.layer.cornerRadius = StytchUI.shared.customization.inputCornerRadius
+        view.layer.borderColor = customization.inputBorderColor.cgColor
+        view.layer.cornerRadius = customization.inputCornerRadius
         return view
     }()
 
@@ -23,8 +25,8 @@ class StytchTextField: UIView {
     lazy var textField: UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.textColor = StytchUI.shared.customization.inputTextStyle.color
-        field.font = StytchUI.shared.customization.inputTextStyle.font.withSize(StytchUI.shared.customization.inputTextStyle.size)
+        field.textColor = customization.inputTextStyle.color
+        field.font = customization.inputTextStyle.font.withSize(customization.inputTextStyle.size)
         field.delegate = self
         field.addTarget(self, action: #selector(fieldDidChanged), for: .valueChanged)
         field.autocorrectionType = .no
@@ -39,8 +41,8 @@ class StytchTextField: UIView {
     
     var placeholderText = "" {
         didSet {
-            let placeholderColor = StytchUI.shared.customization.inputPlaceholderStyle.color
-            let placeholderFont = StytchUI.shared.customization.inputPlaceholderStyle.font.withSize(StytchUI.shared.customization.inputPlaceholderStyle.size)
+            let placeholderColor = customization.inputPlaceholderStyle.color
+            let placeholderFont = customization.inputPlaceholderStyle.font.withSize(customization.inputPlaceholderStyle.size)
             let attributedText = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor : placeholderColor, NSAttributedString.Key.font: placeholderFont])
             textField.attributedPlaceholder = attributedText
         }
@@ -55,16 +57,17 @@ class StytchTextField: UIView {
             return textField.text ?? ""
         }
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = StytchUI.shared.customization.backgroundColor
-        checkStatus()
-        setupViews()
-    }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(frame: CGRect = .zero, customization: StytchUICustomization) {
+        self.customization = customization
+        super.init(frame: frame)
+        backgroundColor = customization.backgroundColor
+        checkStatus()
+        setupViews()
     }
     
     private func setupViews() {

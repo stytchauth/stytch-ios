@@ -20,7 +20,7 @@ class StytchLocalizeController: NSObject {
     func loadStrings() {
         enStrings.removeAll()
         
-        let bundle = Bundle(for: StytchAuthViewController.self)
+        let bundle = Bundle(for: Self.self)
         
         if let path = bundle.path(forResource: "en", ofType: "strings"),
             let dictionary = NSDictionary(contentsOfFile: path) as? [String: String] {

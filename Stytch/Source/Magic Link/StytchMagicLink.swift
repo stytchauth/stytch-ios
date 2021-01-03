@@ -7,16 +7,16 @@
 
 import UIKit
 
-@objc(Stytch) public class Stytch: NSObject {
+@objc(Stytch) public class StytchMagicLink: NSObject {
     
-    @objc public static let shared: Stytch = Stytch()
+    @objc public static let shared: StytchMagicLink = StytchMagicLink()
     
     private override init() {}
     
     var MAGIC_SCHEME = ""
     var MAGIC_HOST = ""
     
-    var serverManager = StytchServerFlowManager()
+    var serverManager = StytchMagicLinkServerFlowManager()
     
     var DEBUG: Bool = false
     
@@ -33,19 +33,19 @@ import UIKit
     }
     
     func clearData() {
-        serverManager = StytchServerFlowManager()
+        serverManager = StytchMagicLinkServerFlowManager()
         delegate = nil
     }
     
     @objc public var environment: StytchEnvironment = .live
     @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
 
-    @objc public var delegate: StytchDelegate?
+    @objc public var delegate: StytchMagicLinkDelegate?
 
     @objc public func configure(projectID: String, secret: String, scheme: String, host: String) {
         self.MAGIC_SCHEME = scheme
         self.MAGIC_HOST = host
-        StytchApi.initialize(projectID: projectID, secretKey: secret)
+        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
     }
     
     private func acceptToken(token: String) {
@@ -64,17 +64,17 @@ import UIKit
         guard let url = url else { return false }
         
         
-        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.LOGIN_MAGIC_PATH) {
+        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.LOGIN_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
         
-        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.SIGNUP_MAGIC_PATH) {
+        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.SIGNUP_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
         
-        if let token = Stytch.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.INVITE_MAGIC_PATH) {
+        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.INVITE_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
@@ -96,9 +96,9 @@ import UIKit
                 
                 if let userModel = self.serverManager.userResponse {
                     if userModel.userCreated {
-                        StytchUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
+                        StytchMagicLinkUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
                     } else {
-                        StytchUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
+                        StytchMagicLinkUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
                     }
                     
                 }
@@ -115,7 +115,7 @@ import UIKit
         guard let url = url else { return nil }
         
         if let host = url.host, let urlScheme = url.scheme, let token = url.valueOf(StytchConstants.MAGIC_TOKEN_KEY),
-           host == Stytch.shared.MAGIC_HOST,
+           host == StytchMagicLink.shared.MAGIC_HOST,
            url.path == path,
            urlScheme == scheme {
             return token

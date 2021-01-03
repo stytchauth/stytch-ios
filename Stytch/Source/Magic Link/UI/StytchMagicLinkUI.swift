@@ -1,5 +1,5 @@
 //
-//  StytchUI.swift
+//  StytchMagicLinkUI.swift
 //  StytchSDK
 //
 //  Created by Edgar Kroman on 2020-11-17.
@@ -7,19 +7,18 @@
 
 import UIKit
 
-@objc(StytchUI) public class StytchUI: NSObject {
+@objc(StytchMagicLinkUI) public class StytchMagicLinkUI: NSObject {
     
-    @objc public static let shared: StytchUI = StytchUI()
+    @objc public static let shared: StytchMagicLinkUI = StytchMagicLinkUI()
     
     private override init() {}
     
     @objc public let customization = StytchUICustomization()
     
-    var delegate: StytchUIDelegate?
+    @objc public var delegate: StytchUIDelegate?
     
-    @objc public func showUI(from presenter: UIViewController, delegate: StytchUIDelegate) {
-        self.delegate = delegate
-        let stytchViewController = StytchAuthViewController()
+    @objc public func showUI(from presenter: UIViewController) {
+        let stytchViewController = MagicLinkInitialViewController()
         stytchViewController.modalPresentationStyle = .fullScreen
         let navigationController = UINavigationController(rootViewController: stytchViewController)
         presenter.present(navigationController, animated: true, completion: nil)

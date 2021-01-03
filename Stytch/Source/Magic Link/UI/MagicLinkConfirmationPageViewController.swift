@@ -1,5 +1,5 @@
 //
-//  MagicLinkConfirmationPage.swift
+//  MagicLinkConfirmationViewController.swift
 //  Stytch
 //
 //  Created by Ethan Furstoss on 12/22/20.
@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class ConfirmationPageViewController: UIViewController {
+class MagicLinkConfirmationViewController: UIViewController {
     
     // MARK: Private Vars
     
@@ -19,25 +19,25 @@ class ConfirmationPageViewController: UIViewController {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StytchUI.shared.customization.titleStyle.font.withSize(StytchUI.shared.customization.titleStyle.size)
+        label.font = StytchMagicLinkUI.shared.customization.titleStyle.font.withSize(StytchMagicLinkUI.shared.customization.titleStyle.size)
         label.numberOfLines = 0
         label.text = String(format: "stytch_login_waiting_verification_title".localized, email)
-        label.textColor = StytchUI.shared.customization.titleStyle.color
+        label.textColor = StytchMagicLinkUI.shared.customization.titleStyle.color
         return label
     }()
     
     var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StytchUI.shared.customization.subtitleStyle.font.withSize(StytchUI.shared.customization.subtitleStyle.size)
+        label.font = StytchMagicLinkUI.shared.customization.subtitleStyle.font.withSize(StytchMagicLinkUI.shared.customization.subtitleStyle.size)
         label.numberOfLines = 0
         label.text = "stytch_login_waiting_verification_description".localized
-        label.textColor = StytchUI.shared.customization.subtitleStyle.color
+        label.textColor = StytchMagicLinkUI.shared.customization.subtitleStyle.color
         return label
     }()
     
     lazy var actionButton: StytchActionButton = {
-        let button = StytchActionButton()
+        let button = StytchActionButton(customization: StytchMagicLinkUI.shared.customization)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("stytch_login_waiting_verification_button_title".localized, for: .normal)
         button.addTarget(self, action: #selector(handleActionButton), for: .touchUpInside)
@@ -45,7 +45,7 @@ class ConfirmationPageViewController: UIViewController {
     }()
     
     var poweredView: StytchPoweredView = {
-        let view = StytchPoweredView()
+        let view = StytchPoweredView(customization: StytchMagicLinkUI.shared.customization)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -71,7 +71,7 @@ class ConfirmationPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = StytchUI.shared.customization.backgroundColor
+        view.backgroundColor = StytchMagicLinkUI.shared.customization.backgroundColor
         
         hideKeyboardWhenTappedAround()
         
@@ -83,7 +83,7 @@ class ConfirmationPageViewController: UIViewController {
         var lastTopAnchor = view.safeAreaLayoutGuide.topAnchor
         var lastTopPadding: CGFloat = 32
         
-        if StytchUI.shared.customization.showTitle {
+        if StytchMagicLinkUI.shared.customization.showTitle {
             view.addSubview(titleLabel)
             titleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
             
@@ -91,7 +91,7 @@ class ConfirmationPageViewController: UIViewController {
             lastTopPadding = 24
         }
         
-        if StytchUI.shared.customization.showSubtitle {
+        if StytchMagicLinkUI.shared.customization.showSubtitle {
             view.addSubview(subtitleLabel)
             subtitleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
             
@@ -103,7 +103,7 @@ class ConfirmationPageViewController: UIViewController {
         
         actionButton.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
         
-        if StytchUI.shared.customization.showBrandLogo {
+        if StytchMagicLinkUI.shared.customization.showBrandLogo {
             view.addSubview(poweredView)
             poweredView.anchor(top: actionButton.bottomAnchor, left: nil, bottom: nil, right: nil, padding: .init(top: 0, left: 24, bottom: 0, right: 24))
             poweredView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

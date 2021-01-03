@@ -1,5 +1,5 @@
 //
-//  StytchDelegate.swift
+//  StytchMagicLinkDelegate.swift
 //  StytchSDK
 //
 //  Created by Edgar Kroman on 2020-11-25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc(StytchDelegate) public protocol StytchDelegate {
+@objc(StytchMagicLinkDelegate) public protocol StytchMagicLinkDelegate {
     
     @objc optional func onSuccess(_ result: StytchResult)
     @objc optional func onFailure(_ error: StytchError)
