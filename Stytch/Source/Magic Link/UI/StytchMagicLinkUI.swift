@@ -17,11 +17,10 @@ import UIKit
     
     @objc public var delegate: StytchUIDelegate?
     
-    @objc public func showUI(from presenter: UIViewController) {
+    @objc public func loginViewController() -> UIViewController{
         let stytchViewController = MagicLinkInitialViewController()
-        stytchViewController.modalPresentationStyle = .fullScreen
         let navigationController = UINavigationController(rootViewController: stytchViewController)
-        presenter.present(navigationController, animated: true, completion: nil)
+        return navigationController
     }
     
 }

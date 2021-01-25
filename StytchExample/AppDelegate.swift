@@ -21,6 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         StytchMagicLink.shared.configure(projectID: stytchProjectID, secret: stytchSecretKey, scheme: "stytchapp", host: "stytch.com")
         
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        
+        StytchMagicLink.shared.environment = .test
+        StytchMagicLink.shared.loginMethod = .loginOrInvite
+     //   StytchMagicLinkUI.shared.delegate = self
+        let initialViewController = StytchMagicLinkUI.shared.loginViewController()
+
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
+        
         return true
     }
     
