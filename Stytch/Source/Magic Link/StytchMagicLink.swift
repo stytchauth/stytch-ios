@@ -7,40 +7,45 @@
 
 import UIKit
 
-@objc(Stytch) public class StytchMagicLink: NSObject {
+@objc public protocol StytchMagicLinkImpl {
+    @objc static var shared: StytchMagicLink { get }
+    @objc func configure(projectID: String, secret: String, scheme: String, host: String)
+    @objc var `debug`: Bool { get set }
+    @objc var environment: StytchEnvironment { get set }
+    @objc var loginMethod: StytchLoginMethod { get set }
+    @objc func handleMagicLinkUrl(_ url: URL?) -> Bool
+    @objc func login(email: String)
+}
+
+@objc(SAStytchMagicLink) public class StytchMagicLink: NSObject, StytchMagicLinkImpl {
     
     @objc public static let shared: StytchMagicLink = StytchMagicLink()
-    
-    private override init() {}
-    
-    var MAGIC_SCHEME = ""
-    var MAGIC_HOST = ""
-    
-    var serverManager = StytchMagicLinkServerFlowManager()
-    
-    var DEBUG: Bool = false
-    
-    var loginMagicLink: String {
-        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.LOGIN_MAGIC_PATH)"
-    }
-    
-    var signUpMagicLink: String {
-        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.SIGNUP_MAGIC_PATH)"
-    }
-    
-    var inviteMagicLink: String {
-        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.INVITE_MAGIC_PATH)"
-    }
-    
-    func clearData() {
-        serverManager = StytchMagicLinkServerFlowManager()
-        delegate = nil
-    }
     
     @objc public var environment: StytchEnvironment = .live
     @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
 
     @objc public var delegate: StytchMagicLinkDelegate?
+    
+    @objc public var `debug`: Bool = false
+    
+    internal var loginMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.LOGIN_MAGIC_PATH)"
+    }
+    
+    internal var signUpMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.SIGNUP_MAGIC_PATH)"
+    }
+    
+    internal var inviteMagicLink: String {
+        return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.INVITE_MAGIC_PATH)"
+    }
+    
+    private var MAGIC_SCHEME = ""
+    private var MAGIC_HOST = ""
+    
+    private var serverManager = StytchMagicLinkServerFlowManager()
+    
+    private override init() {}
 
     @objc public func configure(projectID: String, secret: String, scheme: String, host: String) {
         self.MAGIC_SCHEME = scheme
@@ -60,21 +65,26 @@ import UIKit
         }
     }
     
+    private func clearData() {
+        serverManager = StytchMagicLinkServerFlowManager()
+        delegate = nil
+    }
+    
     @objc public func handleMagicLinkUrl(_ url: URL?) -> Bool {
         guard let url = url else { return false }
         
         
-        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.LOGIN_MAGIC_PATH) {
+        if let token = handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.LOGIN_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
         
-        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.SIGNUP_MAGIC_PATH) {
+        if let token = handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.SIGNUP_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
         
-        if let token = StytchMagicLink.handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.INVITE_MAGIC_PATH) {
+        if let token = handleMagicLink(url, scheme: MAGIC_SCHEME, path: StytchConstants.INVITE_MAGIC_PATH) {
             acceptToken(token: token)
             return true
         }
@@ -111,7 +121,7 @@ import UIKit
     // MARK: Deep link handling
     
     // Check if deep url is intended for StytchSDK and parse token by given sheme
-    static func handleMagicLink(_ url: URL?, scheme: String, path: String) -> String? {
+    private  func handleMagicLink(_ url: URL?, scheme: String, path: String) -> String? {
         guard let url = url else { return nil }
         
         if let host = url.host, let urlScheme = url.scheme, let token = url.valueOf(StytchConstants.MAGIC_TOKEN_KEY),

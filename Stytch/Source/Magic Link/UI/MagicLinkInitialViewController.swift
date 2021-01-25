@@ -96,8 +96,6 @@ class MagicLinkInitialViewController: UIViewController {
         var lastTopAnchor = view.safeAreaLayoutGuide.topAnchor
         var lastTopPadding: CGFloat = 32
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancelButton))
-        
         if StytchMagicLinkUI.shared.customization.showTitle {
             view.addSubview(titleLabel)
             titleLabel.anchor(top: lastTopAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, padding: .init(top: lastTopPadding, left: 24, bottom: 0, right: 24))
@@ -144,10 +142,6 @@ class MagicLinkInitialViewController: UIViewController {
     }
     
     // MARK: Actions
-        
-    @objc func handleCancelButton() {
-        dismiss(animated: true, completion: nil)
-    }
     
     @objc func handleActionButton() {
         showLoading()
