@@ -7,9 +7,10 @@
 
 import UIKit
 
-@objc public protocol StytchMagicLinkImpl {
+@objc private protocol StytchMagicLinkImpl {
     @objc static var shared: StytchMagicLink { get }
     @objc func configure(projectID: String, secret: String, scheme: String, host: String)
+    @objc func configure(projectID: String, secret: String, scheme: String, host: String, universalLink: String)
     @objc var `debug`: Bool { get set }
     @objc var environment: StytchEnvironment { get set }
     @objc var loginMethod: StytchLoginMethod { get set }
@@ -29,27 +30,51 @@ import UIKit
     @objc public var `debug`: Bool = false
     
     internal var loginMagicLink: String {
+        if let UNIVERSAL_LINK = UNIVERSAL_LINK{
+            return "\(UNIVERSAL_LINK)\(StytchConstants.LOGIN_MAGIC_PATH)"
+        }
         return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.LOGIN_MAGIC_PATH)"
     }
     
     internal var signUpMagicLink: String {
+        if let UNIVERSAL_LINK = UNIVERSAL_LINK{
+            return "\(UNIVERSAL_LINK)\(StytchConstants.SIGNUP_MAGIC_PATH)"
+        }
         return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.SIGNUP_MAGIC_PATH)"
     }
     
     internal var inviteMagicLink: String {
+        if let UNIVERSAL_LINK = UNIVERSAL_LINK{
+            return "\(UNIVERSAL_LINK)\(StytchConstants.INVITE_MAGIC_PATH)"
+        }
         return "\(MAGIC_SCHEME)://\(MAGIC_HOST)\(StytchConstants.INVITE_MAGIC_PATH)"
     }
     
     private var MAGIC_SCHEME = ""
     private var MAGIC_HOST = ""
+    private var UNIVERSAL_LINK: String?
     
     private var serverManager = StytchMagicLinkServerFlowManager()
     
     private override init() {}
-
-    @objc public func configure(projectID: String, secret: String, scheme: String, host: String) {
+    
+    @objc public func configure(projectID: String,
+                                secret: String,
+                                scheme: String,
+                                host: String) {
         self.MAGIC_SCHEME = scheme
         self.MAGIC_HOST = host
+        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
+    }
+
+    @objc public func configure(projectID: String,
+                                secret: String,
+                                scheme: String = "https",
+                                host: String,
+                                universalLink: String) {
+        self.MAGIC_SCHEME = scheme
+        self.MAGIC_HOST = host
+        self.UNIVERSAL_LINK = universalLink
         StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
     }
     

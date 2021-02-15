@@ -18,14 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        StytchMagicLink.shared.configure(projectID: stytchProjectID, secret: stytchSecretKey, host: "www.public-assets.stytch.com", universalLink: "https://www.public-assets.stytch.com")
         
-        StytchMagicLink.shared.configure(projectID: stytchProjectID, secret: stytchSecretKey, scheme: "stytchapp", host: "stytch.com")
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         StytchMagicLink.shared.environment = .test
         StytchMagicLink.shared.loginMethod = .loginOrInvite
-     //   StytchMagicLinkUI.shared.delegate = self
+        StytchMagicLinkUI.shared.delegate = self
         let initialViewController = StytchMagicLinkUI.shared.loginViewController()
 
         self.window?.rootViewController = initialViewController
@@ -48,3 +48,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate: StytchUIDelegate {
+    
+    func onEvent(_ event: StytchEvent) {
+        print("Event Type: \(event.type)")
+        print("Is user created: \(event.created)")
+        print("User ID: \(event.userId)")
+    }
+    
+    func onSuccess(_ result: StytchResult) {
+        print("Success: Request ID: \(result.requestId)\nUser ID: \(result.userId)")
+        //showAlert(title: "Success", message: "Request ID: \(result.requestId)\nUser ID: \(result.userId)")
+    }
+    
+    func onFailure() {
+        print("Failure: SDK closed")
+        //showAlert(title: "Failure", message: "SDK closed")
+    }
+}

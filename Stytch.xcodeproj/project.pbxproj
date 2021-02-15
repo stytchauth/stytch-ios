@@ -72,6 +72,20 @@
 		85B19F97257E247A00E088B1 /* StytchLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F96257E247A00E088B1 /* StytchLog.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		4D36458125C64CA300137FAF /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = sourcecode.metal;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# metal\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		8578A7E8257A549900C3E894 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -97,6 +111,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4D36458225C64CB900137FAF /* StytchExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchExample.entitlements; sourceTree = "<group>"; };
 		4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkConfirmationPageViewController.swift; sourceTree = "<group>"; };
 		4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkApi.swift; sourceTree = "<group>"; };
 		8578A771257A53AE00C3E894 /* Stytch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stytch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -345,6 +360,7 @@
 		8578A7D0257A546800C3E894 /* StytchExample */ = {
 			isa = PBXGroup;
 			children = (
+				4D36458225C64CB900137FAF /* StytchExample.entitlements */,
 				8578A7D1257A546800C3E894 /* AppDelegate.swift */,
 				8578A7D5257A546800C3E894 /* ViewController.swift */,
 				8578A7D7257A546800C3E894 /* Main.storyboard */,
@@ -394,6 +410,7 @@
 				8578A76F257A53AE00C3E894 /* Resources */,
 			);
 			buildRules = (
+				4D36458125C64CA300137FAF /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -715,8 +732,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = XG6U8693WY;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -747,8 +766,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = XG6U8693WY;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -781,6 +802,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StytchExample/StytchExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XG6U8693WY;
 				INFOPLIST_FILE = StytchExample/Info.plist;
@@ -788,7 +810,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.StytchExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.StytchExample-1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -800,6 +822,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = StytchExample/StytchExample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XG6U8693WY;
 				INFOPLIST_FILE = StytchExample/Info.plist;
@@ -807,7 +830,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.StytchExample;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.StytchExample-1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
