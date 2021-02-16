@@ -48,9 +48,9 @@ class StytchMagicLinkServerFlowManager {
     
     private func sendLoginOrInvite(email: String, handler: @escaping (StytchError?)->() ) {
         
-        let linkModel = PostLoginSignModel(email: email)
-        
-        StytchMagicLinkApi.shared.loginOrSignUp(model: linkModel) { (response) in
+        let linkModel = PostLoginInviteModel(email: email)
+         
+        StytchMagicLinkApi.shared.loginOrInvite(model: linkModel) { (response) in
             self.email = email
             self.loginHandler(response: response, handler: handler)
         }
