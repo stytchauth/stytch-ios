@@ -39,9 +39,7 @@ class ViewController: UIViewController {
 //        customizeStytch()
         
         StytchMagicLink.shared.environment = .test
-        StytchMagicLink.shared.loginMethod = .loginOrInvite
-        StytchMagicLinkUI.shared.delegate = self
-   //     StytchMagicLinkUI.shared.showUI(from: self)
+        StytchMagicLink.shared.loginMethod = .loginOrInvite   //     StytchMagicLinkUI.shared.showUI(from: self)
     }
     
     func customizeStytch() {
@@ -95,25 +93,4 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 }
-
-extension ViewController: StytchUIDelegate {
-    
-    func onEvent(_ event: StytchEvent) {
-        print("Event Type: \(event.type)")
-        print("Is user created: \(event.created)")
-        print("User ID: \(event.userId)")
-    }
-    
-    func onSuccess(_ result: StytchResult) {
-        showAlert(title: "Success", message: "Request ID: \(result.requestId)\nUser ID: \(result.userId)")
-    }
-    
-    func onFailure() {
-        showAlert(title: "Failure", message: "SDK closed")
-    }
-    
-    
-}
-
-
 

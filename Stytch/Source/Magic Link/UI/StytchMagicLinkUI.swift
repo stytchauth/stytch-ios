@@ -15,8 +15,6 @@ import UIKit
     
     @objc public let customization = StytchUICustomization()
     
-    @objc public var delegate: StytchUIDelegate?
-    
     @objc public func loginViewController() -> UIViewController{
         let stytchViewController = MagicLinkInitialViewController()
         let navigationController = UINavigationController(rootViewController: stytchViewController)
