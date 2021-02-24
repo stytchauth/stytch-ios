@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 @objc private protocol StytchMagicLinkImpl {
     @objc static var shared: StytchMagicLink { get }
     @objc func configure(projectID: String, secret: String, scheme: String, host: String)
@@ -17,8 +17,9 @@ import UIKit
     @objc func handleMagicLinkUrl(_ url: URL?) -> Bool
     @objc func login(email: String)
 }
+*/
 
-@objc(SAStytchMagicLink) public class StytchMagicLink: NSObject, StytchMagicLinkImpl {
+@objc(SAStytchMagicLink) public class StytchMagicLink: NSObject {
     
     @objc public static let shared: StytchMagicLink = StytchMagicLink()
     
@@ -117,28 +118,27 @@ import UIKit
         return false
     }
     
-    @objc public func login(email: String) {
+    @objc public func login(email: String, success: @escaping (String) ->(), failure: @escaping (StytchError) ->()){
         
-        if !email.isValidEmail {
-            self.delegate?.onFailure?(.invalidEmail)
+        guard email.isValidEmail else{
+            failure(.invalidEmail)
             return
         }
         
         serverManager.sendMagicLink(to: email) { error in
             if let error = error {
-                self.delegate?.onFailure?(error)
+                failure(error)
             } else {
                 
                 if let userModel = self.serverManager.userResponse {
                     if userModel.userCreated {
-                        StytchMagicLinkUI.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
+                        StytchMagicLink.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
                     } else {
-                        StytchMagicLinkUI.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
+                        StytchMagicLink.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
                     }
                     
                 }
-                
-                self.delegate?.onMagicLinkSent?(email)
+                success(email)
             }
         }
     }

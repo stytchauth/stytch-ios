@@ -13,5 +13,6 @@ import Foundation
     @objc optional func onFailure(_ error: StytchError)
     @objc optional func onMagicLinkSent(_ email: String)
     @objc optional func onDeepLinkHandled()
+    @objc optional func onEvent(_ event: StytchEvent)
     
 }

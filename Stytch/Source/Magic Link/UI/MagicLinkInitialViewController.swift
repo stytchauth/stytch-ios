@@ -80,7 +80,7 @@ class MagicLinkInitialViewController: UIViewController {
         
         view.backgroundColor = StytchMagicLinkUI.shared.customization.backgroundColor
         
-        StytchMagicLink.shared.delegate = self
+       // StytchMagicLink.shared.delegate = self
         
         hideKeyboardWhenTappedAround()
         
@@ -146,7 +146,14 @@ class MagicLinkInitialViewController: UIViewController {
     @objc func handleActionButton() {
         showLoading()
         if self.textField.isHidden == false {
-            StytchMagicLink.shared.login(email: self.textField.text)
+            StytchMagicLink.shared.login(email: self.textField.text,
+                                         success: { [weak self] email in
+                                            self?.hideLoading()
+                                            self?.presentConfirmationScreen(email)
+                                         },
+                                         failure: { [weak self] error in
+                                            self?.handleError(error)
+                                         })
         } else {
             self.changeToLoginUI()
         }
@@ -161,6 +168,29 @@ class MagicLinkInitialViewController: UIViewController {
         activityIndicatorView.stopAnimating()
         activityIndicatorView.isHidden = true
     }
+    
+    func presentConfirmationScreen(_ email: String) {
+        //Present a new VC here. Rather than just changing the UI
+        let confirmationPage = MagicLinkConfirmationViewController(email: email)
+        self.navigationController?.pushViewController(confirmationPage, animated: true)
+    }
+
+    func handleError(_ error: StytchError) {
+        hideLoading()
+        switch error {
+        case .unknown,
+             .invalidEmail:
+            self.changeToLoginUI()
+        case .invalidConfiguration:
+            StytchMagicLink.shared.delegate?.onFailure?(error)
+            return
+        default:
+            break
+        }
+        
+        showAlert(title: "stytch_error_title".localized, message: "\(error.message)")
+    }
+    
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -240,7 +270,7 @@ class MagicLinkInitialViewController: UIViewController {
                  showInputField: false)
     }
 }
-
+/*
 extension MagicLinkInitialViewController: StytchMagicLinkDelegate {
     
     func onSuccess(_ result: StytchResult) {
@@ -250,23 +280,7 @@ extension MagicLinkInitialViewController: StytchMagicLinkDelegate {
         }
     }
     
-    func onFailure(_ error: StytchError) {
-        hideLoading()
-        switch error {
-        case .unknown,
-             .invalidEmail:
-            self.changeToLoginUI()
-        case .invalidConfiguration:
-            dismiss(animated: true) {
-                StytchMagicLinkUI.shared.delegate?.onFailure()
-            }
-            return
-        default:
-            break
-        }
-        
-        showAlert(title: "stytch_error_title".localized, message: "\(error.message)")
-    }
+    
     
     func onMagicLinkSent(_ email: String) {
         //Present a new VC here. Rather than just changing the UI
@@ -279,3 +293,4 @@ extension MagicLinkInitialViewController: StytchMagicLinkDelegate {
     }
     
 }
+*/
