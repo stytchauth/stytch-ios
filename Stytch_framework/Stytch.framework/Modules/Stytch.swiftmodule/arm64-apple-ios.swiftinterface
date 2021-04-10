@@ -11,6 +11,7 @@ import WebKit
   @objc optional func onFailure(_ error: Stytch.StytchError)
   @objc optional func onMagicLinkSent(_ email: Swift.String)
   @objc optional func onDeepLinkHandled()
+  @objc optional func onEvent(_ event: Stytch.StytchEvent)
 }
 @objc(StytchEnvironment) public enum StytchEnvironment : Swift.Int {
   case test
@@ -30,7 +31,7 @@ import WebKit
   @objc public func configure(projectID: Swift.String, secret: Swift.String, scheme: Swift.String, host: Swift.String)
   @objc public func configure(projectID: Swift.String, secret: Swift.String, scheme: Swift.String = "https", host: Swift.String, universalLink: Swift.String)
   @objc public func handleMagicLinkUrl(_ url: Foundation.URL?) -> Swift.Bool
-  @objc public func login(email: Swift.String)
+  @objc public func login(email: Swift.String, success: @escaping (Swift.String) -> (), failure: @escaping (Stytch.StytchError) -> ())
   @objc deinit
 }
 @objc(StytchLoginMethod) public enum StytchLoginMethod : Swift.Int {
@@ -41,11 +42,6 @@ import WebKit
   public var rawValue: Swift.Int {
     get
   }
-}
-@objc(StytchSDKDelegate) public protocol StytchUIDelegate {
-  @objc optional func onEvent(_ event: Stytch.StytchEvent)
-  @objc func onSuccess(_ result: Stytch.StytchResult)
-  @objc func onFailure()
 }
 @_inheritsConvenienceInitializers @objc(StytchUICustomization) public class StytchUICustomization : ObjectiveC.NSObject {
   @objc final public let titleStyle: Stytch.StytchTextStyle
@@ -75,7 +71,6 @@ import WebKit
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(StytchMagicLinkUI) public class StytchMagicLinkUI : ObjectiveC.NSObject {
   @objc public static var shared: Stytch.StytchMagicLinkUI
   @objc final public let customization: Stytch.StytchUICustomization
-  @objc public var delegate: Stytch.StytchUIDelegate?
   @objc public func loginViewController() -> UIKit.UIViewController
   @objc deinit
 }
