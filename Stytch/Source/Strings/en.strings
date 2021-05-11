@@ -1,7 +1,7 @@
 "stytch_login_title" = "Sign up or log in";
 "stytch_login_description" = "Sign up or log in with your email, no password needed.";
 "stytch_login_email_hint" = "example@email.com";
-"stytch_login_button_title" = "Sign in with email";
+"stytch_login_button_title" = "Continue with email";
 "stytch_login_waiting_verification_title" = "Email sent to %@";
 "stytch_login_waiting_verification_description" = "Didn't get an email? Check your spam folder, or";
 "stytch_login_waiting_verification_button_title" = "Resend magic link";
