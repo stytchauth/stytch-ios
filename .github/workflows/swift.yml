@@ -22,9 +22,3 @@ jobs:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
       run: |
         xcodebuild test -project "$XCodeProj" -scheme "$XC_SCHEME" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 11,OS=14.4"
-    
-    - name: Publish to CocoaPod register
-      env:
-        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-      run: |
-        pod trunk push Stytch.podspec
