@@ -13,20 +13,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let stytchProjectID = "project-test-d0dbafe6-a019-47ea-8550-d021c1c76ea9"
-    let stytchSecretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhLFObauXx07c="
+    let liveStytchProjectID = "project-live-4d957d53-b033-4cdd-8b59-c3a36e566be8"
+    let liveStytchSecretKey = "secret-live-NnT2y2_DKI29uUui3nnMMdnDOZ6I0b0eveg="
+    
+    let testStytchProjectID = "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df"
+    let testStytchSecretKey = "secret-test-ruIeuu_RLEfPNWJNwaLDLFAdz-2_F3vyNoY="
+    
+    
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        StytchMagicLink.shared.configure(projectID: stytchProjectID, secret: stytchSecretKey, scheme: "stytchapp", host: "stytch.com")
+        StytchOTP.shared.configure(projectID: testStytchProjectID, secret: testStytchSecretKey)
         
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        StytchMagicLink.shared.environment = .test
+        StytchOTP.shared.environment = .test
         StytchMagicLink.shared.loginMethod = .loginOrInvite
-        StytchMagicLink.shared.delegate = self
-        let initialViewController = StytchMagicLinkUI.shared.loginViewController()
+       // StytchMagicLink.shared.delegate = self
+        StytchSMSUI.shared.delegate = self
+        let initialViewController = StytchSMSUI.shared.loginViewController()
+        
 
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
@@ -48,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-extension AppDelegate: StytchMagicLinkDelegate {
+extension AppDelegate: StytchSMSUIDelegate {
     func onSuccess(_ result: StytchResult){
         let authedVC = AuthedViewController()
 

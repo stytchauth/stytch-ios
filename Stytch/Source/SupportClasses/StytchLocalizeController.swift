@@ -30,6 +30,7 @@ class StytchLocalizeController: NSObject {
     }
     
     func stringFor(_ key: String) -> String {
+        print("Ethan : \(enStrings)")
         return enStrings[key] ?? ""
     }
 
