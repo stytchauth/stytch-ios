@@ -1,0 +1,15 @@
+"stytch_login_title" = "Enter phone number";
+"stytch_login_sms_hint" = "(123) 456-7890";
+"stytch_login_description" = "Sign up or log in with a one-time passcode sent to your phone number.";
+"stytch_login_button_title" = "Continue";
+"stytch_login_waiting_verification_title" = "Enter passcode";
+"stytch_login_waiting_verification_description" = "A 6-digit passcode was sent to you at %@";
+"stytch_login_waiting_verification_description" = "Didn't get it?";
+"stytch_login_waiting_verification_button_title" = "Resend code";
+"stytch_watermark_powered_by" = "Powered by";
+"stytch_error_title" = "Error!";
+"stytch_error_unknown" = "Something went wrong";
+"stytch_error_bad_token" = "Something went wrong";
+"stytch_error_no_internet" = "Could not connect to server";
+"stytch_error_invalid_input" = "Invalid phone number";
+"stytch_error_invalid_sms_token" = "Code could not be authenticated";
