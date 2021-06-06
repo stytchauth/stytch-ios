@@ -18,8 +18,8 @@ class StytchMagicLinkServerFlowManager {
         switch StytchMagicLink.shared.loginMethod {
         case .loginOrSignUp:
             sendLoginOrSignUp(email: email, handler: handler)
-        case .loginOrInvite:
-            sendLoginOrInvite(email: email, handler: handler)
+        case .createAsPending:
+            sendCreateAsPending(email: email, handler: handler)
         }
     }
     
@@ -46,11 +46,11 @@ class StytchMagicLinkServerFlowManager {
         }
     }
     
-    private func sendLoginOrInvite(email: String, handler: @escaping (StytchError?)->() ) {
+    private func sendCreateAsPending(email: String, handler: @escaping (StytchError?)->() ) {
         
         let linkModel = PostLoginInviteModel(email: email)
          
-        StytchMagicLinkApi.shared.loginOrInvite(model: linkModel) { (response) in
+        StytchMagicLinkApi.shared.createAsPending(model: linkModel) { (response) in
             self.email = email
             self.loginHandler(response: response, handler: handler)
         }

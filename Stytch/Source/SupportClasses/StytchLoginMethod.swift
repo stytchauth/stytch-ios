@@ -9,5 +9,5 @@ import Foundation
 
 @objc(StytchLoginMethod) public enum StytchLoginMethod: Int {
     case loginOrSignUp
-    case loginOrInvite
+    case createAsPending
 }

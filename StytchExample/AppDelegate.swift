@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         StytchMagicLink.shared.environment = .test
-        StytchMagicLink.shared.loginMethod = .loginOrInvite
+        StytchMagicLink.shared.loginMethod = .createAsPending
         StytchMagicLink.shared.delegate = self
         let initialViewController = StytchMagicLinkUI.shared.loginViewController()
 
