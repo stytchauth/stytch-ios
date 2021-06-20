@@ -53,7 +53,7 @@ import UIKit
     }
 
 
-    func loginOrCreateUserBySMS(phoneNumber: String,
+    @objc public func loginOrCreateUserBySMS(phoneNumber: String,
                                 expirationTime: Int = 2,
                                 success: @escaping (SMSModel) ->(),
                                 failure: @escaping (StytchError) ->()){
@@ -67,7 +67,7 @@ import UIKit
         serverManager.loginOrCreateUserBySMS(to: phoneNumber, expirationTime: expirationTime, success: success, failure: failure)
     }
 
-    func authenticateOTP(_ code: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->()){
+    @objc public func authenticateOTP(_ code: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->()){
         guard code.isValidOTP else{
             //@Ethan create invalid phone number error
             failure(.invalidEmail)
