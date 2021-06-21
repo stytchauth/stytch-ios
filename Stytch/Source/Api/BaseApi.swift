@@ -59,7 +59,8 @@ class BaseApi: NSObject {
     func createDataTask<T: Codable>(_ request: URLRequest, handler: @escaping(BaseResponseModel<T>)->()) {
         
         let dataTask = defaultSession.dataTask(with: request, completionHandler: { data, response, error in
-            
+            let str = String(decoding: data!, as: UTF8.self)
+            print("@ethan \(str)")
             let model: BaseResponseModel<T> = self.baseCompletionHandler(data: data, urlResponse: response, error: error)
             
             DispatchQueue.main.async {

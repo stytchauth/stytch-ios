@@ -66,14 +66,6 @@ class StytchMagicLinkApi {
             request.send(handler: handler)
         }
         
-        func createAsPending(model: PostLoginInviteModel, handler: @escaping (BaseResponseModel<UserModel>) -> ()) {
-            let request = BaseRequest<PostLoginInviteModel, UserModel>
-                .init(URL(string: host + "/magic_links/login_or_invite")!, method: .POST, object: model,
-                      headers: authHeader)
-            
-            request.send(handler: handler)
-        }
-        
         func authenticateMagicLink(token: String, handler: @escaping (BaseResponseModel<MagicLinkModel>) -> ()) {
             let request = BaseRequest<EmptyModel, MagicLinkModel>
                 .init(URL(string: host + "/magic_links/\(token)/authenticate")!, method: .POST, object: EmptyModel(),

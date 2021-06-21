@@ -13,14 +13,12 @@ class StytchMagicLinkServerFlowManager {
     
     var email: String = ""
     
-    func sendMagicLink(to email: String, handler: @escaping (StytchError?)->() ) {
-        
-        switch StytchMagicLink.shared.loginMethod {
-        case .loginOrSignUp:
-            sendLoginOrSignUp(email: email, handler: handler)
-        case .createAsPending:
-            sendCreateAsPending(email: email, handler: handler)
-        }
+    func sendMagicLink(to email: String,
+                       createUserAsPending: Bool,
+                       handler: @escaping (StytchError?)->() ) {
+        sendLoginOrSignUp(email: email,
+                          createUserAsPending: createUserAsPending,
+                          handler: handler)
     }
     
     private func loginHandler(response: (BaseResponseModel<UserModel>), handler: @escaping (StytchError?)->() ) {
@@ -36,21 +34,14 @@ class StytchMagicLinkServerFlowManager {
         
     }
     
-    private func sendLoginOrSignUp(email: String, handler: @escaping (StytchError?)->() ) {
+    private func sendLoginOrSignUp(email: String,
+                                   createUserAsPending: Bool,
+                                   handler: @escaping (StytchError?)->() ) {
         
-        let linkModel = PostLoginSignModel(email: email)
+        let linkModel = PostLoginSignModel(email: email,
+                                           createUserAsPending: createUserAsPending)
         
         StytchMagicLinkApi.shared.loginOrSignUp(model: linkModel) { (response) in
-            self.email = email
-            self.loginHandler(response: response, handler: handler)
-        }
-    }
-    
-    private func sendCreateAsPending(email: String, handler: @escaping (StytchError?)->() ) {
-        
-        let linkModel = PostLoginInviteModel(email: email)
-         
-        StytchMagicLinkApi.shared.createAsPending(model: linkModel) { (response) in
             self.email = email
             self.loginHandler(response: response, handler: handler)
         }

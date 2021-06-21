@@ -66,7 +66,6 @@
 		8578A7EE257A553E00C3E894 /* StytchEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8578A7ED257A553E00C3E894 /* StytchEnvironment.swift */; };
 		85B19F74257E0E7800E088B1 /* en.strings in Resources */ = {isa = PBXBuildFile; fileRef = 85B19F73257E0E7800E088B1 /* en.strings */; };
 		85B19F7A257E0FAD00E088B1 /* StytchLocalizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F79257E0FAD00E088B1 /* StytchLocalizeController.swift */; };
-		85B19F8B257E1DD200E088B1 /* StytchLoginMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F8A257E1DD200E088B1 /* StytchLoginMethod.swift */; };
 		85B19F8F257E1F7400E088B1 /* PostLoginSignModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F8E257E1F7400E088B1 /* PostLoginSignModel.swift */; };
 		85B19F93257E1F7D00E088B1 /* PostLoginInviteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F92257E1F7D00E088B1 /* PostLoginInviteModel.swift */; };
 		85B19F97257E247A00E088B1 /* StytchLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B19F96257E247A00E088B1 /* StytchLog.swift */; };
@@ -159,7 +158,6 @@
 		8578A7ED257A553E00C3E894 /* StytchEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchEnvironment.swift; sourceTree = "<group>"; };
 		85B19F73257E0E7800E088B1 /* en.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = en.strings; sourceTree = "<group>"; };
 		85B19F79257E0FAD00E088B1 /* StytchLocalizeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchLocalizeController.swift; sourceTree = "<group>"; };
-		85B19F8A257E1DD200E088B1 /* StytchLoginMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchLoginMethod.swift; sourceTree = "<group>"; };
 		85B19F8E257E1F7400E088B1 /* PostLoginSignModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostLoginSignModel.swift; sourceTree = "<group>"; };
 		85B19F92257E1F7D00E088B1 /* PostLoginInviteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostLoginInviteModel.swift; sourceTree = "<group>"; };
 		85B19F96257E247A00E088B1 /* StytchLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchLog.swift; sourceTree = "<group>"; };
@@ -298,7 +296,6 @@
 				8578A791257A53CA00C3E894 /* StytchConstants.swift */,
 				8578A7ED257A553E00C3E894 /* StytchEnvironment.swift */,
 				85B19F79257E0FAD00E088B1 /* StytchLocalizeController.swift */,
-				85B19F8A257E1DD200E088B1 /* StytchLoginMethod.swift */,
 				85B19F96257E247A00E088B1 /* StytchLog.swift */,
 			);
 			path = SupportClasses;
@@ -538,7 +535,6 @@
 				8578A7EE257A553E00C3E894 /* StytchEnvironment.swift in Sources */,
 				85B19F97257E247A00E088B1 /* StytchLog.swift in Sources */,
 				8578A7B7257A53CB00C3E894 /* StytchMagicLink.swift in Sources */,
-				85B19F8B257E1DD200E088B1 /* StytchLoginMethod.swift in Sources */,
 				8578A7AC257A53CA00C3E894 /* StytchCustomization.swift in Sources */,
 				8578A7C2257A53CB00C3E894 /* MultipartObject.swift in Sources */,
 				8578A7C7257A53CB00C3E894 /* UIView+Constraints.swift in Sources */,

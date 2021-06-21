@@ -13,7 +13,6 @@ import UIKit
     @objc func configure(projectID: String, secret: String, scheme: String, host: String, universalLink: String)
     @objc var `debug`: Bool { get set }
     @objc var environment: StytchEnvironment { get set }
-    @objc var loginMethod: StytchLoginMethod { get set }
     @objc func handleMagicLinkUrl(_ url: URL?) -> Bool
     @objc func login(email: String)
 }
@@ -24,7 +23,8 @@ import UIKit
     @objc public static let shared: StytchMagicLink = StytchMagicLink()
     
     @objc public var environment: StytchEnvironment = .live
-    @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
+    
+    @objc public var createUserAsPending: Bool = false
 
     @objc public var delegate: StytchMagicLinkDelegate?
     
@@ -125,7 +125,7 @@ import UIKit
             return
         }
         
-        serverManager.sendMagicLink(to: email) { error in
+        serverManager.sendMagicLink(to: email, createUserAsPending: createUserAsPending) { error in
             if let error = error {
                 failure(error)
             } else {

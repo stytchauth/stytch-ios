@@ -13,8 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let stytchProjectID = "project-test-d0dbafe6-a019-47ea-8550-d021c1c76ea9"
-    let stytchSecretKey = "secret-test-6-ma0PNENqjBVX6Dx2aPUIdhLFObauXx07c="
+
+    let stytchProjectID = "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df"
+    let stytchSecretKey = "secret-test-ruIeuu_RLEfPNWJNwaLDLFAdz-2_F3vyNoY="
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -24,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         StytchMagicLink.shared.environment = .test
-        StytchMagicLink.shared.loginMethod = .createAsPending
+        StytchMagicLink.shared.createUserAsPending = true
         StytchMagicLink.shared.delegate = self
         let initialViewController = StytchMagicLinkUI.shared.loginViewController()
 
