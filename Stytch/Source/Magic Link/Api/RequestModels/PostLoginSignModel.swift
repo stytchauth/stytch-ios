@@ -9,8 +9,8 @@ import Foundation
 
 class PostLoginSignModel: Codable {
     var email: String?
-    var login_magic_link_url: String = "https://test.com/authenticate"//StytchMagicLink.shared.loginMagicLink
-    var signup_magic_link_url: String = "https://test.com/authenticate"//StytchMagicLink.shared.signUpMagicLink
+    var login_magic_link_url: String = StytchMagicLink.shared.loginMagicLink
+    var signup_magic_link_url: String = StytchMagicLink.shared.signUpMagicLink
     var login_expiration_minutes: Int = 60
     var signup_expiration_minutes: Int = 60 * 24 * 7
     var create_user_as_pending: Bool = false
