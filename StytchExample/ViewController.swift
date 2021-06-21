@@ -39,7 +39,7 @@ class ViewController: UIViewController {
 //        customizeStytch()
         
         StytchMagicLink.shared.environment = .test
-        StytchMagicLink.shared.loginMethod = .loginOrInvite   //     StytchMagicLinkUI.shared.showUI(from: self)
+ //       StytchMagicLinkUI.shared.showUI(from: self)
     }
     
     func customizeStytch() {
