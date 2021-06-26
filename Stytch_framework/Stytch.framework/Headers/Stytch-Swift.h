@@ -259,7 +259,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) SAStytchMagi
 - (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host;
 - (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host universalLink:(NSString * _Nonnull)universalLink;
 - (BOOL)handleMagicLinkUrl:(NSURL * _Nullable)url SWIFT_WARN_UNUSED_RESULT;
-- (void)loginWithEmail:(NSString * _Nonnull)email;
+- (void)loginWithEmail:(NSString * _Nonnull)email success:(void (^ _Nonnull)(NSString * _Nonnull))success failure:(void (^ _Nonnull)(enum StytchError))failure;
 @end
 
 @class StytchResult;
@@ -271,10 +271,10 @@ SWIFT_PROTOCOL_NAMED("StytchMagicLinkDelegate")
 - (void)onFailure:(enum StytchError)error;
 - (void)onMagicLinkSent:(NSString * _Nonnull)email;
 - (void)onDeepLinkHandled;
+- (void)onEvent:(StytchEvent * _Nonnull)event;
 @end
 
 @class StytchUICustomization;
-@protocol StytchSDKDelegate;
 @class UIViewController;
 
 SWIFT_CLASS_NAMED("StytchMagicLinkUI")
@@ -284,7 +284,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StytchMagicL
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @property (nonatomic, readonly, strong) StytchUICustomization * _Nonnull customization;
-@property (nonatomic, strong) id <StytchSDKDelegate> _Nullable delegate;
 - (UIViewController * _Nonnull)loginViewController SWIFT_WARN_UNUSED_RESULT;
 @end
 
@@ -327,16 +326,6 @@ SWIFT_CLASS_NAMED("StytchUICustomization")
 @property (nonatomic) BOOL showBrandLogo;
 @property (nonatomic, strong) UIColor * _Nonnull backgroundColor;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
-@end
-
-
-SWIFT_PROTOCOL_NAMED("StytchUIDelegate")
-@protocol StytchSDKDelegate
-@optional
-- (void)onEvent:(StytchEvent * _Nonnull)event;
-@required
-- (void)onSuccess:(StytchResult * _Nonnull)result;
-- (void)onFailure;
 @end
 
 

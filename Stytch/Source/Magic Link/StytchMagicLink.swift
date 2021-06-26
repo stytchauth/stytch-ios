@@ -53,7 +53,7 @@ import UIKit
     
     private var MAGIC_SCHEME = ""
     private var MAGIC_HOST = ""
-    private var UNIVERSAL_LINK: String?
+    private var UNIVERSAL_LINK: URL?
     
     private var serverManager = StytchMagicLinkServerFlowManager()
     
@@ -70,11 +70,9 @@ import UIKit
 
     @objc public func configure(projectID: String,
                                 secret: String,
-                                scheme: String = "https",
-                                host: String,
-                                universalLink: String) {
-        self.MAGIC_SCHEME = scheme
-        self.MAGIC_HOST = host
+                                universalLink: URL) {
+        self.MAGIC_SCHEME = "https"
+        self.MAGIC_HOST = universalLink.host ?? ""
         self.UNIVERSAL_LINK = universalLink
         StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
     }
