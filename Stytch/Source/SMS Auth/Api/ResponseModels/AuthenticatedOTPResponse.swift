@@ -19,6 +19,12 @@ import Foundation
         case methodId = "method_id"
     }
 
+    public init(userId: String, requestId: String, methodId: String){
+        self.userId = userId
+        self.requestId = requestId
+        self.methodId = methodId
+    }
+
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         userId = try values.decode(String.self, forKey: .userId)

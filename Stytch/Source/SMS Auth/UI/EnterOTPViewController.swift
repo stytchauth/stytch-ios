@@ -177,19 +177,25 @@ class EnterOTPViewController: UIViewController {
     // MARK: Actions
 
     @objc func handleActionButton() {
+        let fields = textFields.map { $0.textField.text ?? ""}
+        let code = fields.joined()
+        guard code.count == StytchOTP.codeLength else{
+            //@Ethan present error for incomplete code
+            return
+        }
         showLoading()
-        StytchOTP.shared.loginOrCreateUserBySMS(phoneNumber: phoneNumber) { [weak self] smsModel in
+        Stytch.shared.otp.authenticateOTP(code, success: { [weak self] smsModel in
             DispatchQueue.main.async{
                 self?.hideLoading()
                 let result = StytchResult(userId: smsModel.userId, requestId: smsModel.requestId)
                 self?.delegate?.onSuccess?(result)
             }
-        } failure: { [weak self] error in
+        }, failure: { [weak self] error in
             DispatchQueue.main.async{
                 self?.hideLoading()
                 self?.delegate?.onFailure?(error)
             }
-        }
+        })
     }
 }
 
