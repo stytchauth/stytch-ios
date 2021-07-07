@@ -17,7 +17,6 @@ class StytchOTPApi {
         api.secretKey = secretKey
         StytchOTPApi.shared = api
     }
-
     private var host: String {
         switch StytchOTP.shared.environment {
         case .test:
@@ -62,7 +61,6 @@ class StytchOTPApi {
         let request = BaseRequest<AuthenticateOTPRequest, AuthenticatedOTPResponse>
             .init(URL(string: host + "/otp/authenticate")!, method: .POST, object: model,
                   headers: authHeader)
-
         request.send(handler: handler)
     }
 }

@@ -27,7 +27,6 @@ extension NSMutableAttributedString {
     }
     /* Other styling methods */
     func orangeHighlight(_ value:String) -> NSMutableAttributedString {
-
         let attributes:[NSAttributedString.Key : Any] = [
             .font :  normalFont,
             .foregroundColor : UIColor.white,

@@ -23,7 +23,6 @@ class EnterPhoneNumberViewController: UIViewController {
         label.textColor = StytchMagicLinkUI.shared.customization.titleStyle.color
         return label
     }()
-
     var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +32,6 @@ class EnterPhoneNumberViewController: UIViewController {
         label.textColor = StytchMagicLinkUI.shared.customization.subtitleStyle.color
         return label
     }()
-
     var textFieldIcon: UIImageView = {
         let textFieldIcon = UIImageView()
         textFieldIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +39,6 @@ class EnterPhoneNumberViewController: UIViewController {
         textFieldIcon.image = UIImage(named: "american_flag")
         return textFieldIcon
     }()
-
     var textFieldLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +48,6 @@ class EnterPhoneNumberViewController: UIViewController {
         label.textColor = StytchMagicLinkUI.shared.customization.subtitleStyle.color
         return label
     }()
-
     var textField: StytchTextField = {
         let textField = StytchTextField(customization: StytchMagicLinkUI.shared.customization)
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -60,7 +56,6 @@ class EnterPhoneNumberViewController: UIViewController {
         textField.textField.becomeFirstResponder()
         return textField
     }()
-
     lazy var actionButton: StytchActionButton = {
         let button = StytchActionButton(customization: StytchMagicLinkUI.shared.customization)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -68,13 +63,11 @@ class EnterPhoneNumberViewController: UIViewController {
         button.addTarget(self, action: #selector(handleActionButton), for: .touchUpInside)
         return button
     }()
-
     var poweredView: StytchPoweredView = {
         let view = StytchPoweredView(customization: StytchMagicLinkUI.shared.customization)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
     var activityIndicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .whiteLarge)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -153,12 +146,10 @@ class EnterPhoneNumberViewController: UIViewController {
             poweredView.anchor(top: actionButton.bottomAnchor, left: nil, bottom: nil, right: nil, padding: .init(top: 0, left: 24, bottom: 0, right: 24))
             poweredView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         }
-
         view.addSubview(activityIndicatorView)
         activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
-
     func getUserAgent(handler: @escaping (String?)->()){
         wkWebView.evaluateJavaScript("navigator.userAgent", completionHandler: { (result, error) in
             handler(result as? String)
@@ -177,17 +168,14 @@ class EnterPhoneNumberViewController: UIViewController {
             self?.handleError(error)
         }
     }
-
     func showLoading() {
         activityIndicatorView.isHidden = false
         activityIndicatorView.startAnimating()
     }
-
     func hideLoading() {
         activityIndicatorView.stopAnimating()
         activityIndicatorView.isHidden = true
     }
-
     func presentEnterOTPPage(_ phoneNumber: String) {
         //Present a new VC here. Rather than just changing the UI
         let enterOTPPage = EnterOTPViewController(phoneNumber: phoneNumber)
@@ -282,7 +270,6 @@ class EnterPhoneNumberViewController: UIViewController {
                       subtitleText: "stytch_login_description".localized,
                       showInputField: true)
     }
-
     func changeMagicLinkSentUI(email: String) {
         self.changeUI(buttonText: "stytch_login_waiting_verification_button_title".localized,
                       titleText: String(format: "stytch_login_waiting_verification_title".localized, email),
@@ -292,7 +279,6 @@ class EnterPhoneNumberViewController: UIViewController {
 }
 /*
 extension MagicLinkInitialViewController: StytchMagicLinkDelegate {
-
     func onSuccess(_ result: StytchResult) {
         hideLoading()
         dismiss(animated: true) {

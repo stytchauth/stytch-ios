@@ -15,7 +15,6 @@ import UIKit
 @objc(SAStytchOTP) public class StytchOTP: NSObject {
 
     @objc public static let shared: StytchOTP = StytchOTP()
-
     @objc public var environment: StytchEnvironment = .live
     @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
 

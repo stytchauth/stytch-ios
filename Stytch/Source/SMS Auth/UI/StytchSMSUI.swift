@@ -17,12 +17,10 @@ import UIKit
         let navigationController = UINavigationController(rootViewController: stytchViewController)
         return navigationController
     }
-
 }
 
 
 @objc(StytchSMSUIDelegate) public protocol StytchSMSUIDelegate {
     @objc optional func onSuccess(_ result: StytchResult)
     @objc optional func onFailure(_ error: StytchError)
-
 }

@@ -21,7 +21,6 @@ class StytchDigitTextField: UIView {
         return view
     }()
 
-
     lazy var textField: UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +46,6 @@ class StytchDigitTextField: UIView {
             textField.attributedPlaceholder = attributedText
         }
     }
-
     var text: String {
         set {
             textField.text = newValue
@@ -61,7 +59,6 @@ class StytchDigitTextField: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
     init(frame: CGRect = .zero, customization: StytchUICustomization) {
         self.customization = customization
         super.init(frame: frame)

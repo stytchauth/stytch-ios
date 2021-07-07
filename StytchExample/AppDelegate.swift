@@ -34,7 +34,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         StytchSMSUI.shared.delegate = self
         let initialViewController = StytchSMSUI.shared.loginViewController()
 
-
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         

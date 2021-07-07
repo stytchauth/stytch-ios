@@ -22,7 +22,6 @@ class EnterOTPViewController: UIViewController {
         label.textColor = StytchMagicLinkUI.shared.customization.titleStyle.color
         return label
     }()
-
     lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +32,6 @@ class EnterOTPViewController: UIViewController {
         label.textColor = StytchMagicLinkUI.shared.customization.subtitleStyle.color
         return label
     }()
-
     lazy var textFields: [StytchDigitTextField] = {
         var textFields = [StytchDigitTextField]()
         for i in 0..<6{
@@ -48,7 +46,6 @@ class EnterOTPViewController: UIViewController {
         textFields.first?.textField.becomeFirstResponder()
         return textFields
     }()
-
     var resentLabel: UILabel = {
         let label = UILabel()
         label.attributedText = NSMutableAttributedString()
@@ -66,13 +63,11 @@ class EnterOTPViewController: UIViewController {
         button.addTarget(self, action: #selector(handleActionButton), for: .touchUpInside)
         return button
     }()
-
     var poweredView: StytchPoweredView = {
         let view = StytchPoweredView(customization: StytchMagicLinkUI.shared.customization)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
     var activityIndicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: .whiteLarge)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +163,6 @@ class EnterOTPViewController: UIViewController {
         activityIndicatorView.isHidden = false
         activityIndicatorView.startAnimating()
     }
-
     func hideLoading() {
         activityIndicatorView.stopAnimating()
         activityIndicatorView.isHidden = true
@@ -224,5 +218,4 @@ extension EnterOTPViewController: UITextFieldDelegate{
             return true
         }
     }
-
 }

@@ -20,7 +20,6 @@ class StytchOTPServerFlowManager {
                       failure: @escaping (StytchError) ->()){
         let request = SendOTPBySMSRequest(phone_number: phoneNumber,
                                           expiration_minutes: expirationTime)
-
         StytchOTPApi.shared.sendOTPBySMS(model: request) { (respose) in
             if let model = respose.data{
                 success(model)
@@ -29,14 +28,12 @@ class StytchOTPServerFlowManager {
             }
         }
     }
-
     func loginOrCreateUserBySMS(to phoneNumber: String,
                                 expirationTime: Int,
                                 success: @escaping (SMSModel) ->(),
                                 failure: @escaping (StytchError) ->()){
         let request = SendOTPBySMSRequest(phone_number: phoneNumber,
                                           expiration_minutes: expirationTime)
-
         StytchOTPApi.shared.loginOrCreateUserBySMS(model: request) { (respose) in
             if let model = respose.data{
                 success(model)
@@ -45,7 +42,6 @@ class StytchOTPServerFlowManager {
             }
         }
     }
-
     func authenticateOTP(with code: String,
                          success: @escaping (AuthenticatedOTPResponse) ->(),
                          failure: @escaping (StytchError) ->()){
@@ -54,7 +50,6 @@ class StytchOTPServerFlowManager {
             return
         }
         let request = AuthenticateOTPRequest(methodId: methodId, code: code)
-
         StytchOTPApi.shared.authenticateOTP(model: request) { (respose) in
             if let model = respose.data{
                 success(model)
@@ -63,7 +58,6 @@ class StytchOTPServerFlowManager {
             }
         }
     }
-
     private func convertError(type: ErrorType) -> StytchError {
         switch type {
         case .unknown:
