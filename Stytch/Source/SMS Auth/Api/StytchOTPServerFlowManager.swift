@@ -13,6 +13,7 @@ class StytchOTPServerFlowManager {
 
     var phoneNumber: String = ""
     var methodId: String? = nil
+    var lastRecievedSMSModel: SMSModel? = nil
 
     func sendOTPBySMS(to phoneNumber: String,
                       expirationTime: Int,
@@ -24,21 +25,24 @@ class StytchOTPServerFlowManager {
             if let model = respose.data{
                 success(model)
             }else {
-                failure(self.convertError(type: respose.error.errorType))
+                failure(Self.convertError(type: respose.error.errorType))
             }
         }
     }
     func loginOrCreateUserBySMS(to phoneNumber: String,
                                 expirationTime: Int,
+                                createUserAsPending: Bool,
                                 success: @escaping (SMSModel) ->(),
                                 failure: @escaping (StytchError) ->()){
         let request = SendOTPBySMSRequest(phone_number: phoneNumber,
-                                          expiration_minutes: expirationTime)
-        StytchOTPApi.shared.loginOrCreateUserBySMS(model: request) { (respose) in
+                                          expiration_minutes: expirationTime,
+                                          create_user_as_pending: createUserAsPending)
+        StytchOTPApi.shared.loginOrCreateUserBySMS(model: request) { [weak self] (respose) in
             if let model = respose.data{
+                self?.lastRecievedSMSModel = model
                 success(model)
             }else {
-                failure(self.convertError(type: respose.error.errorType))
+                failure(Self.convertError(type: respose.error.errorType))
             }
         }
     }
@@ -54,11 +58,11 @@ class StytchOTPServerFlowManager {
             if let model = respose.data{
                 success(model)
             }else {
-                failure(self.convertError(type: respose.error.errorType))
+                failure(Self.convertError(type: respose.error.errorType))
             }
         }
     }
-    private func convertError(type: ErrorType) -> StytchError {
+    private static func convertError(type: ErrorType) -> StytchError {
         switch type {
         case .unknown:
             return StytchError.connection

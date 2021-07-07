@@ -11,21 +11,30 @@ import UIKit
     @objc func login(email: String)
 }
 */
+@objc(SAStytchOTPAuthenticator) public protocol StytchOTPAuthenticator {
+    //@Ethan I probably need to provide more than just the code to clients in order for them to auth.
+    //"method_id": "phone-number-test-d5a3b680-e8a3-40c0-b815-ab79986666d0",
+    //"code": "123456"
+    func authenticateOTP(_ code: String, methodId: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->())
+}
 
 @objc(SAStytchOTP) public class StytchOTP: NSObject {
 
-    @objc public static let shared: StytchOTP = StytchOTP()
+    //@objc public static let shared: StytchOTP = StytchOTP()
     @objc public var environment: StytchEnvironment = .live
-    @objc public var loginMethod: StytchLoginMethod = .loginOrSignUp
 
-  //  @objc public var delegate: StytchMagicLinkDelegate?
+    @objc public var createUserAsPending: Bool = false
 
     @objc public var `debug`: Bool = false
+    
+    @objc public var otpAuthenticator: StytchOTPAuthenticator?
+    
+    @objc public static let codeLength = 6
 
 
     private var serverManager = StytchOTPServerFlowManager()
 
-    private override init() {}
+    internal override init() {}
 
     @objc public func configure(projectID: String,
                                 secret: String) {
@@ -37,7 +46,7 @@ import UIKit
     }
 
 
-    @objc public func sendOTPBySMS(phoneNumber: String,
+    @objc private func sendOTPBySMS(phoneNumber: String,
                                    expirationTime: Int = 2,
                                    success: @escaping (SMSModel) ->(),
                                    failure: @escaping (StytchError) ->()){
@@ -54,25 +63,34 @@ import UIKit
 
     @objc public func loginOrCreateUserBySMS(phoneNumber: String,
                                 expirationTime: Int = 2,
+                                createUserAsPending: Bool,
                                 success: @escaping (SMSModel) ->(),
                                 failure: @escaping (StytchError) ->()){
 
         guard phoneNumber.isValidPhoneNumber else{
-            //@Ethan create invalid phone number error
-            failure(.invalidEmail)
+            failure(.invalidPhoneNumber)
             return
         }
 
-        serverManager.loginOrCreateUserBySMS(to: phoneNumber, expirationTime: expirationTime, success: success, failure: failure)
+        serverManager.loginOrCreateUserBySMS(to: phoneNumber, expirationTime: expirationTime, createUserAsPending: createUserAsPending, success: success, failure: failure)
     }
 
-    @objc public func authenticateOTP(_ code: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->()){
+    @objc internal func authenticateOTP(_ code: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->()){
         guard code.isValidOTP else{
-            //@Ethan create invalid phone number error
-            failure(.invalidEmail)
+            failure(.invalidPhoneNumber)
             return
         }
-        serverManager.authenticateOTP(with: code, success: success, failure: failure)
+        
+        guard let otpAuthenticator = otpAuthenticator else {
+            failure(.missingDeveloperDependency)
+            return
+        }
+        
+        guard let smsModel = serverManager.lastRecievedSMSModel else {
+            return
+        }
+        
+        otpAuthenticator.authenticateOTP(code, methodId: smsModel.phoneId, success: success, failure: failure)
     }
 
 

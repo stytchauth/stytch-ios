@@ -16,20 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let liveStytchProjectID = "project-live-4d957d53-b033-4cdd-8b59-c3a36e566be8"
     let liveStytchSecretKey = "secret-live-NnT2y2_DKI29uUui3nnMMdnDOZ6I0b0eveg="
 
-    let testStytchProjectID = "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df"
+    let testStytchProjectID = "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df:secret-test-ruIeuu_RLEfPNWJNwaLDLFAdz-2_F3vyNoY="
     let testStytchSecretKey = "secret-test-ruIeuu_RLEfPNWJNwaLDLFAdz-2_F3vyNoY="
 
 
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        StytchOTP.shared.configure(projectID: testStytchProjectID, secret: testStytchSecretKey)
+        Stytch.shared.otp.configure(projectID: testStytchProjectID, secret: testStytchSecretKey)
         
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        StytchOTP.shared.environment = .test
-        StytchMagicLink.shared.loginMethod = .loginOrInvite
+        Stytch.shared.otp.environment = .test
+        Stytch.shared.otp.otpAuthenticator = ExampleOTPAuthenticator()
        // StytchMagicLink.shared.delegate = self
         StytchSMSUI.shared.delegate = self
         let initialViewController = StytchSMSUI.shared.loginViewController()
@@ -41,15 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        return StytchMagicLink.shared.handleMagicLinkUrl(userActivity.webpageURL)
+        return Stytch.shared.magicLink.handleMagicLinkUrl(userActivity.webpageURL)
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return StytchMagicLink.shared.handleMagicLinkUrl(url)
+        return Stytch.shared.magicLink.handleMagicLinkUrl(url)
     }
     
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return StytchMagicLink.shared.handleMagicLinkUrl(url)
+        return Stytch.shared.magicLink.handleMagicLinkUrl(url)
     }
 
 }

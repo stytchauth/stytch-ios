@@ -161,7 +161,7 @@ class EnterPhoneNumberViewController: UIViewController {
     @objc func handleActionButton() {
         let phoneNumber = "+1" + self.textField.text
         showLoading()
-        StytchOTP.shared.loginOrCreateUserBySMS(phoneNumber: phoneNumber) { [weak self] smsModel in
+        Stytch.shared.otp.loginOrCreateUserBySMS(phoneNumber: phoneNumber, createUserAsPending: Stytch.shared.otp.createUserAsPending) { [weak self] smsModel in
             self?.hideLoading()
             self?.presentEnterOTPPage(phoneNumber)
         } failure: { [weak self] error in
@@ -190,7 +190,7 @@ class EnterPhoneNumberViewController: UIViewController {
              .invalidEmail:
             self.changeToLoginUI()
         case .invalidConfiguration:
-            StytchMagicLink.shared.delegate?.onFailure?(error)
+            Stytch.shared.magicLink.delegate?.onFailure?(error)
             return
         default:
             break

@@ -19,7 +19,7 @@ class StytchMagicLinkApi {
         }
         
         private var host: String {
-            switch StytchMagicLink.shared.environment {
+            switch Stytch.shared.magicLink.environment {
             case .test:
                 return "https://test.stytch.com\(StytchConstants.SERVER_VERSION)"
             case .live:
@@ -33,7 +33,8 @@ class StytchMagicLinkApi {
         private var secretKey = ""
         
         private var authHeader: [String: String] {
-            let value = "\(projectID):\(secretKey)"
+           // let value = "\(projectID):\(secretKey)"
+            let value = "\(projectID)"
             
             let utf8str = value.data(using: .utf8)?.base64EncodedString() ?? ""
             

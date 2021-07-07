@@ -146,7 +146,7 @@ class MagicLinkInitialViewController: UIViewController {
     @objc func handleActionButton() {
         showLoading()
         if self.textField.isHidden == false {
-            StytchMagicLink.shared.login(email: self.textField.text,
+            Stytch.shared.magicLink.login(email: self.textField.text,
                                          success: { [weak self] email in
                                             self?.hideLoading()
                                             self?.presentConfirmationScreen(email)
@@ -182,7 +182,7 @@ class MagicLinkInitialViewController: UIViewController {
              .invalidEmail:
             self.changeToLoginUI()
         case .invalidConfiguration:
-            StytchMagicLink.shared.delegate?.onFailure?(error)
+            Stytch.shared.magicLink.delegate?.onFailure?(error)
             return
         default:
             break

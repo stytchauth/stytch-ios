@@ -18,7 +18,7 @@ class StytchOTPApi {
         StytchOTPApi.shared = api
     }
     private var host: String {
-        switch StytchOTP.shared.environment {
+        switch Stytch.shared.environment {
         case .test:
             return "https://test.stytch.com\(StytchConstants.SERVER_VERSION)"
         case .live:
@@ -32,7 +32,7 @@ class StytchOTPApi {
     private var secretKey = ""
 
     private var authHeader: [String: String] {
-        let value = "\(projectID):\(secretKey)"
+        let value = "\(projectID)"
 
         let utf8str = value.data(using: .utf8)?.base64EncodedString() ?? ""
 
@@ -43,7 +43,7 @@ class StytchOTPApi {
 
     func sendOTPBySMS(model: SendOTPBySMSRequest, handler: @escaping (BaseResponseModel<SMSModel>) -> ()) {
         let request = BaseRequest<SendOTPBySMSRequest, SMSModel>
-            .init(URL(string: host + "/otp/send_by_sms")!, method: .POST, object: model,
+            .init(URL(string: host + "/otps/sms/send_by_sms")!, method: .POST, object: model,
                   headers: authHeader)
 
         request.send(handler: handler)
@@ -51,7 +51,7 @@ class StytchOTPApi {
 
     func loginOrCreateUserBySMS(model: SendOTPBySMSRequest, handler: @escaping (BaseResponseModel<SMSModel>) -> ()) {
         let request = BaseRequest<SendOTPBySMSRequest, SMSModel>
-            .init(URL(string: host + "/otp/login_or_create")!, method: .POST, object: model,
+            .init(URL(string: host + "/otps/sms/login_or_create")!, method: .POST, object: model,
                   headers: authHeader)
 
         request.send(handler: handler)
@@ -59,7 +59,7 @@ class StytchOTPApi {
 
     func authenticateOTP(model: AuthenticateOTPRequest, handler: @escaping (BaseResponseModel<AuthenticatedOTPResponse>) -> ()) {
         let request = BaseRequest<AuthenticateOTPRequest, AuthenticatedOTPResponse>
-            .init(URL(string: host + "/otp/authenticate")!, method: .POST, object: model,
+            .init(URL(string: host + "/otps/sms/authenticate")!, method: .POST, object: model,
                   headers: authHeader)
         request.send(handler: handler)
     }

@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     @objc func handleStartSDK() {
 //        customizeStytch()
         
-        StytchMagicLink.shared.environment = .test
+        Stytch.shared.environment = .test
  //       StytchMagicLinkUI.shared.showUI(from: self)
     }
     
