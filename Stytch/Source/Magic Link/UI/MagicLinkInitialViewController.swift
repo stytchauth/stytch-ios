@@ -146,7 +146,7 @@ class MagicLinkInitialViewController: UIViewController {
     @objc func handleActionButton() {
         showLoading()
         if self.textField.isHidden == false {
-            Stytch.shared.magicLink.login(email: self.textField.text,
+            Stytch.shared.magicLink.loginOrCreate(email: self.textField.text,
                                          success: { [weak self] email in
                                             self?.hideLoading()
                                             self?.presentConfirmationScreen(email)

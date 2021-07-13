@@ -1,9 +1,3 @@
-//
-//  AuthenticatedOTPResponse.swift
-//  Stytch
-//
-//  Created by Ethan Furstoss on 5/19/21.
-//
 
 import Foundation
 

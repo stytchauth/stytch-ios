@@ -1,9 +1,3 @@
-//
-//  ExampleOTPAuthenticator.swift
-//  StytchExample
-//
-//  Created by Ethan Furstoss on 7/7/21.
-//
 
 import Foundation
 import Stytch
