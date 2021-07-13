@@ -20,7 +20,7 @@ import UIKit
 
 @objc(SAStytchMagicLink) public class StytchMagicLink: NSObject {
     
-    @objc public static let shared: StytchMagicLink = StytchMagicLink()
+    //@objc public static let shared: StytchMagicLink = StytchMagicLink()
     
     @objc public var environment: StytchEnvironment = .live
     
@@ -57,24 +57,22 @@ import UIKit
     
     private var serverManager = StytchMagicLinkServerFlowManager()
     
-    private override init() {}
+    internal override init() {}
     
     @objc public func configure(projectID: String,
-                                secret: String,
                                 scheme: String,
                                 host: String) {
         self.MAGIC_SCHEME = scheme
         self.MAGIC_HOST = host
-        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
+        StytchMagicLinkApi.initialize(projectID: projectID)
     }
 
     @objc public func configure(projectID: String,
-                                secret: String,
                                 universalLink: URL) {
         self.MAGIC_SCHEME = "https"
         self.MAGIC_HOST = universalLink.host ?? ""
         self.UNIVERSAL_LINK = universalLink
-        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
+        StytchMagicLinkApi.initialize(projectID: projectID)
     }
     
     private func acceptToken(token: String) {
@@ -94,7 +92,7 @@ import UIKit
         delegate = nil
     }
     
-    @objc public func handleMagicLinkUrl(_ url: URL?) -> Bool {
+    @objc private func handleMagicLinkUrl(_ url: URL?) -> Bool {
         guard let url = url else { return false }
         
         
@@ -116,7 +114,7 @@ import UIKit
         return false
     }
     
-    @objc public func login(email: String, success: @escaping (String) ->(), failure: @escaping (StytchError) ->()){
+    @objc public func loginOrCreate(email: String, success: @escaping (String) ->(), failure: @escaping (StytchError) ->()){
         
         guard email.isValidEmail else{
             failure(.invalidEmail)
@@ -130,9 +128,9 @@ import UIKit
                 
                 if let userModel = self.serverManager.userResponse {
                     if userModel.userCreated {
-                        StytchMagicLink.shared.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
+                        Stytch.shared.magicLink.delegate?.onEvent?(StytchEvent.userCretedEvent(userId: userModel.userId))
                     } else {
-                        StytchMagicLink.shared.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
+                        Stytch.shared.magicLink.delegate?.onEvent?(StytchEvent.userFoundEvent(userId: userModel.userId))
                     }
                     
                 }
@@ -148,7 +146,7 @@ import UIKit
         guard let url = url else { return nil }
         
         if let host = url.host, let urlScheme = url.scheme, let token = url.valueOf(StytchConstants.MAGIC_TOKEN_KEY),
-           host == StytchMagicLink.shared.MAGIC_HOST,
+           host == Stytch.shared.magicLink.MAGIC_HOST,
            url.path == path,
            urlScheme == scheme {
             return token

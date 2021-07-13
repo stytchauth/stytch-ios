@@ -1,9 +1,3 @@
-//
-//  MagicLinkConfirmationViewController.swift
-//  Stytch
-//
-//  Created by Ethan Furstoss on 12/22/20.
-//
 
 import UIKit
 import WebKit

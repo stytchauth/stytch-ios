@@ -1,9 +1,3 @@
-//
-//  StytchMagicLinkApi.swift
-//  Stytch
-//
-//  Created by Ethan Furstoss on 1/3/21.
-//
 
 import Foundation
 
@@ -11,15 +5,14 @@ class StytchMagicLinkApi {
         
         static private(set) var shared: StytchMagicLinkApi = StytchMagicLinkApi()
         
-        static func initialize(projectID: String, secretKey: String) {
+        static func initialize(projectID: String) {
             let api = StytchMagicLinkApi()
             api.projectID = projectID
-            api.secretKey = secretKey
             StytchMagicLinkApi.shared = api
         }
         
         private var host: String {
-            switch StytchMagicLink.shared.environment {
+            switch Stytch.shared.magicLink.environment {
             case .test:
                 return "https://test.stytch.com\(StytchConstants.SERVER_VERSION)"
             case .live:
@@ -30,10 +23,9 @@ class StytchMagicLinkApi {
         
         private let authKey = "Authorization"
         private var projectID = ""
-        private var secretKey = ""
         
         private var authHeader: [String: String] {
-            let value = "\(projectID):\(secretKey)"
+            let value = "\(projectID)"
             
             let utf8str = value.data(using: .utf8)?.base64EncodedString() ?? ""
             

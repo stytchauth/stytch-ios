@@ -12,3 +12,14 @@
 "stytch_error_no_internet" = "Could not connect to server";
 "stytch_error_invalid_input" = "Invalid email";
 "stytch_error_invalid_magic_token" = "Magic link could not be authenticated";
+"stytch_error_invalid_phone_number" = "Invalid phone number";
+"stytch_error_missing_dependency" = "Missing developer dependency";
+
+"Enter phone number" = "Enter phone number";
+"Sign up or log in with a one-time passcode sent to your phone number." = "Sign up or log in with a one-time passcode sent to your phone number.";
+"(123) 456-7890" = "(123) 456-7890";
+"Continue" = "Continue";
+"Enter passcode" = "Enter passcode";
+"A 6-digit passcode was sent to you at %@" = "A 6-digit passcode was sent to you at %@";
+"Didn't get it?" = "Didn't get it?";
+"Resend code" = "Resend code";
