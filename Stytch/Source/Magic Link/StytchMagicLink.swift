@@ -60,21 +60,19 @@ import UIKit
     internal override init() {}
     
     @objc public func configure(projectID: String,
-                                secret: String,
                                 scheme: String,
                                 host: String) {
         self.MAGIC_SCHEME = scheme
         self.MAGIC_HOST = host
-        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
+        StytchMagicLinkApi.initialize(projectID: projectID)
     }
 
     @objc public func configure(projectID: String,
-                                secret: String,
                                 universalLink: URL) {
         self.MAGIC_SCHEME = "https"
         self.MAGIC_HOST = universalLink.host ?? ""
         self.UNIVERSAL_LINK = universalLink
-        StytchMagicLinkApi.initialize(projectID: projectID, secretKey: secret)
+        StytchMagicLinkApi.initialize(projectID: projectID)
     }
     
     private func acceptToken(token: String) {
@@ -94,7 +92,7 @@ import UIKit
         delegate = nil
     }
     
-    @objc public func handleMagicLinkUrl(_ url: URL?) -> Bool {
+    @objc private func handleMagicLinkUrl(_ url: URL?) -> Bool {
         guard let url = url else { return false }
         
         
@@ -116,7 +114,7 @@ import UIKit
         return false
     }
     
-    @objc public func login(email: String, success: @escaping (String) ->(), failure: @escaping (StytchError) ->()){
+    @objc public func loginOrCreate(email: String, success: @escaping (String) ->(), failure: @escaping (StytchError) ->()){
         
         guard email.isValidEmail else{
             failure(.invalidEmail)

@@ -1,9 +1,3 @@
-//
-//  Stytch.swift
-//  Stytch
-//
-//  Created by Ethan Furstoss on 7/7/21.
-//
 
 import Foundation
 
@@ -37,24 +31,21 @@ import Foundation
     private override init() {}
     
     @objc public func configure(projectID: String,
-                                secret: String,
                                 scheme: String,
                                 host: String) {
-        magicLink.configure(projectID: projectID, secret: secret, scheme: scheme, host: host)
-        otp.configure(projectID: projectID, secret: secret)
+        magicLink.configure(projectID: projectID, scheme: scheme, host: host)
+        otp.configure(projectID: projectID)
     }
 
     @objc public func configure(projectID: String,
-                                secret: String,
                                 universalLink: URL) {
-        magicLink.configure(projectID: projectID, secret: secret, universalLink: universalLink)
-        otp.configure(projectID: projectID, secret: secret)
+        magicLink.configure(projectID: projectID, universalLink: universalLink)
+        otp.configure(projectID: projectID)
     }
     
     //For just configuring OTP without Magic Link config.
-    @objc public func configure(projectID: String,
-                                secret: String) {
-        otp.configure(projectID: projectID, secret: secret)
+    @objc public func configure(projectID: String) {
+        otp.configure(projectID: projectID)
     }
 }
 

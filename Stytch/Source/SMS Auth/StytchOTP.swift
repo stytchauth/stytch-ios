@@ -36,9 +36,8 @@ import UIKit
 
     internal override init() {}
 
-    @objc public func configure(projectID: String,
-                                secret: String) {
-        StytchOTPApi.initialize(projectID: projectID, secretKey: secret)
+    @objc public func configure(projectID: String) {
+        StytchOTPApi.initialize(projectID: projectID)
     }
 
     private func clearData() {

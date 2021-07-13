@@ -202,9 +202,6 @@ extension EnterOTPViewController: UITextFieldDelegate{
             return false
         }else{
 
-            print("@Ethan :\(replacementString):  -> \(replacementString.count)")
-            //if its not a backspace, then select the next text box.
-
             let textFieldIndex = textField.tag
             textField.text = replacementString
             if replacementString.count == 0{

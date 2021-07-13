@@ -1,9 +1,3 @@
-//
-//  StytchMagicLinkApi.swift
-//  Stytch
-//
-//  Created by Ethan Furstoss on 1/3/21.
-//
 
 import Foundation
 
@@ -11,10 +5,9 @@ class StytchOTPApi {
 
     static private(set) var shared: StytchOTPApi = StytchOTPApi()
 
-    static func initialize(projectID: String, secretKey: String) {
+    static func initialize(projectID: String) {
         let api = StytchOTPApi()
         api.projectID = projectID
-        api.secretKey = secretKey
         StytchOTPApi.shared = api
     }
     private var host: String {
@@ -29,9 +22,9 @@ class StytchOTPApi {
 
     private let authKey = "Authorization"
     private var projectID = ""
-    private var secretKey = ""
 
     private var authHeader: [String: String] {
+        
         let value = "\(projectID)"
 
         let utf8str = value.data(using: .utf8)?.base64EncodedString() ?? ""
