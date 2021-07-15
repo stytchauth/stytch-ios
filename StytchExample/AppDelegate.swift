@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func launchMagicLink(){
-        Stytch.shared.configure(projectID: testPublicToken, universalLink: URL(string: "https://test.com")!)
+        Stytch.shared.configure(publicToken: testPublicToken, universalLink: URL(string: "https://test.com")!)
         self.window = UIWindow(frame: UIScreen.main.bounds)
 
         Stytch.shared.environment = .test

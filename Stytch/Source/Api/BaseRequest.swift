@@ -14,7 +14,7 @@ class BaseRequest<RequestModel: Codable, ResponseModel: Codable>: BaseApi {
     private var headers: [String:String]
     var urlRequest: URLRequest
     
-    init(_ url: URL, method: RequestMethod, object: RequestModel?, headers: [String: String], contentType: ContentType = .APP_JSON, multipart: [MultipartObject] = []) {
+    init(_ url: URL, method: RequestMethod, object: RequestModel?, headers: [String: String] = [:], contentType: ContentType = .APP_JSON, multipart: [MultipartObject] = []) {
         self.url = url
         self.method = method
         self.httpBodyObject = object

@@ -54,25 +54,27 @@ import UIKit
     private var MAGIC_SCHEME = ""
     private var MAGIC_HOST = ""
     private var UNIVERSAL_LINK: URL?
+    private var publicToken: String?
     
     private var serverManager = StytchMagicLinkServerFlowManager()
     
     internal override init() {}
     
-    @objc public func configure(projectID: String,
+    @objc public func configure(publicToken: String,
                                 scheme: String,
                                 host: String) {
         self.MAGIC_SCHEME = scheme
         self.MAGIC_HOST = host
-        StytchMagicLinkApi.initialize(projectID: projectID)
+     //   StytchMagicLinkApi.initialize(projectID: projectID)
     }
 
-    @objc public func configure(projectID: String,
+    @objc public func configure(publicToken: String,
                                 universalLink: URL) {
         self.MAGIC_SCHEME = "https"
         self.MAGIC_HOST = universalLink.host ?? ""
         self.UNIVERSAL_LINK = universalLink
-        StytchMagicLinkApi.initialize(projectID: projectID)
+        self.publicToken = publicToken
+    //    StytchMagicLinkApi.initialize(projectID: projectID)
     }
     
     private func acceptToken(token: String) {
@@ -121,7 +123,12 @@ import UIKit
             return
         }
         
-        serverManager.sendMagicLink(to: email, createUserAsPending: createUserAsPending) { error in
+        guard let publicToken = publicToken else {
+            failure(.invalidConfiguration)
+            return
+        }
+        
+        serverManager.sendMagicLink(to: email, createUserAsPending: createUserAsPending, publicToken: publicToken) { error in
             if let error = error {
                 failure(error)
             } else {
