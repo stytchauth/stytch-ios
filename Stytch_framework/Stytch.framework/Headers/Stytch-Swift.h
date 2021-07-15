@@ -209,6 +209,41 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 
+SWIFT_CLASS("_TtC6Stytch24AuthenticatedOTPResponse")
+@interface AuthenticatedOTPResponse : NSObject
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+
+
+
+
+SWIFT_CLASS("_TtC6Stytch8SMSModel")
+@interface SMSModel : NSObject
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@class SAStytchMagicLink;
+@class SAStytchOTP;
+enum StytchEnvironment : NSInteger;
+
+SWIFT_CLASS_NAMED("Stytch")
+@interface SAStytch : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) SAStytch * _Nonnull shared;)
++ (SAStytch * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
+@property (nonatomic, readonly, strong) SAStytchMagicLink * _Nonnull magicLink;
+@property (nonatomic, readonly, strong) SAStytchOTP * _Nonnull otp;
+@property (nonatomic) enum StytchEnvironment environment;
+@property (nonatomic) BOOL debug;
+@property (nonatomic) BOOL createUserAsPending;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host;
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID universalLink:(NSURL * _Nonnull)universalLink;
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID;
+@end
 
 typedef SWIFT_ENUM_NAMED(NSInteger, StytchEnvironment, "StytchEnvironment", open) {
   StytchEnvironmentTest = 0,
@@ -218,9 +253,11 @@ typedef SWIFT_ENUM_NAMED(NSInteger, StytchEnvironment, "StytchEnvironment", open
 typedef SWIFT_ENUM_NAMED(NSInteger, StytchError, "StytchError", open) {
   StytchErrorUnknown = 0,
   StytchErrorInvalidEmail = 1,
-  StytchErrorConnection = 2,
-  StytchErrorInvalidMagicToken = 3,
-  StytchErrorInvalidConfiguration = 4,
+  StytchErrorInvalidPhoneNumber = 2,
+  StytchErrorConnection = 3,
+  StytchErrorInvalidMagicToken = 4,
+  StytchErrorInvalidConfiguration = 5,
+  StytchErrorMissingDeveloperDependency = 6,
 };
 
 
@@ -233,33 +270,23 @@ SWIFT_CLASS_NAMED("StytchEvent")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-typedef SWIFT_ENUM_NAMED(NSInteger, StytchLoginMethod, "StytchLoginMethod", open) {
-  StytchLoginMethodLoginOrSignUp = 0,
-  StytchLoginMethodLoginOrInvite = 1,
-};
-
 typedef SWIFT_ENUM_NAMED(NSInteger, StytchLoginResult, "StytchLoginResult", open) {
   StytchLoginResultUserCreated = 0,
   StytchLoginResultUserFound = 1,
   StytchLoginResultError = 2,
 };
 
-@protocol StytchMagicLinkDelegate;
 
 SWIFT_CLASS_NAMED("StytchMagicLink")
 @interface SAStytchMagicLink : NSObject
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) SAStytchMagicLink * _Nonnull shared;)
-+ (SAStytchMagicLink * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
 @property (nonatomic) enum StytchEnvironment environment;
-@property (nonatomic) enum StytchLoginMethod loginMethod;
-@property (nonatomic, strong) id <StytchMagicLinkDelegate> _Nullable delegate;
+@property (nonatomic) BOOL createUserAsPending;
 @property (nonatomic) BOOL debug;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-- (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host;
-- (void)configureWithProjectID:(NSString * _Nonnull)projectID secret:(NSString * _Nonnull)secret scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host universalLink:(NSString * _Nonnull)universalLink;
-- (BOOL)handleMagicLinkUrl:(NSURL * _Nullable)url SWIFT_WARN_UNUSED_RESULT;
-- (void)loginWithEmail:(NSString * _Nonnull)email success:(void (^ _Nonnull)(NSString * _Nonnull))success failure:(void (^ _Nonnull)(enum StytchError))failure;
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID scheme:(NSString * _Nonnull)scheme host:(NSString * _Nonnull)host;
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID universalLink:(NSURL * _Nonnull)universalLink;
+- (void)loginOrCreateWithEmail:(NSString * _Nonnull)email success:(void (^ _Nonnull)(NSString * _Nonnull))success failure:(void (^ _Nonnull)(enum StytchError))failure;
 @end
 
 @class StytchResult;
@@ -287,6 +314,28 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StytchMagicL
 - (UIViewController * _Nonnull)loginViewController SWIFT_WARN_UNUSED_RESULT;
 @end
 
+@protocol SAStytchOTPAuthenticator;
+
+SWIFT_CLASS_NAMED("StytchOTP")
+@interface SAStytchOTP : NSObject
+@property (nonatomic) enum StytchEnvironment environment;
+@property (nonatomic) BOOL createUserAsPending;
+@property (nonatomic) BOOL debug;
+@property (nonatomic, strong) id <SAStytchOTPAuthenticator> _Nullable otpAuthenticator;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly) NSInteger codeLength;)
++ (NSInteger)codeLength SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+- (void)configureWithProjectID:(NSString * _Nonnull)projectID;
+- (void)loginOrCreateUserBySMSWithPhoneNumber:(NSString * _Nonnull)phoneNumber expirationTime:(NSInteger)expirationTime createUserAsPending:(BOOL)createUserAsPending success:(void (^ _Nonnull)(SMSModel * _Nonnull))success failure:(void (^ _Nonnull)(enum StytchError))failure;
+@end
+
+
+SWIFT_PROTOCOL_NAMED("StytchOTPAuthenticator")
+@protocol SAStytchOTPAuthenticator
+- (void)authenticateOTP:(NSString * _Nonnull)code methodId:(NSString * _Nonnull)methodId success:(void (^ _Nonnull)(AuthenticatedOTPResponse * _Nonnull))success failure:(void (^ _Nonnull)(enum StytchError))failure;
+@end
+
 
 SWIFT_CLASS_NAMED("StytchResult")
 @interface StytchResult : NSObject
@@ -294,6 +343,27 @@ SWIFT_CLASS_NAMED("StytchResult")
 @property (nonatomic, copy) NSString * _Nonnull requestId;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@protocol StytchSMSUIDelegate;
+
+SWIFT_CLASS_NAMED("StytchSMSUI")
+@interface StytchSMSUI : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) StytchSMSUI * _Nonnull shared;)
++ (StytchSMSUI * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
+@property (nonatomic, weak) id <StytchSMSUIDelegate> _Nullable delegate;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@property (nonatomic, readonly, strong) StytchUICustomization * _Nonnull customization;
+- (UIViewController * _Nonnull)loginViewController SWIFT_WARN_UNUSED_RESULT;
+@end
+
+
+SWIFT_PROTOCOL_NAMED("StytchSMSUIDelegate")
+@protocol StytchSMSUIDelegate
+@optional
+- (void)onSuccess:(StytchResult * _Nonnull)result;
+- (void)onFailure:(enum StytchError)error;
 @end
 
 @class UIFont;

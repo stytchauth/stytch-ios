@@ -53,7 +53,7 @@ class StytchOTPServerFlowManager {
                          success: @escaping (AuthenticatedOTPResponse) ->(),
                          failure: @escaping (StytchError) ->()){
         guard let methodId = methodId else {
-            failure(.unknown)//@Ethan fix this to add the specific error.
+            failure(.unknown)//@TODO fix this to add the specific error.
             return
         }
         let request = AuthenticateOTPRequest(methodId: methodId, code: code)

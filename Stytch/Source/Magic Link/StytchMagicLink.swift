@@ -26,7 +26,7 @@ import UIKit
     
     @objc public var createUserAsPending: Bool = false
 
-    @objc public var delegate: StytchMagicLinkDelegate?
+    @objc internal var delegate: StytchMagicLinkDelegate?
     
     @objc public var `debug`: Bool = false
     
