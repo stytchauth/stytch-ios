@@ -15,9 +15,11 @@ class StytchMagicLinkServerFlowManager {
     
     func sendMagicLink(to email: String,
                        createUserAsPending: Bool,
+                       publicToken: String,
                        handler: @escaping (StytchError?)->() ) {
         sendLoginOrSignUp(email: email,
                           createUserAsPending: createUserAsPending,
+                          publicToken: publicToken,
                           handler: handler)
     }
     
@@ -36,10 +38,11 @@ class StytchMagicLinkServerFlowManager {
     
     private func sendLoginOrSignUp(email: String,
                                    createUserAsPending: Bool,
+                                   publicToken: String,
                                    handler: @escaping (StytchError?)->() ) {
         
         let linkModel = PostLoginSignModel(email: email,
-                                           createUserAsPending: createUserAsPending)
+                                           createUserAsPending: createUserAsPending, publicToken: publicToken)
         
         StytchMagicLinkApi.shared.loginOrSignUp(model: linkModel) { (response) in
             self.email = email

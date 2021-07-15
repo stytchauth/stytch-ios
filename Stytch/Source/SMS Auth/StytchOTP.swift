@@ -12,7 +12,7 @@ import UIKit
 }
 */
 @objc(SAStytchOTPAuthenticator) public protocol StytchOTPAuthenticator {
-    //@Ethan I probably need to provide more than just the code to clients in order for them to auth.
+    //@TODO I probably need to provide more than just the code to clients in order for them to auth.
     //"method_id": "phone-number-test-d5a3b680-e8a3-40c0-b815-ab79986666d0",
     //"code": "123456"
     func authenticateOTP(_ code: String, methodId: String, success: @escaping (AuthenticatedOTPResponse) ->(), failure: @escaping (StytchError) ->())
@@ -52,7 +52,7 @@ import UIKit
 
 
         guard phoneNumber.isValidPhoneNumber else{
-            //@Ethan create invalid phone number error
+            //@TODO create invalid phone number error
             failure(.invalidEmail)
             return
         }

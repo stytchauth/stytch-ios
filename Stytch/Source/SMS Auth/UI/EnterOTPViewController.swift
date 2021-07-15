@@ -180,7 +180,7 @@ class EnterOTPViewController: UIViewController {
         let fields = textFields.map { $0.textField.text ?? ""}
         let code = fields.joined()
         guard code.count == StytchOTP.codeLength else{
-            //@Ethan present error for incomplete code
+            //@TODO present error for incomplete code
             return
         }
         showLoading()

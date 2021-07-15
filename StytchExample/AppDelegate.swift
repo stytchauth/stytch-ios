@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let testStytchProjectID = "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df:secret-test-ruIeuu_RLEfPNWJNwaLDLFAdz-2_F3vyNoY=" // "project-test-ac70ffe6-4e3b-45ca-b874-c6171ddb89df"//
 
+    let testPublicToken = "public-token-test-797c9ca9-f367-4105-839d-82c8af86b6c2"
 
 
 
@@ -41,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func launchMagicLink(){
-        Stytch.shared.configure(projectID: testStytchProjectID, universalLink: URL(string: "https://test.com")!)
+        Stytch.shared.configure(publicToken: testPublicToken, universalLink: URL(string: "https://test.com")!)
         self.window = UIWindow(frame: UIScreen.main.bounds)
 
         Stytch.shared.environment = .test
@@ -68,6 +69,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
     }
 
+    func sendSMS(){
+        Stytch.shared.configure(projectID: testStytchProjectID)
+        Stytch.shared.otp.environment = .test
+        Stytch.shared.otp.otpAuthenticator = ExampleOTPAuthenticator()
+        
+        Stytch.shared.otp.loginOrCreateUserBySMS(phoneNumber: "+16097819086",
+                                                 createUserAsPending: true) { (model) in
+            print("Success")
+        } failure: { (error) in
+            print("Error \(error)")
+        }
+    }
 }
 
 extension AppDelegate: StytchSMSUIDelegate {

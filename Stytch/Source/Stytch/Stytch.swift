@@ -30,17 +30,17 @@ import Foundation
 
     private override init() {}
 
-    @objc public func configure(projectID: String,
+    @objc public func configure(publicToken: String,
                                 scheme: String,
                                 host: String) {
-        magicLink.configure(projectID: projectID, scheme: scheme, host: host)
-        otp.configure(projectID: projectID)
+        magicLink.configure(publicToken: publicToken, scheme: scheme, host: host)
+        otp.configure(projectID: publicToken)
     }
 
-    @objc public func configure(projectID: String,
+    @objc public func configure(publicToken: String,
                                 universalLink: URL) {
-        magicLink.configure(projectID: projectID, universalLink: universalLink)
-        otp.configure(projectID: projectID)
+        magicLink.configure(publicToken: publicToken, universalLink: universalLink)
+        otp.configure(projectID: publicToken)
     }
 
     //For just configuring OTP without Magic Link config.

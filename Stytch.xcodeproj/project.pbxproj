@@ -25,6 +25,22 @@
 		4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7406282592F25700E99058 /* MagicLinkConfirmationPageViewController.swift */; };
 		4DA935A8268785F4005EBBA6 /* StytchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA935A7268785F4005EBBA6 /* StytchTests.swift */; };
 		4DA935AA268785F4005EBBA6 /* Stytch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8578A771257A53AE00C3E894 /* Stytch.framework */; platformFilter = ios; };
+		4DC4747E269E0DA1000023B6 /* Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC4747D269E0DA1000023B6 /* Stytch.swift */; };
+		4DC47493269E0DC4000023B6 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DC47484269E0DC4000023B6 /* Icons.xcassets */; };
+		4DC47494269E0DC4000023B6 /* StytchSMSUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47485269E0DC4000023B6 /* StytchSMSUI.swift */; };
+		4DC47495269E0DC4000023B6 /* EnterOTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47486269E0DC4000023B6 /* EnterOTPViewController.swift */; };
+		4DC47496269E0DC4000023B6 /* EnterPhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47487269E0DC4000023B6 /* EnterPhoneNumberViewController.swift */; };
+		4DC47497269E0DC4000023B6 /* StytchOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47488269E0DC4000023B6 /* StytchOTP.swift */; };
+		4DC47498269E0DC4000023B6 /* StytchOTPApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC4748A269E0DC4000023B6 /* StytchOTPApi.swift */; };
+		4DC47499269E0DC4000023B6 /* SMSModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC4748C269E0DC4000023B6 /* SMSModel.swift */; };
+		4DC4749A269E0DC4000023B6 /* AuthenticatedOTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC4748D269E0DC4000023B6 /* AuthenticatedOTPResponse.swift */; };
+		4DC4749B269E0DC4000023B6 /* AuthenticateOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC4748F269E0DC4000023B6 /* AuthenticateOTP.swift */; };
+		4DC4749C269E0DC4000023B6 /* SendBySMSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47490269E0DC4000023B6 /* SendBySMSRequest.swift */; };
+		4DC4749D269E0DC4000023B6 /* LoginOrCreateUserBySMSRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47491269E0DC4000023B6 /* LoginOrCreateUserBySMSRequest.swift */; };
+		4DC4749E269E0DC4000023B6 /* StytchOTPServerFlowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC47492269E0DC4000023B6 /* StytchOTPServerFlowManager.swift */; };
+		4DC474A3269E0DE5000023B6 /* StytchDigitTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC474A2269E0DE5000023B6 /* StytchDigitTextField.swift */; };
+		4DC474A8269E0E83000023B6 /* NSMutableAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC474A7269E0E83000023B6 /* NSMutableAttributedString+Extensions.swift */; };
+		4DC474AD269E0EB3000023B6 /* ExampleOTPAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC474AC269E0EB3000023B6 /* ExampleOTPAuthenticator.swift */; };
 		4DE89F6825A2609500F92D6B /* StytchMagicLinkApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */; };
 		8578A776257A53AE00C3E894 /* Stytch.h in Headers */ = {isa = PBXBuildFile; fileRef = 8578A774257A53AE00C3E894 /* Stytch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8578A77F257A53C100C3E894 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8578A77E257A53C100C3E894 /* Colors.xcassets */; };
@@ -125,6 +141,22 @@
 		4DA935A5268785F4005EBBA6 /* StytchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StytchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DA935A7268785F4005EBBA6 /* StytchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchTests.swift; sourceTree = "<group>"; };
 		4DA935A9268785F4005EBBA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4DC4747D269E0DA1000023B6 /* Stytch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stytch.swift; sourceTree = "<group>"; };
+		4DC47484269E0DC4000023B6 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		4DC47485269E0DC4000023B6 /* StytchSMSUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchSMSUI.swift; sourceTree = "<group>"; };
+		4DC47486269E0DC4000023B6 /* EnterOTPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterOTPViewController.swift; sourceTree = "<group>"; };
+		4DC47487269E0DC4000023B6 /* EnterPhoneNumberViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberViewController.swift; sourceTree = "<group>"; };
+		4DC47488269E0DC4000023B6 /* StytchOTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchOTP.swift; sourceTree = "<group>"; };
+		4DC4748A269E0DC4000023B6 /* StytchOTPApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchOTPApi.swift; sourceTree = "<group>"; };
+		4DC4748C269E0DC4000023B6 /* SMSModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSModel.swift; sourceTree = "<group>"; };
+		4DC4748D269E0DC4000023B6 /* AuthenticatedOTPResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticatedOTPResponse.swift; sourceTree = "<group>"; };
+		4DC4748F269E0DC4000023B6 /* AuthenticateOTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateOTP.swift; sourceTree = "<group>"; };
+		4DC47490269E0DC4000023B6 /* SendBySMSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendBySMSRequest.swift; sourceTree = "<group>"; };
+		4DC47491269E0DC4000023B6 /* LoginOrCreateUserBySMSRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginOrCreateUserBySMSRequest.swift; sourceTree = "<group>"; };
+		4DC47492269E0DC4000023B6 /* StytchOTPServerFlowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchOTPServerFlowManager.swift; sourceTree = "<group>"; };
+		4DC474A2269E0DE5000023B6 /* StytchDigitTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StytchDigitTextField.swift; sourceTree = "<group>"; };
+		4DC474A7269E0E83000023B6 /* NSMutableAttributedString+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Extensions.swift"; sourceTree = "<group>"; };
+		4DC474AC269E0EB3000023B6 /* ExampleOTPAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleOTPAuthenticator.swift; sourceTree = "<group>"; };
 		4DE89F6725A2609500F92D6B /* StytchMagicLinkApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchMagicLinkApi.swift; sourceTree = "<group>"; };
 		8578A771257A53AE00C3E894 /* Stytch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stytch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8578A774257A53AE00C3E894 /* Stytch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stytch.h; sourceTree = "<group>"; };
@@ -232,6 +264,65 @@
 			path = StytchTests;
 			sourceTree = "<group>";
 		};
+		4DC4747C269E0DA1000023B6 /* Stytch */ = {
+			isa = PBXGroup;
+			children = (
+				4DC4747D269E0DA1000023B6 /* Stytch.swift */,
+			);
+			path = Stytch;
+			sourceTree = "<group>";
+		};
+		4DC47482269E0DC4000023B6 /* SMS Auth */ = {
+			isa = PBXGroup;
+			children = (
+				4DC47483269E0DC4000023B6 /* UI */,
+				4DC47488269E0DC4000023B6 /* StytchOTP.swift */,
+				4DC47489269E0DC4000023B6 /* Api */,
+			);
+			path = "SMS Auth";
+			sourceTree = "<group>";
+		};
+		4DC47483269E0DC4000023B6 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				4DC47484269E0DC4000023B6 /* Icons.xcassets */,
+				4DC47485269E0DC4000023B6 /* StytchSMSUI.swift */,
+				4DC47486269E0DC4000023B6 /* EnterOTPViewController.swift */,
+				4DC47487269E0DC4000023B6 /* EnterPhoneNumberViewController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		4DC47489269E0DC4000023B6 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				4DC4748A269E0DC4000023B6 /* StytchOTPApi.swift */,
+				4DC4748B269E0DC4000023B6 /* ResponseModels */,
+				4DC4748E269E0DC4000023B6 /* RequestModels */,
+				4DC47492269E0DC4000023B6 /* StytchOTPServerFlowManager.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		4DC4748B269E0DC4000023B6 /* ResponseModels */ = {
+			isa = PBXGroup;
+			children = (
+				4DC4748C269E0DC4000023B6 /* SMSModel.swift */,
+				4DC4748D269E0DC4000023B6 /* AuthenticatedOTPResponse.swift */,
+			);
+			path = ResponseModels;
+			sourceTree = "<group>";
+		};
+		4DC4748E269E0DC4000023B6 /* RequestModels */ = {
+			isa = PBXGroup;
+			children = (
+				4DC4748F269E0DC4000023B6 /* AuthenticateOTP.swift */,
+				4DC47490269E0DC4000023B6 /* SendBySMSRequest.swift */,
+				4DC47491269E0DC4000023B6 /* LoginOrCreateUserBySMSRequest.swift */,
+			);
+			path = RequestModels;
+			sourceTree = "<group>";
+		};
 		4DE89F5D25A0D5C100F92D6B /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -305,6 +396,8 @@
 		8578A784257A53CA00C3E894 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				4DC47482269E0DC4000023B6 /* SMS Auth */,
+				4DC4747C269E0DA1000023B6 /* Stytch */,
 				4D9390CD25A0C7B800C86642 /* Magic Link */,
 				85B19F72257E0E4100E088B1 /* Strings */,
 				8578A78B257A53CA00C3E894 /* SupportClasses */,
@@ -366,6 +459,7 @@
 		8578A7A2257A53CA00C3E894 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4DC474A2269E0DE5000023B6 /* StytchDigitTextField.swift */,
 				8578A7A3257A53CA00C3E894 /* StytchTextField.swift */,
 				8578A7A4257A53CA00C3E894 /* StytchPoweredView.swift */,
 				8578A7A5257A53CA00C3E894 /* StytchActionButton.swift */,
@@ -376,6 +470,7 @@
 		8578A7A6257A53CA00C3E894 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				4DC474A7269E0E83000023B6 /* NSMutableAttributedString+Extensions.swift */,
 				8578A7A7257A53CA00C3E894 /* UIViewController+Keyoard.swift */,
 				8578A7A8257A53CA00C3E894 /* UIView+Constraints.swift */,
 				8578A7A9257A53CA00C3E894 /* String+Validations.swift */,
@@ -388,6 +483,7 @@
 			isa = PBXGroup;
 			children = (
 				4D36458225C64CB900137FAF /* StytchExample.entitlements */,
+				4DC474AC269E0EB3000023B6 /* ExampleOTPAuthenticator.swift */,
 				8578A7D1257A546800C3E894 /* AppDelegate.swift */,
 				8578A7D5257A546800C3E894 /* ViewController.swift */,
 				4D41F12F25E1CB0F0053AB18 /* AuthedViewController.swift */,
@@ -542,6 +638,7 @@
 			files = (
 				85B19F74257E0E7800E088B1 /* en.strings in Resources */,
 				8578A77F257A53C100C3E894 /* Colors.xcassets in Resources */,
+				4DC47493269E0DC4000023B6 /* Icons.xcassets in Resources */,
 				8578A782257A53C500C3E894 /* stytch_logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -595,6 +692,7 @@
 				8578A7AF257A53CA00C3E894 /* StytchMagicLinkDelegate.swift in Sources */,
 				8578A7C0257A53CB00C3E894 /* PostMagicLinkModel.swift in Sources */,
 				4D7406292592F25700E99058 /* MagicLinkConfirmationPageViewController.swift in Sources */,
+				4DC474A8269E0E83000023B6 /* NSMutableAttributedString+Extensions.swift in Sources */,
 				4DE89F6825A2609500F92D6B /* StytchMagicLinkApi.swift in Sources */,
 				8578A7BB257A53CB00C3E894 /* BaseResponseModel.swift in Sources */,
 				8578A7BF257A53CB00C3E894 /* PostCreateUserModel.swift in Sources */,
@@ -605,24 +703,37 @@
 				8578A7B7257A53CB00C3E894 /* StytchMagicLink.swift in Sources */,
 				8578A7AC257A53CA00C3E894 /* StytchCustomization.swift in Sources */,
 				8578A7C2257A53CB00C3E894 /* MultipartObject.swift in Sources */,
+				4DC47499269E0DC4000023B6 /* SMSModel.swift in Sources */,
 				8578A7C7257A53CB00C3E894 /* UIView+Constraints.swift in Sources */,
+				4DC47498269E0DC4000023B6 /* StytchOTPApi.swift in Sources */,
 				8578A7C8257A53CB00C3E894 /* String+Validations.swift in Sources */,
+				4DC4747E269E0DA1000023B6 /* Stytch.swift in Sources */,
 				85B19F93257E1F7D00E088B1 /* PostLoginInviteModel.swift in Sources */,
+				4DC47494269E0DC4000023B6 /* StytchSMSUI.swift in Sources */,
 				8578A7AE257A53CA00C3E894 /* StytchMagicLinkUI.swift in Sources */,
 				8578A7B3257A53CB00C3E894 /* StytchLoginResult.swift in Sources */,
 				8578A7C4257A53CB00C3E894 /* StytchPoweredView.swift in Sources */,
 				85B19F7A257E0FAD00E088B1 /* StytchLocalizeController.swift in Sources */,
+				4DC474A3269E0DE5000023B6 /* StytchDigitTextField.swift in Sources */,
+				4DC47496269E0DC4000023B6 /* EnterPhoneNumberViewController.swift in Sources */,
 				8578A7C1257A53CB00C3E894 /* ErrorResponseModel.swift in Sources */,
+				4DC47495269E0DC4000023B6 /* EnterOTPViewController.swift in Sources */,
 				8578A7B1257A53CA00C3E894 /* StytchError.swift in Sources */,
 				8578A7B9257A53CB00C3E894 /* BaseApi.swift in Sources */,
+				4DC4749E269E0DC4000023B6 /* StytchOTPServerFlowManager.swift in Sources */,
+				4DC4749C269E0DC4000023B6 /* SendBySMSRequest.swift in Sources */,
+				4DC4749A269E0DC4000023B6 /* AuthenticatedOTPResponse.swift in Sources */,
+				4DC47497269E0DC4000023B6 /* StytchOTP.swift in Sources */,
 				8578A7C6257A53CB00C3E894 /* UIViewController+Keyoard.swift in Sources */,
 				8578A7B2257A53CA00C3E894 /* StytchEvent.swift in Sources */,
 				8578A7C5257A53CB00C3E894 /* StytchActionButton.swift in Sources */,
 				8578A7BE257A53CB00C3E894 /* AttributesModel.swift in Sources */,
+				4DC4749B269E0DC4000023B6 /* AuthenticateOTP.swift in Sources */,
 				8578A7B5257A53CB00C3E894 /* StytchConstants.swift in Sources */,
 				8578A7B8257A53CB00C3E894 /* BaseRequest.swift in Sources */,
 				8578A7B4257A53CB00C3E894 /* StytchResult.swift in Sources */,
 				8578A7BD257A53CB00C3E894 /* UserModel.swift in Sources */,
+				4DC4749D269E0DC4000023B6 /* LoginOrCreateUserBySMSRequest.swift in Sources */,
 				8578A7C3257A53CB00C3E894 /* StytchTextField.swift in Sources */,
 				8578A7B0257A53CA00C3E894 /* StytchColors.swift in Sources */,
 				8578A7AB257A53CA00C3E894 /* MagicLinkInitialViewController.swift in Sources */,
@@ -636,6 +747,7 @@
 			files = (
 				8578A7D6257A546800C3E894 /* ViewController.swift in Sources */,
 				4D41F13025E1CB0F0053AB18 /* AuthedViewController.swift in Sources */,
+				4DC474AD269E0EB3000023B6 /* ExampleOTPAuthenticator.swift in Sources */,
 				8578A7D2257A546800C3E894 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -860,7 +972,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.4;
+				MARKETING_VERSION = 0.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Stytch;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
@@ -894,7 +1006,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.4;
+				MARKETING_VERSION = 0.1.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Stytch;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
