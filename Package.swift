@@ -5,11 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "Stytch",
+    platforms: [.iOS(.v11)],
     products: [
         .library(name: "Stytch", targets: ["Stytch"]),
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
         .target(name: "Stytch", dependencies: []),
         .testTarget(name: "StytchTests", dependencies: ["Stytch"]),
