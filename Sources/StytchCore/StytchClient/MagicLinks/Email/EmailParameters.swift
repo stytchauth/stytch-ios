@@ -9,6 +9,7 @@ public struct EmailParameters: Encodable {
         case signupExpiration = "signup_expiration_minutes"
 //        case attributes
     }
+
     let email: Email
     let loginMagicLinkUrl: URL
     let signupMagicLinkUrl: URL

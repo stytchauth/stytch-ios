@@ -1,6 +1,6 @@
-extension StytchClient.MagicLinks {
+public extension StytchClient.MagicLinks {
     // sourcery: TerminalInterface
-    public struct Email {
+    struct Email {
         let pathContext: String
 
         init(pathContext: String) {

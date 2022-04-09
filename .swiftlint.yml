@@ -3,6 +3,7 @@ included:
   - Tests
 excluded:
   - StytchPlayground.playground
+  - Sources/StytchCore/Generated
 disabled_rules:
   - line_length
   - trailing_comma

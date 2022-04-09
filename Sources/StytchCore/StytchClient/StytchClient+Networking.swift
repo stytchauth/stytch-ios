@@ -32,13 +32,13 @@ extension StytchClient {
             completion(.failure(StytchError(message: "StytchClient not yet configured.")))
             return
         }
-        guard var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL:  false) else {
+        guard var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false) else {
             completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
             return
         }
-        var queryItems = urlComponents.queryItems ?? []
-        queryItems.append(contentsOf: queryItems)
-        urlComponents.queryItems = queryItems
+        var urlQueryItems = urlComponents.queryItems ?? []
+        urlQueryItems.append(contentsOf: queryItems)
+        urlComponents.queryItems = urlQueryItems
         guard let url = urlComponents.url else {
             completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
             return
@@ -52,7 +52,6 @@ extension StytchClient {
         url: URL,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-
         networkingClient.performRequest(
             method,
             url: url

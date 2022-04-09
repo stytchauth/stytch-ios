@@ -25,6 +25,7 @@ public extension StytchClient.Configuration {
         case test
         case production
     }
+
     struct NetworkConfiguration {
         public let basePath: String
     }

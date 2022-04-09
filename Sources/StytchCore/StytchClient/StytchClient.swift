@@ -1,5 +1,5 @@
-import Networking
 import Foundation
+import Networking
 
 public final class StytchClient {
     static let instance: StytchClient = .init()
@@ -34,7 +34,7 @@ public final class StytchClient {
         instance.networkingClient.headerProvider = { [weak instance] in
             guard let configuration = instance?.configuration else { return [:] }
             return [
-                "Authorization": "Bearer \(configuration.publicToken)"
+                "Authorization": "Bearer \(configuration.publicToken)",
             ]
         }
     }

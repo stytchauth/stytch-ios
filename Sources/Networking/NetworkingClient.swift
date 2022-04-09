@@ -9,8 +9,8 @@ public final class NetworkingClient {
 
     @discardableResult
     public func performRequest(_ method: Method, url: URL, completion: @escaping CompletionHandler) -> TaskHandle {
-        return perform(
-            request: urlRequest(url: url, method: method),// configuration: configuration),
+        perform(
+            request: urlRequest(url: url, method: method), // configuration: configuration),
             completion: completion
         )
     }
@@ -58,7 +58,7 @@ public extension NetworkingClient {
     struct Configuration {
         public var additionalHeaders: [String: String]
 
-        public init(additionalHeaders: [String : String]) {
+        public init(additionalHeaders: [String: String]) {
             self.additionalHeaders = additionalHeaders
         }
     }
