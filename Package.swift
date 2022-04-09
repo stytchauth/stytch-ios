@@ -7,11 +7,12 @@ let package = Package(
     name: "Stytch",
     platforms: [.iOS(.v11)],
     products: [
-        .library(name: "Stytch", targets: ["Stytch"]),
+        .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
     dependencies: [],
     targets: [
-        .target(name: "Stytch", dependencies: []),
-        .testTarget(name: "StytchTests", dependencies: ["Stytch"]),
+        .target(name: "StytchCore", dependencies: ["Networking"]),
+        .target(name: "Networking", dependencies: []),
+        .testTarget(name: "StytchTests", dependencies: ["StytchCore"]),
     ]
 )
