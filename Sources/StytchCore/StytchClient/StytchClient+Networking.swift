@@ -8,7 +8,7 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = configuration else {
-            completion(.failure(fatalError("BLAH")))
+            completion(.failure(StytchError(message: "StytchClient not yet configured. Call `StytchClient.configure(environment:publicToken:)` before any further StytchClient calls.")))
             return
         }
         do {
@@ -29,18 +29,18 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = configuration else {
-            completion(.failure(fatalError("BLAH")))
+            completion(.failure(StytchError(message: "StytchClient not yet configured.")))
             return
         }
         guard var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL:  false) else {
-            completion(.failure(fatalError("BLAH")))
+            completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
             return
         }
         var queryItems = urlComponents.queryItems ?? []
         queryItems.append(contentsOf: queryItems)
         urlComponents.queryItems = queryItems
         guard let url = urlComponents.url else {
-            completion(.failure(fatalError("BLAH")))
+            completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
             return
         }
 
@@ -69,4 +69,8 @@ extension StytchClient {
             )
         }
     }
+}
+
+public struct StytchError: Error {
+    let message: String
 }
