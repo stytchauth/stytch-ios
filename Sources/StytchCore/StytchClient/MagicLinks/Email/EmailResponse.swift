@@ -1,3 +1,4 @@
 public struct EmailResponse: Decodable {
-    let session: String // FIXME: something real here
+    // FIXME: something real here
+    let success: Bool
 }

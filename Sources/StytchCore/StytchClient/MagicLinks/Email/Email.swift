@@ -8,11 +8,8 @@ extension StytchClient.MagicLinks {
         }
 
         // sourcery: AsyncVariants
-        /// loginOrCreate
-        /// Does some stuff, as named.
-        /// - Parameters:
-        ///   - parameters: Email parameters
-        ///   - completion: Completion block
+        /// Wraps Stytch's email magiclink `login_or_create` endpoint. Requests an email magiclink for a user to
+        /// either log in or create an account depending on the presence/status of their current account.
         func loginOrCreate(parameters: EmailParameters, completion: @escaping Completion<EmailResponse>) {
             StytchClient.instance.post(
                 parameters: parameters,
