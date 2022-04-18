@@ -1,7 +1,7 @@
 bootstrap-tools:
 	mint bootstrap
 
-codecov:
+coverage:
 	Scripts/generate-coverage-report
 
 codegen:
