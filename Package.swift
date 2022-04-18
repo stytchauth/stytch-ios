@@ -12,6 +12,7 @@ let package = Package(
     targets: [
         .target(name: "StytchCore", dependencies: ["Networking"]),
         .target(name: "Networking"),
+        .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
