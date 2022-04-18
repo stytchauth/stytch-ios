@@ -2,7 +2,7 @@ bootstrap-tools:
 	mint bootstrap
 
 coverage:
-	Scripts/generate-coverage-report
+	Scripts/coverage generate-html
 
 codegen:
 	mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
