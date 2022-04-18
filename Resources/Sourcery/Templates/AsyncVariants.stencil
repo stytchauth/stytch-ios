@@ -1,4 +1,4 @@
-{% for type in types.all where type.annotations.TerminalInterface %}
+{% for type in types.all %}
 {% for method in type.methods where method.annotations.AsyncVariants %}
 {% for methodName in method.name|split:"(" %}
 {% if forloop.first %}
