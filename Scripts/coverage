@@ -1,0 +1,39 @@
+#! /usr/bin/env bash
+
+function llvm-cov() {
+    $(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov "$@"
+}
+
+bin_path="$(swift build --show-bin-path)"
+xctest_path="$(find $bin_path -name '*.xctest')"
+package_name="$(basename $xctest_path .xctest)"
+
+mkdir -p .coverage
+
+
+case "$1" in
+    generate-html)
+        llvm-cov export \
+            -format=lcov \
+            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
+            -instr-profile="$bin_path/codecov/default.profdata" \
+            "$xctest_path/Contents/MacOS/$package_name" \
+            > .coverage/lcov.info
+
+        genhtml .coverage/lcov.info --output-directory .coverage/
+        ;;
+    generate-json)
+        llvm-cov export \
+            -format=text \
+            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
+            -instr-profile="$bin_path/codecov/default.profdata" \
+            "$xctest_path/Contents/MacOS/$package_name" \
+            > .coverage/lcov.json
+        ;;
+    report)
+        llvm-cov report \
+            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
+            -instr-profile="$bin_path/codecov/default.profdata" \
+            "$xctest_path/Contents/MacOS/$package_name" \
+        ;;
+esac

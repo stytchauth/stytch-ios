@@ -1,1 +1,2 @@
+brew 'lcov'
 brew 'mint'

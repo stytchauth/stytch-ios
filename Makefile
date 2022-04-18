@@ -1,6 +1,9 @@
 bootstrap-tools:
 	mint bootstrap
 
+coverage:
+	Scripts/coverage generate-html
+
 codegen:
 	mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
 
