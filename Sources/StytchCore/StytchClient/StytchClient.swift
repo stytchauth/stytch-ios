@@ -12,7 +12,7 @@ public struct StytchClient {
         Current.networkingClient.headerProvider = {
             guard let configuration = instance.configuration else { return [:] }
 
-            let sessionToken = Current.sessionStorage.sessionToken ?? configuration.publicToken
+            let sessionToken = /*Current.sessionStorage.sessionToken ?? */configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
 
             return [
