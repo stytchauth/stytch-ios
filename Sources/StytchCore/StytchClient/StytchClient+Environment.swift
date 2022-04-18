@@ -13,8 +13,6 @@ extension StytchClient {
     struct Environment {
         var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
 
-        var sessionStorage: SessionStorage = .init()
-
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
             // TODO: confirm decoding/encoding strategies
