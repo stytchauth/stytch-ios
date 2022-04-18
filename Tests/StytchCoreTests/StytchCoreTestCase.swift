@@ -7,7 +7,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         StytchClient.configure(
             publicToken: "xyz",
-            hostDomain: try XCTUnwrap(URL(string: "https://myapp.com"))
+            hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
     }
 
