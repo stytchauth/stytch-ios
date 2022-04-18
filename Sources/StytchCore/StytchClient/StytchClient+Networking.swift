@@ -2,20 +2,21 @@ import Foundation
 import Networking
 
 extension StytchClient {
-    func post<Parameters: Encodable, Response: Decodable>(
+    static func post<Parameters: Encodable, Response: Decodable>(
         parameters: Parameters,
         path: Path,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-        guard let configuration = configuration else {
-            completion(.failure(StytchError(message: "StytchClient not yet configured. Call `StytchClient.configure(environment:publicToken:)` before any further StytchClient calls.")))
+        guard let configuration = instance.configuration else {
+            completion(.failure(StytchError.clientNotConfigured))
             return
         }
         do {
             let data = try Current.jsonEncoder.encode(parameters)
-            StytchClient.instance.performRequest(
+            StytchClient.performRequest(
                 .post(data),
                 url: configuration.baseURL.appendingPathComponent(path),
+                configuration: configuration,
                 completion: completion
             )
         } catch {
@@ -23,13 +24,13 @@ extension StytchClient {
         }
     }
 
-    func get<Response: Decodable>(
+    static func get<Response: Decodable>(
         queryItems: [URLQueryItem],
         path: String,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-        guard let configuration = configuration else {
-            completion(.failure(StytchError(message: "StytchClient not yet configured.")))
+        guard let configuration = instance.configuration else {
+            completion(.failure(StytchError.clientNotConfigured))
             return
         }
         guard var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false) else {
@@ -44,12 +45,13 @@ extension StytchClient {
             return
         }
 
-        performRequest(.get, url: url, completion: completion)
+        performRequest(.get, url: url, configuration: configuration, completion: completion)
     }
 
-    private func performRequest<Response: Decodable>(
+    private static func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method = .get,
         url: URL,
+        configuration: Configuration,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         Current.networkingClient.performRequest(method, url: url ) { result in

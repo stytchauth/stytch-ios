@@ -6,7 +6,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
-            StytchClient.instance.post(
+            StytchClient.post(
                 parameters: parameters,
                 path: pathContext.appendingPathComponent("authenticate"),
                 completion: completion
