@@ -1,7 +1,7 @@
 import Foundation
 
 public struct EmailParameters: Encodable {
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case email
         case loginMagicLinkUrl
         case signupMagicLinkUrl
@@ -16,7 +16,22 @@ public struct EmailParameters: Encodable {
     let loginExpiration: Minutes
     let signupExpiration: Minutes
 //    let attributes: [String: String] // TODO: - confirm what this is and if needed
+
+    public init(
+        email: Email,
+        loginMagicLinkUrl: URL,
+        signupMagicLinkUrl: URL,
+        loginExpiration: Minutes,
+        signupExpiration: Minutes
+    ) {
+        self.email = email
+        self.loginMagicLinkUrl = loginMagicLinkUrl
+        self.signupMagicLinkUrl = signupMagicLinkUrl
+        self.loginExpiration = loginExpiration
+        self.signupExpiration = signupExpiration
+    }
 }
 
 public struct EmailTag {}
+
 public typealias Email = Tagged<EmailTag, String>

@@ -9,7 +9,7 @@ import Combine
 public extension StytchClient.MagicLinks.Email {
     /// Wraps Stytch's email magiclink `login_or_create` endpoint. Requests an email magiclink for a user to
     /// either log in or create an account depending on the presence/status of their current account.
-    func loginOrCreate(parameters: EmailParameters) -> AnyPublisher<EmailResponse, Error> {
+    func loginOrCreate(parameters: EmailParameters) -> AnyPublisher<BasicResponse, Error> {
         return Deferred { 
             Future({ promise in
                 self.loginOrCreate(parameters: parameters, completion: promise)
@@ -27,7 +27,7 @@ public extension StytchClient.MagicLinks.Email {
     /// Wraps Stytch's email magiclink `login_or_create` endpoint. Requests an email magiclink for a user to
     /// either log in or create an account depending on the presence/status of their current account.
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-    func loginOrCreate(parameters: EmailParameters) async throws -> EmailResponse {
+    func loginOrCreate(parameters: EmailParameters) async throws -> BasicResponse {
         try await withCheckedThrowingContinuation { continuation in
             self.loginOrCreate(parameters: parameters, completion: continuation.resume)
         }
@@ -36,7 +36,7 @@ public extension StytchClient.MagicLinks.Email {
     /// Wraps Stytch's email magiclink `login_or_create` endpoint. Requests an email magiclink for a user to
     /// either log in or create an account depending on the presence/status of their current account.
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    func loginOrCreate(parameters: EmailParameters) async throws -> EmailResponse {
+    func loginOrCreate(parameters: EmailParameters) async throws -> BasicResponse {
         try await withCheckedThrowingContinuation { continuation in
             self.loginOrCreate(parameters: parameters, completion: continuation.resume)
         }
