@@ -4,7 +4,7 @@ import Networking
 extension StytchClient {
     func post<Parameters: Encodable, Response: Decodable>(
         parameters: Parameters,
-        path: String,
+        path: Path,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = configuration else {
@@ -12,7 +12,7 @@ extension StytchClient {
             return
         }
         do {
-            let data = try StytchClient.instance.jsonEncoder.encode(parameters)
+            let data = try Current.jsonEncoder.encode(parameters)
             StytchClient.instance.performRequest(
                 .post(data),
                 url: configuration.baseURL.appendingPathComponent(path),
@@ -52,15 +52,13 @@ extension StytchClient {
         url: URL,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-        networkingClient.performRequest(
-            method,
-            url: url
-        ) { [unowned self] result in
-            // TODO: verify network response code code
+        Current.networkingClient.performRequest(method, url: url ) { result in
             completion(
-                result.flatMap { data, _ in
+                result.flatMap { data, response in
                     do {
-                        return .success(try self.jsonDecoder.decode(Response.self, from: data))
+                        try response.verifyStatus(data: data)
+                        let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
+                        return .success(dataContainer.data)
                     } catch {
                         return .failure(error)
                     }
@@ -69,3 +67,30 @@ extension StytchClient {
         }
     }
 }
+
+private extension HTTPURLResponse {
+    func verifyStatus(data: Data) throws {
+        switch statusCode {
+        case 400..<500:
+            throw StytchError(
+                message: "Client error: Status code \(statusCode)",
+                debugInfo: String(data: data, encoding: .utf8)
+            )
+        case 500..<600:
+            throw StytchError(
+                message: "Server error: Status code \(statusCode)",
+                debugInfo: String(data: data, encoding: .utf8)
+            )
+        default:
+            break
+        }
+    }
+}
+
+struct DataContainer<T: Decodable>: Decodable {
+    var data: T
+}
+
+#if DEBUG
+extension DataContainer: Encodable where T: Encodable {}
+#endif
