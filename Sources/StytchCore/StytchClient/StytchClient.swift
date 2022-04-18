@@ -7,8 +7,8 @@ public struct StytchClient {
 
     private init() {}
 
-    public static func configure(publicToken: String, hostDomain: URL) {
-        instance.configuration = .init(hostDomain: hostDomain, publicToken: publicToken)
+    public static func configure(publicToken: String, hostUrl: URL) {
+        instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
         Current.networkingClient.headerProvider = {
             guard let configuration = instance.configuration else { return [:] }
 
@@ -20,7 +20,7 @@ public struct StytchClient {
 //                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
                 "User-Agent": "stytchios/0.0.1",
                 "Authorization": "Basic \(authToken)",
-                "X-SDK-Parent-Host": hostDomain.absoluteString,
+                "X-SDK-Parent-Host": hostUrl.absoluteString,
             ]
         }
     }
