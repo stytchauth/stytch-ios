@@ -33,22 +33,22 @@ public struct Empty: Decodable {}
 public typealias BasicResponse = Response<Empty>
 
 #if DEBUG
-extension Response: Encodable where Wrapped: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(requestId, forKey: .requestId)
-        try container.encode(statusCode, forKey: .statusCode)
-        try wrapped.encode(to: encoder)
+    extension Response: Encodable where Wrapped: Encodable {
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(requestId, forKey: .requestId)
+            try container.encode(statusCode, forKey: .statusCode)
+            try wrapped.encode(to: encoder)
+        }
     }
-}
 
-extension Empty: Encodable {}
+    extension Empty: Encodable {}
 
-extension Response where Wrapped == Empty {
-    init(requestId: String, statusCode: UInt) {
-        self.requestId = requestId
-        self.statusCode = statusCode
-        self.wrapped = .init()
+    extension Response where Wrapped == Empty {
+        init(requestId: String, statusCode: UInt) {
+            self.requestId = requestId
+            self.statusCode = statusCode
+            wrapped = .init()
+        }
     }
-}
 #endif

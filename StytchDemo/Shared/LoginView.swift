@@ -9,15 +9,15 @@ struct LoginView: View {
 
     var body: some View {
         VStack {
-                TextField(text: $email, label: { Text("Email") })
-                    .padding()
-                    .textFieldStyle(.roundedBorder)
-                    .disableAutocorrection(true)
-#if !os(macOS)
-                    .textInputAutocapitalization(.never)
-                    .keyboardType(.emailAddress)
-                    .textContentType(.emailAddress)
-#endif
+            TextField(text: $email, label: { Text("Email") })
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .disableAutocorrection(true)
+            #if !os(macOS)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.emailAddress)
+                .textContentType(.emailAddress)
+            #endif
 
             Button(action: {
                 isLoading = true
@@ -48,8 +48,8 @@ struct LoginView: View {
                     Text("Log in")
                 }
             })
-                .buttonStyle(.borderedProminent)
-                .disabled(isLoading || email.isEmpty)
+            .buttonStyle(.borderedProminent)
+            .disabled(isLoading || email.isEmpty)
         }
     }
 }

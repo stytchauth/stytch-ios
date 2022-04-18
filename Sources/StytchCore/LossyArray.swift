@@ -23,6 +23,6 @@ struct LossyArray<T: Decodable>: Decodable {
             }
         }
 
-        self.wrappedValue = elements
+        wrappedValue = elements
     }
 }

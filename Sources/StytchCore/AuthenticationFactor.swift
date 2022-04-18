@@ -37,8 +37,8 @@ public struct AuthenticationFactor: Decodable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
-        self.kind = try container.decode(key: .kind)
+        lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
+        kind = try container.decode(key: .kind)
         let deliveryMethod: _DeliveryMethod = try container.decode(key: .deliveryMethod)
 
         switch deliveryMethod {
@@ -66,14 +66,15 @@ public struct AuthenticationFactor: Decodable {
     }
 }
 
-extension AuthenticationFactor {
-    public enum Kind: String, Decodable {
+public extension AuthenticationFactor {
+    enum Kind: String, Decodable {
         case magicLink = "magic_link" // TODO: figure out why this is required
         case otp
         case totp
         case oauth
     }
-    public enum DeliveryMethod {
+
+    enum DeliveryMethod {
         case authenticatorApp(AuthenticatorApp)
         case recoveryCode(RecoveryCode)
         case email(Email)
@@ -85,66 +86,73 @@ extension AuthenticationFactor {
         case oauthMicrosoft(Oauth)
         case webauthnRegistration(WebAuthn)
     }
-    public struct Email: Decodable {
+
+    struct Email: Decodable {
         public let emailId: String
         public let emailAddress: String
     }
-    public struct PhoneNumber: Decodable {
+
+    struct PhoneNumber: Decodable {
         public let phoneId: String
         public let phoneNumber: String
     }
-    public struct Oauth: Decodable {
+
+    struct Oauth: Decodable {
         public let id: String
         public let emailId: String
         public let providerSubject: String
     }
-    public struct WebAuthn: Decodable {
+
+    struct WebAuthn: Decodable {
         public let webauthnRegistrationId: String
         public let domain: URL
         public let userAgent: String
     }
-    public struct AuthenticatorApp: Decodable {
+
+    struct AuthenticatorApp: Decodable {
         public let totpId: String
     }
-    public struct RecoveryCode: Decodable {
+
+    struct RecoveryCode: Decodable {
         public let totpRecoveryCodeId: String
     }
 }
 
 #if DEBUG
-extension AuthenticationFactor: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(lastAuthenticatedAt, forKey: .lastAuthenticatedAt)
-        try container.encode(kind, forKey: .kind)
+    extension AuthenticationFactor: Encodable {
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(lastAuthenticatedAt, forKey: .lastAuthenticatedAt)
+            try container.encode(kind, forKey: .kind)
 
-        switch deliveryMethod {
-        case let .authenticatorApp(value):
-            try container.encode(value, forKey: .authenticatorAppFactor)
-        case let .recoveryCode(value):
-            try container.encode(value, forKey: .recoveryCodeFactor)
-        case let .email(value):
-            try container.encode(value, forKey: .emailFactor)
-        case let .sms(value), let .whatsapp(value):
-            try container.encode(value, forKey: .phoneNumberFactor)
-        case let .oauthGoogle(value):
-            try container.encode(value, forKey: .googleOauthFactor)
-        case let .oauthApple(value):
-            try container.encode(value, forKey: .appleOauthFactor)
-        case let .oauthGithub(value):
-            try container.encode(value, forKey: .githubOauthFactor)
-        case let .oauthMicrosoft(value):
-            try container.encode(value, forKey: .microsoftOauthFactor)
-        case let .webauthnRegistration(value):
-            try container.encode(value, forKey: .webauthnFactor)
+            switch deliveryMethod {
+            case let .authenticatorApp(value):
+                try container.encode(value, forKey: .authenticatorAppFactor)
+            case let .recoveryCode(value):
+                try container.encode(value, forKey: .recoveryCodeFactor)
+            case let .email(value):
+                try container.encode(value, forKey: .emailFactor)
+            case let .sms(value), let .whatsapp(value):
+                try container.encode(value, forKey: .phoneNumberFactor)
+            case let .oauthGoogle(value):
+                try container.encode(value, forKey: .googleOauthFactor)
+            case let .oauthApple(value):
+                try container.encode(value, forKey: .appleOauthFactor)
+            case let .oauthGithub(value):
+                try container.encode(value, forKey: .githubOauthFactor)
+            case let .oauthMicrosoft(value):
+                try container.encode(value, forKey: .microsoftOauthFactor)
+            case let .webauthnRegistration(value):
+                try container.encode(value, forKey: .webauthnFactor)
+            }
         }
     }
-}
-extension AuthenticationFactor.Kind: Encodable {}
-extension AuthenticationFactor.Email: Encodable {}
-extension AuthenticationFactor.PhoneNumber: Encodable {}
-extension AuthenticationFactor.Oauth: Encodable {}
-extension AuthenticationFactor.WebAuthn: Encodable {}
-extension AuthenticationFactor.AuthenticatorApp: Encodable {}
-extension AuthenticationFactor.RecoveryCode: Encodable {}
+
+    extension AuthenticationFactor.Kind: Encodable {}
+    extension AuthenticationFactor.Email: Encodable {}
+    extension AuthenticationFactor.PhoneNumber: Encodable {}
+    extension AuthenticationFactor.Oauth: Encodable {}
+    extension AuthenticationFactor.WebAuthn: Encodable {}
+    extension AuthenticationFactor.AuthenticatorApp: Encodable {}
+    extension AuthenticationFactor.RecoveryCode: Encodable {}
 #endif

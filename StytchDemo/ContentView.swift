@@ -12,12 +12,13 @@ struct ContentView: View {
         }
     }
 }
+
 //
-//struct ContentView_Previews: PreviewProvider {
+// struct ContentView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        ContentView()
 //    }
-//}
+// }
 
 struct SessionView: View {
     let session: Session

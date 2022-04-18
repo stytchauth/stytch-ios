@@ -51,10 +51,10 @@ extension StytchClient {
     private static func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method = .get,
         url: URL,
-        configuration: Configuration,
+        configuration _: Configuration, // To be used by session tracking
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-        Current.networkingClient.performRequest(method, url: url ) { result in
+        Current.networkingClient.performRequest(method, url: url) { result in
             completion(
                 result.flatMap { data, response in
                     do {
@@ -94,5 +94,5 @@ struct DataContainer<T: Decodable>: Decodable {
 }
 
 #if DEBUG
-extension DataContainer: Encodable where T: Encodable {}
+    extension DataContainer: Encodable where T: Encodable {}
 #endif

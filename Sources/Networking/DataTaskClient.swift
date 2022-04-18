@@ -14,8 +14,8 @@ public struct DataTaskClient {
     }
 }
 
-extension DataTaskClient {
-    public static let live: Self = .init { request, session, completion in
+public extension DataTaskClient {
+    static let live: Self = .init { request, session, completion in
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -30,7 +30,7 @@ extension DataTaskClient {
     }
 
     // swiftlint:disable force_unwrapping
-    public static func mock(returning result: Result<Data, Error>) -> DataTaskClient {
+    static func mock(returning result: Result<Data, Error>) -> DataTaskClient {
         .init { request, _, completion in
             completion(
                 result.map { ($0, .init(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: request.allHTTPHeaderFields)!) }
