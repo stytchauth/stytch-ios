@@ -8,6 +8,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Bootstrap
+      run: |
+        make setup
+        make bootstrap-tools
+    - name: Codegen
+      run: |
+        make codegen
     - name: Lint
       run: |
         make lint
