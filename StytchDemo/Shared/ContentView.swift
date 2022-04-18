@@ -20,4 +20,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView(hostUrl: URL(string: "https://stytch.com")!, session: nil)
     }
 }
-
