@@ -1,0 +1,538 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
+		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
+		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
+		224F7D40280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
+		224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D35280CC566000230FA /* StytchDemoApp.swift */; };
+		224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D35280CC566000230FA /* StytchDemoApp.swift */; };
+		224F7D48280CEC58000230FA /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 224F7D47280CEC58000230FA /* StytchCore */; };
+		224F7D4A280CEDD0000230FA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* LoginView.swift */; };
+		224F7D4B280CEDD0000230FA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* LoginView.swift */; };
+		224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
+		224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
+		226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 226375C5280CBAE0000CDD49 /* StytchCore */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
+		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		224F7D43280CC624000230FA /* macOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		224F7D45280CC63C000230FA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		224F7D49280CEDD0000230FA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		224F7D4C280CEDF5000230FA /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
+		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		229B821E2809EA3F007BC3F1 /* Stytch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stytch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		229B82152809EA3F007BC3F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		229B821B2809EA3F007BC3F1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224F7D48280CEC58000230FA /* StytchCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		224F7D3A280CC5DE000230FA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
+				224F7D3C280CC5DE000230FA /* ContentView.swift */,
+				224F7D49280CEDD0000230FA /* LoginView.swift */,
+				224F7D4C280CEDF5000230FA /* SessionView.swift */,
+				224F7D3B280CC5DE000230FA /* Assets.xcassets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		224F7D42280CC624000230FA /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				224F7D43280CC624000230FA /* macOS.entitlements */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		224F7D44280CC63C000230FA /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				224F7D45280CC63C000230FA /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		224F7D51280CF592000230FA /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				224F7D50280CF500000230FA /* Info.plist */,
+				224F7D4F280CF491000230FA /* iOS.entitlements */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		229B820B2809EA3E007BC3F1 = {
+			isa = PBXGroup;
+			children = (
+				22E4346D280A174100FB45F0 /* Stytch */,
+				224F7D3A280CC5DE000230FA /* Shared */,
+				224F7D51280CF592000230FA /* iOS */,
+				224F7D42280CC624000230FA /* macOS */,
+				224F7D44280CC63C000230FA /* Preview Content */,
+				22E4346A280A133900FB45F0 /* StytchPlayground.playground */,
+				229B82192809EA3F007BC3F1 /* Products */,
+				22E4345E2809EF2200FB45F0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		229B82192809EA3F007BC3F1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				229B82182809EA3F007BC3F1 /* StytchDemo.app */,
+				229B821E2809EA3F007BC3F1 /* Stytch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		22E4345E2809EF2200FB45F0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		229B82172809EA3F007BC3F1 /* StytchDemo (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 229B82292809EA3F007BC3F1 /* Build configuration list for PBXNativeTarget "StytchDemo (iOS)" */;
+			buildPhases = (
+				229B82142809EA3F007BC3F1 /* Sources */,
+				229B82152809EA3F007BC3F1 /* Frameworks */,
+				229B82162809EA3F007BC3F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				22E434622809EF2F00FB45F0 /* PBXTargetDependency */,
+			);
+			name = "StytchDemo (iOS)";
+			packageProductDependencies = (
+				226375C5280CBAE0000CDD49 /* StytchCore */,
+			);
+			productName = "Stytch (iOS)";
+			productReference = 229B82182809EA3F007BC3F1 /* StytchDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		229B821D2809EA3F007BC3F1 /* StytchDemo (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 229B822C2809EA3F007BC3F1 /* Build configuration list for PBXNativeTarget "StytchDemo (macOS)" */;
+			buildPhases = (
+				229B821A2809EA3F007BC3F1 /* Sources */,
+				229B821B2809EA3F007BC3F1 /* Frameworks */,
+				229B821C2809EA3F007BC3F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StytchDemo (macOS)";
+			packageProductDependencies = (
+				224F7D47280CEC58000230FA /* StytchCore */,
+			);
+			productName = "Stytch (macOS)";
+			productReference = 229B821E2809EA3F007BC3F1 /* Stytch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		229B820C2809EA3E007BC3F1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					229B82172809EA3F007BC3F1 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+					229B821D2809EA3F007BC3F1 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+				};
+			};
+			buildConfigurationList = 229B820F2809EA3E007BC3F1 /* Build configuration list for PBXProject "StytchDemo" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 229B820B2809EA3E007BC3F1;
+			productRefGroup = 229B82192809EA3F007BC3F1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				229B82172809EA3F007BC3F1 /* StytchDemo (iOS) */,
+				229B821D2809EA3F007BC3F1 /* StytchDemo (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		229B82162809EA3F007BC3F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		229B821C2809EA3F007BC3F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		229B82142809EA3F007BC3F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */,
+				224F7D4A280CEDD0000230FA /* LoginView.swift in Sources */,
+				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
+				224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		229B821A2809EA3F007BC3F1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */,
+				224F7D4B280CEDD0000230FA /* LoginView.swift in Sources */,
+				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
+				224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		22E434622809EF2F00FB45F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 22E434612809EF2F00FB45F0 /* StytchCore */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		229B82272809EA3F007BC3F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		229B82282809EA3F007BC3F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		229B822A2809EA3F007BC3F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92AC5VS8HG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = stytch.StytchDemo;
+				PRODUCT_NAME = StytchDemo;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		229B822B2809EA3F007BC3F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92AC5VS8HG;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = stytch.StytchDemo;
+				PRODUCT_NAME = StytchDemo;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		229B822D2809EA3F007BC3F1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92AC5VS8HG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = stytch.Stytch;
+				PRODUCT_NAME = Stytch;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		229B822E2809EA3F007BC3F1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 92AC5VS8HG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = stytch.Stytch;
+				PRODUCT_NAME = Stytch;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		229B820F2809EA3E007BC3F1 /* Build configuration list for PBXProject "StytchDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				229B82272809EA3F007BC3F1 /* Debug */,
+				229B82282809EA3F007BC3F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		229B82292809EA3F007BC3F1 /* Build configuration list for PBXNativeTarget "StytchDemo (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				229B822A2809EA3F007BC3F1 /* Debug */,
+				229B822B2809EA3F007BC3F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		229B822C2809EA3F007BC3F1 /* Build configuration list for PBXNativeTarget "StytchDemo (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				229B822D2809EA3F007BC3F1 /* Debug */,
+				229B822E2809EA3F007BC3F1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		224F7D47280CEC58000230FA /* StytchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchCore;
+		};
+		226375C5280CBAE0000CDD49 /* StytchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchCore;
+		};
+		22E434612809EF2F00FB45F0 /* StytchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 229B820C2809EA3E007BC3F1 /* Project object */;
+}

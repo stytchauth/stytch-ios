@@ -3,9 +3,11 @@ included:
   - Tests
 excluded:
   - StytchPlayground.playground
+  - Sources/StytchCore/Generated
 disabled_rules:
   - line_length
   - trailing_comma
+  - todo # disable for initial development stages
 analyzer_rules:
   - unused_declaration
   - unused_import

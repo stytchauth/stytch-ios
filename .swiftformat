@@ -1,6 +1,7 @@
 # file options
 
 --exclude StytchPlayground.playground
+--exclude Sources/StytchCore/Generated
 
 # format options
 
