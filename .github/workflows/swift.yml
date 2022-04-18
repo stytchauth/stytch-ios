@@ -1,5 +1,7 @@
-name: Lint/Test
+name: Test
 on:
+  branches:
+    - main
   pull_request:
   
 jobs:
