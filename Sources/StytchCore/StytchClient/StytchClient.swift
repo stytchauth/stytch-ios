@@ -1,40 +1,26 @@
 import Foundation
-import Networking
 
-public final class StytchClient {
-    static let instance: StytchClient = .init()
-
-    let networkingClient: NetworkingClient
+public struct StytchClient {
+    static var instance: StytchClient = .init()
 
     var configuration: Configuration?
 
-    let jsonDecoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        // TODO: confirm decoding/encoding strategies
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }()
+    private init() {}
 
-    let jsonEncoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        encoder.dateEncodingStrategy = .iso8601
-        return encoder
-    }()
+    public static func configure(publicToken: String, hostDomain: URL) {
+        instance.configuration = .init(hostDomain: hostDomain, publicToken: publicToken)
+        Current.networkingClient.headerProvider = {
+            guard let configuration = instance.configuration else { return [:] }
 
-    private init(
-        networkingClient: NetworkingClient = .init()
-    ) {
-        self.networkingClient = networkingClient
-    }
+            let sessionToken = Current.sessionStorage.sessionToken ?? configuration.publicToken
+            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
 
-    public static func configure(environment: Configuration.Environment = .production, publicToken: String) {
-        instance.configuration = .init(environment: environment, publicToken: publicToken)
-        instance.networkingClient.headerProvider = { [weak instance] in
-            guard let configuration = instance?.configuration else { return [:] }
             return [
-                "Authorization": "Bearer \(configuration.publicToken)",
+                "Content-Type": "application/json",
+//                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
+                "User-Agent": "stytchios/0.0.1",
+                "Authorization": "Basic \(authToken)",
+                "X-SDK-Parent-Host": hostDomain.absoluteString,
             ]
         }
     }
