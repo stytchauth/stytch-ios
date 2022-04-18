@@ -3,36 +3,27 @@ import Foundation
 public final class NetworkingClient {
     let session: URLSession = .init(configuration: .default)
 
+    let dataTaskClient: DataTaskClient
+
     public var headerProvider: (() -> [String: String])?
 
-    public init() {}
+    public init(dataTaskClient: DataTaskClient = .live) {
+        self.dataTaskClient = dataTaskClient
+    }
 
     @discardableResult
-    public func performRequest(_ method: Method, url: URL, completion: @escaping CompletionHandler) -> TaskHandle {
+    public func performRequest(_ method: Method, url: URL, completion: @escaping Completion) -> TaskHandle {
         perform(
-            request: urlRequest(url: url, method: method), // configuration: configuration),
+            request: urlRequest(url: url, method: method),
             completion: completion
         )
     }
 
-    private func perform(request: URLRequest, completion: @escaping CompletionHandler) -> TaskHandle {
-        let task = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success((data, response)))
-            } else {
-                completion(.failure(Error(message: "NetworkResult missing data and/or response")))
-            }
-        }
-        task.resume()
-        return TaskHandle(dataTask: task)
+    private func perform(request: URLRequest, completion: @escaping Completion) -> TaskHandle {
+        dataTaskClient.handle(request: request, session: session, completion: completion)
     }
 
-    private func urlRequest(
-        url: URL,
-        method: Method
-    ) -> URLRequest {
+    private func urlRequest(url: URL, method: Method) -> URLRequest {
         var request: URLRequest = .init(url: url)
 
         request.httpMethod = method.stringValue
@@ -48,20 +39,16 @@ public final class NetworkingClient {
             request.httpBody = data
         }
 
+#if DEBUG
+//        print(request.curlString)
+#endif
+
         return request
     }
 }
 
 public extension NetworkingClient {
-    typealias CompletionHandler = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void
-
-    struct Configuration {
-        public var additionalHeaders: [String: String]
-
-        public init(additionalHeaders: [String: String]) {
-            self.additionalHeaders = additionalHeaders
-        }
-    }
+    typealias Completion = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void
 
     enum Method {
         case delete
@@ -91,6 +78,10 @@ public extension NetworkingClient {
         weak var dataTask: URLSessionDataTask?
 
         public var progress: Progress { dataTask?.progress ?? Progress(totalUnitCount: 0) }
+
+        public init(dataTask: URLSessionDataTask?) {
+            self.dataTask = dataTask
+        }
 
         public func cancel() {
             dataTask?.cancel()
