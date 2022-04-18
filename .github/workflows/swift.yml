@@ -45,7 +45,7 @@ jobs:
 
     - name: Coverage
       run: |
-        make codecov
+        make coverage
 
     - uses: actions/upload-artifact@v3
       with:
