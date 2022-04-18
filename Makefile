@@ -1,5 +1,5 @@
 bootstrap-tools:
-	mint bootstrap --link
+	mint bootstrap
 
 codegen:
 	mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation

@@ -4,23 +4,38 @@ on:
   
 jobs:
   test:
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_13.3.app/Contents/Developer
     runs-on: macos-latest
 
     steps:
-    - run: ls -n /Applications/ | grep Xcode*
     - uses: actions/checkout@v2
+
+    - name: Cache Mint packages
+      uses: actions/cache@v3
+      env:
+        cache-name: mint-cache
+        cache-version: 1
+      with:
+        key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
+          ${{ runner.os }}-${{ env.cache-name }}-build-v
+          ${{ runner.os }}-
+        path: |
+          ~/.mint/
+
     - name: Bootstrap
       run: |
         make setup
         make bootstrap-tools
+
     - name: Codegen
       run: |
         make codegen
+
     - name: Lint
       run: |
         make lint
+
     - name: Test
       run: |
         swift test
