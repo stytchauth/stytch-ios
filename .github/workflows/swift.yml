@@ -15,13 +15,13 @@ jobs:
         cache-name: mint-cache
         cache-version: 1
       with:
+        path: |
+          ~/.mint/
         key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
         restore-keys: |
           ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
           ${{ runner.os }}-${{ env.cache-name }}-build-v
           ${{ runner.os }}-
-        path: |
-          ~/.mint/
 
     - name: Bootstrap
       run: |
