@@ -1,6 +1,9 @@
 bootstrap-tools:
 	mint bootstrap
 
+codecov:
+	Scripts/generate-coverage-report
+
 codegen:
 	mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
 

@@ -22,6 +22,7 @@ Package.resolved
 # .swiftpm
 
 .build/
+.coverage/
 
 # fastlane
 #

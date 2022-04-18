@@ -38,4 +38,13 @@ jobs:
 
     - name: Test
       run: |
-        swift test
+        swift test --enable-code-coverage
+
+    - name: Coverage
+      run: |
+        make codecov
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Coverage
+        path: .coverage/
