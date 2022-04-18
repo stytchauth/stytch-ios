@@ -8,7 +8,7 @@ format:
 	mint run swiftformat .
 
 lint:
-	mint run swiftlint lint
+	mint run swiftlint lint --quiet
 
 setup:
 	brew bundle
