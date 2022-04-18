@@ -17,7 +17,7 @@ public struct StytchClient {
 
             return [
                 "Content-Type": "application/json",
-//                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
+                //                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
                 "User-Agent": "stytchios/0.0.1",
                 "Authorization": "Basic \(authToken)",
                 "X-SDK-Parent-Host": hostUrl.absoluteString,

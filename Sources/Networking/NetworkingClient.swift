@@ -39,10 +39,6 @@ public final class NetworkingClient {
             request.httpBody = data
         }
 
-        #if DEBUG
-//        print(request.curlString)
-        #endif
-
         return request
     }
 }

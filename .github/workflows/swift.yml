@@ -1,4 +1,4 @@
-name: Test
+name: Lint/Test
 on:
   pull_request:
   
@@ -8,6 +8,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Lint
+      run: |
+        make lint
     - name: Test
       run: |
         swift test
