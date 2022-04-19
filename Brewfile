@@ -1,2 +1,0 @@
-brew 'lcov'
-brew 'mint'
