@@ -1,4 +1,5 @@
 public extension StytchClient.MagicLinks {
+    /// Does some stuff
     struct Email {
         let pathContext: Path
 

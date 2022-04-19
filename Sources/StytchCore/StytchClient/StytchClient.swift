@@ -1,5 +1,6 @@
 import Foundation
 
+/// The best thing
 public struct StytchClient {
     static var instance: StytchClient = .init()
 

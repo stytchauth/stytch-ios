@@ -1,4 +1,5 @@
 public extension StytchClient {
+    /// Does things
     struct MagicLinks {
         private let pathContext: Path = .init(rawValue: "magic_links")
 
