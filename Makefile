@@ -9,7 +9,7 @@ codegen:
 
 documentation:
 	xcodebuild docbuild -scheme StytchCore -sdk iphoneos15.4 -destination generic/platform=iOS -derivedDataPath .build
-	$(xcrun --find docc) process-archive -transform-for-static-hosting .build/Build/Products/Debug-iphoneos/StytchCore.doccarchive --output-path Docs --hosting-base-path /ios
+	$$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Debug-iphoneos/StytchCore.doccarchive --output-path .build/docs
 
 format:
 	mint run swiftformat .
