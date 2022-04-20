@@ -10,7 +10,6 @@ package_name="$(basename $xctest_path .xctest)"
 
 mkdir -p .coverage
 
-
 case "$1" in
     generate-html)
         llvm-cov export \
