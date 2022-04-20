@@ -32,10 +32,10 @@ public struct StytchClient {
 
             return [
                 "Content-Type": "application/json",
-                //                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
-                "User-Agent": "stytchios/0.0.1",
                 "Authorization": "Basic \(authToken)",
                 "X-SDK-Parent-Host": hostUrl.absoluteString,
+                "X-SDK-Platform": platform,
+                "X-SDK-Version": SDKMetadata.version.stringValue,
             ]
         }
     }
@@ -90,5 +90,26 @@ public extension StytchClient {
         case handled(Handled)
         /// The handler was unable to handle the given item.
         case notHandled(NotHandled)
+    }
+}
+
+enum SDKMetadata {
+    static let version: OperatingSystemVersion = .init(majorVersion: 0, minorVersion: 0, patchVersion: 1)
+}
+
+extension OperatingSystemVersion {
+    var stringValue: String { "\(majorVersion).\(minorVersion).\(patchVersion)" }
+}
+
+#if !os(macOS)
+    import UIKit
+#endif
+private extension StytchClient {
+    static var platform: String {
+        #if os(macOS)
+            return "macOS"
+        #else
+            return UIDevice.current.systemName
+        #endif
     }
 }
