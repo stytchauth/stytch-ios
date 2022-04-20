@@ -1,6 +1,6 @@
 import Foundation
 
-public extension StytchClient {
+extension StytchClient {
     struct Configuration {
         let hostUrl: URL
 

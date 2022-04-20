@@ -1,6 +1,31 @@
 import Foundation
 
-/// The best thing
+/**
+ The ``StytchClient`` is the entrypoint for all Stytch-related interaction.
+ Supported Stytch products are organized into interface structs which are then exposed as
+ static variables on the ``StytchClient``, e.g. `StytchClient.magicLinks.email`.
+ To utilize the ``StytchClient``, you must first configure the client using the
+ ``configure(publicToken:hostUrl:)`` function.
+ Asynchronous function calls for Stytch products are available via various
+ mechanisms (async/await, Combine, callbacks) so you can use whatever best suits your needs.
+ ``` swift
+ // In your AppDelegate or SwiftUI App file
+ import StytchCore
+ ...
+ StytchClient.configure(publicToken: stytchToken, hostUrl: appUrl)
+ // In another file, when you later want to send an email magic link
+ let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: emailMagicLinkParams)
+ // Back in your AppDelegate/App file
+ .onOpenUrl { url in
+     switch try await StytchClient.handle(url: url) {
+     case let .a(sessionResponse, url):
+         // Utilize the sessionResponse and url as needed for any additional processing, cookies will automatically be stored for your convenience
+     case let .b(url):
+         // The url was not processed
+     }
+ }
+ ```
+ */
 public struct StytchClient {
     static var instance: StytchClient = .init()
 
@@ -8,6 +33,14 @@ public struct StytchClient {
 
     private init() {}
 
+    /**
+     Configures the `StytchClient`, setting the `publicToken` and `hostUrl`.
+     while the `hostUrl`
+     - Parameters:
+     - publicToken: Available via the Stytch dashboard in the `API keys` section
+     - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which verifies your app is allowed to communicate with Stytch.
+     This **must be set** as an `Authorized Domain` in the Stytch dashboard SDK configuration.
+     */
     public static func configure(publicToken: String, hostUrl: URL) {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
         Current.networkingClient.headerProvider = {
