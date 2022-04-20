@@ -1,5 +1,6 @@
 // Generated using Sourcery 1.8.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
+import Foundation
 
 // MARK: - authenticate Combine
 #if canImport(Combine)
@@ -10,7 +11,7 @@ public extension StytchClient.MagicLinks {
     func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
         return Deferred { 
             Future({ promise in
-                self.authenticate(parameters: parameters, completion: promise)
+                authenticate(parameters: parameters, completion: promise)
             })
         }
         .eraseToAnyPublisher()
@@ -25,14 +26,14 @@ public extension StytchClient.MagicLinks {
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
         try await withCheckedThrowingContinuation { continuation in
-            self.authenticate(parameters: parameters, completion: continuation.resume)
+            authenticate(parameters: parameters, completion: continuation.resume)
         }
     }
     #else
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
         try await withCheckedThrowingContinuation { continuation in
-            self.authenticate(parameters: parameters, completion: continuation.resume)
+            authenticate(parameters: parameters, completion: continuation.resume)
         }
     }
     #endif
