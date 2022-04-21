@@ -1,5 +1,6 @@
 // Generated using Sourcery 1.8.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
+import Foundation
 
 // MARK: - loginOrCreate Combine
 #if canImport(Combine)
@@ -12,7 +13,7 @@ public extension StytchClient.MagicLinks.Email {
     func loginOrCreate(parameters: EmailParameters) -> AnyPublisher<BasicResponse, Error> {
         return Deferred { 
             Future({ promise in
-                self.loginOrCreate(parameters: parameters, completion: promise)
+                loginOrCreate(parameters: parameters, completion: promise)
             })
         }
         .eraseToAnyPublisher()
@@ -29,7 +30,7 @@ public extension StytchClient.MagicLinks.Email {
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
     func loginOrCreate(parameters: EmailParameters) async throws -> BasicResponse {
         try await withCheckedThrowingContinuation { continuation in
-            self.loginOrCreate(parameters: parameters, completion: continuation.resume)
+            loginOrCreate(parameters: parameters, completion: continuation.resume)
         }
     }
     #else
@@ -38,7 +39,7 @@ public extension StytchClient.MagicLinks.Email {
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
     func loginOrCreate(parameters: EmailParameters) async throws -> BasicResponse {
         try await withCheckedThrowingContinuation { continuation in
-            self.loginOrCreate(parameters: parameters, completion: continuation.resume)
+            loginOrCreate(parameters: parameters, completion: continuation.resume)
         }
     }
     #endif

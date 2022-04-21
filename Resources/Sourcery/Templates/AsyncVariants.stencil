@@ -3,12 +3,15 @@
 {% for methodName in method.name|split:"(" %}
 {% if forloop.first %}
 // sourcery:file:StytchCore/Generated/{{ type.name}}+AsyncVariants.generated.swift
-{% macro methodCall %}{{ methodName }}(parameters: {{ method.parameters.0.typeName }}){% endmacro %}
-{% macro returnType %}{{ method.parameters.1.typeName|replace:"@escaping Completion<",""|replace:">","" }}{% endmacro %}
+import Foundation
+{% macro methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endmacro %}
+{% macro methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.asSource }}{% endif %}{% endfor %}){% endmacro %}
+{% macro methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.name }}: {{ parameter.name }}{% endif %}{% endfor %}{% endmacro %}
+{% macro returnType %}{{ method.parameters.last.typeName|replace:"@escaping Completion<",""|replace:">","" }}{% endmacro %}
 {% macro asyncFunction %}
-    func {% call methodCall %} async throws -> {% call returnType %} {
+    {% call methodKeywords %} {% call methodDeclaration %} async throws -> {% call returnType %} {
         try await withCheckedThrowingContinuation { continuation in
-            self.{{ methodName }}(parameters: parameters, completion: continuation.resume)
+            {{ methodName }}({% call methodCallParams %}, completion: continuation.resume)
         }
     }
 {% endmacro %}
@@ -29,10 +32,10 @@ import Combine
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
 public extension {{ type.name }} {
     {% call methodDocs %}
-    func {% call methodCall %} -> AnyPublisher<{% call returnType %}, Error> {
+    {% call methodKeywords %} {% call methodDeclaration %} -> AnyPublisher<{% call returnType %}, Error> {
         return Deferred { 
             Future({ promise in
-                self.{{ methodName }}(parameters: parameters, completion: promise)
+                {{ methodName }}({% call methodCallParams %}, completion: promise)
             })
         }
         .eraseToAnyPublisher()

@@ -2,16 +2,16 @@
 // DO NOT EDIT
 import Foundation
 
-// MARK: - authenticate Combine
+// MARK: - handle Combine
 #if canImport(Combine)
 import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-public extension StytchClient.MagicLinks {
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
+public extension StytchClient {
+    static func handle(url: URL, sessionDuration: Minutes) -> AnyPublisher<DeeplinkHandledStatus, Error> {
         return Deferred { 
             Future({ promise in
-                authenticate(parameters: parameters, completion: promise)
+                handle(url: url, sessionDuration: sessionDuration, completion: promise)
             })
         }
         .eraseToAnyPublisher()
@@ -19,21 +19,21 @@ public extension StytchClient.MagicLinks {
 }
 #endif
 
-// MARK: - authenticate Async/Await
+// MARK: - handle Async/Await
 #if compiler(>=5.5) && canImport(_Concurrency)
-public extension StytchClient.MagicLinks {
+public extension StytchClient {
     #if compiler(>=5.5.2)
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-    func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus {
         try await withCheckedThrowingContinuation { continuation in
-            authenticate(parameters: parameters, completion: continuation.resume)
+            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
         }
     }
     #else
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus {
         try await withCheckedThrowingContinuation { continuation in
-            authenticate(parameters: parameters, completion: continuation.resume)
+            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
         }
     }
     #endif
