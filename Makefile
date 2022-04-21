@@ -6,7 +6,7 @@ coverage: test
 codegen:
 	mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
 
-docs:
+docs: codegen
 	xcodebuild docbuild -scheme StytchCore -sdk iphoneos15.4 -destination generic/platform=iOS -derivedDataPath .build
 	$$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Debug-iphoneos/StytchCore.doccarchive --output-path .build/docs
 
@@ -20,7 +20,7 @@ lint:
 setup:
 	brew bundle
 
-test:
+test: codegen
 	swift test --enable-code-coverage
 
 tools:
