@@ -34,7 +34,6 @@ public struct StytchClient {
 
     /**
      Configures the `StytchClient`, setting the `publicToken` and `hostUrl`.
-     while the `hostUrl`
      - Parameters:
      - publicToken: Available via the Stytch dashboard in the `API keys` section
      - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which verifies your app is allowed to communicate with Stytch.

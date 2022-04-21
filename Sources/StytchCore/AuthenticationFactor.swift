@@ -1,7 +1,11 @@
 import Foundation
 
 public extension Session {
-    // TODO: - document
+    /**
+     A type which describes an factor used to authenticate a session.
+     E.g. An email which was used to log in, or a phone which was used
+     via SMS as an OTP second factor.
+     */
     struct AuthenticationFactor: Decodable {
         private enum CodingKeys: String, CodingKey {
             case deliveryMethod
@@ -33,8 +37,11 @@ public extension Session {
             case webauthnRegistration
         }
 
+        /// The delivery mechanism used to provide this factor.
         public let deliveryMethod: DeliveryMethod
+        /// The type of factor, e.g. magic link, OTP, TOTP, etc.
         public let kind: Kind
+        /// The date this factor was last used to authenticate.
         public let lastAuthenticatedAt: Date
 
         public init(from decoder: Decoder) throws {
@@ -70,7 +77,9 @@ public extension Session {
 }
 
 public extension Session.AuthenticationFactor {
-    // TODO: - document
+    /**
+     The kind, or type, of Authentication factor, e.g. magic link, TOTP, etc.
+     */
     enum Kind: String, Decodable {
         case magicLink = "magic_link" // TODO: figure out why this is required
         case otp
@@ -78,7 +87,6 @@ public extension Session.AuthenticationFactor {
         case oauth
     }
 
-    // TODO: - document
     enum DeliveryMethod {
         case authenticatorApp(AuthenticatorApp)
         case recoveryCode(RecoveryCode)
@@ -92,39 +100,51 @@ public extension Session.AuthenticationFactor {
         case webauthnRegistration(WebAuthn)
     }
 
-    // TODO: - document
+    /// Information describing an email used as an authentication factor.
     struct Email: Decodable {
+        /// The id associated with this email factor.
         public let emailId: String
+        /// The email address used for the authentication factor.
         public let emailAddress: String
     }
 
-    // TODO: - document
+    /// Information describing a phone number used as an authentication factor.
     struct PhoneNumber: Decodable {
+        /// The id associated with this phone number factor.
         public let phoneId: String
+        /// The phone number used for the authentication factor.
         public let phoneNumber: String
     }
 
-    // TODO: - document
+    /// Information describing Oauth used as an authentication factor.
     struct Oauth: Decodable {
+        /// The id associated with this Oauth factor.
         public let id: String
+        /// The id associated with the email for this Oauth factor.
         public let emailId: String
+        /// The subject of the identity provider for this Oauth factor.
         public let providerSubject: String
     }
 
-    // TODO: - document
+    /// Information describing a WebAuthn registration used as an authentication factor.
     struct WebAuthn: Decodable {
+        /// The id associated with this WebAuthn registration.
         public let webauthnRegistrationId: String
+        /// The domain associated with this WebAuthn registration.
         public let domain: URL
+        /// The user agent associated with this WebAuthn registration.
         public let userAgent: String
     }
 
-    // TODO: - document
+    /// Information describing a TOTP authenticator app used as an authentication factor.
     struct AuthenticatorApp: Decodable {
+        /// The id associated with this TOTP factor.
         public let totpId: String
     }
 
-    // TODO: - document
+    /// Information describing a TOTP recovery code used as an authentication factor.
     struct RecoveryCode: Decodable {
+        /// The id associated with this recovery code factor.
         public let totpRecoveryCodeId: String
     }
 }

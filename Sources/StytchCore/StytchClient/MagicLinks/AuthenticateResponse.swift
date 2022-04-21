@@ -1,10 +1,10 @@
 import Foundation
 
 public extension StytchClient.MagicLinks {
-    // TODO: - document
+    /// The concrete response type for magic links `authenticate` calls.
     typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
-    // TODO: - document
+    /// The underlying data for magic links `authenticate` calls. See ``SessionResponseType`` for more information.
     struct AuthenticateResponseData: Decodable, SessionResponseType {
         public let userId: String
         public let sessionToken: String
@@ -14,6 +14,5 @@ public extension StytchClient.MagicLinks {
 }
 
 #if DEBUG
-    // TODO: - figure out how to ensure docs are compiled in release mode
     extension StytchClient.MagicLinks.AuthenticateResponseData: Encodable {}
 #endif
