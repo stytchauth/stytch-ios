@@ -1,6 +1,7 @@
-public struct StytchError: Error {
+struct StytchError: Error {
     let message: String
     let debugInfo: String?
+    var localizedDescription: String { message }
 
     init(message: String, debugInfo: String? = nil) {
         self.message = message
@@ -10,6 +11,6 @@ public struct StytchError: Error {
 
 extension StytchError {
     static let clientNotConfigured: Self = StytchError(
-        message: "StytchClient not yet configured. `StytchClient.configure(environment:publicToken:)` must be called prior to other StytchClient calls."
+        message: "StytchClient not yet configured. `StytchClient.configure(hostUrl:publicToken:)` must be called prior to other StytchClient calls."
     )
 }

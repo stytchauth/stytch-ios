@@ -1,29 +1,12 @@
 import Foundation
 
 /**
- The entrypoint for all Stytch-related interaction. Supported Stytch products are organized into interface structs which are
- exposed as static variables on the client, e.g. `StytchClient.magicLinks.email`.
- To utilize the ``StytchClient``, you must first configure it using the
- ``configure(publicToken:hostUrl:)`` function.
- **Async Options**: Asynchronous function calls for Stytch products are available via various
- mechanisms (async/await, Combine, callbacks) so you can use whatever best suits your needs.
- ``` swift
- // In your AppDelegate or SwiftUI App file
- import StytchCore
- ...
- StytchClient.configure(publicToken: stytchToken, hostUrl: appUrl)
- // In another file, when you later want to send an email magic link
- let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: emailMagicLinkParams)
- // Back in your AppDelegate/App file
- .onOpenUrl { url in
-     switch try await StytchClient.handle(url: url) {
-     case let .a(sessionResponse, url):
-         // Utilize the sessionResponse and url as needed for any additional processing, cookies will automatically be stored for your convenience
-     case let .b(url):
-         // The url was not processed
-     }
- }
- ```
+ The entrypoint for all Stytch-related interaction.
+
+ The StytchClient provides static-variable interfaces for all supported Stytch products, e.g. `StytchClient.magicLinks.email`.
+
+ **Async Options**: Async function calls for Stytch products are available via various
+ mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
  */
 public struct StytchClient {
     static var instance: StytchClient = .init()
