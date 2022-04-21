@@ -54,3 +54,28 @@ public typealias BasicResponse = Response<EmptyDecodable>
         }
     }
 #endif
+
+public protocol SessionResponseType {
+    var userId: String { get }
+    var sessionToken: String { get }
+    var sessionJwt: String { get }
+    var session: Session { get }
+}
+
+extension Response: SessionResponseType where Wrapped: SessionResponseType {
+    public var userId: String {
+        self[dynamicMember: \.userId]
+    }
+
+    public var sessionToken: String {
+        self[dynamicMember: \.sessionToken]
+    }
+
+    public var sessionJwt: String {
+        self[dynamicMember: \.sessionJwt]
+    }
+
+    public var session: Session {
+        self[dynamicMember: \.session]
+    }
+}

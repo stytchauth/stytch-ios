@@ -3,7 +3,7 @@ import Foundation
 extension StytchClient.MagicLinks {
     public typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
-    public struct AuthenticateResponseData: Decodable /* , SessionResponseType */ {
+    public struct AuthenticateResponseData: Decodable , SessionResponseType {
         public let userId: String
         public let sessionToken: String
         public let sessionJwt: String
