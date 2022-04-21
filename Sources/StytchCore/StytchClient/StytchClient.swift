@@ -96,10 +96,19 @@ public struct StytchClient {
 }
 
 public extension StytchClient {
+    /**
+     Represents whether a deeplink was able to be handled, containing the original URL for further processing and
+     Session-related information when appropriate.
+     */
     typealias DeeplinkHandledStatus = HandledStatus<(SessionResponseType, URL), URL>
 
+    /**
+     A simple, generic type designed to explictly describe an item's handled status from a given handler.
+     */
     enum HandledStatus<Handled, NotHandled> {
+        /// The handler was successfully able to handle the given item.
         case handled(Handled)
+        /// The handler was unable to handle the given item.
         case notHandled(NotHandled)
     }
 }

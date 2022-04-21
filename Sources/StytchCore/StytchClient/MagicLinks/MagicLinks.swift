@@ -1,9 +1,7 @@
 public extension StytchClient {
-    /// The interface type for all magiclink calls.
+    /// The interface type for magic links.
     struct MagicLinks {
-        private let pathContext: Path = .init(rawValue: "magic_links")
-
-        public var email: Email { .init(pathContext: pathContext) }
+        let pathContext: Path = .init(rawValue: "magic_links")
 
         // sourcery: AsyncVariants
         /**
@@ -20,5 +18,6 @@ public extension StytchClient {
 }
 
 public extension StytchClient {
+    /// The interface implementation for magic links.
     static var magicLinks: MagicLinks { .init() }
 }

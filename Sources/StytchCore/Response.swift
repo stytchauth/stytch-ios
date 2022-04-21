@@ -28,7 +28,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
-/// An empty type to allow decoding the absensce of a value within various generic Decodable types
+/// An empty type to allow decoding the absence of a value within various generic Decodable types
 public struct EmptyDecodable: Decodable {}
 
 /// A response type which provides only the `requestId` and `statusCode`
