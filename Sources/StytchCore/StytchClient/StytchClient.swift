@@ -1,12 +1,11 @@
 import Foundation
 
 /**
- The ``StytchClient`` is the entrypoint for all Stytch-related interaction.
- Supported Stytch products are organized into interface structs which are then exposed as
- static variables on the ``StytchClient``, e.g. `StytchClient.magicLinks.email`.
- To utilize the ``StytchClient``, you must first configure the client using the
+ The entrypoint for all Stytch-related interaction. Supported Stytch products are organized into interface structs which are
+ exposed as static variables on the client, e.g. `StytchClient.magicLinks.email`.
+ To utilize the ``StytchClient``, you must first configure it using the
  ``configure(publicToken:hostUrl:)`` function.
- Asynchronous function calls for Stytch products are available via various
+ **Async Options**: Asynchronous function calls for Stytch products are available via various
  mechanisms (async/await, Combine, callbacks) so you can use whatever best suits your needs.
  ``` swift
  // In your AppDelegate or SwiftUI App file

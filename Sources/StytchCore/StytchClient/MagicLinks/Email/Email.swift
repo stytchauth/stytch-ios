@@ -1,5 +1,5 @@
 public extension StytchClient.MagicLinks {
-    /// Does some stuff
+    /// The interface type for all email-magiclink calls.
     struct Email {
         let pathContext: Path
 
@@ -8,9 +8,10 @@ public extension StytchClient.MagicLinks {
         }
 
         // sourcery: AsyncVariants
-        /// Wraps Stytch's email magiclink `login_or_create` endpoint. Requests an email magiclink for a user to
-        /// either log in or create an account depending on the presence/status of their current account.
-        func loginOrCreate(parameters: EmailParameters, completion: @escaping Completion<BasicResponse>) {
+        /**
+         Wraps Stytch's email magiclink [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magiclink for a user to log in or create an account depending on the presence and/or status of their current account.
+        */
+        func loginOrCreate(parameters: Parameters, completion: @escaping Completion<BasicResponse>) {
             StytchClient.post(
                 parameters: parameters,
                 path: pathContext.appendingPathComponent("login_or_create"),
