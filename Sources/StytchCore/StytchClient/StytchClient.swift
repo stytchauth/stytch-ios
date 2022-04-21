@@ -59,21 +59,35 @@ public struct StytchClient {
     }
 
     // sourcery: AsyncVariants
-    public static func handle(url: URL, sessionDuration: Minutes, completion: @escaping Completion<DeeplinkHandledStatus>) {
+    /**
+     This function is provided as a simple convenience handler to be used in your AppDelegate or
+    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
+    /// If Stytch is able to handle the URL and log the user in, a ``SessionResponseType`` will be returned to you asynchronously, with a `sessionDuration` of the length requested here. Regardless of
+    /// whether Stytch is able to handle the URL, it will be passed back to you for any further processing needs.
+    /// - Parameters:
+    ///   - url: A `URL` passed to your application as a deeplink.
+    ///   - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///   - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
+     */
+    public static func handle(
+        url: URL,
+        sessionDuration: Minutes = 30,
+        completion: @escaping Completion<DeeplinkHandledStatus>
+    ) {
         guard
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
             let typeQuery = queryItems.first(where: { $0.name == "type" }),
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
-            completion(.success(.right(url)))
+            completion(.success(.notHandled(url)))
             return
         }
 
         switch typeQuery.value {
         case "em":
             magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map { .left(($0, url)) })
+                completion(result.map { .handled(($0, url)) })
             }
         default:
             completion(.failure(StytchError(message: "Unrecognized deeplink type")))
@@ -82,10 +96,11 @@ public struct StytchClient {
 }
 
 public extension StytchClient {
-    typealias DeeplinkHandledStatus = Either<(AuthenticateResponse, URL), URL>
+    typealias DeeplinkHandledStatus = HandledStatus<(SessionResponseType, URL), URL>
+
+    enum HandledStatus<Handled, NotHandled> {
+        case handled(Handled)
+        case notHandled(NotHandled)
+    }
 }
 
-public enum Either<Left, Right> {
-    case left(Left)
-    case right(Right)
-}
