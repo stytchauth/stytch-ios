@@ -1,7 +1,8 @@
 import Foundation
 
-extension Session {
-    public struct AuthenticationFactor: Decodable {
+public extension Session {
+    // TODO: - document
+    struct AuthenticationFactor: Decodable {
         private enum CodingKeys: String, CodingKey {
             case deliveryMethod
             case lastAuthenticatedAt
@@ -69,6 +70,7 @@ extension Session {
 }
 
 public extension Session.AuthenticationFactor {
+    // TODO: - document
     enum Kind: String, Decodable {
         case magicLink = "magic_link" // TODO: figure out why this is required
         case otp
@@ -76,6 +78,7 @@ public extension Session.AuthenticationFactor {
         case oauth
     }
 
+    // TODO: - document
     enum DeliveryMethod {
         case authenticatorApp(AuthenticatorApp)
         case recoveryCode(RecoveryCode)
@@ -89,32 +92,38 @@ public extension Session.AuthenticationFactor {
         case webauthnRegistration(WebAuthn)
     }
 
+    // TODO: - document
     struct Email: Decodable {
         public let emailId: String
         public let emailAddress: String
     }
 
+    // TODO: - document
     struct PhoneNumber: Decodable {
         public let phoneId: String
         public let phoneNumber: String
     }
 
+    // TODO: - document
     struct Oauth: Decodable {
         public let id: String
         public let emailId: String
         public let providerSubject: String
     }
 
+    // TODO: - document
     struct WebAuthn: Decodable {
         public let webauthnRegistrationId: String
         public let domain: URL
         public let userAgent: String
     }
 
+    // TODO: - document
     struct AuthenticatorApp: Decodable {
         public let totpId: String
     }
 
+    // TODO: - document
     struct RecoveryCode: Decodable {
         public let totpRecoveryCodeId: String
     }

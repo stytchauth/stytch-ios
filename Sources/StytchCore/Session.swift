@@ -1,5 +1,6 @@
 import Foundation
 
+// TODO: - document
 public struct Session: Decodable {
     private enum CodingKeys: String, CodingKey {
         case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
@@ -62,6 +63,7 @@ public struct Session: Decodable {
 #endif
 
 extension Session {
+    // TODO: - document
     public struct Attributes: Decodable {
         public let ipAddress: String
         public let userAgent: String

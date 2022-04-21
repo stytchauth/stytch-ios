@@ -60,15 +60,15 @@ public struct StytchClient {
 
     // sourcery: AsyncVariants
     /**
-     This function is provided as a simple convenience handler to be used in your AppDelegate or
-    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, a ``SessionResponseType`` will be returned to you asynchronously, with a `sessionDuration` of the length requested here. Regardless of
-    /// whether Stytch is able to handle the URL, it will be passed back to you for any further processing needs.
-    /// - Parameters:
-    ///   - url: A `URL` passed to your application as a deeplink.
-    ///   - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///   - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
-     */
+      This function is provided as a simple convenience handler to be used in your AppDelegate or
+     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
+     /// If Stytch is able to handle the URL and log the user in, a ``SessionResponseType`` will be returned to you asynchronously, with a `sessionDuration` of the length requested here. Regardless of
+     /// whether Stytch is able to handle the URL, it will be passed back to you for any further processing needs.
+     /// - Parameters:
+     ///   - url: A `URL` passed to your application as a deeplink.
+     ///   - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+     ///   - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
+      */
     public static func handle(
         url: URL,
         sessionDuration: Minutes = 30,
@@ -112,4 +112,3 @@ public extension StytchClient {
         case notHandled(NotHandled)
     }
 }
-

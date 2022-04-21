@@ -16,7 +16,7 @@ let package = Package(
             name: "StytchCore",
             dependencies: [
                 "Networking",
-                .product(name: "Tagged", package: "swift-tagged")
+                .product(name: "Tagged", package: "swift-tagged"),
             ]
         ),
         .target(name: "Networking"),

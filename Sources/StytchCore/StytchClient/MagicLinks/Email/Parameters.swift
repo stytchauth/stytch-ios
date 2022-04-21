@@ -1,15 +1,15 @@
 import Foundation
 
-extension StytchClient.MagicLinks.Email {
+public extension StytchClient.MagicLinks.Email {
     /// A dedicated parameters type for email magic link `loginOrCreate` calls
-    public struct Parameters: Encodable {
+    struct Parameters: Encodable {
         private enum CodingKeys: String, CodingKey {
             case email
             case loginMagicLinkUrl
             case signupMagicLinkUrl
             case loginExpiration = "login_expiration_minutes"
             case signupExpiration = "signup_expiration_minutes"
-    //        case attributes
+            //        case attributes
         }
 
         let email: String
@@ -17,7 +17,7 @@ extension StytchClient.MagicLinks.Email {
         let signupMagicLinkUrl: URL
         let loginExpiration: Minutes
         let signupExpiration: Minutes
-    //    let attributes: [String: String] // TODO: - confirm what this is and if needed
+        //    let attributes: [String: String] // TODO: - confirm what this is and if needed
 
         /// Initializes the parameters struct
         /// - Parameters:

@@ -1,6 +1,7 @@
 import Foundation
 
 public extension StytchClient.MagicLinks {
+    // TODO: - document
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
             case token
