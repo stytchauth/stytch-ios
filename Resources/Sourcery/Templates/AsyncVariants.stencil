@@ -16,13 +16,15 @@ import Foundation
     }
 {% endmacro %}
 {% macro methodDocs %}
+/**
 {% for commentLine in method.documentation %}
 {% if commentLine|!contains:"completion" %}
-    /// {{ commentLine }}
+      {{ commentLine }}
 {% else %}
-    /// {{ commentLine|replace:"completion","return" }}
+      {{ commentLine|replace:"completion","return" }}
 {% endif %}
 {% endfor %}
+*/
 {% endmacro %}
 
 // MARK: - {{ methodName }} Combine
