@@ -28,9 +28,11 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
-public struct Empty: Decodable {}
+/// An empty type to allow decoding the absensce of a value within various generic Decodable types
+public struct EmptyDecodable: Decodable {}
 
-public typealias BasicResponse = Response<Empty>
+/// A response type which provides only the `requestId` and `statusCode`
+public typealias BasicResponse = Response<EmptyDecodable>
 
 #if DEBUG
     extension Response: Encodable where Wrapped: Encodable {
@@ -42,9 +44,9 @@ public typealias BasicResponse = Response<Empty>
         }
     }
 
-    extension Empty: Encodable {}
+    extension EmptyDecodable: Encodable {}
 
-    extension Response where Wrapped == Empty {
+    extension Response where Wrapped == EmptyDecodable {
         init(requestId: String, statusCode: UInt) {
             self.requestId = requestId
             self.statusCode = statusCode

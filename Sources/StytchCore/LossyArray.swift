@@ -2,8 +2,6 @@ import Foundation
 
 @propertyWrapper
 struct LossyArray<T: Decodable>: Decodable {
-    private struct AnyDecodableValue: Decodable {}
-
     var wrappedValue: [T]
 
     init(wrappedValue: [T]) {
@@ -19,7 +17,7 @@ struct LossyArray<T: Decodable>: Decodable {
             do {
                 elements.append(try container.decode(T.self))
             } catch {
-                _ = try? container.decode(AnyDecodableValue.self)
+                _ = try? container.decode(EmptyDecodable.self)
             }
         }
 
