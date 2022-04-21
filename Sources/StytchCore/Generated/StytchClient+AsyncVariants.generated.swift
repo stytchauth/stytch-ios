@@ -8,10 +8,10 @@ import Combine
 
 @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
 public extension StytchClient {
-    static func handle(url: URL) -> AnyPublisher<DeeplinkHandledStatus, Error> {
+    static func handle(url: URL, sessionDuration: Minutes) -> AnyPublisher<DeeplinkHandledStatus, Error> {
         return Deferred { 
             Future({ promise in
-                handle(url: url, completion: promise)
+                handle(url: url, sessionDuration: sessionDuration, completion: promise)
             })
         }
         .eraseToAnyPublisher()
@@ -24,16 +24,16 @@ public extension StytchClient {
 public extension StytchClient {
     #if compiler(>=5.5.2)
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.2, *)
-    static func handle(url: URL) async throws -> DeeplinkHandledStatus {
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus {
         try await withCheckedThrowingContinuation { continuation in
-            handle(url: url, completion: continuation.resume)
+            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
         }
     }
     #else
     @available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *)
-    static func handle(url: URL) async throws -> DeeplinkHandledStatus {
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus {
         try await withCheckedThrowingContinuation { continuation in
-            handle(url: url, completion: continuation.resume)
+            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
         }
     }
     #endif

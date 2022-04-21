@@ -26,7 +26,7 @@ public struct StytchClient {
     }
 
     // sourcery: AsyncVariants
-    public static func handle(url: URL, completion: @escaping Completion<DeeplinkHandledStatus>) {
+    public static func handle(url: URL, sessionDuration: Minutes, completion: @escaping Completion<DeeplinkHandledStatus>) {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
             let queryItems = components.queryItems,
@@ -39,8 +39,7 @@ public struct StytchClient {
 
         switch typeQuery.value {
         case "em":
-            // TODO: pass session duration as function parameter
-            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: .init(rawValue: 30))) { result in
+            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
                 completion(result.map { .left(($0, url)) })
             }
         default:
