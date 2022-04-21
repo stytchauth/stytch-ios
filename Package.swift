@@ -8,9 +8,17 @@ let package = Package(
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.6.0"),
+    ],
     targets: [
-        .target(name: "StytchCore", dependencies: ["Networking"]),
+        .target(
+            name: "StytchCore",
+            dependencies: [
+                "Networking",
+                .product(name: "Tagged", package: "swift-tagged")
+            ]
+        ),
         .target(name: "Networking"),
         .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),

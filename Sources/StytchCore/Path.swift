@@ -1,6 +1,7 @@
 import Foundation
+import Tagged
 
-struct PathTag {}
+enum PathTag {}
 
 typealias Path = Tagged<PathTag, String>
 
