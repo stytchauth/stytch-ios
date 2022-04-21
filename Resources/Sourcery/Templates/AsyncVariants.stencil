@@ -1,9 +1,8 @@
 {% for type in types.all %}
 {% for method in type.methods where method.annotations.AsyncVariants %}
-{% for methodName in method.name|split:"(" %}
-{% if forloop.first %}
 // sourcery:file:StytchCore/Generated/{{ type.name }}+AsyncVariants.generated.swift
 import Foundation
+{% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.asSource }}{% endif %}{% endfor %}){% endset %}
 {% set methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.name }}: {{ parameter.name }}{% endif %}{% endfor %}{% endset %}
@@ -62,7 +61,5 @@ public extension {{ type.name }} {
 }
 #endif
 // sourcery:end
-{% endif %}
-{% endfor %}
 {% endfor %}
 {% endfor %}
