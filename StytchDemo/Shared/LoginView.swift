@@ -55,7 +55,6 @@ struct LoginView: View {
                 print(error)
             }
             isLoading = false
-            // TODO: change screen to indicate the user should check their email
         }
     }
 }
