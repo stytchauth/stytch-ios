@@ -15,6 +15,7 @@ public extension StytchClient.MagicLinks {
             StytchClient.post(
                 parameters: parameters,
                 path: pathContext.appendingPathComponent("login_or_create"),
+                queryItems: [.init(name: "type", value: "em")],
                 completion: completion
             )
         }

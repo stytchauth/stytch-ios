@@ -5,6 +5,7 @@ extension StytchClient {
     static func post<Parameters: Encodable, Response: Decodable>(
         parameters: Parameters,
         path: Path,
+        queryItems: [URLQueryItem] = [],
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
@@ -15,7 +16,7 @@ extension StytchClient {
             let data = try Current.jsonEncoder.encode(parameters)
             StytchClient.performRequest(
                 .post(data),
-                url: configuration.baseURL.appendingPathComponent(path),
+                url: configuration.baseURL.appendingPathComponent(path).appendingQueryItems(queryItems),
                 configuration: configuration,
                 completion: completion
             )
