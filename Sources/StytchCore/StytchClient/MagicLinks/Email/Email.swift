@@ -1,9 +1,9 @@
 public extension StytchClient.MagicLinks {
     /// The interface type for email magic links.
     struct Email {
-        let pathContext: Path
+        let pathContext: Endpoint.Path
 
-        init(pathContext: Path) {
+        init(pathContext: Endpoint.Path) {
             self.pathContext = pathContext.appendingPathComponent("email")
         }
 
@@ -13,9 +13,11 @@ public extension StytchClient.MagicLinks {
          */
         public func loginOrCreate(parameters: Parameters, completion: @escaping Completion<BasicResponse>) {
             StytchClient.post(
+                to: .init(
+                    path: pathContext.appendingPathComponent("login_or_create"),
+                    queryItems: [.init(name: "type", value: "em")]
+                ),
                 parameters: parameters,
-                path: pathContext.appendingPathComponent("login_or_create"),
-                queryItems: [.init(name: "type", value: "em")],
                 completion: completion
             )
         }

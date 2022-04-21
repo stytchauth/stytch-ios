@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// The interface type for magic links.
     struct MagicLinks {
-        let pathContext: Path = .init(rawValue: "magic_links")
+        let pathContext: Endpoint.Path = .init(rawValue: "magic_links")
 
         // sourcery: AsyncVariants
         /**
@@ -9,8 +9,8 @@ public extension StytchClient {
          */
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
             StytchClient.post(
+                to: .init(path: pathContext.appendingPathComponent("authenticate")),
                 parameters: parameters,
-                path: pathContext.appendingPathComponent("authenticate"),
                 completion: completion
             )
         }
