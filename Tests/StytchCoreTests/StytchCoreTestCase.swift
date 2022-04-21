@@ -19,12 +19,12 @@ final class StytchCoreTestCase: XCTestCase {
             dataTaskClient: .mock(returning: .success(data))
         )
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: EmailParameters = .init(
-            email: .init(rawValue: "asdf@stytch.com"),
+        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
+            email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
-            loginExpiration: .init(rawValue: 30),
-            signupExpiration: .init(rawValue: 30)
+            loginExpiration: 30,
+            signupExpiration: 30
         )
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
