@@ -1,7 +1,7 @@
 .PHONY: coverage codegen docs format lint setup test tests tools
 
-coverage:
-	@if [ ! -f $$(Scripts/coverage instr-profile-path) ]; then $(MAKE) test; fi
+coverage: test
+	# @if [ ! -f $$(Scripts/coverage instr-profile-path) ] && [ ! -z $$CI ]; then $(MAKE) test; fi
 	Scripts/coverage generate-html
 
 codegen:
