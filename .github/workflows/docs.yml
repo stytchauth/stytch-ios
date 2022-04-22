@@ -1,5 +1,6 @@
 name: Docs
 on:
+  pull_request: # temporary to test this workflow
   push:
     branches:
       - main
