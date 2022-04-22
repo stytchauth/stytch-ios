@@ -1,4 +1,4 @@
-.PHONY: coverage codegen docs format lint setup tools
+.PHONY: coverage codegen docs format lint setup test tests tools
 
 coverage:
 	@if [ ! -f $$(Scripts/coverage instr-profile-path) ]; then $(MAKE) test; fi
@@ -21,7 +21,7 @@ lint:
 setup:
 	brew bundle
 
-test: codegen
+test tests: codegen
 	swift test --enable-code-coverage
 
 tools:
