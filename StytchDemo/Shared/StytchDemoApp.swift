@@ -17,14 +17,14 @@ struct StytchDemoApp: App {
                     )
                 }
                 .onOpenURL { url in
-                    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
-                    guard let token = components.queryItems?.first(where: { $0.name == "token" })?.value else { return }
                     Task {
                         do {
-                            let resp = try await StytchClient.magicLinks.authenticate(
-                                parameters: .init(token: token, sessionDuration: .init(rawValue: 30))
-                            )
-                            self.session = resp.session
+                            switch try await StytchClient.handle(url: url) {
+                            case let .handled((resp, _)):
+                                self.session = resp.session
+                            case .notHandled:
+                                print("not handled")
+                            }
                         }
                     }
                 }
