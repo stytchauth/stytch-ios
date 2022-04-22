@@ -1,6 +1,5 @@
 name: Docs
 on:
-  pull_request: # temporary to test this workflow
   push:
     branches:
       - main
@@ -10,40 +9,40 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    # - uses: actions/checkout@v2
 
-    - name: Cache Mint packages
-      uses: actions/cache@v3
-      env:
-        cache-name: mint-cache
-        cache-version: 1
-      with:
-        path: |
-          ~/.mint/
-        key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
-          ${{ runner.os }}-${{ env.cache-name }}-build-v
-          ${{ runner.os }}-
+    # - name: Cache Mint packages
+    #   uses: actions/cache@v3
+    #   env:
+    #     cache-name: mint-cache
+    #     cache-version: 1
+    #   with:
+    #     path: |
+    #       ~/.mint/
+    #     key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
+    #       ${{ runner.os }}-${{ env.cache-name }}-build-v
+    #       ${{ runner.os }}-
 
-    - name: Bootstrap
-      run: |
-        make setup
-        make tools
+    # - name: Bootstrap
+    #   run: |
+    #     make setup
+    #     make tools
 
-    - name: Codegen
-      run: make codegen
+    # - name: Codegen
+    #   run: make codegen
 
-    - name: Generate docs
-      run: make docs
+    # - name: Generate docs
+    #   run: make docs
 
-    - name: Publish docs
-      run: |
-        current_sha="$(git rev-parse @)"
-        git checkout docs/live
-        git reset @ --hard
-        rsync .build/docs .
-        git add docs
-        git commit --author="CI <ci@stytch.com>" -m "$current_sha"
-        git push
+    # - name: Publish docs
+    #   run: |
+    #     current_sha="$(git rev-parse @)"
+    #     git checkout docs/live
+    #     git reset @ --hard
+    #     rsync .build/docs .
+    #     git add docs
+    #     git commit --author="CI <ci@stytch.com>" -m "$current_sha"
+    #     git push
 
