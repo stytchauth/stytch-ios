@@ -6,7 +6,8 @@ on:
   pull_request:
   
 jobs:
-  test:
+
+  build:
     runs-on: macos-latest
 
     steps:
@@ -34,6 +35,11 @@ jobs:
     - name: Codegen
       run: make codegen
 
+  test:
+    runs-on: macos-latest
+    needs: build
+
+    steps:
     - name: Lint
       run: make lint
 
