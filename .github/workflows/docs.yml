@@ -1,14 +1,14 @@
-name: Docs
-on:
-  push:
-    branches:
-      - main
+# name: Docs
+# on:
+#   push:
+#     branches:
+#       - main
   
-jobs:
-  docs:
-    runs-on: macos-latest
+# jobs:
+#   docs:
+#     runs-on: macos-latest
 
-    steps:
+#     steps:
     # - uses: actions/checkout@v2
 
     # - name: Cache Mint packages
