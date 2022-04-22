@@ -38,9 +38,6 @@ jobs:
     - name: Lint
       run: make lint
 
-    - name: Build
-      run: swift build --build-tests
-
     - name: Test
       run: make test
 
