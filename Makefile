@@ -8,8 +8,9 @@ codegen:
 
 docs: codegen
 	
-	xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$$(xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/') -destination generic/platform=iOS -derivedDataPath .build
-	$$(xcrun --find docc) convert --help
+	# xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$$(xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/') -destination generic/platform=iOS -derivedDataPath .build
+	# $$(xcrun --find docc) convert --help
+	swift --version
 	$$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs
 
 format:
