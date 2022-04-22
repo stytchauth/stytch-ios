@@ -3,8 +3,8 @@ import Networking
 
 extension StytchClient {
     static func post<Parameters: Encodable, Response: Decodable>(
+        to endpoint: Endpoint,
         parameters: Parameters,
-        path: Path,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
@@ -15,7 +15,7 @@ extension StytchClient {
             let data = try Current.jsonEncoder.encode(parameters)
             StytchClient.performRequest(
                 .post(data),
-                url: configuration.baseURL.appendingPathComponent(path),
+                url: endpoint.url(baseUrl: configuration.baseUrl),
                 configuration: configuration,
                 completion: completion
             )
@@ -25,27 +25,20 @@ extension StytchClient {
     }
 
     static func get<Response: Decodable>(
-        queryItems: [URLQueryItem],
-        path: String,
+        endpoint: Endpoint,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
             completion(.failure(StytchError.clientNotConfigured))
             return
         }
-        guard var urlComponents = URLComponents(url: configuration.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false) else {
-            completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
-            return
-        }
-        var urlQueryItems = urlComponents.queryItems ?? []
-        urlQueryItems.append(contentsOf: queryItems)
-        urlComponents.queryItems = urlQueryItems
-        guard let url = urlComponents.url else {
-            completion(.failure(StytchError(message: "Internal Error: Please alert Stytch engineer.")))
-            return
-        }
 
-        performRequest(.get, url: url, configuration: configuration, completion: completion)
+        performRequest(
+            .get,
+            url: endpoint.url(baseUrl: configuration.baseUrl),
+            configuration: configuration,
+            completion: completion
+        )
     }
 
     private static func performRequest<Response: Decodable>(

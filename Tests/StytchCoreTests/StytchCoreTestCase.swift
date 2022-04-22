@@ -19,12 +19,12 @@ final class StytchCoreTestCase: XCTestCase {
             dataTaskClient: .mock(returning: .success(data))
         )
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: EmailParameters = .init(
-            email: .init(rawValue: "asdf@stytch.com"),
+        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
+            email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
-            loginExpiration: .init(rawValue: 30),
-            signupExpiration: .init(rawValue: 30)
+            loginExpiration: 30,
+            signupExpiration: 30
         )
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
@@ -33,7 +33,7 @@ final class StytchCoreTestCase: XCTestCase {
     }
 
     func testPath() {
-        let path = Path(rawValue: "path")
+        let path = Endpoint.Path(rawValue: "path")
         XCTAssertEqual(path.rawValue, "path")
         XCTAssertEqual(path.appendingPathComponent("").rawValue, "path")
         XCTAssertEqual(path.appendingPathComponent("new_path").rawValue, "path/new_path")
@@ -43,11 +43,11 @@ final class StytchCoreTestCase: XCTestCase {
         )
     }
 
-    func testUrl() {
-        let url = URL(string: "https://stytch.com/path/component")
-        XCTAssertEqual(url?.path, "/path/component")
-        let path = Path(rawValue: "/other/path")
-        XCTAssertEqual(url?.appendingPathComponent(path).path, "/path/component/other/path")
+    func testEndpoint() throws {
+        let url = try XCTUnwrap(URL(string: "https://stytch.com/path/component"))
+        XCTAssertEqual(url.path, "/path/component")
+        let endpoint = Endpoint(path: .init(rawValue: "/other/path"))
+        XCTAssertEqual(endpoint.url(baseUrl: url).path, "/path/component/other/path")
     }
 
     func testLossyArray() throws {

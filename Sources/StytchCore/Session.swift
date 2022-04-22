@@ -1,16 +1,26 @@
 import Foundation
 
+/**
+ A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
+ */
 public struct Session: Decodable {
     private enum CodingKeys: String, CodingKey {
         case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
     }
 
+    /// Attributes of this session.
     public let attributes: Attributes
+    /// A list of authentication factors associated with this session.
     public var authenticationFactors: [AuthenticationFactor] { wrappedAuthenticationFactors }
+    /// The date the session expires.
     public let expiresAt: Date
+    /// The date this session was last accessed.
     public let lastAccessedAt: Date
+    /// The id for this session.
     public let sessionId: String
+    /// The date this session began.
     public let startedAt: Date
+    /// The user id associated with this session.
     public let userId: String
     @LossyArray private var wrappedAuthenticationFactors: [AuthenticationFactor]
 
@@ -62,8 +72,13 @@ public struct Session: Decodable {
 #endif
 
 extension Session {
+    /**
+     A type which contains metadata relating to a session.
+     */
     public struct Attributes: Decodable {
+        /// The IP Address associated with a session.
         public let ipAddress: String
+        /// The user agent associated with a session.
         public let userAgent: String
     }
 

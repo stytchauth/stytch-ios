@@ -1,72 +1,85 @@
 import Foundation
 
-public struct AuthenticationFactor: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case deliveryMethod
-        case lastAuthenticatedAt
-        case kind = "type"
+public extension Session {
+    /**
+     A type which describes an factor used to authenticate a session.
+     E.g. An email which was used to log in, or a phone which was used
+     via SMS as an OTP second factor.
+     */
+    struct AuthenticationFactor: Decodable {
+        private enum CodingKeys: String, CodingKey {
+            case deliveryMethod
+            case lastAuthenticatedAt
+            case kind = "type"
 
-        // Factors
-        case emailFactor
-        case phoneNumberFactor
-        case googleOauthFactor
-        case microsoftOauthFactor
-        case appleOauthFactor
-        case githubOauthFactor
-        case webauthnFactor
-        case authenticatorAppFactor
-        case recoveryCodeFactor
-    }
+            // Factors
+            case emailFactor
+            case phoneNumberFactor
+            case googleOauthFactor
+            case microsoftOauthFactor
+            case appleOauthFactor
+            case githubOauthFactor
+            case webauthnFactor
+            case authenticatorAppFactor
+            case recoveryCodeFactor
+        }
 
-    private enum _DeliveryMethod: String, Decodable {
-        case authenticatorApp
-        case recoveryCode
-        case email
-        case sms
-        case whatsapp
-        case oauthGoogle
-        case oauthApple
-        case oauthGithub
-        case oauthMicrosoft
-        case webauthnRegistration
-    }
+        private enum _DeliveryMethod: String, Decodable {
+            case authenticatorApp
+            case recoveryCode
+            case email
+            case sms
+            case whatsapp
+            case oauthGoogle
+            case oauthApple
+            case oauthGithub
+            case oauthMicrosoft
+            case webauthnRegistration
+        }
 
-    public let deliveryMethod: DeliveryMethod
-    public let kind: Kind
-    public let lastAuthenticatedAt: Date
+        /// The delivery mechanism used to provide this factor.
+        public let deliveryMethod: DeliveryMethod
+        /// The type of factor, e.g. magic link, OTP, TOTP, etc.
+        public let kind: Kind
+        /// The date this factor was last used to authenticate.
+        public let lastAuthenticatedAt: Date
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
-        kind = try container.decode(key: .kind)
-        let deliveryMethod: _DeliveryMethod = try container.decode(key: .deliveryMethod)
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
+            kind = try container.decode(key: .kind)
+            let deliveryMethod: _DeliveryMethod = try container.decode(key: .deliveryMethod)
 
-        switch deliveryMethod {
-        case .authenticatorApp:
-            self.deliveryMethod = .authenticatorApp(try container.decode(key: .authenticatorAppFactor))
-        case .recoveryCode:
-            self.deliveryMethod = .recoveryCode(try container.decode(key: .recoveryCodeFactor))
-        case .email:
-            self.deliveryMethod = .email(try container.decode(key: .emailFactor))
-        case .sms:
-            self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
-        case .whatsapp:
-            self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
-        case .oauthGoogle:
-            self.deliveryMethod = .oauthGoogle(try container.decode(key: .googleOauthFactor))
-        case .oauthApple:
-            self.deliveryMethod = .oauthApple(try container.decode(key: .appleOauthFactor))
-        case .oauthGithub:
-            self.deliveryMethod = .oauthGithub(try container.decode(key: .githubOauthFactor))
-        case .oauthMicrosoft:
-            self.deliveryMethod = .oauthMicrosoft(try container.decode(key: .microsoftOauthFactor))
-        case .webauthnRegistration:
-            self.deliveryMethod = .webauthnRegistration(try container.decode(key: .webauthnFactor))
+            switch deliveryMethod {
+            case .authenticatorApp:
+                self.deliveryMethod = .authenticatorApp(try container.decode(key: .authenticatorAppFactor))
+            case .recoveryCode:
+                self.deliveryMethod = .recoveryCode(try container.decode(key: .recoveryCodeFactor))
+            case .email:
+                self.deliveryMethod = .email(try container.decode(key: .emailFactor))
+            case .sms:
+                self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
+            case .whatsapp:
+                self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
+            case .oauthGoogle:
+                self.deliveryMethod = .oauthGoogle(try container.decode(key: .googleOauthFactor))
+            case .oauthApple:
+                self.deliveryMethod = .oauthApple(try container.decode(key: .appleOauthFactor))
+            case .oauthGithub:
+                self.deliveryMethod = .oauthGithub(try container.decode(key: .githubOauthFactor))
+            case .oauthMicrosoft:
+                self.deliveryMethod = .oauthMicrosoft(try container.decode(key: .microsoftOauthFactor))
+            case .webauthnRegistration:
+                self.deliveryMethod = .webauthnRegistration(try container.decode(key: .webauthnFactor))
+            }
         }
     }
 }
 
-public extension AuthenticationFactor {
+public extension Session.AuthenticationFactor {
+    /**
+     The kind, or type, of Authentication factor, e.g. magic link, TOTP, etc.
+     */
     enum Kind: String, Decodable {
         case magicLink = "magic_link" // TODO: figure out why this is required
         case otp
@@ -87,39 +100,57 @@ public extension AuthenticationFactor {
         case webauthnRegistration(WebAuthn)
     }
 
+    /// Information describing an email used as an authentication factor.
     struct Email: Decodable {
+        /// The id associated with this email factor.
         public let emailId: String
+        /// The email address used for the authentication factor.
         public let emailAddress: String
     }
 
+    /// Information describing a phone number used as an authentication factor.
     struct PhoneNumber: Decodable {
+        /// The id associated with this phone number factor.
         public let phoneId: String
+        /// The phone number used for the authentication factor.
         public let phoneNumber: String
     }
 
+    /// Information describing Oauth used as an authentication factor.
     struct Oauth: Decodable {
+        /// The id associated with this Oauth factor.
         public let id: String
+        /// The id associated with the email for this Oauth factor.
         public let emailId: String
+        /// The subject of the identity provider for this Oauth factor.
         public let providerSubject: String
     }
 
+    /// Information describing a WebAuthn registration used as an authentication factor.
     struct WebAuthn: Decodable {
+        /// The id associated with this WebAuthn registration.
         public let webauthnRegistrationId: String
+        /// The domain associated with this WebAuthn registration.
         public let domain: URL
+        /// The user agent associated with this WebAuthn registration.
         public let userAgent: String
     }
 
+    /// Information describing a TOTP authenticator app used as an authentication factor.
     struct AuthenticatorApp: Decodable {
+        /// The id associated with this TOTP factor.
         public let totpId: String
     }
 
+    /// Information describing a TOTP recovery code used as an authentication factor.
     struct RecoveryCode: Decodable {
+        /// The id associated with this recovery code factor.
         public let totpRecoveryCodeId: String
     }
 }
 
 #if DEBUG
-    extension AuthenticationFactor: Encodable {
+    extension Session.AuthenticationFactor: Encodable {
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(lastAuthenticatedAt, forKey: .lastAuthenticatedAt)
@@ -148,11 +179,11 @@ public extension AuthenticationFactor {
         }
     }
 
-    extension AuthenticationFactor.Kind: Encodable {}
-    extension AuthenticationFactor.Email: Encodable {}
-    extension AuthenticationFactor.PhoneNumber: Encodable {}
-    extension AuthenticationFactor.Oauth: Encodable {}
-    extension AuthenticationFactor.WebAuthn: Encodable {}
-    extension AuthenticationFactor.AuthenticatorApp: Encodable {}
-    extension AuthenticationFactor.RecoveryCode: Encodable {}
+    extension Session.AuthenticationFactor.Kind: Encodable {}
+    extension Session.AuthenticationFactor.Email: Encodable {}
+    extension Session.AuthenticationFactor.PhoneNumber: Encodable {}
+    extension Session.AuthenticationFactor.Oauth: Encodable {}
+    extension Session.AuthenticationFactor.WebAuthn: Encodable {}
+    extension Session.AuthenticationFactor.AuthenticatorApp: Encodable {}
+    extension Session.AuthenticationFactor.RecoveryCode: Encodable {}
 #endif

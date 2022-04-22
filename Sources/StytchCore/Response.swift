@@ -1,12 +1,16 @@
 import Foundation
-
+/**
+ A generic type which encompasses the ``requestId`` and ``statusCode``, along with dynamic member accessors for the wrapped type.
+ */
 @dynamicMemberLookup
 public struct Response<Wrapped: Decodable>: Decodable {
     private enum CodingKeys: String, CodingKey {
         case requestId, statusCode
     }
 
+    /// The id for the request.
     public let requestId: String
+    /// The HTTP status code of the request.
     public let statusCode: UInt
     private let wrapped: Wrapped
 
@@ -23,14 +27,17 @@ public struct Response<Wrapped: Decodable>: Decodable {
         self.wrapped = wrapped
     }
 
+    /// Enables dynamic member access to the wrapped type.
     public subscript<T>(dynamicMember member: KeyPath<Wrapped, T>) -> T {
         wrapped[keyPath: member]
     }
 }
 
-public struct Empty: Decodable {}
+/// An empty type to allow decoding the absence of a value within various generic Decodable types.
+public struct EmptyDecodable: Decodable {}
 
-public typealias BasicResponse = Response<Empty>
+/// A concrete response type which provides only the `requestId` and `statusCode`.
+public typealias BasicResponse = Response<EmptyDecodable>
 
 #if DEBUG
     extension Response: Encodable where Wrapped: Encodable {
@@ -42,9 +49,9 @@ public typealias BasicResponse = Response<Empty>
         }
     }
 
-    extension Empty: Encodable {}
+    extension EmptyDecodable: Encodable {}
 
-    extension Response where Wrapped == Empty {
+    extension Response where Wrapped == EmptyDecodable {
         init(requestId: String, statusCode: UInt) {
             self.requestId = requestId
             self.statusCode = statusCode
@@ -52,3 +59,44 @@ public typealias BasicResponse = Response<Empty>
         }
     }
 #endif
+
+/**
+ An interface for the various response types which include ``Session`` information.
+ */
+public protocol SessionResponseType {
+    /// The id of the authenticated user.
+    var userId: String { get }
+    /**
+     The opaque token for the session. Can be used by your server to verify the
+     validity of your session by confirming with Stytch's servers on each request.
+     */
+    var sessionToken: String { get }
+    /**
+     The JWT for the session. Can be used by your server to verify the validity of
+     your session either by checking the data included in the JWT, or by verifying
+     with Stytch's servers as needed.
+     */
+    var sessionJwt: String { get }
+    /**
+     The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+     */
+    var session: Session { get }
+}
+
+extension Response: SessionResponseType where Wrapped: SessionResponseType {
+    public var userId: String {
+        self[dynamicMember: \.userId]
+    }
+
+    public var sessionToken: String {
+        self[dynamicMember: \.sessionToken]
+    }
+
+    public var sessionJwt: String {
+        self[dynamicMember: \.sessionJwt]
+    }
+
+    public var session: Session {
+        self[dynamicMember: \.session]
+    }
+}

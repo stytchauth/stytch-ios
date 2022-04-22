@@ -1,15 +1,16 @@
 import Foundation
 
-public extension StytchClient {
+extension StytchClient {
     struct Configuration {
+        // TODO: - this should be applinks, not hostUrl (that should use bundle identifier)
         let hostUrl: URL
 
         let publicToken: String
 
-        var baseURL: URL {
+        var baseUrl: URL {
             var urlComponents: URLComponents = .init()
             urlComponents.scheme = "https"
-            urlComponents.path = "/web/sdk"
+            urlComponents.path = "/web/sdk/"
             urlComponents.host = "stytch.com"
             #if DEBUG
                 if let host = ProcessInfo.processInfo.environment["STYTCH_API_HOST"] {

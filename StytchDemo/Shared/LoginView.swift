@@ -6,10 +6,12 @@ struct LoginView: View {
 
     @State private var email: String = ""
     @State private var isLoading = false
+    @State private var checkEmailPresented = false
 
     var body: some View {
         VStack {
             TextField(text: $email, label: { Text("Email") })
+                .onSubmit(login)
                 .padding()
                 .textFieldStyle(.roundedBorder)
                 .disableAutocorrection(true)
@@ -19,25 +21,7 @@ struct LoginView: View {
                 .textContentType(.emailAddress)
             #endif
 
-            Button(action: {
-                isLoading = true
-                Task {
-                    let emailParams: EmailParameters = .init(
-                        email: .init(rawValue: email),
-                        loginMagicLinkUrl: hostUrl.appendingPathComponent("login"),
-                        signupMagicLinkUrl: hostUrl.appendingPathComponent("signup"),
-                        loginExpiration: .init(rawValue: 30),
-                        signupExpiration: .init(rawValue: 30)
-                    )
-                    do {
-                        _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: emailParams)
-                    } catch {
-                        print(error)
-                    }
-                    isLoading = false
-                    // TODO: change screen to indicate the user should check their email
-                }
-            }, label: {
+            Button(action: login, label: {
                 if isLoading {
                     ZStack {
                         ProgressView()
@@ -50,6 +34,27 @@ struct LoginView: View {
             })
             .buttonStyle(.borderedProminent)
             .disabled(isLoading || email.isEmpty)
+        }
+        .alert("🪄 Check your email to finish logging in. 🪄", isPresented: $checkEmailPresented, actions: { EmptyView() })
+    }
+
+    func login() {
+        isLoading = true
+        Task {
+            let emailParams: StytchClient.MagicLinks.Email.Parameters = .init(
+                email: email,
+                loginMagicLinkUrl: hostUrl.appendingPathComponent("login"),
+                signupMagicLinkUrl: hostUrl.appendingPathComponent("signup"),
+                loginExpiration: 10,
+                signupExpiration: 10
+            )
+            do {
+                _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: emailParams)
+                checkEmailPresented = true
+            } catch {
+                print(error)
+            }
+            isLoading = false
         }
     }
 }

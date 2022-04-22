@@ -6,18 +6,20 @@ function llvm-cov() {
 
 bin_path="$(swift build --show-bin-path)"
 xctest_path="$(find $bin_path -name '*.xctest')"
-package_name="$(basename $xctest_path .xctest)"
+
+profdata_path="$bin_path/codecov/default.profdata"
+pkg_contents_path="$xctest_path/Contents/MacOS/$(basename $xctest_path .xctest)"
+ignore_regex="\.build|Tests|\.generated.swift"
 
 mkdir -p .coverage
-
 
 case "$1" in
     generate-html)
         llvm-cov export \
             -format=lcov \
-            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
-            -instr-profile="$bin_path/codecov/default.profdata" \
-            "$xctest_path/Contents/MacOS/$package_name" \
+            -ignore-filename-regex="$ignore_regex" \
+            -instr-profile="$profdata_path" \
+            "$pkg_contents_path" \
             > .coverage/lcov.info
 
         genhtml .coverage/lcov.info --output-directory .coverage/
@@ -25,15 +27,22 @@ case "$1" in
     generate-json)
         llvm-cov export \
             -format=text \
-            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
-            -instr-profile="$bin_path/codecov/default.profdata" \
-            "$xctest_path/Contents/MacOS/$package_name" \
+            -ignore-filename-regex="$ignore_regex" \
+            -instr-profile="$profdata_path" \
+            "$pkg_contents_path" \
             > .coverage/lcov.json
         ;;
     report)
         llvm-cov report \
-            -ignore-filename-regex="\.build|Tests|\.generated.swift" \
-            -instr-profile="$bin_path/codecov/default.profdata" \
-            "$xctest_path/Contents/MacOS/$package_name" \
+            -ignore-filename-regex="$ignore_regex" \
+            -instr-profile="$profdata_path" \
+            "$pkg_contents_path" \
+        ;;
+    instr-profile-path)
+        echo "$profdata_path"
+        ;;
+    *)
+        echo 'Unrecognized command'
+        exit 1
         ;;
 esac

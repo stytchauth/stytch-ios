@@ -6,6 +6,7 @@ on:
   pull_request:
   
 jobs:
+
   test:
     runs-on: macos-latest
 
@@ -29,23 +30,19 @@ jobs:
     - name: Bootstrap
       run: |
         make setup
-        make bootstrap-tools
+        make tools
 
     - name: Codegen
-      run: |
-        make codegen
+      run: make codegen
 
     - name: Lint
-      run: |
-        make lint
+      run: make lint
 
     - name: Test
-      run: |
-        swift test --enable-code-coverage
+      run: make test
 
     - name: Coverage
-      run: |
-        make coverage
+      run: make coverage
 
     - uses: actions/upload-artifact@v3
       with:
