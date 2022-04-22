@@ -15,17 +15,9 @@ import Foundation
     }
 {% endset %}
 {% set methodDocs %}
-{% if method.documentation.count > 0 %}
-/**
 {% for commentLine in method.documentation %}
-{% if commentLine|!contains:"completion" %}
-      {{ commentLine }}
-{% else %}
-      {{ commentLine|replace:"completion","return" }}
-{% endif %}
+    /// {{ commentLine|replace:"  - completion:","- Returns:" }}
 {% endfor %}
-*/
-{% endif %}
 {% endset %}
 
 // MARK: - {{ methodName }} Combine
