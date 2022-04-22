@@ -12,7 +12,7 @@ struct Endpoint {
 
     func url(baseUrl: URL) -> URL {
         guard var components = URLComponents(
-            url: URL(string: path.rawValue, relativeTo: baseUrl) ?? baseUrl,
+            url: baseUrl.appendingPathComponent(path.rawValue),
             resolvingAgainstBaseURL: true
         ) else {
             return baseUrl

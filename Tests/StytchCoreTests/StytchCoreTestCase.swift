@@ -33,7 +33,7 @@ final class StytchCoreTestCase: XCTestCase {
     }
 
     func testPath() {
-        let path = Path(rawValue: "path")
+        let path = Endpoint.Path(rawValue: "path")
         XCTAssertEqual(path.rawValue, "path")
         XCTAssertEqual(path.appendingPathComponent("").rawValue, "path")
         XCTAssertEqual(path.appendingPathComponent("new_path").rawValue, "path/new_path")
@@ -43,11 +43,11 @@ final class StytchCoreTestCase: XCTestCase {
         )
     }
 
-    func testUrl() {
-        let url = URL(string: "https://stytch.com/path/component")
-        XCTAssertEqual(url?.path, "/path/component")
-        let path = Path(rawValue: "/other/path")
-        XCTAssertEqual(url?.appendingPathComponent(path).path, "/path/component/other/path")
+    func testEndpoint() {
+        let url = URL(string: "https://stytch.com/path/component")!
+        XCTAssertEqual(url.path, "/path/component")
+        let endpoint = Endpoint(path: .init(rawValue: "/other/path"))
+        XCTAssertEqual(endpoint.url(baseUrl: url).path, "/path/component/other/path")
     }
 
     func testLossyArray() throws {
