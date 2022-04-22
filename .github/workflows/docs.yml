@@ -6,7 +6,7 @@ on:
       - main
   
 jobs:
-  test:
+  docs:
     runs-on: macos-latest
 
     steps:
@@ -35,7 +35,11 @@ jobs:
       run: make codegen
 
     - name: Generate docs
-      run: make docs
+      run: |
+        pwd
+        ls
+        xcodebuild -list
+        make docs
 
     - name: Publish docs
       run: |
