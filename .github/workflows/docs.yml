@@ -35,11 +35,7 @@ jobs:
       run: make codegen
 
     - name: Generate docs
-      run: |
-        pwd
-        ls
-        xcodebuild -list
-        make docs
+      run: make docs
 
     - name: Publish docs
       run: |
