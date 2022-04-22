@@ -1,6 +1,7 @@
 .PHONY: coverage codegen docs format lint setup tools
 
-coverage: test
+coverage:
+	@if [ ! -f $$(Scripts/coverage instr-profile-path) ]; then $(MAKE) test; fi
 	Scripts/coverage generate-html
 
 codegen:
