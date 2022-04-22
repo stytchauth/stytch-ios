@@ -39,7 +39,7 @@ jobs:
 
     - name: Publish docs
       run: |
-        current_sha="$(git rev-parse HEAD)"
+        current_sha="$(git rev-parse @)"
         git checkout docs/live
         git reset @ --hard
         rsync .build/docs .
