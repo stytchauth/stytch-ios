@@ -53,8 +53,8 @@ jobs:
     - name: Publish docs
       run: |
         current_sha="$(git rev-parse @)"
-        rsync .build/docs ../../docs-live/
-        cd ../../docs-live
+        rsync -a .build/docs ../docs-live/
+        cd ../docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         git push
