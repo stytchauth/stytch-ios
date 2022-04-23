@@ -44,14 +44,14 @@ jobs:
 
     - name: Bootstrap
       run: |
-        arch -arm64 make setup
-        arch -arm64 make tools
+        make setup
+        make tools
 
     - name: Codegen
-      run: arch -arm64 make codegen
+      run: make codegen
 
     - name: Generate docs
-      run: arch -arm64 make docs
+      run: make docs
 
     - name: Publish docs
       run: |
