@@ -33,20 +33,20 @@ jobs:
 
     - name: Bootstrap
       run: |
-        make setup
-        make tools
+        arch -arm64 make setup
+        arch -arm64 make tools
 
     - name: Codegen
-      run: make codegen
+      run: arch -arm64 make codegen
 
     - name: Lint
-      run: make lint
+      run: arch -arm64 make lint
 
     - name: Test
-      run: make test
+      run: arch -arm64 make test
 
     - name: Coverage
-      run: make coverage
+      run: arch -arm64 make coverage
 
     - uses: actions/upload-artifact@v3
       with:
