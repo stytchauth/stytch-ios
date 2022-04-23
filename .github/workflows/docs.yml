@@ -37,11 +37,7 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-build-v
           ${{ runner.os }}-
 
-    - run: |
-        cd main
-        pwd
-        ls -alrt
-        cd stytch-ios
+    - run: cd main
 
     - name: Bootstrap
       run: |
