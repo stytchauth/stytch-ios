@@ -16,10 +16,10 @@ jobs:
     steps:
 
     - uses: webiny/action-post-run@2.0.1
-        id: post-workflow-cleanup
-        with:
-          working-directory: ${{ env.RUNNER_WORKSPACE }}
-          run: |
+      id: post-workflow-cleanup
+      with:
+        working-directory: ${{ env.RUNNER_WORKSPACE }}
+        run: |
             ls -alrt
             cd ..
             ls -alrt
