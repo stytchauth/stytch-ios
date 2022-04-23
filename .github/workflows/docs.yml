@@ -20,9 +20,10 @@ jobs:
       with:
         working-directory: ${{ env.RUNNER_WORKSPACE }}
         run: |
-          ls -a
-          cd ..
-          pwd
+          command ls -alrt
+          command cd ..
+          command ls -alrt ../
+          command pwd
           # rm -r ${{ env.RUNNER_WORKSPACE }}
 
     - uses: actions/checkout@v3
