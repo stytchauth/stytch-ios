@@ -31,11 +31,11 @@ jobs:
       with:
         path: |
           ~/.mint/
-        key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
         restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
-          ${{ runner.os }}-${{ env.cache-name }}-build-v
-          ${{ runner.os }}-
+          ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
+          ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v
+          ${{ runner.os }}-${{ runner.arch }}-
 
     - run: cd main
 
