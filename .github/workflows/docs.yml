@@ -23,11 +23,6 @@ jobs:
         ref: docs/live
         path: docs-live
 
-    - name: Debug
-      run: |
-        pwd
-        ls -alrt
-
     - name: Cache Mint packages
       uses: actions/cache@v3
       env:
@@ -42,7 +37,10 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-build-v
           ${{ runner.os }}-
 
-    - run: cd main
+    - run: |
+        cd main
+        pwd
+        ls -alrt
 
     - name: Bootstrap
       run: |
