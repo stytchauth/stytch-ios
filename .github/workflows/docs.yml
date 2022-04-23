@@ -15,17 +15,6 @@ jobs:
 
     steps:
 
-    - uses: webiny/action-post-run@2.0.1
-      id: post-workflow-cleanup
-      with:
-        working-directory: ${{ env.RUNNER_WORKSPACE }}
-        run: |
-          command ls -alrt
-          command cd ..
-          command ls -alrt ../
-          command pwd
-          # rm -r ${{ env.RUNNER_WORKSPACE }}
-
     - uses: actions/checkout@v3
       with:
         path: main
@@ -77,3 +66,10 @@ jobs:
         # git add docs
         # git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         # git push
+        #
+    - name: Clean up # TODO: - use https://docs.github.com/en/actions/hosting-your-own-runners/running-scripts-before-or-after-a-job
+      working-directory: ${{ env.RUNNERWORKSPACE }}
+      run: |
+        pwd
+        ls -alrt
+        ls -alrt ../
