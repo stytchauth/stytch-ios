@@ -54,7 +54,7 @@ jobs:
       run: |
         current_sha="$(git rev-parse @)"
         rsync .build/docs ../../docs-live/
-        cd ../docs-live
+        cd ../../docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         git push
