@@ -25,8 +25,8 @@ jobs:
 
     - name: Debug
       run: |
-      pwd
-      ls -alrt
+        pwd
+        ls -alrt
 
     - name: Cache Mint packages
       uses: actions/cache@v3
