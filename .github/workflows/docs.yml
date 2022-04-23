@@ -23,7 +23,8 @@ jobs:
         ref: docs/live
         path: docs-live
 
-    - run: |
+    - name: Debug
+      run: |
       pwd
       ls -alrt
 
