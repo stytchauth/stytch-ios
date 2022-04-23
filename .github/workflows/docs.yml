@@ -14,6 +14,18 @@ jobs:
     runs-on: [ self-hosted, apple-silicon ]
 
     steps:
+
+    - uses: webiny/action-post-run@2.0.1
+        id: post-workflow-cleanup
+        with:
+          working-directory: ${{ env.RUNNER_WORKSPACE }}
+          run: |
+            ls -alrt
+            cd ..
+            ls -alrt
+            pwd
+            # rm -r ${{ env.RUNNER_WORKSPACE }}
+
     - uses: actions/checkout@v3
       with:
         path: main
@@ -53,10 +65,15 @@ jobs:
     - name: Publish docs
       run: |
         current_sha="$(git rev-parse @)"
-        rsync -a .build/docs ../docs-live/
-        cd ../docs-live
+        echo $current_sha
         pwd
-        ls -alrt
-        git add docs
-        git commit --author="CI <ci@stytch.com>" -m "$current_sha"
-        git push
+        ls -alrt ../
+        echo 'blah'
+        ls -alrt ../../
+        # rsync -a .build/docs ../docs-live/
+        # cd ../docs-live
+        # pwd
+        # ls -alrt
+        # git add docs
+        # git commit --author="CI <ci@stytch.com>" -m "$current_sha"
+        # git push
