@@ -41,6 +41,7 @@ jobs:
         cd main
         pwd
         ls -alrt
+        cd stytch-ios
 
     - name: Bootstrap
       run: |
@@ -56,7 +57,7 @@ jobs:
     - name: Publish docs
       run: |
         current_sha="$(git rev-parse @)"
-        rsync .build/docs ../docs-live/
+        rsync .build/docs ../../docs-live/
         cd ../docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
