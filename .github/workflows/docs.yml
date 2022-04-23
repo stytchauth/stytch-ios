@@ -9,7 +9,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        path: main
+
+    - uses: actions/checkout@v3
+      with:
+        ref: docs/live
+        path: docs-live
 
     - name: Cache Mint packages
       uses: actions/cache@v3
@@ -25,6 +32,8 @@ jobs:
           ${{ runner.os }}-${{ env.cache-name }}-build-v
           ${{ runner.os }}-
 
+    - run: cd main
+
     - name: Bootstrap
       run: |
         make setup
@@ -39,9 +48,8 @@ jobs:
     - name: Publish docs
       run: |
         current_sha="$(git rev-parse @)"
-        git checkout docs/live
-        git reset @ --hard
-        rsync .build/docs .
+        rsync .build/docs ../docs-live/
+        cd ../docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         git push
