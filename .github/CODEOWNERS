@@ -1,7 +1,0 @@
-# Stytch code owners file
-
-# These owners will be the default owners for everything in
-# the repo. Unless a later match takes precedence,
-# @stytchauth/mobile-sdks will be requested for
-# review when someone opens a pull request.
-*       @stytchauth/mobile-sdks
