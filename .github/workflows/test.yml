@@ -4,28 +4,19 @@ on:
     branches:
       - main
   pull_request:
-  
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
+
 jobs:
 
   test:
-    runs-on: self-hosted
+    runs-on: [ self-hosted, apple-silicon ]
 
     steps:
-    - uses: actions/checkout@v3
 
-    - name: Cache Mint packages
-      uses: actions/cache@v3
-      env:
-        cache-name: mint-cache
-        cache-version: 1
-      with:
-        path: |
-          ~/.mint/
-        key: ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
-          ${{ runner.os }}-${{ env.cache-name }}-build-v
-          ${{ runner.os }}-
+    - uses: actions/checkout@v3
 
     - name: Bootstrap
       run: |
