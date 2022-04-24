@@ -41,7 +41,11 @@ jobs:
       run: make codegen
 
     - name: Lint
-      run: make lint
+      run: |
+        mint which swiftlint
+        echo ${{ env.MINT_PATH }}
+        ls ${{ env.MINTPATH }}
+        make lint
 
     - name: Test
       run: make test
