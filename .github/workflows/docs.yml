@@ -39,9 +39,9 @@ jobs:
           ${{ runner.os }}-${{ runner.arch }}-
 
     - run: |
-      ls -alrt
-      pwd
-      cd main
+        ls -alrt
+        pwd
+        cd main
 
     - name: Bootstrap
       run: |
