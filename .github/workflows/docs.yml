@@ -12,9 +12,6 @@ jobs:
   docs:
     runs-on: [ self-hosted, apple-silicon ]
 
-    env:
-      MINT_PATH: ${{ github.workspace }}/mint
-
     steps:
 
     - uses: actions/checkout@v3
@@ -25,17 +22,6 @@ jobs:
       with:
         ref: docs/live
         path: docs-live
-
-    - name: Cache Mint packages
-      uses: actions/cache@v3
-      env:
-        cache-name: mint-cache
-        cache-version: 1
-      with:
-        path: ${{ env.MINT_PATH }}
-        key: ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-${{ hashFiles('Mintfile') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-
 
     - name: Bootstrap
       working-directory: main
@@ -60,8 +46,3 @@ jobs:
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         git push
-
-    - name: Clean up # TODO: - use https://docs.github.com/en/actions/hosting-your-own-runners/running-scripts-before-or-after-a-job
-      working-directory: ${{ env.RUNNERWORKSPACE }}
-      run: |
-        rm -rf *
