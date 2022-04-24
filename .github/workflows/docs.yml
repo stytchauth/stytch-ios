@@ -38,23 +38,22 @@ jobs:
           ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v
           ${{ runner.os }}-${{ runner.arch }}-
 
-    - run: |
-        ls -alrt
-        pwd
-        cd main
-
     - name: Bootstrap
+      working-directory: main
       run: |
         make setup
         make tools
 
     - name: Codegen
+      working-directory: main
       run: make codegen
 
     - name: Generate docs
+      working-directory: main
       run: make docs
 
     - name: Publish docs
+      working-directory: main
       run: |
         current_sha="$(git rev-parse @)"
         echo $current_sha
