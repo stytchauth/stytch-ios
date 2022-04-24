@@ -25,15 +25,13 @@ jobs:
       uses: actions/cache@v3
       env:
         cache-name: mint-cache
-        cache-version: 2
+        cache-version: 0
       with:
         path: |
           $MINT_PATH
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-${{ hashFiles('Mintfile') }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
-          ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v
-          ${{ runner.os }}-${{ runner.arch }}-
+          ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-
 
     - name: Bootstrap
       run: |
