@@ -15,7 +15,7 @@ jobs:
     runs-on: [ self-hosted, apple-silicon ]
 
     env:
-      MINT_PATH: .mint
+      MINT_PATH: ${{ github.workspace }}/mint
 
     steps:
 
@@ -25,10 +25,9 @@ jobs:
       uses: actions/cache@v3
       env:
         cache-name: mint-cache
-        cache-version: 0
+        cache-version: 1
       with:
-        path: |
-          $MINT_PATH
+        path: ${{ env.MINT_PATH }}
         key: ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-${{ hashFiles('Mintfile') }}
         restore-keys: |
           ${{ runner.os }}-${{ runner.arch }}-v${{ env.cache-version }}-${{ env.cache-name }}-build-
