@@ -56,22 +56,12 @@ jobs:
       working-directory: main
       run: |
         current_sha="$(git rev-parse @)"
-        echo $current_sha
-        pwd
-        ls -alrt ../
-        echo 'blah'
-        ls -alrt ../../
-        # rsync -a .build/docs ../docs-live/
-        # cd ../docs-live
-        # pwd
-        # ls -alrt
-        # git add docs
-        # git commit --author="CI <ci@stytch.com>" -m "$current_sha"
-        # git push
-        #
+        rsync -a .build/docs ../docs-live/
+        cd ../docs-live
+        git add docs
+        git commit --author="CI <ci@stytch.com>" -m "$current_sha"
+        git push
     - name: Clean up # TODO: - use https://docs.github.com/en/actions/hosting-your-own-runners/running-scripts-before-or-after-a-job
       working-directory: ${{ env.RUNNERWORKSPACE }}
       run: |
-        pwd
-        ls -alrt
-        ls -alrt ../
+        rm -rf ../*
