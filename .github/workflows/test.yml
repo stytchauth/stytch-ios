@@ -15,7 +15,7 @@ jobs:
     runs-on: [ self-hosted, apple-silicon ]
 
     env:
-      MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
+      MINT_PATH: $RUNNERWORKSPACE/.mint
 
     steps:
     - uses: actions/checkout@v3
