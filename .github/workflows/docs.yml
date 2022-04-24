@@ -12,9 +12,6 @@ jobs:
   docs:
     runs-on: [ self-hosted, apple-silicon ]
 
-    env:
-      MINT_PATH: $RUNNERWORKSPACE/.mint
-
     steps:
 
     - uses: actions/checkout@v3
@@ -29,11 +26,12 @@ jobs:
     - name: Cache Mint packages
       uses: actions/cache@v3
       env:
+        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
         cache-name: mint-cache
         cache-version: 1
       with:
         path: |
-          $MINT_PATH
+          ${{ env.MINT_PATH }}
         key: ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
         restore-keys: |
           ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
@@ -41,12 +39,16 @@ jobs:
           ${{ runner.os }}-${{ runner.arch }}-
 
     - name: Bootstrap
+      env:
+        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
       working-directory: main
       run: |
         make setup
         make tools
 
     - name: Codegen
+      env:
+        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
       working-directory: main
       run: make codegen
 
