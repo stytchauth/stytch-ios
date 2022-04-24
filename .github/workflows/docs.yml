@@ -12,6 +12,9 @@ jobs:
   docs:
     runs-on: [ self-hosted, apple-silicon ]
 
+    env:
+      MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
+
     steps:
 
     - uses: actions/checkout@v3
@@ -30,7 +33,7 @@ jobs:
         cache-version: 1
       with:
         path: |
-          ~/.mint/
+          $MINT_PATH
         key: ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-${{ hashFiles('Mintfile') }}
         restore-keys: |
           ${{ runner.os }}-${{ runner.arch }}-${{ env.cache-name }}-build-v${{ env.cache-version }}-
