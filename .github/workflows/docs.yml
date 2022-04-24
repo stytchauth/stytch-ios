@@ -12,6 +12,9 @@ jobs:
   docs:
     runs-on: [ self-hosted, apple-silicon ]
 
+    env:
+      MINT_PATH: .mint
+
     steps:
 
     - uses: actions/checkout@v3
@@ -26,7 +29,6 @@ jobs:
     - name: Cache Mint packages
       uses: actions/cache@v3
       env:
-        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
         cache-name: mint-cache
         cache-version: 1
       with:
@@ -39,16 +41,12 @@ jobs:
           ${{ runner.os }}-${{ runner.arch }}-
 
     - name: Bootstrap
-      env:
-        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
       working-directory: main
       run: |
         make setup
         make tools
 
     - name: Codegen
-      env:
-        MINT_PATH: ${{ env.RUNNERWORKSPACE }}/.mint
       working-directory: main
       run: make codegen
 
