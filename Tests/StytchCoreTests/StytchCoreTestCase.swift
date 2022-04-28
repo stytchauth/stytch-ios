@@ -2,6 +2,30 @@ import XCTest
 @testable import StytchCore
 
 final class StytchCoreTestCase: XCTestCase {
+    private var mockAuthenticateResponse: StytchClient.MagicLinks.AuthenticateResponse {
+        let refDate = Date()
+        let userId = "im_a_user_id"
+
+        return .init(
+            requestId: "1234",
+            statusCode: 200,
+            wrapped: .init(
+                userId: userId,
+                sessionToken: "hello_session",
+                sessionJwt: "jwt_for_me",
+                session: .init(
+                    attributes: .init(ipAddress: "", userAgent: ""),
+                    authenticationFactors: [],
+                    expiresAt: refDate.advanced(by: 30),
+                    lastAccessedAt: refDate.advanced(by: -30),
+                    sessionId: "im_a_session_id",
+                    startedAt: refDate.advanced(by: -30),
+                    userId: userId
+                )
+            )
+        )
+    }
+
     override func setUpWithError() throws {
         try super.setUpWithError()
 
@@ -30,6 +54,56 @@ final class StytchCoreTestCase: XCTestCase {
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
+    }
+
+    @available(iOS 13.0, *)
+    func testMagicLinksAuthenticate() async throws {
+        let authResponse = mockAuthenticateResponse
+        let container: DataContainer<StytchClient.MagicLinks.AuthenticateResponse> = .init(data: authResponse)
+        let data = try Current.jsonEncoder.encode(container)
+        Current.networkingClient = .init(
+            dataTaskClient: .mock(returning: .success(data))
+        )
+        let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
+            token: "12345",
+            sessionDuration: 15
+        )
+
+        let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertEqual(response.requestId, "1234")
+        XCTAssertEqual(response.userId, mockAuthenticateResponse.userId)
+        XCTAssertEqual(response.sessionToken, "hello_session")
+        XCTAssertEqual(response.sessionJwt, "jwt_for_me")
+        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+    }
+
+    @available(iOS 13.0, *)
+    func testHandleUrl() async throws {
+        let authResponse = mockAuthenticateResponse
+        let container: DataContainer<StytchClient.MagicLinks.AuthenticateResponse> = .init(data: authResponse)
+        let data = try Current.jsonEncoder.encode(container)
+        Current.networkingClient = .init(
+            dataTaskClient: .mock(returning: .success(data))
+        )
+
+        let notHandledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345"))
+
+        switch try await StytchClient.handle(url: notHandledUrl, sessionDuration: 30) {
+        case .handled:
+            XCTFail()
+        case let .notHandled(url):
+            XCTAssertEqual(url, notHandledUrl)
+        }
+
+        let handledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345&type=em"))
+
+        switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
+        case let .handled((response, _)):
+            XCTAssertEqual(response.sessionJwt, "jwt_for_me")
+        case .notHandled:
+            XCTFail()
+        }
     }
 
     func testPath() {
