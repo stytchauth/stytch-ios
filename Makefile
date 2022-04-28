@@ -16,7 +16,7 @@ format:
 
 lint:
 	arch -arm64 mint run swiftlint lint --quiet
-	arch -arm64 mint run swiftformat --lint --quiet .
+	arch -arm64 mint run swiftformat --lint .
 
 setup:
 	arch -arm64 brew bundle
