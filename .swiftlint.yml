@@ -1,16 +1,20 @@
 included:
   - Sources
   - Tests
+
 excluded:
   - StytchPlayground.playground
   - Sources/StytchCore/Generated
+
 disabled_rules:
   - line_length
   - trailing_comma
   - todo # disable for initial development stages
+
 analyzer_rules:
   - unused_declaration
   - unused_import
+
 opt_in_rules:
   - anyobject_protocol
   - array_init
@@ -95,3 +99,9 @@ opt_in_rules:
   - weak_delegate
   - xct_specific_matcher
   - yoda_condition
+
+nesting:
+  type_level: 2
+
+indentation_width:
+  include_comments: false

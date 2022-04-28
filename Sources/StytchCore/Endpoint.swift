@@ -26,9 +26,9 @@ struct Endpoint {
 }
 
 extension Endpoint {
-    enum PathTag {}
-
     typealias Path = Tagged<PathTag, String>
+
+    enum PathTag {}
 }
 
 extension Endpoint.Path {
