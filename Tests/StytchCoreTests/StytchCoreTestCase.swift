@@ -20,7 +20,7 @@ final class StytchCoreTestCase: XCTestCase {
                             deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
                             kind: .magicLink,
                             lastAuthenticatedAt: refDate.advanced(by: -30)
-                        )
+                        ),
                     ],
                     expiresAt: refDate.advanced(by: 30),
                     lastAccessedAt: refDate.advanced(by: -30),
@@ -97,7 +97,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         switch try await StytchClient.handle(url: notHandledUrl, sessionDuration: 30) {
         case .handled:
-            XCTFail()
+            XCTFail("expected to be nothandled")
         case let .notHandled(url):
             XCTAssertEqual(url, notHandledUrl)
         }
@@ -108,7 +108,7 @@ final class StytchCoreTestCase: XCTestCase {
         case let .handled((response, _)):
             XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         case .notHandled:
-            XCTFail()
+            XCTFail("expected to be handled")
         }
     }
 
@@ -154,6 +154,6 @@ final class StytchCoreTestCase: XCTestCase {
 
     func testStringExtensions() {
         XCTAssertEqual("blah-blah-bloop".base64Encoded, "YmxhaC1ibGFoLWJsb29w")
-        XCTAssertEqual("blah-blah-bloop".dropLast(while: { $0 != "-" }), "blah-blah-")
+        XCTAssertEqual("blah-blah-bloop".dropLast { $0 != "-" }, "blah-blah-")
     }
 }
