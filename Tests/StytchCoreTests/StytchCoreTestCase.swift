@@ -145,4 +145,9 @@ final class StytchCoreTestCase: XCTestCase {
             XCTAssertEqual(testArray.wrappedValue[2].stringDigit, "three")
         }
     }
+
+    func testStringExtensions() {
+        XCTAssertEqual("blah-blah-bloop".base64Encoded, "YmxhaC1ibGFoLWJsb29w")
+        XCTAssertEqual("blah-blah-bloop".dropLast(while: { $0 != "-" }), "blah-blah-")
+    }
 }
