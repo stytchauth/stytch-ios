@@ -66,8 +66,9 @@ public extension NetworkingClient {
         }
     }
 
-    internal struct Error: Swift.Error {
-        let message: String
+    enum Error: Swift.Error {
+        case missingData
+        case nonHttpResponse
     }
 
     struct TaskHandle {
