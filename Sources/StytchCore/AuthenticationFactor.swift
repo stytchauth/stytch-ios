@@ -83,7 +83,7 @@ public extension Session.AuthenticationFactor {
      The kind, or type, of Authentication factor, e.g. magic link, TOTP, etc.
      */
     enum Kind: String, Decodable {
-        case magicLink = "magic_link" // TODO: figure out why this is required
+        case magicLink = "magic_link" // Not a coding key, thus not converted to/from snakecase by JSONEncoder/JSONDecoder
         case otp
         case totp
         case oauth
@@ -161,22 +161,34 @@ public extension Session.AuthenticationFactor {
             switch deliveryMethod {
             case let .authenticatorApp(value):
                 try container.encode(value, forKey: .authenticatorAppFactor)
+                try container.encode(_DeliveryMethod.authenticatorApp.rawValue, forKey: .deliveryMethod)
             case let .recoveryCode(value):
                 try container.encode(value, forKey: .recoveryCodeFactor)
+                try container.encode(_DeliveryMethod.recoveryCode.rawValue, forKey: .deliveryMethod)
             case let .email(value):
                 try container.encode(value, forKey: .emailFactor)
-            case let .sms(value), let .whatsapp(value):
+                try container.encode(_DeliveryMethod.email.rawValue, forKey: .deliveryMethod)
+            case let .sms(value):
                 try container.encode(value, forKey: .phoneNumberFactor)
+                try container.encode(_DeliveryMethod.sms.rawValue, forKey: .deliveryMethod)
+            case let .whatsapp(value):
+                try container.encode(value, forKey: .phoneNumberFactor)
+                try container.encode(_DeliveryMethod.whatsapp.rawValue, forKey: .deliveryMethod)
             case let .oauthGoogle(value):
                 try container.encode(value, forKey: .googleOauthFactor)
+                try container.encode(_DeliveryMethod.oauthGoogle.rawValue, forKey: .deliveryMethod)
             case let .oauthApple(value):
                 try container.encode(value, forKey: .appleOauthFactor)
+                try container.encode(_DeliveryMethod.oauthApple.rawValue, forKey: .deliveryMethod)
             case let .oauthGithub(value):
                 try container.encode(value, forKey: .githubOauthFactor)
+                try container.encode(_DeliveryMethod.oauthGithub.rawValue, forKey: .deliveryMethod)
             case let .oauthMicrosoft(value):
                 try container.encode(value, forKey: .microsoftOauthFactor)
+                try container.encode(_DeliveryMethod.oauthMicrosoft.rawValue, forKey: .deliveryMethod)
             case let .webauthnRegistration(value):
                 try container.encode(value, forKey: .webauthnFactor)
+                try container.encode(_DeliveryMethod.webauthnRegistration.rawValue, forKey: .deliveryMethod)
             }
         }
     }

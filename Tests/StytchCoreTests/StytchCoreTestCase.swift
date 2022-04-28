@@ -107,6 +107,7 @@ final class StytchCoreTestCase: XCTestCase {
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
         case let .handled((response, _)):
             XCTAssertEqual(response.sessionJwt, "jwt_for_me")
+            XCTAssertEqual(response.session.authenticationFactors.count, 1)
         case .notHandled:
             XCTFail("expected to be handled")
         }
