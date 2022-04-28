@@ -15,7 +15,13 @@ final class StytchCoreTestCase: XCTestCase {
                 sessionJwt: "jwt_for_me",
                 session: .init(
                     attributes: .init(ipAddress: "", userAgent: ""),
-                    authenticationFactors: [],
+                    authenticationFactors: [
+                        .init(
+                            deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
+                            kind: .magicLink,
+                            lastAuthenticatedAt: refDate.advanced(by: -30)
+                        )
+                    ],
                     expiresAt: refDate.advanced(by: 30),
                     lastAccessedAt: refDate.advanced(by: -30),
                     sessionId: "im_a_session_id",
