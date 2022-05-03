@@ -82,24 +82,37 @@ extension Session {
         public let userAgent: String
     }
 
-    enum Token {
-        case opaque(String)
-        case jwt(String)
+    public struct Token: Equatable {
+        public enum Kind: CaseIterable {
+            case opaque
+            case jwt
 
-        var name: String {
-            switch self {
-            case .jwt:
-                return "stytch_session"
-            case .opaque:
-                return "stytch_session_jwt"
+            var name: String {
+                switch self {
+                case .opaque:
+                    return "stytch_session"
+                case .jwt:
+                    return "stytch_session_jwt"
+                }
             }
         }
 
-        var value: String {
-            switch self {
-            case let .jwt(value), let .opaque(value):
-                return value
-            }
+        let kind: Kind
+
+        let value: String
+
+        let expiresAt: Date // TODO: - is/can this be non-optional? can we
+
+        var name: String { kind.name }
+
+        static var tokenNames: [String] {
+            Kind.allCases.map(\.name)
+        }
+
+        public init(kind: Kind, value: String, expiresAt: Date) {
+            self.kind = kind
+            self.value = value
+            self.expiresAt = expiresAt
         }
     }
 }

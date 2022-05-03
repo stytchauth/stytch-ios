@@ -157,4 +157,62 @@ final class StytchCoreTestCase: XCTestCase {
         XCTAssertEqual("blah-blah-bloop".base64Encoded, "YmxhaC1ibGFoLWJsb29w")
         XCTAssertEqual("blah-blah-bloop".dropLast { $0 != "-" }, "blah-blah-")
     }
+//
+//    // swiftlint:disable:next function_body_length
+//    func testMagicLinksAuthenticate() async throws {
+//        do {
+//            let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
+//            let data = try Current.jsonEncoder.encode(container)
+//            Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)))
+//            _ = try await StytchClient.magicLinks.authenticate(
+//                parameters: .init(token: "123457", sessionDuration: .init(rawValue: 30))
+//            )
+//            XCTFail("Expected to throw an error")
+//        } catch {}
+//
+//        let testReferenceDate = Date()
+//        let container = DataContainer(
+//            data: AuthenticateResponse(
+//                requestId: "1234",
+//                statusCode: 1,
+//                wrapped: .init(
+//                    userId: "1234",
+//                    sessionToken: "fake_session_token",
+//                    sessionJwt: "fake_jwt",
+//                    session: .init(
+//                        attributes: .init(
+//                            ipAddress: "10.0.0.1",
+//                            userAgent: "AGENT SMITH"
+//                        ),
+//                        authenticationFactors: [],
+//                        expiresAt: testReferenceDate.addingTimeInterval(30),
+//                        lastAccessedAt: testReferenceDate.addingTimeInterval(-30),
+//                        sessionId: "session_id_1234",
+//                        startedAt: testReferenceDate.addingTimeInterval(-30),
+//                        userId: "user_1234"
+//                    )
+//                )
+//            )
+//        )
+//        let data = try Current.jsonEncoder.encode(container)
+//        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)))
+//        var cookies: [HTTPCookie] = []
+//        Current.sessionStorage = .init { cookies.append($0) }
+//        let response = try await StytchClient.magicLinks.authenticate(
+//            parameters: .init(token: "1234578", sessionDuration: .init(rawValue: 30))
+//        )
+//        XCTAssertEqual(response.statusCode, 1)
+//        XCTAssertEqual(response.requestId, "1234")
+//        XCTAssertEqual(response.sessionJwt, container.data.sessionJwt)
+//        XCTAssertEqual(response.sessionJwt, container.data.sessionJwt)
+//        XCTAssertEqual(response.sessionToken, container.data.sessionToken)
+//        XCTAssertEqual(response.userId, container.data.userId)
+//        XCTAssertEqual(response.session.userId, container.data.session.userId)
+//        XCTAssertEqual(response.session.sessionId, container.data.session.sessionId)
+//        XCTAssertEqual(response.session.attributes.userAgent, container.data.session.attributes.userAgent)
+//        XCTAssertEqual(response.session.attributes.ipAddress, container.data.session.attributes.ipAddress)
+////        XCTAssertEqual(response.session.startedAt, container.data.session.startedAt)
+//        XCTAssertEqual(cookies.count, 2)
+//        // TODO: test cookie setting
+//    }
 }

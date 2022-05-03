@@ -44,7 +44,7 @@ extension StytchClient {
     private static func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method = .get,
         url: URL,
-        configuration _: Configuration, // To be used by session tracking
+        configuration: Configuration,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         Current.networkingClient.performRequest(method, url: url) { result in
@@ -53,6 +53,17 @@ extension StytchClient {
                     do {
                         try response.verifyStatus(data: data)
                         let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
+                        if let sessionResponse = dataContainer.data as? SessionResponseType, let host = configuration.hostUrl.host {
+                            Current.sessionStorage.updateSession(
+//                                sessionResponse.session,
+                                tokens: [
+                                    .init(kind: .jwt, value: sessionResponse.sessionJwt, expiresAt: sessionResponse.session.expiresAt),
+                                    .init(kind: .opaque, value: sessionResponse.sessionToken, expiresAt: sessionResponse.session.expiresAt)
+                                ],
+//                                expiresAt: 
+                                domain: host
+                            )
+                        }
                         return .success(dataContainer.data)
                     } catch {
                         return .failure(error)
