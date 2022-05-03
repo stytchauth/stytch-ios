@@ -19,13 +19,13 @@ final class StytchCoreTestCase: XCTestCase {
                         .init(
                             deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
                             kind: .magicLink,
-                            lastAuthenticatedAt: refDate.advanced(by: -30)
+                            lastAuthenticatedAt: refDate.addingTimeInterval(-30)
                         ),
                     ],
-                    expiresAt: refDate.advanced(by: 30),
-                    lastAccessedAt: refDate.advanced(by: -30),
+                    expiresAt: refDate.addingTimeInterval(30),
+                    lastAccessedAt: refDate.addingTimeInterval(-30),
                     sessionId: "im_a_session_id",
-                    startedAt: refDate.advanced(by: -30),
+                    startedAt: refDate.addingTimeInterval(-30),
                     userId: userId
                 )
             )
@@ -37,7 +37,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         StytchClient.configure(
             publicToken: "xyz",
-            hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
+            appLinks: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
     }
 
