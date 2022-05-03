@@ -22,8 +22,11 @@ public struct StytchClient {
      - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which verifies your app is allowed to communicate with Stytch.
      This **must be set** as an `Authorized Domain` in the Stytch dashboard SDK configuration.
      */
-    public static func configure(publicToken: String, hostUrl: URL) {
-        instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
+    public static func configure(publicToken: String, appLinks: URL...) {
+        instance.configuration = .init(appLinks: appLinks, publicToken: publicToken)
+
+        let clientInfoString = try? Current.clientInfo.base64EncodedString()
+
         Current.networkingClient.headerProvider = {
             guard let configuration = instance.configuration else { return [:] }
 
@@ -32,10 +35,8 @@ public struct StytchClient {
 
             return [
                 "Content-Type": "application/json",
-                //                "User-Agent": "Stytch iOS SDK v0.0.1", // TODO: - figure out why this errors
-                "User-Agent": "stytchios/0.0.1",
                 "Authorization": "Basic \(authToken)",
-                "X-SDK-Parent-Host": hostUrl.absoluteString,
+                "X-SDK-Client": clientInfoString ?? "",
             ]
         }
     }

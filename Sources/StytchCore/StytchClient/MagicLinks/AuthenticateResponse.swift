@@ -14,5 +14,5 @@ public extension StytchClient.MagicLinks {
 }
 
 #if DEBUG
-    extension StytchClient.MagicLinks.AuthenticateResponseData: Encodable {}
+extension StytchClient.MagicLinks.AuthenticateResponseData: Encodable {}
 #endif
