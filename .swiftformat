@@ -18,7 +18,7 @@
 --header strip
 --hexgrouping 4,8
 --hexliteralcase uppercase
---ifdef indent
+--ifdef outdent
 --indent 4
 --indentcase false
 --importgrouping testable-bottom

@@ -3,9 +3,9 @@ import Networking
 
 // swiftlint:disable identifier_name
 #if DEBUG
-    var Current: StytchClient.Environment = .init()
+var Current: StytchClient.Environment = .init()
 #else
-    let Current: StytchClient.Environment = .init()
+let Current: StytchClient.Environment = .init()
 #endif
 // swiftlint:enable identifier_name
 

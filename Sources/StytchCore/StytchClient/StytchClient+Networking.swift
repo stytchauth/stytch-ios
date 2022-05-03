@@ -87,5 +87,5 @@ struct DataContainer<T: Decodable>: Decodable {
 }
 
 #if DEBUG
-    extension DataContainer: Encodable where T: Encodable {}
+extension DataContainer: Encodable where T: Encodable {}
 #endif
