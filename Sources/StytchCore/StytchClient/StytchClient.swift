@@ -24,6 +24,9 @@ public struct StytchClient {
      */
     public static func configure(publicToken: String, hostUrl: URL) {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
+
+        let clientInfoString = try? Current.clientInfo.base64EncodedString()
+
         Current.networkingClient.headerProvider = {
             guard let configuration = instance.configuration else { return [:] }
 
@@ -33,9 +36,7 @@ public struct StytchClient {
             return [
                 "Content-Type": "application/json",
                 "Authorization": "Basic \(authToken)",
-                "X-SDK-Parent-Host": hostUrl.absoluteString,
-                "X-SDK-Platform": platform,
-                "X-SDK-Version": SDKMetadata.version.stringValue,
+                "X-SDK-Client": clientInfoString ?? "",
             ]
         }
     }
@@ -90,26 +91,5 @@ public extension StytchClient {
         case handled(Handled)
         /// The handler was unable to handle the given item.
         case notHandled(NotHandled)
-    }
-}
-
-enum SDKMetadata {
-    static let version: OperatingSystemVersion = .init(majorVersion: 0, minorVersion: 0, patchVersion: 1)
-}
-
-extension OperatingSystemVersion {
-    var stringValue: String { "\(majorVersion).\(minorVersion).\(patchVersion)" }
-}
-
-#if !os(macOS)
-    import UIKit
-#endif
-private extension StytchClient {
-    static var platform: String {
-        #if os(macOS)
-            return "macOS"
-        #else
-            return UIDevice.current.systemName
-        #endif
     }
 }

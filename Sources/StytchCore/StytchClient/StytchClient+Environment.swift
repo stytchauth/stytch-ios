@@ -11,6 +11,8 @@ import Networking
 
 extension StytchClient {
     struct Environment {
+        var clientInfo: ClientInfo = .init()
+
         var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
 
         var jsonDecoder: JSONDecoder = {
