@@ -2,8 +2,7 @@ import Foundation
 
 extension StytchClient {
     struct Configuration {
-        // TODO: - this should be applinks, not hostUrl (that should use bundle identifier)
-        let hostUrl: URL
+        let appLinks: [URL]
 
         let publicToken: String
 
