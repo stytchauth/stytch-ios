@@ -19,11 +19,6 @@ extension ClientInfo {
         let identifier: String = Bundle.main.bundleIdentifier ?? "unknown_bundle_id"
     }
 
-    struct SDK: Encodable {
-        let identifier: String = "stytch-swift"
-        let version: Version = .init(major: 0, minor: 0, patch: 1)
-    }
-
     struct OS: Encodable {
         private enum CodingKeys: String, CodingKey { case identifier, version }
 
