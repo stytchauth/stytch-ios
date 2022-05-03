@@ -15,11 +15,11 @@ struct LoginView: View {
                 .padding()
                 .textFieldStyle(.roundedBorder)
                 .disableAutocorrection(true)
-#if !os(macOS)
+            #if !os(macOS)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
                 .textContentType(.emailAddress)
-#endif
+            #endif
 
             Button(action: login, label: {
                 if isLoading {

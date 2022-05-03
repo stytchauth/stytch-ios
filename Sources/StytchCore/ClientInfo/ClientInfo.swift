@@ -10,7 +10,8 @@ import UIKit
 struct ClientInfo: Encodable {
     let app: App = .init()
     let sdk: SDK = .init()
-    let os: OS = .init()
+    // swiftlint:disable:next identifier_name
+    let os: OperatingSystem = .init()
     let device: Device = .init()
 }
 
@@ -19,7 +20,7 @@ extension ClientInfo {
         let identifier: String = Bundle.main.bundleIdentifier ?? "unknown_bundle_id"
     }
 
-    struct OS: Encodable {
+    struct OperatingSystem: Encodable {
         private enum CodingKeys: String, CodingKey { case identifier, version }
 
         var identifier: String { operatingSystem.lowercased() }
@@ -27,13 +28,13 @@ extension ClientInfo {
         var version: Version { ProcessInfo.processInfo.operatingSystemVersion.version }
 
         private var operatingSystem: String {
-#if os(macOS)
+            #if os(macOS)
             return "macOS"
-#elseif os(watchOS)
+            #elseif os(watchOS)
             WKInterfaceDevice.current().systemName
-#else
+            #else
             return UIDevice.current.systemName
-#endif
+            #endif
         }
 
         func encode(to encoder: Encoder) throws {
@@ -47,23 +48,23 @@ extension ClientInfo {
         private enum CodingKeys: String, CodingKey { case model, screenSize }
 
         var model: String {
-#if os(macOS)
+            #if os(macOS)
             "macOS"
-#elseif os(watchOS)
+            #elseif os(watchOS)
             WKInterfaceDevice.current().model
-#else
+            #else
             UIDevice.current.model.lowercased()
-#endif
+            #endif
         }
 
         var screenSize: CGSize {
-#if os(macOS)
+            #if os(macOS)
             NSScreen.main?.frame.size ?? .zero
-#elseif os(watchOS)
+            #elseif os(watchOS)
             WKInterfaceDevice.current().screenBounds.size
-#else
+            #else
             UIScreen.main.bounds.size
-#endif
+            #endif
         }
 
         func encode(to encoder: Encoder) throws {

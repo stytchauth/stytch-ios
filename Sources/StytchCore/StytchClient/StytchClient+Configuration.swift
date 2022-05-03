@@ -11,11 +11,11 @@ extension StytchClient {
             urlComponents.scheme = "https"
             urlComponents.path = "/web/sdk/"
             urlComponents.host = "stytch.com"
-#if DEBUG
+            #if DEBUG
             if let host = ProcessInfo.processInfo.environment["STYTCH_API_HOST"] {
                 urlComponents.host = host
             }
-#endif
+            #endif
             guard let url = urlComponents.url else {
                 fatalError("Error generating URL from URLComponents: \(urlComponents)")
             }

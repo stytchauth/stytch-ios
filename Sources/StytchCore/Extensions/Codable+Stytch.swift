@@ -13,4 +13,3 @@ extension Encodable {
         (try Current.jsonEncoder.encode(self)).base64EncodedString()
     }
 }
-
