@@ -15,7 +15,7 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
 
-        var sessionStorage: SessionStorage = .init()
+        let sessionStorage: Session.Storage = .init()
 
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
@@ -31,5 +31,9 @@ extension StytchClient {
             encoder.dateEncodingStrategy = .iso8601
             return encoder
         }()
+
+        var setCookie: (HTTPCookie) -> Void = HTTPCookieStorage.shared.setCookie(_:)
+
+        var date: () -> Date = Date.init
     }
 }

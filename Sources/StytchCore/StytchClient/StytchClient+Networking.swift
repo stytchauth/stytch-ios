@@ -55,12 +55,11 @@ extension StytchClient {
                         let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
                         if let sessionResponse = dataContainer.data as? SessionResponseType {
                             Current.sessionStorage.updateSession(
-//                                sessionResponse.session,
+                                sessionResponse.session,
                                 tokens: [
-                                    .init(kind: .jwt, value: sessionResponse.sessionJwt, expiresAt: sessionResponse.session.expiresAt),
-                                    .init(kind: .opaque, value: sessionResponse.sessionToken, expiresAt: sessionResponse.session.expiresAt)
+                                    .jwt(sessionResponse.sessionJwt),
+                                    .opaque(sessionResponse.sessionToken)
                                 ],
-//                                expiresAt: 
                                 hostUrl: configuration.hostUrl
                             )
                         }
