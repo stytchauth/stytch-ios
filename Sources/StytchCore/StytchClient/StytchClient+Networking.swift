@@ -53,7 +53,7 @@ extension StytchClient {
                     do {
                         try response.verifyStatus(data: data)
                         let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
-                        if let sessionResponse = dataContainer.data as? SessionResponseType, let host = configuration.hostUrl.host {
+                        if let sessionResponse = dataContainer.data as? SessionResponseType {
                             Current.sessionStorage.updateSession(
 //                                sessionResponse.session,
                                 tokens: [
@@ -61,7 +61,7 @@ extension StytchClient {
                                     .init(kind: .opaque, value: sessionResponse.sessionToken, expiresAt: sessionResponse.session.expiresAt)
                                 ],
 //                                expiresAt: 
-                                domain: host
+                                hostUrl: configuration.hostUrl
                             )
                         }
                         return .success(dataContainer.data)
