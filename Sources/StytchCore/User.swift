@@ -30,8 +30,10 @@ public extension User {
         public let verified: Bool
     }
     struct Email: Decodable {
+        private enum CodingKeys: String, CodingKey { case id = "email_id", email, verified }
+
         public let email: String
-        public let emailId: String
+        public let id: String
         public let verified: Bool
     }
     struct Name: Decodable {
@@ -44,21 +46,27 @@ public extension User {
         public let providerType: String
     }
     struct PhoneNumber: Decodable {
+        private enum CodingKeys: String, CodingKey { case id, phoneNumber, verified }
+
         public let phoneNumber: String
-        public let phoneId: String
+        public let id: String
         public let verified: Bool
     }
     enum Status: String, Decodable {
         case active, pending
     }
     struct TOTP: Decodable {
-        public let totpId: String
+        private enum CodingKeys: String, CodingKey { case id, verified }
+
+        public let id: String
         public let verified: Bool
     }
     struct WebAuthNRegistrations: Decodable {
+        private enum CodingKeys: String, CodingKey { case id, verified, domain, userAgent }
+
         public let domain: String
         public let userAgent: String
         public let verified: Bool
-        public let webauthnRegistrationId: String // TODO: - make id
+        public let id: String
     }
 }
