@@ -97,22 +97,23 @@ extension Session {
             }
         }
 
-        let kind: Kind
+        public let kind: Kind
 
-        let value: String
-
-        let expiresAt: Date // TODO: - is/can this be non-optional? can we
+        public let value: String
 
         var name: String { kind.name }
 
-        static var tokenNames: [String] {
-            Kind.allCases.map(\.name)
-        }
-
-        public init(kind: Kind, value: String, expiresAt: Date) {
+        private init(kind: Kind, value: String) {
             self.kind = kind
             self.value = value
-            self.expiresAt = expiresAt
+        }
+
+        public static func jwt(_ value: String) -> Self {
+            .init(kind: .jwt, value: value)
+        }
+
+        public static func opaque(_ value: String) -> Self {
+            .init(kind: .opaque, value: value)
         }
     }
 }
