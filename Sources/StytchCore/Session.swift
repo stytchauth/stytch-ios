@@ -3,7 +3,7 @@ import Foundation
 /**
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
-public struct Session: Decodable {
+public struct Session: Codable {
     private enum CodingKeys: String, CodingKey {
         case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
     }
@@ -52,10 +52,7 @@ public struct Session: Decodable {
         startedAt = try container.decode(key: .startedAt)
         userId = try container.decode(key: .userId)
     }
-}
 
-#if DEBUG
-extension Session: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(attributes, forKey: .attributes)
@@ -68,14 +65,11 @@ extension Session: Encodable {
     }
 }
 
-extension Session.Attributes: Encodable {}
-#endif
-
 public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    struct Attributes: Decodable {
+    struct Attributes: Codable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.
