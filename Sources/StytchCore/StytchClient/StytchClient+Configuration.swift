@@ -9,8 +9,8 @@ extension StytchClient {
         var baseUrl: URL {
             var urlComponents: URLComponents = .init()
             urlComponents.scheme = "https"
-            urlComponents.path = "/web/sdk/"
-            urlComponents.host = "stytch.com"
+            urlComponents.path = "/sdk/v1/"
+            urlComponents.host = "web.stytch.com"
             #if DEBUG
             if let scheme = ProcessInfo.processInfo.environment["STYTCH_API_SCHEME"] {
                 urlComponents.scheme = scheme
