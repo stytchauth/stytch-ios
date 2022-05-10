@@ -9,7 +9,12 @@ struct StytchDemoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(hostUrl: hostUrl, session: session) { session = nil }
+            ContentView(hostUrl: hostUrl, session: session) {
+                Task {
+                    _ = try await StytchClient.sessions.revoke()
+                    session = nil
+                }
+            }
                 .task {
                     StytchClient.configure(
                         publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token

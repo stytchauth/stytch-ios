@@ -17,27 +17,83 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResult>) {
-            struct AuthParams: Encodable {
-                let sessionDurationMinutes: Minutes
-                let sessionToken: String
-            }
+            struct AnyEncodable: Encodable {
+                let value: Encodable
 
-            guard let sessionToken = sessionToken else {
+                func encode(to encoder: Encoder) throws {
+                    try value.encode(to: encoder)
+                }
+            }
+            let encodable: AnyEncodable
+            if let sessionToken = sessionToken {
+                struct AuthParams: Encodable {
+                    let sessionDurationMinutes: Minutes
+                    let sessionToken: String
+                }
+                encodable = AnyEncodable(value: AuthParams(sessionDurationMinutes: parameters.duration, sessionToken: sessionToken))
+            } else if let sessionJwt = sessionJwt {
+                struct AuthParams: Encodable {
+                    let sessionDurationMinutes: Minutes
+                    let sessionJwt: String
+                }
+                encodable = .init(value: AuthParams(sessionDurationMinutes: parameters.duration, sessionJwt: sessionJwt))
+            } else {
                 completion(.success(.unauthenticated))
                 return
             }
 
             StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: AuthParams(sessionDurationMinutes: parameters.duration, sessionToken: sessionToken),
+                parameters: encodable,
                 completion: { (result: Result<AuthenticateResponse, Error>) in
-                    completion(result.map(AuthenticateResult.authenticated))
+                    switch result.map(AuthenticateResult.authenticated) {
+                    case let .success(value):
+                        completion(.success(value))
+                    case let .failure(error):
+                        // TODO: Check if is StytchError and a 401 before clearing tokens
+                        Current.sessionStorage.reset()
+                        completion(.failure(error))
+                    }
                 }
             )
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         public func revoke(completion: @escaping Completion<BasicResponse>) {
+            struct Parameters: Encodable {
+                private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
+                let token: Session.Token
+
+                func encode(to encoder: Encoder) throws {
+                    var container = encoder.container(keyedBy: CodingKeys.self)
+                    switch token.kind {
+                    case .opaque:
+                        try container.encode(token.value, forKey: .sessionToken)
+                    case .jwt:
+                        try container.encode(token.value, forKey: .sessionJwt)
+                    }
+                }
+            }
+            guard let token = Current.sessionStorage.sessionToken ?? Current.sessionStorage.sessionJwt else {
+                // TODO: - do something better than faking respond
+                completion(.success(.init(requestId: "", statusCode: 200)))
+                return
+            }
             // TODO clear tokens in completion handler after calling revoke
+            StytchClient.post(
+                to: .init(path: pathContext.appendingPathComponent("revoke")),
+                parameters: Parameters(token: token),
+                completion: { (result: Result<BasicResponse, Error>) in
+                    switch result {
+                    case let .success(value):
+                        Current.sessionStorage.reset()
+                        completion(.success(value))
+                    case let .failure(error):
+                        // TODO: Check if is StytchError and a 401 before clearing tokens
+                        completion(.failure(error))
+                    }
+                }
+            )
         }
 
         public struct AuthenticateParameters: Encodable {
