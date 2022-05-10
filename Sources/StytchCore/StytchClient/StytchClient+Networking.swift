@@ -58,7 +58,7 @@ extension StytchClient {
                                 sessionResponse.session,
                                 tokens: [
                                     .jwt(sessionResponse.sessionJwt),
-                                    .opaque(sessionResponse.sessionToken)
+                                    .opaque(sessionResponse.sessionToken),
                                 ],
                                 hostUrl: configuration.hostUrl
                             )

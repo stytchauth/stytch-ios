@@ -71,18 +71,18 @@ extension Session: Encodable {
 extension Session.Attributes: Encodable {}
 #endif
 
-extension Session {
+public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    public struct Attributes: Decodable {
+    struct Attributes: Decodable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.
         public let userAgent: String
     }
 
-    public struct Token: Equatable {
+    struct Token: Equatable {
         public enum Kind: CaseIterable {
             case opaque
             case jwt

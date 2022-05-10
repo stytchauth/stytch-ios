@@ -22,8 +22,14 @@ public struct StytchClient {
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which verifies your app is allowed to communicate with Stytch.
        This **must be set** as an `Authorized Domain` in the Stytch dashboard SDK configuration.
      */
-    public static func configure(publicToken: String, hostUrl: URL) {
+    public static func configure(
+        publicToken: String,
+        hostUrl: URL,
+        sessionStorageStrategy: Session.Storage.Strategy = .cookies
+    ) {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
+
+        Current.sessionStorage.strategy = sessionStorageStrategy
 
         let clientInfoString = try? Current.clientInfo.base64EncodedString()
 

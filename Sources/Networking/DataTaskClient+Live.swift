@@ -5,6 +5,7 @@ public extension DataTaskClient {
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
+                return
             }
             guard let data = data else {
                 completion(.failure(NetworkingClient.Error.missingData))

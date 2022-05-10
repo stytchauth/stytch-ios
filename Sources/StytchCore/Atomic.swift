@@ -11,7 +11,7 @@ struct Atomic<T> {
     private var _value: T
 
     init(value: T) {
-        self._value = value
+        _value = value
     }
 
     private func withLock<T>(_ work: () -> T) -> T {
