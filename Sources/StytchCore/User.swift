@@ -1,12 +1,14 @@
-// swiftlint:disable nesting
-
 import Foundation
 
 public struct User: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case createdAt, cryptoWallets, emails, id = "user_id", name, phoneNumbers, providers, status, totps, webauthnRegistrations
+    }
+
     public let createdAt: Date
     public let cryptoWallets: [CryptoWallet]
     public let emails: [Email]
-    public let userId: String // TODO: make this just id
+    public let id: String
     public let name: Name
     public let phoneNumbers: [PhoneNumber]
     public let providers: [Provider]

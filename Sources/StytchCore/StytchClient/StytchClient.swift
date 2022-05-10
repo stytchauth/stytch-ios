@@ -71,9 +71,9 @@ public struct StytchClient {
         // FIXME: - get query params adjusted on backend
 //        switch typeQuery.value {
 //        case "em":
-            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map { .handled(($0, url)) })
-            }
+        magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
+            completion(result.map { .handled(($0, url)) })
+        }
 //        default:
 //            completion(.failure(StytchError(message: "Unrecognized deeplink type")))
 //        }

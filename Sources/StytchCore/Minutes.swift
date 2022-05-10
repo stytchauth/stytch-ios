@@ -10,6 +10,6 @@ public struct Minutes: Encodable {
 
 extension Minutes: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: UInt) {
-        self.rawValue = value
+        rawValue = value
     }
 }

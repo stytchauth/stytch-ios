@@ -101,7 +101,7 @@ opt_in_rules:
   - yoda_condition
 
 nesting:
-  type_level: 2
+  type_level: 3
 
 indentation_width:
   include_comments: false

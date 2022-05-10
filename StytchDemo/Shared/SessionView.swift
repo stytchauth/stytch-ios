@@ -24,7 +24,7 @@ struct SessionView: View {
 
                 let task = URLSession.shared.dataTask(
                     with: request,
-                    completionHandler: { data, blah, error in
+                    completionHandler: { data, _, _ in
                         print(data.flatMap { String(data: $0, encoding: .utf8) } ?? "no data")
                     }
                 )

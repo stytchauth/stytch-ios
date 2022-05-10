@@ -44,8 +44,9 @@ public final class NetworkingClient {
         return request
     }
 }
+
 //
-//private extension URLRequest {
+// private extension URLRequest {
 //     var curlString: String {
 //         guard let url = url else { return "" }
 //         var baseCommand = #"curl "\#(url.absoluteString)""#
