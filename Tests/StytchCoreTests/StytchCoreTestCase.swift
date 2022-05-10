@@ -37,7 +37,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         StytchClient.configure(
             publicToken: "xyz",
-            appLinks: try XCTUnwrap(URL(string: "https://myapp.com"))
+            hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
     }
 
@@ -211,7 +211,7 @@ final class StytchCoreTestCase: XCTestCase {
 //        XCTAssertEqual(response.session.sessionId, container.data.session.sessionId)
 //        XCTAssertEqual(response.session.attributes.userAgent, container.data.session.attributes.userAgent)
 //        XCTAssertEqual(response.session.attributes.ipAddress, container.data.session.attributes.ipAddress)
-////        XCTAssertEqual(response.session.startedAt, container.data.session.startedAt)
+    ////        XCTAssertEqual(response.session.startedAt, container.data.session.startedAt)
 //        XCTAssertEqual(cookies.count, 2)
 //        // TODO: test cookie setting
 //    }
