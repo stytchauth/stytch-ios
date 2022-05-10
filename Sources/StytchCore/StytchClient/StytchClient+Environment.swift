@@ -34,6 +34,12 @@ extension StytchClient {
 
         var setCookie: (HTTPCookie) -> Void = HTTPCookieStorage.shared.setCookie(_:)
 
+        var keychainRemove: (KeychainClient.Item) throws -> Void = KeychainClient.remove(_:)
+
+        var keychainSet: (String, KeychainClient.Item) throws -> Void = { try KeychainClient.set($0, for: $1) }
+
+        var keychainGet: (KeychainClient.Item) throws -> String? = KeychainClient.get(_:)
+
         var date: () -> Date = Date.init
     }
 }

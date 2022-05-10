@@ -24,12 +24,9 @@ public struct StytchClient {
      */
     public static func configure(
         publicToken: String,
-        hostUrl: URL,
-        sessionStorageStrategy: Session.Storage.Strategy = .cookies
+        hostUrl: URL
     ) {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
-
-        Current.sessionStorage.strategy = sessionStorageStrategy
 
         let clientInfoString = try? Current.clientInfo.base64EncodedString()
 

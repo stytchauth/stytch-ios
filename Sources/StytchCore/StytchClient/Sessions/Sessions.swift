@@ -12,9 +12,10 @@ public extension StytchClient {
         /// When using the `keychain` session storage strategy, this method must be called after any updated tokens are received
         /// from your backend to ensure the `StytchClient` and persistent storage are kept up-to-date.
         public func update(sessionTokens tokens: Session.Token...) {
-            Current.sessionStorage.updateLocalStorage(tokens: tokens)
+            tokens.forEach(Current.sessionStorage.updatePersistentStorage)
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResult>) {
             struct AuthParams: Encodable {
                 let sessionDurationMinutes: Minutes
@@ -40,7 +41,11 @@ public extension StytchClient {
         }
 
         public struct AuthenticateParameters: Encodable {
-            let duration: Minutes
+            public let duration: Minutes
+
+            public init(duration: Minutes) {
+                self.duration = duration
+            }
         }
 
         public enum AuthenticateResult {
