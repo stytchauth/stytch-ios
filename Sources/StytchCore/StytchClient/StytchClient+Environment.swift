@@ -50,6 +50,8 @@ extension StytchClient {
 
         var setCookie: (HTTPCookie) -> Void = HTTPCookieStorage.shared.setCookie(_:)
 
+        var deleteCookieNamed: (String) -> Void = { name in HTTPCookieStorage.shared.cookies?.filter { $0.name == name }.forEach(HTTPCookieStorage.shared.deleteCookie(_:)) }
+
         var keychainRemove: (KeychainClient.Item) throws -> Void = KeychainClient.remove(_:)
 
         var keychainSet: (String, KeychainClient.Item) throws -> Void = { try KeychainClient.set($0, for: $1) }

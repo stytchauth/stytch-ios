@@ -4,62 +4,35 @@ public extension Session {
     final class Storage {
         private(set) var sessionToken: Session.Token? {
             get {
-                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.opaque.name)
-                return try? Current.keychainGet(keychainItem).map(Session.Token.opaque)
+                return try? Current.keychainGet(.sessionToken).map(Session.Token.opaque)
             }
             set {
-                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.opaque.name)
+                let keychainItem: KeychainClient.Item = .sessionToken
                 if let newValue = newValue {
                     try? Current.keychainSet(newValue.value, keychainItem)
                 } else {
                     try? Current.keychainRemove(keychainItem)
-                    HTTPCookieStorage.shared.cookies?.filter { $0.name == keychainItem.name }
-                        .forEach(HTTPCookieStorage.shared.deleteCookie)
+                    Current.deleteCookieNamed(keychainItem.name)
                 }
             }
         }
 
         private(set) var sessionJwt: Session.Token? {
             get {
-                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.jwt.name)
-                return try? Current.keychainGet(keychainItem).map(Session.Token.jwt)
+                return try? Current.keychainGet(.sessionJwt).map(Session.Token.jwt)
             }
             set {
-                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.jwt.name)
+                let keychainItem: KeychainClient.Item = .sessionJwt
                 if let newValue = newValue {
                     try? Current.keychainSet(newValue.value, keychainItem)
                 } else {
                     try? Current.keychainRemove(keychainItem)
-                    HTTPCookieStorage.shared.cookies?.filter { $0.name == keychainItem.name }
-                        .forEach(HTTPCookieStorage.shared.deleteCookie)
+                    Current.deleteCookieNamed(keychainItem.name)
                 }
             }
         }
 
-        // TODO: - does this need to be persisted, thinking no
-        private(set) var session: Session? {
-            get {
-                do {
-                    guard let json = try Current.keychainGet(.init(kind: .token, name: "stytch_session")) else { return nil }
-                    return try Current.jsonDecoder.decode(Session.self, from: Data(json.utf8))
-                } catch {
-                    return nil
-                }
-            }
-            set {
-                do {
-                    let keychainItem: KeychainClient.Item = .init(kind: .token, name: "stytch_session")
-                    if let newValue = newValue {
-                        let data = try Current.jsonEncoder.encode(newValue)
-                        if let jsonString = String(data: data, encoding: .utf8) {
-                            try Current.keychainSet(jsonString, keychainItem)
-                        }
-                    } else {
-                        try Current.keychainRemove(keychainItem)
-                    }
-                } catch {}
-            }
-        }
+        private(set) var session: Session?
 
         init() {
             NotificationCenter.default
@@ -95,9 +68,9 @@ public extension Session {
             session = nil
             sessionToken = nil
             sessionJwt = nil
-            HTTPCookieStorage.shared.cookies?
-                .filter { Session.Token.Kind.allCases.map(\.name).contains($0.name) }
-                .forEach(HTTPCookieStorage.shared.deleteCookie)
+            Session.Token.Kind.allCases
+                .map(\.name)
+                .forEach(Current.deleteCookieNamed)
         }
 
         @objc private func cookiesDidUpdate(notification: Notification) {
@@ -145,4 +118,9 @@ public extension Session {
             return HTTPCookie(properties: properties)
         }
     }
+}
+
+fileprivate extension KeychainClient.Item {
+    static let sessionToken: Self = .init(kind: .token, name: Session.Token.Kind.opaque.name)
+    static let sessionJwt: Self = .init(kind: .token, name: Session.Token.Kind.jwt.name)
 }
