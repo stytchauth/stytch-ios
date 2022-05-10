@@ -3,32 +3,40 @@ import Foundation
 public extension Session {
     final class Storage {
         private(set) var sessionToken: Session.Token? {
-            get { try? Current.keychainGet(.init(kind: .token, name: Session.Token.Kind.opaque.name)).map(Session.Token.opaque) }
+            get {
+                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.opaque.name)
+                return try? Current.keychainGet(keychainItem).map(Session.Token.opaque)
+            }
             set {
                 let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.opaque.name)
                 if let newValue = newValue {
                     try? Current.keychainSet(newValue.value, keychainItem)
                 } else {
                     try? Current.keychainRemove(keychainItem)
-                    // TODO: - need to also clear the cookie
+                    HTTPCookieStorage.shared.cookies?.filter { $0.name == keychainItem.name }
+                        .forEach(HTTPCookieStorage.shared.deleteCookie)
                 }
             }
         }
 
         private(set) var sessionJwt: Session.Token? {
-            get { try? Current.keychainGet(.init(kind: .token, name: Session.Token.Kind.jwt.name)).map(Session.Token.opaque) }
+            get {
+                let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.jwt.name)
+                return try? Current.keychainGet(keychainItem).map(Session.Token.jwt)
+            }
             set {
                 let keychainItem: KeychainClient.Item = .init(kind: .token, name: Session.Token.Kind.jwt.name)
                 if let newValue = newValue {
                     try? Current.keychainSet(newValue.value, keychainItem)
                 } else {
                     try? Current.keychainRemove(keychainItem)
-                    // TODO: - need to also clear the cookie
+                    HTTPCookieStorage.shared.cookies?.filter { $0.name == keychainItem.name }
+                        .forEach(HTTPCookieStorage.shared.deleteCookie)
                 }
             }
         }
 
-        // TODO: - does this need to be persisted
+        // TODO: - does this need to be persisted, thinking no
         private(set) var session: Session? {
             get {
                 do {
@@ -81,6 +89,15 @@ public extension Session {
             do {
                 try Current.keychainSet(token.value, .init(kind: .token, name: token.name))
             } catch {}
+        }
+
+        func reset() {
+            session = nil
+            sessionToken = nil
+            sessionJwt = nil
+            HTTPCookieStorage.shared.cookies?
+                .filter { Session.Token.Kind.allCases.map(\.name).contains($0.name) }
+                .forEach(HTTPCookieStorage.shared.deleteCookie)
         }
 
         @objc private func cookiesDidUpdate(notification: Notification) {
