@@ -57,7 +57,6 @@ public extension StytchClient {
 
         /// The underlying data for sessions `authenticate` calls. See ``SessionResponseType`` for more information.
         public struct AuthenticateResponseData: Decodable, SessionResponseType {
-            public let userId: String
             public let sessionToken: String
             public let sessionJwt: String
             public let session: Session
