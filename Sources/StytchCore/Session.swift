@@ -91,9 +91,9 @@ public extension Session {
             }
         }
 
-        let kind: Kind
+        public let kind: Kind
 
-        let value: String
+        public let value: String
 
         var name: String { kind.name }
 

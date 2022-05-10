@@ -20,7 +20,7 @@ struct SessionView: View {
             Text("User agent: " + session.attributes.userAgent)
             Button("Fetch index", action: {
                 var request: URLRequest = .init(url: URL(string: "https://dan-stytch.github.io")!)
-                StytchClient.sessions.sessionToken.map { request.addValue($0, forHTTPHeaderField: "X-Stytch-Token") }
+                StytchClient.sessions.sessionToken.map { request.addValue($0.value, forHTTPHeaderField: "X-Stytch-Token") }
 
                 let task = URLSession.shared.dataTask(
                     with: request,

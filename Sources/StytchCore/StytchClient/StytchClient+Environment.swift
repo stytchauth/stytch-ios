@@ -15,7 +15,7 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
 
-        let sessionStorage: Session.Storage = .init()
+        let sessionStorage: SessionStorage = .init()
 
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
