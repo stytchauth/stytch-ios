@@ -2,16 +2,19 @@ import Foundation
 
 extension StytchClient {
     struct Configuration {
-        let appLinks: [URL]
+        let hostUrl: URL
 
         let publicToken: String
 
         var baseUrl: URL {
             var urlComponents: URLComponents = .init()
             urlComponents.scheme = "https"
-            urlComponents.path = "/web/sdk/"
-            urlComponents.host = "stytch.com"
+            urlComponents.path = "/sdk/v1/"
+            urlComponents.host = "web.stytch.com"
             #if DEBUG
+            if let scheme = ProcessInfo.processInfo.environment["STYTCH_API_SCHEME"] {
+                urlComponents.scheme = scheme
+            }
             if let host = ProcessInfo.processInfo.environment["STYTCH_API_HOST"] {
                 urlComponents.host = host
             }

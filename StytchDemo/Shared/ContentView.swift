@@ -9,7 +9,7 @@ struct ContentView: View {
     var body: some View {
         if let session = session {
             VStack {
-                SessionView(session: session)
+                SessionView(session: session, hostUrl: hostUrl)
                 Button("Log out") {
                     self.logOutTapped()
                 }

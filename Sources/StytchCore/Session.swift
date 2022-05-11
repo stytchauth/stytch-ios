@@ -3,7 +3,7 @@ import Foundation
 /**
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
-public struct Session: Decodable {
+public struct Session: Codable {
     private enum CodingKeys: String, CodingKey {
         case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
     }
@@ -52,10 +52,7 @@ public struct Session: Decodable {
         startedAt = try container.decode(key: .startedAt)
         userId = try container.decode(key: .userId)
     }
-}
 
-#if DEBUG
-extension Session: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(attributes, forKey: .attributes)
@@ -68,38 +65,49 @@ extension Session: Encodable {
     }
 }
 
-extension Session.Attributes: Encodable {}
-#endif
-
-extension Session {
+public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    public struct Attributes: Decodable {
+    struct Attributes: Codable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.
         public let userAgent: String
     }
 
-    enum Token {
-        case opaque(String)
-        case jwt(String)
+    struct Token: Equatable {
+        public enum Kind: CaseIterable {
+            case opaque
+            case jwt
 
-        var name: String {
-            switch self {
-            case .jwt:
-                return "stytch_session"
-            case .opaque:
-                return "stytch_session_jwt"
+            var name: String {
+                switch self {
+                case .opaque:
+                    return "stytch_session"
+                case .jwt:
+                    return "stytch_session_jwt"
+                }
             }
         }
 
-        var value: String {
-            switch self {
-            case let .jwt(value), let .opaque(value):
-                return value
-            }
+        public let kind: Kind
+
+        public let value: String
+
+        var name: String { kind.name }
+
+        private init(kind: Kind, value: String) {
+            self.kind = kind
+            self.value = value
+        }
+
+        public static func jwt(_ value: String) -> Self {
+            .init(kind: .jwt, value: value)
+        }
+
+        public static func opaque(_ value: String) -> Self {
+            .init(kind: .opaque, value: value)
         }
     }
 }

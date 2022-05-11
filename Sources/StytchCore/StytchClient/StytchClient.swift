@@ -18,19 +18,21 @@ public struct StytchClient {
     /**
      Configures the `StytchClient`, setting the `publicToken` and `hostUrl`.
      - Parameters:
-     - publicToken: Available via the Stytch dashboard in the `API keys` section
-     - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which verifies your app is allowed to communicate with Stytch.
-     This **must be set** as an `Authorized Domain` in the Stytch dashboard SDK configuration.
+       - publicToken: Available via the Stytch dashboard in the `API keys` section
+       - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
      */
-    public static func configure(publicToken: String, appLinks: URL...) {
-        instance.configuration = .init(appLinks: appLinks, publicToken: publicToken)
+    public static func configure(
+        publicToken: String,
+        hostUrl: URL
+    ) {
+        instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
 
         let clientInfoString = try? Current.clientInfo.base64EncodedString()
 
         Current.networkingClient.headerProvider = {
             guard let configuration = instance.configuration else { return [:] }
 
-            let sessionToken = /* Current.sessionStorage.sessionToken ?? */ configuration.publicToken
+            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
 
             return [
@@ -58,21 +60,22 @@ public struct StytchClient {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
-            let typeQuery = queryItems.first(where: { $0.name == "type" }),
+//            let typeQuery = queryItems.first(where: { $0.name == "type" }),
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
             completion(.success(.notHandled(url)))
             return
         }
 
-        switch typeQuery.value {
-        case "em":
-            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map { .handled(($0, url)) })
-            }
-        default:
-            completion(.failure(StytchError(message: "Unrecognized deeplink type")))
+        // FIXME: - get query params adjusted on backend
+//        switch typeQuery.value {
+//        case "em":
+        magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
+            completion(result.map { .handled(($0, url)) })
         }
+//        default:
+//            completion(.failure(StytchError(message: "Unrecognized deeplink type")))
+//        }
     }
 }
 

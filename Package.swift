@@ -9,14 +9,12 @@ let package = Package(
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.6.0"),
     ],
     targets: [
         .target(
             name: "StytchCore",
             dependencies: [
                 "Networking",
-                .product(name: "Tagged", package: "swift-tagged"),
             ]
         ),
         .target(name: "Networking"),

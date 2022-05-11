@@ -44,7 +44,7 @@ extension StytchClient {
     private static func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method = .get,
         url: URL,
-        configuration _: Configuration, // To be used by session tracking
+        configuration: Configuration,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         Current.networkingClient.performRequest(method, url: url) { result in
@@ -53,6 +53,16 @@ extension StytchClient {
                     do {
                         try response.verifyStatus(data: data)
                         let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
+                        if let sessionResponse = dataContainer.data as? SessionResponseType {
+                            Current.sessionStorage.updateSession(
+                                sessionResponse.session,
+                                tokens: [
+                                    .jwt(sessionResponse.sessionJwt),
+                                    .opaque(sessionResponse.sessionToken),
+                                ],
+                                hostUrl: configuration.hostUrl
+                            )
+                        }
                         return .success(dataContainer.data)
                     } catch {
                         return .failure(error)
@@ -68,12 +78,14 @@ private extension HTTPURLResponse {
         switch statusCode {
         case 400..<500:
             throw StytchError(
-                message: "Client error: Status code \(statusCode)",
+                message: "Client networking error",
+                errorType: .network(statusCode: statusCode),
                 debugInfo: String(data: data, encoding: .utf8)
             )
         case 500..<600:
             throw StytchError(
-                message: "Server error: Status code \(statusCode)",
+                message: "Server networking error",
+                errorType: .network(statusCode: statusCode),
                 debugInfo: String(data: data, encoding: .utf8)
             )
         default:

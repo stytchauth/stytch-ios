@@ -1,5 +1,4 @@
 import Foundation
-import Tagged
 
 struct Endpoint {
     let path: Path
@@ -26,9 +25,9 @@ struct Endpoint {
 }
 
 extension Endpoint {
-    typealias Path = Tagged<PathTag, String>
-
-    enum PathTag {}
+    struct Path {
+        let rawValue: String
+    }
 }
 
 extension Endpoint.Path {

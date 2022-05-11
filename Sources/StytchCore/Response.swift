@@ -33,11 +33,8 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
-/// An empty type to allow decoding the absence of a value within various generic Decodable types.
-public struct EmptyDecodable: Decodable {}
-
 /// A concrete response type which provides only the `requestId` and `statusCode`.
-public typealias BasicResponse = Response<EmptyDecodable>
+public typealias BasicResponse = Response<EmptyCodable>
 
 #if DEBUG
 extension Response: Encodable where Wrapped: Encodable {
@@ -49,9 +46,7 @@ extension Response: Encodable where Wrapped: Encodable {
     }
 }
 
-extension EmptyDecodable: Encodable {}
-
-extension Response where Wrapped == EmptyDecodable {
+extension Response where Wrapped == EmptyCodable {
     init(requestId: String, statusCode: UInt) {
         self.requestId = requestId
         self.statusCode = statusCode
@@ -64,8 +59,6 @@ extension Response where Wrapped == EmptyDecodable {
  An interface for the various response types which include ``Session`` information.
  */
 public protocol SessionResponseType {
-    /// The id of the authenticated user.
-    var userId: String { get }
     /**
      The opaque token for the session. Can be used by your server to verify the
      validity of your session by confirming with Stytch's servers on each request.
@@ -84,9 +77,7 @@ public protocol SessionResponseType {
 }
 
 extension Response: SessionResponseType where Wrapped: SessionResponseType {
-    public var userId: String {
-        self[dynamicMember: \.userId]
-    }
+    public var userId: String { session.userId }
 
     public var sessionToken: String {
         self[dynamicMember: \.sessionToken]

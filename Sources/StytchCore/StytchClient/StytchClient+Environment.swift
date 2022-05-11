@@ -15,11 +15,29 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
 
+        let sessionStorage: SessionStorage = .init()
+
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
-            // TODO: confirm decoding/encoding strategies
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            decoder.dateDecodingStrategy = .iso8601
+            decoder.dateDecodingStrategy = .custom { decoder in
+                let container = try decoder.singleValueContainer()
+                let dateString = try container.decode(String.self)
+                do {
+                    let formatter = ISO8601DateFormatter()
+                    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    if let date = formatter.date(from: dateString) {
+                        return date
+                    }
+                    formatter.formatOptions = [.withInternetDateTime]
+                    if let date = formatter.date(from: dateString) {
+                        return date
+                    }
+                    throw DecodingError.dataCorrupted(
+                        .init(codingPath: decoder.codingPath, debugDescription: "Expected date string to be ISO8601-formatted.")
+                    )
+                }
+            }
             return decoder
         }()
 
@@ -29,5 +47,11 @@ extension StytchClient {
             encoder.dateEncodingStrategy = .iso8601
             return encoder
         }()
+
+        var cookieClient: CookieClient = .live
+
+        var keychainClient: KeychainClient = .live
+
+        var date: () -> Date = Date.init
     }
 }

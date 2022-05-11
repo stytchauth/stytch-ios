@@ -1,7 +1,15 @@
-import Tagged
+public struct Minutes: Encodable {
+    let rawValue: UInt
 
-/// A tag type for ``Minutes``
-public enum MinutesTag {}
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
 
-/// A dedicated time-unit type to represent minutes.
-public typealias Minutes = Tagged<MinutesTag, UInt>
+        try container.encode(rawValue)
+    }
+}
+
+extension Minutes: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt) {
+        rawValue = value
+    }
+}

@@ -5,12 +5,12 @@ import Foundation
 {% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.asSource }}{% endif %}{% endfor %}){% endset %}
-{% set methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.name }}: {{ parameter.name }}{% endif %}{% endfor %}{% endset %}
+{% set methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{{ parameter.name }}: {{ parameter.name }}, {% endif %}{% endfor %}completion: {% endset %}
 {% set returnType %}{{ method.parameters.last.typeName|replace:"@escaping Completion<",""|replace:">","" }}{% endset %}
 {% set asyncFunction %}
     {{ methodKeywords }} {{ methodDeclaration }} async throws -> {{ returnType }} {
         try await withCheckedThrowingContinuation { continuation in
-            {{ methodName }}({{ methodCallParams }}, completion: continuation.resume)
+            {{ methodName }}({{ methodCallParams }}continuation.resume)
         }
     }
 {% endset %}
@@ -30,7 +30,7 @@ public extension {{ type.name }} {
     {{ methodKeywords }} {{ methodDeclaration }} -> AnyPublisher<{{ returnType }}, Error> {
         return Deferred { 
             Future({ promise in
-                {{ methodName }}({{ methodCallParams }}, completion: promise)
+                {{ methodName }}({{ methodCallParams }}promise)
             })
         }
         .eraseToAnyPublisher()
