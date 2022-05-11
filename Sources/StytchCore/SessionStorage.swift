@@ -3,30 +3,30 @@ import Foundation
 final class SessionStorage {
     private(set) var sessionToken: Session.Token? {
         get {
-            try? Current.keychainGet(.sessionToken).map(Session.Token.opaque)
+            try? Current.keychainClient.get(.sessionToken).map(Session.Token.opaque)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionToken
             if let newValue = newValue {
-                try? Current.keychainSet(newValue.value, keychainItem)
+                try? Current.keychainClient.set(newValue.value, for: keychainItem)
             } else {
-                try? Current.keychainRemove(keychainItem)
-                Current.deleteCookieNamed(keychainItem.name)
+                try? Current.keychainClient.remove(keychainItem)
+                Current.cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
     }
 
     private(set) var sessionJwt: Session.Token? {
         get {
-            try? Current.keychainGet(.sessionJwt).map(Session.Token.jwt)
+            try? Current.keychainClient.get(.sessionJwt).map(Session.Token.jwt)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionJwt
             if let newValue = newValue {
-                try? Current.keychainSet(newValue.value, keychainItem)
+                try? Current.keychainClient.set(newValue.value, for: keychainItem)
             } else {
-                try? Current.keychainRemove(keychainItem)
-                Current.deleteCookieNamed(keychainItem.name)
+                try? Current.keychainClient.remove(keychainItem)
+                Current.cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
     }
@@ -49,14 +49,14 @@ final class SessionStorage {
             updatePersistentStorage(token: token)
 
             if let cookie = cookieFor(token: token, expiresAt: session.expiresAt, hostUrl: hostUrl) {
-                Current.setCookie(cookie)
+                Current.cookieClient.set(cookie: cookie)
             }
         }
     }
 
     func updatePersistentStorage(token: Session.Token) {
         do {
-            try Current.keychainSet(token.value, .init(kind: .token, name: token.name))
+            try Current.keychainClient.set(token.value, for: .init(kind: .token, name: token.name))
         } catch {}
     }
 
@@ -66,7 +66,7 @@ final class SessionStorage {
         sessionJwt = nil
         Session.Token.Kind.allCases
             .map(\.name)
-            .forEach(Current.deleteCookieNamed)
+            .forEach(Current.cookieClient.deleteCookie(named:))
     }
 
     @objc

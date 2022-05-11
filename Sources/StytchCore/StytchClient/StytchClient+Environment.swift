@@ -48,15 +48,9 @@ extension StytchClient {
             return encoder
         }()
 
-        var setCookie: (HTTPCookie) -> Void = HTTPCookieStorage.shared.setCookie(_:)
+        var cookieClient: CookieClient = .live
 
-        var deleteCookieNamed: (String) -> Void = { name in HTTPCookieStorage.shared.cookies?.filter { $0.name == name }.forEach(HTTPCookieStorage.shared.deleteCookie(_:)) }
-
-        var keychainRemove: (KeychainClient.Item) throws -> Void = KeychainClient.remove(_:)
-
-        var keychainSet: (String, KeychainClient.Item) throws -> Void = { try KeychainClient.set($0, for: $1) }
-
-        var keychainGet: (KeychainClient.Item) throws -> String? = KeychainClient.get(_:)
+        var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
     }
