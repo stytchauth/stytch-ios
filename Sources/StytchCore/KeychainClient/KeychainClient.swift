@@ -1,7 +1,7 @@
 import Foundation
 
 struct KeychainClient {
-    private let getItem: (Self, Item) throws -> String?
+    private let getItem: (Item) throws -> String?
 
     private let setValueForItem: (Self, String, Item) throws -> Void
 
@@ -10,7 +10,7 @@ struct KeychainClient {
     private let resultExists: (Item) -> Bool
 
     init(
-        getItem: @escaping (KeychainClient, KeychainClient.Item) throws -> String?,
+        getItem: @escaping (KeychainClient.Item) throws -> String?,
         setValueForItem: @escaping (KeychainClient, String, KeychainClient.Item) throws -> Void,
         removeItem: @escaping (KeychainClient, KeychainClient.Item) throws -> Void,
         resultExists: @escaping (KeychainClient.Item) -> Bool
@@ -22,7 +22,7 @@ struct KeychainClient {
     }
 
     func get(_ item: Item) throws -> String? {
-        try getItem(self, item)
+        try getItem(item)
     }
 
     func set(_ value: String, for item: Item) throws {

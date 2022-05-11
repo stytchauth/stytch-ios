@@ -3,7 +3,7 @@ import Security
 
 extension KeychainClient {
     static let live: Self = .init(
-        getItem: { client, item in
+        getItem: { item in
             var result: CFTypeRef?
 
             guard case errSecSuccess = SecItemCopyMatching(item.getQuery, &result) else {
