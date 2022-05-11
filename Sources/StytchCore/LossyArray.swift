@@ -17,7 +17,7 @@ struct LossyArray<T: Decodable>: Decodable {
             do {
                 elements.append(try container.decode(T.self))
             } catch {
-                _ = try? container.decode(EmptyDecodable.self)
+                _ = try? container.decode(EmptyCodable.self)
             }
         }
 

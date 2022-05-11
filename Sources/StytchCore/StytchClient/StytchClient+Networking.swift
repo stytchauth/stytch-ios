@@ -78,12 +78,14 @@ private extension HTTPURLResponse {
         switch statusCode {
         case 400..<500:
             throw StytchError(
-                message: "Client error: Status code \(statusCode)",
+                message: "Client networking error",
+                errorType: .network(statusCode: statusCode),
                 debugInfo: String(data: data, encoding: .utf8)
             )
         case 500..<600:
             throw StytchError(
-                message: "Server error: Status code \(statusCode)",
+                message: "Server networking error",
+                errorType: .network(statusCode: statusCode),
                 debugInfo: String(data: data, encoding: .utf8)
             )
         default:

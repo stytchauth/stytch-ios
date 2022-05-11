@@ -33,11 +33,8 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
-/// An empty type to allow decoding the absence of a value within various generic Decodable types.
-public struct EmptyDecodable: Decodable {}
-
 /// A concrete response type which provides only the `requestId` and `statusCode`.
-public typealias BasicResponse = Response<EmptyDecodable>
+public typealias BasicResponse = Response<EmptyCodable>
 
 #if DEBUG
 extension Response: Encodable where Wrapped: Encodable {
@@ -49,9 +46,7 @@ extension Response: Encodable where Wrapped: Encodable {
     }
 }
 
-extension EmptyDecodable: Encodable {}
-
-extension Response where Wrapped == EmptyDecodable {
+extension Response where Wrapped == EmptyCodable {
     init(requestId: String, statusCode: UInt) {
         self.requestId = requestId
         self.statusCode = statusCode

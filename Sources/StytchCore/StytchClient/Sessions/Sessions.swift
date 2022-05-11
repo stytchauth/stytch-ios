@@ -9,31 +9,15 @@ public extension StytchClient {
         /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
         public var sessionJwt: Session.Token? { Current.sessionStorage.sessionJwt }
 
-        /// When using the `keychain` session storage strategy, this method must be called after any updated tokens are received
-        /// from your backend to ensure the `StytchClient` and persistent storage are kept up-to-date.
-        public func update(sessionTokens tokens: Session.Token...) {
+        /// If your app has cookies disabled or simply receives updated session tokens from your backend via means other than
+        /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
+        /// and persistent storage are kept up-to-date. You should include both the opaque token and the jwt.
+        public func update(sessionTokens tokens: [Session.Token]) {
             tokens.forEach(Current.sessionStorage.updatePersistentStorage)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResult>) {
-            struct Parameters: Encodable {
-                private enum CodingKeys: String, CodingKey { case sessionDurationMinutes, sessionToken, sessionJwt }
-
-                let sessionDurationMinutes: Minutes
-                let token: Session.Token
-
-                func encode(to encoder: Encoder) throws {
-                    var container = encoder.container(keyedBy: CodingKeys.self)
-                    try container.encode(sessionDurationMinutes, forKey: .sessionDurationMinutes)
-                    switch token.kind {
-                    case .opaque:
-                        try container.encode(token.value, forKey: .sessionToken)
-                    case .jwt:
-                        try container.encode(token.value, forKey: .sessionJwt)
-                    }
-                }
-            }
             guard let token = sessionToken ?? sessionJwt else {
                 completion(.success(.unauthenticated))
                 return
@@ -41,66 +25,67 @@ public extension StytchClient {
 
             StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: Parameters(sessionDurationMinutes: parameters.duration, token: token)
+                parameters: TokenizedParameters(parameters: parameters, token: token)
             ) { (result: Result<AuthenticateResponse, Error>) in
                 switch result.map(AuthenticateResult.authenticated) {
                 case let .success(value):
                     completion(.success(value))
                 case let .failure(error):
-                    // TODO: Check if is StytchError and a 401 before clearing tokens
-                    Current.sessionStorage.reset()
+                    Self.handleError(error)
                     completion(.failure(error))
                 }
             }
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        public func revoke(completion: @escaping Completion<BasicResponse>) {
-            struct Parameters: Encodable {
-                private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
-                let token: Session.Token
-
-                func encode(to encoder: Encoder) throws {
-                    var container = encoder.container(keyedBy: CodingKeys.self)
-                    switch token.kind {
-                    case .opaque:
-                        try container.encode(token.value, forKey: .sessionToken)
-                    case .jwt:
-                        try container.encode(token.value, forKey: .sessionJwt)
-                    }
-                }
-            }
+        public func revoke(completion: @escaping Completion<RevokeResult>) {
             guard let token = sessionToken ?? sessionJwt else {
-                // TODO: - do something better than faking response
-                completion(.success(.init(requestId: "", statusCode: 200)))
+                completion(.success(.unauthenticated))
                 return
             }
+
             StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("revoke")),
-                parameters: Parameters(token: token)
+                parameters: TokenizedParameters(parameters: EmptyCodable(), token: token)
             ) { (result: Result<BasicResponse, Error>) in
                 switch result {
                 case let .success(value):
                     Current.sessionStorage.reset()
-                    completion(.success(value))
+                    completion(.success(.authenticated(value)))
                 case let .failure(error):
-                    // TODO: - Check if is StytchError and a 401 before clearing tokens
+                    Self.handleError(error)
                     completion(.failure(error))
                 }
             }
         }
 
+        private static func handleError(_ error: Error) {
+            guard
+                let error = error as? StytchError,
+                case let .network(statusCode) = error.errorType,
+                statusCode == 401
+            else { return }
+
+            Current.sessionStorage.reset()
+        }
+
+        public typealias AuthenticateResult = AuthenticationStatus<AuthenticateResponse>
+
+        public typealias RevokeResult = AuthenticationStatus<BasicResponse>
+
+        public enum AuthenticationStatus<T> {
+            case authenticated(T)
+            case unauthenticated
+        }
+
         public struct AuthenticateParameters: Encodable {
+            private enum CodingKeys: String, CodingKey { case duration = "session_duration_minutes" }
+
             public let duration: Minutes
 
             public init(duration: Minutes) {
                 self.duration = duration
             }
-        }
-
-        public enum AuthenticateResult {
-            case authenticated(AuthenticateResponse)
-            case unauthenticated
         }
 
         /// The concrete response type for sessions `authenticate` calls.
@@ -111,6 +96,26 @@ public extension StytchClient {
             public let sessionToken: String
             public let sessionJwt: String
             public let session: Session
+        }
+
+        struct TokenizedParameters<Parameters: Encodable>: Encodable {
+            private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
+
+            let parameters: Parameters
+            let token: Session.Token
+
+            func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+
+                try parameters.encode(to: encoder)
+
+                switch token.kind {
+                case .opaque:
+                    try container.encode(token.value, forKey: .sessionToken)
+                case .jwt:
+                    try container.encode(token.value, forKey: .sessionJwt)
+                }
+            }
         }
     }
 }
