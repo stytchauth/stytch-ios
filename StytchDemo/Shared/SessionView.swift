@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SessionView: View {
     let session: Session
+    let hostUrl: URL
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,7 +20,7 @@ struct SessionView: View {
             Text("Expires at: " + session.expiresAt.formatted(date: .abbreviated, time: .shortened))
             Text("User agent: " + session.attributes.userAgent)
             Button("Fetch index", action: {
-                var request: URLRequest = .init(url: URL(string: "https://dan-stytch.github.io")!)
+                var request: URLRequest = .init(url: hostUrl)
                 StytchClient.sessions.sessionToken.map { request.addValue($0.value, forHTTPHeaderField: "X-Stytch-Token") }
 
                 let task = URLSession.shared.dataTask(
