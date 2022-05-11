@@ -9,7 +9,9 @@ struct StytchError: Error {
         self.errorType = errorType
         self.debugInfo = debugInfo
     }
+}
 
+extension StytchError {
     enum ErrorType {
         case generic, network(statusCode: Int)
     }
