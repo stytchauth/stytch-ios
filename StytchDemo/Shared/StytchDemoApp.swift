@@ -3,9 +3,11 @@ import SwiftUI
 
 @main
 struct StytchDemoApp: App {
-    @State var session: Session?
-
     private let hostUrl = URL(string: "https://dan-stytch.github.io")!
+
+    @State private var session: Session?
+    @State private var errorAlertPresented = false
+    @State private var errorMessage = ""
 
     var body: some Scene {
         WindowGroup {
@@ -30,18 +32,24 @@ struct StytchDemoApp: App {
                     case .unauthenticated:
                         break
                     }
-                } catch {}
+                } catch {
+                    handle(error: error)
+                }
             }
+            // Handle web-browsing deeplinks (enables universal links on macOS)
             .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
                 guard let url = userActivity.webpageURL else { return }
                 handle(url: url)
             }
+            // Handle deeplinks
             .onOpenURL(perform: handle(url:))
+            // Prevent deeplink from opening new window
             .handlesExternalEvents(preferring: [], allowing: ["*"])
+            .alert("🚨 Error 🚨", isPresented: $errorAlertPresented, actions: { EmptyView() }, message: { Text(errorMessage) })
         }
-        .commands {
-            CommandGroup(replacing: .newItem, addition: { })
-        }
+        // Prevent user from being able to create a new window
+        .commands { CommandGroup(replacing: .newItem, addition: { }) }
+        // Prevent deeplink from opening new window
         .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
     }
 
@@ -54,7 +62,22 @@ struct StytchDemoApp: App {
                 case .notHandled:
                     print("not handled")
                 }
+            } catch {
+                handle(error: error)
             }
+        }
+    }
+
+    private func handle(error: Error) {
+        switch error {
+        case let error as StytchStructuredError:
+            errorMessage = error.message
+            errorAlertPresented = true
+        case let error as StytchGenericError:
+            errorMessage = error.message
+            errorAlertPresented = true
+        default:
+            break
         }
     }
 }

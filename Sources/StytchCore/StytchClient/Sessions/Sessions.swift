@@ -60,13 +60,15 @@ public extension StytchClient {
         }
 
         private static func handleError(_ error: Error) {
-            guard
-                let error = error as? StytchError,
-                case let .network(statusCode) = error.errorType,
+            if
+                let error = error as? StytchGenericError,
+                case let .network(statusCode) = error.origin,
                 statusCode == 401
-            else { return }
-
-            Current.sessionStorage.reset()
+            {
+                Current.sessionStorage.reset()
+            } else if let error = error as? StytchStructuredError, error.statusCode == 401 {
+                Current.sessionStorage.reset()
+            }
         }
 
         public typealias AuthenticateResult = AuthenticationStatus<AuthenticateResponse>
