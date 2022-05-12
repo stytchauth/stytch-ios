@@ -16,6 +16,7 @@ public extension StytchStructuredError {
         case unableToAuthMagicLink = "unable_to_auth_magic_link"
         // TODO: - flesh out error type definitions
     }
+
     enum ErrorType: Decodable {
         case defined(DefinedErrorType)
         case undefined(rawValue: String)

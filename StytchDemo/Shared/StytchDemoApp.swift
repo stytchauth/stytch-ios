@@ -48,7 +48,7 @@ struct StytchDemoApp: App {
             .alert("🚨 Error 🚨", isPresented: $errorAlertPresented, actions: { EmptyView() }, message: { Text(errorMessage) })
         }
         // Prevent user from being able to create a new window
-        .commands { CommandGroup(replacing: .newItem, addition: { }) }
+        .commands { CommandGroup(replacing: .newItem, addition: {}) }
         // Prevent deeplink from opening new window
         .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
     }
