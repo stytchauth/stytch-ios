@@ -8,7 +8,7 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
-            completion(.failure(StytchError.clientNotConfigured))
+            completion(.failure(StytchGenericError.clientNotConfigured))
             return
         }
         do {
@@ -29,7 +29,7 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
-            completion(.failure(StytchError.clientNotConfigured))
+            completion(.failure(StytchGenericError.clientNotConfigured))
             return
         }
 
@@ -77,17 +77,29 @@ private extension HTTPURLResponse {
     func verifyStatus(data: Data) throws {
         switch statusCode {
         case 400..<500:
-            throw StytchError(
-                message: "Client networking error",
-                errorType: .network(statusCode: statusCode),
-                debugInfo: String(data: data, encoding: .utf8)
-            )
+            let error: Error
+            do {
+                error = try Current.jsonDecoder.decode(StytchStructuredError.self, from: data)
+            } catch _ {
+                error = StytchGenericError(
+                    message: "Client networking error",
+                    origin: .network(statusCode: statusCode),
+                    debugInfo: String(data: data, encoding: .utf8)
+                )
+            }
+            throw error
         case 500..<600:
-            throw StytchError(
-                message: "Server networking error",
-                errorType: .network(statusCode: statusCode),
-                debugInfo: String(data: data, encoding: .utf8)
-            )
+            let error: Error
+            do {
+                error = try Current.jsonDecoder.decode(StytchStructuredError.self, from: data)
+            } catch _ {
+                error = StytchGenericError(
+                    message: "Server networking error",
+                    origin: .network(statusCode: statusCode),
+                    debugInfo: String(data: data, encoding: .utf8)
+                )
+            }
+            throw error
         default:
             break
         }

@@ -34,6 +34,7 @@ struct LoginView: View {
             })
             .buttonStyle(.borderedProminent)
             .disabled(isLoading || email.isEmpty)
+            .padding()
         }
         .alert("🪄 Check your email to finish logging in. 🪄", isPresented: $checkEmailPresented, actions: { EmptyView() })
     }
