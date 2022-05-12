@@ -1,4 +1,4 @@
-# Stytch iOS SDK
+# Stytch Swift SDK
 
 ## Table of contents
 
@@ -13,17 +13,26 @@
 
 ## Overview
 
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication.
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms like iOS, macOS, tvOS, etc.
 
 
 ## Requirements
 
-The Stytch iOS SDK requires Xcode 12.2 or later and is compatible with apps targeting iOS 12 or above.
+The Stytch Swift SDK requires is compatible with apps targeting the following Apple platforms: iOS 11.3+, macOS 10.13+, tvOS 11+, watchOS 4+
 
 ## Installation
 
-### Installation with CocoaPods
+### Swift Package Manager
+1. Open Xcode
+1. File > Add Packages
+1. Enter https://github.com/stytchauth/stytch-swift
+1. Choose Package Requirements (Up to next minor, up to next major, etc)
 
+### Carthage
+TBD
+
+### CocoaPods
+TBD
 ```
 pod 'Stytch'
 ```
@@ -40,44 +49,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let stytchProjectID = "your-project-ID"
-    let stytchSecret = "your-project-secret"
+    let stytchPublicToken = "your-public-token"
+    let hostUrl = URL(string: "https://your-backend.com")!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        Stytch.shared.configure(projectID: stytchProjectID, secret: stytchSecret, scheme: "YOUR_APP_SCHEME", host: "stytch.com")
+        StytchClient.configure(publicToken: stytchPublicToken, hostUrl: hostUrl)
         
         return true
     }
 }
 ```
 
-You can specify Stytch environment `test` or `live`:
-```
-Stytch.shared.environment = .test
-```
-
-You can specify Stytch loginMethod `loginOrSignUp` (default) or `loginOrInvite`:
-`loginOrSignUp`  - Send either a login or sign up magic link to the user based on if the email is associated with a user already. 
-`loginOrInvite` - Send either a login or invite magic link to the user based on if the email is associated with a user already. If an invite is sent a user is not created until the token is authenticated. 
-```
-Stytch.shared.loginMethod = .loginOrInvite
-```
-
 Also you need to register your app scheme for deep link handling. Open Target -> Info tab -> URL Types, add a new one with your URL Scheme which is used in Stytch configuration.
-Handle deep link in AppDelegate:
+Handle the deep link in your AppDelegate:
 
 ```swift
+private func handleUrl(url: URL?) {
+    guard let url = url else { return }
+    
+    StytchClient.handle(url: url)
+}
+
 func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-    return Stytch.shared.handleMagicLinkUrl(userActivity.webpageURL)
+    handleUrl(url: userActivity.webpageURL)
+    return true
 }
 
 func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    return Stytch.shared.handleMagicLinkUrl(url)
+    handleUrl(url: url)
+    return true
 }
 
 func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-    return Stytch.shared.handleMagicLinkUrl(url)
+    handleUrl(url: url)
+    return true
 }
 ```
 
