@@ -9,10 +9,17 @@ struct SessionView: View {
         VStack(alignment: .leading) {
             Text("User ID: " + session.userId)
             ForEach(session.authenticationFactors, id: \.lastAuthenticatedAt) { factor in
-                if case let .email(email) = factor.deliveryMethod {
+                switch factor.deliveryMethod {
+                case let .email(email):
                     Text("Factor type: email")
                     Text("Factor ID: \(email.emailId)")
                     Text(email.emailAddress)
+                case let .sms(sms):
+                    Text("Factor type: email")
+                    Text("Factor ID: \(sms.phoneId)")
+                    Text(sms.phoneNumber)
+                default:
+                    EmptyView()
                 }
             }
             Text("Session ID: " + session.sessionId)
@@ -43,6 +50,6 @@ struct SessionView: View {
                 .buttonStyle(.borderedProminent)
                 Spacer()
             }
-        }.padding()
+        }
     }
 }

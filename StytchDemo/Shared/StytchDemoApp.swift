@@ -15,6 +15,7 @@ struct StytchDemoApp: App {
                     session = nil
                 }
             }
+            .padding()
             .task {
                 StytchClient.configure(
                     publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token
@@ -42,6 +43,11 @@ struct StytchDemoApp: App {
                     }
                 }
             }
+            .handlesExternalEvents(preferring: [], allowing: ["*"])
         }
+        .commands {
+            CommandGroup(replacing: .newItem, addition: { })
+        }
+        .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
     }
 }
