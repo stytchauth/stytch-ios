@@ -33,7 +33,7 @@
 		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		229B821E2809EA3F007BC3F1 /* Stytch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stytch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,7 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				229B82182809EA3F007BC3F1 /* StytchDemo.app */,
-				229B821E2809EA3F007BC3F1 /* Stytch.app */,
+				229B821E2809EA3F007BC3F1 /* StytchDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -167,7 +167,7 @@
 				224F7D47280CEC58000230FA /* StytchCore */,
 			);
 			productName = "Stytch (macOS)";
-			productReference = 229B821E2809EA3F007BC3F1 /* Stytch.app */;
+			productReference = 229B821E2809EA3F007BC3F1 /* StytchDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -455,7 +455,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.StytchDemo;
-				PRODUCT_NAME = Stytch;
+				PRODUCT_NAME = StytchDemo;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -484,7 +484,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.StytchDemo;
-				PRODUCT_NAME = Stytch;
+				PRODUCT_NAME = StytchDemo;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

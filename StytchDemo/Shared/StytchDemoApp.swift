@@ -31,23 +31,29 @@ struct StytchDemoApp: App {
                     }
                 } catch {}
             }
-            .onOpenURL { url in
-                Task {
-                    do {
-                        switch try await StytchClient.handle(url: url) {
-                        case let .handled((resp, _)):
-                            self.session = resp.session
-                        case .notHandled:
-                            print("not handled")
-                        }
-                    }
-                }
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
+                guard let url = userActivity.webpageURL else { return }
+                handle(url: url)
             }
+            .onOpenURL(perform: handle(url:))
             .handlesExternalEvents(preferring: [], allowing: ["*"])
         }
         .commands {
             CommandGroup(replacing: .newItem, addition: { })
         }
         .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
+    }
+
+    private func handle(url: URL) {
+        Task {
+            do {
+                switch try await StytchClient.handle(url: url) {
+                case let .handled((resp, _)):
+                    self.session = resp.session
+                case .notHandled:
+                    print("not handled")
+                }
+            }
+        }
     }
 }
