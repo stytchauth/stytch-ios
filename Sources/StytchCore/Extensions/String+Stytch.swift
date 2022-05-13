@@ -21,5 +21,12 @@ extension String: RegexMatchable {
 }
 
 extension Optional: RegexMatchable where Wrapped == String {
-    func match(_: Regex) -> Bool { false }
+    func match(_ regex: Regex) -> Bool {
+        switch self {
+        case let .some(value):
+            return value.match(regex)
+        case .none:
+            return false
+        }
+    }
 }
