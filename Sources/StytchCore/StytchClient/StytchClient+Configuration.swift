@@ -7,18 +7,15 @@ extension StytchClient {
         let publicToken: String
 
         var baseUrl: URL {
+            #if DEBUG
+            if let urlString = ProcessInfo.processInfo.environment["STYTCH_API_URL"], let url = URL(string: urlString) {
+                return url
+            }
+            #endif
             var urlComponents: URLComponents = .init()
             urlComponents.scheme = "https"
             urlComponents.path = "/sdk/v1/"
             urlComponents.host = "web.stytch.com"
-            #if DEBUG
-            if let scheme = ProcessInfo.processInfo.environment["STYTCH_API_SCHEME"] {
-                urlComponents.scheme = scheme
-            }
-            if let host = ProcessInfo.processInfo.environment["STYTCH_API_HOST"] {
-                urlComponents.host = host
-            }
-            #endif
             guard let url = urlComponents.url else {
                 fatalError("Error generating URL from URLComponents: \(urlComponents)")
             }
