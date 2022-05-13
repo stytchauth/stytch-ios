@@ -60,22 +60,21 @@ public struct StytchClient {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
-//            let typeQuery = queryItems.first(where: { $0.name == "type" }),
+            let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }),
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
             completion(.success(.notHandled(url)))
             return
         }
 
-        // FIXME: - get query params adjusted on backend
-//        switch typeQuery.value {
-//        case "em":
-        magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-            completion(result.map { .handled(($0, url)) })
+        switch typeQuery.value {
+        case "magic_links":
+            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
+                completion(result.map { .handled(($0, url)) })
+            }
+        default:
+            completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
         }
-//        default:
-//            completion(.failure(StytchError(message: "Unrecognized deeplink type")))
-//        }
     }
 }
 

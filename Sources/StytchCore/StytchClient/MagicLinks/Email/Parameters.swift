@@ -9,7 +9,6 @@ public extension StytchClient.MagicLinks.Email {
             case signupMagicLinkUrl
             case loginExpiration = "login_expiration_minutes"
             case signupExpiration = "signup_expiration_minutes"
-            //        case attributes
         }
 
         let email: String
@@ -17,7 +16,6 @@ public extension StytchClient.MagicLinks.Email {
         let signupMagicLinkUrl: URL
         let loginExpiration: Minutes
         let signupExpiration: Minutes
-        //    let attributes: [String: String] // TODO: - confirm what this is and if needed
 
         /**
          Initializes the parameters struct
