@@ -17,7 +17,7 @@ struct ContentView: View {
                 .buttonStyle(.bordered)
             }
         } else {
-            SMSLoginView(hostUrl: hostUrl, onAuth: onAuth)
+            OTPAuthenticationView(hostUrl: hostUrl, onAuth: onAuth)
         }
     }
 }

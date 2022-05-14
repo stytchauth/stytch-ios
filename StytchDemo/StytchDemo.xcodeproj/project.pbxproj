@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
+		2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
 		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
@@ -23,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		2222D13F282C8A38008CEBD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
 		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -64,6 +67,7 @@
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
 				224F7D49280CEDD0000230FA /* LoginView.swift */,
+				2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */,
 				224F7D4C280CEDF5000230FA /* SessionView.swift */,
 				224F7D3B280CC5DE000230FA /* Assets.xcassets */,
 			);
@@ -231,6 +235,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
 				224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */,
 				224F7D4A280CEDD0000230FA /* LoginView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
@@ -242,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
 				224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */,
 				224F7D4B280CEDD0000230FA /* LoginView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
