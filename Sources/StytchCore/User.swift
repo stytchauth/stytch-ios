@@ -1,14 +1,11 @@
 import Foundation
 
-public struct User: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case createdAt, cryptoWallets, emails, id = "user_id", name, phoneNumbers, providers, status, totps, webauthnRegistrations
-    }
-
+public struct User: Codable {
     public let createdAt: Date
     public let cryptoWallets: [CryptoWallet]
     public let emails: [Email]
-    public let id: String
+    public var id: String { userId }
+    let userId: String
     public let name: Name
     public let phoneNumbers: [PhoneNumber]
     public let providers: [Provider]
@@ -18,64 +15,56 @@ public struct User: Decodable {
 }
 
 public extension User {
-    struct CryptoWallet: Decodable {
-        private enum CodingKeys: String, CodingKey {
-            case id = "crypto_wallet_id"
-            case address = "crypto_wallet_address"
-            case verified
-            case walletType = "crypto_wallet_type"
-        }
-
-        public let id: String
-        public let address: String
-        public let walletType: String
+    struct CryptoWallet: Codable {
+        public var id: String { cryptoWalletId }
+        let cryptoWalletId: String
+        public var address: String { cryptoWalletAddress }
+        let cryptoWalletAddress: String
+        public var walletType: String { cryptoWalletType }
+        let cryptoWalletType: String
         public let verified: Bool
     }
 
-    struct Email: Decodable {
-        private enum CodingKeys: String, CodingKey { case id = "email_id", email, verified }
-
+    struct Email: Codable {
         public let email: String
-        public let id: String
+        public var id: String { emailId }
+        let emailId: String
         public let verified: Bool
     }
 
-    struct Name: Decodable {
+    struct Name: Codable {
         public let firstName: String
         public let lastName: String
         public let middleName: String
     }
 
-    struct Provider: Decodable {
+    struct Provider: Codable {
         public let providerSubject: String
         public let providerType: String
     }
 
-    struct PhoneNumber: Decodable {
-        private enum CodingKeys: String, CodingKey { case id, phoneNumber, verified }
-
+    struct PhoneNumber: Codable {
         public let phoneNumber: String
-        public let id: String
+        public var id: String { phoneId }
+        let phoneId: String
         public let verified: Bool
     }
 
-    enum Status: String, Decodable {
+    enum Status: String, Codable {
         case active, pending
     }
 
-    struct TOTP: Decodable {
-        private enum CodingKeys: String, CodingKey { case id, verified }
-
-        public let id: String
+    struct TOTP: Codable {
+        public var id: String { totpId }
+        let totpId: String
         public let verified: Bool
     }
 
-    struct WebAuthNRegistrations: Decodable {
-        private enum CodingKeys: String, CodingKey { case id, verified, domain, userAgent }
-
+    struct WebAuthNRegistrations: Codable {
         public let domain: String
         public let userAgent: String
         public let verified: Bool
-        public let id: String
+        public var id: String { webauthnRegistrationId }
+        let webauthnRegistrationId: String
     }
 }
