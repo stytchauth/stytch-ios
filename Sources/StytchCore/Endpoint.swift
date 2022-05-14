@@ -30,6 +30,12 @@ extension Endpoint {
     }
 }
 
+extension Endpoint.Path: ExpressibleByStringLiteral {
+    init(stringLiteral value: StringLiteralType) {
+        rawValue = value
+    }
+}
+
 extension Endpoint.Path {
     func appendingPathComponent(_ pathComponent: String) -> Self {
         .init(

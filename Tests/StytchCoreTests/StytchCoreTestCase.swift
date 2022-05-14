@@ -127,7 +127,7 @@ final class StytchCoreTestCase: XCTestCase {
     func testEndpoint() throws {
         let url = try XCTUnwrap(URL(string: "https://stytch.com/path/component"))
         XCTAssertEqual(url.path, "/path/component")
-        let endpoint = Endpoint(path: .init(rawValue: "/other/path"))
+        let endpoint = Endpoint(path: "/other/path")
         XCTAssertEqual(endpoint.url(baseUrl: url).path, "/path/component/other/path")
     }
 

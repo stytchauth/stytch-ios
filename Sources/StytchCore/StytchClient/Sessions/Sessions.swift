@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// The interface type for sessions.
     struct Sessions {
-        let pathContext: Endpoint.Path = .init(rawValue: "sessions")
+        let pathContext: Endpoint.Path = "sessions"
 
         /// An opaque token representing your current session, which your servers can check with Stytch's servers to verify your session status.
         public var sessionToken: Session.Token? { Current.sessionStorage.sessionToken }
