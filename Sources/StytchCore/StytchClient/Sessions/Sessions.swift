@@ -90,16 +90,6 @@ public extension StytchClient {
             }
         }
 
-        /// The concrete response type for sessions `authenticate` calls.
-        public typealias AuthenticateResponse = Response<AuthenticateResponseData>
-
-        /// The underlying data for sessions `authenticate` calls. See ``SessionResponseType`` for more information.
-        public struct AuthenticateResponseData: Decodable, SessionResponseType {
-            public let sessionToken: String
-            public let sessionJwt: String
-            public let session: Session
-        }
-
         struct TokenizedParameters<Parameters: Encodable>: Encodable {
             private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
 
