@@ -16,36 +16,36 @@ struct StytchDemoApp: App {
                     _ = try await StytchClient.sessions.revoke()
                     session = nil
                 }
-            }
-            .padding()
-            .frame(minHeight: 250)
-            .task {
-                StytchClient.configure(
-                    publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token
-                    hostUrl: hostUrl
-                )
-                do {
-                    let response = try await StytchClient.sessions.authenticate(parameters: .init(duration: 30))
-                    switch response {
-                    case let .authenticated(response):
-                        session = response.session
-                    case .unauthenticated:
-                        break
+            } onAuth: { session = $0 }
+                .padding()
+                .frame(minHeight: 250)
+                .task {
+                    StytchClient.configure(
+                        publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token
+                        hostUrl: hostUrl
+                    )
+                    do {
+                        let response = try await StytchClient.sessions.authenticate(parameters: .init(duration: 30))
+                        switch response {
+                        case let .authenticated(response):
+                            session = response.session
+                        case .unauthenticated:
+                            break
+                        }
+                    } catch {
+                        handle(error: error)
                     }
-                } catch {
-                    handle(error: error)
                 }
-            }
-            // Handle web-browsing deeplinks (enables universal links on macOS)
-            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
-                guard let url = userActivity.webpageURL else { return }
-                handle(url: url)
-            }
-            // Handle deeplinks
-            .onOpenURL(perform: handle(url:))
-            // Prevent deeplink from opening new window
-            .handlesExternalEvents(preferring: [], allowing: ["*"])
-            .alert("🚨 Error 🚨", isPresented: $errorAlertPresented, actions: { EmptyView() }, message: { Text(errorMessage) })
+                // Handle web-browsing deeplinks (enables universal links on macOS)
+                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
+                    guard let url = userActivity.webpageURL else { return }
+                    handle(url: url)
+                }
+                // Handle deeplinks
+                .onOpenURL(perform: handle(url:))
+                // Prevent deeplink from opening new window
+                .handlesExternalEvents(preferring: [], allowing: ["*"])
+                .alert("🚨 Error 🚨", isPresented: $errorAlertPresented, actions: { EmptyView() }, message: { Text(errorMessage) })
         }
         // Prevent user from being able to create a new window
         .commands { CommandGroup(replacing: .newItem, addition: {}) }
