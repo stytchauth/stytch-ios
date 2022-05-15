@@ -225,7 +225,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         XCTAssertEqual(
             item.getQuery,
-            ["acct": "item", "class": "genp", "m_Limit": "m_LimitOne", "r_Data": 1] as CFDictionary
+            ["acct": "item", "class": "genp", "m_Limit": "m_LimitOne", "r_Data": 1, "nleg": 1] as CFDictionary
         )
         XCTAssertEqual(
             item.querySegmentForUpdate(for: "value") as CFDictionary,
@@ -233,7 +233,7 @@ final class StytchCoreTestCase: XCTestCase {
         )
         XCTAssertEqual(
             item.insertQuery(value: "new_value") as CFDictionary,
-            ["acct": "item", "class": "genp", "v_Data": Data("new_value".utf8)] as CFDictionary
+            ["acct": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1] as CFDictionary
         )
     }
 
