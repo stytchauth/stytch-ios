@@ -3,36 +3,6 @@ import XCTest
 @testable import StytchCore
 
 final class StytchCoreTestCase: XCTestCase {
-    private var mockAuthenticateResponse: AuthenticateResponse {
-        let refDate = Date()
-        let userId = "im_a_user_id"
-
-        return .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(
-                user: nil,
-                sessionToken: "hello_session",
-                sessionJwt: "jwt_for_me",
-                session: .init(
-                    attributes: .init(ipAddress: "", userAgent: ""),
-                    authenticationFactors: [
-                        .init(
-                            deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
-                            kind: .magicLink,
-                            lastAuthenticatedAt: refDate.addingTimeInterval(-30)
-                        ),
-                    ],
-                    expiresAt: refDate.addingTimeInterval(30),
-                    lastAccessedAt: refDate.addingTimeInterval(-30),
-                    sessionId: "im_a_session_id",
-                    startedAt: refDate.addingTimeInterval(-30),
-                    userId: userId
-                )
-            )
-        )
-    }
-
     private var cookies: [HTTPCookie] = []
 
     private var keychainItems: [String: String] = [:]
@@ -56,6 +26,8 @@ final class StytchCoreTestCase: XCTestCase {
             removeItem: { [unowned self] _, item in self.keychainItems[item.name] = nil },
             resultExists: { [unowned self] item in self.keychainItems[item.name] != nil }
         )
+
+        Current.sessionStorage.reset()
 
         StytchClient.configure(
             publicToken: "xyz",
@@ -90,7 +62,7 @@ final class StytchCoreTestCase: XCTestCase {
 
     @available(iOS 13.0, *)
     func testMagicLinksAuthenticate() async throws {
-        let authResponse = mockAuthenticateResponse
+        let authResponse: AuthenticateResponse = .mock
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
@@ -103,7 +75,7 @@ final class StytchCoreTestCase: XCTestCase {
         let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
-        XCTAssertEqual(response.userId, mockAuthenticateResponse.userId)
+        XCTAssertEqual(response.userId, authResponse.userId)
         XCTAssertEqual(response.sessionToken, "hello_session")
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
@@ -115,8 +87,173 @@ final class StytchCoreTestCase: XCTestCase {
     }
 
     @available(iOS 13.0, *)
+    func testSessionsAuthenticate() async throws {
+        let authResponse: AuthenticateResponse = .mock
+        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(duration: 15)
+
+        let unauthenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
+
+        guard case .unauthenticated = unauthenticatedResult else {
+            XCTFail("Expected to be unauthenticated")
+            return
+        }
+
+        Current.sessionStorage.updateSession(
+            .mock(userId: "i_am_user"),
+            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        let authenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
+
+        guard case let .authenticated(response) = authenticatedResult else {
+            XCTFail("Expected authenticated")
+            return
+        }
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertEqual(response.requestId, "1234")
+        XCTAssertEqual(response.userId, authResponse.userId)
+        XCTAssertEqual(response.sessionToken, "hello_session")
+        XCTAssertEqual(response.sessionJwt, "jwt_for_me")
+        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+
+        // Verify request
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/sessions/authenticate")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.httpBody, Data("{\"session_duration_minutes\":15,\"session_token\":\"opaque_all_day\"}".utf8))
+
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+    }
+
+    @available(iOS 13.0, *)
+    func testSessionsRevoke() async throws {
+        let container: DataContainer<BasicResponse> = .init(data: .init(requestId: "request_id", statusCode: 200))
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+
+        let unauthenticatedResult = try await StytchClient.sessions.revoke()
+
+        guard case .unauthenticated = unauthenticatedResult else {
+            XCTFail("Expected to be unauthenticated")
+            return
+        }
+
+        Current.sessionStorage.updateSession(
+            .mock(userId: "i_am_user"),
+            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("opaque_all_day"))
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("i'm_jwt"))
+
+        let authenticatedResult = try await StytchClient.sessions.revoke()
+
+        guard case let .authenticated(response) = authenticatedResult else {
+            XCTFail("Expected authenticated")
+            return
+        }
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertEqual(response.requestId, "request_id")
+
+        // Verify request
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/sessions/revoke")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.httpBody, Data("{\"session_token\":\"opaque_all_day\"}".utf8))
+
+        XCTAssertNil(StytchClient.sessions.sessionJwt)
+        XCTAssertNil(StytchClient.sessions.sessionToken)
+    }
+
+    @available(iOS 13.0, *)
+    func testOtpLoginOrCreate() async throws {
+        let container: DataContainer<StytchClient.OneTimePasscodes.LoginOrCreateResponse> = .init(
+            data: .init(
+                requestId: "1234",
+                statusCode: 200,
+                wrapped: .init(methodId: "method_id_1234")
+            )
+        )
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+
+        try await [
+            (
+                StytchClient.OneTimePasscodes.LoginOrCreateParameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
+                "{\"expiration_minutes\":3,\"phone_number\":\"+12345678901\"}"
+            ),
+            (
+                .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                "https://web.stytch.com/sdk/v1/otps/sms/login_or_create",
+                "{\"expiration_minutes\":2,\"phone_number\":\"+11098765432\"}"
+            ),
+            (
+                .init(deliveryMethod: .email("test@stytch.com")),
+                "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
+                "{\"expiration_minutes\":2,\"email\":\"test@stytch.com\"}"
+            )
+        ].asyncForEach { params, urlString, body in
+            let response = try await StytchClient.otps.loginOrCreate(parameters: params)
+            XCTAssertEqual(response.methodId, "method_id_1234")
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertEqual(response.requestId, "1234")
+
+            // Verify request
+            XCTAssertEqual(request?.url?.absoluteString, urlString)
+            XCTAssertEqual(request?.httpMethod, "POST")
+            XCTAssertEqual(request?.httpBody, Data(body.utf8))
+
+            XCTAssertNil(StytchClient.sessions.sessionJwt)
+            XCTAssertNil(StytchClient.sessions.sessionToken)
+        }
+    }
+
+    @available(iOS 13.0, *)
+    func testOtpAuthenticate() async throws {
+        let authResponse: AuthenticateResponse = .mock
+        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        let parameters: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(
+            code: "i_am_code",
+            methodId: "method_id_fake_id",
+            sessionDuration: 20
+        )
+
+        XCTAssertNil(StytchClient.sessions.sessionToken)
+        XCTAssertNil(StytchClient.sessions.sessionJwt)
+
+        let response = try await StytchClient.otps.authenticate(parameters: parameters)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertEqual(response.requestId, "1234")
+        XCTAssertEqual(response.userId, authResponse.userId)
+        XCTAssertEqual(response.sessionToken, "hello_session")
+        XCTAssertEqual(response.sessionJwt, "jwt_for_me")
+        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+
+        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
+
+        // Verify request
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/otps/authenticate")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"i_am_code\",\"method_id\":\"method_id_fake_id\",\"session_duration_minutes\":20}".utf8))
+    }
+
+
+    @available(iOS 13.0, *)
     func testHandleUrl() async throws {
-        let authResponse = mockAuthenticateResponse
+        let authResponse: AuthenticateResponse = .mock
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
@@ -277,6 +414,43 @@ final class StytchCoreTestCase: XCTestCase {
     }
 }
 
+private extension AuthenticateResponse {
+    static var mock: Self {
+        .init(
+            requestId: "1234",
+            statusCode: 200,
+            wrapped: .init(
+                user: nil,
+                sessionToken: "hello_session",
+                sessionJwt: "jwt_for_me",
+                session: .mock(userId: "im_a_user_id")
+            )
+        )
+    }
+}
+
+private extension Session {
+    static func mock(userId: String) -> Self {
+        let refDate = Date()
+
+        return .init(
+            attributes: .init(ipAddress: "", userAgent: ""),
+            authenticationFactors: [
+                .init(
+                    deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
+                    kind: .magicLink,
+                    lastAuthenticatedAt: refDate.addingTimeInterval(-30)
+                ),
+            ],
+            expiresAt: refDate.addingTimeInterval(30),
+            lastAccessedAt: refDate.addingTimeInterval(-30),
+            sessionId: "im_a_session_id",
+            startedAt: refDate.addingTimeInterval(-30),
+            userId: userId
+        )
+    }
+}
+
 private extension NetworkingClient {
     static let failing: NetworkingClient = .init(
         dataTaskClient: .init { _, _, _ in
@@ -284,4 +458,14 @@ private extension NetworkingClient {
             return .init(dataTask: nil)
         }
     )
+}
+
+extension Sequence {
+    func asyncForEach(
+        _ operation: (Element) async throws -> Void
+    ) async rethrows {
+        for element in self {
+            try await operation(element)
+        }
+    }
 }

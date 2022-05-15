@@ -76,7 +76,7 @@ public extension StytchClient.OneTimePasscodes {
         }
     }
 
-    struct LoginOrCreateResponseData: Decodable {
+    struct LoginOrCreateResponseData: Codable {
         public let methodId: String
     }
 }
