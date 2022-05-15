@@ -1,5 +1,5 @@
-import Networking
 import XCTest
+@testable import Networking
 @testable import StytchCore
 
 final class StytchCoreTestCase: XCTestCase {
@@ -68,7 +68,19 @@ final class StytchCoreTestCase: XCTestCase {
         let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
-            dataTaskClient: .mock(returning: .success(data))
+            dataTaskClient: .mock(
+                returning: .success(data),
+                verifyingRequest: { request in
+                    XCTAssertEqual(
+                        request.curlString,
+                        [
+                            "curl \"https://web.stytch.com/sdk/v1/magic_links/email/login_or_create\"",
+                            "-X POST",
+                            "-d '{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}'"
+                        ].joined(separator: " \\\n\t")
+                    )
+                }
+            )
         )
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
@@ -90,7 +102,19 @@ final class StytchCoreTestCase: XCTestCase {
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
-            dataTaskClient: .mock(returning: .success(data))
+            dataTaskClient: .mock(
+                returning: .success(data),
+                verifyingRequest: { request in
+                    XCTAssertEqual(
+                        request.curlString,
+                        [
+                            "curl \"https://web.stytch.com/sdk/v1/magic_links/authenticate\"",
+                            "-X POST",
+                            "-d '{\"token\":\"12345\",\"session_duration_minutes\":15}'"
+                        ].joined(separator: " \\\n\t")
+                    )
+                }
+            )
         )
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",

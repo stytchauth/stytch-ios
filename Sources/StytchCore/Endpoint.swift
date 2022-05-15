@@ -17,9 +17,11 @@ struct Endpoint {
             return baseUrl
         }
 
-        var newQueryItems = components.queryItems ?? []
-        newQueryItems.append(contentsOf: queryItems)
-        components.queryItems = newQueryItems
+        if !queryItems.isEmpty {
+            var newQueryItems = components.queryItems ?? []
+            newQueryItems.append(contentsOf: queryItems)
+            components.queryItems = newQueryItems
+        }
         return components.url ?? baseUrl
     }
 }
