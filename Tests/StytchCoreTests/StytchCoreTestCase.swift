@@ -2,7 +2,7 @@ import XCTest
 @testable import StytchCore
 
 final class StytchCoreTestCase: XCTestCase {
-    private var mockAuthenticateResponse: StytchClient.MagicLinks.AuthenticateResponse {
+    private var mockAuthenticateResponse: AuthenticateResponse {
         let refDate = Date()
         let userId = "im_a_user_id"
 
@@ -10,7 +10,7 @@ final class StytchCoreTestCase: XCTestCase {
             requestId: "1234",
             statusCode: 200,
             wrapped: .init(
-                userId: userId,
+                user: nil,
                 sessionToken: "hello_session",
                 sessionJwt: "jwt_for_me",
                 session: .init(
@@ -65,7 +65,7 @@ final class StytchCoreTestCase: XCTestCase {
     @available(iOS 13.0, *)
     func testMagicLinksAuthenticate() async throws {
         let authResponse = mockAuthenticateResponse
-        let container: DataContainer<StytchClient.MagicLinks.AuthenticateResponse> = .init(data: authResponse)
+        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
             dataTaskClient: .mock(returning: .success(data))
@@ -87,7 +87,7 @@ final class StytchCoreTestCase: XCTestCase {
     @available(iOS 13.0, *)
     func testHandleUrl() async throws {
         let authResponse = mockAuthenticateResponse
-        let container: DataContainer<StytchClient.MagicLinks.AuthenticateResponse> = .init(data: authResponse)
+        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
             dataTaskClient: .mock(returning: .success(data))
