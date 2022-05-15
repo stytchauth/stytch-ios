@@ -44,7 +44,7 @@ final class StytchCoreTestCase: XCTestCase {
 
         Current.cookieClient = .init(
             setCookie: { [unowned self] in self.cookies.append($0) },
-            deleteCookieNamed: { [unowned self] name in self.cookies.removeAll(where: { $0.name == name }) }
+            deleteCookieNamed: { [unowned self] name in self.cookies.removeAll { $0.name == name } }
         )
 
         Current.keychainClient = .init(
@@ -215,6 +215,23 @@ final class StytchCoreTestCase: XCTestCase {
 
         XCTAssertFalse(Current.keychainClient.resultExists(for: item))
         XCTAssertFalse(Current.keychainClient.resultExists(for: otherItem))
+    }
+
+    func testKeychainItem() {
+        let item: KeychainClient.Item = .init(kind: .token, name: "item")
+
+        XCTAssertEqual(
+            item.getQuery,
+            ["acct": "item", "class": "genp", "m_Limit": "m_LimitOne", "r_Data": 1] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.querySegmentForUpdate(for: "value") as CFDictionary,
+            ["v_Data": Data("value".utf8)] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.insertQuery(value: "new_value") as CFDictionary,
+            ["acct": "item", "class": "genp", "v_Data": Data("new_value".utf8)] as CFDictionary
+        )
     }
 
     func testCookieClient() throws {
