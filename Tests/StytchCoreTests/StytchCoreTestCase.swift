@@ -200,7 +200,7 @@ final class StytchCoreTestCase: XCTestCase {
                 .init(deliveryMethod: .email("test@stytch.com")),
                 "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
                 "{\"expiration_minutes\":2,\"email\":\"test@stytch.com\"}"
-            )
+            ),
         ].asyncForEach { params, urlString, body in
             let response = try await StytchClient.otps.loginOrCreate(parameters: params)
             XCTAssertEqual(response.methodId, "method_id_1234")
@@ -249,7 +249,6 @@ final class StytchCoreTestCase: XCTestCase {
         XCTAssertEqual(request?.httpMethod, "POST")
         XCTAssertEqual(request?.httpBody, Data("{\"token\":\"i_am_code\",\"method_id\":\"method_id_fake_id\",\"session_duration_minutes\":20}".utf8))
     }
-
 
     @available(iOS 13.0, *)
     func testHandleUrl() async throws {
