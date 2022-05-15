@@ -1,3 +1,4 @@
+import Networking
 import XCTest
 @testable import StytchCore
 
@@ -41,6 +42,8 @@ final class StytchCoreTestCase: XCTestCase {
 
         cookies = []
         keychainItems = [:]
+
+        Current.networkingClient = .failing
 
         Current.cookieClient = .init(
             setCookie: { [unowned self] in self.cookies.append($0) },
@@ -264,4 +267,13 @@ final class StytchCoreTestCase: XCTestCase {
 
         XCTAssertTrue(cookies.isEmpty)
     }
+}
+
+private extension NetworkingClient {
+    static let failing: NetworkingClient = .init(
+        dataTaskClient: .init { _, _, _ in
+            XCTFail("Must use your own custom networking client")
+            return .init(dataTask: nil)
+        }
+    )
 }
