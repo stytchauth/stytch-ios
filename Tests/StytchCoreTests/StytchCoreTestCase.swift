@@ -67,15 +67,8 @@ final class StytchCoreTestCase: XCTestCase {
     func testMagicLinksEmailLoginOrCreate() async throws {
         let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
         let data = try Current.jsonEncoder.encode(container)
-        Current.networkingClient = .init(
-            dataTaskClient: .mock(
-                returning: .success(data)
-            ) { request in
-                XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
-                XCTAssertEqual(request.httpMethod, "POST")
-                XCTAssertEqual(request.httpBody, Data("{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}".utf8))
-            }
-        )
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
@@ -88,6 +81,11 @@ final class StytchCoreTestCase: XCTestCase {
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
+
+        // Verify request
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.httpBody, Data("{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}".utf8))
     }
 
     @available(iOS 13.0, *)
@@ -95,15 +93,8 @@ final class StytchCoreTestCase: XCTestCase {
         let authResponse = mockAuthenticateResponse
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
-        Current.networkingClient = .init(
-            dataTaskClient: .mock(
-                returning: .success(data)
-            ) { request in
-                XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
-                XCTAssertEqual(request.httpMethod, "POST")
-                XCTAssertEqual(request.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15}".utf8))
-            }
-        )
+        var request: URLRequest?
+        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
             sessionDuration: 15
@@ -116,6 +107,11 @@ final class StytchCoreTestCase: XCTestCase {
         XCTAssertEqual(response.sessionToken, "hello_session")
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+
+        // Verify request
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
+        XCTAssertEqual(request?.httpMethod, "POST")
+        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15}".utf8))
     }
 
     @available(iOS 13.0, *)
