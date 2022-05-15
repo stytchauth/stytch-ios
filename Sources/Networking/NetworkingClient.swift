@@ -44,8 +44,9 @@ public final class NetworkingClient {
         return request
     }
 }
+
 //
-//extension URLRequest {
+// extension URLRequest {
 //    var curlString: String {
 //        guard let url = url else { return "" }
 //        var baseCommand = #"curl "\#(url.absoluteString)""#
@@ -72,7 +73,7 @@ public final class NetworkingClient {
 //
 //        return command.joined(separator: " \\\n\t")
 //    }
-//}
+// }
 
 public extension NetworkingClient {
     typealias Completion = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void

@@ -69,13 +69,12 @@ final class StytchCoreTestCase: XCTestCase {
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
             dataTaskClient: .mock(
-                returning: .success(data),
-                verifyingRequest: { request in
-                    XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
-                    XCTAssertEqual(request.httpMethod, "POST")
-                    XCTAssertEqual(request.httpBody, Data("{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}".utf8))
-                }
-            )
+                returning: .success(data)
+            ) { request in
+                XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
+                XCTAssertEqual(request.httpMethod, "POST")
+                XCTAssertEqual(request.httpBody, Data("{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}".utf8))
+            }
         )
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
@@ -98,13 +97,12 @@ final class StytchCoreTestCase: XCTestCase {
         let data = try Current.jsonEncoder.encode(container)
         Current.networkingClient = .init(
             dataTaskClient: .mock(
-                returning: .success(data),
-                verifyingRequest: { request in
-                    XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
-                    XCTAssertEqual(request.httpMethod, "POST")
-                    XCTAssertEqual(request.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15}".utf8))
-                }
-            )
+                returning: .success(data)
+            ) { request in
+                XCTAssertEqual(request.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
+                XCTAssertEqual(request.httpMethod, "POST")
+                XCTAssertEqual(request.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15}".utf8))
+            }
         )
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
