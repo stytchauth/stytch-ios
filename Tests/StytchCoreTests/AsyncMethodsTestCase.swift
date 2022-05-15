@@ -241,4 +241,14 @@ final class AsyncMethodsTestCase: BaseTestCase {
             XCTFail("expected to be handled")
         }
     }
+
+    func testExternalSessionsUpdate() {
+        XCTAssertNil(StytchClient.sessions.sessionToken)
+        XCTAssertNil(StytchClient.sessions.sessionJwt)
+
+        StytchClient.sessions.update(sessionTokens: [.opaque("token"), .jwt("jwt")])
+
+        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("token"))
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
+    }
 }

@@ -60,11 +60,7 @@ public extension StytchClient {
         }
 
         private static func handleError(_ error: Error) {
-            if
-                let error = error as? StytchGenericError,
-                case let .network(statusCode) = error.origin,
-                statusCode == 401
-            {
+            if let error = error as? StytchGenericError, case let .network(statusCode) = error.origin, statusCode == 401 {
                 Current.sessionStorage.reset()
             } else if let error = error as? StytchStructuredError, error.statusCode == 401 {
                 Current.sessionStorage.reset()
