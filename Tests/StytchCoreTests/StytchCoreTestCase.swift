@@ -32,8 +32,27 @@ final class StytchCoreTestCase: XCTestCase {
         )
     }
 
+    private var cookies: [HTTPCookie] = []
+
+    private var keychainItems: [String: String] = [:]
+
     override func setUpWithError() throws {
         try super.setUpWithError()
+
+        cookies = []
+        keychainItems = [:]
+
+        Current.cookieClient = .init(
+            setCookie: { [unowned self] in self.cookies.append($0) },
+            deleteCookieNamed: { [unowned self] name in self.cookies.removeAll(where: { $0.name == name }) }
+        )
+
+        Current.keychainClient = .init(
+            getItem: { [unowned self] in self.keychainItems[$0.name] },
+            setValueForItem: { [unowned self] _, value, item in self.keychainItems[item.name] = value },
+            removeItem: { [unowned self] _, item in self.keychainItems[item.name] = nil },
+            resultExists: { [unowned self] item in self.keychainItems[item.name] != nil }
+        )
 
         StytchClient.configure(
             publicToken: "xyz",
@@ -172,5 +191,60 @@ final class StytchCoreTestCase: XCTestCase {
         ].forEach { urlString, expectation in
             try testIsLocalHost(urlString: urlString, expectation: expectation)
         }
+    }
+
+    func testKeychainClient() throws {
+        let item: KeychainClient.Item = .init(kind: .token, name: "item")
+        let otherItem: KeychainClient.Item = .init(kind: .token, name: "other_item")
+
+        XCTAssertNil(try Current.keychainClient.get(item))
+        XCTAssertNil(try Current.keychainClient.get(otherItem))
+
+        try Current.keychainClient.set("test test", for: item)
+
+        XCTAssertTrue(Current.keychainClient.resultExists(for: item))
+        XCTAssertFalse(Current.keychainClient.resultExists(for: otherItem))
+
+        XCTAssertEqual(try Current.keychainClient.get(item), "test test")
+
+        try Current.keychainClient.set("test again", for: item)
+
+        XCTAssertEqual(try Current.keychainClient.get(item), "test again")
+
+        try Current.keychainClient.remove(item)
+
+        XCTAssertFalse(Current.keychainClient.resultExists(for: item))
+        XCTAssertFalse(Current.keychainClient.resultExists(for: otherItem))
+    }
+
+    func testCookieClient() throws {
+        XCTAssertTrue(cookies.isEmpty)
+
+        Current.cookieClient.set(
+            cookie: try XCTUnwrap(HTTPCookie(properties: [.name: "cookie", .value: "test", .domain: "domain.com", .path: "/"]))
+        )
+
+        XCTAssertEqual(cookies.count, 1)
+        XCTAssertEqual(try XCTUnwrap(cookies.last).name, "cookie")
+
+        Current.cookieClient.deleteCookie(named: "other_name")
+
+        XCTAssertFalse(cookies.isEmpty)
+
+        Current.cookieClient.set(
+            cookie: try XCTUnwrap(HTTPCookie(properties: [.name: "other_name", .value: "test", .domain: "domain.com", .path: "/"]))
+        )
+
+        XCTAssertEqual(cookies.count, 2)
+
+        Current.cookieClient.deleteCookie(named: "cookie")
+
+        XCTAssertEqual(cookies.count, 1)
+
+        XCTAssertEqual(try XCTUnwrap(cookies.last).name, "other_name")
+
+        Current.cookieClient.deleteCookie(named: "other_name")
+
+        XCTAssertTrue(cookies.isEmpty)
     }
 }
