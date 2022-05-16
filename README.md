@@ -71,10 +71,7 @@ struct YourApp: App {
         WindowGroup {
             ContentView(session: session) 
                 .task {
-                    StytchClient.configure(
-                        publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token
-                        hostUrl: hostUrl
-                    )
+                    StytchClient.configure(publicToken: stytchPublicToken, hostUrl: hostUrl)
                 }
                 // Handle web-browsing deeplinks
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
