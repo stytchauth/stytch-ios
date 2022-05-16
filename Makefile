@@ -3,6 +3,7 @@
 coverage:
 	@if [ ! -f $$(Scripts/coverage instr-profile-path) ]; then $(MAKE) test; fi
 	arch -arm64 Scripts/coverage generate-html
+	arch -arm64 Scripts/coverage generate-json
 
 codegen:
 	arch -arm64 mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation

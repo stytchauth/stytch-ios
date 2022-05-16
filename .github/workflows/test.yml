@@ -33,7 +33,9 @@ jobs:
       run: make test
 
     - name: Coverage
-      run: make coverage
+      run: |
+        make coverage
+        Scripts/generate-coverage-summary .coverage/lcov.json >> $GITHUB_STEP_SUMMARY
 
     - uses: actions/upload-artifact@v3
       with:

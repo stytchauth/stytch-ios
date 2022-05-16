@@ -1,0 +1,33 @@
+#! /usr/bin/env ruby
+
+require 'json'
+
+coverage = JSON.load(File.new(ARGV[0]))
+
+totals = coverage['data'][0]['totals']
+
+def formatted_percent(input)
+  # NOTE: - These values are arbitrary and could/should be raised over time
+  case input
+  when 0..75
+    "#{input} ❌"
+  when 75...90
+    "#{input} 🟨"
+  else
+    "#{input} 🟢"
+  end
+end
+
+def row(type_name, input)
+  "| #{type_name} | #{input['covered']} | #{input['count']} | #{formatted_percent(input['percent'].truncate(1))} |"
+end
+
+puts """
+# Coverage
+
+| Type | Hit | Total | Percent |
+| --- | --- | --- | --- |
+#{row('Lines', totals['lines'])}
+#{row('Functions', totals['functions'])}
+#{row('Initializers', totals['instantiations'])}
+"""
