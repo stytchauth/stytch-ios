@@ -15,7 +15,7 @@ format:
 	arch -arm64 mint run swiftformat .
 
 lint:
-	arch -arm64 mint run swiftlint lint --quiet
+	arch -arm64 mint run swiftlint lint --quiet --strict
 	arch -arm64 mint run swiftformat --lint .
 
 setup:
