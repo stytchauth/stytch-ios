@@ -18,7 +18,7 @@ Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage use
 #### Supported Products
 
 - Email magic links
-- One-time passcodes
+- One-time passcodes (SMS, WhatsApp, Email)
 - Session management
 
 Additional functionality coming in the near future!
