@@ -108,7 +108,7 @@ final class SessionStorage {
             .domain: hostUrl.host ?? hostUrl.absoluteString,
             .expires: expiresAt,
         ]
-        if urlComponents.isLocalHost {
+        if !urlComponents.isLocalHost {
             properties[.secure] = true
         }
         if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *) {
