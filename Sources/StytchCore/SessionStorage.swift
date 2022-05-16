@@ -55,9 +55,12 @@ final class SessionStorage {
     }
 
     func updatePersistentStorage(token: Session.Token) {
-        do {
-            try Current.keychainClient.set(token.value, for: .init(kind: .token, name: token.name))
-        } catch {}
+        switch token.kind {
+        case .jwt:
+            sessionJwt = token
+        case .opaque:
+            sessionToken = token
+        }
     }
 
     func reset() {
