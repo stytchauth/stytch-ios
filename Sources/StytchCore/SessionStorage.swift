@@ -3,35 +3,45 @@ import Foundation
 final class SessionStorage {
     private(set) var sessionToken: Session.Token? {
         get {
-            try? Current.keychainClient.get(.sessionToken).map(Session.Token.opaque)
+            withLock(keychainLock) {
+                try? Current.keychainClient.get(.sessionToken).map(Session.Token.opaque)
+            }
         }
         set {
-            let keychainItem: KeychainClient.Item = .sessionToken
-            if let newValue = newValue {
-                try? Current.keychainClient.set(newValue.value, for: keychainItem)
-            } else {
-                try? Current.keychainClient.remove(keychainItem)
-                Current.cookieClient.deleteCookie(named: keychainItem.name)
+            withLock(keychainLock) {
+                let keychainItem: KeychainClient.Item = .sessionToken
+                if let newValue = newValue {
+                    try? Current.keychainClient.set(newValue.value, for: keychainItem)
+                } else {
+                    try? Current.keychainClient.remove(keychainItem)
+                    Current.cookieClient.deleteCookie(named: keychainItem.name)
+                }
             }
         }
     }
 
     private(set) var sessionJwt: Session.Token? {
         get {
-            try? Current.keychainClient.get(.sessionJwt).map(Session.Token.jwt)
+            withLock(keychainLock) {
+                try? Current.keychainClient.get(.sessionJwt).map(Session.Token.jwt)
+            }
         }
         set {
-            let keychainItem: KeychainClient.Item = .sessionJwt
-            if let newValue = newValue {
-                try? Current.keychainClient.set(newValue.value, for: keychainItem)
-            } else {
-                try? Current.keychainClient.remove(keychainItem)
-                Current.cookieClient.deleteCookie(named: keychainItem.name)
+            withLock(keychainLock) {
+                let keychainItem: KeychainClient.Item = .sessionJwt
+                if let newValue = newValue {
+                    try? Current.keychainClient.set(newValue.value, for: keychainItem)
+                } else {
+                    try? Current.keychainClient.remove(keychainItem)
+                    Current.cookieClient.deleteCookie(named: keychainItem.name)
+                }
             }
         }
     }
 
     private(set) var session: Session?
+
+    private let keychainLock: NSLock = .init()
 
     init() {
         NotificationCenter.default
@@ -116,6 +126,12 @@ final class SessionStorage {
         }
 
         return HTTPCookie(properties: properties)
+    }
+
+    private func withLock<T>(_ lock: NSLock, perform: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        return perform()
     }
 }
 
