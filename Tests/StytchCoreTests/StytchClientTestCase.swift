@@ -28,7 +28,7 @@ final class StytchClientTestCase: BaseTestCase {
             request?.allHTTPHeaderFields,
             [
                 "Content-Type": "application/json",
-                "X-SDK-Client": "eyJhcHAiOnsiaWRlbnRpZmllciI6ImNvbS5hcHBsZS5kdC54Y3Rlc3QudG9vbCJ9LCJzZGsiOnsidmVyc2lvbiI6IjAuMC4xIiwiaWRlbnRpZmllciI6InN0eXRjaC1zd2lmdCJ9LCJvcyI6eyJ2ZXJzaW9uIjoiMTIuMi4xIiwiaWRlbnRpZmllciI6Im1hY29zIn0sImRldmljZSI6eyJtb2RlbCI6Im1hY09TIiwic2NyZWVuX3NpemUiOiIoMTUxMi4wLDk4Mi4wKSJ9fQ==",
+                "X-SDK-Client": try Current.clientInfo.base64EncodedString(),
                 "Authorization": "Basic eHl6Onh5eg==",
             ]
         )
