@@ -114,10 +114,6 @@ final class SessionStorage {
 
         return HTTPCookie(properties: properties)
     }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .NSHTTPCookieManagerCookiesChanged, object: nil)
-    }
 }
 
 private extension KeychainClient.Item {

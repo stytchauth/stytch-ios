@@ -1,0 +1,16 @@
+import Foundation
+import XCTest
+@testable import StytchCore
+
+final class SessionStorageTestCase: BaseTestCase {
+    func testNotification() throws {
+        XCTAssertNil(StytchClient.sessions.sessionJwt)
+        try HTTPCookieStorage.shared.setCookie(
+            XCTUnwrap(.init(
+                properties: [.name: "stytch_session_jwt", .value: "new_value", .domain: "my-domain.com", .path: "/"]
+            ))
+        )
+        NotificationCenter.default.post(name: .NSHTTPCookieManagerCookiesChanged, object: HTTPCookieStorage.shared)
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("new_value"))
+    }
+}
