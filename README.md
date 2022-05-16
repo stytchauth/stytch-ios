@@ -17,14 +17,17 @@ Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage use
 
 #### Supported Products
 
-Several authentication products are currently supported, with additional functionality coming in the near future. Currently supported:
 - Email magic links
 - One-time passcodes
 - Session management
 
+Additional functionality coming in the near future!
+
 #### Async Options
 
-For optimal ergonomics, several async options are available out of the box: `Async/Await`, `Combine`, and ` Callbacks`.
+- `Async/Await`
+- `Combine`
+- ` Callbacks`
 
 ## Requirements
 
