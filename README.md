@@ -112,13 +112,13 @@ func application(_ application: UIApplication, open url: URL, sourceApplication:
 ``` swift
 import StytchCore
 
-final class AuthenticationController {
+final class SMSAuthenticationController {
     var methodId: String?
     var session: Session?
     var user: User?
 
     // phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
-    func loginWithSMS(phoneNumber: String) async throws {
+    func login(phoneNumber: String) async throws {
         let response = try await StytchClient.otps.loginOrCreate(
             parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumber))
         )
