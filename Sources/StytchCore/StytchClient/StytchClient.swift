@@ -47,7 +47,7 @@ public struct StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
     /// If Stytch is able to handle the URL and log the user in, a ``SessionResponseType`` will be returned to you asynchronously, with a `sessionDuration` of
-    /// the length requested here. Regardless of whether Stytch is able to handle the URL, it will be passed back to you for any further processing needs.
+    /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
@@ -63,14 +63,14 @@ public struct StytchClient {
             let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }),
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
-            completion(.success(.notHandled(url)))
+            completion(.success(.notHandled))
             return
         }
 
         switch typeQuery.value {
         case "magic_links":
             magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map { .handled(($0, url)) })
+                completion(result.map(DeeplinkHandledStatus.handled))
             }
         default:
             completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
@@ -80,18 +80,13 @@ public struct StytchClient {
 
 public extension StytchClient {
     /**
-     Represents whether a deeplink was able to be handled, containing the original URL for further processing and
+     Represents whether a deeplink was able to be handled
      Session-related information when appropriate.
      */
-    typealias DeeplinkHandledStatus = HandledStatus<(SessionResponseType, URL), URL>
-
-    /**
-     A simple, generic type designed to explictly describe an item's handled status from a given handler.
-     */
-    enum HandledStatus<Handled, NotHandled> {
+    enum DeeplinkHandledStatus {
         /// The handler was successfully able to handle the given item.
-        case handled(Handled)
+        case handled(SessionResponseType)
         /// The handler was unable to handle the given item.
-        case notHandled(NotHandled)
+        case notHandled
     }
 }

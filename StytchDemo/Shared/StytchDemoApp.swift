@@ -57,8 +57,8 @@ struct StytchDemoApp: App {
         Task {
             do {
                 switch try await StytchClient.handle(url: url) {
-                case let .handled((resp, _)):
-                    self.session = resp.session
+                case let .handled(response):
+                    self.session = response.session
                 case .notHandled:
                     print("not handled")
                 }
