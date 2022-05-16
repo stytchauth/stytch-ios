@@ -13,25 +13,22 @@
 
 ## Overview
 
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms like iOS, macOS, tvOS, etc.
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
-### Supported Products
+#### Supported Products
 
-The Swift SDK currently supports several authentication products, with additional functionality coming in the near future. The currently-supported products are:
+Several authentication products are currently supported, with additional functionality coming in the near future. Currently supported:
 - Email magic links
 - One-time passcodes
 - Session management
 
-### Async Options
+#### Async Options
 
-To enable you to choose the option that best works for your codebase, the Swift SDK supports several different async options:
-- Async/Await
-- Combine
-- Callbacks
+For optimal ergonomics, several async options are available out of the box: `Async/Await`, `Combine`, and ` Callbacks`.
 
 ## Requirements
 
-The Stytch Swift SDK requires is compatible with apps targeting the following Apple platforms:
+The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
 - iOS 11.3+
 - macOS 10.13+
 - tvOS 11+
