@@ -86,7 +86,6 @@ public extension StytchClient.OneTimePasscodes.LoginOrCreateParameters {
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
         case sms(phoneNumber: String)
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
-
         case whatsapp(phoneNumber: String)
         /// The email address of the user to send the one-time passcode to.
         case email(String)
