@@ -38,22 +38,11 @@ class BaseTestCase: XCTestCase {
 }
 
 extension Sequence {
-    func asyncForEach(
-        _ operation: (Element) async throws -> Void
-    ) async rethrows {
+    func asyncForEach(_ operation: (Element) async throws -> Void) async rethrows {
         for element in self {
             try await operation(element)
         }
     }
-}
-
-private extension NetworkingClient {
-    static let failing: NetworkingClient = .init(
-        dataTaskClient: .init { _, _, _ in
-            XCTFail("Must use your own custom networking client")
-            return .init(dataTask: nil)
-        }
-    )
 }
 
 extension AuthenticateResponse {

@@ -1,3 +1,4 @@
+import NetworkingTestSupport
 import XCTest
 @testable import StytchCore
 
@@ -7,7 +8,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
@@ -32,7 +33,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
             sessionDuration: 15
@@ -57,7 +58,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
         let parameters: StytchClient.Sessions.AuthenticateParameters = .init(duration: 15)
 
@@ -100,7 +101,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let container: DataContainer<BasicResponse> = .init(data: .init(requestId: "request_id", statusCode: 200))
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
         let unauthenticatedResult = try await StytchClient.sessions.revoke()
 
@@ -147,7 +148,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         )
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
         try await [
             (
@@ -187,7 +188,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .init(dataTaskClient: .mock(returning: .success(data)) { request = $0 })
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         let parameters: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(
             code: "i_am_code",
             methodId: "method_id_fake_id",
@@ -218,9 +219,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let authResponse: AuthenticateResponse = .mock
         let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
         let data = try Current.jsonEncoder.encode(container)
-        Current.networkingClient = .init(
-            dataTaskClient: .mock(returning: .success(data))
-        )
+        Current.networkingClient = .mock(returning: .success(data))
 
         let notHandledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345"))
 

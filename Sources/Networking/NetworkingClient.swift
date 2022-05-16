@@ -1,14 +1,12 @@
 import Foundation
 
 public final class NetworkingClient {
-    let session: URLSession = .init(configuration: .default)
-
-    let dataTaskClient: DataTaskClient
-
     public var headerProvider: (() -> [String: String])?
 
-    public init(dataTaskClient: DataTaskClient = .live) {
-        self.dataTaskClient = dataTaskClient
+    private let handleRequest: (URLRequest, @escaping Completion) -> TaskHandle
+
+    init(handleRequest: @escaping (URLRequest, @escaping Completion) -> TaskHandle) {
+        self.handleRequest = handleRequest
     }
 
     @discardableResult
@@ -20,7 +18,7 @@ public final class NetworkingClient {
     }
 
     private func perform(request: URLRequest, completion: @escaping Completion) -> TaskHandle {
-        dataTaskClient.handle(request: request, session: session, completion: completion)
+        handleRequest(request, completion)
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {
