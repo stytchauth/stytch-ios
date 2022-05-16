@@ -3,18 +3,31 @@
 ## Table of contents
 
 * [Overview](#overview)
+  * [Supported Products](#supported-products)
+  * [Async Options](#async-options)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Getting Started](#getting-started)
   * [Configuration](#configuration)
-  * [Starting UI Flow](#starting-ui-flow)
-  * [Starting Custom Flow](#starting-custom-flow)
-
+  * [Authenticating](#authenticating)
 
 ## Overview
 
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms like iOS, macOS, tvOS, etc.
 
+### Supported Products
+
+The Swift SDK currently supports several authentication products, with additional functionality coming in the near future. The currently-supported products are:
+- Email magic links
+- One-time passcodes
+- Session management
+
+### Async Options
+
+To enable you to choose the option that best works for your codebase, the Swift SDK supports several different async options:
+- Async/Await
+- Combine
+- Callbacks
 
 ## Requirements
 
@@ -67,7 +80,11 @@ Handle the deep link in your AppDelegate:
 private func handleUrl(url: URL?) {
     guard let url = url else { return }
     
-    StytchClient.handle(url: url)
+    Task {
+        do {
+            try await StytchClient.handle(url: url)
+        } catch { // handle error as needed }
+    }    
 }
 
 func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
@@ -83,5 +100,34 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplication.Op
 func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
     handleUrl(url: url)
     return true
+}
+```
+
+### Authenticating
+
+One-time passcodes example:
+``` swift
+import StytchCore
+
+// Instance properties
+var methodId: String?
+var session: Session?
+var user: User?
+
+// phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
+func loginWithSMS(phoneNumber: String) async throws {
+    let response = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumber)))
+    // Store the methodId for the authenticate call
+    methodId = response.methodId
+}
+
+func authenticate(code: String) async throws {
+    guard let methodId = methodId else { throw YourCustomError }
+    
+    let response = try await StytchClient.otps.authenticate(
+        parameters: .init(code: code, methodId: methodId, sessionDuration: 30)
+    )
+    session = response.session
+    user = response.user
 }
 ```
