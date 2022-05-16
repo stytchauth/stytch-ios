@@ -1,8 +1,9 @@
-import Networking
+import NetworkingTestSupport
 import XCTest
+@testable import Networking
 
 final class NetworkingClientTestCase: XCTestCase {
-    private var networkingClient: NetworkingClient = .init(dataTaskClient: .mock(returning: .success(.init())))
+    private var networkingClient: NetworkingClient = .mock(returning: .success(.init()))
 
     func testCustomHeaders() throws {
         let headers = ["CUSTOM": "HEADER"]
@@ -57,11 +58,11 @@ final class NetworkingClientTestCase: XCTestCase {
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
     ) throws {
         let expectation = expectation(description: "Request handled")
-        networkingClient = .init(dataTaskClient: .init { request, _, _ in
+        networkingClient = .init { request, _ in
             onPerformRequest(request, line)
             expectation.fulfill()
             return .init(dataTask: nil)
-        })
+        }
         onClientCreate?(networkingClient)
         networkingClient.performRequest(
             method,

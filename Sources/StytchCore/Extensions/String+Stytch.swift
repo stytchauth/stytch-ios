@@ -22,11 +22,6 @@ extension String: RegexMatchable {
 
 extension Optional: RegexMatchable where Wrapped == String {
     func match(_ regex: Regex) -> Bool {
-        switch self {
-        case let .some(value):
-            return value.match(regex)
-        case .none:
-            return false
-        }
+        map { $0.match(regex) } ?? false
     }
 }

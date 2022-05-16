@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// The interface type for sessions.
     struct Sessions {
-        let pathContext: Endpoint.Path = .init(rawValue: "sessions")
+        let pathContext: Endpoint.Path = "sessions"
 
         /// An opaque token representing your current session, which your servers can check with Stytch's servers to verify your session status.
         public var sessionToken: Session.Token? { Current.sessionStorage.sessionToken }
@@ -60,11 +60,7 @@ public extension StytchClient {
         }
 
         private static func handleError(_ error: Error) {
-            if
-                let error = error as? StytchGenericError,
-                case let .network(statusCode) = error.origin,
-                statusCode == 401
-            {
+            if let error = error as? StytchGenericError, case let .network(statusCode) = error.origin, statusCode == 401 {
                 Current.sessionStorage.reset()
             } else if let error = error as? StytchStructuredError, error.statusCode == 401 {
                 Current.sessionStorage.reset()
@@ -88,16 +84,6 @@ public extension StytchClient {
             public init(duration: Minutes) {
                 self.duration = duration
             }
-        }
-
-        /// The concrete response type for sessions `authenticate` calls.
-        public typealias AuthenticateResponse = Response<AuthenticateResponseData>
-
-        /// The underlying data for sessions `authenticate` calls. See ``SessionResponseType`` for more information.
-        public struct AuthenticateResponseData: Decodable, SessionResponseType {
-            public let sessionToken: String
-            public let sessionJwt: String
-            public let session: Session
         }
 
         struct TokenizedParameters<Parameters: Encodable>: Encodable {

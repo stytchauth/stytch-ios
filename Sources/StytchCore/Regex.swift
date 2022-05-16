@@ -15,11 +15,11 @@ struct Regex {
         regex = try! NSRegularExpression(pattern: pattern)
     }
 
-    func match(_ string: String) -> Bool {
-        regex.firstMatch(in: string, range: string.completeRange) != nil
-    }
-
     static func ~= (regex: Self, matchable: RegexMatchable) -> Bool {
         matchable.match(regex)
+    }
+
+    func match(_ string: String) -> Bool {
+        regex.firstMatch(in: string, range: string.completeRange) != nil
     }
 }

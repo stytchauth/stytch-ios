@@ -53,11 +53,9 @@ extension KeychainClient {
                 kSecClass: secClass,
                 kSecAttrAccount: name,
             ]
-            #if os(macOS)
-            if #available(macOS 10.15, *) {
+            if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *) {
                 query[kSecUseDataProtectionKeychain] = true
             }
-            #endif
             return query
         }
 

@@ -13,7 +13,7 @@ extension StytchClient {
     struct Environment {
         var clientInfo: ClientInfo = .init()
 
-        var networkingClient: NetworkingClient = .init(dataTaskClient: .live)
+        var networkingClient: NetworkingClient = .live
 
         let sessionStorage: SessionStorage = .init()
 

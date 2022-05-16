@@ -13,7 +13,9 @@ public struct StytchStructuredError: Error, Decodable {
 
 public extension StytchStructuredError {
     enum DefinedErrorType: String {
+        case endpointNotAuthorizedForSdk = "endpoint_not_authorized_for_sdk"
         case unableToAuthMagicLink = "unable_to_auth_magic_link"
+        case unableToAuthOtpCode = "unable_to_auth_otp_code"
         // TODO: - flesh out error type definitions
     }
 
