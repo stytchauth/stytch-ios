@@ -31,7 +31,10 @@ To enable you to choose the option that best works for your codebase, the Swift 
 
 ## Requirements
 
-The Stytch Swift SDK requires is compatible with apps targeting the following Apple platforms: iOS 11.3+, macOS 10.13+, tvOS 11+, watchOS 4+
+The Stytch Swift SDK requires is compatible with apps targeting the following Apple platforms:
+- iOS 11.3+
+- macOS 10.13+
+- tvOS 11+
 
 ## Installation
 
@@ -105,29 +108,32 @@ func application(_ application: UIApplication, open url: URL, sourceApplication:
 
 ### Authenticating
 
-One-time passcodes example:
+#### One-time passcodes
 ``` swift
 import StytchCore
 
-// Instance properties
-var methodId: String?
-var session: Session?
-var user: User?
+final class AuthenticationController {
+    var methodId: String?
+    var session: Session?
+    var user: User?
 
-// phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
-func loginWithSMS(phoneNumber: String) async throws {
-    let response = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumber)))
-    // Store the methodId for the authenticate call
-    methodId = response.methodId
-}
+    // phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
+    func loginWithSMS(phoneNumber: String) async throws {
+        let response = try await StytchClient.otps.loginOrCreate(
+            parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumber))
+        )
+        // Store the methodId for the subsequent `authenticate(code:)` call
+        methodId = response.methodId
+    }
 
-func authenticate(code: String) async throws {
-    guard let methodId = methodId else { throw YourCustomError }
-    
-    let response = try await StytchClient.otps.authenticate(
-        parameters: .init(code: code, methodId: methodId, sessionDuration: 30)
-    )
-    session = response.session
-    user = response.user
+    func authenticate(code: String) async throws {
+        guard let methodId = methodId else { throw YourCustomError }
+        
+        let response = try await StytchClient.otps.authenticate(
+            parameters: .init(code: code, methodId: methodId, sessionDuration: 30)
+        )
+        session = response.session
+        user = response.user
+    }
 }
 ```
