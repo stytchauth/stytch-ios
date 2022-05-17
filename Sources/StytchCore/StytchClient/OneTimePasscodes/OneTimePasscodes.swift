@@ -1,18 +1,10 @@
-import SwiftUI
 public extension StytchClient {
+    /// One-time passcodes can be sent via email, phone number, or WhatsApp. One-time passcodes allow for a quick and seamless login experience on their own, or can layer on top of another login product like Email magic links to provide extra security as a multi-factor authentication (MFA) method.
     struct OneTimePasscodes {
         let pathContext: Endpoint.Path = "otps"
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
-            StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: parameters,
-                completion: completion
-            )
-        }
-
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
         public func loginOrCreate(parameters: LoginOrCreateParameters, completion: @escaping Completion<LoginOrCreateResponse>) {
             StytchClient.post(
                 to: .init(
@@ -24,14 +16,26 @@ public extension StytchClient {
                 completion: completion
             )
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
+        func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
+            StytchClient.post(
+                to: .init(path: pathContext.appendingPathComponent("authenticate")),
+                parameters: parameters,
+                completion: completion
+            )
+        }
     }
 }
 
 public extension StytchClient {
+    /// The interface for interacting with one-time-passcodes products.
     static var otps: OneTimePasscodes { .init() }
 }
 
 public extension StytchClient.OneTimePasscodes {
+    /// The dedicated parameters type for OTP `authenticate` calls.
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case code = "token", methodId, sessionDuration = "session_duration_minutes" }
 
@@ -48,8 +52,7 @@ public extension StytchClient.OneTimePasscodes {
 }
 
 public extension StytchClient.OneTimePasscodes {
-    typealias LoginOrCreateResponse = Response<LoginOrCreateResponseData>
-
+    /// The dedicated parameters type for OTP `loginOrCreate` calls.
     struct LoginOrCreateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case phoneNumber, email, expiration = "expiration_minutes" }
 
@@ -75,13 +78,20 @@ public extension StytchClient.OneTimePasscodes {
             }
         }
     }
+}
 
+public extension StytchClient.OneTimePasscodes {
+    /// The concrete response type for OTP `loginOrCreate` calls.
+    typealias LoginOrCreateResponse = Response<LoginOrCreateResponseData>
+
+    /// The underlying data for OTP `loginOrCreate` responses.
     struct LoginOrCreateResponseData: Codable {
         public let methodId: String
     }
 }
 
 public extension StytchClient.OneTimePasscodes.LoginOrCreateParameters {
+    /// The mechanism use to deliver one-time passcodes.
     enum DeliveryMethod {
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
         case sms(phoneNumber: String)

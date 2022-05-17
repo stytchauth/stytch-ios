@@ -1,7 +1,7 @@
 import Foundation
 
 public extension StytchClient.MagicLinks.Email {
-    /// A dedicated parameters type for email magic link `loginOrCreate` calls.
+    /// The dedicated parameters type for email magic link `loginOrCreate` calls.
     struct Parameters: Encodable {
         private enum CodingKeys: String, CodingKey {
             case email

@@ -39,6 +39,7 @@ final class SessionStorage {
         }
     }
 
+    // TODO: persist the session
     private(set) var session: Session?
 
     private let keychainLock: NSLock = .init()

@@ -1,5 +1,5 @@
 public extension StytchClient.MagicLinks {
-    /// The interface type for email magic links.
+    /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
     struct Email {
         let pathContext: Endpoint.Path
 
@@ -18,6 +18,6 @@ public extension StytchClient.MagicLinks {
         }
     }
 
-    /// The interface implementation for email magic links.
+    /// The interface for interacting with email magic links.
     var email: Email { .init(pathContext: pathContext) }
 }
