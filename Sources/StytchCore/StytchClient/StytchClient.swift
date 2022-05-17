@@ -72,6 +72,9 @@ public struct StytchClient {
             magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
                 completion(result.map(DeeplinkHandledStatus.handled))
             }
+        case "oauth":
+            // This will be supported in the near future
+            completion(.success(.notHandled))
         default:
             completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
         }
