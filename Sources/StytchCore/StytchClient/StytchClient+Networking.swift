@@ -64,6 +64,12 @@ extension StytchClient {
                             )
                         }
                         return .success(dataContainer.data)
+                    } catch let error as StytchStructuredError where error.errorType == .unauthorizedCredentials {
+                        Current.sessionStorage.reset()
+                        return .failure(error)
+                    } catch let error as StytchGenericError where error.statusCode == 401 {
+                        Current.sessionStorage.reset()
+                        return .failure(error)
                     } catch {
                         return .failure(error)
                     }
