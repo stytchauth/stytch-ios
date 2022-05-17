@@ -17,7 +17,9 @@ struct ContentView: View {
                 .buttonStyle(.bordered)
             }
         } else {
-            OTPAuthenticationView(hostUrl: hostUrl, onAuth: onAuth)
+            // Perhaps present one or the other here depending on a button press
+            LoginView(hostUrl: hostUrl)
+//            OTPAuthenticationView(hostUrl: hostUrl, onAuth: onAuth)
         }
     }
 }
