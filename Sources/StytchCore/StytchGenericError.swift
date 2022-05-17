@@ -7,6 +7,15 @@ public struct StytchGenericError: Error {
     /// An optional string value which should provide additional information for debugging purposes.
     public let debugInfo: String?
 
+    var statusCode: Int? {
+        switch origin {
+        case let .network(statusCode):
+            return statusCode
+        case .client:
+            return nil
+        }
+    }
+
     init(message: String, origin: Origin = .client, debugInfo: String? = nil) {
         self.message = message
         self.origin = origin
