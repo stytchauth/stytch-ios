@@ -32,16 +32,23 @@ YourContentView().onOpenUrl { url in
 
 - ``StytchClient``
 - ``Session``
+- ``User``
 
 ### Response Types
 
 - ``SessionResponseType``
+- ``AuthenticateResponse``
 - ``BasicResponse``
 - ``Response``
+- ``AuthenticateResponseData
+
+### Error Types
+- ``StytchStructuredError``
+- ``StytchGenericError``
 
 ### Additional Types
 
 - ``Completion``
 - ``Minutes``
 - ``MinutesTag``
-- ``EmptyDecodable``
+- ``EmptyCodable``

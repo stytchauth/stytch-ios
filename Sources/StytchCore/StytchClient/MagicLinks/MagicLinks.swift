@@ -1,5 +1,5 @@
 public extension StytchClient {
-    /// The interface type for magic links.
+    /// Magic links can be sent via email and allow for a quick and seamless login experience.
     struct MagicLinks {
         let pathContext: Endpoint.Path = "magic_links"
 
@@ -16,6 +16,6 @@ public extension StytchClient {
 }
 
 public extension StytchClient {
-    /// The interface implementation for magic links.
+    /// The interface for interacting with magic-links products.
     static var magicLinks: MagicLinks { .init() }
 }

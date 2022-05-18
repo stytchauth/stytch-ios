@@ -25,7 +25,7 @@ struct StytchDemoApp: App {
                         hostUrl: hostUrl
                     )
                     do {
-                        let response = try await StytchClient.sessions.authenticate(parameters: .init(duration: 30))
+                        let response = try await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: 5))
                         switch response {
                         case let .authenticated(response):
                             session = response.session
@@ -56,9 +56,9 @@ struct StytchDemoApp: App {
     private func handle(url: URL) {
         Task {
             do {
-                switch try await StytchClient.handle(url: url) {
-                case let .handled((resp, _)):
-                    self.session = resp.session
+                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+                case let .handled(response):
+                    self.session = response.session
                 case .notHandled:
                     print("not handled")
                 }

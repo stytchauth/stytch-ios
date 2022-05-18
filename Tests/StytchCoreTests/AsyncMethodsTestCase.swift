@@ -60,7 +60,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         var request: URLRequest?
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
-        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(duration: 15)
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDuration: 15)
 
         let unauthenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
 
@@ -226,14 +226,14 @@ final class AsyncMethodsTestCase: BaseTestCase {
         switch try await StytchClient.handle(url: notHandledUrl, sessionDuration: 30) {
         case .handled:
             XCTFail("expected to be nothandled")
-        case let .notHandled(url):
-            XCTAssertEqual(url, notHandledUrl)
+        case .notHandled:
+            break
         }
 
         let handledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345&stytch_token_type=magic_links"))
 
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
-        case let .handled((response, _)):
+        case let .handled(response):
             XCTAssertEqual(response.sessionJwt, "jwt_for_me")
             XCTAssertEqual(response.session.authenticationFactors.count, 1)
         case .notHandled:

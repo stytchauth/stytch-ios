@@ -1,3 +1,4 @@
+/// A dedicated type which represents the minutes unit of time.
 public struct Minutes: Encodable {
     let rawValue: UInt
 
