@@ -60,7 +60,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         var request: URLRequest?
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
-        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(duration: 15)
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDuration: 15)
 
         let unauthenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
 
