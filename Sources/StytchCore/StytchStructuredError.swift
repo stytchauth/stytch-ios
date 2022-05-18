@@ -33,11 +33,16 @@ public extension StytchStructuredError {
 
         private static func errorType(for value: String) -> Self {
             switch value {
-            case "endpoint_not_authorized_for_sdk": return .endpointNotAuthorizedForSdk
-            case "unable_to_auth_magic_link": return .unableToAuthMagicLink
-            case "unable_to_auth_otp_code": return .unableToAuthOtpCode
-            case "unauthorized_credentials": return .unauthorizedCredentials
-            default: return .undefined(rawValue: value)
+            case "endpoint_not_authorized_for_sdk":
+                return .endpointNotAuthorizedForSdk
+            case "unable_to_auth_magic_link":
+                return .unableToAuthMagicLink
+            case "unable_to_auth_otp_code":
+                return .unableToAuthOtpCode
+            case "unauthorized_credentials":
+                return .unauthorizedCredentials
+            default:
+                return .undefined(rawValue: value)
             }
         }
     }
