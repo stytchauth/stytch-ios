@@ -14,14 +14,14 @@ public struct StytchClient {
     private(set) var configuration: Configuration? = {
         guard let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) else { return nil }
 
-        return try! PropertyListDecoder().decode(Configuration.self, from: data)
+        return try? PropertyListDecoder().decode(Configuration.self, from: data)
     }()
 
     private init() {
         let clientInfoString = try? Current.clientInfo.base64EncodedString()
 
         Current.networkingClient.headerProvider = {
-            guard let configuration = StytchClient.instance.configuration else { return [:] }
+            guard let configuration = Self.instance.configuration else { return [:] }
 
             let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
