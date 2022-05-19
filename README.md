@@ -62,7 +62,8 @@ To start using Stytch, you must configure it via one of two techniques: 1) Autom
 #### Associated Domains
 If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
 
-![entitlements](Resources/Assets/Entitlements.png)
+![entitlements](Resources/Assets/Entitlements-dark-mode.png#gh-dark-mode-only)
+![entitlements](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)
 
 #### Manual Configuration / Deeplink Handling
 
