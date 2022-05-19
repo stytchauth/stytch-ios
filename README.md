@@ -57,9 +57,17 @@ pod 'Stytch'
 
 ### Configuration
 
-To start using Stytch, you must configure it (see `.task {}` below). Also you need to set up associated domains and universal links or register your custom app scheme for deep link handling.
+To start using Stytch, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
-```swift
+#### Associated Domains
+If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
+
+![Entitlements screenshot](Resources/Assets/Entitlements-dark-mode.png#gh-dark-mode-only)
+![Entitlements screenshot](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)
+
+#### Manual Configuration / Deeplink Handling
+
+``` swift
 @main
 struct YourApp: App {
     private let stytchPublicToken = "your-public-token"
@@ -87,8 +95,8 @@ struct YourApp: App {
         Task {
             do {
                 switch try await StytchClient.handle(url: url) {
-                case let .handled((resp, _)):
-                    self.session = resp.session
+                case let .handled(response):
+                    self.session = response.session
                 case .notHandled:
                     // Handle via alternative means
                 }
@@ -102,7 +110,8 @@ struct YourApp: App {
 
 ### Authenticating
 
-#### One-time passcodes
+#### One-time Passcodes
+
 ``` swift
 import StytchCore
 

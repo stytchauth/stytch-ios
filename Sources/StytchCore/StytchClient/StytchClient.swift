@@ -11,9 +11,17 @@ import Foundation
 public struct StytchClient {
     static var instance: StytchClient = .init()
 
-    var configuration: Configuration?
+    private(set) var configuration: Configuration? = {
+        guard let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) else { return nil }
 
-    private init() {}
+        return try? PropertyListDecoder().decode(Configuration.self, from: data)
+    }() {
+        didSet { updateHeaderProvider() }
+    }
+
+    private init() {
+        updateHeaderProvider()
+    }
 
     /**
      Configures the `StytchClient`, setting the `publicToken` and `hostUrl`.
@@ -21,26 +29,8 @@ public struct StytchClient {
        - publicToken: Available via the Stytch dashboard in the `API keys` section
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
      */
-    public static func configure(
-        publicToken: String,
-        hostUrl: URL
-    ) {
+    public static func configure(publicToken: String, hostUrl: URL) {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
-
-        let clientInfoString = try? Current.clientInfo.base64EncodedString()
-
-        Current.networkingClient.headerProvider = {
-            guard let configuration = instance.configuration else { return [:] }
-
-            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
-            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
-
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Basic \(authToken)",
-                "X-SDK-Client": clientInfoString ?? "",
-            ]
-        }
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -77,6 +67,24 @@ public struct StytchClient {
             completion(.success(.notHandled))
         default:
             completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
+        }
+    }
+
+    // To be called after configuration
+    private func updateHeaderProvider() {
+        let clientInfoString = try? Current.clientInfo.base64EncodedString()
+
+        Current.networkingClient.headerProvider = {
+            guard let configuration = Self.instance.configuration else { return [:] }
+
+            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
+            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
+
+            return [
+                "Content-Type": "application/json",
+                "Authorization": "Basic \(authToken)",
+                "X-SDK-Client": clientInfoString ?? "",
+            ]
         }
     }
 }
