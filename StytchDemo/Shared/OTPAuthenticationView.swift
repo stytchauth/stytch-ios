@@ -23,6 +23,7 @@ struct OTPAuthenticationView: View {
             }
         }
 
+        #if !os(macOS)
         var contentType: UITextContentType {
             switch self {
             case .sms, .whatsapp: return .telephoneNumber
@@ -36,6 +37,7 @@ struct OTPAuthenticationView: View {
             case .email: return .emailAddress
             }
         }
+        #endif
 
         func deliveryMethod(_ value: String) -> StytchClient.OneTimePasscodes.LoginOrCreateParameters.DeliveryMethod {
             let normalizedPhone: () -> String = { "+1" + value.filter(\.isNumber) }

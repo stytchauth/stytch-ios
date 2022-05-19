@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
 		2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
+		2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
+		2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
 		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
@@ -24,8 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2222D13F282C8A38008CEBD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
+		2222D1432835C341008CEBD7 /* StytchConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchConfiguration.plist; sourceTree = "<group>"; };
 		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -64,6 +66,8 @@
 		224F7D3A280CC5DE000230FA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				224F7D50280CF500000230FA /* Info.plist */,
+				2222D1432835C341008CEBD7 /* StytchConfiguration.plist */,
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
 				224F7D49280CEDD0000230FA /* LoginView.swift */,
@@ -77,7 +81,6 @@
 		224F7D42280CC624000230FA /* macOS */ = {
 			isa = PBXGroup;
 			children = (
-				2222D13F282C8A38008CEBD7 /* Info.plist */,
 				224F7D43280CC624000230FA /* macOS.entitlements */,
 			);
 			path = macOS;
@@ -94,7 +97,6 @@
 		224F7D51280CF592000230FA /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				224F7D50280CF500000230FA /* Info.plist */,
 				224F7D4F280CF491000230FA /* iOS.entitlements */,
 			);
 			path = iOS;
@@ -216,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */,
 				224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,6 +227,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */,
 				224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,7 +389,7 @@
 				DEVELOPMENT_TEAM = 92AC5VS8HG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -417,7 +421,7 @@
 				DEVELOPMENT_TEAM = 92AC5VS8HG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = iOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -452,7 +456,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -481,7 +485,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = macOS/Info.plist;
+				INFOPLIST_FILE = Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -57,8 +57,13 @@ pod 'Stytch'
 
 ### Configuration
 
-To start using Stytch, you must configure it (see `.task {}` below). Also you need to set up associated domains and universal links or register your custom app scheme for deep link handling.
+To start using Stytch, you must configure it. You can configure the client in one of two fashions: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([Example](StytchDemo/Shared/StytchConfiguration.plist)), or 2) Programmatically at app launch (see `.task {}` below).
+If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([Example](StytchDemo/macOS/macOS.entitlements)).
 
+![entitlements](Resources/Assets/Entitlements.png)
+
+<details>
+  <summary>Configuring a SwiftUI app</summary>
 ```swift
 @main
 struct YourApp: App {
@@ -99,10 +104,13 @@ struct YourApp: App {
     }
 }
 ```
+</details>
 
 ### Authenticating
 
 #### One-time passcodes
+<details>
+  <summary>One-time passcodes with Async/Await</summary>
 ``` swift
 import StytchCore
 
@@ -131,3 +139,4 @@ final class SMSAuthenticationController {
     }
 }
 ```
+</details>

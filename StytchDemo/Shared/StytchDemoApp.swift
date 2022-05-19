@@ -20,10 +20,6 @@ struct StytchDemoApp: App {
                 .padding()
                 .frame(minHeight: 250)
                 .task {
-                    StytchClient.configure(
-                        publicToken: "public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba", // TODO: extract this token
-                        hostUrl: hostUrl
-                    )
                     do {
                         let response = try await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: 5))
                         switch response {
