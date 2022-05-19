@@ -17,18 +17,21 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Create XCFramework
-        uses: unsignedapps/swift-create-xcframework@v2
-        with:
-          target: StytchCore
+    - name: Bootstrap
+      run: |
+        make setup
+        make tools
 
-      - run: mv StytchCore.zip StytchCore.xcframework.zip
+    - name: Create XCFramework
+      run: |
+        arch -arm64 mint run swift-create-xcframework --zip
+        mv StytchCore.zip StytchCore.xcframework.zip
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          draft: true # TODO: - change this so it's not draft
-          files: StytchCore.xcframework.zip
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        draft: true # TODO: - change this so it's not draft
+        files: StytchCore.xcframework.zip
