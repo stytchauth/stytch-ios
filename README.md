@@ -62,8 +62,8 @@ If you are using a redirect authentication product (Email Magic Links/OAuth) you
 
 ![entitlements](Resources/Assets/Entitlements.png)
 
-<details>
-  <summary>Configuring a SwiftUI app</summary>
+<details open>
+  <summary>#### Configuring a SwiftUI app</summary>
 ```swift
 @main
 struct YourApp: App {
