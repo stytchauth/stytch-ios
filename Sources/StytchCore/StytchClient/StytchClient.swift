@@ -15,23 +15,12 @@ public struct StytchClient {
         guard let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) else { return nil }
 
         return try? PropertyListDecoder().decode(Configuration.self, from: data)
-    }()
+    }() {
+        didSet { updateHeaderProvider() }
+    }
 
     private init() {
-        let clientInfoString = try? Current.clientInfo.base64EncodedString()
-
-        Current.networkingClient.headerProvider = {
-            guard let configuration = Self.instance.configuration else { return [:] }
-
-            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
-            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
-
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Basic \(authToken)",
-                "X-SDK-Client": clientInfoString ?? "",
-            ]
-        }
+        updateHeaderProvider()
     }
 
     /**
@@ -78,6 +67,24 @@ public struct StytchClient {
             completion(.success(.notHandled))
         default:
             completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
+        }
+    }
+
+    // To be called after configuration
+    private func updateHeaderProvider() {
+        let clientInfoString = try? Current.clientInfo.base64EncodedString()
+
+        Current.networkingClient.headerProvider = {
+            guard let configuration = Self.instance.configuration else { return [:] }
+
+            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
+            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
+
+            return [
+                "Content-Type": "application/json",
+                "Authorization": "Basic \(authToken)",
+                "X-SDK-Client": clientInfoString ?? "",
+            ]
         }
     }
 }
