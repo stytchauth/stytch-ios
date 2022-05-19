@@ -57,7 +57,7 @@ pod 'Stytch'
 
 ### Configuration
 
-To start using Stytch, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).
+To start using Stytch, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
 If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
@@ -94,8 +94,8 @@ struct YourApp: App {
         Task {
             do {
                 switch try await StytchClient.handle(url: url) {
-                case let .handled((resp, _)):
-                    self.session = resp.session
+                case let .handled(response):
+                    self.session = response.session
                 case .notHandled:
                     // Handle via alternative means
                 }
