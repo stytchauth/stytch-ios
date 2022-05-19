@@ -57,14 +57,15 @@ pod 'Stytch'
 
 ### Configuration
 
-To start using Stytch, you must configure it. You can configure the client in one of two fashions: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([Example](StytchDemo/Shared/StytchConfiguration.plist)), or 2) Programmatically at app launch (see `.task {}` below).
-If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([Example](StytchDemo/macOS/macOS.entitlements)).
+To start using Stytch, you must configure it. You can configure the client in one of two fashions: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration-and-deeplink-handling).
+
+#### Associated Domains
+If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
 
 ![entitlements](Resources/Assets/Entitlements.png)
 
-#### Manual configuration and deeplink handling
-<!--<details>-->
-<!--    <summary><b><u>SwiftUI</b></u></summary>-->
+#### Manual Configuration / Deeplink Handling
+
 ``` swift
 @main
 struct YourApp: App {
@@ -105,13 +106,11 @@ struct YourApp: App {
     }
 }
 ```
-<!--</details>-->
 
 ### Authenticating
 
-#### One-time passcodes
-<details>
-  <summary>One-time passcodes with Async/Await</summary>
+#### One-time Passcodes
+
 ``` swift
 import StytchCore
 
@@ -140,4 +139,3 @@ final class SMSAuthenticationController {
     }
 }
 ```
-</details>
