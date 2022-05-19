@@ -63,8 +63,8 @@ If you are using a redirect authentication product (Email Magic Links/OAuth) you
 ![entitlements](Resources/Assets/Entitlements.png)
 
 #### Manual configuration and deeplink handling
-<details open>
-  <summary>SwiftUI</summary>
+<details>
+    <summary><b><u>SwiftUI</b></u></summary>
 ``` swift
 @main
 struct YourApp: App {
