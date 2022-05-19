@@ -62,9 +62,10 @@ If you are using a redirect authentication product (Email Magic Links/OAuth) you
 
 ![entitlements](Resources/Assets/Entitlements.png)
 
+#### Manual configuration and deeplink handling
 <details open>
-  <summary>#### Configuring a SwiftUI app</summary>
-```swift
+  <summary>SwiftUI</summary>
+``` swift
 @main
 struct YourApp: App {
     private let stytchPublicToken = "your-public-token"
