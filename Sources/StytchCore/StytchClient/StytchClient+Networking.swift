@@ -7,18 +7,9 @@ extension StytchClient {
         parameters: Parameters,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
-        guard let configuration = instance.configuration else {
-            completion(.failure(StytchGenericError.clientNotConfigured))
-            return
-        }
         do {
             let data = try Current.jsonEncoder.encode(parameters)
-            StytchClient.performRequest(
-                .post(data),
-                url: endpoint.url(baseUrl: configuration.baseUrl),
-                configuration: configuration,
-                completion: completion
-            )
+            StytchClient.performRequest(.post(data), endpoint: endpoint, completion: completion)
         } catch {
             completion(.failure(error))
         }
@@ -28,26 +19,20 @@ extension StytchClient {
         endpoint: Endpoint,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
+        performRequest(.get, endpoint: endpoint, completion: completion)
+    }
+
+    private static func performRequest<Response: Decodable>(
+        _ method: NetworkingClient.Method = .get,
+        endpoint: Endpoint,
+        completion: @escaping ((Result<Response, Error>) -> Void)
+    ) {
         guard let configuration = instance.configuration else {
             completion(.failure(StytchGenericError.clientNotConfigured))
             return
         }
 
-        performRequest(
-            .get,
-            url: endpoint.url(baseUrl: configuration.baseUrl),
-            configuration: configuration,
-            completion: completion
-        )
-    }
-
-    private static func performRequest<Response: Decodable>(
-        _ method: NetworkingClient.Method = .get,
-        url: URL,
-        configuration: Configuration,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
-        Current.networkingClient.performRequest(method, url: url) { result in
+        Current.networkingClient.performRequest(method, url: endpoint.url(baseUrl: configuration.baseUrl)) { result in
             completion(
                 result.flatMap { data, response in
                     do {
