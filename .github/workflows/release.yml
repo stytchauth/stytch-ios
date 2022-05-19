@@ -18,13 +18,14 @@ jobs:
 
       - name: Create XCFramework
         uses: unsignedapps/swift-create-xcframework@v2
-        target: StytchCore
+        with:
+          target: StytchCore
 
       - run: mv StytchCore.zip StytchCore.xcframework.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
-        draft: true # TODO: - change this so it's not draft
         with:
+          draft: true # TODO: - change this so it's not draft
           files: StytchCore.xcframework.zip
