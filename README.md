@@ -1,13 +1,8 @@
 ![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
 ![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
-## Overview
-
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
-* [Overview](#overview)
-  * [Supported Products](#supported-products)
-  * [Async Options](#async-options)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Getting Started](#getting-started)
@@ -38,18 +33,26 @@ The Stytch Swift SDK is compatible with apps targeting the following Apple platf
 ## Installation
 
 ### Swift Package Manager
+
+The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
+
 1. Open Xcode
 1. File > Add Packages
 1. Enter https://github.com/stytchauth/stytch-swift
 1. Choose Package Requirements (Up to next minor, up to next major, etc)
 
 ### Carthage
-TBD
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
+```
+binary "https://stytch-swift.github.io/StytchCore.json"
+```
 
 ### CocoaPods
-TBD
+[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
+
 ```
-pod 'Stytch'
+pod 'StytchCore'
 ```
 
 ## Getting Started
