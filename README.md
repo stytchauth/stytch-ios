@@ -10,9 +10,15 @@
 
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
+## Contents
+
+* [Contents](#contents)
+  * [Supported Products](#supported-products)
+  * [Async Options](#async-options)
+* [Quick Start](#quick-start)
 * [Requirements](#requirements)
 * [Installation](#installation)
-* [Getting Started](#getting-started)
+* [Usage](#usage)
   * [Configuration](#configuration)
   * [Authenticating](#authenticating)
 * [Documentation](#documentation)
@@ -30,6 +36,18 @@ Additional functionality coming in the near future!
 - `Async/Await`
 - `Combine`
 - ` Callbacks`
+
+## Quick Start
+
+``` swift
+import StytchCore
+
+// Initiate login
+_ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init( email: userEmail))
+
+// Later, handle the subsequent deeplink
+_ = try await StytchClient.handle(url: deeplinkUrl)
+```
 
 ## Requirements
 
@@ -63,7 +81,7 @@ binary "https://stytch-swift.github.io/StytchCore.json"
 pod 'StytchCore'
 ```
 
-## Getting Started
+## Usage
 
 ### Configuration
 
@@ -91,7 +109,7 @@ struct YourApp: App {
                 .task {
                     StytchClient.configure(publicToken: stytchPublicToken, hostUrl: hostUrl)
                 }
-                // Handle web-browsing deeplinks
+                // Handle web-browsing/universal deeplinks
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
                     guard let url = userActivity.webpageURL else { return }
                     handle(url: url)
@@ -110,9 +128,7 @@ struct YourApp: App {
                 case .notHandled:
                     // Handle via alternative means
                 }
-            } catch {
-                handle(error: error)
-            }
+            } catch { ... }
         }
     }
 }
@@ -143,10 +159,14 @@ final class SMSAuthenticationController {
         guard let methodId = methodId else { throw YourCustomError }
         
         let response = try await StytchClient.otps.authenticate(
-            parameters: .init(code: code, methodId: methodId, sessionDuration: 30)
+            parameters: .init(code: code, methodId: methodId)
         )
         session = response.session
         user = response.user
     }
 }
 ```
+
+## Documentation
+
+Full documentation is available [here](https://fluffy-bassoon-7f56d670.pages.github.io/documentation/stytchcore/).
