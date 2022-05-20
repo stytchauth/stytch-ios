@@ -42,7 +42,7 @@ Additional functionality coming in the near future!
 ``` swift
 import StytchCore
 
-// Initiate login
+// Initiate login/signup
 _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init( email: userEmail))
 
 // Later, handle the subsequent deeplink

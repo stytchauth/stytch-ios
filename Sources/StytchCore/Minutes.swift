@@ -15,7 +15,7 @@ extension Minutes: ExpressibleByIntegerLiteral {
     }
 }
 
-extension Minutes {
+public extension Minutes {
     /// 30
-    public static let defaultSessionDuration: Self = 30
+    static let defaultSessionDuration: Self = 30
 }
