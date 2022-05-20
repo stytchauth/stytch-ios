@@ -3,8 +3,8 @@
 
 ![Test Status](https://github.com/stytchauth/stytch-swift/actions/workflows/test.yml/badge.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
-![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D?style=flat-square)
-![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)
+![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
+![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)
 
 
