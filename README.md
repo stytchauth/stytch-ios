@@ -1,6 +1,13 @@
 ![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
 ![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
+![Test Status](https://github.com/stytchauth/stytch-swift/actions/workflows/test.yml/badge.svg)
+[![Platforms](https://img.shields.io/badge/Platforms-iOS_macOS_tvOS_yellowgreen?style=flat-square)](https://img.shields.io/badge/Platforms-iOS_macOS_tvOS-Green?style=flat-square)
+[![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange?style=flat-square)
+[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
+[![Cocoapods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)](https://cocoapods.org/pods/StycthCore)
+
+
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
 * [Requirements](#requirements)
@@ -8,6 +15,7 @@ Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage use
 * [Getting Started](#getting-started)
   * [Configuration](#configuration)
   * [Authenticating](#authenticating)
+* [Documentation](#documentation)
 
 #### Supported Products
 
