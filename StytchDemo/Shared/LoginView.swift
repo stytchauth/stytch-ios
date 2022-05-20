@@ -42,15 +42,8 @@ struct LoginView: View {
     func login() {
         isLoading = true
         Task {
-            let emailParams: StytchClient.MagicLinks.Email.Parameters = .init(
-                email: email,
-                loginMagicLinkUrl: hostUrl.appendingPathComponent("login"),
-                signupMagicLinkUrl: hostUrl.appendingPathComponent("signup"),
-                loginExpiration: 10,
-                signupExpiration: 10
-            )
             do {
-                _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: emailParams)
+                _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: email))
                 checkEmailPresented = true
             } catch {
                 print(error)

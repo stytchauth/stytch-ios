@@ -86,11 +86,10 @@ public extension StytchClient.Sessions {
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case sessionDuration = "session_duration_minutes" }
 
-        /// The desired session lifetime, in minutes.
-        public let sessionDuration: Minutes
+        let sessionDuration: Minutes
 
-        /// - Parameter sessionDuration: The desired session lifetime, in minutes. This value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the SDK Configuration page of the Stytch dashboard.
-        public init(sessionDuration: Minutes) {
+        /// - Parameter sessionDuration: The duration, in minutes, of the requested session. This value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the SDK Configuration page of the Stytch dashboard. Defaults to 30 minutes.
+        public init(sessionDuration: Minutes = .defaultSessionDuration) {
             self.sessionDuration = sessionDuration
         }
     }

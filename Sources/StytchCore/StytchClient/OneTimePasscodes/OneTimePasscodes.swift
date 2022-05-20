@@ -43,7 +43,11 @@ public extension StytchClient.OneTimePasscodes {
         let methodId: String
         let sessionDuration: Minutes
 
-        public init(code: String, methodId: String, sessionDuration: Minutes) {
+        /// - Parameters:
+        ///   - code: The one-time passcode
+        ///   - methodId: The methodId captured upon requesting the OTP.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        public init(code: String, methodId: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.code = code
             self.methodId = methodId
             self.sessionDuration = sessionDuration
@@ -57,19 +61,19 @@ public extension StytchClient.OneTimePasscodes {
         private enum CodingKeys: String, CodingKey { case phoneNumber, email, expiration = "expiration_minutes" }
 
         let deliveryMethod: DeliveryMethod
-        let expiration: Minutes
+        let expiration: Minutes?
 
         /// - Parameters:
         ///   - deliveryMethod: The mechanism used to deliver the one-time passcode.
         ///   - expiration: Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10 minutes. The default expiration is 2 minutes.
-        public init(deliveryMethod: DeliveryMethod, expiration: Minutes = 2) {
+        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil) {
             self.deliveryMethod = deliveryMethod
             self.expiration = expiration
         }
 
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(expiration, forKey: .expiration)
+            try container.encodeIfPresent(expiration, forKey: .expiration)
             switch deliveryMethod {
             case let .sms(value), let .whatsapp(value):
                 try container.encode(value, forKey: .phoneNumber)
