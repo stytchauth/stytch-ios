@@ -10,18 +10,30 @@
 
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
-## Contents
-
-* [Contents](#contents)
+* [Getting Started](#getting-started)
   * [Supported Products](#supported-products)
   * [Async Options](#async-options)
-* [Quick Start](#quick-start)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
   * [Configuration](#configuration)
   * [Authenticating](#authenticating)
 * [Documentation](#documentation)
+* [License](#license)
+
+## Getting Started
+
+With just a few lines of code, you can easiliy authenticate your users and get back to focusing on the core of your product.
+
+``` swift
+import StytchCore
+
+// Initiate login/signup
+_ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: userEmail))
+
+// Later, handle the subsequent deeplink
+_ = try await StytchClient.handle(url: deeplinkUrl)
+```
 
 #### Supported Products
 
@@ -36,18 +48,6 @@ Additional functionality coming in the near future!
 - `Async/Await`
 - `Combine`
 - ` Callbacks`
-
-## Quick Start
-
-``` swift
-import StytchCore
-
-// Initiate login/signup
-_ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init( email: userEmail))
-
-// Later, handle the subsequent deeplink
-_ = try await StytchClient.handle(url: deeplinkUrl)
-```
 
 ## Requirements
 
@@ -170,3 +170,7 @@ final class SMSAuthenticationController {
 ## Documentation
 
 Full documentation is available [here](https://fluffy-bassoon-7f56d670.pages.github.io/documentation/stytchcore/).
+
+## License
+
+The Stytch Swift SDK is released under the MIT license. See [LICENSE](LICENSE) for details.
