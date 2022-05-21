@@ -40,13 +40,21 @@ extension KeychainClient {
     } resultExists: { item in
         SecItemCopyMatching(item.baseQuery as CFDictionary, nil) == errSecSuccess
     } publicKeyForItem: { client, item in
+        var error: Unmanaged<CFError>?
+
+        let externalRepresentationForKey: (SecKey, inout Unmanaged<CFError>?) throws -> String = { key, error in
+            guard let externalRepresentationData = SecKeyCopyExternalRepresentation(key, &error) as? Data else {
+                throw error.toError() ?? KeychainError.publicKeyExternalRepresentationCreationFailed
+            }
+
+            return externalRepresentationData.base64EncodedString()
+        }
+
         if let publicKey = try client.fetchKeyForItem(item, .public) {
-            return try .init(publicKey)
+            return try externalRepresentationForKey(publicKey, &error)
         }
 
         guard case let .keyPair(appStatusOption) = item.kind else { throw KeychainError.keychainItemKindMistmatch }
-
-        var error: Unmanaged<CFError>?
 
         let accessControl: SecAccessControlCreateFlags
 
@@ -70,9 +78,9 @@ extension KeychainClient {
             throw KeychainError.publicKeyGenerationFailed
         }
 
-        return try .init(publicKey)
+        return try externalRepresentationForKey(publicKey, &error)
     } fetchKeyForItem: { item, keyClass in
-        let query = item.getKeyPairQuery(keyClass: keyClass)
+        let query = item.getKeyQuery(keyClass: keyClass)
 
         var result: AnyObject?
 

@@ -9,7 +9,7 @@ struct KeychainClient {
 
     private let resultExists: (Item) -> Bool
 
-    private let publicKeyForItem: (Self, Item) throws -> PublicKey?
+    private let publicKeyForItem: (Self, Item) throws -> String
 
     let fetchKeyForItem: (Item, KeyClass) throws -> SecKey?
 
@@ -20,7 +20,7 @@ struct KeychainClient {
         setValueForItem: @escaping (Self, String, Item) throws -> Void,
         removeItem: @escaping (Self, Item) throws -> Void,
         resultExists: @escaping (Item) -> Bool,
-        publicKeyForItem: @escaping (Self, Item) throws -> PublicKey?,
+        publicKeyForItem: @escaping (Self, Item) throws -> String,
         fetchKeyForItem: @escaping (Item, KeyClass) throws -> SecKey?,
         signChallenge: @escaping (Self, String, Item, String) throws -> String
     ) {
@@ -49,7 +49,7 @@ struct KeychainClient {
         resultExists(item)
     }
 
-    func publicKey(for item: Item) throws -> PublicKey? {
+    func publicKey(for item: Item) throws -> String {
         try publicKeyForItem(self, item)
     }
 
@@ -134,7 +134,7 @@ extension KeychainClient {
             ]) { $1 } as CFDictionary
         }
 
-        func getKeyPairQuery(keyClass: KeyClass) -> CFDictionary {
+        func getKeyQuery(keyClass: KeyClass) -> CFDictionary {
             baseQuery.merging([kSecAttrApplicationTag: keyClass.rawValue]) { $1 } as CFDictionary
         }
 
@@ -165,38 +165,6 @@ extension KeychainClient {
 }
 
 extension KeychainClient {
-    public struct PublicKey {
-        public let base64Encoded: String
-        let secKey: SecKey
-
-        public init(rawValue: String) throws {
-            let options: [CFString: Any] = [
-                kSecAttrKeyType: KeychainClient.Item.Kind.keyPairKeyType,
-                kSecAttrKeyClass: kSecAttrKeyClassPublic,
-            ]
-
-            var error: Unmanaged<CFError>?
-
-            guard let secKey = SecKeyCreateWithData(Data(rawValue.utf8) as CFData, options as CFDictionary, &error) else {
-                throw error.toError() ?? KeychainError.keyCreationFromExternalDataFailed
-            }
-
-            base64Encoded = rawValue
-            self.secKey = secKey
-        }
-
-        public init(_ publicKey: SecKey) throws {
-            var error: Unmanaged<CFError>?
-
-            guard let externalRepresentationData = SecKeyCopyExternalRepresentation(publicKey, &error) as? Data else {
-                throw error.toError() ?? KeychainError.publicKeyExternalRepresentationCreationFailed
-            }
-
-            base64Encoded = externalRepresentationData.base64EncodedString()
-            secKey = publicKey
-        }
-    }
-
     public enum AppStatusOption {
         case foreground
         case background
