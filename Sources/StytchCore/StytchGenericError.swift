@@ -37,4 +37,7 @@ extension StytchGenericError {
     static let clientNotConfigured: Self = .init(
         message: "StytchClient not yet configured. `StytchClient.configure(hostUrl:publicToken:)` must be called prior to other StytchClient calls."
     )
+    static let pckeNotAvailable: Self = .init(
+        message: "No PKCE code_verifier available. Redirect authentication must begin/end on this device."
+    )
 }
