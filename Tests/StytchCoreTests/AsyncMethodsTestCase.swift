@@ -13,8 +13,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
             loginExpiration: 30,
+            signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
             signupExpiration: 30
         )
 
@@ -159,12 +159,12 @@ final class AsyncMethodsTestCase: BaseTestCase {
             (
                 .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 "https://web.stytch.com/sdk/v1/otps/sms/login_or_create",
-                "{\"expiration_minutes\":2,\"phone_number\":\"+11098765432\"}"
+                "{\"phone_number\":\"+11098765432\"}"
             ),
             (
                 .init(deliveryMethod: .email("test@stytch.com")),
                 "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
-                "{\"expiration_minutes\":2,\"email\":\"test@stytch.com\"}"
+                "{\"email\":\"test@stytch.com\"}"
             ),
         ]
         .asyncForEach { params, urlString, body in
@@ -174,9 +174,11 @@ final class AsyncMethodsTestCase: BaseTestCase {
             XCTAssertEqual(response.requestId, "1234")
 
             // Verify request
-            XCTAssertEqual(request?.url?.absoluteString, urlString)
-            XCTAssertEqual(request?.httpMethod, "POST")
-            XCTAssertEqual(request?.httpBody, Data(body.utf8))
+            guard let request = request else { XCTFail("Request should be present"); return }
+
+            XCTAssertEqual(request.url?.absoluteString, urlString)
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.httpBody, Data(body.utf8))
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
