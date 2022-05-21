@@ -44,7 +44,7 @@ extension KeychainClient {
             return try .init(publicKey)
         }
 
-        guard case let .keyPair(appStatusOption) = item.kind else { throw KeychainError.resultNotData } // FIXME: - use different error type
+        guard case let .keyPair(appStatusOption) = item.kind else { throw KeychainError.keychainItemKindMistmatch }
 
         var error: Unmanaged<CFError>?
 
@@ -57,22 +57,22 @@ extension KeychainClient {
         }
 
         guard let accessControl = SecAccessControlCreateWithFlags(nil, appStatusOption.value, accessControl, &error) else {
-            throw error.toError() ?? KeychainError.resultNotData // FIXME: - (message: "Unable to create access control")
+            throw error.toError() ?? KeychainError.accessControlCreationFailed
         }
 
         let query = item.createKeyPairQuery(accessControl: accessControl)
 
         guard let privateKey = SecKeyCreateRandomKey(query as CFDictionary, &error) else {
-            throw error.toError() ?? KeychainError.notSecKey // FIXME: - (message: "Unable to create private key")
+            throw error.toError() ?? KeychainError.privateKeyGenerationFailed
         }
 
         guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-            throw KeychainError.notSecKey // FIXME: - (message: "Unable to generate public key from private key")
+            throw KeychainError.publicKeyGenerationFailed
         }
 
         return try .init(publicKey)
-    } fetchKeyForItem: { item, keyType in
-        let query = item.getKeyPairQuery(keyType: keyType)
+    } fetchKeyForItem: { item, keyClass in
+        let query = item.getKeyPairQuery(keyClass: keyClass)
 
         var result: AnyObject?
 
@@ -95,14 +95,14 @@ extension KeychainClient {
         var error: Unmanaged<CFError>?
 
         guard let privateKey = try client.fetchKeyForItem(item, .private) else {
-            throw KeychainError.notSecKey // FIXME: - (message: "Unable to find private key")
+            throw KeychainError.noPrivateKeyFound
         }
 
         guard
             case let algorithm: SecKeyAlgorithm = .init(rawValue: algorithm as CFString),
             SecKeyIsAlgorithmSupported(privateKey, .sign, algorithm)
         else {
-            throw KeychainError.notSecKey // FIXME: - correct error
+            throw KeychainError.signingNotSupportedWithAlgorithm(algorithm)
         }
 
         guard let signatureData = SecKeyCreateSignature(
@@ -111,7 +111,7 @@ extension KeychainClient {
             Data(challenge.utf8) as CFData,
             &error
         ) as? Data else {
-            throw error.toError() ?? KeychainError.notSecKey // FIXME: - (message: "Unable to sign challenge")
+            throw error.toError() ?? KeychainError.challengeSigningFailed
         }
 
         return signatureData.base64EncodedString()

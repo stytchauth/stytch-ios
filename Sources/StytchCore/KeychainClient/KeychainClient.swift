@@ -11,7 +11,7 @@ struct KeychainClient {
 
     private let publicKeyForItem: (Self, Item) throws -> PublicKey?
 
-    let fetchKeyForItem: (Item, KeyPairType) throws -> SecKey?
+    let fetchKeyForItem: (Item, KeyClass) throws -> SecKey?
 
     private let signChallenge: (Self, String, Item, String) throws -> String
 
@@ -21,7 +21,7 @@ struct KeychainClient {
         removeItem: @escaping (Self, Item) throws -> Void,
         resultExists: @escaping (Item) -> Bool,
         publicKeyForItem: @escaping (Self, Item) throws -> PublicKey?,
-        fetchKeyForItem: @escaping (Item, KeyPairType) throws -> SecKey?,
+        fetchKeyForItem: @escaping (Item, KeyClass) throws -> SecKey?,
         signChallenge: @escaping (Self, String, Item, String) throws -> String
     ) {
         self.getItem = getItem
@@ -63,6 +63,17 @@ extension KeychainClient {
         enum Kind {
             case token
             case keyPair(AppStatusOption)
+
+            var keyType: CFString? {
+                switch self {
+                case .token:
+                    return nil
+                case .keyPair:
+                    return Self.keyPairKeyType
+                }
+            }
+
+            static let keyPairKeyType: CFString = kSecAttrKeyTypeEC // TODO: confirm this vs ECPrimeRandom
         }
 
         var kind: Kind
@@ -78,8 +89,8 @@ extension KeychainClient {
             if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *) {
                 query[kSecUseDataProtectionKeychain] = true
             }
-            if case .keyPair = kind {
-                query[kSecAttrKeyType] = kSecAttrKeyTypeEC // TODO: confirm this vs ECPrimeRandom
+            if let keyType = kind.keyType {
+                query[kSecAttrKeyType] = keyType
             }
             return query
         }
@@ -114,17 +125,17 @@ extension KeychainClient {
                 kSecAttrKeySizeInBits: 2048, // TODO: - confirm key size
                 kSecAttrIsPermanent: true,
                 kSecPublicKeyAttrs: [
-                    kSecAttrApplicationTag: KeyPairType.public.rawValue,
+                    kSecAttrApplicationTag: KeyClass.public.rawValue,
                 ],
                 kSecPrivateKeyAttrs: [
-                    kSecAttrApplicationTag: KeyPairType.private.rawValue,
+                    kSecAttrApplicationTag: KeyClass.private.rawValue,
                     kSecAttrAccessControl: accessControl, // FIXME: - messed up on ios 15 simulator
                 ],
             ]) { $1 } as CFDictionary
         }
 
-        func getKeyPairQuery(keyType: KeyPairType) -> CFDictionary {
-            baseQuery.merging([kSecAttrApplicationTag: keyType.rawValue]) { $1 } as CFDictionary
+        func getKeyPairQuery(keyClass: KeyClass) -> CFDictionary {
+            baseQuery.merging([kSecAttrApplicationTag: keyClass.rawValue]) { $1 } as CFDictionary
         }
 
         private var secClass: CFString {
@@ -138,8 +149,17 @@ extension KeychainClient {
     }
 
     enum KeychainError: Swift.Error {
-        case resultNotData
+        case accessControlCreationFailed
+        case challengeSigningFailed
+        case keyCreationFromExternalDataFailed
+        case keychainItemKindMistmatch
         case notSecKey
+        case noPrivateKeyFound
+        case privateKeyGenerationFailed
+        case publicKeyExternalRepresentationCreationFailed
+        case publicKeyGenerationFailed
+        case resultNotData
+        case signingNotSupportedWithAlgorithm(String)
         case unhandledError(status: OSStatus)
     }
 }
@@ -150,15 +170,15 @@ extension KeychainClient {
         let secKey: SecKey
 
         public init(rawValue: String) throws {
-            let options: [String: Any] = [
-                kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-                kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
+            let options: [CFString: Any] = [
+                kSecAttrKeyType: KeychainClient.Item.Kind.keyPairKeyType,
+                kSecAttrKeyClass: kSecAttrKeyClassPublic,
             ]
 
             var error: Unmanaged<CFError>?
 
             guard let secKey = SecKeyCreateWithData(Data(rawValue.utf8) as CFData, options as CFDictionary, &error) else {
-                throw error.toError() ?? KeychainError.notSecKey // FIXME: - (message: "Unable to create key from external data")
+                throw error.toError() ?? KeychainError.keyCreationFromExternalDataFailed
             }
 
             base64Encoded = rawValue
@@ -169,7 +189,7 @@ extension KeychainClient {
             var error: Unmanaged<CFError>?
 
             guard let externalRepresentationData = SecKeyCopyExternalRepresentation(publicKey, &error) as? Data else {
-                throw error.toError() ?? KeychainError.notSecKey // FIXME: - (message: "Unable to copy external public key representation")
+                throw error.toError() ?? KeychainError.publicKeyExternalRepresentationCreationFailed
             }
 
             base64Encoded = externalRepresentationData.base64EncodedString()
@@ -191,7 +211,7 @@ extension KeychainClient {
         }
     }
 
-    enum KeyPairType: String {
+    enum KeyClass: String {
         case `private`
         case `public`
     }
