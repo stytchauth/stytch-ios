@@ -65,7 +65,7 @@ opt_in_rules:
   - multiline_parameters_brackets
   - nimble_operator
   - nslocalizedstring_key
-  - number_separator
+  # - number_separator
   - object_literal
   - operator_usage_whitespace
   - overridden_super_call
