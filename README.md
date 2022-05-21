@@ -10,9 +10,6 @@
 
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
 
-## Contents
-
-* [Contents](#contents)
 * [Getting Started](#getting-started)
   * [Supported Products](#supported-products)
   * [Async Options](#async-options)
