@@ -88,3 +88,7 @@ extension KeychainClient {
         case unhandledError(status: OSStatus)
     }
 }
+
+extension KeychainClient.Item {
+    static let stytchPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_pkce_code_verifier")
+}

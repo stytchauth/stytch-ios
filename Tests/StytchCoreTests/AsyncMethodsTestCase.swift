@@ -18,14 +18,18 @@ final class AsyncMethodsTestCase: BaseTestCase {
             signupExpiration: 30
         )
 
+        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
+        XCTAssertEqual(try Current.keychainClient.get(.stytchPKCECodeVerifier), UUID.mock.uuidString)
+
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
         XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"email\":\"asdf@stytch.com\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30,\"signup_expiration_minutes\":30}".utf8))
+        XCTAssertEqual(request?.httpBody, Data("{\"code_challenge_method\":\"sha256\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"code_challenge\":\"e99d8c848fabcf30dfd5698baf5d3b4954e513c14b973e47d6f0981b7e9ab235\",\"signup_expiration_minutes\":30,\"email\":\"asdf@stytch.com\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30}".utf8))
     }
 
     func testMagicLinksAuthenticate() async throws {
@@ -39,6 +43,14 @@ final class AsyncMethodsTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
+        await XCTAssertThrowsError(try await StytchClient.magicLinks.authenticate(parameters: parameters))
+
+        XCTAssertEqual("123E4567-E89B-12D3-A456-426614174000", UUID.mock.uuidString)
+
+        try Current.keychainClient.set(UUID.mock.uuidString, for: .stytchPKCECodeVerifier)
+
+        XCTAssertNotNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+
         let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
@@ -47,10 +59,12 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
 
+        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
         XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15}".utf8))
+        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15,\"code_verifier\":\"123E4567-E89B-12D3-A456-426614174000\"}".utf8))
     }
 
     func testSessionsAuthenticate() async throws {
@@ -234,6 +248,10 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         let handledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345&stytch_token_type=magic_links"))
 
+        await XCTAssertThrowsError(try await StytchClient.handle(url: handledUrl))
+
+        try Current.keychainClient.set(UUID.mock.uuidString, for: .stytchPKCECodeVerifier)
+
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
         case let .handled(response):
             XCTAssertEqual(response.sessionJwt, "jwt_for_me")
@@ -251,5 +269,27 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("token"))
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
+    }
+}
+
+extension UUID {
+    // swiftlint:disable:next force_unwrapping
+    static let mock: UUID = .init(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+}
+
+extension XCTest {
+    func XCTAssertThrowsError<T: Sendable>(
+        _ expression: @autoclosure () async throws -> T,
+        _ message: @autoclosure () -> String = "",
+        file: StaticString = #filePath,
+        line: UInt = #line,
+        _ errorHandler: (_ error: Error) -> Void = { _ in }
+    ) async {
+        do {
+            _ = try await expression()
+            XCTFail(message(), file: file, line: line)
+        } catch {
+            errorHandler(error)
+        }
     }
 }

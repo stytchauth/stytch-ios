@@ -30,6 +30,8 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionStorage.reset()
 
+        Current.uuid = { UUID.mock }
+
         StytchClient.configure(
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
