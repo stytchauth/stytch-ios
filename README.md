@@ -1,19 +1,27 @@
-# Stytch Swift SDK
+![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
+![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
-## Table of contents
+![Test Status](https://github.com/stytchauth/stytch-swift/actions/workflows/test.yml/badge.svg)
+![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
+![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
+![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
+![CocoaPods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)
 
-* [Overview](#overview)
-  * [Supported Products](#supported-products)
-  * [Async Options](#async-options)
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Getting Started](#getting-started)
-  * [Configuration](#configuration)
-  * [Authenticating](#authenticating)
-
-## Overview
 
 Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
+
+## Contents
+
+* [Contents](#contents)
+  * [Supported Products](#supported-products)
+  * [Async Options](#async-options)
+* [Quick Start](#quick-start)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Configuration](#configuration)
+  * [Authenticating](#authenticating)
+* [Documentation](#documentation)
 
 #### Supported Products
 
@@ -29,6 +37,18 @@ Additional functionality coming in the near future!
 - `Combine`
 - ` Callbacks`
 
+## Quick Start
+
+``` swift
+import StytchCore
+
+// Initiate login/signup
+_ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init( email: userEmail))
+
+// Later, handle the subsequent deeplink
+_ = try await StytchClient.handle(url: deeplinkUrl)
+```
+
 ## Requirements
 
 The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
@@ -39,21 +59,29 @@ The Stytch Swift SDK is compatible with apps targeting the following Apple platf
 ## Installation
 
 ### Swift Package Manager
+
+The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool for managing the distribution of Swift code. It’s integrated with the Swift build system to automate the process of downloading, compiling, and linking dependencies.
+
 1. Open Xcode
 1. File > Add Packages
 1. Enter https://github.com/stytchauth/stytch-swift
 1. Choose Package Requirements (Up to next minor, up to next major, etc)
 
 ### Carthage
-TBD
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
+```
+binary "https://stytch-swift.github.io/StytchCore.json"
+```
 
 ### CocoaPods
-TBD
+[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
+
 ```
-pod 'Stytch'
+pod 'StytchCore'
 ```
 
-## Getting Started
+## Usage
 
 ### Configuration
 
@@ -81,7 +109,7 @@ struct YourApp: App {
                 .task {
                     StytchClient.configure(publicToken: stytchPublicToken, hostUrl: hostUrl)
                 }
-                // Handle web-browsing deeplinks
+                // Handle web-browsing/universal deeplinks
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
                     guard let url = userActivity.webpageURL else { return }
                     handle(url: url)
@@ -100,9 +128,7 @@ struct YourApp: App {
                 case .notHandled:
                     // Handle via alternative means
                 }
-            } catch {
-                handle(error: error)
-            }
+            } catch { ... }
         }
     }
 }
@@ -133,10 +159,14 @@ final class SMSAuthenticationController {
         guard let methodId = methodId else { throw YourCustomError }
         
         let response = try await StytchClient.otps.authenticate(
-            parameters: .init(code: code, methodId: methodId, sessionDuration: 30)
+            parameters: .init(code: code, methodId: methodId)
         )
         session = response.session
         user = response.user
     }
 }
 ```
+
+## Documentation
+
+Full documentation is available [here](https://fluffy-bassoon-7f56d670.pages.github.io/documentation/stytchcore/).
