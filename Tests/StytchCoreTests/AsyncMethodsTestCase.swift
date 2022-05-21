@@ -271,25 +271,3 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
     }
 }
-
-extension UUID {
-    // swiftlint:disable:next force_unwrapping
-    static let mock: UUID = .init(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
-}
-
-extension XCTest {
-    func XCTAssertThrowsError<T: Sendable>(
-        _ expression: @autoclosure () async throws -> T,
-        _ message: @autoclosure () -> String = "",
-        file: StaticString = #filePath,
-        line: UInt = #line,
-        _ errorHandler: (_ error: Error) -> Void = { _ in }
-    ) async {
-        do {
-            _ = try await expression()
-            XCTFail(message(), file: file, line: line)
-        } catch {
-            errorHandler(error)
-        }
-    }
-}
