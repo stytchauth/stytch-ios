@@ -51,7 +51,7 @@ extension SessionPollingClient {
         }
 
         let timer = Timer(
-            timeInterval: 20, // 3 minutes
+            timeInterval: 30, // 180 // 3 minutes
             repeats: true
         ) { timer in
             Retrier(currentRetryValue: 0, maxRetries: 5, task: task)() {} failure: { _ in }
@@ -66,6 +66,7 @@ extension SessionPollingClient {
     }
 }
 
+// Need way to cancel previous retries
 struct Retrier {
     let currentRetryValue: UInt
     let maxRetries: UInt
