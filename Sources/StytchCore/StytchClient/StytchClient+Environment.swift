@@ -15,6 +15,8 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .live
 
+        var sessionPollingClient: SessionPollingClient = .live
+
         let sessionStorage: SessionStorage = .init()
 
         var jsonDecoder: JSONDecoder = {
@@ -53,5 +55,7 @@ extension StytchClient {
         var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
+
+        var uuid: () -> UUID = UUID.init
     }
 }
