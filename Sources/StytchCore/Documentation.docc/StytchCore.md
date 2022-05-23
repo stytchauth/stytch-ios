@@ -8,7 +8,7 @@ The Swift SDK provides methods that communicate directly with the Stytch API. Th
 
 ### Using Stytch
 
- You'll interact with Stytch via the ``StytchClient``. Supported Stytch products are organized into interface structs — exposed as static variables on the client, e.g. StytchClient.magicLinks.email. These contain the underlying methods such as: `StytchClient.magicLinks.email.loginOrCreate(parameters:)`
+ You'll interact with Stytch via the ``StytchClient``. Supported Stytch products are organized into interface structs — exposed as static variables on the client, e.g. StytchClient.magicLinks.email. These contain the underlying methods such as: `StytchClient.magicLinks.email.loginOrCreate(parameters:)` // TODO: - update this
  
  Prior to using any authentication methods, you must first configure the ``StytchClient`` using the static `configure(publicToken:hostUrl:)` function. After this, the client is ready for use.
  

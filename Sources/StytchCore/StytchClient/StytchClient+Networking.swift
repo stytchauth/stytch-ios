@@ -1,5 +1,5 @@
 import Foundation
-import Networking
+//import Networking
 
 extension StytchClient {
     static func post<Parameters: Encodable, Response: Decodable>(
