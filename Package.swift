@@ -8,18 +8,9 @@ let package = Package(
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
-        .target(
-            name: "StytchCore",
-            dependencies: [
-                "Networking",
-            ]
-        ),
-        .target(name: "Networking"),
-        .target(name: "NetworkingTestSupport"),
-        .testTarget(name: "NetworkingTests", dependencies: ["Networking", "NetworkingTestSupport"]),
-        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore", "NetworkingTestSupport"]),
+        .target(name: "StytchCore"),
+        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
