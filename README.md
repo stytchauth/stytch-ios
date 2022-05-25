@@ -12,6 +12,7 @@
   * [Why should I use the Stytch SDK?](#why-should-i-use-the-stytch-sdk)
   * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
     * [Async Options](#async-options)
+  * [How do I start using Stytch?](how-do-i-start-using-stytch)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
@@ -24,7 +25,7 @@
 
 ### What is Stytch?
 
-Stytch is an authentication platform, written by developers for developers, with a focus on improving security and user experience via passwordless authentcation. Stytch offers direct API integrations, language-specific libraries, and SDKs (like this one) to make the process of setting up an authentication flow for your app as easy as possible.
+[Stytch](https://stytch.com) is an authentication platform, written by developers for developers, with a focus on improving security and user experience via passwordless authentcation. Stytch offers direct API integrations, language-specific libraries, and SDKs (like this one) to make the process of setting up an authentication flow for your app as easy as possible.
 
 ### Why should I use the Stytch SDK?
 
@@ -64,6 +65,10 @@ The SDK provides several different mechanisms for handling the asynchronous code
 - `Combine`
 - ` Callbacks`
 
+### How do I start using Stytch?
+
+You will first need to visit [Stytch's homepage](https://stytch.com), sign up, and create a new project in the [dashboard](https://stytch.com/dashboard/home). You'll then need to adjust your [SDK configuration](https://stytch.com/dashboard/sdk-configuration) — adding your app's bundle id to `Authorized environments` and enabling any `Auth methods` you wish to use. 
+
 ## Requirements
 
 The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
@@ -100,7 +105,7 @@ pod 'StytchCore'
 
 ### Configuration
 
-To start using Stytch, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
+To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
 If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
@@ -109,6 +114,8 @@ If you are using a redirect authentication product (Email Magic Links/OAuth) you
 ![Entitlements screenshot](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)
 
 #### Manual Configuration / Deeplink Handling
+
+This example shows a hypothetical SwiftUI App file, with custom configuration (see `.task {}`), as well as deeplink/universal link handling.
 
 ``` swift
 @main
@@ -151,15 +158,18 @@ struct YourApp: App {
 
 ### Authenticating
 
+As seen in [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk), there are a number of different authentication products available. Here, we'll showcase a simple example of using the OTP product.
+
 #### One-time Passcodes
+
+This example shows a hypothetical class you could use to manage SMS authentication in your app, delegating much of the work to the StytchClient under the hood.
 
 ``` swift
 import StytchCore
 
 final class SMSAuthenticationController {
-    var methodId: String?
-    var session: Session?
-    var user: User?
+    private let onAuthenticate: (Session, User) -> Void
+    private var methodId: String?
 
     // phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
     func login(phoneNumber: String) async throws {
@@ -176,8 +186,8 @@ final class SMSAuthenticationController {
         let response = try await StytchClient.otps.authenticate(
             parameters: .init(code: code, methodId: methodId)
         )
-        session = response.session
-        user = response.user
+
+        onAuthenticate(response.session, response.user)
     }
 }
 ```
