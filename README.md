@@ -7,12 +7,11 @@
 ![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)
 
-
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
-
 * [Getting Started](#getting-started)
-  * [Supported Products](#supported-products)
-  * [Async Options](#async-options)
+  * [What is Stytch?](#what-is-stytch)
+  * [Why should I use the Stytch SDK?](#why-should-use-the-stytch-sdk)
+  * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
+    * [Async Options](#async-options)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
@@ -23,7 +22,13 @@ Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage use
 
 ## Getting Started
 
-With just a few lines of code, you can easiliy authenticate your users and get back to focusing on the core of your product.
+### What is Stytch?
+
+Stytch is an authentication platform, written by developers for developers, with a focus on improving security and user experience via passwordless authentcation. Stytch offers direct API integrations, language-specific libraries, and SDKs (like this one) to make the process of setting up an authentication flow for your app as easy as possible.
+
+### Why should I use the Stytch SDK?
+
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
 
 ``` swift
 import StytchCore
@@ -35,13 +40,19 @@ _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(emai
 _ = try await StytchClient.handle(url: deeplinkUrl)
 ```
 
-#### Supported Products
+### What can I do with the Stytch SDK?
 
-- Email magic links
-- One-time passcodes (SMS, WhatsApp, Email)
-- Session management
+There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
-Additional functionality coming in the near future!
+- Send/authenticate magic links
+    - Email
+- Send/authenticate one-time passcodes
+    - SMS
+    - WhatsApp
+    - Email
+- Manage user sessions
+    - Authenticate/refresh an existing session
+    - Revoke a session (Sign out everywhere)
 
 #### Async Options
 
