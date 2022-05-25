@@ -12,7 +12,7 @@
   * [Why should I use the Stytch SDK?](#why-should-i-use-the-stytch-sdk)
   * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
     * [Async Options](#async-options)
-  * [How do I start using Stytch?](how-do-i-start-using-stytch)
+  * [How do I start using Stytch?](#how-do-i-start-using-stytch)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
