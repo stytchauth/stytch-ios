@@ -9,7 +9,7 @@
 
 * [Getting Started](#getting-started)
   * [What is Stytch?](#what-is-stytch)
-  * [Why should I use the Stytch SDK?](#why-should-use-the-stytch-sdk)
+  * [Why should I use the Stytch SDK?](#why-should-i-use-the-stytch-sdk)
   * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
     * [Async Options](#async-options)
 * [Requirements](#requirements)
@@ -45,16 +45,20 @@ _ = try await StytchClient.handle(url: deeplinkUrl)
 There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
 - Send/authenticate magic links
-    - Email
+    - Delivery mechanisms
+        - Email
 - Send/authenticate one-time passcodes
-    - SMS
-    - WhatsApp
-    - Email
+    - Delivery mechanisms
+        - SMS
+        - WhatsApp
+        - Email
 - Manage user sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out everywhere)
 
 #### Async Options
+
+The SDK provides several different mechanisms for handling the asynchronous code, so you can choose what best suits your application.
 
 - `Async/Await`
 - `Combine`
