@@ -14,7 +14,7 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .live
 
-        var sessionPollingClient: PollingClient = .live
+        var sessionsPollingClient: PollingClient = .sessions
 
         let sessionStorage: SessionStorage = .init()
 
