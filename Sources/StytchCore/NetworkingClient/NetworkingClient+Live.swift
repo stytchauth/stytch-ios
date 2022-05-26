@@ -2,7 +2,7 @@ import Foundation
 
 var count = 0
 
-public extension NetworkingClient {
+extension NetworkingClient {
     static let live: NetworkingClient = {
         let session: URLSession = .init(configuration: .default)
         return .init { request, completion in
