@@ -22,7 +22,7 @@ Product | Methods | Delivery mechanisms
 
 #### Configuration
 
- Prior to using any authentication methods, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` function.
+ Prior to using any authentication methods, you must configure the StytchClient via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` function.
  
  #### Usage
 
