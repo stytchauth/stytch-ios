@@ -1,21 +1,23 @@
 import Foundation
 
-final class SessionPollingClient {
-    private let _beginPollingIfNeeded: (SessionPollingClient) -> Void
+final class PollingClient {
+    typealias Task = (@escaping () -> Void, @escaping (Error) -> Void) -> Void
 
-    private let _stopPolling: (SessionPollingClient) -> Void
+    private let _beginPollingIfNeeded: (PollingClient, @escaping Task, TimeInterval, UInt) -> Void
+
+    private let _stopPolling: (PollingClient) -> Void
+
+    private var retrier: Retrier?
 
     private var timer: Timer?
 
-    private var taskId: UUID?
-
-    init(beginPollingIfNeeded: @escaping (SessionPollingClient) -> Void, stopPolling: @escaping (SessionPollingClient) -> Void) {
+    init(beginPollingIfNeeded: @escaping (PollingClient, @escaping Task, TimeInterval, UInt) -> Void, stopPolling: @escaping (PollingClient) -> Void) {
         _beginPollingIfNeeded = beginPollingIfNeeded
         _stopPolling = stopPolling
     }
 
-    func beginPollingIfNeeded() {
-        _beginPollingIfNeeded(self)
+    func beginPollingIfNeeded(pollingInterval: TimeInterval, maxRetries: UInt, task: @escaping Task) {
+        _beginPollingIfNeeded(self, task, pollingInterval, maxRetries)
     }
 
     func stopPolling() {
@@ -27,61 +29,87 @@ private extension DispatchQueue {
     static let sessionPolling: DispatchQueue = .init(label: "com.stytch.StytchCore.SessionPolling")
 }
 
-extension SessionPollingClient {
-    static let live: SessionPollingClient = .init { client in
+extension PollingClient {
+    static let live: PollingClient = .init { client, task, pollingInterval, maxRetries in
         client.timer?.invalidate()
-        client.taskId = Current.uuid()
-        let task: (UInt, @escaping () -> Void, @escaping (Error) -> Void) -> Void = { currentAttempt, onSuccess, onFailure in
-            print("current attempt:", currentAttempt, Current.date())
-            DispatchQueue.sessionPolling.asyncAfter(deadline: .now() + pow(2, Double(currentAttempt))) { [weak client, taskId = client.taskId] in
-                guard client?.taskId == taskId else {
-                    print("not same task")
-                    return
-                }
-                print("authenticating")
-                StytchClient.sessions.authenticate(parameters: .init()) { result in
-                    switch result {
-                    case .success:
-                        onSuccess()
-                    case let .failure(error):
-                        onFailure(error)
-                    }
-                }
-            }
-        }
+        client.retrier?.cancel()
 
-        let timer = Timer(
-            timeInterval: 30, // 180 // 3 minutes
-            repeats: true
-        ) { _ in
-            Retrier(currentRetryValue: 0, maxRetries: 5, task: task)(success: {}, failure: { _ in })
+        client.retrier = .init(maxRetries: maxRetries, queue: .sessionPolling, task: task)
+
+        let timer = Timer(timeInterval: pollingInterval, repeats: true) { _ in
+            client.retrier?.attempt()
         }
 
         client.timer = timer
 
+        print("begin polling")
         RunLoop.main.add(timer, forMode: .common) // TODO: add callback to alert developer session has been updated
     } stopPolling: { client in
         client.timer?.invalidate()
         client.timer = nil
+        client.retrier?.cancel()
+        client.retrier = nil
     }
 }
 
 // Need way to cancel previous retries
-struct Retrier {
-    let currentRetryValue: UInt
-    let maxRetries: UInt
-    let task: (UInt, @escaping () -> Void, @escaping (Error) -> Void) -> Void
+final class Retrier {
+    private let currentRetryValue: UInt
+    private let maxRetries: UInt
+    private let queue: DispatchQueue
+    private var isCancelled: () -> Bool = { false }
+    private var _isCancelled: Bool = false
+    private var task: (@escaping () -> Void, @escaping (Error) -> Void) -> Void = { _, _ in }
+    private var _next: Retrier?
 
-    func callAsFunction(success: @escaping () -> Void, failure: @escaping (Error) -> Void) {
-        let failureWrapper: (Error) -> Void = { error in
-            // do we have retries left? if yes, call retry again
-            // if not, report error
-            if currentRetryValue <= maxRetries {
-                Retrier(currentRetryValue: currentRetryValue + 1, maxRetries: maxRetries, task: task)(success: success, failure: failure)
-            } else {
+    init(
+        currentRetryValue: UInt = 0,
+        maxRetries: UInt,
+        queue: DispatchQueue,
+        isCancelled: (() -> Bool)? = nil,
+        task: @escaping (@escaping () -> Void, @escaping (Error) -> Void) -> Void
+    ) {
+        self.currentRetryValue = currentRetryValue
+        self.maxRetries = maxRetries
+        self.queue = queue
+        self.isCancelled = isCancelled ?? { [weak self] in self?._isCancelled ?? false }
+        self.task = task
+    }
+
+    deinit {
+        print(#function)
+    }
+
+    func attempt(success: @escaping () -> Void = {}, failure: @escaping (Error) -> Void = { _ in }) {
+        let failureWrapper: (Error) -> Void = { [weak self] error in
+            guard let self = self, !self.isCancelled(), let next = self.next() else {
                 failure(error)
+                return
             }
+            self._next = next
+            next.attempt(success: success, failure: failure)
         }
-        task(currentRetryValue, success, failureWrapper)
+        print("queueing: \(currentRetryValue)")
+        let referenceDate = Current.date()
+        let wrappedTask = { [weak self] in
+            guard let self = self, !self.isCancelled() else { return }
+            print("running task \(self.currentRetryValue) @ \(Current.date().timeIntervalSince(referenceDate))")
+            self.task(success, failureWrapper)
+        }
+        if currentRetryValue == 0 {
+            wrappedTask()
+        } else {
+            queue.asyncAfter(deadline: .now() + pow(2, Double(currentRetryValue - 1)), execute: wrappedTask)
+        }
+    }
+
+    func cancel() {
+        _isCancelled = true
+    }
+
+    private func next() -> Retrier? {
+        guard currentRetryValue <= maxRetries, !isCancelled() else { return nil }
+
+        return .init(currentRetryValue: currentRetryValue + 1, maxRetries: maxRetries, queue: queue, isCancelled: isCancelled, task: task)
     }
 }
