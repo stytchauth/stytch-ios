@@ -10,24 +10,24 @@ extension NetworkingClient {
                 completion(.failure(Error.missingData))
                 return .init(dataTask: nil)
             } else {
-            let task = session.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
+                let task = session.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        completion(.failure(error))
+                        return
+                    }
+                    guard let data = data else {
+                        completion(.failure(Error.missingData))
+                        return
+                    }
+                    guard let response = response as? HTTPURLResponse else {
+                        completion(.failure(Error.nonHttpResponse))
+                        return
+                    }
+                    completion(.success((data, response)))
                 }
-                guard let data = data else {
-                    completion(.failure(Error.missingData))
-                    return
-                }
-                guard let response = response as? HTTPURLResponse else {
-                    completion(.failure(Error.nonHttpResponse))
-                    return
-                }
-                completion(.success((data, response)))
-            }
-            task.resume()
+                task.resume()
                 count += 1
-            return .init(dataTask: task)
+                return .init(dataTask: task)
             }
         }
     }()

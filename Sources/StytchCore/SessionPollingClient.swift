@@ -10,8 +10,8 @@ final class SessionPollingClient {
     private var taskId: UUID?
 
     init(beginPollingIfNeeded: @escaping (SessionPollingClient) -> Void, stopPolling: @escaping (SessionPollingClient) -> Void) {
-        self._beginPollingIfNeeded = beginPollingIfNeeded
-        self._stopPolling = stopPolling
+        _beginPollingIfNeeded = beginPollingIfNeeded
+        _stopPolling = stopPolling
     }
 
     func beginPollingIfNeeded() {
@@ -53,8 +53,8 @@ extension SessionPollingClient {
         let timer = Timer(
             timeInterval: 30, // 180 // 3 minutes
             repeats: true
-        ) { timer in
-            Retrier(currentRetryValue: 0, maxRetries: 5, task: task)() {} failure: { _ in }
+        ) { _ in
+            Retrier(currentRetryValue: 0, maxRetries: 5, task: task)(success: {}, failure: { _ in })
         }
 
         client.timer = timer
@@ -85,4 +85,3 @@ struct Retrier {
         task(currentRetryValue, success, failureWrapper)
     }
 }
-
