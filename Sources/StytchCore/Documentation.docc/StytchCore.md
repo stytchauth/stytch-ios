@@ -22,13 +22,14 @@ Product | Methods | Delivery mechanisms
 
 #### Configuration
 
- Prior to using any authentication methods, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` function.
+ Prior to using any authentication methods, you must configure the StytchClient via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` function.
  
  #### Usage
 
 With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
  
 ``` swift
+import StytchCore
 // When a user has entered their email and requests a magic link
 _ = try await StytchClient.magicLinks.email.loginOrCreate(
     parameters: .init(email: userEmail)
