@@ -26,7 +26,7 @@ There are several package manager systems which are supported out of the box: Sw
 
 ### Configuration
 
-To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a StytchConfiguration.plist file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist) or 2) Programmatically at app launch via the `StytchClient.configure(publicToken:hostUrl:)` method. You may also need to set up associated domains for your site to enable safe deeplinking between the autentication flows and your application. You can see more information and examples [here](https://github.com/stytchauth/stytch-swift/blob/b7e761794c2aae0b72517314c1b8606b107adee9/README.md#configuration).
+To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a StytchConfiguration.plist file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch via the `StytchClient.configure(publicToken:hostUrl:)` method. You may also need to set up associated domains for your site to enable safe deeplinking between the autentication flows and your application. You can see more information and examples [here](https://github.com/stytchauth/stytch-swift/blob/b7e761794c2aae0b72517314c1b8606b107adee9/README.md#configuration).
 
 ## Documentation
 
