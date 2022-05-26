@@ -5,9 +5,6 @@
 	<key>StytchPublicToken</key>
 	<string>public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba</string>
 	<key>StytchHostURL</key>
-	<dict>
-		<key>relative</key>
-		<string>https://dan-stytch.github.io</string>
-	</dict>
+	<string>https://dan-stytch.github.io</string>
 </dict>
 </plist>
