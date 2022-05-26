@@ -55,7 +55,7 @@ There are a number of authentication products currently supported by the SDK, wi
         - Email
 - Manage user sessions
     - Authenticate/refresh an existing session
-    - Revoke a session (Sign out everywhere)
+    - Revoke a session (Sign out)
 
 #### Async Options
 
