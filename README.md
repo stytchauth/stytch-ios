@@ -195,11 +195,11 @@ final class SMSAuthenticationController {
 ## FAQ
 
 1. How does the SDK compare to the API?
-  A) The SDK, for the most part, mirrors the API directly — though it provides a more opinionated take on interacting with these methods, managing local state on your behalf and introducing some defaults (viewable in the corresponding init/function docs). A primary benefit of using the SDK is that you can interact with Stytch directly from the client, without relaying calls through your backend.
+  1. The SDK, for the most part, mirrors the API directly — though it provides a more opinionated take on interacting with these methods, managing local state on your behalf and introducing some defaults (viewable in the corresponding init/function docs). A primary benefit of using the SDK is that you can interact with Stytch directly from the client, without relaying calls through your backend.
 1. What are the some of the default behaviors of the SDK?
-  A) A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are not cached by the SDK, these must be pulled from the `authenticate` responses and stored by the application. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
+  1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are not cached by the SDK, these must be pulled from the `authenticate` responses and stored by the application. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
 1. Are there guides or sample apps available to see this in use?
-  A) Yes! There is a SwiftUI macOS/iOS Demo App included in this repo, available [here](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo).
+  1. Yes! There is a SwiftUI macOS/iOS Demo App included in this repo, available [here](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo).
 
 ## Documentation
 
