@@ -46,10 +46,10 @@ _ = try await StytchClient.handle(url: deeplinkUrl)
 There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
 - Send/authenticate magic links
-    - Delivery mechanisms
+    - Delivery via:
         - Email
 - Send/authenticate one-time passcodes
-    - Delivery mechanisms
+    - Delivery via:
         - SMS
         - WhatsApp
         - Email
@@ -59,7 +59,7 @@ There are a number of authentication products currently supported by the SDK, wi
 
 #### Async Options
 
-The SDK provides several different mechanisms for handling the asynchronous code, so you can choose what best suits your application.
+The SDK provides several different mechanisms for handling the asynchronous code, so you can choose what best suits your needs.
 
 - `Async/Await`
 - `Combine`
