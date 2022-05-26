@@ -2,9 +2,19 @@
 
 The Swift SDK provides the easiest way for you to use Stytch on Apple platforms — wrapping the API and providing several layers of convenience on top. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product — all without creating extra endpoints on your backend.
 
+``` swift
+import StytchCore
+
+// Initiate login/signup
+_ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: userEmail))
+
+// Later, handle the subsequent deeplink
+_ = try await StytchClient.handle(url: deeplinkUrl)
+```
+
 ## Getting Started
 
-The Swift SDK allows you to use whatever asynchronous mechanism you prefer, be it callbacks, Async/Await, or Combine.
+The Swift SDK, among other conveniences, allows you to use whatever asynchronous mechanism you prefer, be it callbacks, Async/Await, or Combine.
 
 ### Requirements
 
