@@ -29,6 +29,7 @@ Product | Methods | Delivery mechanisms
 With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
  
 ``` swift
+import StytchCore
 // When a user has entered their email and requests a magic link
 _ = try await StytchClient.magicLinks.email.loginOrCreate(
     parameters: .init(email: userEmail)
