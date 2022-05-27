@@ -75,6 +75,10 @@ private extension PollingClient {
 
         func attempt(success: @escaping () -> Void = {}, failure: @escaping (Error) -> Void = { _ in }) {
             let failureWrapper: (Error) -> Void = { [weak self] error in
+                if let error = error as? StytchStructuredError, error.errorType == .unauthorizedCredentials {
+                    failure(error)
+                    return
+                }
                 guard let self = self, !self.isCancelled, self.currentRetryValue < self.maxRetries else {
                     failure(error)
                     return
