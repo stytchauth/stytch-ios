@@ -83,11 +83,12 @@ private extension PollingClient {
                 self.attempt(success: success, failure: failure)
             }
             // We'll set the due time to: 2 seconds from now * 2^n +/- jitter
-            let delay: (UInt) -> DispatchTime = { .now() + 2 * pow(2, Double($0 - 1)) + Double.random(in: (-0.0175...0.0175)) }
+            let delay: (UInt) -> DispatchTime = { .now() + 2 * pow(2, Double($0 - 1)) + Double.random(in: -0.0175...0.0175) }
             let wrappedTask = { [weak self] in
                 guard let self = self, !self.isCancelled else { return }
                 self.task(success, failureWrapper)
             }
+            // On the first attempt, execute immediately
             if currentRetryValue == 0 {
                 wrappedTask()
             } else {
