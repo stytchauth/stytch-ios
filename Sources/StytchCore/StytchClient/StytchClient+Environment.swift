@@ -54,7 +54,5 @@ extension StytchClient {
         var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
-
-        var uuid: () -> UUID = UUID.init
     }
 }
