@@ -1,5 +1,5 @@
 public extension StytchClient {
-    /// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library.
+    /// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
     struct Sessions {
         let pathContext: Endpoint.Path = "sessions"
 
@@ -20,7 +20,7 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, and will need to be refreshed over time.
+        /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<SessionsAuthenticateResponse>) {
             guard let token = sessionToken ?? sessionJwt else {
                 completion(.success(.unauthenticated))
@@ -41,7 +41,7 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user.
+        /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
         public func revoke(completion: @escaping Completion<SessionsRevokeResponse>) {
             guard let token = sessionToken ?? sessionJwt else {
                 completion(.success(.unauthenticated))
