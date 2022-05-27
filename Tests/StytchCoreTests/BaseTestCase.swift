@@ -100,7 +100,7 @@ extension PollingClient {
         maxRetries: 0,
         queue: .main,
         createTimer: { _, _, _ in
-        } task: { _, _ in
+        }, task: { _, _ in
             XCTFail("Shouldn't execute")
         }
     )
