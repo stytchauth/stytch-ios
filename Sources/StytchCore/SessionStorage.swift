@@ -63,6 +63,7 @@ final class SessionStorage {
                 Current.cookieClient.set(cookie: cookie)
             }
         }
+        Current.sessionsPollingClient.start()
     }
 
     func updatePersistentStorage(token: Session.Token) {
@@ -81,6 +82,7 @@ final class SessionStorage {
         Session.Token.Kind.allCases
             .map(\.name)
             .forEach(Current.cookieClient.deleteCookie(named:))
+        Current.sessionsPollingClient.stop()
     }
 
     @objc

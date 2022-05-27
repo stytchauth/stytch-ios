@@ -50,6 +50,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         XCTAssertNotNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
 
+        Current.timer = { _, _, _ in .init() }
+
         let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
@@ -81,6 +83,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
             XCTFail("Expected to be unauthenticated")
             return
         }
+
+        Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
             .mock(userId: "i_am_user"),
@@ -122,6 +126,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
             XCTFail("Expected to be unauthenticated")
             return
         }
+
+        Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
             .mock(userId: "i_am_user"),
@@ -213,6 +219,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
+        Current.timer = { _, _, _ in .init() }
+
         let response = try await StytchClient.otps.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
@@ -250,6 +258,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
         await XCTAssertThrowsError(try await StytchClient.handle(url: handledUrl))
 
         try Current.keychainClient.set(UUID.mock.uuidString, for: .stytchPKCECodeVerifier)
+
+        Current.timer = { _, _, _ in .init() }
 
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
         case let .handled(response):

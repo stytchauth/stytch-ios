@@ -27,6 +27,16 @@ class BaseTestCase: XCTestCase {
             resultExists: { [unowned self] item in self.keychainItems[item.name] != nil }
         )
 
+        Current.sessionsPollingClient = .failing
+
+        Current.timer = { _, _, _ in
+            XCTFail("Unexpected timer initialization")
+            return .init()
+        }
+        Current.asyncAfter = { _, _, _ in
+            XCTFail("Unexpected asyncAfter run")
+        }
+
         Current.sessionStorage.reset()
 
         Current.uuid = { UUID.mock }
@@ -102,5 +112,15 @@ extension Session {
             startedAt: refDate.addingTimeInterval(-30),
             userId: userId
         )
+    }
+}
+
+extension PollingClient {
+    static var failing: PollingClient = .init(
+        interval: 0,
+        maxRetries: 0,
+        queue: .main
+    ) { _, _ in
+        XCTFail("Shouldn't execute")
     }
 }

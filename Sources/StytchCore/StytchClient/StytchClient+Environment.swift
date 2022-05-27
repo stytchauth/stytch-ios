@@ -12,12 +12,6 @@ extension StytchClient {
     struct Environment {
         var clientInfo: ClientInfo = .init()
 
-        var networkingClient: NetworkingClient = .live
-
-        let cryptoClient: CryptoClient = .init()
-
-        let sessionStorage: SessionStorage = .init()
-
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -49,6 +43,14 @@ extension StytchClient {
             return encoder
         }()
 
+        var networkingClient: NetworkingClient = .live
+
+        let cryptoClient: CryptoClient = .init()
+
+        var sessionsPollingClient: PollingClient = .sessions
+
+        let sessionStorage: SessionStorage = .init()
+
         var cookieClient: CookieClient = .live
 
         var keychainClient: KeychainClient = .live
@@ -56,5 +58,13 @@ extension StytchClient {
         var date: () -> Date = Date.init
 
         var uuid: () -> UUID = UUID.init
+
+        var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
+
+        var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
+            let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
+            runloop.add(timer, forMode: .common)
+            return timer
+        }
     }
 }
