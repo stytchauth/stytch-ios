@@ -4,7 +4,7 @@ final class PollingClient {
     private let interval: TimeInterval
     private let maxRetries: UInt
     private let queue: DispatchQueue
-    private let onInterval: (PollingClient, TimeInterval, @escaping () -> Void) -> Void
+    private let createTimer: (PollingClient, TimeInterval, @escaping () -> Void) -> Void
     private let task: Task
     private var retrier: Retrier?
     private var timer: Timer?
@@ -13,7 +13,7 @@ final class PollingClient {
         interval: TimeInterval,
         maxRetries: UInt,
         queue: DispatchQueue,
-        onInterval: @escaping (PollingClient, TimeInterval, @escaping () -> Void) -> Void = { client, interval, task in
+        createTimer: @escaping (PollingClient, TimeInterval, @escaping () -> Void) -> Void = { client, interval, task in
             let timer = Timer(timeInterval: interval, repeats: true, block: { _ in task() })
             client.timer = timer
             RunLoop.main.add(timer, forMode: .common)
@@ -23,7 +23,7 @@ final class PollingClient {
         self.interval = interval
         self.maxRetries = maxRetries
         self.queue = queue
-        self.onInterval = onInterval
+        self.createTimer = createTimer
         self.task = task
     }
 
@@ -32,7 +32,7 @@ final class PollingClient {
         retrier?.cancel()
         retrier = nil
 
-        onInterval(self, interval) { [weak self] in
+        createTimer(self, interval) { [weak self] in
             guard let self = self else { return }
             self.retrier?.cancel()
             self.retrier = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
