@@ -6,7 +6,7 @@ final class PollingClient {
     private let queue: DispatchQueue
     private let createTimer: (PollingClient, TimeInterval, @escaping () -> Void) -> Void
     private let task: Task
-    private var retrier: Retrier?
+    private var retryClient: RetryClient?
     private var timer: Timer?
 
     init(
@@ -29,22 +29,22 @@ final class PollingClient {
 
     func start() {
         timer?.invalidate()
-        retrier?.cancel()
-        retrier = nil
+        retryClient?.cancel()
+        retryClient = nil
 
         createTimer(self, interval) { [weak self] in
             guard let self = self else { return }
-            self.retrier?.cancel()
-            self.retrier = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
-            self.retrier?.attempt()
+            self.retryClient?.cancel()
+            self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
+            self.retryClient?.attempt()
         }
     }
 
     func stop() {
         timer?.invalidate()
         timer = nil
-        retrier?.cancel()
-        retrier = nil
+        retryClient?.cancel()
+        retryClient = nil
     }
 }
 
@@ -53,7 +53,7 @@ extension PollingClient {
 }
 
 private extension PollingClient {
-    final class Retrier {
+    final class RetryClient {
         private var currentRetryValue: UInt = 0
         private let maxRetries: UInt
         private let queue: DispatchQueue
