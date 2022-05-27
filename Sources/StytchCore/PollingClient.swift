@@ -14,7 +14,7 @@ final class PollingClient {
         maxRetries: UInt,
         queue: DispatchQueue,
         createTimer: @escaping (PollingClient, TimeInterval, @escaping () -> Void) -> Void = { client, interval, task in
-            let timer = Timer(timeInterval: interval, repeats: true, block: { _ in task() })
+            let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
             client.timer = timer
             RunLoop.main.add(timer, forMode: .common)
         },
