@@ -9,7 +9,7 @@ extension StytchClient {
 
         try Current.keychainClient.set(codeVerifier, for: .stytchPKCECodeVerifier)
 
-        return (Current.cryptoClient.sha256(codeVerifier).base64Encoded(), "S256")
+        return (Current.cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
     }
 
     /// Wraps an `authenticate` ``Completion`` and removes the PKCE code verifier from persistent storage upon success.
@@ -28,3 +28,13 @@ private extension Sequence where Element: CVarArg {
         reduce(into: "", { $0 += String(format: "%02x", $1) })
     }
 }
+
+private extension Data {
+    func base64UrlEncoded() -> String {
+        base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+    }
+}
+
