@@ -3,7 +3,7 @@ import CryptoKit
 import Foundation
 
 extension StytchClient {
-    /// Generates a new code_verifier and stores the value in the keychain. Then hashes the value and returns the hashed value along with a string representing the hash method. (Currently sha256)
+    /// Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
     static func generateAndStorePKCE() throws -> (challenge: String, method: String) {
         let codeVerifier = Current.uuid().uuidString
 
