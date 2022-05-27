@@ -12,12 +12,6 @@ extension StytchClient {
     struct Environment {
         var clientInfo: ClientInfo = .init()
 
-        var networkingClient: NetworkingClient = .live
-
-        var sessionsPollingClient: PollingClient = .sessions
-
-        let sessionStorage: SessionStorage = .init()
-
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -48,6 +42,12 @@ extension StytchClient {
             encoder.dateEncodingStrategy = .iso8601
             return encoder
         }()
+
+        var networkingClient: NetworkingClient = .live
+
+        var sessionsPollingClient: PollingClient = .sessions
+
+        let sessionStorage: SessionStorage = .init()
 
         var cookieClient: CookieClient = .live
 
