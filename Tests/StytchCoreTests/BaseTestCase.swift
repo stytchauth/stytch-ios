@@ -27,6 +27,8 @@ class BaseTestCase: XCTestCase {
             resultExists: { [unowned self] item in self.keychainItems[item.name] != nil }
         )
 
+        Current.sessionsPollingClient = .failing
+
         Current.sessionStorage.reset()
 
         StytchClient.configure(
@@ -79,4 +81,20 @@ extension Session {
             userId: userId
         )
     }
+}
+
+extension PollingClient {
+    static var failing: PollingClient = .init(
+        interval: 0,
+        maxRetries: 0,
+        queue: .main
+    ) { _, _, _ in XCTFail("Shouldn't execute") } task: { _, _ in
+        XCTFail("Shouldn't execute")
+    }
+
+    static var noOp: PollingClient = .init(
+        interval: 0,
+        maxRetries: 0,
+        queue: .main
+    ) { _, _, _ in } task: { _, _ in XCTFail("Shouldn't execute") }
 }
