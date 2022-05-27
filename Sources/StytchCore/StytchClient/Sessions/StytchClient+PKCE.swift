@@ -23,12 +23,6 @@ extension StytchClient {
     }
 }
 
-private extension Sequence where Element: CVarArg {
-    func toHexString() -> String {
-        reduce(into: "", { $0 += String(format: "%02x", $1) })
-    }
-}
-
 private extension Data {
     func base64UrlEncoded() -> String {
         base64EncodedString()
