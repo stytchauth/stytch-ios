@@ -81,6 +81,7 @@ final class SessionStorage {
         Session.Token.Kind.allCases
             .map(\.name)
             .forEach(Current.cookieClient.deleteCookie(named:))
+        Current.sessionsPollingClient.stopPolling()
     }
 
     @objc
