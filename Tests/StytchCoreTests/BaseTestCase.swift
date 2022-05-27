@@ -39,7 +39,9 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionStorage.reset()
 
-        Current.uuid = { UUID.mock }
+        Current.dataWithRandomBytesOfCount = { _ in
+            .init(bytes: [UInt8].mockBytes, count: [UInt8].mockBytes.count)
+        }
 
         StytchClient.configure(
             publicToken: "xyz",
@@ -73,9 +75,12 @@ extension Sequence {
     }
 }
 
-extension UUID {
-    // swiftlint:disable:next force_unwrapping
-    static let mock: UUID = .init(uuidString: "123e4567-e89b-12d3-a456-426614174000")!
+extension String {
+    static let mockPKCECodeVerifier: String = "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"
+}
+
+extension Array where Element == UInt8 {
+    static let mockBytes: Self = [224, 104, 60, 156, 2, 191, 85, 74, 185, 199, 49, 161, 118, 123, 201, 64, 215, 19, 33, 164, 15, 219, 234, 198, 40, 36, 231, 182, 73, 90, 135, 65]
 }
 
 extension AuthenticateResponse {
