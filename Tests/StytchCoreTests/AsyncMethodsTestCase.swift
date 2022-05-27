@@ -28,7 +28,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
         XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"code_challenge_method\":\"sha256\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"code_challenge\":\"e99d8c848fabcf30dfd5698baf5d3b4954e513c14b973e47d6f0981b7e9ab235\",\"signup_expiration_minutes\":30,\"email\":\"asdf@stytch.com\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30}".utf8))
+        XCTAssertEqual(request?.httpBody, Data("{\"code_challenge_method\":\"S256\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"code_challenge\":\"ZTk5ZDhjODQ4ZmFiY2YzMGRmZDU2OThiYWY1ZDNiNDk1NGU1MTNjMTRiOTczZTQ3ZDZmMDk4MWI3ZTlhYjIzNQ==\",\"signup_expiration_minutes\":30,\"email\":\"asdf@stytch.com\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30}".utf8))
     }
 
     func testMagicLinksAuthenticate() async throws {
