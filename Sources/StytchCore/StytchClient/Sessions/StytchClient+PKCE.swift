@@ -9,7 +9,7 @@ extension StytchClient {
 
         try Current.keychainClient.set(codeVerifier, for: .stytchPKCECodeVerifier)
 
-        return (Current.cryptoClient.sha256(codeVerifier), "sha256")
+        return (Current.cryptoClient.sha256(codeVerifier).base64Encoded(), "S256")
     }
 
     /// Wraps an `authenticate` ``Completion`` and removes the PKCE code verifier from persistent storage upon success.

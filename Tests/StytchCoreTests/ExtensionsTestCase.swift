@@ -3,7 +3,7 @@ import XCTest
 
 final class ExtensionsTestCase: BaseTestCase {
     func testStringExtensions() {
-        XCTAssertEqual("blah-blah-bloop".base64Encoded, "YmxhaC1ibGFoLWJsb29w")
+        XCTAssertEqual("blah-blah-bloop".base64Encoded(), "YmxhaC1ibGFoLWJsb29w")
         XCTAssertEqual("blah-blah-bloop".dropLast { $0 != "-" }, "blah-blah-")
     }
 
