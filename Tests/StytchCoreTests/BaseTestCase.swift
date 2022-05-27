@@ -29,6 +29,14 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionsPollingClient = .failing
 
+        Current.timer = { _, _, task in
+            XCTFail("Unexpected timer initialization")
+            return .init()
+        }
+        Current.asyncAfter = { _, _, _ in
+            XCTFail("Unexpected asyncAfter run")
+        }
+
         Current.sessionStorage.reset()
 
         StytchClient.configure(
@@ -87,21 +95,8 @@ extension PollingClient {
     static var failing: PollingClient = .init(
         interval: 0,
         maxRetries: 0,
-        queue: .main,
-        createTimer: { _, _, _ in
-            XCTFail("Shouldn't execute")
-        }, task: { _, _ in
-            XCTFail("Shouldn't execute")
-        }
-    )
-
-    static var noOp: PollingClient = .init(
-        interval: 0,
-        maxRetries: 0,
-        queue: .main,
-        createTimer: { _, _, _ in
-        }, task: { _, _ in
-            XCTFail("Shouldn't execute")
-        }
-    )
+        queue: .main
+    ) { _, _ in
+        XCTFail("Shouldn't execute")
+    }
 }

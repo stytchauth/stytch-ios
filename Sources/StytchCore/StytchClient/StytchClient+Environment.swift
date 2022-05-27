@@ -54,5 +54,13 @@ extension StytchClient {
         var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
+
+        var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
+
+        var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
+            let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
+            runloop.add(timer, forMode: .common)
+            return timer
+        }
     }
 }

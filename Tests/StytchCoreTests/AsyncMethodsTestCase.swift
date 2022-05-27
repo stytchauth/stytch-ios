@@ -38,7 +38,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
-        Current.sessionsPollingClient = .noOp
+        Current.timer = { _, _, _ in .init() }
 
         let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -70,7 +70,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
             return
         }
 
-        Current.sessionsPollingClient = .noOp
+        Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
             .mock(userId: "i_am_user"),
@@ -113,7 +113,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
             return
         }
 
-        Current.sessionsPollingClient = .noOp
+        Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
             .mock(userId: "i_am_user"),
@@ -205,7 +205,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
-        Current.sessionsPollingClient = .noOp
+        Current.timer = { _, _, _ in .init() }
 
         let response = try await StytchClient.otps.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -241,7 +241,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         let handledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345&stytch_token_type=magic_links"))
 
-        Current.sessionsPollingClient = .noOp
+        Current.timer = { _, _, _ in .init() }
 
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
         case let .handled(response):

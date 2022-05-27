@@ -4,7 +4,6 @@ final class PollingClient {
     private let interval: TimeInterval
     private let maxRetries: UInt
     private let queue: DispatchQueue
-    private let createTimer: (PollingClient, TimeInterval, @escaping () -> Void) -> Void
     private let task: Task
     private var retryClient: RetryClient?
     private var timer: Timer?
@@ -13,17 +12,11 @@ final class PollingClient {
         interval: TimeInterval,
         maxRetries: UInt,
         queue: DispatchQueue,
-        createTimer: @escaping (PollingClient, TimeInterval, @escaping () -> Void) -> Void = { client, interval, task in
-            let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
-            client.timer = timer
-            RunLoop.main.add(timer, forMode: .common)
-        },
         task: @escaping Task
     ) {
         self.interval = interval
         self.maxRetries = maxRetries
         self.queue = queue
-        self.createTimer = createTimer
         self.task = task
     }
 
@@ -32,7 +25,7 @@ final class PollingClient {
         retryClient?.cancel()
         retryClient = nil
 
-        createTimer(self, interval) { [weak self] in
+        timer = Current.timer(interval, .main) { [weak self] in
             guard let self = self else { return }
             self.retryClient?.cancel()
             self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
@@ -58,18 +51,15 @@ private extension PollingClient {
         private let maxRetries: UInt
         private let queue: DispatchQueue
         private var isCancelled: Bool = false
-        private let asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void
         private let task: Task
 
         init(
             maxRetries: UInt,
             queue: DispatchQueue,
-            asyncAfter: @escaping (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) },
             task: @escaping Task
         ) {
             self.maxRetries = maxRetries
             self.queue = queue
-            self.asyncAfter = asyncAfter
             self.task = task
         }
 
@@ -96,7 +86,7 @@ private extension PollingClient {
             if currentRetryValue == 0 {
                 wrappedTask()
             } else {
-                asyncAfter(queue, delayForRetry(currentRetryValue), wrappedTask)
+                Current.asyncAfter(queue, delayForRetry(currentRetryValue), wrappedTask)
             }
         }
 
