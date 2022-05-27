@@ -57,7 +57,15 @@ extension StytchClient {
 
         var date: () -> Date = Date.init
 
-        var uuid: () -> UUID = UUID.init
+        var dataWithRandomBytesOfCount: (UInt) throws -> Data = { byteCount in
+            var buffer = [UInt8](repeating: 0, count: Int(byteCount))
+
+            guard SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer) == errSecSuccess else {
+                throw StytchGenericError(message: "Random number generation failed")
+            }
+
+            return .init(buffer)
+        }
 
         var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
 

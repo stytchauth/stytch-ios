@@ -5,7 +5,7 @@ import Foundation
 extension StytchClient {
     /// Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
     static func generateAndStorePKCE() throws -> (challenge: String, method: String) {
-        let codeVerifier = Current.uuid().uuidString
+        let codeVerifier = try Current.dataWithRandomBytesOfCount(32).toHexString()
 
         try Current.keychainClient.set(codeVerifier, for: .stytchPKCECodeVerifier)
 
@@ -20,5 +20,11 @@ extension StytchClient {
             }
             completion(result)
         }
+    }
+}
+
+private extension Sequence where Element: CVarArg {
+    func toHexString() -> String {
+        reduce(into: "", { $0 += String(format: "%02x", $1) })
     }
 }
