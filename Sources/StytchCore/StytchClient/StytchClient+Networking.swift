@@ -46,7 +46,6 @@ extension StytchClient {
                                 ],
                                 hostUrl: configuration.hostUrl
                             )
-                            Current.sessionsPollingClient.beginPolling()
                         }
                         return .success(dataContainer.data)
                     } catch let error as StytchStructuredError where error.errorType == .unauthorizedCredentials {

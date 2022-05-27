@@ -27,7 +27,7 @@ final class PollingClient {
         self.task = task
     }
 
-    func beginPolling() {
+    func start() {
         timer?.invalidate()
         retrier?.cancel()
         retrier = nil
@@ -40,7 +40,7 @@ final class PollingClient {
         }
     }
 
-    func stopPolling() {
+    func stop() {
         timer?.invalidate()
         timer = nil
         retrier?.cancel()
