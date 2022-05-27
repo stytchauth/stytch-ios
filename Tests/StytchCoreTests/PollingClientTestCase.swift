@@ -9,7 +9,7 @@ final class PollingClientTestCase: BaseTestCase {
             timer = newTimer
             return newTimer
         }
-        var fireCount: Int = 0
+        var fireCount = 0
         var error: Error?
         let pollingClient: PollingClient = .init(
             interval: 5,

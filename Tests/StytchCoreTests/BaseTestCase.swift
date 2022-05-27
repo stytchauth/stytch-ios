@@ -29,7 +29,7 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionsPollingClient = .failing
 
-        Current.timer = { _, _, task in
+        Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
             return .init()
         }
