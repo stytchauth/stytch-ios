@@ -39,10 +39,31 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionStorage.reset()
 
+        Current.dataWithRandomBytesOfCount = { _ in
+            .init(bytes: [UInt8].mockBytes, count: [UInt8].mockBytes.count)
+        }
+
         StytchClient.configure(
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
+    }
+}
+
+extension XCTest {
+    func XCTAssertThrowsError<T: Sendable>(
+        _ expression: @autoclosure () async throws -> T,
+        _ message: @autoclosure () -> String = "",
+        file: StaticString = #filePath,
+        line: UInt = #line,
+        _ errorHandler: (_ error: Error) -> Void = { _ in }
+    ) async {
+        do {
+            _ = try await expression()
+            XCTFail(message(), file: file, line: line)
+        } catch {
+            errorHandler(error)
+        }
     }
 }
 
@@ -52,6 +73,14 @@ extension Sequence {
             try await operation(element)
         }
     }
+}
+
+extension String {
+    static let mockPKCECodeVerifier: String = "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"
+}
+
+extension Array where Element == UInt8 {
+    static let mockBytes: Self = [224, 104, 60, 156, 2, 191, 85, 74, 185, 199, 49, 161, 118, 123, 201, 64, 215, 19, 33, 164, 15, 219, 234, 198, 40, 36, 231, 182, 73, 90, 135, 65]
 }
 
 extension AuthenticateResponse {

@@ -45,6 +45,8 @@ extension StytchClient {
 
         var networkingClient: NetworkingClient = .live
 
+        let cryptoClient: CryptoClient = .init()
+
         var sessionsPollingClient: PollingClient = .sessions
 
         let sessionStorage: SessionStorage = .init()
@@ -54,6 +56,16 @@ extension StytchClient {
         var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
+
+        var dataWithRandomBytesOfCount: (UInt) throws -> Data = { byteCount in
+            var buffer = [UInt8](repeating: 0, count: Int(byteCount))
+
+            guard SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer) == errSecSuccess else {
+                throw StytchGenericError(message: "Random number generation failed")
+            }
+
+            return .init(buffer)
+        }
 
         var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
 

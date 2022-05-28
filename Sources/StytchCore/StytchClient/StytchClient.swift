@@ -78,7 +78,7 @@ public struct StytchClient {
             guard let configuration = Self.instance.configuration else { return [:] }
 
             let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
-            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
+            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
 
             return [
                 "Content-Type": "application/json",
