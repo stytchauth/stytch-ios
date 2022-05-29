@@ -7,7 +7,7 @@ public struct StytchError: Error {
     /// The id of the request. Nil if error originated from the client.
     public let requestId: String?
     /// The type of the error.
-    public let errorType: ErrorType
+    public let errorType: String
     /// The message associated with the error.
     public var message: String { errorMessage }
     private let errorMessage: String
@@ -18,7 +18,7 @@ public struct StytchError: Error {
     init(
         statusCode: Int? = nil,
         requestId: String? = nil,
-        errorType: StytchError.ErrorType,
+        errorType: String,
         errorMessage: String,
         errorUrl: URL? = nil
     ) {
@@ -32,61 +32,26 @@ public struct StytchError: Error {
 
 extension StytchError: Decodable {}
 
-public extension StytchError {
-    /// The type of the error.
-    enum ErrorType: Decodable, Equatable {
-        // Server-defined
-        case endpointNotAuthorizedForSdk
-        case unableToAuthMagicLink
-        case unableToAuthOtpCode
-        case unauthorizedCredentials
-        case undefined(rawValue: String)
-
-        // Client-only
-        case clientNotConfigured
-        case pckeNotAvailable
-        case randomNumberGenerationFailed
-        case unrecognizedDeeplinkTokenType
-
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let rawValue = try container.decode(String.self)
-            self = Self.errorType(for: rawValue)
-        }
-
-        private static func errorType(for value: String) -> Self {
-            switch value {
-            case "endpoint_not_authorized_for_sdk":
-                return .endpointNotAuthorizedForSdk
-            case "unable_to_auth_magic_link":
-                return .unableToAuthMagicLink
-            case "unable_to_auth_otp_code":
-                return .unableToAuthOtpCode
-            case "unauthorized_credentials":
-                return .unauthorizedCredentials
-            default:
-                return .undefined(rawValue: value)
-            }
-        }
-    }
+extension StytchError: Equatable {
+    static let typeUnauthorizedCredentials: String = "unauthorized_credentials"
 }
 
 extension StytchError {
     static let clientNotConfigured: Self = .init(
-        errorType: .clientNotConfigured,
+        errorType: "client_not_configured",
         errorMessage: "StytchClient not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `StytchClient.configure(hostUrl:publicToken:)` prior to other StytchClient calls.",
         errorUrl: .readmeUrl(withFragment: "configuration")
     )
     static let pckeNotAvailable: Self = .init(
-        errorType: .pckeNotAvailable,
+        errorType: "pcke_not_available",
         errorMessage: "No PKCE code_verifier available. Redirect authentication must begin/end on this device."
     )
     static let randomNumberGenerationFailed: Self = .init(
-        errorType: .randomNumberGenerationFailed,
+        errorType: "random_number_generation_failed",
         errorMessage: "System unable to generate a random data. Typically used for PKCE."
     )
     static let unrecognizedDeeplinkTokenType: Self = .init(
-        errorType: .unrecognizedDeeplinkTokenType,
+        errorType: "unrecognized_deeplink_token_type",
         errorMessage: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links` or `oauth`"
     )
 }
