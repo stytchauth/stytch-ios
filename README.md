@@ -5,7 +5,7 @@
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
 ![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
-![CocoaPods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)
+![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stytch.svg)
 
 * [Getting Started](#getting-started)
   * [What is Stytch?](#what-is-stytch)
@@ -99,7 +99,7 @@ binary "https://stytch-swift.github.io/StytchCore.json"
 [CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
 
 ```
-pod 'StytchCore'
+pod 'StytchSwift/StytchCore'
 ```
 
 ## Usage
