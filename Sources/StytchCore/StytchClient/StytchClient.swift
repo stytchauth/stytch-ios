@@ -66,7 +66,7 @@ public struct StytchClient {
             // This will be supported in the near future
             completion(.success(.notHandled))
         default:
-            completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
+            completion(.failure(StytchError.unrecognizedDeeplinkTokenType))
         }
     }
 

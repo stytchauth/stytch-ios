@@ -55,8 +55,7 @@ YourContentView().onOpenUrl { url in
 - ``AuthenticateResponseData``
 
 ### Error Types
-- ``StytchStructuredError``
-- ``StytchGenericError``
+- ``StytchError``
 
 ### Additional Types
 
