@@ -99,7 +99,7 @@ binary "https://stytch-swift.github.io/StytchCore.json"
 [CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
 
 ```
-pod 'StytchCore'
+pod 'StytchSwift/StytchCore'
 ```
 
 ## Usage
