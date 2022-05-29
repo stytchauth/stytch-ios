@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type representing an error within the Stytch ecosystem.
-public struct StytchError: Error {
+public struct StytchError: Error, Decodable {
     /// The HTTP status code associated with the error. Nil if error originated from the client.
     public let statusCode: Int?
     /// The id of the request. Nil if error originated from the client.
@@ -28,12 +28,6 @@ public struct StytchError: Error {
         self.errorMessage = errorMessage
         self.errorUrl = errorUrl
     }
-}
-
-extension StytchError: Decodable {}
-
-extension StytchError: Equatable {
-    static let typeUnauthorizedCredentials: String = "unauthorized_credentials"
 }
 
 extension StytchError {

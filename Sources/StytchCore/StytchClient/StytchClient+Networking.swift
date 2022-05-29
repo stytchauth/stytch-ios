@@ -48,7 +48,7 @@ extension StytchClient {
                             )
                         }
                         return .success(dataContainer.data)
-                    } catch let error as StytchError where error.errorType == StytchError.typeUnauthorizedCredentials {
+                    } catch let error as StytchError where error.statusCode == 401 {
                         Current.sessionStorage.reset()
                         return .failure(error)
                     } catch {
@@ -77,18 +77,9 @@ private extension HTTPURLResponse {
                 message.append(" Debug info: \(debugInfo)")
             }
 
-            let errorType: String
-
-            switch statusCode {
-            case 401:
-                errorType = StytchError.typeUnauthorizedCredentials
-            default:
-                errorType = "unknown_error"
-            }
-
             error = StytchError(
                 statusCode: statusCode,
-                errorType: errorType,
+                errorType: "unknown_error",
                 errorMessage: message
             )
         }
