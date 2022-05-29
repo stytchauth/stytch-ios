@@ -70,8 +70,8 @@ private extension HTTPURLResponse {
             error = try Current.jsonDecoder.decode(StytchError.self, from: data)
         } catch _ {
             var message = (500..<600).contains(statusCode) ?
-            "Server networking error." :
-            "Client networking error."
+                "Server networking error." :
+                "Client networking error."
 
             String(data: data, encoding: .utf8).map { debugInfo in
                 message.append(" Debug info: \(debugInfo)")

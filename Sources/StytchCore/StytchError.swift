@@ -1,6 +1,6 @@
 import Foundation
 
-/// A structured error type, typically originating from Stytch's servers.
+/// A type representing an error within the Stytch ecosystem.
 public struct StytchError: Error {
     /// The HTTP status code associated with the error. Nil if error originated from the client.
     public let statusCode: Int?
