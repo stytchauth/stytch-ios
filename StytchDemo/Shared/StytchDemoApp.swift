@@ -66,10 +66,7 @@ struct StytchDemoApp: App {
 
     private func handle(error: Error) {
         switch error {
-        case let error as StytchStructuredError:
-            errorMessage = error.message
-            errorAlertPresented = true
-        case let error as StytchGenericError:
+        case let error as StytchError:
             errorMessage = error.message
             errorAlertPresented = true
         default:

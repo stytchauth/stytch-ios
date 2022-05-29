@@ -61,7 +61,7 @@ extension StytchClient {
             var buffer = [UInt8](repeating: 0, count: Int(byteCount))
 
             guard SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer) == errSecSuccess else {
-                throw StytchGenericError(message: "Random number generation failed")
+                throw StytchError.randomNumberGenerationFailed
             }
 
             return .init(buffer)

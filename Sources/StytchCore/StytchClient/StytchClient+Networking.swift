@@ -27,7 +27,7 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         guard let configuration = instance.configuration else {
-            completion(.failure(StytchGenericError.clientNotConfigured))
+            completion(.failure(StytchError.clientNotConfigured))
             return
         }
 
@@ -48,10 +48,7 @@ extension StytchClient {
                             )
                         }
                         return .success(dataContainer.data)
-                    } catch let error as StytchStructuredError where error.errorType == .unauthorizedCredentials {
-                        Current.sessionStorage.reset()
-                        return .failure(error)
-                    } catch let error as StytchGenericError where error.statusCode == 401 {
+                    } catch let error as StytchError where error.statusCode == 401 {
                         Current.sessionStorage.reset()
                         return .failure(error)
                     } catch {
@@ -65,34 +62,29 @@ extension StytchClient {
 
 private extension HTTPURLResponse {
     func verifyStatus(data: Data) throws {
-        switch statusCode {
-        case 400..<500:
-            let error: Error
-            do {
-                error = try Current.jsonDecoder.decode(StytchStructuredError.self, from: data)
-            } catch _ {
-                error = StytchGenericError(
-                    message: "Client networking error",
-                    origin: .network(statusCode: statusCode),
-                    debugInfo: String(data: data, encoding: .utf8)
-                )
+        guard (400..<600).contains(statusCode) else { return }
+
+        let error: Error
+
+        do {
+            error = try Current.jsonDecoder.decode(StytchError.self, from: data)
+        } catch _ {
+            var message = (500..<600).contains(statusCode) ?
+                "Server networking error." :
+                "Client networking error."
+
+            String(data: data, encoding: .utf8).map { debugInfo in
+                message.append(" Debug info: \(debugInfo)")
             }
-            throw error
-        case 500..<600:
-            let error: Error
-            do {
-                error = try Current.jsonDecoder.decode(StytchStructuredError.self, from: data)
-            } catch _ {
-                error = StytchGenericError(
-                    message: "Server networking error",
-                    origin: .network(statusCode: statusCode),
-                    debugInfo: String(data: data, encoding: .utf8)
-                )
-            }
-            throw error
-        default:
-            break
+
+            error = StytchError(
+                statusCode: statusCode,
+                errorType: "unknown_error",
+                errorMessage: message
+            )
         }
+
+        throw error
     }
 }
 
