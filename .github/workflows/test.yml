@@ -26,6 +26,7 @@ jobs:
     - name: Codegen
       run: |
         make codegen
+        git status --porcelain
         if [[ ! -z $(git status --porcelain) ]]; then
           echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
           exit 1
