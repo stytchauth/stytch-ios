@@ -24,7 +24,12 @@ jobs:
         make tools
 
     - name: Codegen
-      run: make codegen
+      run: |
+        make codegen
+        if [[ ! -z $(git status --porcelain) ]]; then
+          echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
+          exit 1
+        fi
 
     - name: Lint
       run: make lint
