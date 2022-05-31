@@ -206,6 +206,10 @@ Full reference documentation is available [here](https://fluffy-bassoon-7f56d670
 1. Are there guides or sample apps available to see this in use?
     1. Yes! There is a SwiftUI macOS/iOS Demo App included in this repo, available [here](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo).
 
+### Questions?
+
+Feel free to reach out any time at support@stytch.com or in our [Slack](https://join.slack.com/t/stytch/shared_invite/zt-nil4wo92-jApJ9Cl32cJbEd9esKkvyg)
+
 ## License
 
 The Stytch Swift SDK is released under the MIT license. See [LICENSE](LICENSE) for details.
