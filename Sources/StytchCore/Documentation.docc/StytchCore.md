@@ -48,7 +48,6 @@ YourContentView().onOpenUrl { url in
 
 ### Response Types
 
-- ``SessionResponseType``
 - ``AuthenticateResponse``
 - ``BasicResponse``
 - ``Response``
