@@ -195,7 +195,7 @@ final class SMSAuthenticationController {
 
 ## Documentation
 
-Full reference documentation is available [here](https://fluffy-bassoon-7f56d670.pages.github.io/documentation/stytchcore/).
+Full reference documentation is available [here](https://stytchauth.github.io/stytch-swift/documentation/stytchcore/).
 
 ## FAQ
 
