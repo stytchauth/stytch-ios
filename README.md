@@ -99,8 +99,10 @@ binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/St
 [CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
 
 ```
-pod 'StytchSwift/StytchCore'
+pod 'Stytch/StytchCore'
 ```
+
+Unlike with the other dependency managers, when using CocoaPods you'll import `Stytch` vs `StytchCore`.
 
 ## Usage
 

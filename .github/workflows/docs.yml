@@ -35,7 +35,7 @@ jobs:
 
     - name: Generate docs
       working-directory: main
-      run: make docs
+      run: make docs-site
 
     - name: Publish docs
       working-directory: main

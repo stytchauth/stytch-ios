@@ -30,7 +30,10 @@ jobs:
         mv StytchCore.zip StytchCore.xcframework.zip
 
     - name: Build docs
-      run: make docs
+      run: |
+        make docs
+        cd .build/Build/Products/Release-iphoneos
+        zip -r StytchCore.doccarchive.zip StytchCore.doccarchive
 
     - name: Release
       uses: softprops/action-gh-release@v1
@@ -39,4 +42,4 @@ jobs:
         draft: true # TODO: - change this so it's not draft
         files: |
           StytchCore.xcframework.zip
-          .build/Build/Products/Release-iphoneos/StytchCore.doccarchive
+          .build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip
