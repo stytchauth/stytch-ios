@@ -18,7 +18,7 @@ struct ContentView: View {
             }
         } else {
             // Perhaps present one or the other here depending on a button press
-            LoginView(hostUrl: hostUrl)
+            LoginView()
 //            OTPAuthenticationView(hostUrl: hostUrl, onAuth: onAuth)
         }
     }

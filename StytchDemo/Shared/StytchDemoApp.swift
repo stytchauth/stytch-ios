@@ -46,7 +46,7 @@ struct StytchDemoApp: App {
         // Prevent user from being able to create a new window
         .commands { CommandGroup(replacing: .newItem, addition: {}) }
         // Prevent deeplink from opening new window
-        .handlesExternalEvents(matching: Set(arrayLiteral: "*"))
+        .handlesExternalEvents(matching: ["*"])
     }
 
     private func handle(url: URL) {

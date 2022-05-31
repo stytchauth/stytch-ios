@@ -2,8 +2,6 @@ import StytchCore
 import SwiftUI
 
 struct LoginView: View {
-    let hostUrl: URL
-
     @State private var email: String = ""
     @State private var isLoading = false
     @State private var checkEmailPresented = false

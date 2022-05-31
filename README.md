@@ -92,7 +92,7 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
 ```
-binary "https://stytch-swift.github.io/StytchCore.json"
+binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json"
 ```
 
 ### CocoaPods
