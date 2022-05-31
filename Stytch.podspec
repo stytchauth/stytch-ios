@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.5'
 
-  s.documentation_url = "https://stytch-swift.github.io/documentation/stytchcore"
+  s.documentation_url = "https://stytchauth.github.io/stytch-swift/documentation/stytchcore/"
 
   s.default_subspec = 'StytchCore'
 
