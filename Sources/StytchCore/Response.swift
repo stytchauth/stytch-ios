@@ -75,6 +75,9 @@ public protocol SessionResponseType {
      The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
      */
     var session: Session { get }
+
+    /// The object containing information about the current user.
+    var user: User? { get }
 }
 
 extension Response: SessionResponseType where Wrapped: SessionResponseType {
@@ -90,5 +93,9 @@ extension Response: SessionResponseType where Wrapped: SessionResponseType {
 
     public var session: Session {
         self[dynamicMember: \.session]
+    }
+
+    public var user: User? {
+        self[dynamicMember: \.user]
     }
 }
