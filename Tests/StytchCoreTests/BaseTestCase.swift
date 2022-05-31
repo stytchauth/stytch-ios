@@ -85,14 +85,26 @@ extension Array where Element == UInt8 {
 
 extension AuthenticateResponse {
     static var mock: Self {
-        .init(
+        let userId = "im_a_user_id"
+        return .init(
             requestId: "1234",
             statusCode: 200,
             wrapped: .init(
-                user: nil,
+                user: .init(
+                    createdAt: Current.date(),
+                    cryptoWallets: [],
+                    emails: [],
+                    userId: userId,
+                    name: .init(firstName: "first", lastName: "last", middleName: nil),
+                    phoneNumbers: [],
+                    providers: [],
+                    status: .active,
+                    totps: [],
+                    webauthnRegistrations: []
+                ),
                 sessionToken: "hello_session",
                 sessionJwt: "jwt_for_me",
-                session: .mock(userId: "im_a_user_id")
+                session: .mock(userId: userId)
             )
         )
     }
