@@ -102,6 +102,8 @@ binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/St
 pod 'Stytch/StytchCore'
 ```
 
+Unlike with the other dependency managers, when using CocoaPods you'll import `Stytch` vs `StytchCore`.
+
 ## Usage
 
 ### Configuration
