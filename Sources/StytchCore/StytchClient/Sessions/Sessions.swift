@@ -93,24 +93,26 @@ public extension StytchClient.Sessions {
             self.sessionDuration = sessionDuration
         }
     }
+}
 
-    internal struct TokenizedParameters<Parameters: Encodable>: Encodable {
-        private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
+struct TokenizedParameters<Parameters: Encodable>: Encodable {
+    private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
 
-        let parameters: Parameters
-        let token: Session.Token
+    let parameters: Parameters
+    let token: Session.Token?
 
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
-            try parameters.encode(to: encoder)
+        try parameters.encode(to: encoder)
 
-            switch token.kind {
-            case .opaque:
-                try container.encode(token.value, forKey: .sessionToken)
-            case .jwt:
-                try container.encode(token.value, forKey: .sessionJwt)
-            }
+        switch token?.kind {
+        case .opaque:
+            try container.encodeIfPresent(token?.value, forKey: .sessionToken)
+        case .jwt:
+            try container.encodeIfPresent(token?.value, forKey: .sessionJwt)
+        case nil:
+            break
         }
     }
 }
