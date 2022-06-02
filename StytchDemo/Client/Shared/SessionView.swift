@@ -7,6 +7,9 @@ struct SessionView: View {
 
     var body: some View {
         Text("Hi, \(sessionUser.user.name.firstName.presence ?? "pal")!")
+            .font(.title)
+            .padding()
+
         VStack(alignment: .leading) {
             Text("User ID: " + session.userId)
             Text("Factors:").bold()
