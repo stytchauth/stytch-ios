@@ -1,5 +1,24 @@
 #! /usr/bin/env ruby
 
+class String
+  # colorization
+  def colorize(color_code)
+    "\e[#{color_code}m#{self}\e[0m"
+  end
+
+  def red
+    colorize(31)
+  end
+
+  def green
+    colorize(32)
+  end
+
+  def yellow
+    colorize(33)
+  end
+end
+
 class Runner
   def run(port:)
     puts 'Starting server'
@@ -16,14 +35,16 @@ class Runner
 
     update_client_config(tunnel_url: @tunnel_url)
 
-    puts "\nNOTE: You must go to https://stytch.com/dashboard/redirect-urls and add #{@tunnel_url} as the Redirect URL in the dashboard for your application before running \n\n"
+    system("echo #{@tunnel_url} | pbcopy")
+
+    puts "\nNOTE: You must go to https://stytch.com/dashboard/redirect-urls and add `#{@tunnel_url}` as the Redirect URL in the dashboard for your application before running. It has been copied to your clipboard.\n\n".yellow
 
     start_server(port: port)
   end
 
   def cleanup
     puts 'Cleaning up server'
-    system('pgrep ngrok')
+    system('pkill ngrok')
   end
 
   private
@@ -48,7 +69,7 @@ class Runner
   end
 
   def update_applinks_entitlement(tunnel_url:,client:)
-    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url.sub('https://', '')}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
   end
 
   def start_server(port:)
