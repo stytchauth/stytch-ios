@@ -76,4 +76,6 @@ when 'start'
   end
 when 'cleanup'
   Runner.new.cleanup
+when 'bootstrap'
+  system('brew install ngrok')
 end
