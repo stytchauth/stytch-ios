@@ -24,6 +24,7 @@ class Runner
     puts 'Starting server'
 
     #TODO: check if public token in config is placeholder, else prompt for new token and update client config
+    update_public_token_if_needed
 
     start_ngrok(port: port)
 
@@ -76,6 +77,15 @@ class Runner
     system("DEMO_SERVER_SCRIPT=1 xcrun xcodebuild -quiet -project StytchDemo/StytchDemo.xcodeproj -scheme 'StytchDemo (Server)' -derivedDataPath #{File.join(project_root, '.build')} -configuration release build")
     # TODO: - pass through port to server
     system("APP_ID=#{app_id} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')}")
+  end
+
+  def update_public_token_if_needed
+    public_token = %x(/usr/libexec/PlistBuddy -c 'print :StytchPublicToken' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}).strip
+    if public_token == "public-token-example"
+      puts 'You need to update your public token. Paste a token from https://stytch.com/dashboard/api-keys here:'.yellow
+      public_token = STDIN.gets.chomp
+      system("/usr/libexec/PlistBuddy -c 'set :StytchPublicToken #{public_token}' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}")
+    end
   end
 
   def project_root
