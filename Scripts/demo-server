@@ -23,7 +23,9 @@ class Runner
   def run(port:)
     puts 'Starting server'
 
-    #TODO: check if public token in config is placeholder, else prompt for new token and update client config
+    system("echo #{ngrok_wildcard_url} | pbcopy")
+    puts "\nNOTE: You must visit https://stytch.com/dashboard/redirect-urls and add `#{ngrok_wildcard_url}` as a signup/login Redirect URL before using magic links or OAuth. It's already been added to your clipboard.\n".yellow
+
     update_public_token_if_needed
 
     start_ngrok(port: port)
@@ -35,10 +37,6 @@ class Runner
     end
 
     update_client_config(tunnel_url: @tunnel_url)
-
-    system("echo #{@tunnel_url} | pbcopy")
-
-    puts "\nNOTE: You must go to https://stytch.com/dashboard/redirect-urls and add `#{@tunnel_url}` as the Redirect URL in the dashboard for your application before running. It has been copied to your clipboard.\n\n".yellow
 
     start_server(port: port)
   end
@@ -94,6 +92,10 @@ class Runner
 
   def demo_project_file
     File.join(project_root, 'StytchDemo/StytchDemo.xcodeproj')
+  end
+
+  def ngrok_wildcard_url
+    'https://*.ngrok.io'
   end
 end
 

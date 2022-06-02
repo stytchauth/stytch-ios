@@ -2,6 +2,8 @@ import StytchCore
 import SwiftUI
 
 struct EmailAuthenticationView: View {
+    private var serverUrl: URL { configuration.serverUrl }
+
     @State private var email: String = ""
     @State private var isLoading = false
     @State private var checkEmailPresented = false
@@ -48,7 +50,9 @@ struct EmailAuthenticationView: View {
         isLoading = true
         Task {
             do {
-                _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: email))
+                _ = try await StytchClient.magicLinks.email.loginOrCreate(
+                    parameters: .init(email: email, loginMagicLinkUrl: serverUrl, signupMagicLinkUrl: serverUrl)
+                )
                 checkEmailPresented = true
             } catch {
                 print(error)
