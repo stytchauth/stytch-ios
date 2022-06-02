@@ -12,9 +12,7 @@ public extension StytchClient {
             }
             StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: StytchClient.tokenizedParameters(
-                    CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
-                ),
+                parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters),
                 completion: StytchClient.pckeAuthenticateCompletion(completion)
             )
         }
@@ -40,14 +38,5 @@ private extension StytchClient.MagicLinks {
 
             try container.encode(codeVerifier, forKey: .codeVerifier)
         }
-    }
-}
-
-extension StytchClient {
-    static func tokenizedParameters<T: Encodable>(_ parameters: T) -> some Encodable {
-        TokenizedParameters(
-            parameters: parameters,
-            token: sessions.sessionToken ?? sessions.sessionJwt
-        )
     }
 }

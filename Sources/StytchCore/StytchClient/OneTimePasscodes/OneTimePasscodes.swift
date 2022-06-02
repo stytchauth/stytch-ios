@@ -22,7 +22,7 @@ public extension StytchClient {
         public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
             StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: StytchClient.tokenizedParameters(parameters),
+                parameters: parameters,
                 completion: completion
             )
         }
