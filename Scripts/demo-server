@@ -1,0 +1,79 @@
+#! /usr/bin/env ruby
+
+class Runner
+  def run(port:)
+    puts 'Starting server'
+
+    #TODO: check if public token in config is placeholder, else prompt for new token and update client config
+
+    start_ngrok(port: port)
+
+    @tunnel_url = fetch_tunnel_url
+    while @tunnel_url&.empty? do
+      sleep(0.1)
+      @tunnel_url = fetch_tunnel_url
+    end
+
+    update_client_config(tunnel_url: @tunnel_url)
+
+    puts "\nNOTE: You must go to https://stytch.com/dashboard/redirect-urls and add #{@tunnel_url} as the Redirect URL in the dashboard for your application before running \n\n"
+
+    start_server(port: port)
+  end
+
+  def cleanup
+    puts 'Cleaning up server'
+    system('pgrep ngrok')
+  end
+
+  private
+
+  def start_ngrok(port:)
+    system("/usr/bin/env ngrok http #{port} > /dev/null &")
+  end
+
+  def fetch_tunnel_url
+    %x(/usr/bin/env curl http://127.0.0.1:4040/api/tunnels --silent | jq -r '.tunnels[].public_url').strip
+  end
+
+  def app_id
+    @app_id ||= %x(xcrun xcodebuild -quiet -showBuildSettings -project '#{demo_project_file}' -json -scheme 'StytchDemo (macOS)' | jq -r '.[0].buildSettings | "\\(.DEVELOPMENT_TEAM).\\(.PRODUCT_BUNDLE_IDENTIFIER)"').strip
+  end
+
+  def update_client_config(tunnel_url:)
+    system("/usr/libexec/PlistBuddy -c 'set :StytchHostURL #{tunnel_url}' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}")
+    [:iOS, :macOS].each do |client|
+      update_applinks_entitlement(tunnel_url: tunnel_url, client: client)
+    end
+  end
+
+  def update_applinks_entitlement(tunnel_url:,client:)
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
+  end
+
+  def start_server(port:)
+    system("DEMO_SERVER_SCRIPT=1 xcrun xcodebuild -quiet -project StytchDemo/StytchDemo.xcodeproj -scheme 'StytchDemo (Server)' -derivedDataPath #{File.join(project_root, '.build')} -configuration release build")
+    # TODO: - pass through port to server
+    system("APP_ID=#{app_id} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')}")
+  end
+
+  def project_root
+    File.expand_path('../../', __FILE__)
+  end
+
+  def demo_project_file
+    File.join(project_root, 'StytchDemo/StytchDemo.xcodeproj')
+  end
+end
+
+case ARGV[0]
+when 'start'
+  begin
+    # TODO: allow passing port through optparse
+    Runner.new.run(port: 8080)
+  rescue Interrupt
+    Runner.new.cleanup
+  end
+when 'cleanup'
+  Runner.new.cleanup
+end
