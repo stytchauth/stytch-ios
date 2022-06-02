@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>StytchPublicToken</key>
-	<string>public-token-test-9e306f84-4f6a-4c23-bbae-abd27bcb90ba</string>
 	<key>StytchHostURL</key>
-	<string>https://dan-stytch.github.io</string>
+	<string>https://example.com</string>
+	<key>StytchPublicToken</key>
+	<string>public-token-example</string>
 </dict>
 </plist>
