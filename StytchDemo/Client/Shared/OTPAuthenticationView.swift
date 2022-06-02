@@ -2,8 +2,8 @@ import StytchCore
 import SwiftUI
 
 struct OTPAuthenticationView: View {
-    let hostUrl: URL
-    let onAuth: (Session) -> Void
+    let session: Session?
+    let onAuth: (Session, User) -> Void
 
     @State private var deliveryMethod: DeliveryMethod = .sms
     @State private var deliveryMethodValue: String = ""
@@ -11,10 +11,18 @@ struct OTPAuthenticationView: View {
     @State private var methodId = ""
     @State private var otp = ""
 
-    enum DeliveryMethod: Hashable {
-        case email
+    enum DeliveryMethod: String, Hashable, CaseIterable {
         case sms
         case whatsapp
+        case email
+
+        var title: String {
+            switch self {
+            case .sms: return "SMS"
+            case .whatsapp: return "WhatsApp"
+            case .email: return "Email"
+            }
+        }
 
         var label: String {
             switch self {
@@ -57,12 +65,7 @@ struct OTPAuthenticationView: View {
             Picker(
                 selection: $deliveryMethod,
                 content: {
-                    Text("SMS")
-                        .tag(DeliveryMethod.sms)
-                    Text("Email")
-                        .tag(DeliveryMethod.email)
-                    Text("WhatsApp")
-                        .tag(DeliveryMethod.whatsapp)
+                    ForEach(DeliveryMethod.allCases, id: \.self) { Text($0.title).tag($0) }
                 },
                 label: { Text("Delivery Method") }
             )
@@ -106,11 +109,24 @@ struct OTPAuthenticationView: View {
                 }
             })
             .buttonStyle(.borderedProminent)
-            .disabled(isLoading || deliveryMethodValue.isEmpty)
+            .disabled(isLoading || deliveryMethodHasRecentAuth || deliveryMethodValue.isEmpty)
             .padding()
 
             Spacer()
         }
+    }
+
+    var deliveryMethodHasRecentAuth: Bool {
+        guard let session = session else {
+            return false
+        }
+
+        // If the delivery method has authenticated in the last 3 minutes, it has recent auth
+        return session.authenticationFactors
+            .filter { $0.kind == .otp && $0.matches(deliveryMethod) }
+            .contains {
+                $0.lastAuthenticatedAt > Date().addingTimeInterval(-180)
+            }
     }
 
     func login() {
@@ -134,12 +150,23 @@ struct OTPAuthenticationView: View {
         Task {
             let params: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDuration: 30)
             do {
-                let sessionResp = try await StytchClient.otps.authenticate(parameters: params)
-                onAuth(sessionResp.session)
+                let response = try await StytchClient.otps.authenticate(parameters: params)
+                onAuth(response.session, response.user)
             } catch {
                 print(error)
             }
             isLoading = false
+        }
+    }
+}
+
+private extension Session.AuthenticationFactor {
+    func matches(_ deliveryMethod: OTPAuthenticationView.DeliveryMethod) -> Bool {
+        switch self.deliveryMethod {
+        case .email: return deliveryMethod == .email
+        case .sms: return deliveryMethod == .sms
+        case .whatsapp: return deliveryMethod == .whatsapp
+        default: return false
         }
     }
 }

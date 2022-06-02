@@ -1,22 +1,26 @@
 import StytchCore
 import SwiftUI
 
+let configuration: StytchDemoApp.Configuration = {
+    guard let data = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist").flatMap({ try? Data(contentsOf: $0) })
+    else { fatalError("StytchConfiguration.plist should be included in the Demo App") }
+    return try! PropertyListDecoder().decode(StytchDemoApp.Configuration.self, from: data)
+}()
+
 @main
 struct StytchDemoApp: App {
-    private let hostUrl = URL(string: "https://dan-stytch.github.io")!
-
-    @State private var session: Session?
+    @State private var sessionUser: (Session, User)?
     @State private var errorAlertPresented = false
     @State private var errorMessage = ""
 
     var body: some Scene {
         WindowGroup {
-            ContentView(hostUrl: hostUrl, session: session) {
+            ContentView(serverUrl: configuration.serverUrl, sessionUser: sessionUser) {
                 Task {
                     _ = try await StytchClient.sessions.revoke()
-                    session = nil
+                    sessionUser = nil
                 }
-            } onAuth: { session = $0 }
+            } onAuth: { sessionUser = ($0, $1) }
                 .padding()
                 .frame(minHeight: 250)
                 .task {
@@ -24,7 +28,7 @@ struct StytchDemoApp: App {
                         let response = try await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: 30))
                         switch response {
                         case let .authenticated(response):
-                            session = response.session
+                            sessionUser = (response.session, response.user)
                         case .unauthenticated:
                             break
                         }
@@ -54,7 +58,7 @@ struct StytchDemoApp: App {
             do {
                 switch try await StytchClient.handle(url: url, sessionDuration: 5) {
                 case let .handled(response):
-                    self.session = response.session
+                    self.sessionUser = (response.session, response.user)
                 case .notHandled:
                     print("not handled")
                 }
@@ -71,6 +75,31 @@ struct StytchDemoApp: App {
             errorAlertPresented = true
         default:
             break
+        }
+    }
+}
+
+extension StytchDemoApp {
+    // For simplicity, we'll mimic StytchClient.Configuration, simply to reuse that value. We'd likely have a different source of truth in a real application.
+    struct Configuration: Decodable {
+
+        let serverUrl: URL
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            do {
+                serverUrl = try container.decode(URL.self, forKey: .serverUrl)
+            } catch {
+                let urlString = try container.decode(String.self, forKey: .serverUrl)
+                guard let url = URL(string: urlString) else {
+                    throw DecodingError.dataCorruptedError(forKey: .serverUrl, in: container, debugDescription: "Not a valid URL")
+                }
+                serverUrl = url
+            }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case serverUrl = "StytchHostURL"
         }
     }
 }

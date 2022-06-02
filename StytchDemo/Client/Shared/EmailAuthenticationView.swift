@@ -1,10 +1,12 @@
 import StytchCore
 import SwiftUI
 
-struct LoginView: View {
+struct EmailAuthenticationView: View {
     @State private var email: String = ""
     @State private var isLoading = false
     @State private var checkEmailPresented = false
+
+    @Environment(\.openURL) var openUrl
 
     var body: some View {
         VStack {
@@ -34,7 +36,12 @@ struct LoginView: View {
             .disabled(isLoading || email.isEmpty)
             .padding()
         }
-        .alert("🪄 Check your email to finish logging in. 🪄", isPresented: $checkEmailPresented, actions: { EmptyView() })
+        .alert("🪄 Check your email to finish logging in. 🪄", isPresented: $checkEmailPresented, actions: {
+            Button("Open Gmail") {
+                openUrl(URL(string: "https://mail.google.com")!)
+            }
+            Button("OK") { }
+        })
     }
 
     func login() {
