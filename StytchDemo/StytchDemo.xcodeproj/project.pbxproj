@@ -221,7 +221,6 @@
 			buildPhases = (
 				22BE99F92847FFA300E29245 /* Sources */,
 				22BE99FA2847FFA300E29245 /* Frameworks */,
-				224FC03C2848C2F4009C9740 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -299,26 +298,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		224FC03C2848C2F4009C9740 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ -z $DEMO_SERVER_SCRIPT ]]; then\n  echo 'NOTE: You should use `Scripts/demo-server start` to build and start the demo-server'\n  exit 1\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		229B82142809EA3F007BC3F1 /* Sources */ = {

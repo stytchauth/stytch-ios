@@ -1,7 +1,7 @@
 import Foundation
 import Swifter
 
-func startServer() {
+func startServer(port: UInt16) {
     let server = HttpServer()
 
     server.configureRoutes()
@@ -12,12 +12,12 @@ func startServer() {
     }
 
     server.notFoundHandler = { _ in
-        return .movedPermanently("https://github.com/404")
+        .movedPermanently("https://github.com/404")
     }
 
     let semaphore = DispatchSemaphore(value: 0)
     do {
-        try server.start()
+        try server.start(port)
         let port = try server.port()
         print("Server has started ( port = \(port) ). Try to connect now...")
 
