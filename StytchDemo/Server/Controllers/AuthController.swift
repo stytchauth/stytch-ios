@@ -8,7 +8,7 @@ struct AuthController: Controller {
     func withCurrentUserId(_ task: (String) -> HttpResponse) -> HttpResponse {
         guard
             let stytchSessionJwt = request.cookies.first(where: { $0.name == "stytch_session_jwt" }),
-            let stytchJWKS = serverStorage.valueForKey(.stytchJwksKey) ??
+            let stytchJWKS = memoryStorage.valueForKey(.stytchJwksKey) ??
                 (try? Data(
                     contentsOf: URL(string: "https://test.stytch.com/v1/sessions/jwks")!
                         .appendingPathComponent(configuration.projectId)

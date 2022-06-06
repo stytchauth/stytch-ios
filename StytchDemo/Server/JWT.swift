@@ -1,8 +1,8 @@
 import Foundation
 import JWTKit
 
-extension ServerStorage.Key {
-    static var stytchJwksKey: ServerStorage.Key<JWKS> {
+extension InMemoryStorage.Key {
+    static var stytchJwksKey: InMemoryStorage.Key<JWKS> {
         .init(
             convert: { try JSONEncoder().encode($0) },
             unconvert: { try JSONDecoder().decode(JWKS.self, from: $0) }

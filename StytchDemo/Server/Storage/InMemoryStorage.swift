@@ -7,9 +7,9 @@
 
 import Foundation
 
-let serverStorage: ServerStorage = .init()
+let memoryStorage: InMemoryStorage = .init()
 
-final class ServerStorage {
+final class InMemoryStorage {
     struct Key<T>: Hashable {
         let uuid: UUID = .init()
 
