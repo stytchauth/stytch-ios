@@ -7,76 +7,61 @@ struct HobbiesController: Controller {
     let request: HttpRequest
 
     func createHobby() -> HttpResponse {
-        struct Params: Decodable {
-            let name: String
-            let favorited: Bool?
-        }
-        let currentUserId: String
-        do {
-            currentUserId = try AuthorizationController(request: request).currentUserId()
-        } catch {
-            return .unauthorized((error as? AuthorizationController.Error).map { .text($0.message) })
-        }
-        do {
-            let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
-            let hobby = Hobby(id: .init(), userId: currentUserId, name: params.name, favorited: params.favorited ?? false)
-            try Self.hobbies.upsert(hobby)
-            return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
-        } catch {
-            return .badRequest(nil)
+        AuthController(request: request).withCurrentUserId { userId in
+            do {
+                struct Params: Decodable {
+                    let name: String
+                    let favorited: Bool?
+                }
+                let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
+                let hobby = Hobby(id: .init(), userId: userId, name: params.name, favorited: params.favorited ?? false)
+                try Self.hobbies.upsert(hobby)
+                return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
+            } catch {
+                return .badRequest(nil)
+            }
         }
     }
 
     func updateHobby() -> HttpResponse {
-        let currentUserId: String
-        do {
-            currentUserId = try AuthorizationController(request: request).currentUserId()
-        } catch {
-            return .unauthorized((error as? AuthorizationController.Error).map { .text($0.message) })
-        }
-        do {
-            struct Params: Decodable {
-                let id: UUID
-                let name: String
-                let favorited: Bool
+        AuthController(request: request).withCurrentUserId { userId in
+            do {
+                struct Params: Decodable {
+                    let id: UUID
+                    let name: String
+                    let favorited: Bool
+                }
+                guard let id = request.params[":id"].flatMap(UUID.init(uuidString:)) else { return .badRequest(nil) }
+
+                let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
+
+                guard params.id == id else { return .badRequest(nil) }
+
+                if let existing = Self.hobbies.value(id: id), existing.userId != userId {
+                    return .unauthorized(nil)
+                }
+                let hobby = Hobby(id: params.id, userId: userId, name: params.name, favorited: params.favorited)
+                try Self.hobbies.upsert(hobby)
+                return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
+            } catch {
+                return .badRequest(nil)
             }
-            guard let id = request.params[":id"].flatMap(UUID.init(uuidString:)) else { return .badRequest(nil) }
-
-            let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
-
-            guard params.id == id else { return .badRequest(nil) }
-
-            if let existing = Self.hobbies.value(id: id), existing.userId != currentUserId {
-                return .unauthorized(nil)
-            }
-            let hobby = Hobby(id: params.id, userId: currentUserId, name: params.name, favorited: params.favorited)
-            try Self.hobbies.upsert(hobby)
-            return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
-        } catch {
-            return .badRequest(nil)
         }
     }
 
     func hobbyList() -> HttpResponse {
-        let currentUserId: String
-        do {
-            currentUserId = try AuthorizationController(request: request).currentUserId()
-        } catch {
-            return .unauthorized((error as? AuthorizationController.Error).map { .text($0.message) })
-        }
-        do {
-            struct Response: Encodable {
-                let userId: String
-                let hobbies: [Hobby]
+        AuthController(request: request).withCurrentUserId { userId in
+            do {
+                struct Response: Encodable {
+                    let userId: String
+                    let hobbies: [Hobby]
+                }
+                // In a real application, we'd want to add an index on user id
+                let response = Response(userId: userId, hobbies: Self.hobbies.values { $0.userId == userId })
+                return .ok(.data(try JSONEncoder().encode(response), contentType: "application/json"))
+            } catch {
+                return .badRequest(nil)
             }
-            // In a real application, we'd want to add an index on user id
-            let response = Response(
-                userId: currentUserId,
-                hobbies: Self.hobbies.values { $0.userId == currentUserId }
-            )
-            return .ok(.data(try JSONEncoder().encode(response), contentType: "application/json"))
-        } catch {
-            return .badRequest(nil)
         }
 
     }
