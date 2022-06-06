@@ -2,10 +2,10 @@ import Foundation
 import Swifter
 import JWTKit
 
-struct AuthorizationController: Controller {
+struct AuthController: Controller {
     let request: HttpRequest
 
-    func currentUserId() throws -> String {
+    func withCurrentUserId(_ task: (String) -> HttpResponse) -> HttpResponse {
         guard
             let stytchSessionJwt = request.cookies.first(where: { $0.name == "stytch_session_jwt" }),
             let stytchJWKS = serverStorage.valueForKey(.stytchJwksKey) ??
@@ -15,22 +15,16 @@ struct AuthorizationController: Controller {
                 )
                 ).flatMap({ try? JSONDecoder().decode(JWKS.self, from: $0) })
         else {
-            throw Error(message: "Couldn't retrieve JWKS")
+            return .unauthorized(.text("Couldn't retrieve JWKS"))
         }
 
-        let payload: BasicPayload
         do {
             let signers = JWTSigners()
             try signers.use(jwks: stytchJWKS)
 
-            payload = try signers.verify(stytchSessionJwt.value, as: BasicPayload.self)
+            return task(try signers.verify(stytchSessionJwt.value, as: BasicPayload.self).subject.value)
         } catch {
-            throw Error(message: "Couldn't verify token")
+            return .unauthorized(.text("Couldn't verify token"))
         }
-        return payload.subject.value
-    }
-
-    struct Error: Swift.Error {
-        let message: String
     }
 }
