@@ -63,7 +63,21 @@ struct HobbiesController: Controller {
                 return .badRequest(nil)
             }
         }
+    }
 
+    func deleteHobby() -> HttpResponse {
+        AuthController(request: request).withCurrentUserId { userId in
+            guard let id = request.params[":id"].flatMap(UUID.init(uuidString:)) else { return .badRequest(nil) }
+            if let existing = Self.hobbies.value(id: id), existing.userId != userId {
+                return .unauthorized(nil)
+            }
+            do {
+                try Self.hobbies.remove(id: id)
+                return .ok(.json(["success": true]))
+            } catch {
+                return .internalServerError(nil)
+            }
+        }
     }
 }
 
