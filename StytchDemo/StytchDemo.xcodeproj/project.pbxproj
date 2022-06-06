@@ -35,7 +35,7 @@
 		22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */; };
 		22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */; };
 		22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909088284DBC1900ADD3C4 /* JWT.swift */; };
-		2290908D284DC30D00ADD3C4 /* AuthorizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */; };
+		2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908C284DC30D00ADD3C4 /* AuthController.swift */; };
 		2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908E284DC35900ADD3C4 /* HobbiesController.swift */; };
 		22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */; };
 		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
@@ -66,7 +66,7 @@
 		22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBackedStorage.swift; sourceTree = "<group>"; };
 		22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStorage.swift; sourceTree = "<group>"; };
 		22909088284DBC1900ADD3C4 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
-		2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationController.swift; sourceTree = "<group>"; };
+		2290908C284DC30D00ADD3C4 /* AuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthController.swift; sourceTree = "<group>"; };
 		2290908E284DC35900ADD3C4 /* HobbiesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesController.swift; sourceTree = "<group>"; };
 		22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HttpRequest+Stytch.swift"; sourceTree = "<group>"; };
 		22909092284DCC8E00ADD3C4 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 			children = (
 				22909073284AE99300ADD3C4 /* UsersController.swift */,
 				2290908E284DC35900ADD3C4 /* HobbiesController.swift */,
-				2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */,
+				2290908C284DC30D00ADD3C4 /* AuthController.swift */,
 				22909092284DCC8E00ADD3C4 /* Controller.swift */,
 			);
 			path = Controllers;
@@ -394,7 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22BE9A002847FFA300E29245 /* main.swift in Sources */,
-				2290908D284DC30D00ADD3C4 /* AuthorizationController.swift in Sources */,
+				2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */,
 				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
 				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
 				22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */,
