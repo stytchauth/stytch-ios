@@ -4,7 +4,7 @@ import Swifter
 func startServer(port: UInt16) {
     let server = HttpServer()
 
-    server.configureRoutes()
+    mountRoutes(to: server)
 
     server.middleware.append { request in
         print("[INFO] \(request.address ?? "unknown address") -> \(request.method) -> \(request.path)")
