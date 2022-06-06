@@ -21,6 +21,6 @@ private extension HttpServer {
 
         POST["/hobbies/new"] = HobbiesController.createHobby
 
-        PUT["/hobbies/update/:id"] = HobbiesController.updateHobby
+        PUT["/hobbies/:id/update"] = HobbiesController.updateHobby
     }
 }

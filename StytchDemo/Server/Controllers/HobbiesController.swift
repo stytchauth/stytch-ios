@@ -20,7 +20,7 @@ struct HobbiesController: Controller {
         do {
             let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
             let hobby = Hobby(id: .init(), userId: currentUserId, name: params.name, favorited: params.favorited ?? false)
-            Self.hobbies.upsert(hobby)
+            try Self.hobbies.upsert(hobby)
             return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
         } catch {
             return .badRequest(nil)
@@ -40,12 +40,17 @@ struct HobbiesController: Controller {
                 let name: String
                 let favorited: Bool
             }
+            guard let id = request.params[":id"].flatMap(UUID.init(uuidString:)) else { return .badRequest(nil) }
+
             let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
-            if let existing = Self.hobbies.value(id: params.id), existing.userId != currentUserId {
+
+            guard params.id == id else { return .badRequest(nil) }
+
+            if let existing = Self.hobbies.value(id: id), existing.userId != currentUserId {
                 return .unauthorized(nil)
             }
             let hobby = Hobby(id: params.id, userId: currentUserId, name: params.name, favorited: params.favorited)
-            Self.hobbies.upsert(hobby)
+            try Self.hobbies.upsert(hobby)
             return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
         } catch {
             return .badRequest(nil)

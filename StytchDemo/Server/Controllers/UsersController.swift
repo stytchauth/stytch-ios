@@ -53,9 +53,8 @@ struct UsersController: Controller {
 
     private func upsert(id: String, update: (inout User?) -> User) throws -> String {
         var user = Self.users.value(id: id)
-        Self.users.upsert(update(&user))
 
-        try Self.users.save()
+        try Self.users.upsert(update(&user))
 
         guard let user = user else {
             throw NSError() as Error
