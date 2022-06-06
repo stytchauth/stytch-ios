@@ -2,44 +2,6 @@ import Foundation
 import Swifter
 import JWTKit
 
-final class StorageClient<T: Identifiable & Codable>: Codable where T.ID: Codable {
-    private var storage: [T.ID: T] = [:]
-
-    private let url: URL
-
-    func upsert(_ value: T) {
-        storage[value.id] = value
-    }
-
-    func value(id: T.ID) -> T? {
-        storage[id]
-    }
-
-    init(path: String) {
-        self.url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("stytch-demo/storage")
-            .appendingPathComponent(path)
-            .appendingPathExtension("json")
-        do {
-            storage = try FileManager.default.contents(atPath: url.path).map { data in
-                 try JSONDecoder().decode(Self.self, from: data).storage
-            } ?? [:]
-        } catch {
-            storage = [:]
-        }
-    }
-
-    func save() throws {
-        if !FileManager.default.fileExists(atPath: url.path) {
-            try FileManager.default.createDirectory(
-                at: url.pathExtension.isEmpty ? url : url.deletingPathExtension().deletingLastPathComponent(),
-                withIntermediateDirectories: true
-            )
-        }
-        try JSONEncoder().encode(self).write(to: url)
-    }
-}
-
 final class UsersController {
     private let users: StorageClient<User> = .init(path: "users")
 
