@@ -11,18 +11,30 @@ struct HobbiesView: View {
             Text("Hobbies")
                 .font(.title2)
             List {
-                Section("Favorites") {
+                Section("Favorite hobbies") {
                     ForEach(model.hobbies.filter(\.favorited)) { hobby in
                         HobbyView(hobby: hobby, onUpdate: model.update(hobby:))
                     }
+                    .onDelete { $0.forEach(model.deleteHobby(at:)) }
                 }
-                Section("Second Best") {
+                Section("Other hobbies") {
                     ForEach(model.hobbies.filter { !$0.favorited }) { hobby in
                         HobbyView(hobby: hobby, onUpdate: model.update(hobby:))
                     }
+                    .onDelete { $0.forEach(model.deleteHobby(at:)) }
+                }
+                Section("Add a new hobby") {
                     HStack {
-                        TextField("New hobby name", text: $newHobbyName)
-                        Button("Add new hobby") { model.addHobby(name: newHobbyName) }
+                        TextField("Hobby name", text: $newHobbyName)
+                            .onSubmit {
+                                guard !newHobbyName.isEmpty else { return }
+                                model.addHobby(name: newHobbyName) { newHobbyName = $0 }
+                                newHobbyName = ""
+                            }
+                        Button("Add hobby") {
+                            model.addHobby(name: newHobbyName) { newHobbyName = $0 }
+                            newHobbyName = ""
+                        }
                             .disabled(newHobbyName.isEmpty)
                     }
                 }
@@ -85,12 +97,7 @@ extension HobbiesView {
             let oldHobby = hobbies[index]
             self.hobbies[index] = hobby
             Task {
-                var request = request(
-                    url: hobbiesUrl
-                        .appendingPathComponent(hobby.id.uuidString)
-                        .appendingPathComponent("update")
-                )
-                request.httpMethod = "PUT"
+                var request = request(url: hobbyUrl(hobby), method: "PUT")
                 do {
                     request.httpBody = try JSONEncoder().encode(hobby)
                     let updatedHobby: Hobby = try await performRequest(request)
@@ -105,12 +112,11 @@ extension HobbiesView {
             }
         }
 
-        func addHobby(name: String) {
+        func addHobby(name: String, onFailure: @escaping (String) -> Void) {
             let tempHobby = Hobby(id: .init(), name: name, favorited: false)
             hobbies.append(tempHobby)
             Task {
-                var request = request(url: hobbiesUrl.appendingPathComponent("new"))
-                request.httpMethod = "POST"
+                var request = request(url: hobbiesUrl.appendingPathComponent("new"), method: "POST")
                 let updateHobby: (Hobby?) -> Void = { [weak self] hobby in
                     guard let self = self else { return }
                     guard let index = self.hobbies.firstIndex(where: { $0.id == tempHobby.id }) else {
@@ -135,7 +141,30 @@ extension HobbiesView {
                 } catch {
                     DispatchQueue.main.async {
                         updateHobby(nil)
+                        onFailure(name)
                     }
+                }
+            }
+        }
+
+        func deleteHobby(at index: Int) {
+            let hobby = hobbies.remove(at: index)
+            let revertRemoval = {
+                DispatchQueue.main.async {
+                    self.hobbies.insert(hobby, at: index)
+                }
+            }
+            Task {
+                do {
+                    struct Response: Decodable {
+                        let success: Bool
+                    }
+                    let request = request(url: hobbyUrl(hobby), method: "DELETE")
+                    if case let response: Response = try await performRequest(request), !response.success {
+                        revertRemoval()
+                    }
+                } catch {
+                    revertRemoval()
                 }
             }
         }
@@ -145,12 +174,19 @@ extension HobbiesView {
             return try JSONDecoder().decode(T.self, from: data)
         }
 
-        private func request(url: URL) -> URLRequest {
+        private func request(url: URL, method: String? = nil) -> URLRequest {
             var request: URLRequest = .init(url: url)
+            if let method = method {
+                request.httpMethod = method
+            }
             StytchClient.sessions.sessionToken.map { request.addValue($0.value, forHTTPHeaderField: "X-Stytch-Token") }
             return request
         }
 
-        var hobbiesUrl: URL { configuration.serverUrl.appendingPathComponent("hobbies") }
+        private var hobbiesUrl: URL { configuration.serverUrl.appendingPathComponent("hobbies") }
+
+        private func hobbyUrl(_ hobby: Hobby) -> URL {
+            hobbiesUrl.appendingPathComponent(hobby.id.uuidString)
+        }
     }
 }
