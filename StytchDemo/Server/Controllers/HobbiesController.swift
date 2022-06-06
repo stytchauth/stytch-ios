@@ -27,6 +27,31 @@ struct HobbiesController: Controller {
         }
     }
 
+    func updateHobby() -> HttpResponse {
+        let currentUserId: String
+        do {
+            currentUserId = try AuthorizationController(request: request).currentUserId()
+        } catch {
+            return .unauthorized((error as? AuthorizationController.Error).map { .text($0.message) })
+        }
+        do {
+            struct Params: Decodable {
+                let id: UUID
+                let name: String
+                let favorited: Bool
+            }
+            let params = try JSONDecoder().decode(Params.self, from: Data(request.body))
+            if let existing = Self.hobbies.value(id: params.id), existing.userId != currentUserId {
+                return .unauthorized(nil)
+            }
+            let hobby = Hobby(id: params.id, userId: currentUserId, name: params.name, favorited: params.favorited)
+            Self.hobbies.upsert(hobby)
+            return .ok(.data(try JSONEncoder().encode(hobby), contentType: "application/json"))
+        } catch {
+            return .badRequest(nil)
+        }
+    }
+
     func hobbyList() -> HttpResponse {
         let currentUserId: String
         do {
