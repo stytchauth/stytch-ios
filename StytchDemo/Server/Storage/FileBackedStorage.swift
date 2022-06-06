@@ -5,8 +5,9 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
 
     private let url: URL
 
-    func upsert(_ value: T) {
+    func upsert(_ value: T) throws {
         storage.values[value.id] = value
+        try save()
     }
 
     func value(id: T.ID) -> T? {
