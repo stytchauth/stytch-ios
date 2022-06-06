@@ -12,6 +12,7 @@ let configuration: Configuration = {
 struct Configuration: Decodable {
     let hostUrl: URL
     let appId: String
+    let projectId: String
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -26,10 +27,12 @@ struct Configuration: Decodable {
 
         hostUrl = url
         appId = try container.decode(String.self, forKey: .appId)
+        projectId = try container.decode(String.self, forKey: .projectId)
     }
 
     private enum CodingKeys: String, CodingKey {
         case appId = "APP_ID"
         case hostUrl = "HOST_URL"
+        case projectId = "PROJECT_ID"
     }
 }

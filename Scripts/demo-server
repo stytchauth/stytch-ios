@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 
+require 'dotenv'
+
 class String
   # colorization
   def colorize(color_code)
@@ -21,12 +23,13 @@ end
 
 class Runner
   def run(port:)
+    Dotenv.load(File.join(demo_root, '.env'))
+
     puts 'Starting server'
 
-    system("echo #{ngrok_wildcard_url} | pbcopy")
-    puts "\nNOTE: You must visit https://stytch.com/dashboard/redirect-urls and add `#{ngrok_wildcard_url}` as a signup/login Redirect URL before using magic links or OAuth. It's already been added to your clipboard.\n".yellow
-
+    update_project_id_if_needed
     update_public_token_if_needed
+    prompt_for_redirect_url
 
     start_ngrok(port: port)
 
@@ -71,10 +74,14 @@ class Runner
     system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url.sub('https://', '')}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
   end
 
+  def prompt_for_redirect_url
+    system("echo #{ngrok_wildcard_url} | pbcopy")
+    puts "\nNOTE: You must visit https://stytch.com/dashboard/redirect-urls and add `#{ngrok_wildcard_url}` as a signup/login Redirect URL before using magic links or OAuth. It's already been added to your clipboard.\n".yellow
+  end
+
   def start_server(port:)
     system("xcrun xcodebuild -quiet -project StytchDemo/StytchDemo.xcodeproj -scheme 'StytchDemo (Server)' -derivedDataPath #{File.join(project_root, '.build')} -configuration release build")
-    # TODO: - pass through port to server
-    system("DEMO_SERVER_SCRIPT=1 HOST_URL=#{@tunnel_url} APP_ID=#{app_id} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')} #{port}")
+    system("DEMO_SERVER_SCRIPT=1 HOST_URL=#{@tunnel_url} APP_ID=#{app_id} PROJECT_ID=#{stytch_project_id} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')} #{port}")
   end
 
   def update_public_token_if_needed
@@ -86,12 +93,28 @@ class Runner
     end
   end
 
+  def update_project_id_if_needed
+    return unless stytch_project_id.nil?
+
+    puts 'Please add your project id. Paste a value from https://stytch.com/dashboard/api-keys here:'.yellow
+    project_id = STDIN.gets.chomp
+    File.open(File.join(demo_root, '.env'), 'w') { |file| file.write("PROJECT_ID=#{project_id}") }
+  end
+
+  def stytch_project_id
+    ENV['PROJECT_ID']
+  end
+
   def project_root
     File.expand_path('../../', __FILE__)
   end
 
   def demo_project_file
-    File.join(project_root, 'StytchDemo/StytchDemo.xcodeproj')
+    File.join(demo_root, 'StytchDemo.xcodeproj')
+  end
+
+  def demo_root
+    File.join(project_root, 'StytchDemo')
   end
 
   def ngrok_wildcard_url
@@ -110,5 +133,6 @@ when 'start'
 when 'cleanup'
   Runner.new.cleanup
 when 'bootstrap'
+  system('bundle install')
   system('brew install ngrok')
 end
