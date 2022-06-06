@@ -13,12 +13,12 @@ private extension HttpServer {
             .ok(.json(["applinks":["details": [["appIDs": [configuration.appId]]]]]))
         }
 
-        GET["/hobbies"] = HobbiesController.hobbyList
+        GET["/hobbies"] = HobbiesController.list
 
-        POST["/hobbies/new"] = HobbiesController.createHobby
+        POST["/hobbies/new"] = HobbiesController.create
 
-        PUT["/hobbies/:id"] = HobbiesController.updateHobby
+        PUT["/hobbies/:id"] = HobbiesController.update
 
-        DELETE["hobbies/:id"] = HobbiesController.deleteHobby
+        DELETE["hobbies/:id"] = HobbiesController.delete
     }
 }

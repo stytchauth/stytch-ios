@@ -6,7 +6,7 @@ struct HobbiesController: Controller {
 
     let request: HttpRequest
 
-    func createHobby() -> HttpResponse {
+    func create() -> HttpResponse {
         AuthController(request: request).withCurrentUserId { userId in
             do {
                 struct Params: Decodable {
@@ -23,7 +23,7 @@ struct HobbiesController: Controller {
         }
     }
 
-    func updateHobby() -> HttpResponse {
+    func update() -> HttpResponse {
         AuthController(request: request).withCurrentUserId { userId in
             do {
                 struct Params: Decodable {
@@ -49,7 +49,7 @@ struct HobbiesController: Controller {
         }
     }
 
-    func hobbyList() -> HttpResponse {
+    func list() -> HttpResponse {
         AuthController(request: request).withCurrentUserId { userId in
             do {
                 struct Response: Encodable {
@@ -65,7 +65,7 @@ struct HobbiesController: Controller {
         }
     }
 
-    func deleteHobby() -> HttpResponse {
+    func delete() -> HttpResponse {
         AuthController(request: request).withCurrentUserId { userId in
             guard let id = request.params[":id"].flatMap(UUID.init(uuidString:)) else { return .badRequest(nil) }
             if let existing = Self.hobbies.value(id: id), existing.userId != userId {
