@@ -25,6 +25,22 @@
 		224FC03628486013009C9740 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 224FC03528486013009C9740 /* Swifter */; };
 		224FC03A28488591009C9740 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FC03928488591009C9740 /* Configuration.swift */; };
 		226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 226375C5280CBAE0000CDD49 /* StytchCore */; };
+		22909074284AE99300ADD3C4 /* UsersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909073284AE99300ADD3C4 /* UsersController.swift */; };
+		22909077284BE7FC00ADD3C4 /* JWTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 22909076284BE7FC00ADD3C4 /* JWTKit */; };
+		22909079284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
+		2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
+		2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
+		2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
+		22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907E284DADB700ADD3C4 /* JSON.swift */; };
+		22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */; };
+		22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */; };
+		22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909088284DBC1900ADD3C4 /* JWT.swift */; };
+		2290908D284DC30D00ADD3C4 /* AuthorizationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */; };
+		2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908E284DC35900ADD3C4 /* HobbiesController.swift */; };
+		22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */; };
+		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
+		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22BE9A002847FFA300E29245 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE99FF2847FFA300E29245 /* main.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
 		22BE9A1228481EFE00E29245 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* Server.swift */; };
@@ -43,6 +59,18 @@
 		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		22909073284AE99300ADD3C4 /* UsersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersController.swift; sourceTree = "<group>"; };
+		22909078284D9F4600ADD3C4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationOptionsView.swift; sourceTree = "<group>"; };
+		2290907E284DADB700ADD3C4 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBackedStorage.swift; sourceTree = "<group>"; };
+		22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStorage.swift; sourceTree = "<group>"; };
+		22909088284DBC1900ADD3C4 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
+		2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationController.swift; sourceTree = "<group>"; };
+		2290908E284DC35900ADD3C4 /* HobbiesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesController.swift; sourceTree = "<group>"; };
+		22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HttpRequest+Stytch.swift"; sourceTree = "<group>"; };
+		22909092284DCC8E00ADD3C4 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		22909094284DD5EE00ADD3C4 /* HobbiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesView.swift; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				224FC03628486013009C9740 /* Swifter in Frameworks */,
+				22909077284BE7FC00ADD3C4 /* JWTKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,7 +116,10 @@
 				224F7D50280CF500000230FA /* Info.plist */,
 				2222D1432835C341008CEBD7 /* StytchConfiguration.plist */,
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
+				22909078284D9F4600ADD3C4 /* Extensions.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
+				2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */,
+				22909094284DD5EE00ADD3C4 /* HobbiesView.swift */,
 				224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */,
 				2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */,
 				224F7D4C280CEDF5000230FA /* SessionView.swift */,
@@ -118,6 +150,26 @@
 				224F7D4F280CF491000230FA /* iOS.entitlements */,
 			);
 			path = iOS;
+			sourceTree = "<group>";
+		};
+		2290908A284DC2E600ADD3C4 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				22909073284AE99300ADD3C4 /* UsersController.swift */,
+				2290908E284DC35900ADD3C4 /* HobbiesController.swift */,
+				2290908C284DC30D00ADD3C4 /* AuthorizationController.swift */,
+				22909092284DCC8E00ADD3C4 /* Controller.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		2290908B284DC2F300ADD3C4 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */,
+				22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		229B820B2809EA3E007BC3F1 = {
@@ -159,7 +211,12 @@
 				22BE9A072848071B00E29245 /* Routes.swift */,
 				224FC03928488591009C9740 /* Configuration.swift */,
 				22BE9A1128481EFE00E29245 /* Server.swift */,
+				2290908B284DC2F300ADD3C4 /* Storage */,
+				2290908A284DC2E600ADD3C4 /* Controllers */,
+				2290907E284DADB700ADD3C4 /* JSON.swift */,
+				22909088284DBC1900ADD3C4 /* JWT.swift */,
 				22BE99FF2847FFA300E29245 /* main.swift */,
+				22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -229,6 +286,7 @@
 			name = "StytchDemo (Server)";
 			packageProductDependencies = (
 				224FC03528486013009C9740 /* Swifter */,
+				22909076284BE7FC00ADD3C4 /* JWTKit */,
 			);
 			productName = StytchDemoServer;
 			productReference = 22BE99FD2847FFA300E29245 /* StytchDemo (Server) */;
@@ -266,6 +324,7 @@
 			mainGroup = 229B820B2809EA3E007BC3F1;
 			packageReferences = (
 				224FC03428486013009C9740 /* XCRemoteSwiftPackageReference "swifter" */,
+				22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */,
 			);
 			productRefGroup = 229B82192809EA3F007BC3F1 /* Products */;
 			projectDirPath = "";
@@ -305,9 +364,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				22909079284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */,
+				22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */,
 				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
+				2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -317,9 +379,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */,
+				22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */,
 				224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
+				2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,7 +394,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				22BE9A002847FFA300E29245 /* main.swift in Sources */,
+				2290908D284DC30D00ADD3C4 /* AuthorizationController.swift in Sources */,
+				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
+				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
+				22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */,
+				22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */,
+				22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */,
+				22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */,
 				22BE9A1228481EFE00E29245 /* Server.swift in Sources */,
+				22909074284AE99300ADD3C4 /* UsersController.swift in Sources */,
+				22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */,
 				224FC03A28488591009C9740 /* Configuration.swift in Sources */,
 				22BE9A082848071B00E29245 /* Routes.swift in Sources */,
 			);
@@ -653,6 +727,14 @@
 				kind = branch;
 			};
 		};
+		22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vapor/jwt-kit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -668,6 +750,11 @@
 		226375C5280CBAE0000CDD49 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
+		};
+		22909076284BE7FC00ADD3C4 /* JWTKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */;
+			productName = JWTKit;
 		};
 		22E434612809EF2F00FB45F0 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
