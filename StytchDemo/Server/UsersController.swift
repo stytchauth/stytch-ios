@@ -2,24 +2,46 @@ import Foundation
 import Swifter
 import JWTKit
 
-final class UsersController {
-    private static let usersCsvUrl = FileManager.default
-        .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        .appendingPathComponent("stytch-demo")
-        .appendingPathComponent("users")
-        .appendingPathExtension("csv")
+final class StorageClient<T: Identifiable & Codable>: Codable where T.ID: Codable {
+    private var storage: [T.ID: T] = [:]
 
-    private var users: CSV<User> = {
-        if FileManager.default.fileExists(atPath: usersCsvUrl.path) {
-            do {
-                return try .init(url: usersCsvUrl)
-            } catch {
-                return .init()
-            }
-        } else {
-            return .init()
+    private let url: URL
+
+    func upsert(_ value: T) {
+        storage[value.id] = value
+    }
+
+    func value(id: T.ID) -> T? {
+        storage[id]
+    }
+
+    init(path: String) {
+        self.url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("stytch-demo/storage")
+            .appendingPathComponent(path)
+            .appendingPathExtension("json")
+        do {
+            storage = try FileManager.default.contents(atPath: url.path).map { data in
+                 try JSONDecoder().decode(Self.self, from: data).storage
+            } ?? [:]
+        } catch {
+            storage = [:]
         }
-    }()
+    }
+
+    func save() throws {
+        if !FileManager.default.fileExists(atPath: url.path) {
+            try FileManager.default.createDirectory(
+                at: url.pathExtension.isEmpty ? url : url.deletingPathExtension().deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+        }
+        try JSONEncoder().encode(self).write(to: url)
+    }
+}
+
+final class UsersController {
+    private let users: StorageClient<User> = .init(path: "users")
 
     func createUser(request: HttpRequest) -> HttpResponse {
         do {
@@ -29,10 +51,11 @@ final class UsersController {
             let lastName = userParams["last_name"]?.stringValue
 
             do {
-                let id = try upsert(stytchId: stytchId) { user in
-                    user ?? .new(stytchId: stytchId, firstName: firstName ?? "", lastName: lastName ?? "")
-                }
-                return .ok(.text(id.uuidString))
+                return .ok(
+                    .text(
+                        try upsert(id: stytchId) { $0 ?? .init(id: stytchId, firstName: firstName ?? "", lastName: lastName ?? "") }
+                    )
+                )
             } catch {
                 return .internalServerError(nil)
             }
@@ -64,7 +87,7 @@ final class UsersController {
             return .unauthorized(.text("couldn't verify token"))
         }
 
-        guard let user = user(stytchId: payload.subject.value) else {
+        guard let user = user(id: payload.subject.value) else {
             return .notFound(.text("no current user"))
         }
 
@@ -75,21 +98,15 @@ final class UsersController {
         }
     }
 
-    private func user(stytchId: String) -> User? {
-        users.first { $0.stytchId == stytchId }
+    private func user(id: String) -> User? {
+        users.value(id: id)
     }
 
-    private func upsert(stytchId: String, update: (inout User?) -> User) throws -> UUID {
-        var user: User?
+    private func upsert(id: String, update: (inout User?) -> User) throws -> String {
+        var user = users.value(id: id)
+        users.upsert(update(&user))
 
-        if let index = users.firstIndex(where: { $0.stytchId == stytchId }) {
-            user = users[index]
-            users[index] = update(&user)
-        } else {
-            users.append(update(&user))
-        }
-
-        try users.save(to: Self.usersCsvUrl)
+        try users.save()
 
         guard let user = user else {
             throw NSError() as Error
@@ -99,44 +116,14 @@ final class UsersController {
     }
 }
 
-struct User: Codable {
-    let id: UUID
-    let stytchId: String
+struct User: Codable, Identifiable {
+    let id: String
     var firstName: String
     var lastName: String
 
-    private init(id: UUID, stytchId: String, firstName: String, lastName: String) {
+    init(id: String, firstName: String, lastName: String) {
         self.id = id
-        self.stytchId = stytchId
         self.firstName = firstName
         self.lastName = lastName
     }
-
-    static func new(stytchId: String, firstName: String, lastName: String) -> Self {
-        .init(id: .init(), stytchId: stytchId, firstName: firstName, lastName: lastName)
-    }
-}
-
-extension User: CSVRow {
-    static var headerNames: [String] { ["id", "stytchId", "firstName", "firstName"] }
-
-    static func from(_ strings: inout [String]) throws -> Self {
-        guard let id = UUID(uuidString: strings.removeFirst()) else { throw Error() }
-        let stytchId = strings.removeFirst()
-        let firstName = strings.removeFirst()
-        let lastName = strings.removeFirst()
-
-        return .init(id: id, stytchId: stytchId, firstName: firstName, lastName: lastName)
-    }
-
-    static func encodedRow(_ value: Self, encodeColumn: (String) -> EncodedColumn) -> [EncodedColumn] {
-        [
-            encodeColumn(value.id.uuidString),
-            encodeColumn(value.stytchId),
-            encodeColumn(value.firstName),
-            encodeColumn(String(value.lastName))
-        ]
-    }
-
-    struct Error: Swift.Error {}
 }
