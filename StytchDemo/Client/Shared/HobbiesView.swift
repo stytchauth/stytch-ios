@@ -15,13 +15,13 @@ struct HobbiesView: View {
                     ForEach(model.hobbies.filter(\.favorited)) { hobby in
                         HobbyView(hobby: hobby, onUpdate: model.update(hobby:))
                     }
-                    .onDelete { $0.forEach(model.deleteHobby(at:)) }
+                    .onDelete { $0.forEach { model.deleteHobby(at: $0, favorited: true) } }
                 }
                 Section("Other hobbies") {
                     ForEach(model.hobbies.filter { !$0.favorited }) { hobby in
                         HobbyView(hobby: hobby, onUpdate: model.update(hobby:))
                     }
-                    .onDelete { $0.forEach(model.deleteHobby(at:)) }
+                    .onDelete { $0.forEach { model.deleteHobby(at: $0, favorited: false) } }
                 }
                 Section("Add a new hobby") {
                     HStack {
@@ -147,11 +147,12 @@ extension HobbiesView {
             }
         }
 
-        func deleteHobby(at index: Int) {
-            let hobby = hobbies.remove(at: index)
+        func deleteHobby(at index: Int, favorited: Bool) {
+            let normalizedIndex = hobbies.enumerated().filter { $0.1.favorited == favorited }[index].offset
+            let hobby = hobbies.remove(at: normalizedIndex)
             let revertRemoval = {
                 DispatchQueue.main.async {
-                    self.hobbies.insert(hobby, at: index)
+                    self.hobbies.insert(hobby, at: normalizedIndex)
                 }
             }
             Task {
