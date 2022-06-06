@@ -10,6 +10,11 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
         try save()
     }
 
+    func remove(id: T.ID) throws {
+        storage.values.removeValue(forKey: id)
+        try save()
+    }
+
     func value(id: T.ID) -> T? {
         storage.values[id]
     }
