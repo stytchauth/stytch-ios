@@ -40,7 +40,7 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
                 withIntermediateDirectories: true
             )
         }
-        try JSONEncoder().encode(storage).write(to: url)
+        try JSONEncoder().encode(storage).write(to: url, options: [.atomic])
     }
 
     struct Storage: Codable {
