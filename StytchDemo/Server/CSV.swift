@@ -35,6 +35,12 @@ struct CSV<Row: CSVRow> {
     }
 
     func save(to url: URL) throws {
+        if !FileManager.default.fileExists(atPath: url.path) {
+            try FileManager.default.createDirectory(
+                at: url.pathExtension.isEmpty ? url : url.deletingPathExtension().deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+        }
         try Data(
             stringValue().utf8
         ).write(to: url)
