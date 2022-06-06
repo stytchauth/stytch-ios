@@ -13,10 +13,6 @@ private extension HttpServer {
             .ok(.json(["applinks":["details": [["appIDs": [configuration.appId]]]]]))
         }
 
-        GET["/users/me"] = UsersController.currentUser
-
-        PUT["/users/new"] = UsersController.createUser
-
         GET["/hobbies"] = HobbiesController.hobbyList
 
         POST["/hobbies/new"] = HobbiesController.createHobby
