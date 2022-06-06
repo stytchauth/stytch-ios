@@ -1,7 +1,7 @@
 import Foundation
 import Swifter
 
-struct HobbiesController {
+struct HobbiesController: Controller {
     private static let hobbies: FileBackedStorage<Hobby> = .init(path: "hobbies")
 
     let request: HttpRequest

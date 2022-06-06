@@ -2,7 +2,7 @@ import Foundation
 import Swifter
 import JWTKit
 
-struct UsersController {
+struct UsersController: Controller {
     private static let users: FileBackedStorage<User> = .init(path: "users")
 
     let request: HttpRequest

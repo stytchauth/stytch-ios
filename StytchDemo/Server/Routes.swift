@@ -10,13 +10,17 @@ private extension HttpServer {
         GET["/"] = { _ in .ok(.htmlBody("Hello, world!"))  }
 
         GET["/.well-known/apple-app-site-association"] = { _ in
-                .ok(.json(["applinks":["details": [["appIDs": [configuration.appId]]]]]))
+            .ok(.json(["applinks":["details": [["appIDs": [configuration.appId]]]]]))
         }
 
-        GET["/users/me"] = { UsersController(request: $0).currentUser() }
+        GET["/users/me"] = UsersController.currentUser
 
-        PUT["/users/new"] = { UsersController(request: $0).createUser() }
+        PUT["/users/new"] = UsersController.createUser
 
-        PUT["/hobbies/new"] = { HobbiesController(request: $0).createHobby() }
+        GET["/hobbies"] = HobbiesController.hobbyList
+
+        POST["/hobbies/new"] = HobbiesController.createHobby
+
+        PUT["/hobbies/update/:id"] = HobbiesController.updateHobby
     }
 }

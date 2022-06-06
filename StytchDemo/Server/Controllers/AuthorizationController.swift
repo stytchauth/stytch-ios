@@ -2,7 +2,7 @@ import Foundation
 import Swifter
 import JWTKit
 
-struct AuthorizationController {
+struct AuthorizationController: Controller {
     let request: HttpRequest
 
     func currentUserId() throws -> String {
