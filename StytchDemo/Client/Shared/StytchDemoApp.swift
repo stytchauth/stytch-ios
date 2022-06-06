@@ -15,7 +15,7 @@ struct StytchDemoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(serverUrl: configuration.serverUrl, sessionUser: sessionUser) {
+            ContentView(sessionUser: sessionUser) {
                 Task {
                     _ = try await StytchClient.sessions.revoke()
                     sessionUser = nil
