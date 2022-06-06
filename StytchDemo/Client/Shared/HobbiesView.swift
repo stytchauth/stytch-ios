@@ -28,6 +28,7 @@ struct HobbiesView: View {
                 }
             }
         }
+        .task { model.fetch() }
     }
 }
 
@@ -69,7 +70,7 @@ extension HobbiesView {
         func fetch() {
             Task {
                 do {
-                    let hobbyList: HobbyList = try await performRequest(request(url: userHobbiesUrl))
+                    let hobbyList: HobbyList = try await performRequest(request(url: hobbiesUrl))
                     DispatchQueue.main.async {
                         self.hobbies = hobbyList.hobbies
                     }
@@ -84,7 +85,11 @@ extension HobbiesView {
             let oldHobby = hobbies[index]
             self.hobbies[index] = hobby
             Task {
-                var request = request(url: hobbiesUrl.appendingPathComponent(hobby.id.uuidString))
+                var request = request(
+                    url: hobbiesUrl
+                        .appendingPathComponent(hobby.id.uuidString)
+                        .appendingPathComponent("update")
+                )
                 request.httpMethod = "PUT"
                 do {
                     request.httpBody = try JSONEncoder().encode(hobby)
@@ -145,8 +150,6 @@ extension HobbiesView {
             StytchClient.sessions.sessionToken.map { request.addValue($0.value, forHTTPHeaderField: "X-Stytch-Token") }
             return request
         }
-
-        var userHobbiesUrl: URL { configuration.serverUrl.appendingPathComponent("users/me/hobbies") }
 
         var hobbiesUrl: URL { configuration.serverUrl.appendingPathComponent("hobbies") }
     }
