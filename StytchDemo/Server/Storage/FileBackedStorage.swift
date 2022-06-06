@@ -1,6 +1,6 @@
 import Foundation
 
-final class StorageClient<T: Identifiable & Codable> where T.ID: Codable {
+final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
     private var storage: Storage
 
     private let url: URL
@@ -11,6 +11,10 @@ final class StorageClient<T: Identifiable & Codable> where T.ID: Codable {
 
     func value(id: T.ID) -> T? {
         storage.values[id]
+    }
+
+    func values(where predicate: (T) -> Bool) -> [T] {
+        storage.values.values.filter(predicate)
     }
 
     init(path: String) {

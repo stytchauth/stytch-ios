@@ -2,10 +2,12 @@ import Foundation
 import Swifter
 import JWTKit
 
-final class UsersController {
-    private let users: StorageClient<User> = .init(path: "users")
+struct UsersController {
+    private static let users: FileBackedStorage<User> = .init(path: "users")
 
-    func createUser(request: HttpRequest) -> HttpResponse {
+    let request: HttpRequest
+
+    func createUser() -> HttpResponse {
         do {
             let userParams: JSON = try JSONDecoder().decode(JSON.self, from: Data(request.body))
             guard let stytchId = userParams["stytch_id"].stringValue else { return .badRequest(nil) }
@@ -26,30 +28,15 @@ final class UsersController {
         }
     }
 
-    func currentUser(request: HttpRequest) -> HttpResponse {
-        guard
-            let stytchSessionJwt = request.cookies.first(where: { $0.name == "stytch_session_jwt" }),
-            let stytchJWKS = serverStorage.valueForKey(.stytchJwksKey) ??
-                (try? Data(
-                    contentsOf: URL(string: "https://test.stytch.com/v1/sessions/jwks")!
-                        .appendingPathComponent(configuration.projectId)
-                )
-                ).flatMap({ try? JSONDecoder().decode(JWKS.self, from: $0) })
-        else {
-            return .unauthorized(.text("couldn't get keys"))
-        }
-
-        let payload: TestPayload
+    func currentUser() -> HttpResponse {
+        let currentUserId: String
         do {
-            let signers = JWTSigners()
-            try signers.use(jwks: stytchJWKS)
-
-            payload = try signers.verify(stytchSessionJwt.value, as: TestPayload.self)
+            currentUserId = try AuthorizationController(request: request).currentUserId()
         } catch {
-            return .unauthorized(.text("couldn't verify token"))
+            return .unauthorized((error as? AuthorizationController.Error).map { .text($0.message) })
         }
 
-        guard let user = user(id: payload.subject.value) else {
+        guard let user = user(id: currentUserId) else {
             return .notFound(.text("no current user"))
         }
 
@@ -60,15 +47,15 @@ final class UsersController {
         }
     }
 
-    private func user(id: String) -> User? {
-        users.value(id: id)
+    func user(id: String) -> User? {
+        Self.users.value(id: id)
     }
 
     private func upsert(id: String, update: (inout User?) -> User) throws -> String {
-        var user = users.value(id: id)
-        users.upsert(update(&user))
+        var user = Self.users.value(id: id)
+        Self.users.upsert(update(&user))
 
-        try users.save()
+        try Self.users.save()
 
         guard let user = user else {
             throw NSError() as Error
