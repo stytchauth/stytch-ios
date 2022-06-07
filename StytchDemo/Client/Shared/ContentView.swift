@@ -32,19 +32,19 @@ struct ContentView: View {
                 }
                 .navigationTitle("Stytch Demo")
                 #if !os(macOS)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Log out", action: logOutTapped)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Log out", action: logOutTapped)
+                        }
                     }
-                }
                 #endif
             } else {
                 AuthenticationOptionsView(session: sessionUser?.0, onAuth: onAuth)
                     .navigationTitle("Stytch Demo")
-                    #if !os(macOS)
+                #if !os(macOS)
                     .navigationBarTitleDisplayMode(.inline)
-                    #endif
+                #endif
             }
         }
     }

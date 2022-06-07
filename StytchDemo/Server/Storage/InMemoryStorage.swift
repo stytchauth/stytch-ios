@@ -1,10 +1,3 @@
-//
-//  InMemoryStorage.swift
-//  StytchDemo (Server)
-//
-//  Created by Dan Loman on 6/5/22.
-//
-
 import Foundation
 
 let memoryStorage: InMemoryStorage = .init()

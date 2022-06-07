@@ -24,7 +24,7 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
     }
 
     init(path: String) {
-        self.url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("stytch-demo/storage")
             .appendingPathComponent(path)
             .appendingPathExtension("json")
@@ -36,7 +36,6 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
             storage = .init(values: [:])
         }
     }
-
 
     func save() throws {
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -52,4 +51,3 @@ final class FileBackedStorage<T: Identifiable & Codable> where T.ID: Codable {
         var values: [T.ID: T] = [:]
     }
 }
-

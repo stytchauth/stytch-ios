@@ -7,10 +7,10 @@ func mountRoutes(to server: HttpServer) {
 
 private extension HttpServer {
     func mountRoutes() {
-        GET["/"] = { _ in .ok(.htmlBody("Hello, world!"))  }
+        GET["/"] = { _ in .ok(.htmlBody("Hello, world!")) }
 
         GET["/.well-known/apple-app-site-association"] = { _ in
-            .ok(.json(["applinks":["details": [["appIDs": [configuration.appId]]]]]))
+            .ok(.json(["applinks": ["details": [["appIDs": [configuration.appId]]]]]))
         }
 
         GET["/hobbies"] = HobbiesController.list

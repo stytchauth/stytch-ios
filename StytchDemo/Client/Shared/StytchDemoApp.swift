@@ -82,7 +82,6 @@ struct StytchDemoApp: App {
 extension StytchDemoApp {
     // For simplicity, we'll mimic StytchClient.Configuration, simply to reuse that value. We'd likely have a different source of truth in a real application.
     struct Configuration: Decodable {
-
         let serverUrl: URL
 
         init(from decoder: Decoder) throws {

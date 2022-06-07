@@ -1,5 +1,5 @@
-import SwiftUI
 import StytchCore
+import SwiftUI
 
 struct AuthenticationOptionsView: View {
     let session: Session?

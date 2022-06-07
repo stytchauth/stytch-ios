@@ -1,5 +1,5 @@
-import SwiftUI
 import StytchCore
+import SwiftUI
 
 struct HobbiesView: View {
     @StateObject private var model: Model = .init()
@@ -35,7 +35,7 @@ struct HobbiesView: View {
                             model.addHobby(name: newHobbyName) { newHobbyName = $0 }
                             newHobbyName = ""
                         }
-                            .disabled(newHobbyName.isEmpty)
+                        .disabled(newHobbyName.isEmpty)
                     }
                 }
             }
@@ -95,7 +95,7 @@ extension HobbiesView {
                 return
             }
             let oldHobby = hobbies[index]
-            self.hobbies[index] = hobby
+            hobbies[index] = hobby
             Task {
                 var request = request(url: hobbyUrl(hobby), method: "PUT")
                 do {

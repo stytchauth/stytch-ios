@@ -42,7 +42,7 @@ struct EmailAuthenticationView: View {
             Button("Open Gmail") {
                 openUrl(URL(string: "https://mail.google.com")!)
             }
-            Button("OK") { }
+            Button("OK") {}
         })
     }
 

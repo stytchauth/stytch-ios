@@ -19,7 +19,7 @@ struct BasicPayload: JWTPayload, Equatable {
     var subject: SubjectClaim
     var expiration: ExpirationClaim
 
-    func verify(using signer: JWTSigner) throws {
-        try self.expiration.verifyNotExpired()
+    func verify(using _: JWTSigner) throws {
+        try expiration.verifyNotExpired()
     }
 }
