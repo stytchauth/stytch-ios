@@ -6,11 +6,12 @@ struct SessionView: View {
     private var session: Session { sessionUser.session }
 
     var body: some View {
-        Text("Hi, \(sessionUser.user.name.firstName.presence ?? "pal")!")
-            .font(.title)
-            .padding()
-
         VStack(alignment: .leading) {
+            #if os(macOS)
+            Text("Hi, \(sessionUser.user.name.firstName.presence ?? "pal")!")
+                .font(.title)
+                .padding()
+            #endif
             Text("User ID: " + session.userId)
             Text("Factors:").bold()
             ForEach(session.authenticationFactors, id: \.lastAuthenticatedAt) { factor in
@@ -23,7 +24,7 @@ struct SessionView: View {
             Text("Started at: " + session.startedAt.formatted(date: .abbreviated, time: .shortened))
             Text("Expires at: " + session.expiresAt.formatted(date: .abbreviated, time: .shortened))
             Text("User agent: " + session.attributes.userAgent)
-        }
+        }.navigationTitle("Hi, \(sessionUser.user.name.firstName.presence ?? "pal")!")
     }
 }
 

@@ -36,9 +36,10 @@ struct HobbiesView: View {
                             newHobbyName = ""
                         }
                         .disabled(newHobbyName.isEmpty)
+                        .buttonStyle(.bordered)
                     }
                 }
-            }
+            }.listStyle(.plain)
         }
         .task { model.fetch() }
     }

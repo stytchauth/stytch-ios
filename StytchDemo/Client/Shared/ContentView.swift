@@ -5,6 +5,7 @@ struct ContentView: View {
     var sessionUser: (Session, User)?
     let logOutTapped: () -> Void
     let onAuth: (Session, User) -> Void
+    @State private var presentationOption: PresentationOption?
 
     var body: some View {
         NavigationView {
@@ -14,30 +15,81 @@ struct ContentView: View {
                     Text("Welcome, \(sessionUser.1.name.firstName.presence ?? "pal")!")
                         .font(.title)
                     Spacer()
-                    NavigationLink("View session info") {
-                        SessionView(sessionUser: sessionUser)
-                    }
-                    NavigationLink("Authenticate further (or refresh factor)") {
-                        AuthenticationOptionsView(session: sessionUser.0, onAuth: onAuth)
-                    }
-                    NavigationLink("View hobbies") {
-                        HobbiesView()
+                    Button("View hobbies") {
+                        presentationOption = .hobbies
                     }
                     .buttonStyle(.borderedProminent)
+                    Button("Add or refresh auth factor") {
+                        presentationOption = .authOptions
+                    }
+                    Button("View session info") {
+                        presentationOption = .sessionInfo
+                    }
                     Spacer()
-                    #if os(macOS)
-                    Button("Log out", action: logOutTapped)
-                        .padding()
-                    #endif
                 }
                 .navigationTitle("Stytch Demo")
-                #if !os(macOS)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Log out", action: logOutTapped)
+                .toolbar {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button("Log out", action: logOutTapped)
+                    }
+                }
+                .sheet(item: $presentationOption) { option in
+                    Group {
+                        switch option {
+                        case .authOptions:
+                            NavigationView {
+                                AuthenticationOptionsView(session: sessionUser.0, onAuth: onAuth)
+                                    .frame(minWidth: 200, minHeight: 200)
+                                    .toolbar {
+                                        ToolbarItem(placement: .cancellationAction) {
+                                            Button("Cancel") { presentationOption = nil }
+                                        }
+                                    }
+                            }
+                        case .sessionInfo:
+                            #if !os(macOS)
+                            NavigationView {
+                                SessionView(sessionUser: sessionUser)
+                                    .frame(minWidth: 200, minHeight: 200)
+                                    .toolbar {
+                                        ToolbarItem(placement: .cancellationAction) {
+                                            Button("Cancel") { presentationOption = nil }
+                                        }
+                                    }
+                            }
+                            #else
+                            SessionView(sessionUser: sessionUser)
+                                .frame(minWidth: 400, minHeight: 400)
+                                .toolbar {
+                                    ToolbarItem(placement: .cancellationAction) {
+                                        Button("Cancel") { presentationOption = nil }
+                                    }
+                                }
+                            #endif
+                        case .hobbies:
+                            #if !os(macOS)
+                            NavigationView {
+                                HobbiesView()
+                                    .toolbar {
+                                        ToolbarItem(placement: .cancellationAction) {
+                                            Button("Cancel") { presentationOption = nil }
+                                        }
+                                    }
+                            }
+                            #else
+                            HobbiesView()
+                                .frame(minWidth: 400, minHeight: 400)
+                                .toolbar {
+                                    ToolbarItem(placement: .cancellationAction) {
+                                        Button("Cancel") { presentationOption = nil }
+                                    }
+                                }
+                            #endif
                         }
                     }
+                }
+                #if !os(macOS)
+                .navigationBarTitleDisplayMode(.inline)
                 #endif
             } else {
                 AuthenticationOptionsView(session: sessionUser?.0, onAuth: onAuth)
@@ -47,5 +99,13 @@ struct ContentView: View {
                 #endif
             }
         }
+    }
+
+    enum PresentationOption: String, Identifiable {
+        var id: String { rawValue }
+
+        case sessionInfo
+        case authOptions
+        case hobbies
     }
 }

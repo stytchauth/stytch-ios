@@ -70,6 +70,7 @@ struct OTPAuthenticationView: View {
                 label: { Text("Delivery Method") }
             )
             .pickerStyle(.segmented)
+            .padding()
 
             Spacer()
 
