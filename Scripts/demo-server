@@ -33,11 +33,7 @@ class Runner
 
     start_ngrok(port: port)
 
-    @tunnel_url = fetch_tunnel_url
-    while @tunnel_url&.empty? do
-      sleep(0.1)
-      @tunnel_url = fetch_tunnel_url
-    end
+    fetch_tunnel_url
 
     update_client_config(tunnel_url: @tunnel_url)
 
@@ -56,7 +52,14 @@ class Runner
   end
 
   def fetch_tunnel_url
-    %x(/usr/bin/env curl http://127.0.0.1:4040/api/tunnels --silent | jq -r '.tunnels[].public_url').strip
+    @tunnel_url = ''
+    while @tunnel_url&.empty? do
+      (4040...4045).to_a.each do |port|
+        @tunnel_url = %x(/usr/bin/env curl http://127.0.0.1:#{port}/api/tunnels --silent --max-time 0.1 | jq -r '.tunnels[].public_url').strip
+        return unless @tunnel_url.empty?
+      end
+      sleep(0.1)
+    end
   end
 
   def app_id
