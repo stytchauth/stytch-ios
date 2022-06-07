@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ContentView: View {
     var sessionUser: (Session, User)?
-    let logOutTapped: () -> Void
+    let logOut: () -> Void
     let onAuth: (Session, User) -> Void
     @State private var presentationOption: PresentationOption?
 
@@ -30,7 +30,7 @@ struct ContentView: View {
                 .navigationTitle("Stytch Demo")
                 .toolbar {
                     ToolbarItem(placement: .destructiveAction) {
-                        Button("Log out", action: logOutTapped)
+                        Button("Log out", action: logOut)
                     }
                 }
                 .sheet(item: $presentationOption) { option in
@@ -69,7 +69,7 @@ struct ContentView: View {
                         case .hobbies:
                             #if !os(macOS)
                             NavigationView {
-                                HobbiesView()
+                                HobbiesView(onAuthError: logOut)
                                     .toolbar {
                                         ToolbarItem(placement: .cancellationAction) {
                                             Button("Cancel") { presentationOption = nil }
@@ -77,7 +77,7 @@ struct ContentView: View {
                                     }
                             }
                             #else
-                            HobbiesView()
+                            HobbiesView(onAuthError: logOut)
                                 .frame(minWidth: 400, minHeight: 400)
                                 .toolbar {
                                     ToolbarItem(placement: .cancellationAction) {

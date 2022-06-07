@@ -2,6 +2,8 @@ import StytchCore
 import SwiftUI
 
 struct HobbiesView: View {
+    let onAuthError: () -> Void
+
     @StateObject private var model: Model = .init()
 
     @State private var newHobbyName: String = ""
@@ -42,6 +44,10 @@ struct HobbiesView: View {
             }.listStyle(.plain)
         }
         .task { model.fetch() }
+        .onReceive(model.$onAuthError) { output in
+            guard output != nil else { return }
+            onAuthError()
+        }
     }
 }
 
@@ -79,6 +85,7 @@ struct HobbyList: Codable {
 extension HobbiesView {
     final class Model: ObservableObject {
         @Published var hobbies: [Hobby] = []
+        @Published var onAuthError: Void?
 
         func fetch() {
             Task {
@@ -172,7 +179,12 @@ extension HobbiesView {
         }
 
         private func performRequest<T: Decodable>(_ request: URLRequest) async throws -> T {
-            let (data, _) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if (response as? HTTPURLResponse)?.statusCode == 401 {
+                DispatchQueue.main.async {
+                    self.onAuthError = ()
+                }
+            }
             return try JSONDecoder().decode(T.self, from: data)
         }
 
