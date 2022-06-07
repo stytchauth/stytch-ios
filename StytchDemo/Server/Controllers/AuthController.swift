@@ -9,10 +9,11 @@ struct AuthController: Controller {
         guard
             let stytchSessionJwt = request.cookies.first(where: { $0.name == "stytch_session_jwt" }),
             let stytchJWKS = memoryStorage.valueForKey(.stytchJwksKey) ??
-            (try? Data(
-                contentsOf: URL(string: "https://test.stytch.com/v1/sessions/jwks")!
-                    .appendingPathComponent(configuration.projectId)
-            )
+            (
+                try? Data(
+                    contentsOf: URL(string: "https://test.stytch.com/v1/sessions/jwks")!
+                        .appendingPathComponent(configuration.projectId)
+                )
             ).flatMap({ try? JSONDecoder().decode(JWKS.self, from: $0) })
         else {
             return .unauthorized(.text("Couldn't retrieve JWKS"))
