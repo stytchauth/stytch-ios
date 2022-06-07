@@ -23,7 +23,7 @@ end
 
 class Runner
   def run(port:)
-    Dotenv.load(File.join(demo_root, '.env'))
+    load_env
 
     puts 'Starting server'
 
@@ -99,6 +99,11 @@ class Runner
     puts 'Please add your project id. Paste a value from https://stytch.com/dashboard/api-keys here:'.yellow
     project_id = STDIN.gets.chomp
     File.open(File.join(demo_root, '.env'), 'w') { |file| file.write("PROJECT_ID=#{project_id}") }
+    load_env
+  end
+
+  def load_env
+    Dotenv.load(File.join(demo_root, '.env'))
   end
 
   def stytch_project_id
