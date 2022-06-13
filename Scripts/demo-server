@@ -84,7 +84,8 @@ class Runner
 
   def start_server(port:)
     system("xcrun xcodebuild -quiet -project StytchDemo/StytchDemo.xcodeproj -scheme 'StytchDemo (Server)' -derivedDataPath #{File.join(project_root, '.build')} -configuration release build")
-    system("DEMO_SERVER_SCRIPT=1 HOST_URL=#{@tunnel_url} APP_ID=#{app_id} PROJECT_ID=#{stytch_project_id} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')} #{port}")
+    env = "DEMO_SERVER_SCRIPT=1 HOST_URL=#{@tunnel_url} APPLE_APP_ID=#{app_id} STYTCH_PROJECT_ID=#{stytch_project_id} PORT=#{port}"
+    system("#{env} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')}")
   end
 
   def update_public_token_if_needed

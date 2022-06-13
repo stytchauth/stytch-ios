@@ -5,14 +5,15 @@ let configuration: Configuration = {
         let data = try JSONEncoder().encode(ProcessInfo.processInfo.environment)
         return try JSONDecoder().decode(Configuration.self, from: data)
     } catch {
-        fatalError("ERROR generating config from Environment")
+        fatalError("Error deserializing config")
     }
 }()
 
 struct Configuration: Decodable {
+    let appleAppId: String
     let hostUrl: URL
-    let appId: String
-    let projectId: String
+    let port: UInt16
+    let stytchProjectId: String
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -21,18 +22,25 @@ struct Configuration: Decodable {
             case let urlString = try container.decode(String.self, forKey: .hostUrl),
             let url = URL(string: urlString)
         else {
-            throw DecodingError
-                .dataCorruptedError(forKey: .hostUrl, in: container, debugDescription: "Expected valid URL string")
+            throw DecodingError.dataCorruptedError(forKey: .hostUrl, in: container, debugDescription: "Expected valid URL string")
+        }
+        guard
+            case let portString = try container.decode(String.self, forKey: .port),
+            let _port = UInt16(portString)
+        else {
+            throw DecodingError.dataCorruptedError(forKey: .port, in: container, debugDescription: "Expected valid port string")
         }
 
+        appleAppId = try container.decode(String.self, forKey: .appleAppId)
         hostUrl = url
-        appId = try container.decode(String.self, forKey: .appId)
-        projectId = try container.decode(String.self, forKey: .projectId)
+        port = _port
+        stytchProjectId = try container.decode(String.self, forKey: .stytchProjectId)
     }
 
     private enum CodingKeys: String, CodingKey {
-        case appId = "APP_ID"
+        case appleAppId = "APPLE_APP_ID"
         case hostUrl = "HOST_URL"
-        case projectId = "PROJECT_ID"
+        case port = "PORT"
+        case stytchProjectId = "STYTCH_PROJECT_ID"
     }
 }

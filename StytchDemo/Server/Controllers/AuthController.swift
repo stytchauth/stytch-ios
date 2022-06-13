@@ -12,7 +12,7 @@ struct AuthController: Controller {
             (
                 try? Data(
                     contentsOf: URL(string: "https://test.stytch.com/v1/sessions/jwks")!
-                        .appendingPathComponent(configuration.projectId)
+                        .appendingPathComponent(configuration.stytchProjectId)
                 )
             ).flatMap({ try? JSONDecoder().decode(JWKS.self, from: $0) })
         else {
