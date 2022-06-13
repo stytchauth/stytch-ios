@@ -142,7 +142,7 @@ when 'start'
   end
 when 'cleanup'
   Runner.new.cleanup
-when 'bootstrap'
+when 'setup'
   system('bundle install')
   system('brew install ngrok')
 end
