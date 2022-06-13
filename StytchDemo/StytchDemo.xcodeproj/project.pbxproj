@@ -18,11 +18,30 @@
 		224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D35280CC566000230FA /* StytchDemoApp.swift */; };
 		224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D35280CC566000230FA /* StytchDemoApp.swift */; };
 		224F7D48280CEC58000230FA /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 224F7D47280CEC58000230FA /* StytchCore */; };
-		224F7D4A280CEDD0000230FA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* LoginView.swift */; };
-		224F7D4B280CEDD0000230FA /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* LoginView.swift */; };
+		224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */; };
+		224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */; };
 		224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
 		224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
+		224FC03628486013009C9740 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 224FC03528486013009C9740 /* Swifter */; };
+		224FC03A28488591009C9740 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FC03928488591009C9740 /* Configuration.swift */; };
 		226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 226375C5280CBAE0000CDD49 /* StytchCore */; };
+		22909077284BE7FC00ADD3C4 /* JWTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 22909076284BE7FC00ADD3C4 /* JWTKit */; };
+		22909079284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
+		2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
+		2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
+		2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
+		22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907E284DADB700ADD3C4 /* JSON.swift */; };
+		22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */; };
+		22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */; };
+		22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909088284DBC1900ADD3C4 /* JWT.swift */; };
+		2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908C284DC30D00ADD3C4 /* AuthController.swift */; };
+		2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290908E284DC35900ADD3C4 /* HobbiesController.swift */; };
+		22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */; };
+		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
+		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
+		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,12 +52,28 @@
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		224F7D43280CC624000230FA /* macOS.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		224F7D45280CC63C000230FA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		224F7D49280CEDD0000230FA /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthenticationView.swift; sourceTree = "<group>"; };
 		224F7D4C280CEDF5000230FA /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
 		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		22909078284D9F4600ADD3C4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationOptionsView.swift; sourceTree = "<group>"; };
+		2290907E284DADB700ADD3C4 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBackedStorage.swift; sourceTree = "<group>"; };
+		22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStorage.swift; sourceTree = "<group>"; };
+		22909088284DBC1900ADD3C4 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
+		2290908C284DC30D00ADD3C4 /* AuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthController.swift; sourceTree = "<group>"; };
+		2290908E284DC35900ADD3C4 /* HobbiesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesController.swift; sourceTree = "<group>"; };
+		22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HttpRequest+Stytch.swift"; sourceTree = "<group>"; };
+		22909092284DCC8E00ADD3C4 /* Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		22909094284DD5EE00ADD3C4 /* HobbiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesView.swift; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
+		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
+		22BE9A1128481EFE00E29245 /* ServerRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRunner.swift; sourceTree = "<group>"; };
+		22D4F3CF2857DE26001FA1EC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -60,6 +95,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		22BE99FA2847FFA300E29245 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				224FC03628486013009C9740 /* Swifter in Frameworks */,
+				22909077284BE7FC00ADD3C4 /* JWTKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -69,8 +113,11 @@
 				224F7D50280CF500000230FA /* Info.plist */,
 				2222D1432835C341008CEBD7 /* StytchConfiguration.plist */,
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
+				22909078284D9F4600ADD3C4 /* Extensions.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
-				224F7D49280CEDD0000230FA /* LoginView.swift */,
+				2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */,
+				22909094284DD5EE00ADD3C4 /* HobbiesView.swift */,
+				224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */,
 				2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */,
 				224F7D4C280CEDF5000230FA /* SessionView.swift */,
 				224F7D3B280CC5DE000230FA /* Assets.xcassets */,
@@ -102,15 +149,33 @@
 			path = iOS;
 			sourceTree = "<group>";
 		};
+		2290908A284DC2E600ADD3C4 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				2290908E284DC35900ADD3C4 /* HobbiesController.swift */,
+				2290908C284DC30D00ADD3C4 /* AuthController.swift */,
+				22909092284DCC8E00ADD3C4 /* Controller.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		2290908B284DC2F300ADD3C4 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */,
+				22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		229B820B2809EA3E007BC3F1 = {
 			isa = PBXGroup;
 			children = (
+				22D4F3CF2857DE26001FA1EC /* README.md */,
 				22E4346D280A174100FB45F0 /* Stytch */,
-				224F7D3A280CC5DE000230FA /* Shared */,
-				224F7D51280CF592000230FA /* iOS */,
-				224F7D42280CC624000230FA /* macOS */,
-				224F7D44280CC63C000230FA /* Preview Content */,
+				22BE99F82847FDC800E29245 /* Client */,
 				22E4346A280A133900FB45F0 /* StytchPlayground.playground */,
+				22BE99FE2847FFA300E29245 /* Server */,
 				229B82192809EA3F007BC3F1 /* Products */,
 				22E4345E2809EF2200FB45F0 /* Frameworks */,
 			);
@@ -121,8 +186,35 @@
 			children = (
 				229B82182809EA3F007BC3F1 /* StytchDemo.app */,
 				229B821E2809EA3F007BC3F1 /* StytchDemo.app */,
+				22BE99FD2847FFA300E29245 /* StytchDemo (Server) */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		22BE99F82847FDC800E29245 /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				224F7D44280CC63C000230FA /* Preview Content */,
+				224F7D42280CC624000230FA /* macOS */,
+				224F7D51280CF592000230FA /* iOS */,
+				224F7D3A280CC5DE000230FA /* Shared */,
+			);
+			path = Client;
+			sourceTree = "<group>";
+		};
+		22BE99FE2847FFA300E29245 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				22BE9A072848071B00E29245 /* Routes.swift */,
+				224FC03928488591009C9740 /* Configuration.swift */,
+				22BE9A1128481EFE00E29245 /* ServerRunner.swift */,
+				2290908B284DC2F300ADD3C4 /* Storage */,
+				2290908A284DC2E600ADD3C4 /* Controllers */,
+				2290907E284DADB700ADD3C4 /* JSON.swift */,
+				22909088284DBC1900ADD3C4 /* JWT.swift */,
+				22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */,
+			);
+			path = Server;
 			sourceTree = "<group>";
 		};
 		22E4345E2809EF2200FB45F0 /* Frameworks */ = {
@@ -176,6 +268,26 @@
 			productReference = 229B821E2809EA3F007BC3F1 /* StytchDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		22BE99FC2847FFA300E29245 /* StytchDemo (Server) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22BE9A012847FFA300E29245 /* Build configuration list for PBXNativeTarget "StytchDemo (Server)" */;
+			buildPhases = (
+				22BE99F92847FFA300E29245 /* Sources */,
+				22BE99FA2847FFA300E29245 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StytchDemo (Server)";
+			packageProductDependencies = (
+				224FC03528486013009C9740 /* Swifter */,
+				22909076284BE7FC00ADD3C4 /* JWTKit */,
+			);
+			productName = StytchDemoServer;
+			productReference = 22BE99FD2847FFA300E29245 /* StytchDemo (Server) */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -192,6 +304,9 @@
 					229B821D2809EA3F007BC3F1 = {
 						CreatedOnToolsVersion = 13.3;
 					};
+					22BE99FC2847FFA300E29245 = {
+						CreatedOnToolsVersion = 13.3;
+					};
 				};
 			};
 			buildConfigurationList = 229B820F2809EA3E007BC3F1 /* Build configuration list for PBXProject "StytchDemo" */;
@@ -203,12 +318,17 @@
 				Base,
 			);
 			mainGroup = 229B820B2809EA3E007BC3F1;
+			packageReferences = (
+				224FC03428486013009C9740 /* XCRemoteSwiftPackageReference "swifter" */,
+				22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */,
+			);
 			productRefGroup = 229B82192809EA3F007BC3F1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				229B82172809EA3F007BC3F1 /* StytchDemo (iOS) */,
 				229B821D2809EA3F007BC3F1 /* StytchDemo (macOS) */,
+				22BE99FC2847FFA300E29245 /* StytchDemo (Server) */,
 			);
 		};
 /* End PBXProject section */
@@ -240,9 +360,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				22909079284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */,
-				224F7D4A280CEDD0000230FA /* LoginView.swift in Sources */,
+				22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */,
+				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
+				2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,10 +375,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */,
-				224F7D4B280CEDD0000230FA /* LoginView.swift in Sources */,
+				22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */,
+				224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
+				2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22BE99F92847FFA300E29245 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */,
+				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
+				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
+				22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */,
+				22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */,
+				22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */,
+				22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */,
+				22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */,
+				22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */,
+				224FC03A28488591009C9740 /* Configuration.swift in Sources */,
+				22BE9A082848071B00E29245 /* Routes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,13 +527,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Client/iOS/iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_FILE = Client/Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -415,13 +559,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = iOS/iOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Client/iOS/iOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_FILE = Client/Shared/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -448,7 +592,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -456,7 +600,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_FILE = Client/Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -477,7 +621,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -485,7 +629,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shared/Info.plist;
+				INFOPLIST_FILE = Client/Shared/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -497,6 +641,32 @@
 				PRODUCT_NAME = StytchDemo;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		22BE9A022847FFA300E29245 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		22BE9A032847FFA300E29245 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -531,16 +701,54 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		22BE9A012847FFA300E29245 /* Build configuration list for PBXNativeTarget "StytchDemo (Server)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22BE9A022847FFA300E29245 /* Debug */,
+				22BE9A032847FFA300E29245 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		224FC03428486013009C9740 /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/namolnad/swifter.git";
+			requirement = {
+				branch = "update-to-async";
+				kind = branch;
+			};
+		};
+		22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vapor/jwt-kit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		224F7D47280CEC58000230FA /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
 		};
+		224FC03528486013009C9740 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 224FC03428486013009C9740 /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
 		226375C5280CBAE0000CDD49 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
+		};
+		22909076284BE7FC00ADD3C4 /* JWTKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */;
+			productName = JWTKit;
 		};
 		22E434612809EF2F00FB45F0 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;

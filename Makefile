@@ -8,6 +8,10 @@ coverage:
 codegen:
 	arch -arm64 mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
 
+demo:
+	Scripts/demo setup
+	bundle exec --gemfile=StytchDemo/Gemfile Scripts/demo start
+
 docs: codegen
 	arch -arm64 xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$$(xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/') -destination generic/platform=iOS -derivedDataPath .build
 

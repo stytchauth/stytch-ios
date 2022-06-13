@@ -2,6 +2,8 @@
 #
 .DS_Store
 
+**/.env
+
 ## User settings
 **/xcuserdata/
 
@@ -41,3 +43,6 @@ fastlane/test_output
 !*.playground/playground.xcworkspace/contents.xcworkspacedata
 *.playground/**
 !*.playground/Sources/.gitkeep
+
+# Demo
+StytchDemo/*file.lock*
