@@ -1,8 +1,10 @@
 import Foundation
 import Swifter
 
-func mountRoutes(to server: HttpServer) {
-    server.mountRoutes()
+extension ServerRunner {
+    static func mountRoutes(to server: HttpServer) {
+        server.mountRoutes()
+    }
 }
 
 private extension HttpServer {
