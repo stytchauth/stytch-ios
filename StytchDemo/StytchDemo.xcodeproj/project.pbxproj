@@ -40,9 +40,8 @@
 		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
 		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
-		22BE9A002847FFA300E29245 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE99FF2847FFA300E29245 /* main.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
-		22BE9A1228481EFE00E29245 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* Server.swift */; };
+		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,9 +71,8 @@
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
-		22BE99FF2847FFA300E29245 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
-		22BE9A1128481EFE00E29245 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		22BE9A1128481EFE00E29245 /* ServerRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRunner.swift; sourceTree = "<group>"; };
 		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -207,12 +205,11 @@
 			children = (
 				22BE9A072848071B00E29245 /* Routes.swift */,
 				224FC03928488591009C9740 /* Configuration.swift */,
-				22BE9A1128481EFE00E29245 /* Server.swift */,
+				22BE9A1128481EFE00E29245 /* ServerRunner.swift */,
 				2290908B284DC2F300ADD3C4 /* Storage */,
 				2290908A284DC2E600ADD3C4 /* Controllers */,
 				2290907E284DADB700ADD3C4 /* JSON.swift */,
 				22909088284DBC1900ADD3C4 /* JWT.swift */,
-				22BE99FF2847FFA300E29245 /* main.swift */,
 				22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */,
 			);
 			path = Server;
@@ -390,7 +387,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22BE9A002847FFA300E29245 /* main.swift in Sources */,
 				2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */,
 				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
 				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
@@ -398,7 +394,7 @@
 				22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */,
 				22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */,
 				22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */,
-				22BE9A1228481EFE00E29245 /* Server.swift in Sources */,
+				22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */,
 				22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */,
 				224FC03A28488591009C9740 /* Configuration.swift in Sources */,
 				22BE9A082848071B00E29245 /* Routes.swift in Sources */,
