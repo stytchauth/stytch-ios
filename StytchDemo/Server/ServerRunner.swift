@@ -5,7 +5,7 @@ import Swifter
 enum ServerRunner {
     static func main() {
         if ProcessInfo.processInfo.environment["DEMO_SERVER_SCRIPT"] == nil {
-            preconditionFailure("Server should be started by running `Scripts/demo-server start` from the commandline.")
+            preconditionFailure("Server should be started by running `make demo` from the commandline.")
         }
 
         let server = HttpServer()

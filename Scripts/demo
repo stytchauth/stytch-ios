@@ -143,6 +143,8 @@ when 'start'
 when 'cleanup'
   Runner.new.cleanup
 when 'setup'
-  system('bundle install')
-  system('brew install ngrok')
+  Dir.chdir 'StytchDemo' do
+    system('bundle install --quiet')
+    system('HOMEBREW_NO_AUTO_UPDATE=1 brew bundle --quiet')
+  end
 end
