@@ -43,6 +43,7 @@ class Runner
   def cleanup
     puts 'Cleaning up server'
     system('pkill ngrok')
+    system('pkill \'StytchDemo \(Server\)\'')
   end
 
   private
