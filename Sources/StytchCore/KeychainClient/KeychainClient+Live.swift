@@ -41,6 +41,7 @@ extension KeychainClient {
         SecItemCopyMatching(item.baseQuery as CFDictionary, nil) == errSecSuccess
     } publicKeyForItem: { client, item in
         var error: Unmanaged<CFError>?
+        defer { error?.release() }
 
         let externalRepresentationForKey: (SecKey, inout Unmanaged<CFError>?) throws -> String = { key, error in
             guard let externalRepresentationData = SecKeyCopyExternalRepresentation(key, &error) as? Data else {
@@ -50,7 +51,7 @@ extension KeychainClient {
             return externalRepresentationData.base64EncodedString()
         }
 
-        if let publicKey = try client.fetchKeyForItem(item, .public) {
+        if let privateKey = try client.privateKeyForItem(item), let publicKey = SecKeyCopyPublicKey(privateKey) {
             return try externalRepresentationForKey(publicKey, &error)
         }
 
@@ -58,6 +59,8 @@ extension KeychainClient {
 
         let accessControl: SecAccessControlCreateFlags
 
+        // TODO: - allow falling back to passcode if the developer desires it (should NOT be the default)
+        // TODO: - 
         if #available(iOS 11.3, macOS 10.13.4, tvOS 11.3, watchOS 4.3, *) {
             accessControl = [.biometryCurrentSet]
         } else {
@@ -70,7 +73,7 @@ extension KeychainClient {
 
         let query = item.createKeyPairQuery(accessControl: accessControl)
 
-        guard let privateKey = SecKeyCreateRandomKey(query as CFDictionary, &error) else {
+        guard let privateKey = SecKeyCreateRandomKey(query, &error) else {
             throw error.toError() ?? KeychainError.privateKeyGenerationFailed
         }
 
@@ -79,12 +82,10 @@ extension KeychainClient {
         }
 
         return try externalRepresentationForKey(publicKey, &error)
-    } fetchKeyForItem: { item, keyClass in
-        let query = item.getKeyQuery(keyClass: keyClass)
-
+    } privateKeyForItem: { item in
         var result: AnyObject?
 
-        let queryStatus = SecItemCopyMatching(query as CFDictionary, &result)
+        let queryStatus = SecItemCopyMatching(item.privateKeyQuery, &result)
 
         if queryStatus == errSecItemNotFound {
             return nil
@@ -94,6 +95,7 @@ extension KeychainClient {
             throw KeychainError.unhandledError(status: queryStatus)
         }
 
+        // TODO: check on retrieving metadata (like email address)
         guard let result = result, let castedKey = result as? SecKey?, let key = castedKey else {
             throw KeychainError.notSecKey
         }
@@ -101,11 +103,13 @@ extension KeychainClient {
         return key
     } signChallenge: { client, challenge, item, algorithm in
         var error: Unmanaged<CFError>?
+        defer { error?.release() }
 
-        guard let privateKey = try client.fetchKeyForItem(item, .private) else {
+        guard let privateKey = try client.privateKeyForItem(item) else {
             throw KeychainError.noPrivateKeyFound
         }
 
+        // TODO: check how these algorithms are initialized
         guard
             case let algorithm: SecKeyAlgorithm = .init(rawValue: algorithm as CFString),
             SecKeyIsAlgorithmSupported(privateKey, .sign, algorithm)

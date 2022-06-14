@@ -11,7 +11,7 @@ struct KeychainClient {
 
     private let publicKeyForItem: (Self, Item) throws -> String
 
-    let fetchKeyForItem: (Item, KeyClass) throws -> SecKey?
+    let privateKeyForItem: (Item) throws -> SecKey?
 
     private let signChallenge: (Self, String, Item, String) throws -> String
 
@@ -21,7 +21,7 @@ struct KeychainClient {
         removeItem: @escaping (Self, Item) throws -> Void,
         resultExists: @escaping (Item) -> Bool,
         publicKeyForItem: @escaping (Self, Item) throws -> String,
-        fetchKeyForItem: @escaping (Item, KeyClass) throws -> SecKey?,
+        privateKeyForItem: @escaping (Item) throws -> SecKey?,
         signChallenge: @escaping (Self, String, Item, String) throws -> String
     ) {
         self.getItem = getItem
@@ -29,7 +29,7 @@ struct KeychainClient {
         self.removeItem = removeItem
         self.resultExists = resultExists
         self.publicKeyForItem = publicKeyForItem
-        self.fetchKeyForItem = fetchKeyForItem
+        self.privateKeyForItem = privateKeyForItem
         self.signChallenge = signChallenge
     }
 
@@ -92,6 +92,7 @@ extension KeychainClient {
             if let keyType = kind.keyType {
                 query[kSecAttrKeyType] = keyType
             }
+            // TODO: - add syncronizable
             return query
         }
 
@@ -108,12 +109,11 @@ extension KeychainClient {
                 getQuerySegment = [kSecReturnRef: true]
             }
 
-            return baseQuery
-                .merging(getQuerySegment) { $1 } as CFDictionary
+            return baseQuery.merging(getQuerySegment)
         }
 
         func insertQuery(value: String) -> CFDictionary {
-            baseQuery.merging(querySegmentForUpdate(for: value)) { $1 } as CFDictionary
+            baseQuery.merging(querySegmentForUpdate(for: value))
         }
 
         func querySegmentForUpdate(for value: String) -> [CFString: Any] {
@@ -123,19 +123,16 @@ extension KeychainClient {
         func createKeyPairQuery(accessControl: SecAccessControl) -> CFDictionary {
             baseQuery.merging([
                 kSecAttrKeySizeInBits: 2048, // TODO: - confirm key size
-                kSecAttrIsPermanent: true,
-                kSecPublicKeyAttrs: [
-                    kSecAttrApplicationTag: KeyClass.public.rawValue,
-                ],
+                kSecPublicKeyAttrs: [:],
                 kSecPrivateKeyAttrs: [
-                    kSecAttrApplicationTag: KeyClass.private.rawValue,
+                    kSecAttrIsPermanent: true,
                     kSecAttrAccessControl: accessControl, // FIXME: - messed up on ios 15 simulator
                 ],
-            ]) { $1 } as CFDictionary
+            ])
         }
 
-        func getKeyQuery(keyClass: KeyClass) -> CFDictionary {
-            baseQuery.merging([kSecAttrApplicationTag: keyClass.rawValue]) { $1 } as CFDictionary
+        var privateKeyQuery: CFDictionary {
+            baseQuery as CFDictionary
         }
 
         private var secClass: CFString {
@@ -165,6 +162,7 @@ extension KeychainClient {
 }
 
 extension KeychainClient {
+    // TODO: remove this for better
     public enum AppStatusOption {
         case foreground
         case background
@@ -177,11 +175,6 @@ extension KeychainClient {
                 return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
             }
         }
-    }
-
-    enum KeyClass: String {
-        case `private`
-        case `public`
     }
 }
 
@@ -203,4 +196,10 @@ extension Unmanaged where Instance == CFError {
 
 extension KeychainClient.Item {
     static let stytchPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_pkce_code_verifier")
+}
+
+extension Dictionary where Key == CFString, Value == Any {
+    func merging(_ other: Self) -> CFDictionary {
+        self.merging(other) { $1 } as CFDictionary
+    }
 }
