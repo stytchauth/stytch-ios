@@ -62,7 +62,8 @@ extension KeychainClient {
     struct Item {
         enum Kind {
             case token
-            case keyPair(AppStatusOption)
+            // TODO: - determine if AppStatusOption is required, also use default values for these associated values
+            case keyPair(AppStatusOption = .foreground)
 
             var keyType: CFString? {
                 switch self {
@@ -125,6 +126,7 @@ extension KeychainClient {
                 kSecAttrKeySizeInBits: 2048, // TODO: - confirm key size
                 kSecPublicKeyAttrs: [:],
                 kSecPrivateKeyAttrs: [
+                    // TODO: confirm this works within the public key attrs
                     kSecAttrIsPermanent: true,
                     kSecAttrAccessControl: accessControl, // FIXME: - messed up on ios 15 simulator
                 ],

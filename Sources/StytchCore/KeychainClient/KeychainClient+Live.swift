@@ -60,10 +60,11 @@ extension KeychainClient {
         let accessControl: SecAccessControlCreateFlags
 
         // TODO: - allow falling back to passcode if the developer desires it (should NOT be the default)
-        // TODO: - 
+        // TODO: - look into privateKeyUsage. Find out if this is required
         if #available(iOS 11.3, macOS 10.13.4, tvOS 11.3, watchOS 4.3, *) {
             accessControl = [.biometryCurrentSet]
         } else {
+            // TODO: decide if should allow something other than current set
             accessControl = [.touchIDCurrentSet]
         }
 
