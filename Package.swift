@@ -8,18 +8,16 @@ let package = Package(
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
-        .target(
-            name: "StytchCore",
-            dependencies: [
-                "Networking",
-            ]
-        ),
-        .target(name: "Networking"),
-        .target(name: "NetworkingTestSupport"),
-        .testTarget(name: "NetworkingTests", dependencies: ["Networking", "NetworkingTestSupport"]),
-        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore", "NetworkingTestSupport"]),
+        .target(name: "StytchCore"),
+        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
+
+#if swift(>=5.6)
+// Add the documentation compiler plugin if possible
+package.dependencies.append(
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+)
+#endif

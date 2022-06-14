@@ -1,12 +1,12 @@
 import Foundation
 
 extension String {
-    var base64Encoded: String {
-        Data(utf8).base64EncodedString()
-    }
-
     var completeRange: NSRange {
         .init(location: 0, length: count)
+    }
+
+    func base64Encoded() -> String {
+        Data(utf8).base64EncodedString()
     }
 
     func dropLast(while predicate: (Character) throws -> Bool) rethrows -> Substring {

@@ -51,11 +51,11 @@ public extension User {
 
     struct Name: Codable {
         /// The user's first name.
-        public let firstName: String
+        public let firstName: String?
         /// The user's last name.
-        public let lastName: String
+        public let lastName: String?
         /// The user's middle name.
-        public let middleName: String
+        public let middleName: String?
     }
 
     struct Provider: Codable {

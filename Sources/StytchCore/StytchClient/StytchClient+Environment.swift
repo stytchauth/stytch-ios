@@ -1,5 +1,4 @@
 import Foundation
-import Networking
 
 // swiftlint:disable identifier_name
 #if DEBUG
@@ -12,10 +11,6 @@ let Current: StytchClient.Environment = .init()
 extension StytchClient {
     struct Environment {
         var clientInfo: ClientInfo = .init()
-
-        var networkingClient: NetworkingClient = .live
-
-        let sessionStorage: SessionStorage = .init()
 
         var jsonDecoder: JSONDecoder = {
             let decoder = JSONDecoder()
@@ -48,10 +43,36 @@ extension StytchClient {
             return encoder
         }()
 
+        var networkingClient: NetworkingClient = .live
+
+        let cryptoClient: CryptoClient = .init()
+
+        var sessionsPollingClient: PollingClient = .sessions
+
+        let sessionStorage: SessionStorage = .init()
+
         var cookieClient: CookieClient = .live
 
         var keychainClient: KeychainClient = .live
 
         var date: () -> Date = Date.init
+
+        var dataWithRandomBytesOfCount: (UInt) throws -> Data = { byteCount in
+            var buffer = [UInt8](repeating: 0, count: Int(byteCount))
+
+            guard SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer) == errSecSuccess else {
+                throw StytchError.randomNumberGenerationFailed
+            }
+
+            return .init(buffer)
+        }
+
+        var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
+
+        var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
+            let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
+            runloop.add(timer, forMode: .common)
+            return timer
+        }
     }
 }

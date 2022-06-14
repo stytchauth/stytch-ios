@@ -5,25 +5,32 @@
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
 ![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
-![CocoaPods Compatible](https://img.shields.io/cocoapods/v/StytchCore.svg)
-
-
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. Improve security and user experience with passwordless authentication. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms.
+![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stytch.svg)
 
 * [Getting Started](#getting-started)
-  * [Supported Products](#supported-products)
-  * [Async Options](#async-options)
+  * [What is Stytch?](#what-is-stytch)
+  * [Why should I use the Stytch SDK?](#why-should-i-use-the-stytch-sdk)
+  * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
+    * [Async Options](#async-options)
+  * [How do I start using Stytch?](#how-do-i-start-using-stytch)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
   * [Configuration](#configuration)
   * [Authenticating](#authenticating)
 * [Documentation](#documentation)
+* [FAQ](#faq)
 * [License](#license)
 
 ## Getting Started
 
-With just a few lines of code, you can easiliy authenticate your users and get back to focusing on the core of your product.
+### What is Stytch?
+
+[Stytch](https://stytch.com) is an authentication platform, written by developers for developers, with a focus on improving security and user experience via passwordless authentication. Stytch offers direct API integrations, language-specific libraries, and SDKs (like this one) to make the process of setting up an authentication flow for your app as easy as possible.
+
+### Why should I use the Stytch SDK?
+
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
 
 ``` swift
 import StytchCore
@@ -35,19 +42,33 @@ _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(emai
 _ = try await StytchClient.handle(url: deeplinkUrl)
 ```
 
-#### Supported Products
+### What can I do with the Stytch SDK?
 
-- Email magic links
-- One-time passcodes (SMS, WhatsApp, Email)
-- Session management
+There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
-Additional functionality coming in the near future!
+- Send/authenticate magic links
+    - Delivery via:
+        - Email
+- Send/authenticate one-time passcodes
+    - Delivery via:
+        - SMS
+        - WhatsApp
+        - Email
+- Manage user sessions
+    - Authenticate/refresh an existing session
+    - Revoke a session (Sign out)
 
 #### Async Options
+
+The SDK provides several different mechanisms for handling the asynchronous code, so you can choose what best suits your needs.
 
 - `Async/Await`
 - `Combine`
 - ` Callbacks`
+
+### How do I start using Stytch?
+
+If you are completely new to Stytch, prior to using the SDK you will first need to visit [Stytch's homepage](https://stytch.com), sign up, and create a new project in the [dashboard](https://stytch.com/dashboard/home). You'll then need to adjust your [SDK configuration](https://stytch.com/dashboard/sdk-configuration) — adding your app's bundle id to `Authorized environments` and enabling any `Auth methods` you wish to use.
 
 ## Requirements
 
@@ -71,21 +92,23 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
 ```
-binary "https://stytch-swift.github.io/StytchCore.json"
+binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json"
 ```
 
 ### CocoaPods
 [CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
 
 ```
-pod 'StytchCore'
+pod 'Stytch/StytchCore'
 ```
+
+Unlike with the other dependency managers, when using CocoaPods you'll import `Stytch` vs `StytchCore`.
 
 ## Usage
 
 ### Configuration
 
-To start using Stytch, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
+To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
 If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
@@ -94,6 +117,8 @@ If you are using a redirect authentication product (Email Magic Links/OAuth) you
 ![Entitlements screenshot](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)
 
 #### Manual Configuration / Deeplink Handling
+
+This example shows a hypothetical SwiftUI App file, with custom configuration (see `.task {}`), as well as deeplink/universal link handling.
 
 ``` swift
 @main
@@ -136,15 +161,18 @@ struct YourApp: App {
 
 ### Authenticating
 
+As seen in [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk), there are a number of different authentication products available. Here, we'll showcase a simple example of using the OTP product.
+
 #### One-time Passcodes
+
+This example shows a hypothetical class you could use to manage SMS authentication in your app, delegating much of the work to the StytchClient under the hood.
 
 ``` swift
 import StytchCore
 
 final class SMSAuthenticationController {
-    var methodId: String?
-    var session: Session?
-    var user: User?
+    private let onAuthenticate: (Session, User) -> Void
+    private var methodId: String?
 
     // phoneNumber must be a valid phone number in E.164 format (e.g. +1XXXXXXXXXX)
     func login(phoneNumber: String) async throws {
@@ -161,15 +189,28 @@ final class SMSAuthenticationController {
         let response = try await StytchClient.otps.authenticate(
             parameters: .init(code: code, methodId: methodId)
         )
-        session = response.session
-        user = response.user
+
+        onAuthenticate(response.session, response.user)
     }
 }
 ```
 
 ## Documentation
 
-Full documentation is available [here](https://fluffy-bassoon-7f56d670.pages.github.io/documentation/stytchcore/).
+Full reference documentation is available [here](https://stytchauth.github.io/stytch-swift/documentation/stytchcore/).
+
+## FAQ
+
+1. How does the SDK compare to the API?
+    1. The SDK, for the most part, mirrors the API directly — though it provides a more opinionated take on interacting with these methods; managing local state on your behalf and introducing some defaults (viewable in the corresponding init/function reference docs). A primary benefit of using the SDK is that you can interact with Stytch directly from the client, without relaying calls through your backend.
+1. What are the some of the default behaviors of the SDK?
+    1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are not cached by the SDK, these must be pulled from the `authenticate` responses and stored by the application. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
+1. Are there guides or sample apps available to see this in use?
+    1. Yes! There is a SwiftUI macOS/iOS Demo App included in this repo, available [here](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo).
+
+### Questions?
+
+Feel free to reach out any time at support@stytch.com or in our [Slack](https://join.slack.com/t/stytch/shared_invite/zt-nil4wo92-jApJ9Cl32cJbEd9esKkvyg)
 
 ## License
 

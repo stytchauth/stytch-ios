@@ -1,7 +1,7 @@
 import Foundation
 
-public final class NetworkingClient {
-    public var headerProvider: (() -> [String: String])?
+final class NetworkingClient {
+    var headerProvider: (() -> [String: String])?
 
     private let handleRequest: (URLRequest, @escaping Completion) -> TaskHandle
 
@@ -10,7 +10,7 @@ public final class NetworkingClient {
     }
 
     @discardableResult
-    public func performRequest(_ method: Method, url: URL, completion: @escaping Completion) -> TaskHandle {
+    func performRequest(_ method: Method, url: URL, completion: @escaping Completion) -> TaskHandle {
         perform(
             request: urlRequest(url: url, method: method),
             completion: completion
@@ -73,7 +73,7 @@ public final class NetworkingClient {
 //    }
 // }
 
-public extension NetworkingClient {
+extension NetworkingClient {
     typealias Completion = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void
 
     enum Method {

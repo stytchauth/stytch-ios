@@ -200,3 +200,7 @@ extension Unmanaged where Instance == CFError {
         takeRetainedValue() as Error
     }
 }
+
+extension KeychainClient.Item {
+    static let stytchPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_pkce_code_verifier")
+}

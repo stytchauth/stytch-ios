@@ -36,7 +36,7 @@ public struct StytchClient {
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, a ``SessionResponseType`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
@@ -66,7 +66,7 @@ public struct StytchClient {
             // This will be supported in the near future
             completion(.success(.notHandled))
         default:
-            completion(.failure(StytchGenericError(message: "Unrecognized deeplink type")))
+            completion(.failure(StytchError.unrecognizedDeeplinkTokenType))
         }
     }
 
@@ -78,7 +78,7 @@ public struct StytchClient {
             guard let configuration = Self.instance.configuration else { return [:] }
 
             let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
-            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded
+            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
 
             return [
                 "Content-Type": "application/json",
@@ -96,7 +96,7 @@ public extension StytchClient {
      */
     enum DeeplinkHandledStatus {
         /// The handler was successfully able to handle the given item.
-        case handled(SessionResponseType)
+        case handled(AuthenticateResponse)
         /// The handler was unable to handle the given item.
         case notHandled
     }

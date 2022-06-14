@@ -1,0 +1,150 @@
+#! /usr/bin/env ruby
+
+require 'dotenv'
+
+class String
+  # colorization
+  def colorize(color_code)
+    "\e[#{color_code}m#{self}\e[0m"
+  end
+
+  def red
+    colorize(31)
+  end
+
+  def green
+    colorize(32)
+  end
+
+  def yellow
+    colorize(33)
+  end
+end
+
+class Runner
+  def run(port:)
+    load_env
+
+    puts 'Starting server'
+
+    update_project_id_if_needed
+    update_public_token_if_needed
+    prompt_for_redirect_url
+
+    start_ngrok(port: port)
+
+    fetch_tunnel_url
+
+    update_client_config(tunnel_url: @tunnel_url)
+
+    start_server(port: port)
+  end
+
+  def cleanup
+    puts 'Cleaning up server'
+    system('pkill ngrok')
+    system('pkill \'StytchDemo \(Server\)\'')
+  end
+
+  private
+
+  def start_ngrok(port:)
+    system("/usr/bin/env ngrok http #{port} > /dev/null &")
+  end
+
+  def fetch_tunnel_url
+    @tunnel_url = ''
+    while @tunnel_url&.empty? do
+      (4040...4045).to_a.each do |port|
+        @tunnel_url = %x(/usr/bin/env curl http://127.0.0.1:#{port}/api/tunnels --silent --max-time 0.1 | jq -r '.tunnels[].public_url').strip
+        return unless @tunnel_url.empty?
+      end
+      sleep(0.1)
+    end
+  end
+
+  def app_id
+    @app_id ||= %x(xcrun xcodebuild -quiet -showBuildSettings -project '#{demo_project_file}' -json -scheme 'StytchDemo (macOS)' | jq -r '.[0].buildSettings | "\\(.DEVELOPMENT_TEAM).\\(.PRODUCT_BUNDLE_IDENTIFIER)"').strip
+  end
+
+  def update_client_config(tunnel_url:)
+    system("/usr/libexec/PlistBuddy -c 'set :StytchHostURL #{tunnel_url}' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}")
+    [:iOS, :macOS].each do |client|
+      update_applinks_entitlement(tunnel_url: tunnel_url, client: client)
+    end
+  end
+
+  def update_applinks_entitlement(tunnel_url:,client:)
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url.sub('https://', '')}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
+  end
+
+  def prompt_for_redirect_url
+    system("echo #{ngrok_wildcard_url} | pbcopy")
+    puts "\nNOTE: You must visit https://stytch.com/dashboard/redirect-urls and add `#{ngrok_wildcard_url}` as a signup/login Redirect URL before using magic links or OAuth. It's already been added to your clipboard.\n".yellow
+  end
+
+  def start_server(port:)
+    system("xcrun xcodebuild -quiet -project StytchDemo/StytchDemo.xcodeproj -scheme 'StytchDemo (Server)' -derivedDataPath #{File.join(project_root, '.build')} -configuration release build")
+    env = "DEMO_SERVER_SCRIPT=1 HOST_URL=#{@tunnel_url} APPLE_APP_ID=#{app_id} STYTCH_PROJECT_ID=#{stytch_project_id} PORT=#{port}"
+    system("#{env} #{File.join(project_root, '.build/Build/Products/Release/StytchDemo\ \(Server\)')}")
+  end
+
+  def update_public_token_if_needed
+    public_token = %x(/usr/libexec/PlistBuddy -c 'print :StytchPublicToken' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}).strip
+    if public_token == "public-token-example"
+      puts 'Please add a public token. Paste a value from https://stytch.com/dashboard/api-keys here:'.yellow
+      public_token = STDIN.gets.chomp
+      system("/usr/libexec/PlistBuddy -c 'set :StytchPublicToken #{public_token}' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}")
+    end
+  end
+
+  def update_project_id_if_needed
+    return unless stytch_project_id.nil?
+
+    puts 'Please add your project id. Paste a value from https://stytch.com/dashboard/api-keys here:'.yellow
+    project_id = STDIN.gets.chomp
+    File.open(File.join(demo_root, '.env'), 'w') { |file| file.write("PROJECT_ID=#{project_id}") }
+    load_env
+  end
+
+  def load_env
+    Dotenv.load(File.join(demo_root, '.env'))
+  end
+
+  def stytch_project_id
+    ENV['PROJECT_ID']
+  end
+
+  def project_root
+    File.expand_path('../../', __FILE__)
+  end
+
+  def demo_project_file
+    File.join(demo_root, 'StytchDemo.xcodeproj')
+  end
+
+  def demo_root
+    File.join(project_root, 'StytchDemo')
+  end
+
+  def ngrok_wildcard_url
+    'https://*.ngrok.io'
+  end
+end
+
+case ARGV[0]
+when 'start'
+  begin
+    # TODO: allow passing port through optparse
+    Runner.new.run(port: 8080)
+  rescue Interrupt
+    Runner.new.cleanup
+  end
+when 'cleanup'
+  Runner.new.cleanup
+when 'setup'
+  Dir.chdir 'StytchDemo' do
+    system('bundle install --quiet')
+    system('HOMEBREW_NO_AUTO_UPDATE=1 brew bundle --quiet')
+  end
+end

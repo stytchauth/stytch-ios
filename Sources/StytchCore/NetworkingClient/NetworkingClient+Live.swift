@@ -1,6 +1,6 @@
 import Foundation
 
-public extension NetworkingClient {
+extension NetworkingClient {
     static let live: NetworkingClient = {
         let session: URLSession = .init(configuration: .default)
         return .init { request, completion in

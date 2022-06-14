@@ -1,7 +1,7 @@
 import XCTest
-@testable import Networking
+@testable import StytchCore
 
-public extension NetworkingClient {
+extension NetworkingClient {
     static let failing: NetworkingClient = .init { _, _ in
         XCTFail("Must use your own custom networking client")
         return .init(dataTask: nil)

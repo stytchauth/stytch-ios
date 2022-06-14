@@ -1,6 +1,5 @@
-import NetworkingTestSupport
 import XCTest
-@testable import Networking
+@testable import StytchCore
 
 final class NetworkingClientTestCase: XCTestCase {
     private var networkingClient: NetworkingClient = .mock(returning: .success(.init()))
