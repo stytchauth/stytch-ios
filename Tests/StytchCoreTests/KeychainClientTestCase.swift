@@ -11,8 +11,8 @@ final class KeychainClientTestCase: BaseTestCase {
 
         try Current.keychainClient.set("test test", for: item)
 
-        XCTAssertTrue(Current.keychainClient.resultExists(for: item))
-        XCTAssertFalse(Current.keychainClient.resultExists(for: otherItem))
+        XCTAssertTrue(Current.keychainClient.resultsExistForItem(item))
+        XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
 
         XCTAssertEqual(try Current.keychainClient.get(item), "test test")
 
@@ -20,25 +20,29 @@ final class KeychainClientTestCase: BaseTestCase {
 
         XCTAssertEqual(try Current.keychainClient.get(item), "test again")
 
-        try Current.keychainClient.remove(item)
+        try Current.keychainClient.removeItem(item)
 
-        XCTAssertFalse(Current.keychainClient.resultExists(for: item))
-        XCTAssertFalse(Current.keychainClient.resultExists(for: otherItem))
+        XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
+        XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
     }
 
     func testKeychainItem() {
         let item: KeychainClient.Item = .init(kind: .token, name: "item")
+
+        let itemDataForValue: (String) -> KeychainClient.ItemData = { value in
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessControl: nil)
+        }
 
         XCTAssertEqual(
             item.getQuery,
             ["svce": "item", "class": "genp", "m_Limit": "m_LimitOne", "r_Data": 1, "nleg": 1] as CFDictionary
         )
         XCTAssertEqual(
-            item.querySegmentForUpdate(for: "value") as CFDictionary,
+            item.updateQuerySegment(for: itemDataForValue("value")) as CFDictionary,
             ["v_Data": Data("value".utf8)] as CFDictionary
         )
         XCTAssertEqual(
-            item.insertQuery(value: "new_value") as CFDictionary,
+            item.insertQuery(itemData: itemDataForValue("new_value")) as CFDictionary,
             ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1] as CFDictionary
         )
     }

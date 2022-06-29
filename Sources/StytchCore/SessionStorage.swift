@@ -13,7 +13,7 @@ final class SessionStorage {
                 if let newValue = newValue {
                     try? Current.keychainClient.set(newValue.value, for: keychainItem)
                 } else {
-                    try? Current.keychainClient.remove(keychainItem)
+                    try? Current.keychainClient.removeItem(keychainItem)
                     Current.cookieClient.deleteCookie(named: keychainItem.name)
                 }
             }
@@ -32,7 +32,7 @@ final class SessionStorage {
                 if let newValue = newValue {
                     try? Current.keychainClient.set(newValue.value, for: keychainItem)
                 } else {
-                    try? Current.keychainClient.remove(keychainItem)
+                    try? Current.keychainClient.removeItem(keychainItem)
                     Current.cookieClient.deleteCookie(named: keychainItem.name)
                 }
             }

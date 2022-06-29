@@ -6,38 +6,52 @@ extension KeychainClient {
         var result: CFTypeRef?
 
         guard case errSecSuccess = SecItemCopyMatching(item.getQuery, &result) else {
-            return nil
+            return []
         }
-        guard let data = result as? Data else {
-            throw KeychainError.resultNotData
+        guard let results = result as? [[CFString: Any]] else {
+            throw KeychainError.resultNotArray
         }
 
-        return String(data: data, encoding: .utf8)
-    } setValueForItem: { client, value, item in
+        return try results.compactMap { dict in
+            guard let data = dict[kSecValueData] as? Data else {
+                throw KeychainError.resultNotData
+            }
+            guard let account = dict[kSecAttrAccount] as? String else { throw KeychainError.resultMissingAccount }
+            guard
+                let createdAt = dict[kSecAttrCreationDate] as? Date,
+                let modifiedAt = dict[kSecAttrModificationDate] as? Date
+            else { throw KeychainError.resultMissingDates }
+
+            return QueryResult(
+                data: data,
+                createdAt: createdAt,
+                modifiedAt: modifiedAt,
+                label: dict[kSecAttrLabel] as? String,
+                account: account,
+                generic: dict[kSecAttrGeneric] as? Data
+            )
+        }
+    } setValueForItem: { client, itemData, item in
         let status: OSStatus
 
-        if client.resultExists(for: item) {
+        if client.resultsExistForItem(item) {
             status = SecItemUpdate(
                 item.baseQuery as CFDictionary,
-                item.querySegmentForUpdate(for: value) as CFDictionary
+                item.updateQuerySegment(for: itemData) as CFDictionary
             )
         } else {
-            status = SecItemAdd(item.insertQuery(value: value), nil)
+            status = SecItemAdd(item.insertQuery(itemData: itemData), nil)
         }
         if status != errSecSuccess {
             throw KeychainError.unhandledError(status: status)
         }
-    } removeItem: { client, item in
-        guard client.resultExists(for: item) else {
-            return
-        }
-
+    } removeItem: { item in
         let status = SecItemDelete(item.baseQuery as CFDictionary)
 
-        if status != errSecSuccess {
+        guard [errSecSuccess, errSecItemNotFound].contains(status) else {
             throw KeychainError.unhandledError(status: status)
         }
-    } resultExists: { item in
+    } resultsExistForItem: { item in
         SecItemCopyMatching(item.baseQuery as CFDictionary, nil) == errSecSuccess
     }
 }

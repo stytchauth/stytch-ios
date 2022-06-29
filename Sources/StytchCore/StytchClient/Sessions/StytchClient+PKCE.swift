@@ -16,7 +16,7 @@ extension StytchClient {
     static func pckeAuthenticateCompletion<T>(_ completion: @escaping Completion<T>) -> Completion<T> {
         { result in
             if case .success = result {
-                try? Current.keychainClient.remove(.stytchPKCECodeVerifier)
+                try? Current.keychainClient.removeItem(.stytchPKCECodeVerifier)
             }
             completion(result)
         }

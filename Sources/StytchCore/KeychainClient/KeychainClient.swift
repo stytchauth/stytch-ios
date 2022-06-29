@@ -1,40 +1,66 @@
 import Foundation
 
 struct KeychainClient {
-    private let getItem: (Item) throws -> String?
+    private let get: (Item) throws -> [QueryResult]
 
-    private let setValueForItem: (Self, String, Item) throws -> Void
+    let setValueForItem: (Self, ItemData, Item) throws -> Void
 
-    private let removeItem: (Self, Item) throws -> Void
+    let removeItem: (Item) throws -> Void
 
-    private let resultExists: (Item) -> Bool
+    let resultsExistForItem: (Item) -> Bool
 
     init(
-        getItem: @escaping (KeychainClient.Item) throws -> String?,
-        setValueForItem: @escaping (KeychainClient, String, KeychainClient.Item) throws -> Void,
-        removeItem: @escaping (KeychainClient, KeychainClient.Item) throws -> Void,
-        resultExists: @escaping (KeychainClient.Item) -> Bool
+        get: @escaping (Item) throws -> [QueryResult],
+        setValueForItem: @escaping (Self, ItemData, Item) throws -> Void,
+        removeItem: @escaping (Item) throws -> Void,
+        resultsExistForItem: @escaping (Item) -> Bool
     ) {
-        self.getItem = getItem
+        self.get = get
         self.setValueForItem = setValueForItem
         self.removeItem = removeItem
-        self.resultExists = resultExists
+        self.resultsExistForItem = resultsExistForItem
     }
+}
 
+// String convenience methods
+extension KeychainClient {
     func get(_ item: Item) throws -> String? {
-        try getItem(item)
+        try get(item)
+            .first
+            .flatMap { String(data: $0.data, encoding: .utf8) }
     }
 
     func set(_ value: String, for item: Item) throws {
-        try setValueForItem(self, value, item)
+        try setValueForItem(
+            self,
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessControl: nil),
+            item
+        )
+    }
+}
+
+extension KeychainClient {
+    struct QueryResult {
+        let data: Data
+        let createdAt: Date
+        let modifiedAt: Date
+        let label: String?
+        let account: String
+        let generic: Data?
     }
 
-    func remove(_ item: Item) throws {
-        try removeItem(self, item)
-    }
+    struct ItemData {
+        let data: Data
+        let account: String?
+        let label: String?
+        let generic: Data?
+        let accessControl: AccessControl?
 
-    func resultExists(for item: Item) -> Bool {
-        resultExists(item)
+        enum AccessControl {
+            var value: SecAccessControl {
+                switch self {}
+            }
+        }
     }
 }
 
@@ -64,16 +90,35 @@ extension KeychainClient {
                 ]) { $1 } as CFDictionary
         }
 
-        func insertQuery(value: String) -> CFDictionary {
-            baseQuery.merging(querySegmentForUpdate(for: value)) { $1 } as CFDictionary
+        func insertQuery(itemData: ItemData) -> CFDictionary {
+            baseQuery.merging(updateQuerySegment(for: itemData))
         }
 
-        func querySegmentForUpdate(for value: String) -> [CFString: Any] {
-            [kSecValueData: Data(value.utf8)]
+        func updateQuerySegment(for itemData: ItemData) -> [CFString: Any] {
+            var querySegment: [CFString: Any] = [
+                kSecValueData: itemData.data,
+            ]
+            if let account = itemData.account {
+                querySegment[kSecAttrAccount] = account
+            }
+            if let label = itemData.label {
+                querySegment[kSecAttrLabel] = label
+            }
+            if let generic = itemData.generic {
+                querySegment[kSecAttrGeneric] = generic
+            }
+            if let accessControl = itemData.accessControl?.value {
+                querySegment[kSecAttrAccessControl] = accessControl // FIXME: - messed up on ios 15 simulator
+            }
+            return querySegment
         }
+
     }
 
     enum KeychainError: Swift.Error {
+        case resultMissingAccount
+        case resultMissingDates
+        case resultNotArray
         case resultNotData
         case unhandledError(status: OSStatus)
     }
@@ -81,4 +126,10 @@ extension KeychainClient {
 
 extension KeychainClient.Item {
     static let stytchPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_pkce_code_verifier")
+}
+
+extension Dictionary where Key == CFString, Value == Any {
+    func merging(_ other: Self) -> CFDictionary {
+        self.merging(other) { $1 } as CFDictionary
+    }
 }
