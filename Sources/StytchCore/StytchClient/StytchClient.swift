@@ -21,6 +21,7 @@ public struct StytchClient {
 
     private init() {
         updateHeaderProvider()
+        runKeychainMigrations()
     }
 
     /**
@@ -85,6 +86,21 @@ public struct StytchClient {
                 "Authorization": "Basic \(authToken)",
                 "X-SDK-Client": clientInfoString ?? "",
             ]
+        }
+    }
+
+    private func runKeychainMigrations() {
+        KeychainClient.migrations.forEach { migration in
+            let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
+            guard !Current.defaults.bool(forKey: migrationName) else {
+                return
+            }
+            do {
+                try migration.run()
+                Current.defaults.set(true, forKey: migrationName)
+            } catch {
+                print(error)
+            }
         }
     }
 }

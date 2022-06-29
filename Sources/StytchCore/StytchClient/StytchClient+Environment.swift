@@ -43,6 +43,8 @@ extension StytchClient {
             return encoder
         }()
 
+        var defaults: UserDefaults = .standard
+
         var networkingClient: NetworkingClient = .live
 
         let cryptoClient: CryptoClient = .init()
