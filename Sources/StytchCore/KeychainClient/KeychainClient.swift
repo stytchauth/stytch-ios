@@ -50,8 +50,8 @@ extension KeychainClient {
 
         var baseQuery: [CFString: Any] {
             [
-                kSecClass: secClass,
-                kSecAttrAccount: name,
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrService: name,
                 kSecUseDataProtectionKeychain: true,
             ]
         }
@@ -70,13 +70,6 @@ extension KeychainClient {
 
         func querySegmentForUpdate(for value: String) -> [CFString: Any] {
             [kSecValueData: Data(value.utf8)]
-        }
-
-        private var secClass: CFString {
-            switch kind {
-            case .token:
-                return kSecClassGenericPassword
-            }
         }
     }
 
