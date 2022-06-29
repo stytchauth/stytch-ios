@@ -1,7 +1,6 @@
 import XCTest
 @testable import StytchCore
 
-@available(iOS 13.0, *)
 final class AsyncMethodsTestCase: BaseTestCase {
     func testMagicLinksEmailLoginOrCreate() async throws {
         let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
@@ -154,7 +153,6 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
     }
 
-    @available(iOS 13.0, *)
     func testOtpLoginOrCreate() async throws {
         let container: DataContainer<StytchClient.OneTimePasscodes.LoginOrCreateResponse> = .init(
             data: .init(
