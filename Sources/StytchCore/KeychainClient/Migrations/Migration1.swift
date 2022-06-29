@@ -7,7 +7,8 @@ extension KeychainClient {
                 KeychainClient.Item.sessionJwt,
                 .sessionToken,
                 .stytchPKCECodeVerifier,
-            ].forEach { item in
+            ]
+            .forEach { item in
                 let status = SecItemUpdate(
                     [kSecAttrAccount: item.name, kSecClass: kSecClassGenericPassword] as CFDictionary,
                     [kSecAttrService: item.name] as CFDictionary
