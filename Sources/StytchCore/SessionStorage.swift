@@ -120,12 +120,10 @@ final class SessionStorage {
             .path: "/",
             .domain: hostUrl.host ?? hostUrl.absoluteString,
             .expires: expiresAt,
+            .sameSitePolicy: HTTPCookieStringPolicy.sameSiteLax,
         ]
         if !urlComponents.isLocalHost {
             properties[.secure] = true
-        }
-        if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *) {
-            properties[.sameSitePolicy] = HTTPCookieStringPolicy.sameSiteLax
         }
 
         return HTTPCookie(properties: properties)
