@@ -73,9 +73,9 @@ If you are completely new to Stytch, prior to using the SDK you will first need 
 ## Requirements
 
 The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
-- iOS 11.3+
-- macOS 10.13+
-- tvOS 11+
+- iOS 13+
+- macOS 10.15+
+- tvOS 13+
 
 ## Installation
 
