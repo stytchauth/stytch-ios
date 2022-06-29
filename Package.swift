@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Stytch",
-    platforms: [.iOS(.v13), .macOS(.v10_15), .tvOS(.v13), .watchOS(.v6)],
+    platforms: [.iOS("11.3"), .macOS(.v10_13), .tvOS(.v11), .watchOS(.v4)],
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],

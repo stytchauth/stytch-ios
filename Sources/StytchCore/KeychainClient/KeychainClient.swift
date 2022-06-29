@@ -49,11 +49,14 @@ extension KeychainClient {
         var name: String
 
         var baseQuery: [CFString: Any] {
-            [
+            var query: [CFString: Any] = [
                 kSecClass: secClass,
                 kSecAttrAccount: name,
-                kSecUseDataProtectionKeychain: true,
             ]
+            if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *) {
+                query[kSecUseDataProtectionKeychain] = true
+            }
+            return query
         }
 
         var getQuery: CFDictionary {
