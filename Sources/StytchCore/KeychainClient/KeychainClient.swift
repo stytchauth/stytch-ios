@@ -62,9 +62,7 @@ extension KeychainClient {
             }
         }
     }
-}
 
-extension KeychainClient {
     struct Item {
         enum Kind {
             case token
@@ -112,7 +110,6 @@ extension KeychainClient {
             }
             return querySegment
         }
-
     }
 
     enum KeychainError: Swift.Error {
@@ -130,6 +127,6 @@ extension KeychainClient.Item {
 
 extension Dictionary where Key == CFString, Value == Any {
     func merging(_ other: Self) -> CFDictionary {
-        self.merging(other) { $1 } as CFDictionary
+        merging(other) { $1 } as CFDictionary
     }
 }

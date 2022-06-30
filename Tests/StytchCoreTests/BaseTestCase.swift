@@ -24,7 +24,7 @@ class BaseTestCase: XCTestCase {
             get: { [unowned self] in self.keychainItems[$0.name] ?? [] },
             setValueForItem: { [unowned self] _, value, item in
                 self.keychainItems[item.name] = [
-                    .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: item.name, account: item.name, generic: nil)
+                    .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: item.name, account: item.name, generic: nil),
                 ]
             },
             removeItem: { [unowned self] item in self.keychainItems[item.name] = nil },
