@@ -13,9 +13,7 @@ extension KeychainClient {
         }
 
         return try results.compactMap { dict in
-            guard let data = dict[kSecValueData] as? Data else {
-                throw KeychainError.resultNotData
-            }
+            guard let data = dict[kSecValueData] as? Data else { throw KeychainError.resultNotData }
             guard let account = dict[kSecAttrAccount] as? String else { throw KeychainError.resultMissingAccount }
             guard
                 let createdAt = dict[kSecAttrCreationDate] as? Date,
