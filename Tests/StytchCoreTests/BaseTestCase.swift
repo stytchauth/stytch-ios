@@ -5,7 +5,7 @@ import XCTest
 class BaseTestCase: XCTestCase {
     private(set) var cookies: [HTTPCookie] = []
 
-    private(set) var keychainItems: [String: String] = [:]
+    private(set) var keychainItems: [String: [KeychainClient.QueryResult]] = [:]
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -21,10 +21,14 @@ class BaseTestCase: XCTestCase {
         )
 
         Current.keychainClient = .init(
-            getItem: { [unowned self] in self.keychainItems[$0.name] },
-            setValueForItem: { [unowned self] _, value, item in self.keychainItems[item.name] = value },
-            removeItem: { [unowned self] _, item in self.keychainItems[item.name] = nil },
-            resultExists: { [unowned self] item in self.keychainItems[item.name] != nil }
+            get: { [unowned self] in self.keychainItems[$0.name] ?? [] },
+            setValueForItem: { [unowned self] _, value, item in
+                self.keychainItems[item.name] = [
+                    .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: item.name, account: item.name, generic: nil),
+                ]
+            },
+            removeItem: { [unowned self] item in self.keychainItems[item.name] = nil },
+            resultsExistForItem: { [unowned self] item in self.keychainItems[item.name] != nil }
         )
 
         Current.sessionsPollingClient = .failing
