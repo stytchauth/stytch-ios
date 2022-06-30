@@ -84,7 +84,8 @@ extension KeychainClient {
             baseQuery
                 .merging([
                     kSecReturnData: true,
-                    kSecMatchLimit: kSecMatchLimitOne,
+                    kSecReturnAttributes: true,
+                    kSecMatchLimit: kSecMatchLimitAll,
                 ]) { $1 } as CFDictionary
         }
 
