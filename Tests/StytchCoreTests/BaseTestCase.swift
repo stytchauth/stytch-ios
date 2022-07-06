@@ -43,7 +43,7 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionStorage.reset()
 
-        Current.dataWithRandomBytesOfCount = { _ in
+        Current.cryptoClient.dataWithRandomBytesOfCount = { _ in
             .init(bytes: [UInt8].mockBytes, count: [UInt8].mockBytes.count)
         }
 
