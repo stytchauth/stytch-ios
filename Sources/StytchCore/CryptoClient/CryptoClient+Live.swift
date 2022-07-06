@@ -19,12 +19,11 @@ extension CryptoClient {
             privateKey.publicKey.rawRepresentation
         )
     } publicKeyForPrivateKey: { privateKeyData in
-        try Curve25519.Signing.PrivateKey(
-            rawRepresentation: privateKeyData
-        ).publicKey.rawRepresentation
+        try Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData)
+            .publicKey
+            .rawRepresentation
     } signChallengeWithPrivateKey: { challenge, privateKeyData in
-        try Curve25519.Signing.PrivateKey(
-            rawRepresentation: privateKeyData
-        ).signature(for: challenge)
+        try Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData)
+            .signature(for: challenge)
     }
 }
