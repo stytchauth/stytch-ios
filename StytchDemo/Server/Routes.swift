@@ -11,7 +11,7 @@ private extension HttpServer {
     func mountRoutes() {
         GET["/"] = { _ in .ok(.htmlBody("Hello, world!")) }
 
-        GET["/.well-known/apple-app-site-association"] = { _ in
+        GET["/apple-app-site-association", "/.well-known/apple-app-site-association"] = { _ in
             .ok(.json(["applinks": ["details": [["appIDs": [configuration.appleAppId]]]]]))
         }
 
