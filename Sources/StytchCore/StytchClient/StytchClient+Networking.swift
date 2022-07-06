@@ -3,6 +3,22 @@ import Foundation
 extension StytchClient {
     static func post<Parameters: Encodable, Response: Decodable>(
         to endpoint: Endpoint,
+        parameters: Parameters
+    ) async throws -> Response {
+        try await StytchClient.performRequest(
+            .post(Current.jsonEncoder.encode(parameters)),
+            endpoint: endpoint
+        )
+    }
+
+    static func get<Response: Decodable>(
+        endpoint: Endpoint
+    ) async throws -> Response {
+        try await performRequest(.get, endpoint: endpoint)
+    }
+
+    static func post<Parameters: Encodable, Response: Decodable>(
+        to endpoint: Endpoint,
         parameters: Parameters,
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
@@ -19,6 +35,15 @@ extension StytchClient {
         completion: @escaping ((Result<Response, Error>) -> Void)
     ) {
         performRequest(.get, endpoint: endpoint, completion: completion)
+    }
+
+    private static func performRequest<Response: Decodable>(
+        _ method: NetworkingClient.Method = .get,
+        endpoint: Endpoint
+    ) async throws -> Response {
+        try await withCheckedThrowingContinuation { continuation in
+            performRequest(method, endpoint: endpoint, completion: continuation.resume)
+        }
     }
 
     private static func performRequest<Response: Decodable>(
