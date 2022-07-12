@@ -16,7 +16,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
             signupExpiration: 30
         )
 
-        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+        XCTAssertTrue(try Current.keychainClient.get(.stytchPKCECodeVerifier).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -57,7 +57,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
 
-        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+        XCTAssertTrue(try Current.keychainClient.get(.stytchPKCECodeVerifier).isEmpty)
 
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")

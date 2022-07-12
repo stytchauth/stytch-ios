@@ -1,3 +1,4 @@
+import CryptoKit
 import XCTest
 @testable import StytchCore
 
@@ -15,5 +16,15 @@ final class CryptoClientTestCase: BaseTestCase {
             Current.cryptoClient.sha256("i am crypto client").toHexString(),
             "b0f950f0d37d205d5d091a1517fb5fed40be37fd94ee0309b2c884f8ec2c928c"
         )
+    }
+
+    func testSignature() throws {
+        let (privateKey, origPubKeyData) = Current.cryptoClient.generateKeyPair()
+        let challenge = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
+        let signature = try Current.cryptoClient.signChallengeWithPrivateKey(challenge, privateKey)
+        let publicKeyData = try Current.cryptoClient.publicKeyForPrivateKey(privateKey)
+        let publicKey = try Curve25519.Signing.PublicKey(rawRepresentation: publicKeyData)
+        XCTAssertEqual(origPubKeyData, publicKeyData)
+        XCTAssertTrue(publicKey.isValidSignature(signature, for: challenge))
     }
 }
