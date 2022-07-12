@@ -1,4 +1,4 @@
-import Foundation
+import CoreFoundation
 
 extension Dictionary where Key == CFString, Value == Any {
     func merging(_ other: Self) -> CFDictionary {
