@@ -34,6 +34,28 @@ extension KeychainClient {
     }
 }
 
+// Private key registration convenience methods
+extension KeychainClient {
+    func set(
+        key: Data,
+        registration: KeyRegistration,
+        accessPolicy: Item.AccessPolicy,
+        syncingBehavior: Item.SyncingBehavior
+    ) throws {
+        try setValueForItem(
+            .init(
+                data: key,
+                account: registration.userId,
+                label: registration.userLabel,
+                generic: Current.jsonEncoder.encode(registration),
+                accessPolicy: accessPolicy,
+                syncingBehavior: syncingBehavior
+            ),
+            .privateKeyRegistration
+        )
+    }
+}
+
 extension KeychainClient {
     struct QueryResult {
         let data: Data
@@ -42,6 +64,12 @@ extension KeychainClient {
         let label: String?
         let account: String
         let generic: Data?
+    }
+
+    struct KeyRegistration: Codable {
+        let userId: String
+        let userLabel: String
+        let registrationId: String
     }
 
     enum KeychainError: Swift.Error {
