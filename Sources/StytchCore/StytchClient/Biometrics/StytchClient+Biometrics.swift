@@ -12,7 +12,7 @@ public extension StytchClient {
         public func register(parameters: RegisterParameters) async throws -> BasicResponse {
             // Early out if not authenticated
             guard (Current.sessionStorage.sessionToken ?? Current.sessionStorage.sessionJwt) != nil else {
-                throw StytchError.clientNotConfigured // FIXME: correct error
+                throw StytchError.noCurrentSession
             }
 
             let (privateKey, publicKey) = Current.cryptoClient.generateKeyPair()
@@ -61,7 +61,7 @@ public extension StytchClient {
             handler: ([Registration]) async -> Registration
         ) async throws -> AuthenticateResponse {
             guard case let queryResults = try Current.keychainClient.get(.privateKeyRegistration), !queryResults.isEmpty else {
-                throw StytchError.clientNotConfigured // FIXME: - use correct error
+                throw StytchError.noBiometricRegistrationsAvailable
             }
 
             let queryResult: KeychainClient.QueryResult

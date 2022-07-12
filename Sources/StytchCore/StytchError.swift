@@ -48,6 +48,14 @@ extension StytchError {
         errorType: "unrecognized_deeplink_token_type",
         errorMessage: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links` or `oauth`"
     )
+    static let noCurrentSession: Self = .init(
+        errorType: "no_current_session",
+        errorMessage: "There is no session currently available. Must authenticate prior to calling this method."
+    )
+    static let noBiometricRegistrationsAvailable: Self = .init(
+        errorType: "no_biometric_registrations",
+        errorMessage: "There are no biometric registrations available. Must authenticate with other methods and add a new biometric registration before calling this method."
+    )
 }
 
 private extension URL {
