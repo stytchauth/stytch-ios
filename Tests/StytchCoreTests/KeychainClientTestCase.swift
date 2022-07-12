@@ -50,7 +50,7 @@ final class KeychainClientTestCase: BaseTestCase {
     func testQueryResults() throws {
         let data = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         try Current.keychainClient.set(
-            data,
+            key: data,
             registration: .init(userId: "user_123", userLabel: "user@example.com", registrationId: "registration_123"),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics,
             syncingBehavior: .enabled

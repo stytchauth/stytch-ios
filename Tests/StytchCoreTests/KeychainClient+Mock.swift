@@ -19,4 +19,3 @@ extension KeychainClient {
         (try? get(item).map { !$0.isEmpty }) ?? false
     }
 }
-

@@ -1,3 +1,5 @@
+// swiftlint:disable:this file_name
+
 import CoreFoundation
 
 extension Optional where Wrapped == Unmanaged<CFError> {

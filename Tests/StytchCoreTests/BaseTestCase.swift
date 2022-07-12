@@ -1,7 +1,6 @@
 import XCTest
 @testable import StytchCore
 
-// swiftlint:disable test_case_accessibility
 class BaseTestCase: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -119,9 +118,4 @@ extension PollingClient {
     ) { _, _ in
         XCTFail("Shouldn't execute")
     }
-}
-
-func XCTUnimplemented<T>(_ message: String = "\(#function) unimplemented") -> T {
-    XCTFail(message)
-    fatalError()
 }
