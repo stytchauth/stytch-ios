@@ -8,7 +8,6 @@ public struct Response<Wrapped: Decodable>: Decodable {
         case requestId, statusCode
     }
 
-    // TODO: - make sure this is included in all web-backend responses
     /// The id for the request.
     public let requestId: String
     /// The HTTP status code of the request.

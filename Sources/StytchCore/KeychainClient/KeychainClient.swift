@@ -77,6 +77,7 @@ extension KeychainClient {
         case resultMissingDates
         case resultNotArray
         case resultNotData
+        case unableToCreateAccessControl
         case unhandledError(status: OSStatus)
     }
 }

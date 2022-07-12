@@ -116,7 +116,7 @@ private extension KeychainClient.Item.AccessPolicy {
         }
 
         guard let accessControl = SecAccessControlCreateWithFlags(nil, protection, flags, &error) else {
-            throw error.toError() ?? KeychainClient.KeychainError.resultNotData // TODO: - specific error
+            throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
         }
 
         return accessControl
