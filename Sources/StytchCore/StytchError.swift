@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type representing an error within the Stytch ecosystem.
-public struct StytchError: Error, Decodable {
+public struct StytchError: Error, Decodable, Equatable {
     /// The HTTP status code associated with the error. Nil if error originated from the client.
     public let statusCode: Int?
     /// The id of the request. Nil if error originated from the client.
@@ -30,7 +30,7 @@ public struct StytchError: Error, Decodable {
     }
 }
 
-extension StytchError {
+public extension StytchError {
     static let clientNotConfigured: Self = .init(
         errorType: "client_not_configured",
         errorMessage: "StytchClient not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `StytchClient.configure(hostUrl:publicToken:)` prior to other StytchClient calls.",
