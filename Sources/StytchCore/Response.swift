@@ -10,14 +10,14 @@ public struct Response<Wrapped: Decodable>: Decodable {
 
     // TODO: - make sure this is included in all web-backend responses
     /// The id for the request.
-    public let requestId: String?
+    public let requestId: String
     /// The HTTP status code of the request.
     public let statusCode: UInt
     private let wrapped: Wrapped
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId)
+        self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId) ?? "unknown_id"
         self.statusCode = try container.decode(key: .statusCode)
         self.wrapped = try .init(from: decoder)
     }
