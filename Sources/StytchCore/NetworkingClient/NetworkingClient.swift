@@ -3,22 +3,14 @@ import Foundation
 final class NetworkingClient {
     var headerProvider: (() -> [String: String])?
 
-    private let handleRequest: (URLRequest, @escaping Completion) -> TaskHandle
+    private let handleRequest: (URLRequest) async throws -> (Data, HTTPURLResponse)
 
-    init(handleRequest: @escaping (URLRequest, @escaping Completion) -> TaskHandle) {
+    init(handleRequest: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse)) {
         self.handleRequest = handleRequest
     }
 
-    @discardableResult
-    func performRequest(_ method: Method, url: URL, completion: @escaping Completion) -> TaskHandle {
-        perform(
-            request: urlRequest(url: url, method: method),
-            completion: completion
-        )
-    }
-
-    private func perform(request: URLRequest, completion: @escaping Completion) -> TaskHandle {
-        handleRequest(request, completion)
+    func performRequest(_ method: Method, url: URL) async throws -> (Data, HTTPURLResponse) {
+        try await handleRequest(urlRequest(url: url, method: method))
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {
