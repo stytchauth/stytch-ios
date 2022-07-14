@@ -32,7 +32,7 @@ public extension StytchClient.MagicLinks {
     var email: Email { .init(pathContext: pathContext) }
 }
 
-private extension StytchClient.MagicLinks.Email {
+//private extension StytchClient.MagicLinks.Email {
     struct CodeChallengedParameters<T: Encodable>: Encodable {
         private enum CodingKeys: String, CodingKey { case codeChallenge, codeChallengeMethod }
 
@@ -49,4 +49,4 @@ private extension StytchClient.MagicLinks.Email {
             try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod)
         }
     }
-}
+//}

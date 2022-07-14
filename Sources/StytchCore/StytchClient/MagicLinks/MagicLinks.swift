@@ -24,7 +24,7 @@ public extension StytchClient {
     static var magicLinks: MagicLinks { .init() }
 }
 
-private extension StytchClient.MagicLinks {
+//private extension StytchClient.MagicLinks {
     struct CodeVerifierParameters<T: Encodable>: Encodable {
         private enum CodingKeys: String, CodingKey { case codeVerifier }
 
@@ -39,4 +39,4 @@ private extension StytchClient.MagicLinks {
             try container.encode(codeVerifier, forKey: .codeVerifier)
         }
     }
-}
+//}
