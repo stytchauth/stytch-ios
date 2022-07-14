@@ -9,13 +9,13 @@ extension NetworkingClient {
 
     static func mock(
         verifyingRequest: @escaping (URLRequest) -> Void = { _ in },
-        returning result: Result<Data, Swift.Error>...
+        returning results: Result<Data, Swift.Error>...
     ) -> NetworkingClient {
-        var copy = result
+        var results = results
         return .init { request in
             verifyingRequest(request)
 
-            switch copy.removeFirst() {
+            switch results.removeFirst() {
             case let .success(data):
                 return (data, .init(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:])!)
             case let .failure(error):

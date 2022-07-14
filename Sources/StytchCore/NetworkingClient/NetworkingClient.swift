@@ -66,8 +66,6 @@ final class NetworkingClient {
 // }
 
 extension NetworkingClient {
-    typealias Completion = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void
-
     enum Method {
         case delete
         case get
@@ -91,14 +89,5 @@ extension NetworkingClient {
     enum Error: Swift.Error {
         case missingData
         case nonHttpResponse
-    }
-
-    // A handle wrapping the underlying DataTask which can easily be extended to pass through progress or cancellation functionality
-    struct TaskHandle {
-        weak var dataTask: URLSessionDataTask?
-
-        public init(dataTask: URLSessionDataTask?) {
-            self.dataTask = dataTask
-        }
     }
 }

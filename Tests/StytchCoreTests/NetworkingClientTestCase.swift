@@ -56,17 +56,14 @@ final class NetworkingClientTestCase: XCTestCase {
         onClientCreate: ((NetworkingClient) -> Void)? = nil,
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
     ) async throws {
-//        let expectation = expectation(description: "Request handled")
         networkingClient = .init { request in
             onPerformRequest(request, line)
-//            expectation.fulfill()
             return (.init(), .init())
         }
         onClientCreate?(networkingClient)
-        let _ = try await networkingClient.performRequest(
+        _ = try await networkingClient.performRequest(
             method,
             url: try url ?? XCTUnwrap(URL(string: "https://www.stytch.com"))
         )
-//        wait(for: [expectation], timeout: 1)
     }
 }
