@@ -4,7 +4,7 @@ extension NetworkingClient {
     static let live: NetworkingClient = {
         let session: URLSession = .init(configuration: .default)
         return .init { request in
-            if #available(iOS 15.0, *) {
+            if #available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *) {
                 let (data, response) = try await session.data(for: request)
                 guard let response = response as? HTTPURLResponse else { throw NetworkingClient.Error.nonHttpResponse }
                 return (data, response)
