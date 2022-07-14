@@ -17,7 +17,10 @@ extension NetworkingClient {
 
             switch results.removeFirst() {
             case let .success(data):
-                return (data, .init(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:])!)
+                return try (
+                    data,
+                    XCTUnwrap(.init(url: XCTUnwrap(request.url), statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:]))
+                )
             case let .failure(error):
                 throw error
             }

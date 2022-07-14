@@ -82,6 +82,9 @@ public extension StytchClient {
 }
 
 public extension StytchClient.Passwords {
+    typealias CreateResponse = Response<CreateResponseData>
+    typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
+
     // TODO: add public init methods
     struct PasswordParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "session_duration_mintues" }
@@ -90,8 +93,6 @@ public extension StytchClient.Passwords {
         let password: String
         let sessionDuration: Minutes
     }
-
-    typealias CreateResponse = Response<CreateResponseData>
 
     struct CreateResponseData: Codable {
         public let emailId: String
@@ -114,8 +115,6 @@ public extension StytchClient.Passwords {
         let email: String?
         let password: String
     }
-
-    typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
 
     struct StrengthCheckResponseData: Codable {
         public let validPassword: Bool

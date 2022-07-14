@@ -32,21 +32,22 @@ public extension StytchClient.MagicLinks {
     var email: Email { .init(pathContext: pathContext) }
 }
 
-//private extension StytchClient.MagicLinks.Email {
-    struct CodeChallengedParameters<T: Encodable>: Encodable {
-        private enum CodingKeys: String, CodingKey { case codeChallenge, codeChallengeMethod }
+// private extension StytchClient.MagicLinks.Email {
+struct CodeChallengedParameters<T: Encodable>: Encodable {
+    private enum CodingKeys: String, CodingKey { case codeChallenge, codeChallengeMethod }
 
-        let codeChallenge: String
-        let codeChallengeMethod: String
-        let wrapped: T
+    let codeChallenge: String
+    let codeChallengeMethod: String
+    let wrapped: T
 
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
-            try wrapped.encode(to: encoder)
+        try wrapped.encode(to: encoder)
 
-            try container.encode(codeChallenge, forKey: .codeChallenge)
-            try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod)
-        }
+        try container.encode(codeChallenge, forKey: .codeChallenge)
+        try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod)
     }
-//}
+}
+
+// }
