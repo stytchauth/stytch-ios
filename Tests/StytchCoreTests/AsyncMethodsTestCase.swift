@@ -163,7 +163,10 @@ final class AsyncMethodsTestCase: BaseTestCase {
         )
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        Current.networkingClient = .mock(
+            verifyingRequest: { request = $0 },
+            returning: .success(data), .success(data), .success(data)
+        )
 
         try await [
             (

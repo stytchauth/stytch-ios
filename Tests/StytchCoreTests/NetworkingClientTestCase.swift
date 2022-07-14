@@ -4,9 +4,9 @@ import XCTest
 final class NetworkingClientTestCase: XCTestCase {
     private var networkingClient: NetworkingClient = .mock(returning: .success(.init()))
 
-    func testCustomHeaders() throws {
+    func testCustomHeaders() async throws {
         let headers = ["CUSTOM": "HEADER"]
-        try verifyRequest(
+        try await verifyRequest(
             onClientCreate: { $0.headerProvider = { headers } },
             onPerformRequest: { request, line in
                 XCTAssertEqual(request.httpMethod, "GET", line: line)
@@ -14,37 +14,37 @@ final class NetworkingClientTestCase: XCTestCase {
         )
     }
 
-    func testUrl() throws {
+    func testUrl() async throws {
         let url = try XCTUnwrap(URL(string: "https://stytch.com?blah=blah"))
-        try verifyRequest(url: url) { request, line in
+        try await verifyRequest(url: url) { request, line in
             XCTAssertEqual(request.url, url, line: line)
         }
     }
 
-    func testMethodGet() throws {
-        try verifyRequest { request, line in
+    func testMethodGet() async throws {
+        try await verifyRequest { request, line in
             XCTAssertEqual(request.httpMethod, "GET", line: line)
         }
     }
 
-    func testMethodPost() throws {
+    func testMethodPost() async throws {
         let testString = "test_string"
-        try verifyRequest(.post(.init(testString.utf8))) { request, line in
+        try await verifyRequest(.post(.init(testString.utf8))) { request, line in
             XCTAssertEqual(request.httpMethod, "POST", line: line)
             XCTAssertEqual(request.httpBody.map { String(data: $0, encoding: .utf8) }, testString, line: line)
         }
     }
 
-    func testMethodPut() throws {
+    func testMethodPut() async throws {
         let testString = "test_string"
-        try verifyRequest(.put(.init(testString.utf8))) { request, line in
+        try await verifyRequest(.put(.init(testString.utf8))) { request, line in
             XCTAssertEqual(request.httpMethod, "PUT", line: line)
             XCTAssertEqual(request.httpBody.map { String(data: $0, encoding: .utf8) }, testString, line: line)
         }
     }
 
-    func testMethodDelete() throws {
-        try verifyRequest(.delete) { request, line in
+    func testMethodDelete() async throws {
+        try await verifyRequest(.delete) { request, line in
             XCTAssertEqual(request.httpMethod, "DELETE", line: line)
         }
     }
@@ -55,20 +55,18 @@ final class NetworkingClientTestCase: XCTestCase {
         line: UInt = #line,
         onClientCreate: ((NetworkingClient) -> Void)? = nil,
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
-    ) throws {
-        let expectation = expectation(description: "Request handled")
-        networkingClient = .init { request, _ in
+    ) async throws {
+//        let expectation = expectation(description: "Request handled")
+        networkingClient = .init { request in
             onPerformRequest(request, line)
-            expectation.fulfill()
-            return .init(dataTask: nil)
+//            expectation.fulfill()
+            return (.init(), .init())
         }
         onClientCreate?(networkingClient)
-        networkingClient.performRequest(
+        let _ = try await networkingClient.performRequest(
             method,
             url: try url ?? XCTUnwrap(URL(string: "https://www.stytch.com"))
-        ) { _ in
-            XCTFail("Completion should not be called using this mock", line: line)
-        }
-        wait(for: [expectation], timeout: 1)
+        )
+//        wait(for: [expectation], timeout: 1)
     }
 }

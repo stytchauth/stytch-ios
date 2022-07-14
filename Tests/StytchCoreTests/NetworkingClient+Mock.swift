@@ -2,22 +2,25 @@ import XCTest
 @testable import StytchCore
 
 extension NetworkingClient {
-    static let failing: NetworkingClient = .init { _, _ in
+    static let failing: NetworkingClient = .init { _ in
         XCTFail("Must use your own custom networking client")
-        return .init(dataTask: nil)
+        return (.init(), .init())
     }
 
     static func mock(
         verifyingRequest: @escaping (URLRequest) -> Void = { _ in },
-        returning result: Result<Data, Swift.Error>
+        returning result: Result<Data, Swift.Error>...
     ) -> NetworkingClient {
-        .init { request, completion in
+        var copy = result
+        return .init { request in
             verifyingRequest(request)
-            completion(
-                // swiftlint:disable:next force_unwrapping
-                result.map { ($0, .init(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:])!) }
-            )
-            return .init(dataTask: nil)
+
+            switch copy.removeFirst() {
+            case let .success(data):
+                return (data, .init(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:])!)
+            case let .failure(error):
+                throw error
+            }
         }
     }
 }
