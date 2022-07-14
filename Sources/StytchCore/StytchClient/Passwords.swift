@@ -99,11 +99,19 @@ public extension StytchClient.Passwords {
     }
 
     struct ResetByEmailStartParameters: Encodable {
+        private enum CodingKeys: String, CodingKey {
+            case email
+            case loginUrl = "login_redirect_url"
+            case loginExpiration = "login_expiration_minutes"
+            case resetPasswordUrl = "reset_password_redirect_url"
+            case resetPasswordExpiration = "reset_password_expiration_minutes"
+        }
+
         public let email: String
-        public let loginRedirectUrl: URL?
-        public let loginExpirationMinutes: Minutes?
-        public let resetPasswordRedirectUrl: URL?
-        public let resetPasswordExpirationMinutes: Minutes?
+        public let loginUrl: URL?
+        public let loginExpiration: Minutes?
+        public let resetPasswordUrl: URL?
+        public let resetPasswordExpiration: Minutes?
     }
 
     struct ResetByEmailParameters: Encodable {
