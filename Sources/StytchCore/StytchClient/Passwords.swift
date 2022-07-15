@@ -67,7 +67,7 @@ public extension StytchClient {
 
         // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Docs
-        public func strengthCheck(parameters: PasswordParameters) async throws -> StrengthCheckResponse {
+        public func strengthCheck(parameters: StrengthCheckParameters) async throws -> StrengthCheckResponse {
             try await StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("strength_check")),
                 parameters: parameters
@@ -87,7 +87,7 @@ public extension StytchClient.Passwords {
 
     // TODO: add public init methods
     struct PasswordParameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "session_duration_mintues" }
+        private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "session_duration_minutes" }
 
         let email: String
         let password: String
