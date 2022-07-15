@@ -153,7 +153,7 @@ extension PollingClient {
 final class MockDefaults: UserDefaults {
     var boolReturnValue: Bool = true
 
-    override func bool(forKey defaultName: String) -> Bool {
+    override func bool(forKey _: String) -> Bool {
         boolReturnValue
     }
 }
