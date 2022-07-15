@@ -46,8 +46,7 @@ public extension StytchClient {
         // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Docs
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
-            // TODO: - determine if we want to separate out pkce codes for separate auth methods
-            guard let codeVerifier = try? Current.keychainClient.get(.stytchPKCECodeVerifier) else {
+            guard let codeVerifier = try? Current.keychainClient.get(.stytchPasswordResetByEmailPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -60,7 +59,7 @@ public extension StytchClient {
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
 
-            try? Current.keychainClient.removeItem(.stytchPKCECodeVerifier)
+            try? Current.keychainClient.removeItem(.stytchPasswordResetByEmailPKCECodeVerifier)
 
             return response
         }
