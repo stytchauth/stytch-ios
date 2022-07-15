@@ -45,7 +45,7 @@ public struct StytchClient {
     ///    - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
     public static func handle(
         url: URL,
-        sessionDuration: Minutes = 30,
+        sessionDuration: Minutes = .defaultSessionDuration,
         completion: @escaping Completion<DeeplinkHandledStatus>
     ) {
         guard
@@ -112,7 +112,7 @@ public extension StytchClient {
      */
     enum DeeplinkHandledStatus {
         /// The handler was successfully able to handle the given item.
-        case handled(AuthenticateResponse)
+        case handled(AuthenticateResponseType)
         /// The handler was unable to handle the given item.
         case notHandled
     }
