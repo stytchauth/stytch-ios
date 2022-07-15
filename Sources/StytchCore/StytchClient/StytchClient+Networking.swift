@@ -54,7 +54,7 @@ extension StytchClient {
         do {
             try response.verifyStatus(data: data)
             let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
-            if let sessionResponse = dataContainer.data as? AuthenticateResponse {
+            if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
                 Current.sessionStorage.updateSession(
                     sessionResponse.session,
                     tokens: [
