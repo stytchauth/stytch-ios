@@ -47,6 +47,10 @@ class BaseTestCase: XCTestCase {
             .init(bytes: [UInt8].mockBytes, count: [UInt8].mockBytes.count)
         }
 
+        let defaults = MockDefaults()
+        defaults.boolReturnValue = true
+        Current.defaults = defaults
+
         StytchClient.configure(
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
@@ -143,5 +147,13 @@ extension PollingClient {
         queue: .main
     ) { _, _ in
         XCTFail("Shouldn't execute")
+    }
+}
+
+final class MockDefaults: UserDefaults {
+    var boolReturnValue: Bool = true
+
+    override func bool(forKey defaultName: String) -> Bool {
+        boolReturnValue
     }
 }
