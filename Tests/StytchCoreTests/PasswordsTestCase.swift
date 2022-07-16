@@ -6,8 +6,10 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testCreate() async throws {
         var request: URLRequest?
-        let data = try Current.jsonEncoder.encode(DataContainer(data: StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am"))))
+        let userId = "user_id_123"
+        let data = try Current.jsonEncoder.encode(DataContainer(data: StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am", userId: userId, user: .mock(userId: userId), sessionToken: "session_token_431", sessionJwt: "jwt_8534", session: .mock(userId: userId)))))
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)
 
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/passwords")

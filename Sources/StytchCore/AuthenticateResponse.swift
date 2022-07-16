@@ -23,10 +23,3 @@ public struct AuthenticateResponseData: Codable, AuthenticateResponseType {
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     public let session: Session
 }
-
-extension Response: AuthenticateResponseType where Wrapped: AuthenticateResponseType {
-    public var user: User { self[keyPath: \.user] }
-    public var sessionToken: String { self[keyPath: \.sessionToken] }
-    public var sessionJwt: String { self[keyPath: \.sessionJwt] }
-    public var session: Session { self[keyPath: \.session] }
-}

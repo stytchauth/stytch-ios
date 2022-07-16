@@ -54,3 +54,10 @@ extension Response where Wrapped == EmptyCodable {
     }
 }
 #endif
+
+extension Response: AuthenticateResponseType where Wrapped: AuthenticateResponseType {
+    public var user: User { wrapped.user }
+    public var sessionToken: String { wrapped.sessionToken }
+    public var sessionJwt: String { wrapped.sessionJwt }
+    public var session: Session { wrapped.session }
+}

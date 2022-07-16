@@ -91,6 +91,23 @@ extension Array where Element == UInt8 {
     static let mockBytes: Self = [224, 104, 60, 156, 2, 191, 85, 74, 185, 199, 49, 161, 118, 123, 201, 64, 215, 19, 33, 164, 15, 219, 234, 198, 40, 36, 231, 182, 73, 90, 135, 65]
 }
 
+extension User {
+    static func mock(userId: String) -> Self {
+        .init(
+            createdAt: Current.date(),
+            cryptoWallets: [],
+            emails: [],
+            userId: userId,
+            name: .init(firstName: "first", lastName: "last", middleName: nil),
+            phoneNumbers: [],
+            providers: [],
+            status: .active,
+            totps: [],
+            webauthnRegistrations: []
+        )
+    }
+}
+
 extension AuthenticateResponse {
     static var mock: Self {
         let userId = "im_a_user_id"
@@ -98,18 +115,7 @@ extension AuthenticateResponse {
             requestId: "1234",
             statusCode: 200,
             wrapped: .init(
-                user: .init(
-                    createdAt: Current.date(),
-                    cryptoWallets: [],
-                    emails: [],
-                    userId: userId,
-                    name: .init(firstName: "first", lastName: "last", middleName: nil),
-                    phoneNumbers: [],
-                    providers: [],
-                    status: .active,
-                    totps: [],
-                    webauthnRegistrations: []
-                ),
+                user: .mock(userId: userId),
                 sessionToken: "hello_session",
                 sessionJwt: "jwt_for_me",
                 session: .mock(userId: userId)

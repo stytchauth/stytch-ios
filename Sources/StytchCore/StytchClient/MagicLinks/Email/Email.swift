@@ -1,3 +1,5 @@
+import Foundation
+
 public extension StytchClient.MagicLinks {
     /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
     struct Email {
