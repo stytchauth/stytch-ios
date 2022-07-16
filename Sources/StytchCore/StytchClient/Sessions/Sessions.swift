@@ -34,7 +34,7 @@ public extension StytchClient {
             )
         }
 
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
         public func revoke() async throws -> SessionsRevokeResponse {
             guard let token = sessionToken ?? sessionJwt else {

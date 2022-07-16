@@ -3,27 +3,25 @@ public extension StytchClient {
     struct OneTimePasscodes {
         let pathContext: Endpoint.Path = "otps"
 
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
-        public func loginOrCreate(parameters: LoginOrCreateParameters, completion: @escaping Completion<LoginOrCreateResponse>) {
-            StytchClient.post(
+        public func loginOrCreate(parameters: LoginOrCreateParameters) async throws -> LoginOrCreateResponse {
+            try await StytchClient.post(
                 to: .init(
                     path: pathContext
                         .appendingPathComponent(parameters.deliveryMethod.pathComponent.rawValue)
                         .appendingPathComponent("login_or_create")
                 ),
-                parameters: parameters,
-                completion: completion
+                parameters: parameters
             )
         }
 
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-        public func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
-            StytchClient.post(
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            try await StytchClient.post(
                 to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: parameters,
-                completion: completion
+                parameters: parameters
             )
         }
     }

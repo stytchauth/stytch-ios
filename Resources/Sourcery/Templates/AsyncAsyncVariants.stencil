@@ -16,7 +16,7 @@ public extension {{ type.name }} {
 {% endfor %}
 {% endset %}
     {{ methodDocs }}
-    {{ methodKeywords }} {{ methodDeclaration }}, completion: @escaping Completion<{{ returnType }}>) {
+    {{ methodKeywords }} {{ methodDeclaration }}{% if method.parameters.count != 0 %}, {% endif %}completion: @escaping Completion<{{ returnType }}>) {
         Task {
             do {
                 completion(.success(try await {{ methodName }}({{ methodCallParams }})))
