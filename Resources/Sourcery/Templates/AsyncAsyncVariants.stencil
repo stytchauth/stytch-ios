@@ -1,0 +1,51 @@
+{% for type in types.all %}
+{% for method in type.methods where method.annotations.AsyncAsyncVariants %}
+// sourcery:file:StytchCore/Generated/{{ type.name }}+AsyncAsyncVariants.generated.swift
+import Combine
+import Foundation
+{% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
+{% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
+{% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set methodCallParams %}{% for parameter in method.parameters %}{{ parameter.name }}: {{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set returnType %}{{ method.returnTypeName }}{% endset %}
+{% set methodDocs %}
+{% for commentLine in method.documentation %}
+    /// {{ commentLine }}
+{% endfor %}
+{% endset %}
+
+// MARK: - {{ methodName }} Callback
+public extension {{ type.name }} {
+    {{ methodKeywords }} {{ methodDeclaration }}, completion: @escaping Completion<{{ returnType }}>) {
+        Task {
+            do {
+                completion(.success(try await {{ methodName }}({{ methodCallParams }})))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
+// MARK: - {{ methodName }} Combine
+public extension {{ type.name }} {
+    {{ methodDocs }}
+    {{ methodKeywords }} {{ methodDeclaration }}) -> AnyPublisher<{{ returnType }}, Error> {
+        return Deferred {
+            Future({ promise in
+                Task {
+                    do {
+                        promise(.success(try await {{ methodName }}({{ methodCallParams }})))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            })
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
+// sourcery:end
+{% endfor %}
+{% endfor %}
