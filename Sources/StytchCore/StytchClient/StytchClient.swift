@@ -34,7 +34,7 @@ public struct StytchClient {
         instance.configuration = .init(hostUrl: hostUrl, publicToken: publicToken)
     }
 
-    // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+    // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
     /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
@@ -45,29 +45,25 @@ public struct StytchClient {
     ///    - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
     public static func handle(
         url: URL,
-        sessionDuration: Minutes = .defaultSessionDuration,
-        completion: @escaping Completion<DeeplinkHandledStatus>
-    ) {
+        sessionDuration: Minutes = .defaultSessionDuration
+    ) async throws -> DeeplinkHandledStatus {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
             let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }),
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
-            completion(.success(.notHandled))
-            return
+            return .notHandled
         }
 
         switch typeQuery.value {
         case "magic_links":
-            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map(DeeplinkHandledStatus.handled))
-            }
+            return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case "oauth":
             // This will be supported in the near future
-            completion(.success(.notHandled))
+            return .notHandled
         default:
-            completion(.failure(StytchError.unrecognizedDeeplinkTokenType))
+            throw StytchError.unrecognizedDeeplinkTokenType
         }
     }
 

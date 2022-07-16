@@ -11,14 +11,15 @@ public extension StytchClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///  - Returns: A ``DeeplinkHandledStatus`` will be returned asynchronously.
-    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus, Error> {
-        return Deferred { 
-            Future({ promise in
-                handle(url: url, sessionDuration: sessionDuration, completion: promise)
-            })
+    ///    - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
+    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration, completion: @escaping Completion<DeeplinkHandledStatus>) {
+        Task {
+            do {
+                completion(.success(try await handle(url: url, sessionDuration: sessionDuration)))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        .eraseToAnyPublisher()
     }
 
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
@@ -28,10 +29,19 @@ public extension StytchClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///  - Returns: A ``DeeplinkHandledStatus`` will be returned asynchronously.
-    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) async throws -> DeeplinkHandledStatus {
-        try await withCheckedThrowingContinuation { continuation in
-            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
+    ///    - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
+    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus, Error> {
+        return Deferred {
+            Future({ promise in
+                Task {
+                    do {
+                        promise(.success(try await handle(url: url, sessionDuration: sessionDuration)))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            })
         }
+        .eraseToAnyPublisher()
     }
 }
