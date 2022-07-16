@@ -3,33 +3,6 @@ import Foundation
 extension StytchClient {
     static func post<Parameters: Encodable, Response: Decodable>(
         to endpoint: Endpoint,
-        parameters: Parameters,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
-        Task {
-            do {
-                completion(.success(try await post(to: endpoint, parameters: parameters)))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    static func get<Response: Decodable>(
-        endpoint: Endpoint,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
-        Task {
-            do {
-                completion(.success(try await get(endpoint: endpoint)))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-
-    static func post<Parameters: Encodable, Response: Decodable>(
-        to endpoint: Endpoint,
         parameters: Parameters
     ) async throws -> Response {
         try await performRequest(.post(Current.jsonEncoder.encode(parameters)), endpoint: endpoint)
