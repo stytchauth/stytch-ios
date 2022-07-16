@@ -23,3 +23,27 @@ public extension StytchClient {
     /// The interface for interacting with magic-links products.
     static var magicLinks: MagicLinks { .init() }
 }
+
+public extension StytchClient.MagicLinks {
+    /// A dedicated parameters type for magic links `authenticate` calls.
+    struct AuthenticateParameters: Encodable {
+        private enum CodingKeys: String, CodingKey {
+            case token
+            case sessionDuration = "session_duration_minutes"
+        }
+
+        let token: String
+        let sessionDuration: Minutes
+
+        /**
+         Initializes the parameters struct
+         - Parameters:
+           - token: The token extracted from the magic link.
+           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+         */
+        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
+            self.token = token
+            self.sessionDuration = sessionDuration
+        }
+    }
+}
