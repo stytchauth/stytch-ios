@@ -6,7 +6,7 @@ public extension StytchClient {
     struct Passwords {
         let pathContext: Endpoint.Path = "passwords"
 
-        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Create a new user with a password and an authenticated session for the user if requested. If a user with this email already exists in the project, an error will be returned.
         ///
         /// Existing passwordless users who wish to create a password need to go through the reset password flow.
@@ -17,7 +17,7 @@ public extension StytchClient {
             )
         }
 
-        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a user with their email address and password. This method verifies that the user has a password currently set, and that the entered password is correct.
         ///
         /// There are two instances where the endpoint will return a reset_password error even if they enter their previous password:
@@ -32,7 +32,7 @@ public extension StytchClient {
             )
         }
 
-        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates a password reset for the email address provided. This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
             let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .stytchPWResetByEmailPKCECodeVerifier)
@@ -52,7 +52,7 @@ public extension StytchClient {
             )
         }
 
-        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Reset the user’s password and authenticate them. This endpoint checks that the magic link token is valid, hasn’t expired, or already been used – and can optionally require additional security settings, such as the IP address and user agent matching the initial reset request.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
@@ -75,7 +75,7 @@ public extension StytchClient {
             return response
         }
 
-        // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// This method allows you to check whether or not the user’s provided password is valid, and to provide feedback to the user on how to increase the strength of their password.
         ///
         /// Passwords are considered invalid if either of the following is true:

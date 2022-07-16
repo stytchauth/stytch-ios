@@ -7,33 +7,40 @@ import Foundation
 
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
-{% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.asSource }}{% endif %}{% endfor %}){% endset %}
-{% set methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{{ parameter.name }}: {{ parameter.name }}, {% endif %}{% endfor %}completion: {% endset %}
-{% set returnType %}{{ method.parameters.last.typeName|replace:"@escaping Completion<",""|replace:">","" }}{% endset %}
-{% set asyncFunction %}
-    {{ methodKeywords }} {{ methodDeclaration }} async throws -> {{ returnType }} {
-        try await withCheckedThrowingContinuation { continuation in
-            {{ methodName }}({{ methodCallParams }}continuation.resume)
-        }
-    }
-{% endset %}
+{% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set methodCallParams %}{% for parameter in method.parameters %}{{ parameter.name }}: {{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set returnType %}{{ method.returnTypeName }}{% endset %}
 {% set methodDocs %}
 {% for commentLine in method.documentation %}
-    /// {{ commentLine|replace:"  - completion:","- Returns:" }}
+    /// {{ commentLine }}
 {% endfor %}
 {% endset %}
     {{ methodDocs }}
-    {{ methodKeywords }} {{ methodDeclaration }} -> AnyPublisher<{{ returnType }}, Error> {
-        return Deferred { 
+    {{ methodKeywords }} {{ methodDeclaration }}{% if method.parameters.count != 0 %}, {% endif %}completion: @escaping Completion<{{ returnType }}>) {
+        Task {
+            do {
+                completion(.success(try await {{ methodName }}({{ methodCallParams }})))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    {{ methodDocs }}
+    {{ methodKeywords }} {{ methodDeclaration }}) -> AnyPublisher<{{ returnType }}, Error> {
+        return Deferred {
             Future({ promise in
-                {{ methodName }}({{ methodCallParams }}promise)
+                Task {
+                    do {
+                        promise(.success(try await {{ methodName }}({{ methodCallParams }})))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
             })
         }
         .eraseToAnyPublisher()
     }
-
-    {{ methodDocs }}
-    {{ asyncFunction }}
 }
 // sourcery:end
 {% endfor %}
