@@ -1,10 +1,7 @@
 // Generated using Sourcery 1.8.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
-import Foundation
-
-// MARK: - handle Combine
-#if canImport(Combine)
 import Combine
+import Foundation
 
 public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
@@ -14,33 +11,35 @@ public extension StytchClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///  - Returns: A ``DeeplinkHandledStatus`` will be returned asynchronously.
-    static func handle(url: URL, sessionDuration: Minutes = 30) -> AnyPublisher<DeeplinkHandledStatus, Error> {
-        return Deferred { 
+    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration, completion: @escaping Completion<DeeplinkHandledStatus>) {
+        Task {
+            do {
+                completion(.success(try await handle(url: url, sessionDuration: sessionDuration)))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// This function is provided as a simple convenience handler to be used in your AppDelegate or
+    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// the length requested here.
+    ///  - Parameters:
+    ///    - url: A `URL` passed to your application as a deeplink.
+    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus, Error> {
+        return Deferred {
             Future({ promise in
-                handle(url: url, sessionDuration: sessionDuration, completion: promise)
+                Task {
+                    do {
+                        promise(.success(try await handle(url: url, sessionDuration: sessionDuration)))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
             })
         }
         .eraseToAnyPublisher()
     }
 }
-#endif
-
-// MARK: - handle Async/Await
-#if compiler(>=5.5) && canImport(_Concurrency)
-public extension StytchClient {
-    /// This function is provided as a simple convenience handler to be used in your AppDelegate or
-    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
-    /// the length requested here.
-    ///  - Parameters:
-    ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///  - Returns: A ``DeeplinkHandledStatus`` will be returned asynchronously.
-    static func handle(url: URL, sessionDuration: Minutes = 30) async throws -> DeeplinkHandledStatus {
-        try await withCheckedThrowingContinuation { continuation in
-            handle(url: url, sessionDuration: sessionDuration, completion: continuation.resume)
-        }
-    }
-}
-#endif

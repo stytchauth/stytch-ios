@@ -42,33 +42,38 @@ public struct StytchClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
-    ///    - completion: A ``DeeplinkHandledStatus`` will be returned asynchronously.
     public static func handle(
         url: URL,
-        sessionDuration: Minutes = 30,
-        completion: @escaping Completion<DeeplinkHandledStatus>
-    ) {
+        sessionDuration: Minutes = .defaultSessionDuration
+    ) async throws -> DeeplinkHandledStatus {
+        guard let (tokenType, token) = try tokenValues(for: url) else {
+            return .notHandled
+        }
+
+        switch tokenType {
+        case .magicLinks:
+            return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+        case .oauth:
+            return .notHandled
+        case .passwordReset:
+            return .notHandled
+        }
+    }
+
+    ///  A helper function for parsing out the Stytch token types and values from a given deeplink
+    public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
-            let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }),
+            let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }), let type = typeQuery.value,
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
-            completion(.success(.notHandled))
-            return
+            return nil
         }
-
-        switch typeQuery.value {
-        case "magic_links":
-            magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)) { result in
-                completion(result.map(DeeplinkHandledStatus.handled))
-            }
-        case "oauth":
-            // This will be supported in the near future
-            completion(.success(.notHandled))
-        default:
-            completion(.failure(StytchError.unrecognizedDeeplinkTokenType))
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else {
+            throw StytchError.unrecognizedDeeplinkTokenType
         }
+        return (tokenType, token)
     }
 
     // To be called after configuration
@@ -112,8 +117,14 @@ public extension StytchClient {
      */
     enum DeeplinkHandledStatus {
         /// The handler was successfully able to handle the given item.
-        case handled(AuthenticateResponse)
+        case handled(AuthenticateResponseType)
         /// The handler was unable to handle the given item.
         case notHandled
+    }
+
+    enum DeeplinkTokenType: String {
+        case magicLinks = "magic_links"
+        case oauth
+        case passwordReset = "password_reset"
     }
 }

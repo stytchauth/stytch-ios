@@ -5,82 +5,44 @@ extension StytchClient {
         to endpoint: Endpoint,
         parameters: Parameters
     ) async throws -> Response {
-        try await StytchClient.performRequest(
-            .post(Current.jsonEncoder.encode(parameters)),
-            endpoint: endpoint
-        )
+        try await performRequest(.post(Current.jsonEncoder.encode(parameters)), endpoint: endpoint)
     }
 
-    static func get<Response: Decodable>(
-        endpoint: Endpoint
-    ) async throws -> Response {
+    static func get<Response: Decodable>(endpoint: Endpoint) async throws -> Response {
         try await performRequest(.get, endpoint: endpoint)
     }
 
-    static func post<Parameters: Encodable, Response: Decodable>(
-        to endpoint: Endpoint,
-        parameters: Parameters,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
-        do {
-            let data = try Current.jsonEncoder.encode(parameters)
-            StytchClient.performRequest(.post(data), endpoint: endpoint, completion: completion)
-        } catch {
-            completion(.failure(error))
-        }
-    }
-
-    static func get<Response: Decodable>(
-        endpoint: Endpoint,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
-        performRequest(.get, endpoint: endpoint, completion: completion)
-    }
-
     private static func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method = .get,
         endpoint: Endpoint
     ) async throws -> Response {
-        try await withCheckedThrowingContinuation { continuation in
-            performRequest(method, endpoint: endpoint, completion: continuation.resume)
-        }
-    }
-
-    private static func performRequest<Response: Decodable>(
-        _ method: NetworkingClient.Method = .get,
-        endpoint: Endpoint,
-        completion: @escaping ((Result<Response, Error>) -> Void)
-    ) {
         guard let configuration = instance.configuration else {
-            completion(.failure(StytchError.clientNotConfigured))
-            return
+            throw StytchError.clientNotConfigured
         }
 
-        Current.networkingClient.performRequest(method, url: endpoint.url(baseUrl: configuration.baseUrl)) { result in
-            completion(
-                result.flatMap { data, response in
-                    do {
-                        try response.verifyStatus(data: data)
-                        let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
-                        if let sessionResponse = dataContainer.data as? AuthenticateResponse {
-                            Current.sessionStorage.updateSession(
-                                sessionResponse.session,
-                                tokens: [
-                                    .jwt(sessionResponse.sessionJwt),
-                                    .opaque(sessionResponse.sessionToken),
-                                ],
-                                hostUrl: configuration.hostUrl
-                            )
-                        }
-                        return .success(dataContainer.data)
-                    } catch let error as StytchError where error.statusCode == 401 {
-                        Current.sessionStorage.reset()
-                        return .failure(error)
-                    } catch {
-                        return .failure(error)
-                    }
-                }
-            )
+        let (data, response) = try await Current.networkingClient.performRequest(
+            method,
+            url: endpoint.url(baseUrl: configuration.baseUrl)
+        )
+        do {
+            try response.verifyStatus(data: data)
+            let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
+            if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
+                Current.sessionStorage.updateSession(
+                    sessionResponse.session,
+                    tokens: [
+                        .jwt(sessionResponse.sessionJwt),
+                        .opaque(sessionResponse.sessionToken),
+                    ],
+                    hostUrl: configuration.hostUrl
+                )
+            }
+            return dataContainer.data
+        } catch let error as StytchError where error.statusCode == 401 {
+            Current.sessionStorage.reset()
+            throw error
+        } catch {
+            throw error
         }
     }
 }

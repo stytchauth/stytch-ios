@@ -3,22 +3,14 @@ import Foundation
 final class NetworkingClient {
     var headerProvider: (() -> [String: String])?
 
-    private let handleRequest: (URLRequest, @escaping Completion) -> TaskHandle
+    private let handleRequest: (URLRequest) async throws -> (Data, HTTPURLResponse)
 
-    init(handleRequest: @escaping (URLRequest, @escaping Completion) -> TaskHandle) {
+    init(handleRequest: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse)) {
         self.handleRequest = handleRequest
     }
 
-    @discardableResult
-    func performRequest(_ method: Method, url: URL, completion: @escaping Completion) -> TaskHandle {
-        perform(
-            request: urlRequest(url: url, method: method),
-            completion: completion
-        )
-    }
-
-    private func perform(request: URLRequest, completion: @escaping Completion) -> TaskHandle {
-        handleRequest(request, completion)
+    func performRequest(_ method: Method, url: URL) async throws -> (Data, HTTPURLResponse) {
+        try await handleRequest(urlRequest(url: url, method: method))
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {
@@ -74,8 +66,6 @@ final class NetworkingClient {
 // }
 
 extension NetworkingClient {
-    typealias Completion = (Result<(Data, HTTPURLResponse), Swift.Error>) -> Void
-
     enum Method {
         case delete
         case get
@@ -99,14 +89,5 @@ extension NetworkingClient {
     enum Error: Swift.Error {
         case missingData
         case nonHttpResponse
-    }
-
-    // A handle wrapping the underlying DataTask which can easily be extended to pass through progress or cancellation functionality
-    struct TaskHandle {
-        weak var dataTask: URLSessionDataTask?
-
-        public init(dataTask: URLSessionDataTask?) {
-            self.dataTask = dataTask
-        }
     }
 }

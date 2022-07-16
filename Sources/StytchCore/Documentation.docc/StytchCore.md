@@ -15,6 +15,7 @@ There are a number of authentication products currently supported by the SDK, wi
 Product | Methods | Delivery mechanisms
 --- | --- | ---
 ``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:completion:)``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:completion:)`` | Email 
+``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-9xbzg``, ``StytchClient/Passwords-swift.struct/``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-79mm8``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
 ``StytchClient/OneTimePasscodes`` | ``StytchClient/OneTimePasscodes/loginOrCreate(parameters:completion:)``, ``StytchClient/OneTimePasscodes/authenticate(parameters:completion:)`` | SMS, WhatsApp, Email
 ``StytchClient/Sessions-swift.struct`` | ``StytchClient/Sessions-swift.struct/revoke(completion:)``, ``StytchClient/Sessions-swift.struct/authenticate(parameters:completion:)`` | N/A
 
