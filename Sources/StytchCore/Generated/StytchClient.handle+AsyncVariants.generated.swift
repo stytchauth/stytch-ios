@@ -3,7 +3,6 @@
 import Combine
 import Foundation
 
-// MARK: - handle Combined
 public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
@@ -21,10 +20,7 @@ public extension StytchClient {
         }
         .eraseToAnyPublisher()
     }
-}
 
-// MARK: - handle Async/Await
-public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
     /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of

@@ -1,9 +1,11 @@
 {% for type in types.all %}
 {% for method in type.methods where method.annotations.AsyncAsyncVariants %}
-// sourcery:file:StytchCore/Generated/{{ type.name }}+AsyncAsyncVariants.generated.swift
+{% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
+// sourcery:file:StytchCore/Generated/{{ type.name }}.{{ methodName }}+AsyncAsyncVariants.generated.swift
 import Combine
 import Foundation
-{% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
+
+public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
 {% set methodCallParams %}{% for parameter in method.parameters %}{{ parameter.name }}: {{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
@@ -13,9 +15,7 @@ import Foundation
     /// {{ commentLine }}
 {% endfor %}
 {% endset %}
-
-// MARK: - {{ methodName }} Callback
-public extension {{ type.name }} {
+    {{ methodDocs }}
     {{ methodKeywords }} {{ methodDeclaration }}, completion: @escaping Completion<{{ returnType }}>) {
         Task {
             do {
@@ -25,10 +25,7 @@ public extension {{ type.name }} {
             }
         }
     }
-}
 
-// MARK: - {{ methodName }} Combine
-public extension {{ type.name }} {
     {{ methodDocs }}
     {{ methodKeywords }} {{ methodDeclaration }}) -> AnyPublisher<{{ returnType }}, Error> {
         return Deferred {
@@ -45,7 +42,6 @@ public extension {{ type.name }} {
         .eraseToAnyPublisher()
     }
 }
-
 // sourcery:end
 {% endfor %}
 {% endfor %}
