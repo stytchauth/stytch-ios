@@ -2,7 +2,7 @@ import Foundation
 
 // NOTE: - Ability to import LocalAuthentication serves as a proxy for supported platforms for biometrics
 #if canImport(LocalAuthentication)
-public extension StytchClient {
+extension StytchClient {
     /// some docs
     struct Biometrics {
         let pathContext: Endpoint.Path = "biometrics"
@@ -97,12 +97,12 @@ public extension StytchClient {
     }
 }
 
-public extension StytchClient {
+extension StytchClient {
     /// The interface for interacting with biometrics products.
     static var biometrics: Biometrics { .init() }
 }
 
-public extension StytchClient.Biometrics {
+extension StytchClient.Biometrics {
     struct AuthenticateParameters {
         let sessionDuration: Minutes
     }
