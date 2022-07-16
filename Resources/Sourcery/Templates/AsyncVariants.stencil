@@ -1,6 +1,7 @@
 {% for type in types.all %}
 {% for method in type.methods where method.annotations.AsyncVariants %}
 // sourcery:file:StytchCore/Generated/{{ type.name }}+AsyncVariants.generated.swift
+import Combine
 import Foundation
 {% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
@@ -20,10 +21,7 @@ import Foundation
 {% endfor %}
 {% endset %}
 
-// MARK: - {{ methodName }} Combine
-#if canImport(Combine)
-import Combine
-
+// MARK: - {{ methodName }} Combined
 public extension {{ type.name }} {
     {{ methodDocs }}
     {{ methodKeywords }} {{ methodDeclaration }} -> AnyPublisher<{{ returnType }}, Error> {
@@ -35,15 +33,12 @@ public extension {{ type.name }} {
         .eraseToAnyPublisher()
     }
 }
-#endif
 
 // MARK: - {{ methodName }} Async/Await
-#if compiler(>=5.5) && canImport(_Concurrency)
 public extension {{ type.name }} {
     {{ methodDocs }}
     {{ asyncFunction }}
 }
-#endif
 // sourcery:end
 {% endfor %}
 {% endfor %}

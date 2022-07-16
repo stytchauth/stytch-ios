@@ -1,11 +1,9 @@
-// Generated using Sourcery 1.8.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 1.8.1 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
+import Combine
 import Foundation
 
-// MARK: - authenticate Combine
-#if canImport(Combine)
-import Combine
-
+// MARK: - authenticate Combined
 public extension StytchClient.MagicLinks {
     /// Wraps the magic link [authenticate](https://stytch.com/docs/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
     func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
@@ -17,10 +15,8 @@ public extension StytchClient.MagicLinks {
         .eraseToAnyPublisher()
     }
 }
-#endif
 
 // MARK: - authenticate Async/Await
-#if compiler(>=5.5) && canImport(_Concurrency)
 public extension StytchClient.MagicLinks {
     /// Wraps the magic link [authenticate](https://stytch.com/docs/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
     func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
@@ -29,4 +25,3 @@ public extension StytchClient.MagicLinks {
         }
     }
 }
-#endif

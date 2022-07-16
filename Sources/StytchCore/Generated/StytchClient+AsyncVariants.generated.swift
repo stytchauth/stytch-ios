@@ -1,11 +1,9 @@
-// Generated using Sourcery 1.8.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 1.8.1 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
+import Combine
 import Foundation
 
-// MARK: - handle Combine
-#if canImport(Combine)
-import Combine
-
+// MARK: - handle Combined
 public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
@@ -24,10 +22,8 @@ public extension StytchClient {
         .eraseToAnyPublisher()
     }
 }
-#endif
 
 // MARK: - handle Async/Await
-#if compiler(>=5.5) && canImport(_Concurrency)
 public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
@@ -43,4 +39,3 @@ public extension StytchClient {
         }
     }
 }
-#endif
