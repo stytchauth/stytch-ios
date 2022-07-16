@@ -6,7 +6,6 @@ extension KeychainClient {
             try [
                 KeychainClient.Item.sessionJwt,
                 .sessionToken,
-                .stytchPKCECodeVerifier,
             ]
             .forEach { item in
                 let status = SecItemUpdate(

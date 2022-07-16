@@ -123,7 +123,8 @@ extension KeychainClient {
 }
 
 extension KeychainClient.Item {
-    static let stytchPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_pkce_code_verifier")
+    static let stytchEMLPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_eml_pkce_code_verifier")
+    static let stytchPWResetByEmailPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_password_reset_by_email_pkce_code_verifier")
 }
 
 extension Dictionary where Key == CFString, Value == Any {

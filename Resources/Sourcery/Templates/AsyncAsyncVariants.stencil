@@ -1,0 +1,47 @@
+{% for type in types.all %}
+{% for method in type.methods where method.annotations.AsyncAsyncVariants %}
+{% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
+// sourcery:file:StytchCore/Generated/{{ type.name }}.{{ methodName }}+AsyncAsyncVariants.generated.swift
+import Combine
+import Foundation
+
+public extension {{ type.name }} {
+{% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
+{% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set methodCallParams %}{% for parameter in method.parameters %}{{ parameter.name }}: {{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set returnType %}{{ method.returnTypeName }}{% endset %}
+{% set methodDocs %}
+{% for commentLine in method.documentation %}
+    /// {{ commentLine }}
+{% endfor %}
+{% endset %}
+    {{ methodDocs }}
+    {{ methodKeywords }} {{ methodDeclaration }}, completion: @escaping Completion<{{ returnType }}>) {
+        Task {
+            do {
+                completion(.success(try await {{ methodName }}({{ methodCallParams }})))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    {{ methodDocs }}
+    {{ methodKeywords }} {{ methodDeclaration }}) -> AnyPublisher<{{ returnType }}, Error> {
+        return Deferred {
+            Future({ promise in
+                Task {
+                    do {
+                        promise(.success(try await {{ methodName }}({{ methodCallParams }})))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            })
+        }
+        .eraseToAnyPublisher()
+    }
+}
+// sourcery:end
+{% endfor %}
+{% endfor %}

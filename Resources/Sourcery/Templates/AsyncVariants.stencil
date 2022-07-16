@@ -1,8 +1,11 @@
 {% for type in types.all %}
 {% for method in type.methods where method.annotations.AsyncVariants %}
-// sourcery:file:StytchCore/Generated/{{ type.name }}+AsyncVariants.generated.swift
-import Foundation
 {% set methodName %}{% for value in method.name|split:"(" %}{% if forloop.first %}{{ value }}{% endif %}{% endfor %}{% endset %}
+// sourcery:file:StytchCore/Generated/{{ type.name }}.{{ methodName }}+AsyncVariants.generated.swift
+import Combine
+import Foundation
+
+public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{% if not forloop.last %}{% if not forloop.first %}, {% endif %}{{ parameter.asSource }}{% endif %}{% endfor %}){% endset %}
 {% set methodCallParams %}{% for parameter in method.parameters %}{% if not forloop.last %}{{ parameter.name }}: {{ parameter.name }}, {% endif %}{% endfor %}completion: {% endset %}
@@ -19,12 +22,6 @@ import Foundation
     /// {{ commentLine|replace:"  - completion:","- Returns:" }}
 {% endfor %}
 {% endset %}
-
-// MARK: - {{ methodName }} Combine
-#if canImport(Combine)
-import Combine
-
-public extension {{ type.name }} {
     {{ methodDocs }}
     {{ methodKeywords }} {{ methodDeclaration }} -> AnyPublisher<{{ returnType }}, Error> {
         return Deferred { 
@@ -34,16 +31,10 @@ public extension {{ type.name }} {
         }
         .eraseToAnyPublisher()
     }
-}
-#endif
 
-// MARK: - {{ methodName }} Async/Await
-#if compiler(>=5.5) && canImport(_Concurrency)
-public extension {{ type.name }} {
     {{ methodDocs }}
     {{ asyncFunction }}
 }
-#endif
 // sourcery:end
 {% endfor %}
 {% endfor %}

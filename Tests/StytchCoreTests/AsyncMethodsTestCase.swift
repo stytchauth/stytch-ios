@@ -16,13 +16,13 @@ final class AsyncMethodsTestCase: BaseTestCase {
             signupExpiration: 30
         )
 
-        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+        XCTAssertNil(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier))
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.get(.stytchPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
@@ -43,9 +43,9 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         await XCTAssertThrowsError(try await StytchClient.magicLinks.authenticate(parameters: parameters))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchEMLPKCECodeVerifier)
 
-        XCTAssertNotNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier))
 
         Current.timer = { _, _, _ in .init() }
 
@@ -57,7 +57,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
 
-        XCTAssertNil(try Current.keychainClient.get(.stytchPKCECodeVerifier))
+        XCTAssertNil(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier))
 
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
@@ -163,7 +163,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         )
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data), .success(data), .success(data))
 
         try await [
             (
@@ -253,7 +253,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         await XCTAssertThrowsError(try await StytchClient.handle(url: handledUrl))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchEMLPKCECodeVerifier)
 
         Current.timer = { _, _, _ in .init() }
 

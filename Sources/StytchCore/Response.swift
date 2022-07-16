@@ -8,16 +8,15 @@ public struct Response<Wrapped: Decodable>: Decodable {
         case requestId, statusCode
     }
 
-    // TODO: - make sure this is included in all web-backend responses
     /// The id for the request.
-    public let requestId: String?
+    public let requestId: String
     /// The HTTP status code of the request.
     public let statusCode: UInt
     private let wrapped: Wrapped
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId)
+        self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId) ?? "unknown_request_id"
         self.statusCode = try container.decode(key: .statusCode)
         self.wrapped = try .init(from: decoder)
     }
@@ -55,3 +54,10 @@ extension Response where Wrapped == EmptyCodable {
     }
 }
 #endif
+
+extension Response: AuthenticateResponseType where Wrapped: AuthenticateResponseType {
+    public var user: User { wrapped.user }
+    public var sessionToken: String { wrapped.sessionToken }
+    public var sessionJwt: String { wrapped.sessionJwt }
+    public var session: Session { wrapped.session }
+}
