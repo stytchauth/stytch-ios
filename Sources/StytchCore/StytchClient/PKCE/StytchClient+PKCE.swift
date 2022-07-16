@@ -11,16 +11,6 @@ extension StytchClient {
 
         return (Current.cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
     }
-
-    /// Wraps an `authenticate` ``Completion`` and removes the PKCE code verifier from persistent storage upon success.
-    static func pckeAuthenticateCompletion<T>(keychainItem: KeychainClient.Item, _ completion: @escaping Completion<T>) -> Completion<T> {
-        { result in
-            if case .success = result {
-                try? Current.keychainClient.removeItem(keychainItem)
-            }
-            completion(result)
-        }
-    }
 }
 
 private extension Data {
