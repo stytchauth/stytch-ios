@@ -9,8 +9,14 @@ extension String {
         Data(utf8).base64EncodedString()
     }
 
-    func dropLast(while predicate: (Character) throws -> Bool) rethrows -> Substring {
-        try Substring(reversed().drop(while: predicate).reversed())
+    var presence: String? {
+        isEmpty ? nil : self
+    }
+}
+
+extension Optional where Wrapped == String {
+    var presence: String? {
+        flatMap(\.presence)
     }
 }
 

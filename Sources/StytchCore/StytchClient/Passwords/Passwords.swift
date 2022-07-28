@@ -4,17 +4,14 @@ public extension StytchClient {
     /// Stytch supports creating, storing, and authenticating password based users, as well as support for account recovery (password reset) and account deduplication with passwordless login methods.
     /// Our implementation of passwords has built-in breach detection powered by [HaveIBeenPwned](https://haveibeenpwned.com/) on both sign-up and login, to prevent the use of compromised credentials and uses Dropbox’s [zxcvbn](https://github.com/dropbox/zxcvbn) strength requirements to guide users towards creating passwords that are easy for humans to remember but difficult for computers to crack.
     struct Passwords {
-        let pathContext: Endpoint.Path = "passwords"
+        let router: NetworkingRouter<PasswordsRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Create a new user with a password and an authenticated session for the user if requested. If a user with this email already exists in the project, an error will be returned.
         ///
         /// Existing passwordless users who wish to create a password need to go through the reset password flow.
         public func create(parameters: PasswordParameters) async throws -> CreateResponse {
-            try await StytchClient.post(
-                to: .init(path: pathContext),
-                parameters: parameters
-            )
+            try await router.post(to: .create, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -26,10 +23,7 @@ public extension StytchClient {
         /// 2. The user used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account takeover attack.
         public func authenticate(parameters: PasswordParameters) async throws -> AuthenticateResponse {
-            try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                parameters: parameters
-            )
+            try await router.post(to: .authenticate, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -37,13 +31,8 @@ public extension StytchClient {
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
             let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .stytchPWResetByEmailPKCECodeVerifier)
 
-            return try await StytchClient.post(
-                to: .init(
-                    path: pathContext
-                        .appendingPathComponent("email")
-                        .appendingPathComponent("reset")
-                        .appendingPathComponent("start")
-                ),
+            return try await router.post(
+                to: .resetByEmail(.start),
                 parameters: CodeChallengedParameters(
                     codeChallenge: codeChallenge,
                     codeChallengeMethod: codeChallengeMethod,
@@ -61,12 +50,8 @@ public extension StytchClient {
                 throw StytchError.pckeNotAvailable
             }
 
-            let response: AuthenticateResponse = try await StytchClient.post(
-                to: .init(
-                    path: pathContext
-                        .appendingPathComponent("email")
-                        .appendingPathComponent("reset")
-                ),
+            let response: AuthenticateResponse = try await router.post(
+                to: .resetByEmail(.complete),
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
 
@@ -86,17 +71,14 @@ public extension StytchClient {
         /// This method takes `email` as an optional argument, and if it is passed it will be factored into zxcvbn’s evaluation of the strength of the password. If you do not pass the email, it is possible that the password will evaluate as valid – but will fail with a weak_password error when used in the ``StytchClient/Passwords-swift.struct/create(parameters:)`` method.
         /// Feedback will be present in the response for any password that does not meet the strength requirements, and mirrors that feedback provided by the zxcvbn library.
         public func strengthCheck(parameters: StrengthCheckParameters) async throws -> StrengthCheckResponse {
-            try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("strength_check")),
-                parameters: parameters
-            )
+            try await router.post(to: .strengthCheck, parameters: parameters)
         }
     }
 }
 
 public extension StytchClient {
     /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init() }
+    static var passwords: Passwords { .init(router: router.childRouter(BaseRoute.passwords)) }
 }
 
 public extension StytchClient.Passwords {
