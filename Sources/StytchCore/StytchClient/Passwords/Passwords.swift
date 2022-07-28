@@ -207,6 +207,7 @@ public extension StytchClient.Passwords {
     /// The underlying data for passwords `strengthCheck` calls.
     struct StrengthCheckResponseData: Codable {
         public let validPassword: Bool
+        /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
         public let breachedPassword: Bool
         public let feedback: Feedback
