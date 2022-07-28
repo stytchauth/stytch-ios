@@ -3,21 +3,14 @@ import XCTest
 
 final class ModelsTestCase: BaseTestCase {
     func testPath() {
-        let path = Endpoint.Path(rawValue: "path")
+        let path = Path(rawValue: "path")
         XCTAssertEqual(path.rawValue, "path")
-        XCTAssertEqual(path.appendingPathComponent("").rawValue, "path")
-        XCTAssertEqual(path.appendingPathComponent("new_path").rawValue, "path/new_path")
+        XCTAssertEqual(path.appendingPath("").rawValue, "path")
+        XCTAssertEqual(path.appendingPath("new_path").rawValue, "path/new_path")
         XCTAssertEqual(
-            path.appendingPathComponent("new_path").appendingPathComponent("other_path").rawValue,
+            path.appendingPath("new_path").appendingPath("other_path").rawValue,
             "path/new_path/other_path"
         )
-    }
-
-    func testEndpoint() throws {
-        let url = try XCTUnwrap(URL(string: "https://stytch.com/path/component"))
-        XCTAssertEqual(url.path, "/path/component")
-        let endpoint = Endpoint(path: "/other/path")
-        XCTAssertEqual(endpoint.url(baseUrl: url).path, "/path/component/other/path")
     }
 
     func testLossyArray() throws {

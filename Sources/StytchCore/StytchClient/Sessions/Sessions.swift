@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
     struct Sessions {
-        let pathContext: Endpoint.Path = "sessions"
+        let router: NetworkingRouter<SessionsRoute>
 
         /// If logged in, returns the cached session object.
         public var session: Session? { Current.sessionStorage.session }
@@ -27,10 +27,7 @@ public extension StytchClient {
             }
 
             return try await .authenticated(
-                StytchClient.post(
-                    to: .init(path: pathContext.appendingPathComponent("authenticate")),
-                    parameters: TokenizedParameters(parameters: parameters, token: token)
-                )
+                router.post(to: .authenticate, parameters: TokenizedParameters(parameters: parameters, token: token))
             )
         }
 
@@ -41,10 +38,7 @@ public extension StytchClient {
                 return .unauthenticated
             }
 
-            let response: BasicResponse = try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("revoke")),
-                parameters: TokenizedParameters(parameters: EmptyCodable(), token: token)
-            )
+            let response: BasicResponse = try await router.post(to: .revoke, parameters: TokenizedParameters(parameters: EmptyCodable(), token: token))
             Current.sessionStorage.reset()
             return .authenticated(response)
         }
@@ -53,7 +47,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with sessions products.
-    static var sessions: Sessions { .init() }
+    static var sessions: Sessions { .init(router: router.childRouter(BaseRoute.sessions)) }
 }
 
 public extension StytchClient.Sessions {

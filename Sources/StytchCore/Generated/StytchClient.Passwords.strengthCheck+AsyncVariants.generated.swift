@@ -11,7 +11,7 @@ public extension StytchClient.Passwords {
     /// 1. [zxcvbn](https://github.com/dropbox/zxcvbn)'s strength score is <= 2.
     /// 2. The password is present in the HaveIBeenPwned dataset.
     /// 
-    /// This method takes `email` as an optional argument, and if it is passed it will be factored into zxcvbn’s evaluation of the strength of the password. If you do not pass the email, it is possible that the password will evaluate as valid – but will fail with a weak_password error when used in the ``StytchClient/Passwords-swift.struct/create(parameters:)`` method.
+    /// This method takes `email` as an optional argument, and if it is passed it will be factored into zxcvbn’s evaluation of the strength of the password. If you do not pass the email, it is possible that the password will evaluate as valid – but will fail with a weak_password error when used in the ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz`` method.
     /// Feedback will be present in the response for any password that does not meet the strength requirements, and mirrors that feedback provided by the zxcvbn library.
     func strengthCheck(parameters: StrengthCheckParameters, completion: @escaping Completion<StrengthCheckResponse>) {
         Task {
@@ -30,7 +30,7 @@ public extension StytchClient.Passwords {
     /// 1. [zxcvbn](https://github.com/dropbox/zxcvbn)'s strength score is <= 2.
     /// 2. The password is present in the HaveIBeenPwned dataset.
     /// 
-    /// This method takes `email` as an optional argument, and if it is passed it will be factored into zxcvbn’s evaluation of the strength of the password. If you do not pass the email, it is possible that the password will evaluate as valid – but will fail with a weak_password error when used in the ``StytchClient/Passwords-swift.struct/create(parameters:)`` method.
+    /// This method takes `email` as an optional argument, and if it is passed it will be factored into zxcvbn’s evaluation of the strength of the password. If you do not pass the email, it is possible that the password will evaluate as valid – but will fail with a weak_password error when used in the ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz`` method.
     /// Feedback will be present in the response for any password that does not meet the strength requirements, and mirrors that feedback provided by the zxcvbn library.
     func strengthCheck(parameters: StrengthCheckParameters) -> AnyPublisher<StrengthCheckResponse, Error> {
         return Deferred {

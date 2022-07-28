@@ -8,10 +8,10 @@ final class StytchClientTestCase: BaseTestCase {
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         // Configure the client after setting the networking client, so the headers are passed to the request
         StytchClient.configure(publicToken: "xyz", hostUrl: try XCTUnwrap(URL(string: "https://myapp.com")))
-        let response: String? = try await StytchClient.get(endpoint: .init(path: "doesnt_matter"))
+        let response: String? = try await StytchClient.router.get(route: .sessions(.authenticate))
 
         // Verify request
-        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/doesnt_matter")
+        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/sessions/authenticate")
         XCTAssertEqual(request?.httpMethod, "GET")
         XCTAssertEqual(
             request?.allHTTPHeaderFields,

@@ -5,12 +5,18 @@ extension String {
         .init(location: 0, length: count)
     }
 
+    var presence: String? {
+        isEmpty ? nil : self
+    }
+
     func base64Encoded() -> String {
         Data(utf8).base64EncodedString()
     }
+}
 
-    func dropLast(while predicate: (Character) throws -> Bool) rethrows -> Substring {
-        try Substring(reversed().drop(while: predicate).reversed())
+extension Optional where Wrapped == String {
+    var presence: String? {
+        flatMap(\.presence)
     }
 }
 
