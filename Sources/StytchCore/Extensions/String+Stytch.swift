@@ -5,12 +5,12 @@ extension String {
         .init(location: 0, length: count)
     }
 
-    func base64Encoded() -> String {
-        Data(utf8).base64EncodedString()
-    }
-
     var presence: String? {
         isEmpty ? nil : self
+    }
+
+    func base64Encoded() -> String {
+        Data(utf8).base64EncodedString()
     }
 }
 

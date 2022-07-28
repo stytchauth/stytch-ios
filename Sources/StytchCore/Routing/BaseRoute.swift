@@ -1,4 +1,9 @@
 enum BaseRoute: RouteType {
+    case magicLinks(MagicLinksRoute)
+    case otps(OneTimePasscodesRoute)
+    case passwords(PasswordsRoute)
+    case sessions(SessionsRoute)
+
     var path: Path {
         switch self {
         case let .magicLinks(route):
@@ -11,9 +16,4 @@ enum BaseRoute: RouteType {
             return "otps".appendingPath(route.path)
         }
     }
-
-    case magicLinks(MagicLinksRoute)
-    case otps(OneTimePasscodesRoute)
-    case passwords(PasswordsRoute)
-    case sessions(SessionsRoute)
 }
