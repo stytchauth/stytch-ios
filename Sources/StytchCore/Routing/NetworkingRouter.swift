@@ -1,28 +1,50 @@
 import Foundation
 
-extension StytchClient {
-    static func post<Parameters: Encodable, Response: Decodable>(
-        to endpoint: Endpoint,
+protocol RouteType {
+    var path: Path { get }
+}
+
+struct NetworkingRouter<Route: RouteType> {
+    private let pathForRoute: (Route) -> Path
+
+    private init(_ pathForRoute: @escaping (Route) -> Path) {
+        self.pathForRoute = pathForRoute
+    }
+
+    func childRouter<ChildRoute: RouteType>(
+        _ transform: @escaping (ChildRoute) -> Route
+    ) -> NetworkingRouter<ChildRoute> {
+        .init { path(for: transform($0)) }
+    }
+
+    private func path(for route: Route) -> Path {
+        pathForRoute(route)
+    }
+}
+
+extension NetworkingRouter {
+    func post<Parameters: Encodable, Response: Decodable>(
+        to route: Route,
         parameters: Parameters
     ) async throws -> Response {
-        try await performRequest(.post(Current.jsonEncoder.encode(parameters)), endpoint: endpoint)
+        try await performRequest(.post(Current.jsonEncoder.encode(parameters)), route: route)
     }
 
-    static func get<Response: Decodable>(endpoint: Endpoint) async throws -> Response {
-        try await performRequest(.get, endpoint: endpoint)
+    func get<Response: Decodable>(route: Route) async throws -> Response {
+        try await performRequest(.get, route: route)
     }
 
-    private static func performRequest<Response: Decodable>(
-        _ method: NetworkingClient.Method = .get,
-        endpoint: Endpoint
+    private func performRequest<Response: Decodable>(
+        _ method: NetworkingClient.Method,
+        route: Route
     ) async throws -> Response {
-        guard let configuration = instance.configuration else {
+        guard let configuration = StytchClient.instance.configuration else {
             throw StytchError.clientNotConfigured
         }
 
         let (data, response) = try await Current.networkingClient.performRequest(
             method,
-            url: endpoint.url(baseUrl: configuration.baseUrl)
+            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
         )
         do {
             try response.verifyStatus(data: data)
@@ -45,6 +67,10 @@ extension StytchClient {
             throw error
         }
     }
+}
+
+extension NetworkingRouter where Route == BaseRoute {
+    init() { self.init { $0.path } }
 }
 
 private extension HTTPURLResponse {
@@ -74,11 +100,3 @@ private extension HTTPURLResponse {
         throw error
     }
 }
-
-struct DataContainer<T: Decodable>: Decodable {
-    var data: T
-}
-
-#if DEBUG
-extension DataContainer: Encodable where T: Encodable {}
-#endif
