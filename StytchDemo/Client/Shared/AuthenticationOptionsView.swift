@@ -10,6 +10,13 @@ struct AuthenticationOptionsView: View {
         VStack {
             NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
                 .padding()
+            NavigationLink("Authenticate with Password") {
+                PasswordAuthenticationView {
+                    onAuth($0, $1)
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .padding()
             NavigationLink("Authenticate with OTP") {
                 OTPAuthenticationView(session: session) {
                     onAuth($0, $1)
