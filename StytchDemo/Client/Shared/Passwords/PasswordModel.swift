@@ -31,7 +31,7 @@ final class PasswordModel: ObservableObject {
     @discardableResult
     func resetPasswordStart() async throws -> BasicResponse {
         try await StytchClient.passwords.resetByEmailStart(
-            parameters: .init(email: email, resetPasswordUrl: configuration.serverUrl)
+            parameters: .init(email: email, loginUrl: configuration.serverUrl, resetPasswordUrl: configuration.serverUrl)
         )
     }
 
