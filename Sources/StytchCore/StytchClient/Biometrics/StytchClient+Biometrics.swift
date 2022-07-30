@@ -5,7 +5,7 @@ import Foundation
 extension StytchClient {
     /// some docs
     struct Biometrics {
-        let pathContext: Endpoint.Path = "biometrics"
+        let router: NetworkingRouter<BiometricsRoute>
 
         // sourcery: AsyncAsyncVariants, (NOTE: - must use /// doc comment styling)
         /// some docs
@@ -17,15 +17,13 @@ extension StytchClient {
 
             let (privateKey, publicKey) = Current.cryptoClient.generateKeyPair()
 
-            let pathContext = pathContext.appendingPathComponent("register")
-
-            let startResponse: RegisterStartResponse = try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("start")),
+            let startResponse: RegisterStartResponse = try await router.post(
+                to: .register(.start),
                 parameters: RegisterStartParameters(publicKey: publicKey)
             )
 
-            let finishResponse: Response<RegisterFinishResponseData> = try await StytchClient.post(
-                to: .init(path: pathContext),
+            let finishResponse: Response<RegisterCompleteResponseData> = try await router.post(
+                to: .register(.complete),
                 parameters: RegisterFinishParameters(
                     biometricRegistrationId: startResponse.biometricRegistrationId,
                     signature: Current.cryptoClient.signChallengeWithPrivateKey(
@@ -77,17 +75,15 @@ extension StytchClient {
             let privateKey = queryResult.data
             let publicKey = try Current.cryptoClient.publicKeyForPrivateKey(privateKey)
 
-            let pathContext = pathContext.appendingPathComponent("authenticate")
-
-            let startResponse: AuthenticateStartResponse = try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("start")),
+            let startResponse: AuthenticateStartResponse = try await router.post(
+                to: .authenticate(.start),
                 parameters: AuthenticateStartParameters(publicKey: publicKey, userId: queryResult.account)
             )
 
             // Could use separate concrete type which contains biometric registration id, but this doesn't seem to add value
-            return try await StytchClient.post(
-                to: .init(path: pathContext),
-                parameters: AuthenticateFinishParameters(
+            return try await router.post(
+                to: .authenticate(.complete),
+                parameters: AuthenticateCompleteParameters(
                     signature: Current.cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
                     biometricRegistrationId: startResponse.biometricRegistrationId,
                     sessionDurationMinutes: parameters.sessionDuration
@@ -99,7 +95,7 @@ extension StytchClient {
 
 extension StytchClient {
     /// The interface for interacting with biometrics products.
-    static var biometrics: Biometrics { .init() }
+    static var biometrics: Biometrics { .init(router: router.childRouter(BaseRoute.biometrics)) }
 }
 
 extension StytchClient.Biometrics {
@@ -117,7 +113,7 @@ extension StytchClient.Biometrics {
         let biometricRegistrationId: String
     }
 
-    struct AuthenticateFinishParameters: Encodable {
+    struct AuthenticateCompleteParameters: Encodable {
         let signature: Data
         let biometricRegistrationId: String
         let sessionDurationMinutes: Minutes
@@ -186,7 +182,7 @@ extension StytchClient.Biometrics {
         let signature: Data
     }
 
-    private struct RegisterFinishResponseData: Codable {
+    private struct RegisterCompleteResponseData: Codable {
         let biometricRegistrationId: String
         let user: User
     }
