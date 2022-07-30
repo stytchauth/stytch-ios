@@ -12,6 +12,7 @@ struct StytchDemoApp: App {
     @State private var sessionUser: (Session, User)?
     @State private var errorAlertPresented = false
     @State private var errorMessage = ""
+    @State private var resetPasswordToken: ResetPasswordToken?
 
     var body: some Scene {
         WindowGroup {
@@ -45,6 +46,12 @@ struct StytchDemoApp: App {
                 .onOpenURL(perform: handle(url:))
                 // Prevent deeplink from opening new window
                 .handlesExternalEvents(preferring: [], allowing: ["*"])
+                .sheet(item: $resetPasswordToken, onDismiss: nil) { wrapped in
+                    ResetPasswordView(token: wrapped.token) { session, user in
+                        sessionUser = (session, user)
+                        resetPasswordToken = nil
+                    }
+                }
                 .alert("🚨 Error 🚨", isPresented: $errorAlertPresented, actions: { EmptyView() }, message: { Text(errorMessage) })
         }
         // Prevent user from being able to create a new window
@@ -61,6 +68,11 @@ struct StytchDemoApp: App {
                     self.sessionUser = (response.session, response.user)
                 case .notHandled:
                     print("not handled")
+                case let .manualHandlingRequired(tokenType, token):
+                    guard tokenType == .passwordReset else {
+                        fatalError("unexpected token type")
+                    }
+                    self.resetPasswordToken = .init(token: token)
                 }
             } catch {
                 handle(error: error)
@@ -76,6 +88,11 @@ struct StytchDemoApp: App {
         default:
             break
         }
+    }
+
+    struct ResetPasswordToken: Identifiable {
+        let id: UUID = .init()
+        let token: String
     }
 }
 
