@@ -46,7 +46,7 @@ public extension StytchError {
     )
     static let unrecognizedDeeplinkTokenType: Self = .init(
         errorType: "unrecognized_deeplink_token_type",
-        errorMessage: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links` or `oauth`"
+        errorMessage: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links`, `oauth`, or `reset_password`"
     )
     static let noCurrentSession: Self = .init(
         errorType: "no_current_session",

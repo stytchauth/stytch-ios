@@ -245,7 +245,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         switch try await StytchClient.handle(url: notHandledUrl, sessionDuration: 30) {
         case .handled:
             XCTFail("expected to be nothandled")
-        case .notHandled:
+        case .notHandled, .manualHandlingRequired:
             break
         }
 
@@ -261,7 +261,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         case let .handled(response):
             XCTAssertEqual(response.sessionJwt, "jwt_for_me")
             XCTAssertEqual(response.session.authenticationFactors.count, 1)
-        case .notHandled:
+        case .notHandled, .manualHandlingRequired:
             XCTFail("expected to be handled")
         }
     }

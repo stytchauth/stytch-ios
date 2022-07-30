@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// Magic links can be sent via email and allow for a quick and seamless login experience.
     struct MagicLinks {
-        let pathContext: Endpoint.Path = "magic_links"
+        let router: NetworkingRouter<MagicLinksRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
@@ -9,8 +9,8 @@ public extension StytchClient {
             guard let codeVerifier: String = try? Current.keychainClient.get(.stytchEMLPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
-            let response: AuthenticateResponse = try await StytchClient.post(
-                to: .init(path: pathContext.appendingPathComponent("authenticate")),
+            let response: AuthenticateResponse = try await router.post(
+                to: .authenticate,
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
             try Current.keychainClient.removeItem(.stytchEMLPKCECodeVerifier)
@@ -21,7 +21,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init() }
+    static var magicLinks: MagicLinks { .init(router: router.childRouter(BaseRoute.magicLinks)) }
 }
 
 public extension StytchClient.MagicLinks {
