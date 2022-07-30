@@ -81,7 +81,10 @@ struct PasswordAuthenticationView: View {
                 }
             })
             .buttonStyle(.borderedProminent)
-            .disabled(authOption == .signUp ? !model.isValid : false)
+            .disabled(
+                [model.email, model.password].contains(where: \.isEmpty) ||
+                    (authOption == .signUp && !model.isValid)
+            )
             .padding()
         }
         .alert("Check your email", isPresented: $checkEmailPresented, actions: { EmptyView() })
