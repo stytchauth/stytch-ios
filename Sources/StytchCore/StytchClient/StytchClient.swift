@@ -58,7 +58,7 @@ public struct StytchClient {
         case .oauth:
             return .notHandled
         case .passwordReset:
-            return .notHandled
+            return .manualHandlingRequired(.passwordReset, token: token)
         }
     }
 
@@ -122,6 +122,8 @@ public extension StytchClient {
         case handled(AuthenticateResponseType)
         /// The handler was unable to handle the given item.
         case notHandled
+        /// The handler recognized the token type, but manual handing is required. This should only be encountered for password reset deeplinks.
+        case manualHandlingRequired(DeeplinkTokenType, token: String)
     }
 
     enum DeeplinkTokenType: String {
