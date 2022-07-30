@@ -127,6 +127,6 @@ public extension StytchClient {
     enum DeeplinkTokenType: String {
         case magicLinks = "magic_links"
         case oauth
-        case passwordReset = "password_reset"
+        case passwordReset = "reset_password"
     }
 }
