@@ -24,4 +24,3 @@ struct PasswordFeedbackView: View {
         }
     }
 }
-

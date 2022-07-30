@@ -11,7 +11,7 @@ struct PasswordView: View {
     var body: some View {
         (
             isSecure ?
-            AnyView(SecureField(text: $password, label: { Text(title) })) :
+                AnyView(SecureField(text: $password, label: { Text(title) })) :
                 AnyView(TextField(text: $password, label: { Text(title) }))
         )
         .onReceive(
