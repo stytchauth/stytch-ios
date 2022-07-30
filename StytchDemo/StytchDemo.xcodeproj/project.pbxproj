@@ -13,6 +13,14 @@
 		2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
 		223F88B6289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */; };
 		223F88B7289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */; };
+		223F88B92894D05000CE2B0C /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B82894D05000CE2B0C /* ResetPasswordView.swift */; };
+		223F88BA2894D05000CE2B0C /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B82894D05000CE2B0C /* ResetPasswordView.swift */; };
+		223F88BD2894D09400CE2B0C /* PasswordFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */; };
+		223F88BE2894D09400CE2B0C /* PasswordFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */; };
+		223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BF2894D0D500CE2B0C /* PasswordView.swift */; };
+		223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BF2894D0D500CE2B0C /* PasswordView.swift */; };
+		223F88C32894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
+		223F88C42894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
 		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
@@ -50,6 +58,10 @@
 		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
 		2222D1432835C341008CEBD7 /* StytchConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchConfiguration.plist; sourceTree = "<group>"; };
 		223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordAuthenticationView.swift; sourceTree = "<group>"; };
+		223F88B82894D05000CE2B0C /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFeedbackView.swift; sourceTree = "<group>"; };
+		223F88BF2894D0D500CE2B0C /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		223F88C22894D0F500CE2B0C /* PasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordModel.swift; sourceTree = "<group>"; };
 		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +122,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		223F88BB2894D08500CE2B0C /* Passwords */ = {
+			isa = PBXGroup;
+			children = (
+				223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */,
+				223F88BF2894D0D500CE2B0C /* PasswordView.swift */,
+				223F88B82894D05000CE2B0C /* ResetPasswordView.swift */,
+				223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */,
+				223F88C22894D0F500CE2B0C /* PasswordModel.swift */,
+			);
+			path = Passwords;
+			sourceTree = "<group>";
+		};
 		224F7D3A280CC5DE000230FA /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,7 +145,7 @@
 				2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */,
 				22909094284DD5EE00ADD3C4 /* HobbiesView.swift */,
 				224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */,
-				223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */,
+				223F88BB2894D08500CE2B0C /* Passwords */,
 				2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */,
 				224F7D4C280CEDF5000230FA /* SessionView.swift */,
 				224F7D3B280CC5DE000230FA /* Assets.xcassets */,
@@ -364,12 +388,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				223F88BD2894D09400CE2B0C /* PasswordFeedbackView.swift in Sources */,
+				223F88C32894D0F500CE2B0C /* PasswordModel.swift in Sources */,
 				22909079284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */,
 				22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B6289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
+				223F88B92894D05000CE2B0C /* ResetPasswordView.swift in Sources */,
 				2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */,
 			);
@@ -380,12 +408,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */,
+				223F88BE2894D09400CE2B0C /* PasswordFeedbackView.swift in Sources */,
+				223F88C42894D0F500CE2B0C /* PasswordModel.swift in Sources */,
 				2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */,
 				224F7D46280CEC46000230FA /* StytchDemoApp.swift in Sources */,
 				22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B7289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
+				223F88BA2894D05000CE2B0C /* ResetPasswordView.swift in Sources */,
 				2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */,
 			);

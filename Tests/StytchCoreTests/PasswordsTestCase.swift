@@ -59,6 +59,6 @@ final class PasswordsTestCase: BaseTestCase {
 
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/passwords/email/reset")
         XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"12345\",\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\",\"password\":\"iAMpasswordHEARmeROAR\"}".utf8))
+        XCTAssertEqual(request?.httpBody, Data("{\"session_duration_minutes\":30,\"password\":\"iAMpasswordHEARmeROAR\",\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\",\"token\":\"12345\"}".utf8))
     }
 }

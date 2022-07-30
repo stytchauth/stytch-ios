@@ -155,15 +155,20 @@ public extension StytchClient.Passwords {
 
     /// The dedicated parameters type for passwords `resetByEmail` calls.
     struct ResetByEmailParameters: Encodable {
+        private enum CodingKeys: String, CodingKey { case token, password, sessionDuration = "session_duration_minutes" }
+
         public let token: String
         public let password: String
+        public let sessionDuration: Minutes
 
         /// - Parameters:
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
         ///   - password: The user's updated password.
-        public init(token: String, password: String) {
+        ///   - sessionDuration: The duration of the requested session.
+        public init(token: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.token = token
             self.password = password
+            self.sessionDuration = sessionDuration
         }
     }
 }
