@@ -100,6 +100,9 @@ opt_in_rules:
   - xct_specific_matcher
   - yoda_condition
 
+type_name:
+  min_length: 2
+
 nesting:
   type_level: 3
 

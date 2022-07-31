@@ -26,9 +26,10 @@ public struct User: Codable {
 
 public extension User {
     struct CryptoWallet: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The id of the crypto wallet.
-        public var id: String { cryptoWalletId }
-        let cryptoWalletId: String
+        public var id: ID { cryptoWalletId }
+        let cryptoWalletId: ID
         /// The address of the cryptowallet.
         public var address: String { cryptoWalletAddress }
         let cryptoWalletAddress: String
@@ -40,11 +41,12 @@ public extension User {
     }
 
     struct Email: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The email address.
         public let email: String
         /// The id of the email.
-        public var id: String { emailId }
-        let emailId: String
+        public var id: ID { emailId }
+        let emailId: ID
         /// The verification status of the email.
         public let verified: Bool
     }
@@ -56,6 +58,12 @@ public extension User {
         public let lastName: String?
         /// The user's middle name.
         public let middleName: String?
+
+        public init(firstName: String? = nil, lastName: String? = nil, middleName: String? = nil) {
+            self.firstName = firstName
+            self.lastName = lastName
+            self.middleName = middleName
+        }
     }
 
     struct Provider: Codable {
@@ -66,11 +74,12 @@ public extension User {
     }
 
     struct PhoneNumber: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The phone number.
         public let phoneNumber: String
         /// The id of the phone number.
-        public var id: String { phoneId }
-        let phoneId: String
+        public var id: ID { phoneId }
+        let phoneId: ID
         /// The verification status of the phone number.
         public let verified: Bool
     }
@@ -83,14 +92,16 @@ public extension User {
     }
 
     struct TOTP: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The id of the TOTP.
-        public var id: String { totpId }
-        let totpId: String
+        public var id: ID { totpId }
+        let totpId: ID
         /// The verification status of the TOTP.
         public let verified: Bool
     }
 
     struct WebAuthNRegistration: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The domain of the WebAuthN registration.
         public let domain: String
         /// The user agent of the registration.
@@ -98,7 +109,7 @@ public extension User {
         /// The verification status of the registration.
         public let verified: Bool
         /// The id of the registration.
-        public var id: String { webauthnRegistrationId }
-        let webauthnRegistrationId: String
+        public var id: ID { webauthnRegistrationId }
+        let webauthnRegistrationId: ID
     }
 }
