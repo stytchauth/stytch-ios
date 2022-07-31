@@ -12,7 +12,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     public let requestId: String
     /// The HTTP status code of the request.
     public let statusCode: UInt
-    private let wrapped: Wrapped
+    let wrapped: Wrapped
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
