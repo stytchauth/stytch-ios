@@ -21,7 +21,7 @@ public struct User: Codable {
     /// The user's totps.
     public let totps: [TOTP]
     /// The user's WebAuthn registrations.
-    public let webauthnRegistrations: [WebAuthNRegistrations]
+    public let webauthnRegistrations: [WebAuthNRegistration]
 }
 
 public extension User {
@@ -90,7 +90,7 @@ public extension User {
         public let verified: Bool
     }
 
-    struct WebAuthNRegistrations: Codable {
+    struct WebAuthNRegistration: Codable {
         /// The domain of the WebAuthN registration.
         public let domain: String
         /// The user agent of the registration.
