@@ -8,7 +8,7 @@ import Foundation
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
-{% set methodCallParams %}{% for parameter in method.parameters %}{{ parameter.name }}: {{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
+{% set methodCallParams %}{% for parameter in method.parameters %}{%if parameter.argumentLabel %}{{ parameter.argumentLabel }}: {% endif %}{{ parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
 {% set returnType %}{{ method.returnTypeName }}{% endset %}
 {% set methodDocs %}
 {% for commentLine in method.documentation %}
