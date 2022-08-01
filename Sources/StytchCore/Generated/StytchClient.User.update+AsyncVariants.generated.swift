@@ -8,7 +8,7 @@ public extension StytchClient.User {
     func update(_ parameters: UpdateParameters, completion: @escaping Completion<UserResponse>) {
         Task {
             do {
-                completion(.success(try await update(parameters: parameters)))
+                completion(.success(try await update(parameters)))
             } catch {
                 completion(.failure(error))
             }
@@ -21,7 +21,7 @@ public extension StytchClient.User {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await update(parameters: parameters)))
+                        promise(.success(try await update(parameters)))
                     } catch {
                         promise(.failure(error))
                     }

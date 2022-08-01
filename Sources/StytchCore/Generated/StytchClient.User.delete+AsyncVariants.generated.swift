@@ -8,7 +8,7 @@ public extension StytchClient.User {
     func delete(_ parameters: DeleteParameters, completion: @escaping Completion<UserResponse>) {
         Task {
             do {
-                completion(.success(try await delete(parameters: parameters)))
+                completion(.success(try await delete(parameters)))
             } catch {
                 completion(.failure(error))
             }
@@ -21,7 +21,7 @@ public extension StytchClient.User {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await delete(parameters: parameters)))
+                        promise(.success(try await delete(parameters)))
                     } catch {
                         promise(.failure(error))
                     }
