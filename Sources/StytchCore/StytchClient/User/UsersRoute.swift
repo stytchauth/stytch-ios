@@ -20,23 +20,17 @@ extension UsersRoute {
         case cryptoWallets(id: User.CryptoWallet.ID)
 
         var path: Path {
-            let basePath: Path
-            let value: String
+            let joinedPath: (Path, String) -> Path = { $0.appendingPath(.init(rawValue: $1)) }
             switch self {
             case let .emails(id):
-                basePath = "emails"
-                value = id.rawValue
+                return joinedPath("emails", id.rawValue)
             case let .phoneNumbers(id):
-                basePath = "phone_numbers"
-                value = id.rawValue
+                return joinedPath("phone_numbers", id.rawValue)
             case let .webAuthNRegistrations(id):
-                basePath = "webauthn_registrations"
-                value = id.rawValue
+                return joinedPath("webauthn_registrations", id.rawValue)
             case let .cryptoWallets(id):
-                basePath = "crypto_wallets"
-                value = id.rawValue
+                return joinedPath("crypto_wallets", id.rawValue)
             }
-            return basePath.appendingPath(.init(rawValue: value))
         }
     }
 }
