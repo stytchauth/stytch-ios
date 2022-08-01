@@ -30,8 +30,19 @@ extension NetworkingRouter {
         try await performRequest(.post(Current.jsonEncoder.encode(parameters)), route: route)
     }
 
+    func put<Parameters: Encodable, Response: Decodable>(
+        to route: Route,
+        parameters: Parameters
+    ) async throws -> Response {
+        try await performRequest(.put(Current.jsonEncoder.encode(parameters)), route: route)
+    }
+
     func get<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.get, route: route)
+    }
+
+    func delete<Response: Decodable>(route: Route) async throws -> Response {
+        try await performRequest(.delete, route: route)
     }
 
     private func performRequest<Response: Decodable>(
