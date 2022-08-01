@@ -1,4 +1,4 @@
-enum UserRoute: RouteType {
+enum UsersRoute: RouteType {
     case index
     case factors(FactorsRoute)
 
@@ -12,7 +12,7 @@ enum UserRoute: RouteType {
     }
 }
 
-extension UserRoute {
+extension UsersRoute {
     enum FactorsRoute: RouteType {
         case emails(id: User.Email.ID)
         case phoneNumbers(id: User.PhoneNumber.ID)

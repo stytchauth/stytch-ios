@@ -3,7 +3,7 @@ enum BaseRoute: RouteType {
     case otps(OneTimePasscodesRoute)
     case passwords(PasswordsRoute)
     case sessions(SessionsRoute)
-    case users(UserRoute)
+    case users(UsersRoute)
 
     var path: Path {
         switch self {
