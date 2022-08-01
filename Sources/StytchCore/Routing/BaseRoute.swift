@@ -1,10 +1,9 @@
-import Foundation
 enum BaseRoute: RouteType {
     case magicLinks(MagicLinksRoute)
     case otps(OneTimePasscodesRoute)
     case passwords(PasswordsRoute)
     case sessions(SessionsRoute)
-    case users(UsersRoute)
+    case users(UserRoute)
 
     var path: Path {
         switch self {

@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// some docs
     struct User {
-        let router: NetworkingRouter<UsersRoute>
+        let router: NetworkingRouter<UserRoute>
 
         // TODO: - consider making this sync w/ an NSLock vs an actor
         /// some docs (a cached user, if exists)
