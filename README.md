@@ -49,6 +49,10 @@ There are a number of authentication products currently supported by the SDK, wi
 - Send/authenticate magic links
     - Delivery via:
         - Email
+- Authenticate/manage passwords
+    - Create or authenticate a user
+    - Check password strength
+    - Reset a password
 - Send/authenticate one-time passcodes
     - Delivery via:
         - SMS
