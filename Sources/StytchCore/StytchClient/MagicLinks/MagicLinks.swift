@@ -21,7 +21,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init(router: router.childRouter(BaseRoute.magicLinks)) }
+    static var magicLinks: MagicLinks { .init(router: router.scopedRouter(BaseRoute.magicLinks)) }
 }
 
 public extension StytchClient.MagicLinks {

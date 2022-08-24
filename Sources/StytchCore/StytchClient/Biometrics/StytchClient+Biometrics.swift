@@ -95,7 +95,7 @@ extension StytchClient {
 
 extension StytchClient {
     /// The interface for interacting with biometrics products.
-    static var biometrics: Biometrics { .init(router: router.childRouter(BaseRoute.biometrics)) }
+    static var biometrics: Biometrics { .init(router: router.scopedRouter(BaseRoute.biometrics)) }
 }
 
 extension StytchClient.Biometrics {

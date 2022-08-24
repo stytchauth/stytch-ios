@@ -47,7 +47,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with sessions products.
-    static var sessions: Sessions { .init(router: router.childRouter(BaseRoute.sessions)) }
+    static var sessions: Sessions { .init(router: router.scopedRouter(BaseRoute.sessions)) }
 }
 
 public extension StytchClient.Sessions {

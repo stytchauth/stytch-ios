@@ -78,7 +78,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init(router: router.childRouter(BaseRoute.passwords)) }
+    static var passwords: Passwords { .init(router: router.scopedRouter(BaseRoute.passwords)) }
 }
 
 public extension StytchClient.Passwords {

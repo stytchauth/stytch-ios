@@ -22,7 +22,7 @@ public extension StytchClient.MagicLinks {
     }
 
     /// The interface for interacting with email magic links.
-    var email: Email { .init(router: router.childRouter(MagicLinksRoute.email)) }
+    var email: Email { .init(router: router.scopedRouter(MagicLinksRoute.email)) }
 }
 
 public extension StytchClient.MagicLinks.Email {
