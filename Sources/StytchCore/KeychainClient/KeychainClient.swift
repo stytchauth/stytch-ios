@@ -28,7 +28,7 @@ extension KeychainClient {
 
     func set(_ value: String, for item: Item) throws {
         try setValueForItem(
-            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil, syncingBehavior: .disabled),
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil),
             item
         )
     }
@@ -39,8 +39,7 @@ extension KeychainClient {
     func set(
         key: Data,
         registration: KeyRegistration,
-        accessPolicy: Item.AccessPolicy,
-        syncingBehavior: Item.SyncingBehavior
+        accessPolicy: Item.AccessPolicy
     ) throws {
         try setValueForItem(
             .init(
@@ -48,8 +47,7 @@ extension KeychainClient {
                 account: registration.userId,
                 label: registration.userLabel,
                 generic: Current.jsonEncoder.encode(registration),
-                accessPolicy: accessPolicy,
-                syncingBehavior: syncingBehavior
+                accessPolicy: accessPolicy
             ),
             .privateKeyRegistration
         )

@@ -64,7 +64,12 @@ extension KeychainClient {
             let context = updateQueryWithLAContext(&query)
             #endif
 
-            if SecItemCopyMatching(query as CFDictionary, nil) == errSecSuccess {
+            let itemExists = SecItemCopyMatching(
+                query.merging([kSecAttrSynchronizable: kSecAttrSynchronizableAny]) as CFDictionary,
+                nil
+            ) == errSecSuccess
+
+            if itemExists {
                 status = SecItemUpdate(
                     query as CFDictionary,
                     item.updateQuerySegment(for: value) as CFDictionary
@@ -76,7 +81,7 @@ extension KeychainClient {
                 throw KeychainError.unhandledError(status: status)
             }
         } removeItem: { item in
-            let status = SecItemDelete(item.baseQuery as CFDictionary)
+            let status = SecItemDelete(item.baseQuery.merging([kSecAttrSynchronizable: kSecAttrSynchronizableAny]) as CFDictionary)
 
             guard [errSecSuccess, errSecItemNotFound].contains(status) else {
                 throw KeychainError.unhandledError(status: status)

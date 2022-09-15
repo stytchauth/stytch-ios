@@ -25,6 +25,7 @@ extension KeychainClient {
                     kSecReturnData: true,
                     kSecReturnAttributes: true,
                     kSecMatchLimit: kSecMatchLimitAll,
+                    kSecAttrSynchronizable: kSecAttrSynchronizableAny,
                 ]) { $1 }
         }
 
@@ -45,11 +46,8 @@ extension KeychainClient {
             if let generic = value.generic {
                 querySegment[kSecAttrGeneric] = generic
             }
-            if let accessControl = try? value.accessPolicy?.accessControl(syncingBehavior: value.syncingBehavior) {
+            if let accessControl = try? value.accessPolicy?.accessControl {
                 querySegment[kSecAttrAccessControl] = accessControl // FIXME: - messed up on ios 15 simulator
-            }
-            if case .enabled = value.syncingBehavior {
-                querySegment[kSecAttrSynchronizable] = kCFBooleanTrue
             }
             return querySegment
         }
@@ -71,12 +69,6 @@ extension KeychainClient.Item {
         let label: String?
         let generic: Data?
         let accessPolicy: AccessPolicy?
-        let syncingBehavior: SyncingBehavior
-    }
-
-    enum SyncingBehavior {
-        case disabled
-        case enabled
     }
 
     enum AccessPolicy {
@@ -90,36 +82,36 @@ extension KeychainClient.Item {
 }
 
 private extension KeychainClient.Item.AccessPolicy {
-    func accessControl(syncingBehavior: KeychainClient.Item.SyncingBehavior) throws -> SecAccessControl {
-        var error: Unmanaged<CFError>?
-        defer { error?.release() }
+    var accessControl: SecAccessControl {
+        get throws {
+            var error: Unmanaged<CFError>?
+            defer { error?.release() }
 
-        let flags: SecAccessControlCreateFlags
-        let protection: CFString
+            let flags: SecAccessControlCreateFlags
 
-        switch syncingBehavior {
-        case .enabled:
-            protection = kSecAttrAccessibleWhenUnlocked
-        case .disabled:
-            protection = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+            switch self {
+            case .deviceOwnerAuthentication:
+                flags = [.userPresence]
+            case .deviceOwnerAuthenticationWithBiometrics:
+                flags = [.biometryCurrentSet]
+#if os(macOS)
+            case .deviceOwnerAuthenticationWithBiometricsOrWatch:
+                flags = [.biometryCurrentSet, .or, .watch]
+#endif
+            }
+
+            guard
+                let accessControl = SecAccessControlCreateWithFlags(
+                    nil,
+                    kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+                    flags,
+                    &error
+                )
+            else {
+                throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
+            }
+
+            return accessControl
         }
-
-        // TODO: - check on use of xxxCurrentSet for synced keys, does this work?
-        switch self {
-        case .deviceOwnerAuthentication:
-            flags = [.userPresence]
-        case .deviceOwnerAuthenticationWithBiometrics:
-            flags = [.biometryCurrentSet]
-        #if os(macOS)
-        case .deviceOwnerAuthenticationWithBiometricsOrWatch:
-            flags = [.biometryCurrentSet, .or, .watch]
-        #endif
-        }
-
-        guard let accessControl = SecAccessControlCreateWithFlags(nil, protection, flags, &error) else {
-            throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
-        }
-
-        return accessControl
     }
 }
