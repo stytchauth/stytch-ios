@@ -13,6 +13,7 @@ public extension Session {
             case kind = "type"
 
             // Factors
+            case biometricFactor
             case emailFactor
             case phoneNumberFactor
             case googleOauthFactor
@@ -26,6 +27,7 @@ public extension Session {
 
         private enum _DeliveryMethod: String, Codable {
             case authenticatorApp
+            case biometric
             case recoveryCode
             case email
             case sms
@@ -35,6 +37,14 @@ public extension Session {
             case oauthGithub
             case oauthMicrosoft
             case webauthnRegistration
+
+            case unknown
+
+            init(from decoder: Decoder) throws {
+                let container = try decoder.singleValueContainer()
+                let rawValue: String = try container.decode(String.self)
+                self = .init(rawValue: rawValue) ?? .unknown
+            }
         }
 
         /// The delivery mechanism used to provide this factor.
@@ -56,6 +66,8 @@ public extension Session.AuthenticationFactor {
         switch deliveryMethod {
         case .authenticatorApp:
             self.deliveryMethod = .authenticatorApp(try container.decode(key: .authenticatorAppFactor))
+        case .biometric:
+            self.deliveryMethod = .biometric(try container.decode(key: .biometricFactor))
         case .recoveryCode:
             self.deliveryMethod = .recoveryCode(try container.decode(key: .recoveryCodeFactor))
         case .email:
@@ -74,6 +86,8 @@ public extension Session.AuthenticationFactor {
             self.deliveryMethod = .oauthMicrosoft(try container.decode(key: .microsoftOauthFactor))
         case .webauthnRegistration:
             self.deliveryMethod = .webauthnRegistration(try container.decode(key: .webauthnFactor))
+        case .unknown:
+            self.deliveryMethod = .unknown
         }
     }
 
@@ -83,6 +97,9 @@ public extension Session.AuthenticationFactor {
         try container.encode(kind, forKey: .kind)
 
         switch deliveryMethod {
+        case let .biometric(value):
+            try container.encode(value, forKey: .biometricFactor)
+            try container.encode(_DeliveryMethod.biometric.rawValue, forKey: .deliveryMethod)
         case let .authenticatorApp(value):
             try container.encode(value, forKey: .authenticatorAppFactor)
             try container.encode(_DeliveryMethod.authenticatorApp.rawValue, forKey: .deliveryMethod)
@@ -113,6 +130,8 @@ public extension Session.AuthenticationFactor {
         case let .webauthnRegistration(value):
             try container.encode(value, forKey: .webauthnFactor)
             try container.encode(_DeliveryMethod.webauthnRegistration.rawValue, forKey: .deliveryMethod)
+        case .unknown:
+            break
         }
     }
 }
@@ -123,12 +142,22 @@ public extension Session.AuthenticationFactor {
      */
     enum Kind: String, Codable {
         case magicLink = "magic_link" // Not a coding key, thus not converted to/from snakecase by JSONEncoder/JSONDecoder
+        case oauth
         case otp
         case totp
-        case oauth
+        case signatureChallenge = "signature_challenge"
+
+        case unknown
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let rawValue: String = try container.decode(String.self)
+            self = .init(rawValue: rawValue) ?? .unknown
+        }
     }
 
     enum DeliveryMethod {
+        case biometric(Biometric)
         case authenticatorApp(AuthenticatorApp)
         case recoveryCode(RecoveryCode)
         case email(Email)
@@ -139,6 +168,12 @@ public extension Session.AuthenticationFactor {
         case oauthGithub(Oauth)
         case oauthMicrosoft(Oauth)
         case webauthnRegistration(WebAuthn)
+
+        case unknown
+    }
+
+    struct Biometric: Codable {
+        public let biometricRegistrationId: String
     }
 
     /// Information describing an email used as an authentication factor.
