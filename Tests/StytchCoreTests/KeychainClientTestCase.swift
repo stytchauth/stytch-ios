@@ -30,12 +30,12 @@ final class KeychainClientTestCase: BaseTestCase {
         let item: KeychainClient.Item = .init(kind: .token, name: "item")
 
         let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
-            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil, syncingBehavior: .disabled)
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil)
         }
 
         XCTAssertEqual(
             item.getQuery as CFDictionary,
-            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1] as CFDictionary
+            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
         )
         XCTAssertEqual(
             item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
@@ -52,11 +52,10 @@ final class KeychainClientTestCase: BaseTestCase {
         try Current.keychainClient.set(
             key: data,
             registration: .init(userId: "user_123", userLabel: "user@example.com", registrationId: "registration_123"),
-            accessPolicy: .deviceOwnerAuthenticationWithBiometrics,
-            syncingBehavior: .enabled
+            accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
         let results = try Current.keychainClient.get(.privateKeyRegistration)
-        XCTAssertEqual(results.first?.account, "user_123")
+        XCTAssertNil(results.first?.account)
         XCTAssertEqual(results.first?.label, "user@example.com")
     }
 }
