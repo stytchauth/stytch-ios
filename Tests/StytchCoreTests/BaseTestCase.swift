@@ -9,6 +9,7 @@ class BaseTestCase: XCTestCase {
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()
+        Current.cryptoClient = .live
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
             return .init()
@@ -21,9 +22,12 @@ class BaseTestCase: XCTestCase {
             .init(bytes: Array([UInt8].mockBytes.prefix(Int(count))), count: Int(count))
         }
 
-        let defaults = MockDefaults()
-        defaults.boolReturnValue = true
-        Current.defaults = defaults
+        Current.defaults = MockDefaults()
+
+        KeychainClient.migrations.forEach { migration in
+            let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
+            Current.defaults.set(true, forKey: migrationName)
+        }
 
         StytchClient.configure(
             publicToken: "xyz",
@@ -131,9 +135,13 @@ extension PollingClient {
 }
 
 final class MockDefaults: UserDefaults {
-    var boolReturnValue: Bool = true
+    private var values: [String: Any] = [:]
 
-    override func bool(forKey _: String) -> Bool {
-        boolReturnValue
+    override func object(forKey defaultName: String) -> Any? {
+        values[defaultName]
+    }
+
+    override func set(_ value: Any?, forKey defaultName: String) {
+        values[defaultName] = value
     }
 }
