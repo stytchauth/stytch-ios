@@ -31,6 +31,8 @@ struct SessionView: View {
 private extension Session.AuthenticationFactor.DeliveryMethod {
     var factorType: String {
         switch self {
+        case .biometric:
+            return "Biometric"
         case .authenticatorApp:
             return "Authenticator App"
         case .recoveryCode:
@@ -51,11 +53,15 @@ private extension Session.AuthenticationFactor.DeliveryMethod {
             return "OauthMicrosoft"
         case .webauthnRegistration:
             return "WebAuthN"
+        case .unknown:
+            return "Unknown"
         }
     }
 
     var factorId: String {
         switch self {
+        case let .biometric(value):
+            return value.biometricRegistrationId
         case let .authenticatorApp(value):
             return value.totpId
         case let .recoveryCode(value):
@@ -74,11 +80,15 @@ private extension Session.AuthenticationFactor.DeliveryMethod {
             return value.id
         case let .webauthnRegistration(value):
             return value.webauthnRegistrationId
+        case .unknown:
+            return UUID().uuidString
         }
     }
 
     var factorValue: String {
         switch self {
+        case let .biometric(value):
+            return value.biometricRegistrationId
         case .authenticatorApp:
             return "THE CODE"
         case .recoveryCode:
@@ -97,6 +107,8 @@ private extension Session.AuthenticationFactor.DeliveryMethod {
             return value.providerSubject
         case let .webauthnRegistration(value):
             return value.domain.absoluteString
+        case .unknown:
+            return "unknown"
         }
     }
 }
