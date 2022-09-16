@@ -44,7 +44,7 @@ extension KeychainClient {
         try setValueForItem(
             .init(
                 data: key,
-                account: registration.userId,
+                account: nil, // By setting as nil, the primary key will be the Item.name and nil, thus allowing only one registration to be stored.
                 label: registration.userLabel,
                 generic: Current.jsonEncoder.encode(registration),
                 accessPolicy: accessPolicy
@@ -60,7 +60,7 @@ extension KeychainClient {
         let createdAt: Date
         let modifiedAt: Date
         let label: String?
-        let account: String
+        let account: String?
         let generic: Data?
     }
 
