@@ -57,6 +57,7 @@ public extension Session {
 }
 
 public extension Session.AuthenticationFactor {
+    // swiftlint:disable:next cyclomatic_complexity
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
@@ -91,6 +92,7 @@ public extension Session.AuthenticationFactor {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(lastAuthenticatedAt, forKey: .lastAuthenticatedAt)

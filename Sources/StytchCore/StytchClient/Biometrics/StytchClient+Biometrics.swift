@@ -108,6 +108,7 @@ public extension StytchClient.Biometrics {
             self.sessionDuration = sessionDuration
         }
     }
+
     /// A dedicated parameters type for biometrics `register` calls.
     struct RegisterParameters {
         let identifier: String
@@ -139,9 +140,8 @@ public extension StytchClient.Biometrics.RegisterParameters {
         /// The device will try to confirm access rights via biometrics.
         case deviceOwnerAuthenticationWithBiometrics
         #if os(macOS)
-        // swiftlint:disable:next identifier_name
         /// The device will, in parallel, try to confirm access rights via biometrics or an associated Apple Watch.
-        case deviceOwnerAuthenticationWithBiometricsOrWatch
+        case deviceOwnerAuthenticationWithBiometricsOrWatch // swiftlint:disable:this identifier_name
         #endif
 
         var keychainValue: KeychainClient.Item.AccessPolicy {
@@ -159,10 +159,12 @@ public extension StytchClient.Biometrics.RegisterParameters {
     }
 }
 
-// Internal/private parameters and keys
 extension StytchClient.Biometrics {
     private static let biometricRegistrationDefaultsKey: String = "biometric_registration_available"
+}
 
+// Internal/private parameters and keys
+extension StytchClient.Biometrics {
     struct AuthenticateStartParameters: Encodable {
         let publicKey: Data
     }

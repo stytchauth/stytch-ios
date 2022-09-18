@@ -1,6 +1,6 @@
-@testable import StytchCore
 import CryptoKit
 import XCTest
+@testable import StytchCore
 
 final class BiometricsTestCase: BaseTestCase {
     func testRegistration() async throws {

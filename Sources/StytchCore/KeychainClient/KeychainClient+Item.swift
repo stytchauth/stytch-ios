@@ -94,10 +94,10 @@ private extension KeychainClient.Item.AccessPolicy {
                 flags = [.userPresence]
             case .deviceOwnerAuthenticationWithBiometrics:
                 flags = [.biometryCurrentSet]
-#if os(macOS)
+            #if os(macOS)
             case .deviceOwnerAuthenticationWithBiometricsOrWatch:
                 flags = [.biometryCurrentSet, .or, .watch]
-#endif
+            #endif
             }
 
             guard
