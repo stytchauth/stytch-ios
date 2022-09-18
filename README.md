@@ -54,6 +54,9 @@ There are a number of authentication products currently supported by the SDK, wi
         - SMS
         - WhatsApp
         - Email
+- Sign up/authenticate via passwords
+    - Check password strength
+- Authenticate via biometrics (FaceID/TouchID)
 - Manage user sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
