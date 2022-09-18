@@ -1,0 +1,11 @@
+#! /usr/bin/env ruby
+
+def project_root
+  File.expand_path('../../', __FILE__)
+end
+
+version = File.readlines(
+  File.join(project_root, 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift')
+)[1].sub(/.*major: (\d+), minor: (\d+), patch: (\d+).*/, '\1.\2.\3')
+
+puts version.strip
