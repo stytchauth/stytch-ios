@@ -22,7 +22,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
-            return try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
+            try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
