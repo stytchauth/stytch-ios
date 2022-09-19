@@ -27,12 +27,7 @@ struct StytchDemoApp: App {
                 .task {
                     do {
                         let response = try await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: 30))
-                        switch response {
-                        case let .authenticated(response):
-                            sessionUser = (response.session, response.user)
-                        case .unauthenticated:
-                            break
-                        }
+                        sessionUser = (response.session, response.user)
                     } catch {
                         handle(error: error)
                     }

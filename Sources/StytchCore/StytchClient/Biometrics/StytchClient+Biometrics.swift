@@ -199,7 +199,7 @@ extension StytchClient.Biometrics {
         let sessionDuration: Minutes
     }
 
-    struct RegisterCompleteResponseData: Codable, AuthenticateResponseType {
+    struct RegisterCompleteResponseData: Codable, AuthenticateResponseDataType {
         let biometricRegistrationId: String
         let user: User
         let session: Session
