@@ -6,7 +6,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier = try? Current.keychainClient.get(.stytchEMLPKCECodeVerifier) else {
+            guard let codeVerifier: String = try? Current.keychainClient.get(.stytchEMLPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
             let response: AuthenticateResponse = try await router.post(
@@ -21,7 +21,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init(router: router.childRouter(BaseRoute.magicLinks)) }
+    static var magicLinks: MagicLinks { .init(router: router.scopedRouter(BaseRoute.magicLinks)) }
 }
 
 public extension StytchClient.MagicLinks {

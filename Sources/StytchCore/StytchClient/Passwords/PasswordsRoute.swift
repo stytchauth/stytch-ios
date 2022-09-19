@@ -1,6 +1,6 @@
 enum PasswordsRoute: RouteType {
     case create
-    case resetByEmail(ResetByEmailRoute)
+    case resetByEmail(TaskStageRoute)
     case authenticate
     case strengthCheck
 
@@ -15,14 +15,5 @@ enum PasswordsRoute: RouteType {
         case .strengthCheck:
             return "strength_check"
         }
-    }
-}
-
-extension PasswordsRoute {
-    enum ResetByEmailRoute: String, RouteType {
-        case start
-        case complete = ""
-
-        var path: Path { .init(rawValue: rawValue) }
     }
 }

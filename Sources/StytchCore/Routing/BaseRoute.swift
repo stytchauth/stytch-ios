@@ -1,4 +1,5 @@
 enum BaseRoute: RouteType {
+    case biometrics(BiometricsRoute)
     case magicLinks(MagicLinksRoute)
     case otps(OneTimePasscodesRoute)
     case passwords(PasswordsRoute)
@@ -6,6 +7,8 @@ enum BaseRoute: RouteType {
 
     var path: Path {
         switch self {
+        case let .biometrics(route):
+            return "biometrics".appendingPath(route.path)
         case let .magicLinks(route):
             return "magic_links".appendingPath(route.path)
         case let .passwords(route):
@@ -16,4 +19,12 @@ enum BaseRoute: RouteType {
             return "otps".appendingPath(route.path)
         }
     }
+}
+
+// A reusable route meant to represent the stage (starting and completing) of a given task corresponding to a parent-route's task.
+enum TaskStageRoute: String, RouteType {
+    case start
+    case complete = ""
+
+    var path: Path { .init(rawValue: rawValue) }
 }

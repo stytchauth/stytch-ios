@@ -46,7 +46,7 @@ public extension StytchClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier = try? Current.keychainClient.get(.stytchPWResetByEmailPKCECodeVerifier) else {
+            guard let codeVerifier: String = try? Current.keychainClient.get(.stytchPWResetByEmailPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -78,7 +78,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init(router: router.childRouter(BaseRoute.passwords)) }
+    static var passwords: Passwords { .init(router: router.scopedRouter(BaseRoute.passwords)) }
 }
 
 public extension StytchClient.Passwords {
