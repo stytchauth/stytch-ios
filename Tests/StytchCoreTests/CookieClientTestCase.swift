@@ -3,33 +3,33 @@ import XCTest
 
 final class CookieClientTestCase: BaseTestCase {
     func testCookieClient() throws {
-        XCTAssertTrue(cookies.isEmpty)
+        XCTAssertTrue(CookieClient.testCookies.isEmpty)
 
         Current.cookieClient.set(
             cookie: try XCTUnwrap(HTTPCookie(properties: [.name: "cookie", .value: "test", .domain: "domain.com", .path: "/"]))
         )
 
-        XCTAssertEqual(cookies.count, 1)
-        XCTAssertEqual(try XCTUnwrap(cookies.last).name, "cookie")
+        XCTAssertEqual(CookieClient.testCookies.count, 1)
+        XCTAssertEqual(try XCTUnwrap(CookieClient.testCookies.last).name, "cookie")
 
         Current.cookieClient.deleteCookie(named: "other_name")
 
-        XCTAssertFalse(cookies.isEmpty)
+        XCTAssertFalse(CookieClient.testCookies.isEmpty)
 
         Current.cookieClient.set(
             cookie: try XCTUnwrap(HTTPCookie(properties: [.name: "other_name", .value: "test", .domain: "domain.com", .path: "/"]))
         )
 
-        XCTAssertEqual(cookies.count, 2)
+        XCTAssertEqual(CookieClient.testCookies.count, 2)
 
         Current.cookieClient.deleteCookie(named: "cookie")
 
-        XCTAssertEqual(cookies.count, 1)
+        XCTAssertEqual(CookieClient.testCookies.count, 1)
 
-        XCTAssertEqual(try XCTUnwrap(cookies.last).name, "other_name")
+        XCTAssertEqual(try XCTUnwrap(CookieClient.testCookies.last).name, "other_name")
 
         Current.cookieClient.deleteCookie(named: "other_name")
 
-        XCTAssertTrue(cookies.isEmpty)
+        XCTAssertTrue(CookieClient.testCookies.isEmpty)
     }
 }

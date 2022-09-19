@@ -25,7 +25,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with one-time-passcodes products.
-    static var otps: OneTimePasscodes { .init(router: router.childRouter(BaseRoute.otps)) }
+    static var otps: OneTimePasscodes { .init(router: router.scopedRouter(BaseRoute.otps)) }
 }
 
 public extension StytchClient.OneTimePasscodes {

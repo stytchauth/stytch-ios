@@ -47,7 +47,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with sessions products.
-    static var sessions: Sessions { .init(router: router.childRouter(BaseRoute.sessions)) }
+    static var sessions: Sessions { .init(router: router.scopedRouter(BaseRoute.sessions)) }
 }
 
 public extension StytchClient.Sessions {
@@ -57,6 +57,7 @@ public extension StytchClient.Sessions {
     /// A ``AuthenticationStatus``-wrapped ``BasicResponse``
     typealias SessionsRevokeResponse = AuthenticationStatus<BasicResponse>
 
+    // TODO: - kill this and rely on the backend
     /// A generic type which represents the authentication status of the user prior to the method call.
     enum AuthenticationStatus<T> {
         case authenticated(T)
@@ -75,6 +76,7 @@ public extension StytchClient.Sessions {
         }
     }
 
+    // TODO: - kill this and rely on the token sent in the auth header
     internal struct TokenizedParameters<Parameters: Encodable>: Encodable {
         private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
 

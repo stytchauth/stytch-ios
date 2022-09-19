@@ -8,12 +8,12 @@ extension NetworkingClient {
     }
 
     static func mock(
-        verifyingRequest: @escaping (URLRequest) -> Void = { _ in },
+        verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
         returning results: Result<Data, Swift.Error>...
     ) -> NetworkingClient {
         var results = results
         return .init { request in
-            verifyingRequest(request)
+            try verifyingRequest(request)
 
             switch results.removeFirst() {
             case let .success(data):

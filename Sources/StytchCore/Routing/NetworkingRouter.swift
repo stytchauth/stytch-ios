@@ -11,10 +11,10 @@ struct NetworkingRouter<Route: RouteType> {
         self.pathForRoute = pathForRoute
     }
 
-    func childRouter<ChildRoute: RouteType>(
-        _ transform: @escaping (ChildRoute) -> Route
-    ) -> NetworkingRouter<ChildRoute> {
-        .init { path(for: transform($0)) }
+    func scopedRouter<ScopedRoute: RouteType>(
+        _ transformToRoute: @escaping (ScopedRoute) -> Route
+    ) -> NetworkingRouter<ScopedRoute> {
+        .init { path(for: transformToRoute($0)) }
     }
 
     private func path(for route: Route) -> Path {

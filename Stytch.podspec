@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'Stytch'
-  s.version      = '0.2.0'
+  s.version      = `Scripts/current-version`.strip
   s.summary      = "A Swift SDK for using Stytch's user-authentication products on Apple platforms."
   s.homepage     = 'https://github.com/stytchauth/stytch-swift'
   s.license      = {

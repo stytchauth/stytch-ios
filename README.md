@@ -49,11 +49,18 @@ There are a number of authentication products currently supported by the SDK, wi
 - Send/authenticate magic links
     - Delivery via:
         - Email
+- Authenticate/manage passwords
+    - Create or authenticate a user
+    - Check password strength
+    - Reset a password
 - Send/authenticate one-time passcodes
     - Delivery via:
         - SMS
         - WhatsApp
         - Email
+- Sign up/authenticate via passwords
+    - Check password strength
+- Authenticate via biometrics (FaceID/TouchID)
 - Manage user sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
@@ -108,10 +115,10 @@ Unlike with the other dependency managers, when using CocoaPods you'll import `S
 
 ### Configuration
 
-To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
+To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Client/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
-If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/macOS/macOS.entitlements)).
+If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/Client/macOS/macOS.entitlements)).
 
 ![Entitlements screenshot](Resources/Assets/Entitlements-dark-mode.png#gh-dark-mode-only)
 ![Entitlements screenshot](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)

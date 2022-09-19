@@ -1,38 +1,15 @@
 import XCTest
 @testable import StytchCore
 
-// swiftlint:disable test_case_accessibility
 class BaseTestCase: XCTestCase {
-    private(set) var cookies: [HTTPCookie] = []
-
-    private(set) var keychainItems: [String: [KeychainClient.QueryResult]] = [:]
-
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        cookies = []
-        keychainItems = [:]
-
         Current.networkingClient = .failing
-
-        Current.cookieClient = .init(
-            setCookie: { [unowned self] in self.cookies.append($0) },
-            deleteCookieNamed: { [unowned self] name in self.cookies.removeAll { $0.name == name } }
-        )
-
-        Current.keychainClient = .init(
-            get: { [unowned self] in self.keychainItems[$0.name] ?? [] },
-            setValueForItem: { [unowned self] _, value, item in
-                self.keychainItems[item.name] = [
-                    .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: item.name, account: item.name, generic: nil),
-                ]
-            },
-            removeItem: { [unowned self] item in self.keychainItems[item.name] = nil },
-            resultsExistForItem: { [unowned self] item in self.keychainItems[item.name] != nil }
-        )
-
         Current.sessionsPollingClient = .failing
-
+        Current.cookieClient = .mock()
+        Current.keychainClient = .mock()
+        Current.cryptoClient = .live
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
             return .init()
@@ -40,16 +17,17 @@ class BaseTestCase: XCTestCase {
         Current.asyncAfter = { _, _, _ in
             XCTFail("Unexpected asyncAfter run")
         }
-
         Current.sessionStorage.reset()
-
-        Current.cryptoClient.dataWithRandomBytesOfCount = { _ in
-            .init(bytes: [UInt8].mockBytes, count: [UInt8].mockBytes.count)
+        Current.cryptoClient.dataWithRandomBytesOfCount = { count in
+            .init(bytes: Array([UInt8].mockBytes.prefix(Int(count))), count: Int(count))
         }
 
-        let defaults = MockDefaults()
-        defaults.boolReturnValue = true
-        Current.defaults = defaults
+        Current.defaults = .mock()
+
+        KeychainClient.migrations.forEach { migration in
+            let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
+            Current.defaults.set(true, forKey: migrationName)
+        }
 
         StytchClient.configure(
             publicToken: "xyz",
@@ -153,13 +131,5 @@ extension PollingClient {
         queue: .main
     ) { _, _ in
         XCTFail("Shouldn't execute")
-    }
-}
-
-final class MockDefaults: UserDefaults {
-    var boolReturnValue: Bool = true
-
-    override func bool(forKey _: String) -> Bool {
-        boolReturnValue
     }
 }

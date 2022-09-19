@@ -76,6 +76,7 @@ public extension Session {
         public let userAgent: String
     }
 
+    // TODO: include optional expiration here
     struct Token: Equatable {
         /// A type representing the different kinds of session tokens available.
         public enum Kind: CaseIterable {

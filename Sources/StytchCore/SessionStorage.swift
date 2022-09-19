@@ -134,8 +134,3 @@ final class SessionStorage {
         return perform()
     }
 }
-
-extension KeychainClient.Item {
-    static let sessionToken: Self = .init(kind: .token, name: Session.Token.Kind.opaque.name)
-    static let sessionJwt: Self = .init(kind: .token, name: Session.Token.Kind.jwt.name)
-}
