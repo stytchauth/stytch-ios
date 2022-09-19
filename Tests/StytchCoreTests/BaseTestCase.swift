@@ -22,7 +22,7 @@ class BaseTestCase: XCTestCase {
             .init(bytes: Array([UInt8].mockBytes.prefix(Int(count))), count: Int(count))
         }
 
-        Current.defaults = MockDefaults()
+        Current.defaults = .mock()
 
         KeychainClient.migrations.forEach { migration in
             let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
@@ -131,17 +131,5 @@ extension PollingClient {
         queue: .main
     ) { _, _ in
         XCTFail("Shouldn't execute")
-    }
-}
-
-final class MockDefaults: UserDefaults {
-    private var values: [String: Any] = [:]
-
-    override func object(forKey defaultName: String) -> Any? {
-        values[defaultName]
-    }
-
-    override func set(_ value: Any?, forKey defaultName: String) {
-        values[defaultName] = value
     }
 }
