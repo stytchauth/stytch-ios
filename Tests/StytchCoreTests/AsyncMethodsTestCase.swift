@@ -74,13 +74,6 @@ final class AsyncMethodsTestCase: BaseTestCase {
 
         let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDuration: 15)
 
-        let unauthenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
-
-        guard case .unauthenticated = unauthenticatedResult else {
-            XCTFail("Expected to be unauthenticated")
-            return
-        }
-
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
@@ -89,14 +82,8 @@ final class AsyncMethodsTestCase: BaseTestCase {
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 
-        let authenticatedResult = try await StytchClient.sessions.authenticate(parameters: parameters)
+        let response = try await StytchClient.sessions.authenticate(parameters: parameters)
 
-        guard case let .authenticated(response) = authenticatedResult else {
-            XCTFail("Expected authenticated")
-            return
-        }
-        XCTAssertEqual(response.statusCode, 200)
-        XCTAssertEqual(response.requestId, "1234")
         XCTAssertEqual(response.user.id, authResponse.user.id)
         XCTAssertEqual(response.sessionToken, "hello_session")
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
@@ -117,13 +104,6 @@ final class AsyncMethodsTestCase: BaseTestCase {
         var request: URLRequest?
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
 
-        let unauthenticatedResult = try await StytchClient.sessions.revoke()
-
-        guard case .unauthenticated = unauthenticatedResult else {
-            XCTFail("Expected to be unauthenticated")
-            return
-        }
-
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
@@ -135,12 +115,7 @@ final class AsyncMethodsTestCase: BaseTestCase {
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("opaque_all_day"))
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("i'm_jwt"))
 
-        let authenticatedResult = try await StytchClient.sessions.revoke()
-
-        guard case let .authenticated(response) = authenticatedResult else {
-            XCTFail("Expected authenticated")
-            return
-        }
+        let response = try await StytchClient.sessions.revoke()
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "request_id")
 

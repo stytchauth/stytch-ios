@@ -21,26 +21,16 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> SessionsAuthenticateResponse {
-            guard let token = sessionToken ?? sessionJwt else {
-                return .unauthenticated
-            }
-
-            return try await .authenticated(
-                router.post(to: .authenticate, parameters: TokenizedParameters(parameters: parameters, token: token))
-            )
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
+            return try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
-        public func revoke() async throws -> SessionsRevokeResponse {
-            guard let token = sessionToken ?? sessionJwt else {
-                return .unauthenticated
-            }
-
-            let response: BasicResponse = try await router.post(to: .revoke, parameters: TokenizedParameters(parameters: EmptyCodable(), token: token))
+        public func revoke() async throws -> BasicResponse {
+            let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
             Current.sessionStorage.reset()
-            return .authenticated(response)
+            return response
         }
     }
 }
@@ -51,19 +41,6 @@ public extension StytchClient {
 }
 
 public extension StytchClient.Sessions {
-    /// A ``AuthenticationStatus``-wrapped ``AuthenticateResponse``
-    typealias SessionsAuthenticateResponse = AuthenticationStatus<AuthenticateResponse>
-
-    /// A ``AuthenticationStatus``-wrapped ``BasicResponse``
-    typealias SessionsRevokeResponse = AuthenticationStatus<BasicResponse>
-
-    // TODO: - kill this and rely on the backend
-    /// A generic type which represents the authentication status of the user prior to the method call.
-    enum AuthenticationStatus<T> {
-        case authenticated(T)
-        case unauthenticated
-    }
-
     /// The dedicated parameters type for sessions `authenticate` calls.
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case sessionDuration = "session_duration_minutes" }
@@ -73,27 +50,6 @@ public extension StytchClient.Sessions {
         /// - Parameter sessionDuration: The duration, in minutes, of the requested session. If included, this value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the SDK Configuration page of the Stytch dashboard. Defaults to nil, leaving the original session expiration intact.
         public init(sessionDuration: Minutes? = nil) {
             self.sessionDuration = sessionDuration
-        }
-    }
-
-    // TODO: - kill this and rely on the token sent in the auth header
-    internal struct TokenizedParameters<Parameters: Encodable>: Encodable {
-        private enum CodingKeys: String, CodingKey { case sessionToken, sessionJwt }
-
-        let parameters: Parameters
-        let token: Session.Token
-
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-
-            try parameters.encode(to: encoder)
-
-            switch token.kind {
-            case .opaque:
-                try container.encode(token.value, forKey: .sessionToken)
-            case .jwt:
-                try container.encode(token.value, forKey: .sessionJwt)
-            }
         }
     }
 }

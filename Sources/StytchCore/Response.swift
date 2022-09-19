@@ -33,6 +33,11 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
+public protocol BasicResponseType {
+    var requestId: String { get }
+    var statusCode: UInt { get }
+}
+
 /// A concrete response type which provides only the `requestId` and `statusCode`.
 public typealias BasicResponse = Response<EmptyCodable>
 
@@ -55,7 +60,7 @@ extension Response where Wrapped == EmptyCodable {
 }
 #endif
 
-extension Response: AuthenticateResponseType where Wrapped: AuthenticateResponseType {
+extension Response: AuthenticateResponseType where Wrapped: AuthenticateResponseDataType {
     public var user: User { wrapped.user }
     public var sessionToken: String { wrapped.sessionToken }
     public var sessionJwt: String { wrapped.sessionJwt }
