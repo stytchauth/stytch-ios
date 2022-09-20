@@ -9,7 +9,7 @@ extension StytchClient {
 
         try Current.keychainClient.set(codeVerifier, for: keychainItem)
 
-        return (Current.cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
+        return (Current.cryptoClient.sha256(Data(codeVerifier.utf8)).base64UrlEncoded(), "S256")
     }
 }
 

@@ -3,7 +3,7 @@ import Foundation
 
 extension CryptoClient {
     static let live: Self = .init { value in
-        .init(SHA256.hash(data: Data(value.utf8)))
+        .init(SHA256.hash(data: value))
     } dataWithRandomBytesOfCount: { byteCount in
         var buffer = [UInt8](repeating: 0, count: Int(byteCount))
 
