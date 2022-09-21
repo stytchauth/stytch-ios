@@ -16,6 +16,7 @@ public extension Session {
             case biometricFactor
             case emailFactor
             case phoneNumberFactor
+            case facebookOauthFactor
             case googleOauthFactor
             case microsoftOauthFactor
             case appleOauthFactor
@@ -26,17 +27,18 @@ public extension Session {
         }
 
         private enum _DeliveryMethod: String, Codable {
-            case authenticatorApp
+            case authenticatorApp = "authenticator_app"
             case biometric
-            case recoveryCode
+            case recoveryCode = "recovery_code"
             case email
             case sms
             case whatsapp
-            case oauthGoogle
-            case oauthApple
-            case oauthGithub
-            case oauthMicrosoft
-            case webauthnRegistration
+            case oauthGoogle = "oauth_google"
+            case oauthApple = "oauth_apple"
+            case oauthFacebook = "oauth_facebook"
+            case oauthGithub = "oauth_github"
+            case oauthMicrosoft = "oauth_microsoft"
+            case webauthnRegistration = "webauthn_registration"
 
             case unknown
 
@@ -77,6 +79,8 @@ public extension Session.AuthenticationFactor {
             self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
         case .whatsapp:
             self.deliveryMethod = .sms(try container.decode(key: .phoneNumberFactor))
+        case .oauthFacebook:
+            self.deliveryMethod = .oauthFacebook(try container.decode(key: .facebookOauthFactor))
         case .oauthGoogle:
             self.deliveryMethod = .oauthGoogle(try container.decode(key: .googleOauthFactor))
         case .oauthApple:
@@ -123,6 +127,9 @@ public extension Session.AuthenticationFactor {
         case let .oauthApple(value):
             try container.encode(value, forKey: .appleOauthFactor)
             try container.encode(_DeliveryMethod.oauthApple.rawValue, forKey: .deliveryMethod)
+        case let .oauthFacebook(value):
+            try container.encode(value, forKey: .facebookOauthFactor)
+            try container.encode(_DeliveryMethod.oauthFacebook.rawValue, forKey: .deliveryMethod)
         case let .oauthGithub(value):
             try container.encode(value, forKey: .githubOauthFactor)
             try container.encode(_DeliveryMethod.oauthGithub.rawValue, forKey: .deliveryMethod)
@@ -165,6 +172,7 @@ public extension Session.AuthenticationFactor {
         case email(Email)
         case sms(PhoneNumber)
         case whatsapp(PhoneNumber)
+        case oauthFacebook(Oauth)
         case oauthGoogle(Oauth)
         case oauthApple(Oauth)
         case oauthGithub(Oauth)
