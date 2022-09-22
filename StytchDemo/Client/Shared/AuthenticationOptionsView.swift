@@ -48,14 +48,11 @@ struct AuthenticationOptionsView: View {
                     }
                 }
                 .padding()
-            } else if
-                let session = session,
-                case let .email(email) = session.authenticationFactors.first(where: { if case .email = $0.deliveryMethod { return true } else { return false } })?.deliveryMethod
-            {
+            } else if session != nil {
                 Button("Register Biometrics") {
                     Task {
                         do {
-                            let resp = try await StytchClient.biometrics.register(parameters: .init(identifier: email.emailAddress))
+                            let resp = try await StytchClient.biometrics.register(parameters: .init(identifier: ""))
                             onAuth(resp.session, resp.user)
                             presentationMode.wrappedValue.dismiss()
                         } catch {
@@ -73,11 +70,13 @@ struct OAuthAuthenticationView: View {
     let onAuth: (Session, User) -> Void
     @Environment(\.presentationMode) private var presentationMode
 
+    private var serverUrl: URL { configuration.serverUrl }
+
     var body: some View {
         Button("Authenticate with Apple") {
             Task {
                 do {
-                    let resp = try await StytchClient.oauth.apple.authenticate()
+                    let resp = try await StytchClient.oauth.apple.start()
                     onAuth(resp.session, resp.user)
                     presentationMode.wrappedValue.dismiss()
                 } catch {
@@ -85,5 +84,19 @@ struct OAuthAuthenticationView: View {
                 }
             }
         }
+        .padding()
+
+        Button("Authenticate with Google") {
+            Task {
+                do {
+                    try await StytchClient.oauth.google.start(
+                        parameters: .init(loginRedirectUrl: serverUrl, signupRedirectUrl: serverUrl)
+                    )
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        .padding()
     }
 }
