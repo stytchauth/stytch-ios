@@ -61,9 +61,18 @@ extension StytchClient.OAuth {
 
 extension StytchClient.OAuth.GenericProvider {
     enum Provider: String {
+        case amazon
+        case bitbucket
+        case coinbase
+        case discord
         case facebook
+        case github
+        case gitlab
         case google
-        // TODO: - add more providers
+        case linkedin
+        case microsoft
+        case slack
+        case twitch
     }
 }
 

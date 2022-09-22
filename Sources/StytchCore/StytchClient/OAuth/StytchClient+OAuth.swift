@@ -26,11 +26,31 @@ public extension StytchClient {
 }
 
 public extension StytchClient.OAuth {
+    var amazon: GenericProvider { .init(provider: .amazon) }
+
     var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
+
+    var bitbucket: GenericProvider { .init(provider: .bitbucket) }
+
+    var coinbase: GenericProvider { .init(provider: .coinbase) }
+
+    var discord: GenericProvider { .init(provider: .discord) }
 
     var facebook: GenericProvider { .init(provider: .facebook) }
 
+    var github: GenericProvider { .init(provider: .github) }
+
+    var gitlab: GenericProvider { .init(provider: .gitlab) }
+
     var google: GenericProvider { .init(provider: .google) }
+
+    var linkedin: GenericProvider { .init(provider: .linkedin) }
+
+    var microsoft: GenericProvider { .init(provider: .microsoft) }
+
+    var slack: GenericProvider { .init(provider: .slack) }
+
+    var twitch: GenericProvider { .init(provider: .twitch) }
 }
 
 extension StytchClient.OAuth {
@@ -49,4 +69,3 @@ extension StytchClient.OAuth {
         }
     }
 }
-
