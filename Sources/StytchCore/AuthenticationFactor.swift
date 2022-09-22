@@ -11,6 +11,7 @@ public extension Session {
             case lastAuthenticatedAt
             case kind = "type"
         }
+
         /// The underlying data representing this factor. Includes additional information about the specific factor ids and values.
         public let rawData: JSON
         /// The type of factor, e.g. magic link, OTP, TOTP, etc.

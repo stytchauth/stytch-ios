@@ -1,23 +1,11 @@
 import Foundation
 
 public enum JSON: Hashable {
-    struct Error: Swift.Error {}
-
     case array([JSON])
     case object([String: JSON])
     case string(String)
     case number(Double)
     case boolean(Bool)
-
-    public subscript(key: String) -> JSON? {
-        guard case let .object(dict) = self else { return nil }
-        return dict[key]
-    }
-
-    public subscript(_ index: Int) -> JSON? {
-        guard case let .array(arr) = self else { return nil }
-        return arr[index]
-    }
 
     public var stringValue: String? {
         if case let .string(value) = self {
@@ -38,6 +26,16 @@ public enum JSON: Hashable {
             return value
         }
         return nil
+    }
+
+    public subscript(key: String) -> JSON? {
+        guard case let .object(dict) = self else { return nil }
+        return dict[key]
+    }
+
+    public subscript(_ index: Int) -> JSON? {
+        guard case let .array(arr) = self else { return nil }
+        return arr[index]
     }
 }
 
@@ -130,12 +128,12 @@ extension JSON: Encodable {
 
                 init(stringValue: String) {
                     self.stringValue = stringValue
-                    self.intValue = nil
+                    intValue = nil
                 }
 
                 init?(intValue: Int) {
                     self.intValue = intValue
-                    self.stringValue = ""
+                    stringValue = ""
                 }
             }
             var container = encoder.container(keyedBy: RawKey.self)

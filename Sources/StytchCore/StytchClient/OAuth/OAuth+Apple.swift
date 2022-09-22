@@ -63,7 +63,7 @@ final class AppleOAuthClient: NSObject, ASAuthorizationControllerDelegate {
         }
     }
 
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential else {
             continuation?.resume(throwing: StytchError.oauthCredentialInvalid)
             return
@@ -75,7 +75,7 @@ final class AppleOAuthClient: NSObject, ASAuthorizationControllerDelegate {
         continuation?.resume(returning: token)
     }
 
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    func authorizationController(controller _: ASAuthorizationController, didCompleteWithError error: Error) {
         continuation?.resume(throwing: error)
     }
 }

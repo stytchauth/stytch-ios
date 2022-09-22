@@ -53,8 +53,8 @@ public extension StytchClient.OAuth {
     var twitch: GenericProvider { .init(provider: .twitch) }
 }
 
-extension StytchClient.OAuth {
-    public struct AuthenticateParameters: Encodable {
+public extension StytchClient.OAuth {
+    struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case token, sessionDuration = "session_duration_minutes" }
 
         let token: String

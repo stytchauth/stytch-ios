@@ -5,8 +5,8 @@ import AppKit
 import UIKit
 #endif
 
-extension StytchClient.OAuth {
-    public struct GenericProvider {
+public extension StytchClient.OAuth {
+    struct GenericProvider {
         let provider: Provider
 
         public func start(parameters: StartParameters) async throws {
@@ -76,7 +76,7 @@ extension StytchClient.OAuth.GenericProvider {
     }
 }
 
-//extension StytchClient.OAuth.GenericProvider {
+// extension StytchClient.OAuth.GenericProvider {
 //    static var session: ASWebAuthenticationSession!
 //
 //    static let provider: Provider = .init()
@@ -94,10 +94,10 @@ extension StytchClient.OAuth.GenericProvider {
 //                Self.session.start()
 //            }
 //    }
-//}
+// }
 //
-//final class Provider: NSObject, ASWebAuthenticationPresentationContextProviding {
+// final class Provider: NSObject, ASWebAuthenticationPresentationContextProviding {
 //    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
 //        UIApplication.shared.keyWindow!
 //    }
-//}
+// }
