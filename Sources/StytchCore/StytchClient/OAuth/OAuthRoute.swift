@@ -1,16 +1,13 @@
 enum OAuthRoute: RouteType {
+    case authenticate
     case apple(AppleRoute)
-    case facebook(FacebookRoute)
-    case google(GoogleRoute)
 
     var path: Path {
         switch self {
+        case .authenticate:
+            return "authenticate"
         case let .apple(route):
             return "apple".appendingPath(route.path)
-        case let .facebook(route):
-            return "facebook".appendingPath(route.path)
-        case let .google(route):
-            return "google".appendingPath(route.path)
         }
     }
 }
