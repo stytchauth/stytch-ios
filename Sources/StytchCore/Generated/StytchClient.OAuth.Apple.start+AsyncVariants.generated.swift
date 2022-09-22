@@ -5,10 +5,10 @@ import Foundation
 
 public extension StytchClient.OAuth.Apple {
     /// docs
-    func start(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil, completion: @escaping Completion<AuthenticateResponseType>) {
+    func start(parameters: StartParameters, completion: @escaping Completion<AuthenticateResponseType>) {
         Task {
             do {
-                completion(.success(try await start(presentationContextProvider: presentationContextProvider)))
+                completion(.success(try await start(parameters: parameters)))
             } catch {
                 completion(.failure(error))
             }
@@ -16,12 +16,12 @@ public extension StytchClient.OAuth.Apple {
     }
 
     /// docs
-    func start(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil) -> AnyPublisher<AuthenticateResponseType, Error> {
+    func start(parameters: StartParameters) -> AnyPublisher<AuthenticateResponseType, Error> {
         return Deferred {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await start(presentationContextProvider: presentationContextProvider)))
+                        promise(.success(try await start(parameters: parameters)))
                     } catch {
                         promise(.failure(error))
                     }

@@ -18,16 +18,28 @@ public extension StytchClient.OAuth {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// docs
-        public func start(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil) async throws -> AuthenticateResponseType {
+        public func start(parameters: StartParameters) async throws -> AuthenticateResponseType {
             let nonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
             let idToken = try await Current.appleOAuthClient.authenticate(
-                presentationContextProvider: presentationContextProvider,
+                presentationContextProvider: parameters.presentationContextProvider,
                 nonce: Current.cryptoClient.sha256(nonce).base64EncodedString()
             )
             return try await router.post(
                 to: .authenticate,
                 parameters: AuthenticateParameters(nonce: nonce, idToken: idToken)
             ) as AuthenticateResponse
+        }
+    }
+}
+
+public extension StytchClient.OAuth.Apple {
+    struct StartParameters {
+        let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
+
+        public init(
+            presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil
+        ) {
+            self.presentationContextProvider = presentationContextProvider
         }
     }
 }
