@@ -110,8 +110,11 @@ extension Session {
             attributes: .init(ipAddress: "", userAgent: ""),
             authenticationFactors: [
                 .init(
-                    deliveryMethod: .email(.init(emailId: "email_id", emailAddress: "test@stytch.com")),
-                    kind: .magicLink,
+                    rawData: .object([
+                        "type": "magic_link",
+                        "last_authenticated_at": .string(ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30)))
+                    ]),
+                    kind: "magic_link",
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
                 ),
             ],
