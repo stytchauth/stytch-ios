@@ -6,9 +6,12 @@ import UIKit
 #endif
 
 public extension StytchClient.OAuth {
+    /// docs
     struct GenericProvider {
         let provider: Provider
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// docs
         public func start(parameters: StartParameters) async throws {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.pckeNotAvailable } // TODO: fix error
 
@@ -41,11 +44,13 @@ public extension StytchClient.OAuth {
             }
         }
 
+        /// docs
         public struct StartParameters: Encodable {
             let loginRedirectUrl: URL?
             let signupRedirectUrl: URL?
             let customScopes: [String]?
 
+            /// docs
             public init(
                 loginRedirectUrl: URL? = nil,
                 signupRedirectUrl: URL? = nil,

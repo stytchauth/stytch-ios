@@ -12,9 +12,12 @@ enum AppleRoute: RouteType {
 }
 
 public extension StytchClient.OAuth {
+    /// docs
     struct Apple {
         let router: NetworkingRouter<AppleRoute>
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// docs
         public func start(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil) async throws -> AuthenticateResponseType {
             let nonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
             let idToken = try await Current.appleOAuthClient.authenticate(
