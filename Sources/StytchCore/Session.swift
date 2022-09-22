@@ -11,7 +11,7 @@ public struct Session: Codable {
     /// Attributes of this session.
     public let attributes: Attributes
     /// A list of authentication factors associated with this session.
-    public var authenticationFactors: [AuthenticationFactor] { wrappedAuthenticationFactors }
+    public var authenticationFactors: [AuthenticationFactor]
     /// The date the session expires.
     public let expiresAt: Date
     /// The date this session was last accessed.
@@ -22,7 +22,6 @@ public struct Session: Codable {
     public let startedAt: Date
     /// The user id associated with this session.
     public let userId: String
-    @LossyArray private var wrappedAuthenticationFactors: [AuthenticationFactor]
 
     init(
         attributes: Session.Attributes,
@@ -34,7 +33,7 @@ public struct Session: Codable {
         userId: String
     ) {
         self.attributes = attributes
-        _wrappedAuthenticationFactors = .init(wrappedValue: authenticationFactors)
+        self.authenticationFactors = authenticationFactors
         self.expiresAt = expiresAt
         self.lastAccessedAt = lastAccessedAt
         self.sessionId = sessionId
@@ -45,7 +44,7 @@ public struct Session: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         attributes = try container.decode(key: .attributes)
-        _wrappedAuthenticationFactors = try container.decode(key: .authenticationFactors)
+        authenticationFactors = try container.decode(key: .authenticationFactors)
         expiresAt = try container.decode(key: .expiresAt)
         lastAccessedAt = try container.decode(key: .lastAccessedAt)
         sessionId = try container.decode(key: .sessionId)
