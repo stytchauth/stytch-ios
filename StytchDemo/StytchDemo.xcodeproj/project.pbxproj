@@ -40,7 +40,6 @@
 		2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
 		2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
 		2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
-		22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907E284DADB700ADD3C4 /* JSON.swift */; };
 		22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */; };
 		22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */; };
 		22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909088284DBC1900ADD3C4 /* JWT.swift */; };
@@ -74,7 +73,6 @@
 		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		22909078284D9F4600ADD3C4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationOptionsView.swift; sourceTree = "<group>"; };
-		2290907E284DADB700ADD3C4 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBackedStorage.swift; sourceTree = "<group>"; };
 		22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStorage.swift; sourceTree = "<group>"; };
 		22909088284DBC1900ADD3C4 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 				22BE9A1128481EFE00E29245 /* ServerRunner.swift */,
 				2290908B284DC2F300ADD3C4 /* Storage */,
 				2290908A284DC2E600ADD3C4 /* Controllers */,
-				2290907E284DADB700ADD3C4 /* JSON.swift */,
 				22909088284DBC1900ADD3C4 /* JWT.swift */,
 				22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */,
 			);
@@ -429,7 +426,6 @@
 			files = (
 				2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */,
 				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
-				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
 				22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */,
 				22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */,
 				22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */,
@@ -632,6 +628,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -662,6 +659,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
