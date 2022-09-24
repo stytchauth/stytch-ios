@@ -61,8 +61,6 @@ final class BiometricsTestCase: BaseTestCase {
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
 
-        Current.defaults.set(true, forKey: "biometric_registration_available")
-
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
         Current.networkingClient = try .success(
