@@ -7,13 +7,12 @@ public extension StytchClient {
 
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
-            Current.defaults.bool(forKey: Self.biometricRegistrationDefaultsKey)
+            Current.keychainClient.valueExistsForItem(.privateKeyRegistration)
         }
 
         /// Clears existing biometric registrations stored on device. Useful when removing a user from a given device.
         public func removeRegistration() throws {
             try Current.keychainClient.removeItem(.privateKeyRegistration)
-            Current.defaults.removeObject(forKey: Self.biometricRegistrationDefaultsKey)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -56,8 +55,6 @@ public extension StytchClient {
                 registration: registration,
                 accessPolicy: parameters.accessPolicy.keychainValue
             )
-
-            Current.defaults.set(true, forKey: Self.biometricRegistrationDefaultsKey)
 
             return finishResponse
         }
@@ -157,10 +154,6 @@ public extension StytchClient.Biometrics.RegisterParameters {
             }
         }
     }
-}
-
-extension StytchClient.Biometrics {
-    private static let biometricRegistrationDefaultsKey: String = "biometric_registration_available"
 }
 
 // Internal/private parameters and keys

@@ -3,16 +3,20 @@ import Foundation
 struct KeychainClient {
     let get: (Item) throws -> [QueryResult]
 
+    let valueExistsForItem: (Item) -> Bool
+
     let setValueForItem: (Item.Value, Item) throws -> Void
 
     let removeItem: (Item) throws -> Void
 
     init(
         get: @escaping (Item) throws -> [QueryResult],
+        valueExistsForItem: @escaping (Item) -> Bool,
         setValueForItem: @escaping (Item.Value, Item) throws -> Void,
         removeItem: @escaping (Item) throws -> Void
     ) {
         self.get = get
+        self.valueExistsForItem = valueExistsForItem
         self.setValueForItem = setValueForItem
         self.removeItem = removeItem
     }
