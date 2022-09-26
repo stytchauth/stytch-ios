@@ -22,6 +22,22 @@ extension KeychainClient {
         }
         #endif
 
+        let valueExistsForItem: (Item) -> Bool = { item in
+            var result: CFTypeRef?
+
+            var query = item.getQuery
+
+            #if canImport(LocalAuthentication)
+            let context = updateQueryWithLAContext(&query)
+            #endif
+
+            context.interactionNotAllowed = true
+
+            let status = SecItemCopyMatching(query as CFDictionary, &result)
+
+            return [errSecSuccess, errSecInteractionNotAllowed].contains(status)
+        }
+
         return .init { item in
             var result: CFTypeRef?
 
@@ -55,6 +71,8 @@ extension KeychainClient {
                     generic: dict[kSecAttrGeneric] as? Data
                 )
             }
+        } valueExistsForItem: { item in
+            valueExistsForItem(item)
         } setValueForItem: { value, item in
             let status: OSStatus
 
@@ -64,12 +82,7 @@ extension KeychainClient {
             let context = updateQueryWithLAContext(&query)
             #endif
 
-            let itemExists = SecItemCopyMatching(
-                query.merging([kSecAttrSynchronizable: kSecAttrSynchronizableAny]) as CFDictionary,
-                nil
-            ) == errSecSuccess
-
-            if itemExists {
+            if valueExistsForItem(item) {
                 status = SecItemUpdate(
                     query as CFDictionary,
                     item.updateQuerySegment(for: value) as CFDictionary
