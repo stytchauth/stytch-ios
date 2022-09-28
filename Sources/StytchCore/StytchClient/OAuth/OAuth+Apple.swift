@@ -6,7 +6,7 @@ enum AppleRoute: RouteType {
     var path: Path {
         switch self {
         case .authenticate:
-            return "authenticate" // TODO: - confirm what the path should actually be
+            return "id_token/authenticate"
         }
     }
 }
