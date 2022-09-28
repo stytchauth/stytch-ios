@@ -1,15 +1,15 @@
 import Foundation
 import Security
-#if canImport(LocalAuthentication)
+#if !os(tvOS)
 import LocalAuthentication
 #endif
 
 extension KeychainClient {
     static let live: Self = {
-        #if canImport(LocalAuthentication)
+        #if !os(tvOS)
         let updateQueryWithLAContext: (inout [CFString: Any]) -> LAContext = { query in
             let context = LAContext()
-            #if !os(tvOS)
+            #if !os(watchOS)
             context.localizedReason = NSLocalizedString(
                 "keychain_client.la_context_reason",
                 value: "Authenticate with biometrics",
@@ -27,11 +27,11 @@ extension KeychainClient {
 
             var query = item.getQuery
 
-            #if canImport(LocalAuthentication)
+            #if !os(tvOS)
             let context = updateQueryWithLAContext(&query)
+            context.interactionNotAllowed = true
             #endif
 
-            context.interactionNotAllowed = true
 
             let status = SecItemCopyMatching(query as CFDictionary, &result)
 
@@ -43,8 +43,8 @@ extension KeychainClient {
 
             var query = item.getQuery
 
-            #if canImport(LocalAuthentication)
-            let context = updateQueryWithLAContext(&query)
+            #if !os(tvOS)
+            _ = updateQueryWithLAContext(&query)
             #endif
 
             guard case errSecSuccess = SecItemCopyMatching(query as CFDictionary, &result) else {
@@ -78,8 +78,8 @@ extension KeychainClient {
 
             var query = item.baseQuery
 
-            #if canImport(LocalAuthentication)
-            let context = updateQueryWithLAContext(&query)
+            #if !os(tvOS)
+            _ = updateQueryWithLAContext(&query)
             #endif
 
             if valueExistsForItem(item) {
