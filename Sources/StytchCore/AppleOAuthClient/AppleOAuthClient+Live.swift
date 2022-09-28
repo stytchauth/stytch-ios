@@ -17,8 +17,10 @@ extension AppleOAuthClient {
             controller.performRequests()
         }
     }
+}
 
-    fileprivate final class Delegate: NSObject, ASAuthorizationControllerDelegate {
+extension AppleOAuthClient {
+    private final class Delegate: NSObject, ASAuthorizationControllerDelegate {
         var continuation: CheckedContinuation<Result, Error>?
 
         func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
@@ -40,7 +42,7 @@ extension AppleOAuthClient {
     }
 }
 
-fileprivate extension StytchClient.OAuth.Apple.Name {
+private extension StytchClient.OAuth.Apple.Name {
     init(_ components: PersonNameComponents?) {
         self.init(firstName: components?.givenName, lastName: components?.familyName)
     }
