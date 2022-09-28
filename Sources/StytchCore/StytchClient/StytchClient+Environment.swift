@@ -45,6 +45,8 @@ extension StytchClient {
 
         var defaults: UserDefaults = .standard
 
+        var appleOAuthClient: AppleOAuthClient = .live
+
         var networkingClient: NetworkingClient = .live
 
         var cryptoClient: CryptoClient = .live

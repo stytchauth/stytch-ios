@@ -11,3 +11,16 @@ enum OAuthRoute: RouteType {
         }
     }
 }
+
+extension OAuthRoute {
+    enum AppleRoute: RouteType {
+        case authenticate
+
+        var path: Path {
+            switch self {
+            case .authenticate:
+                return "id_token/authenticate"
+            }
+        }
+    }
+}

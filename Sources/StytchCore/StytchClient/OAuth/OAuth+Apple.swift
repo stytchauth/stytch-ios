@@ -1,32 +1,26 @@
 import AuthenticationServices
 
-enum AppleRoute: RouteType {
-    case authenticate
-
-    var path: Path {
-        switch self {
-        case .authenticate:
-            return "id_token/authenticate"
-        }
-    }
-}
-
 public extension StytchClient.OAuth {
     /// docs
     struct Apple {
-        let router: NetworkingRouter<AppleRoute>
+        let router: NetworkingRouter<OAuthRoute.AppleRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// docs
         public func start(parameters: StartParameters) async throws -> AuthenticateResponseType {
             let nonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
-            let idToken = try await Current.appleOAuthClient.authenticate(
+            let authenticateResult = try await Current.appleOAuthClient.authenticate(
                 presentationContextProvider: parameters.presentationContextProvider,
                 nonce: Current.cryptoClient.sha256(nonce).base64EncodedString()
             )
             return try await router.post(
                 to: .authenticate,
-                parameters: AuthenticateParameters(nonce: nonce, idToken: idToken)
+                parameters: AuthenticateParameters(
+                    idToken: authenticateResult.idToken,
+                    nonce: nonce,
+                    sessionDurationMinutes: parameters.sessionDuration,
+                    name: authenticateResult.name
+                )
             ) as AuthenticateResponse
         }
     }
@@ -34,11 +28,14 @@ public extension StytchClient.OAuth {
 
 public extension StytchClient.OAuth.Apple {
     struct StartParameters {
+        let sessionDuration: Minutes
         let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
 
         public init(
+            sessionDuration: Minutes = .defaultSessionDuration,
             presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil
         ) {
+            self.sessionDuration = sessionDuration
             self.presentationContextProvider = presentationContextProvider
         }
     }
@@ -46,51 +43,14 @@ public extension StytchClient.OAuth.Apple {
 
 extension StytchClient.OAuth.Apple {
     struct AuthenticateParameters: Codable {
+        let idToken: String
         let nonce: Data
-        let idToken: Data
-    }
-}
-
-extension StytchClient.Environment {
-    // FIXME: - remove hack
-    var appleOAuthClient: AppleOAuthClient { .instance }
-}
-
-final class AppleOAuthClient: NSObject, ASAuthorizationControllerDelegate {
-    // FIXME: - remove hack
-    static let instance: AppleOAuthClient = .init()
-
-    private var continuation: CheckedContinuation<Data, Error>?
-
-    func authenticate(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil, nonce: String) async throws -> Data {
-        let provider: ASAuthorizationAppleIDProvider = .init()
-        let request = provider.createRequest()
-        request.requestedScopes = [.email, .fullName]
-        request.nonce = nonce
-
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.presentationContextProvider = presentationContextProvider
-        controller.delegate = self
-
-        return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-            controller.performRequests()
-        }
+        let sessionDurationMinutes: Minutes
+        let name: Name
     }
 
-    func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential else {
-            continuation?.resume(throwing: StytchError.oauthCredentialInvalid)
-            return
-        }
-        guard let token = credential.identityToken else {
-            continuation?.resume(throwing: StytchError.oauthCredentialMissingIdToken)
-            return
-        }
-        continuation?.resume(returning: token)
-    }
-
-    func authorizationController(controller _: ASAuthorizationController, didCompleteWithError error: Error) {
-        continuation?.resume(throwing: error)
+    struct Name: Codable {
+        let firstName: String?
+        let lastName: String?
     }
 }
