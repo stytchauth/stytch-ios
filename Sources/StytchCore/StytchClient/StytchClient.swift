@@ -39,7 +39,7 @@ public struct StytchClient {
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponseType`` will be returned to you asynchronously, with a `sessionDuration` of
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
