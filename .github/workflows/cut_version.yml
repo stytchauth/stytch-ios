@@ -1,0 +1,28 @@
+name: Cut version
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        description: The intended type of release
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  release:
+    runs-on: [ self-hosted, apple-silicon ]
+
+    steps:
+
+    - name: Release type
+      run: |
+        echo "Release type: ${{ github.event.inputs.release_type }}"
+
+      # ensure tag doesn't exist
+      # check that version has already been incremented appropriately for corresponding release type
+      # create tag
+      # push tag
+      # create PR for incrementing version (major/minor only)
