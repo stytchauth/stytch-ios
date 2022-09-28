@@ -32,7 +32,6 @@ extension KeychainClient {
             context.interactionNotAllowed = true
             #endif
 
-
             let status = SecItemCopyMatching(query as CFDictionary, &result)
 
             return [errSecSuccess, errSecInteractionNotAllowed].contains(status)
