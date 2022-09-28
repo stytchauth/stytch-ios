@@ -14,11 +14,11 @@ There are a number of authentication products currently supported by the SDK, wi
 
 Product | Methods | Delivery mechanisms
 --- | --- | ---
-``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-27v6k`` | Email 
-``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-9xbzg``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-79mm8``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
-``StytchClient/OneTimePasscodes`` | ``StytchClient/OneTimePasscodes/loginOrCreate(parameters:)-8glu3``, ``StytchClient/OneTimePasscodes/authenticate(parameters:)-88x30`` | SMS, WhatsApp, Email
-``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-6nkim``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-3m2ub``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()`` | N/A
-``StytchClient/Sessions-swift.struct`` | ``StytchClient/Sessions-swift.struct/revoke()-33tpy``, ``StytchClient/Sessions-swift.struct/authenticate(parameters:)-8mezl`` | N/A
+``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-4aa9c`` | Email 
+``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-8qxx5``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-353x1``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
+``StytchClient/OneTimePasscodes`` | ``StytchClient/OneTimePasscodes/loginOrCreate(parameters:)-8glu3``, ``StytchClient/OneTimePasscodes/authenticate(parameters:)-151as`` | SMS, WhatsApp, Email
+``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-812fz``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-7b3rx``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()`` | N/A
+``StytchClient/Sessions-swift.struct`` | ``StytchClient/Sessions-swift.struct/revoke()-4jc0p``, ``StytchClient/Sessions-swift.struct/authenticate(parameters:)-41u13`` | N/A
 
 **Async Options**: Async functions are available via various mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
 
@@ -51,10 +51,10 @@ YourContentView().onOpenUrl { url in
 ### Response Types
 
 - ``AuthenticateResponseType``
-- ``AuthenticateResponse``
+- ``AuthenticateResponseDataType``
+- ``BasicResponseType``
 - ``BasicResponse``
 - ``Response``
-- ``AuthenticateResponseData``
 
 ### Error Types
 - ``StytchError``
