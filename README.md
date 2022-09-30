@@ -46,22 +46,17 @@ _ = try await StytchClient.handle(url: deeplinkUrl)
 
 There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
-- Send/authenticate magic links
-    - Delivery via:
-        - Email
-- Authenticate/manage passwords
+- Magic links
+    - Send/authenticate magic links via Email
+- Biometrics
+    - Authenticate via FaceID/TouchID
+- OTPs
+    - Send/authenticate one-time passcodes via SMS, WhatsApp, Email
+- Passwords
     - Create or authenticate a user
     - Check password strength
     - Reset a password
-- Send/authenticate one-time passcodes
-    - Delivery via:
-        - SMS
-        - WhatsApp
-        - Email
-- Sign up/authenticate via passwords
-    - Check password strength
-- Authenticate via biometrics (FaceID/TouchID)
-- Manage user sessions
+- Sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
 
@@ -71,7 +66,7 @@ The SDK provides several different mechanisms for handling the asynchronous code
 
 - `Async/Await`
 - `Combine`
-- ` Callbacks`
+- `Callbacks`
 
 ### How do I start using Stytch?
 
