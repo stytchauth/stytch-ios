@@ -98,5 +98,18 @@ struct OAuthAuthenticationView: View {
             }
         }
         .padding()
+
+        Button("Authenticate with Facebook") {
+            Task {
+                do {
+                    try await StytchClient.oauth.facebook.start(
+                        parameters: .init(loginRedirectUrl: serverUrl, signupRedirectUrl: serverUrl)
+                    )
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        .padding()
     }
 }
