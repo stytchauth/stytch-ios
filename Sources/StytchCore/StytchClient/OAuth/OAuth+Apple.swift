@@ -8,16 +8,16 @@ public extension StytchClient.OAuth {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// docs
         public func start(parameters: StartParameters) async throws -> AuthenticateResponseType {
-            let nonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
+            let rawNonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
             let authenticateResult = try await Current.appleOAuthClient.authenticate(
                 presentationContextProvider: parameters.presentationContextProvider,
-                nonce: Current.cryptoClient.sha256(nonce).base64EncodedString()
+                nonce: Current.cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
             )
             return try await router.post(
                 to: .authenticate,
                 parameters: AuthenticateParameters(
                     idToken: authenticateResult.idToken,
-                    nonce: nonce,
+                    nonce: rawNonce,
                     sessionDurationMinutes: parameters.sessionDuration,
                     name: authenticateResult.name
                 )
@@ -44,7 +44,7 @@ public extension StytchClient.OAuth.Apple {
 extension StytchClient.OAuth.Apple {
     struct AuthenticateParameters: Codable {
         let idToken: String
-        let nonce: Data
+        let nonce: String
         let sessionDurationMinutes: Minutes
         let name: Name
     }
