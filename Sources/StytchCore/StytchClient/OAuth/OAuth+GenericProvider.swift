@@ -29,7 +29,7 @@ public extension StytchClient.OAuth {
                 queryParameters.append((name, value))
             }
 
-            let subDomain = publicToken.hasPrefix("public-token-test") ? "test" : "live"
+            let subDomain = publicToken.hasPrefix("public-token-test") ? "test" : "api"
 
             guard
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
