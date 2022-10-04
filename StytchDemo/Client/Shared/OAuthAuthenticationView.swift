@@ -1,5 +1,5 @@
-import SwiftUI
 import StytchCore
+import SwiftUI
 
 struct OAuthAuthenticationView: View {
     let onAuth: (Session, User) -> Void
