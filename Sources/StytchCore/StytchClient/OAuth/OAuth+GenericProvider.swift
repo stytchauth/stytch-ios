@@ -80,29 +80,3 @@ extension StytchClient.OAuth.GenericProvider {
         case twitch
     }
 }
-
-// extension StytchClient.OAuth.GenericProvider {
-//    static var session: ASWebAuthenticationSession!
-//
-//    static let provider: Provider = .init()
-//
-//    func presentASWebAuth(url: URL) {
-//            Self.session = ASWebAuthenticationSession(url: url, callbackURLScheme: "stytch-demo") { url, error in
-//                print(url)
-//                // This doesn't seem to be getting called, though the app is redirected into. perhaps a config thing or just how Stytch redirects doesn't play well w/ ASWebAuth
-//                // perhaps call authenticate here?
-//            }
-//
-//            Self.session.presentationContextProvider = Self.provider
-//
-//            DispatchQueue.main.async {
-//                Self.session.start()
-//            }
-//    }
-// }
-//
-// final class Provider: NSObject, ASWebAuthenticationPresentationContextProviding {
-//    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-//        UIApplication.shared.keyWindow!
-//    }
-// }

@@ -26,40 +26,55 @@ public extension StytchClient {
 }
 
 public extension StytchClient.OAuth {
+    /// docs
     var amazon: GenericProvider { .init(provider: .amazon) }
 
+    /// docs
     var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
 
+    /// docs
     var bitbucket: GenericProvider { .init(provider: .bitbucket) }
 
+    /// docs
     var coinbase: GenericProvider { .init(provider: .coinbase) }
 
+    /// docs
     var discord: GenericProvider { .init(provider: .discord) }
 
+    /// docs
     var facebook: GenericProvider { .init(provider: .facebook) }
 
+    /// docs
     var github: GenericProvider { .init(provider: .github) }
 
+    /// docs
     var gitlab: GenericProvider { .init(provider: .gitlab) }
 
+    /// docs
     var google: GenericProvider { .init(provider: .google) }
 
+    /// docs
     var linkedin: GenericProvider { .init(provider: .linkedin) }
 
+    /// docs
     var microsoft: GenericProvider { .init(provider: .microsoft) }
 
+    /// docs
     var slack: GenericProvider { .init(provider: .slack) }
 
+    /// docs
     var twitch: GenericProvider { .init(provider: .twitch) }
 }
 
 public extension StytchClient.OAuth {
+    /// docs
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case token, sessionDuration = "session_duration_minutes" }
 
         let token: String
         let sessionDuration: Minutes
 
+        /// docs
         public init(
             token: String,
             sessionDuration: Minutes = .defaultSessionDuration
