@@ -7,7 +7,7 @@ public extension StytchClient.OAuth {
 
         /// docs
         public func start(parameters: StartParameters) throws {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.pckeNotAvailable } // TODO: fix error
+            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
 
             var queryParameters = [
                 ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier).challenge),
