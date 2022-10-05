@@ -1,9 +1,4 @@
 import Foundation
-#if os(macOS)
-import AppKit
-#else
-import UIKit
-#endif
 
 public extension StytchClient.OAuth {
     /// docs
@@ -34,13 +29,7 @@ public extension StytchClient.OAuth {
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
             else { throw StytchError.oauthInvalidStartUrl }
 
-            DispatchQueue.main.async {
-                #if os(macOS)
-                NSWorkspace.shared.open(url)
-                #else
-                UIApplication.shared.open(url)
-                #endif
-            }
+            Current.openUrl(url)
         }
 
         /// docs
