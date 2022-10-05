@@ -4,7 +4,7 @@ import Combine
 import Foundation
 
 public extension StytchClient.OAuth.Apple {
-    /// docs
+    /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
     func start(parameters: StartParameters, completion: @escaping Completion<AuthenticateResponseType>) {
         Task {
             do {
@@ -15,7 +15,7 @@ public extension StytchClient.OAuth.Apple {
         }
     }
 
-    /// docs
+    /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
     func start(parameters: StartParameters) -> AnyPublisher<AuthenticateResponseType, Error> {
         return Deferred {
             Future({ promise in

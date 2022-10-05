@@ -1,12 +1,12 @@
 import Foundation
 
 public extension StytchClient {
-    /// docs
+    /// OAuth allows you to leverage outside identity providers, for which your users may already have an account, to verify their identity. This is a low-friction method your users will be familiar with.
     struct OAuth {
         let router: NetworkingRouter<OAuthRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// docs
+        /// After an identity provider confirms the identiy of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
             guard let codeVerifier: String = try Current.keychainClient.get(.oauthPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
@@ -26,48 +26,48 @@ public extension StytchClient {
 }
 
 public extension StytchClient.OAuth {
-    /// docs
-    var amazon: ThirdPartyProvider { .init(provider: .amazon) }
+    /// The interface for authenticating a user with Amazon.
+    var amazon: ThirdParty { .init(provider: .amazon) }
 
-    /// docs
+    /// The interface for authenticating a user with Apple.
     var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
 
-    /// docs
-    var bitbucket: ThirdPartyProvider { .init(provider: .bitbucket) }
+    /// The interface for authenticating a user with Bitbucket.
+    var bitbucket: ThirdParty { .init(provider: .bitbucket) }
 
-    /// docs
-    var coinbase: ThirdPartyProvider { .init(provider: .coinbase) }
+    /// The interface for authenticating a user with Coinbase.
+    var coinbase: ThirdParty { .init(provider: .coinbase) }
 
-    /// docs
-    var discord: ThirdPartyProvider { .init(provider: .discord) }
+    /// The interface for authenticating a user with Discord.
+    var discord: ThirdParty { .init(provider: .discord) }
 
-    /// docs
-    var facebook: ThirdPartyProvider { .init(provider: .facebook) }
+    /// The interface for authenticating a user with Facebook.
+    var facebook: ThirdParty { .init(provider: .facebook) }
 
-    /// docs
-    var github: ThirdPartyProvider { .init(provider: .github) }
+    /// The interface for authenticating a user with GitHub.
+    var github: ThirdParty { .init(provider: .github) }
 
-    /// docs
-    var gitlab: ThirdPartyProvider { .init(provider: .gitlab) }
+    /// The interface for authenticating a user with GitLab.
+    var gitlab: ThirdParty { .init(provider: .gitlab) }
 
-    /// docs
-    var google: ThirdPartyProvider { .init(provider: .google) }
+    /// The interface for authenticating a user with Google.
+    var google: ThirdParty { .init(provider: .google) }
 
-    /// docs
-    var linkedin: ThirdPartyProvider { .init(provider: .linkedin) }
+    /// The interface for authenticating a user with LinkedIn.
+    var linkedin: ThirdParty { .init(provider: .linkedin) }
 
-    /// docs
-    var microsoft: ThirdPartyProvider { .init(provider: .microsoft) }
+    /// The interface for authenticating a user with Microsoft.
+    var microsoft: ThirdParty { .init(provider: .microsoft) }
 
-    /// docs
-    var slack: ThirdPartyProvider { .init(provider: .slack) }
+    /// The interface for authenticating a user with Slack.
+    var slack: ThirdParty { .init(provider: .slack) }
 
-    /// docs
-    var twitch: ThirdPartyProvider { .init(provider: .twitch) }
+    /// The interface for authenticating a user with Twitch.
+    var twitch: ThirdParty { .init(provider: .twitch) }
 }
 
 public extension StytchClient.OAuth {
-    /// docs
+    /// The dedicated parameters type for ``authenticate(parameters:)-172ak`` calls.
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case token, sessionDuration = "session_duration_minutes" }
 

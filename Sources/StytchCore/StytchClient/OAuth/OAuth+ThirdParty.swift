@@ -1,8 +1,8 @@
 import Foundation
 
 public extension StytchClient.OAuth {
-    /// The SDK provides the ability to integrate with third-party identity providers for OAuth experiences beyond the natively supported Sign In With Apple flow.
-    struct ThirdPartyProvider {
+    /// The SDK provides the ability to integrate with third-party identity providers for OAuth experiences beyond the natively-supported Sign In With Apple flow.
+    struct ThirdParty {
         let provider: Provider
 
         /// Initiates the OAuth flow by using the included parameters to generate a URL and pass this off to the system's default browser. The user will be redirected to the corresponding redirectUrl (this should be back into the application), after completing the authentication challenge with the identity provider.
@@ -55,7 +55,7 @@ public extension StytchClient.OAuth {
     }
 }
 
-extension StytchClient.OAuth.ThirdPartyProvider {
+extension StytchClient.OAuth.ThirdParty {
     enum Provider: String {
         case amazon
         case bitbucket
