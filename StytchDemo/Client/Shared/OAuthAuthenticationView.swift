@@ -29,14 +29,12 @@ struct OAuthAuthenticationView: View {
 
     private func button(for provider: Provider) -> some View {
         Button("Authenticate with \(provider.rawValue.capitalized)") {
-            Task {
-                do {
-                    try await provider.interface.start(
-                        parameters: .init(loginRedirectUrl: serverUrl, signupRedirectUrl: serverUrl)
-                    )
-                } catch {
-                    print(error)
-                }
+            do {
+                try provider.interface.start(
+                    parameters: .init(loginRedirectUrl: serverUrl, signupRedirectUrl: serverUrl)
+                )
+            } catch {
+                print(error)
             }
         }
     }
@@ -54,7 +52,7 @@ private enum Provider: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    var interface: StytchClient.OAuth.GenericProvider {
+    var interface: StytchClient.OAuth.ThirdPartyProvider {
         switch self {
         case .amazon:
             return StytchClient.oauth.amazon

@@ -27,43 +27,43 @@ public extension StytchClient {
 
 public extension StytchClient.OAuth {
     /// docs
-    var amazon: GenericProvider { .init(provider: .amazon) }
+    var amazon: ThirdPartyProvider { .init(provider: .amazon) }
 
     /// docs
     var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
 
     /// docs
-    var bitbucket: GenericProvider { .init(provider: .bitbucket) }
+    var bitbucket: ThirdPartyProvider { .init(provider: .bitbucket) }
 
     /// docs
-    var coinbase: GenericProvider { .init(provider: .coinbase) }
+    var coinbase: ThirdPartyProvider { .init(provider: .coinbase) }
 
     /// docs
-    var discord: GenericProvider { .init(provider: .discord) }
+    var discord: ThirdPartyProvider { .init(provider: .discord) }
 
     /// docs
-    var facebook: GenericProvider { .init(provider: .facebook) }
+    var facebook: ThirdPartyProvider { .init(provider: .facebook) }
 
     /// docs
-    var github: GenericProvider { .init(provider: .github) }
+    var github: ThirdPartyProvider { .init(provider: .github) }
 
     /// docs
-    var gitlab: GenericProvider { .init(provider: .gitlab) }
+    var gitlab: ThirdPartyProvider { .init(provider: .gitlab) }
 
     /// docs
-    var google: GenericProvider { .init(provider: .google) }
+    var google: ThirdPartyProvider { .init(provider: .google) }
 
     /// docs
-    var linkedin: GenericProvider { .init(provider: .linkedin) }
+    var linkedin: ThirdPartyProvider { .init(provider: .linkedin) }
 
     /// docs
-    var microsoft: GenericProvider { .init(provider: .microsoft) }
+    var microsoft: ThirdPartyProvider { .init(provider: .microsoft) }
 
     /// docs
-    var slack: GenericProvider { .init(provider: .slack) }
+    var slack: ThirdPartyProvider { .init(provider: .slack) }
 
     /// docs
-    var twitch: GenericProvider { .init(provider: .twitch) }
+    var twitch: ThirdPartyProvider { .init(provider: .twitch) }
 }
 
 public extension StytchClient.OAuth {

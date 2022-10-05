@@ -7,12 +7,11 @@ import UIKit
 
 public extension StytchClient.OAuth {
     /// docs
-    struct GenericProvider {
+    struct ThirdPartyProvider {
         let provider: Provider
 
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// docs
-        public func start(parameters: StartParameters) async throws {
+        public func start(parameters: StartParameters) throws {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.pckeNotAvailable } // TODO: fix error
 
             var queryParameters = [
@@ -64,7 +63,7 @@ public extension StytchClient.OAuth {
     }
 }
 
-extension StytchClient.OAuth.GenericProvider {
+extension StytchClient.OAuth.ThirdPartyProvider {
     enum Provider: String {
         case amazon
         case bitbucket
