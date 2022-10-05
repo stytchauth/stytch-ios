@@ -74,7 +74,9 @@ public extension StytchClient.OAuth {
         let token: String
         let sessionDuration: Minutes
 
-        /// docs
+        /// - Parameters:
+        ///   - token: The token returned from the identity provider as parsed from the final/complete redirect URL.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
         public init(
             token: String,
             sessionDuration: Minutes = .defaultSessionDuration

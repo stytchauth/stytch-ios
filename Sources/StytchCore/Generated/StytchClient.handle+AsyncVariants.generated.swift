@@ -10,7 +10,7 @@ public extension StytchClient {
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration, completion: @escaping Completion<DeeplinkHandledStatus>) {
         Task {
             do {
@@ -27,7 +27,7 @@ public extension StytchClient {
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus, Error> {
         return Deferred {
             Future({ promise in
