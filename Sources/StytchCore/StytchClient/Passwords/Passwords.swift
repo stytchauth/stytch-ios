@@ -86,7 +86,7 @@ public extension StytchClient.Passwords {
     typealias CreateResponse = Response<CreateResponseData>
 
     /// The underlying data for passwords `create` calls.
-    struct CreateResponseData: Codable, AuthenticateResponseDataType {
+    struct CreateResponseData: Decodable, AuthenticateResponseDataType {
         public let emailId: String
         public let userId: String
         public let user: User
@@ -206,3 +206,7 @@ public extension StytchClient.Passwords {
         }
     }
 }
+
+#if DEBUG
+extension StytchClient.Passwords.CreateResponseData: Encodable {}
+#endif

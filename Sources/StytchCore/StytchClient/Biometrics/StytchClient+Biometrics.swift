@@ -192,7 +192,7 @@ extension StytchClient.Biometrics {
         let sessionDuration: Minutes
     }
 
-    struct RegisterCompleteResponseData: Codable, AuthenticateResponseDataType {
+    struct RegisterCompleteResponseData: Decodable, AuthenticateResponseDataType {
         let biometricRegistrationId: String
         let user: User
         let session: Session
@@ -200,3 +200,7 @@ extension StytchClient.Biometrics {
         let sessionJwt: String
     }
 }
+
+#if DEBUG
+extension StytchClient.Biometrics.RegisterCompleteResponseData: Encodable {}
+#endif

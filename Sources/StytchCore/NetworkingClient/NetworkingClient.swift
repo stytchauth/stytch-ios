@@ -34,8 +34,9 @@ final class NetworkingClient {
         return request
     }
 }
+
 //
-//extension URLRequest {
+// extension URLRequest {
 //    var curlString: String {
 //        guard let url = url else { return "" }
 //        var baseCommand = #"curl "\#(url.absoluteString)""#
@@ -62,7 +63,7 @@ final class NetworkingClient {
 //
 //        return command.joined(separator: " \\\n\t")
 //    }
-//}
+// }
 
 extension NetworkingClient {
     enum Method {
