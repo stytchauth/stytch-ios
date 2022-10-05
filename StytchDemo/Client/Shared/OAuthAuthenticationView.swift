@@ -52,7 +52,7 @@ private enum Provider: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    var interface: StytchClient.OAuth.ThirdPartyProvider {
+    var interface: StytchClient.OAuth.ThirdParty {
         switch self {
         case .amazon:
             return StytchClient.oauth.amazon
