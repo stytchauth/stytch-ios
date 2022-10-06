@@ -43,7 +43,7 @@ public struct StytchClient {
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     public static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
@@ -56,7 +56,7 @@ public struct StytchClient {
         case .magicLinks:
             return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .oauth:
-            return .notHandled
+            return try await .handled(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .passwordReset:
             return .manualHandlingRequired(.passwordReset, token: token)
         }

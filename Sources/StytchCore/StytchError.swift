@@ -56,6 +56,18 @@ public extension StytchError {
         errorType: "no_biometric_registrations",
         errorMessage: "There are no biometric registrations available. Must authenticate with other methods and add a new biometric registration before calling this method."
     )
+    static let oauthCredentialInvalid: Self = .init(
+        errorType: "oauth_apple_credential_invalid",
+        errorMessage: "The Sign In With Apple authorization credential was an invalid type/format."
+    )
+    static let oauthCredentialMissingIdToken: Self = .init(
+        errorType: "oauth_apple_missing_id_token",
+        errorMessage: "The Sign In With Apple authorization credential was missing an id_token."
+    )
+    static let oauthInvalidStartUrl: Self = .init(
+        errorType: "oauth_generic_invalid_start_url",
+        errorMessage: "The start url was invalid or improperly formatted."
+    )
 }
 
 private extension URL {

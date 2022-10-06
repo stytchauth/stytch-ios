@@ -91,7 +91,9 @@ struct OTPAuthenticationView: View {
                     .padding()
                     .textFieldStyle(.roundedBorder)
                     .disableAutocorrection(true)
-                #if !os(macOS)
+                #if os(macOS)
+                    .textContentType(.oneTimeCode)
+                #else
                     .textInputAutocapitalization(.never)
                     .keyboardType(.phonePad)
                     .textContentType(.oneTimeCode)
@@ -124,7 +126,7 @@ struct OTPAuthenticationView: View {
 
         // If the delivery method has authenticated in the last 3 minutes, it has recent auth
         return session.authenticationFactors
-            .filter { $0.kind == .otp && $0.matches(deliveryMethod) }
+            .filter { $0.kind == "otp" }
             .contains {
                 $0.lastAuthenticatedAt > Date().addingTimeInterval(-180)
             }
@@ -157,17 +159,6 @@ struct OTPAuthenticationView: View {
                 print(error)
             }
             isLoading = false
-        }
-    }
-}
-
-private extension Session.AuthenticationFactor {
-    func matches(_ deliveryMethod: OTPAuthenticationView.DeliveryMethod) -> Bool {
-        switch self.deliveryMethod {
-        case .email: return deliveryMethod == .email
-        case .sms: return deliveryMethod == .sms
-        case .whatsapp: return deliveryMethod == .whatsapp
-        default: return false
         }
     }
 }

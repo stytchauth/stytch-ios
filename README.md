@@ -52,6 +52,8 @@ There are a number of authentication products currently supported by the SDK, wi
     - Authenticate via FaceID/TouchID
 - OTPs
     - Send/authenticate one-time passcodes via SMS, WhatsApp, Email
+- OAuth
+    - Authenticate with external identity providers such as: Apple, Google, Facebook, GitHub, etc.
 - Passwords
     - Create or authenticate a user
     - Check password strength
