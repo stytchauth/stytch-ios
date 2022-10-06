@@ -27,7 +27,7 @@ public extension StytchClient.OAuth {
 }
 
 public extension StytchClient.OAuth.Apple {
-    /// The dedicated parameters type for ``start(parameters:)`` calls.
+    /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-858tw`` calls.
     struct StartParameters {
         let sessionDuration: Minutes
         let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
