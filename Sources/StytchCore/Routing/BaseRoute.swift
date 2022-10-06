@@ -3,6 +3,7 @@ enum BaseRoute: RouteType {
     case magicLinks(MagicLinksRoute)
     case oauth(OAuthRoute)
     case otps(OneTimePasscodesRoute)
+    case passkeys(PasskeysRoute)
     case passwords(PasswordsRoute)
     case sessions(SessionsRoute)
 
@@ -16,6 +17,8 @@ enum BaseRoute: RouteType {
             return "oauth".appendingPath(route.path)
         case let .otps(route):
             return "otps".appendingPath(route.path)
+        case let .passkeys(route):
+            return "web_authn".appendingPath(route.path)
         case let .passwords(route):
             return "passwords".appendingPath(route.path)
         case let .sessions(route):
