@@ -1,6 +1,8 @@
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable implicitly_unwrapped_optional
+
 final class OAuthTestCase: BaseTestCase {
     func testApple() async throws {
         var request: URLRequest!
