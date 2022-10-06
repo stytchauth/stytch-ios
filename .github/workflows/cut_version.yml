@@ -26,3 +26,4 @@ jobs:
       # create tag
       # push tag
       # create PR for incrementing version (major/minor only)
+      # Add semver-${{ github.event.inputs.release_type }} label to PR
