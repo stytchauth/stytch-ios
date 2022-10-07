@@ -10,7 +10,11 @@ public extension StytchClient.OAuth {
         public func start(parameters: StartParameters) async throws -> AuthenticateResponseType {
             let rawNonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
             let authenticateResult = try await Current.appleOAuthClient.authenticate(
-                presentationContextProvider: parameters.presentationContextProvider,
+                configureController: { controller in
+                    #if !os(watchOS)
+                    controller.presentationContextProvider = parameters.presentationContextProvider
+                    #endif
+                },
                 nonce: Current.cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
             )
             return try await router.post(
@@ -30,8 +34,11 @@ public extension StytchClient.OAuth.Apple {
     /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-858tw`` calls.
     struct StartParameters {
         let sessionDuration: Minutes
+        #if !os(watchOS)
         let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
+        #endif
 
+        #if !os(watchOS)
         /// - Parameters:
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
         ///   - presentationContextProvider: This native Apple authorization type allows you to present Sign In With Apple in the window of your choosing.
@@ -42,6 +49,13 @@ public extension StytchClient.OAuth.Apple {
             self.sessionDuration = sessionDuration
             self.presentationContextProvider = presentationContextProvider
         }
+        #else
+        /// - Parameters:
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        public init(sessionDuration: Minutes = .defaultSessionDuration) {
+            self.sessionDuration = sessionDuration
+        }
+        #endif
     }
 }
 
