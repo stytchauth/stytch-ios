@@ -41,7 +41,7 @@ jobs:
         # test macOS
         make test
         # test iOS
-        xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk iphonesimulator16.0 -destination "OS=16.0,name=iPhone 13 Mini"
+        xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk iphonesimulator16.0 -destination "OS=16.0,name=iPhone 14 Pro"
         # test tvOS
         xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk appletvsimulator16.0 -destination "OS=16.0,name=Apple TV"
         # test watchOS
