@@ -8,7 +8,7 @@ public extension StytchClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status current account.
         public func loginOrCreate(parameters: Parameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .stytchEMLPKCECodeVerifier)
+            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .emlPKCECodeVerifier)
 
             return try await router.post(
                 to: .loginOrCreate,

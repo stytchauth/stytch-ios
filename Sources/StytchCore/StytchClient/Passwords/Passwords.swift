@@ -29,7 +29,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates a password reset for the email address provided. This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .stytchPWResetByEmailPKCECodeVerifier)
+            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .pwResetByEmailPKCECodeVerifier)
 
             return try await router.post(
                 to: .resetByEmail(.start),
@@ -46,7 +46,7 @@ public extension StytchClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponseType {
-            guard let codeVerifier: String = try? Current.keychainClient.get(.stytchPWResetByEmailPKCECodeVerifier) else {
+            guard let codeVerifier: String = try? Current.keychainClient.get(.pwResetByEmailPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -55,7 +55,7 @@ public extension StytchClient {
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
 
-            try? Current.keychainClient.removeItem(.stytchPWResetByEmailPKCECodeVerifier)
+            try? Current.keychainClient.removeItem(.pwResetByEmailPKCECodeVerifier)
 
             return response
         }
@@ -86,7 +86,7 @@ public extension StytchClient.Passwords {
     typealias CreateResponse = Response<CreateResponseData>
 
     /// The underlying data for passwords `create` calls.
-    struct CreateResponseData: Codable, AuthenticateResponseDataType {
+    struct CreateResponseData: Decodable, AuthenticateResponseDataType {
         public let emailId: String
         public let userId: String
         public let user: User
@@ -106,7 +106,7 @@ public extension StytchClient.Passwords {
         ///  - Parameters:
         ///    - email: The user's email address.
         ///    - password: The user's password.
-        ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
         public init(email: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.email = email
             self.password = password
@@ -206,3 +206,7 @@ public extension StytchClient.Passwords {
         }
     }
 }
+
+#if DEBUG
+extension StytchClient.Passwords.CreateResponseData: Encodable {}
+#endif

@@ -40,7 +40,6 @@
 		2290907A284D9F4600ADD3C4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909078284D9F4600ADD3C4 /* Extensions.swift */; };
 		2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
 		2290907D284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */; };
-		22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2290907E284DADB700ADD3C4 /* JSON.swift */; };
 		22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */; };
 		22909087284DBBB800ADD3C4 /* InMemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */; };
 		22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909088284DBC1900ADD3C4 /* JWT.swift */; };
@@ -52,6 +51,8 @@
 		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
 		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
+		22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
+		22E2E06228ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,7 +75,6 @@
 		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		22909078284D9F4600ADD3C4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationOptionsView.swift; sourceTree = "<group>"; };
-		2290907E284DADB700ADD3C4 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		22909082284DB76B00ADD3C4 /* FileBackedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBackedStorage.swift; sourceTree = "<group>"; };
 		22909086284DBBB800ADD3C4 /* InMemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStorage.swift; sourceTree = "<group>"; };
 		22909088284DBC1900ADD3C4 /* JWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWT.swift; sourceTree = "<group>"; };
@@ -89,6 +89,7 @@
 		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
 		22BE9A1128481EFE00E29245 /* ServerRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRunner.swift; sourceTree = "<group>"; };
 		22D4F3CF2857DE26001FA1EC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthAuthenticationView.swift; sourceTree = "<group>"; };
 		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,6 +144,7 @@
 				22909078284D9F4600ADD3C4 /* Extensions.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
 				2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */,
+				22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */,
 				22909094284DD5EE00ADD3C4 /* HobbiesView.swift */,
 				224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */,
 				223F88BB2894D08500CE2B0C /* Passwords */,
@@ -238,7 +240,6 @@
 				22BE9A1128481EFE00E29245 /* ServerRunner.swift */,
 				2290908B284DC2F300ADD3C4 /* Storage */,
 				2290908A284DC2E600ADD3C4 /* Controllers */,
-				2290907E284DADB700ADD3C4 /* JSON.swift */,
 				22909088284DBC1900ADD3C4 /* JWT.swift */,
 				22909090284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift */,
 			);
@@ -324,7 +325,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					229B82172809EA3F007BC3F1 = {
 						CreatedOnToolsVersion = 13.3;
@@ -395,6 +396,7 @@
 				22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B6289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
 				223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
 				223F88B92894D05000CE2B0C /* ResetPasswordView.swift in Sources */,
@@ -415,6 +417,7 @@
 				22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B7289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				22E2E06228ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
 				223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,
 				223F88BA2894D05000CE2B0C /* ResetPasswordView.swift in Sources */,
@@ -429,7 +432,6 @@
 			files = (
 				2290908D284DC30D00ADD3C4 /* AuthController.swift in Sources */,
 				2290908F284DC35900ADD3C4 /* HobbiesController.swift in Sources */,
-				22909081284DAE4D00ADD3C4 /* JSON.swift in Sources */,
 				22909089284DBC1A00ADD3C4 /* JWT.swift in Sources */,
 				22909085284DB77B00ADD3C4 /* FileBackedStorage.swift in Sources */,
 				22909091284DC5DE00ADD3C4 /* HttpRequest+Stytch.swift in Sources */,
@@ -484,6 +486,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -542,6 +545,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -632,9 +636,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -662,9 +668,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Client/macOS/macOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -690,6 +698,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
@@ -704,6 +713,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.2;

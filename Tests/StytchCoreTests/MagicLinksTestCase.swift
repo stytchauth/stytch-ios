@@ -16,13 +16,13 @@ final class MagicLinksTestCase: BaseTestCase {
             signupExpiration: 30
         )
 
-        XCTAssertTrue(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
@@ -43,9 +43,9 @@ final class MagicLinksTestCase: BaseTestCase {
 
         await XCTAssertThrowsError(try await StytchClient.magicLinks.authenticate(parameters: parameters))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchEMLPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .emlPKCECodeVerifier)
 
-        XCTAssertNotNil(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.emlPKCECodeVerifier))
 
         Current.timer = { _, _, _ in .init() }
 
@@ -57,7 +57,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
 
-        XCTAssertTrue(try Current.keychainClient.get(.stytchEMLPKCECodeVerifier).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
 
         // Verify request
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")

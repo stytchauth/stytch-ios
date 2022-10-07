@@ -10,6 +10,7 @@ struct AuthenticationOptionsView: View {
         VStack {
             NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
                 .padding()
+
             NavigationLink("Authenticate with Password") {
                 PasswordAuthenticationView {
                     onAuth($0, $1)
@@ -17,8 +18,17 @@ struct AuthenticationOptionsView: View {
                 }
             }
             .padding()
+
             NavigationLink("Authenticate with OTP") {
                 OTPAuthenticationView(session: session) {
+                    onAuth($0, $1)
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .padding()
+
+            NavigationLink("Authenticate with OAuth") {
+                OAuthAuthenticationView {
                     onAuth($0, $1)
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -37,14 +47,12 @@ struct AuthenticationOptionsView: View {
                         }
                     }
                 }
-            } else if
-                let session = session,
-                case let .email(email) = session.authenticationFactors.first(where: { if case .email = $0.deliveryMethod { return true } else { return false } })?.deliveryMethod
-            {
+                .padding()
+            } else if session != nil {
                 Button("Register Biometrics") {
                     Task {
                         do {
-                            let resp = try await StytchClient.biometrics.register(parameters: .init(identifier: email.emailAddress))
+                            let resp = try await StytchClient.biometrics.register(parameters: .init(identifier: ""))
                             onAuth(resp.session, resp.user)
                             presentationMode.wrappedValue.dismiss()
                         } catch {
@@ -52,6 +60,7 @@ struct AuthenticationOptionsView: View {
                         }
                     }
                 }
+                .padding()
             }
         }
     }

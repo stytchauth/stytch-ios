@@ -1,4 +1,9 @@
 import Foundation
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 // swiftlint:disable identifier_name
 #if DEBUG
@@ -45,6 +50,8 @@ extension StytchClient {
 
         var defaults: UserDefaults = .standard
 
+        var appleOAuthClient: AppleOAuthClient = .live
+
         var networkingClient: NetworkingClient = .live
 
         var cryptoClient: CryptoClient = .live
@@ -65,6 +72,16 @@ extension StytchClient {
             let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
             runloop.add(timer, forMode: .common)
             return timer
+        }
+
+        var openUrl: (URL) -> Void = { url in
+            DispatchQueue.main.async {
+                #if os(macOS)
+                NSWorkspace.shared.open(url)
+                #else
+                UIApplication.shared.open(url)
+                #endif
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
 
         await XCTAssertThrowsError(try await StytchClient.handle(url: handledUrl))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .stytchEMLPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .emlPKCECodeVerifier)
 
         Current.timer = { _, _, _ in .init() }
 
