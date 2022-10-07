@@ -33,7 +33,7 @@ final class OAuthTestCase: BaseTestCase {
     }
 }
 
-// #if !os(watchOS)
+#if !os(watchOS)
 extension OAuthTestCase {
     func testThirdParty() throws {
         var url: URL!
@@ -89,5 +89,4 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
         }
     }
 }
-
-// #endif
+#endif
