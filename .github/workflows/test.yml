@@ -37,7 +37,15 @@ jobs:
       run: make lint
 
     - name: Test
-      run: make test
+      run: |
+        # test macOS
+        make test
+        # test iOS
+        xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk iphonesimulator16.0 -destination "OS=16.0,name=iPhone 13 Mini"
+        # test tvOS
+        xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk appletvsimulator16.0 -destination "OS=16.0,name=Apple TV"
+        # test watchOS
+        xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk watchsimulator9.0 -destination "OS=9.0,name=Apple Watch Ultra (49mm)"
 
     - name: Coverage
       run: |
