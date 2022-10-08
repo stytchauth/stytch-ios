@@ -2,6 +2,7 @@ import CryptoKit
 import XCTest
 @testable import StytchCore
 
+#if !os(tvOS) && !os(watchOS)
 final class BiometricsTestCase: BaseTestCase {
     func testRegistration() async throws {
         XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
@@ -86,3 +87,4 @@ final class BiometricsTestCase: BaseTestCase {
         _ = try await StytchClient.biometrics.authenticate(parameters: .init())
     }
 }
+#endif

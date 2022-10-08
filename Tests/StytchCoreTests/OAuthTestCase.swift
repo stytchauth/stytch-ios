@@ -17,6 +17,24 @@ final class OAuthTestCase: BaseTestCase {
         )
     }
 
+    func testAuthenticate() async throws {
+        var request: URLRequest!
+        Current.networkingClient = try .success(verifyingRequest: { request = $0 }, AuthenticateResponse.mock)
+        Current.timer = { _, _, _ in .init() }
+
+        await XCTAssertThrowsError(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
+        _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
+        _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
+
+        XCTAssertEqual(
+            request.httpBody,
+            .init("{\"token\":\"i-am-token\",\"session_duration_minutes\":12,\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\"}".utf8)
+        )
+    }
+}
+
+#if !os(watchOS)
+extension OAuthTestCase {
     func testThirdParty() throws {
         var url: URL!
         Current.openUrl = { url = $0 }
@@ -38,21 +56,6 @@ final class OAuthTestCase: BaseTestCase {
         }
 
         XCTAssertNotNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
-    }
-
-    func testAuthenticate() async throws {
-        var request: URLRequest!
-        Current.networkingClient = try .success(verifyingRequest: { request = $0 }, AuthenticateResponse.mock)
-        Current.timer = { _, _, _ in .init() }
-
-        await XCTAssertThrowsError(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
-        _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
-        _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
-
-        XCTAssertEqual(
-            request.httpBody,
-            .init("{\"token\":\"i-am-token\",\"session_duration_minutes\":12,\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\"}".utf8)
-        )
     }
 }
 
@@ -86,3 +89,4 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
         }
     }
 }
+#endif

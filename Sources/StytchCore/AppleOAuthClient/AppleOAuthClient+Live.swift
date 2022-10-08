@@ -1,14 +1,14 @@
 import AuthenticationServices
 
 extension AppleOAuthClient {
-    static let live: Self = .init { presentationContextProvider, nonce in
+    static let live: Self = .init { configureController, nonce in
         let provider: ASAuthorizationAppleIDProvider = .init()
         let request = provider.createRequest()
         request.requestedScopes = [.email, .fullName]
         request.nonce = nonce
 
         let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.presentationContextProvider = presentationContextProvider
+        configureController(controller)
         let delegate: Self.Delegate = .init()
         controller.delegate = delegate
 

@@ -26,11 +26,14 @@ public extension StytchClient {
 }
 
 public extension StytchClient.OAuth {
-    /// The interface for authenticating a user with Amazon.
-    var amazon: ThirdParty { .init(provider: .amazon) }
-
     /// The interface for authenticating a user with Apple.
     var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
+}
+
+#if !os(watchOS)
+public extension StytchClient.OAuth {
+    /// The interface for authenticating a user with Amazon.
+    var amazon: ThirdParty { .init(provider: .amazon) }
 
     /// The interface for authenticating a user with Bitbucket.
     var bitbucket: ThirdParty { .init(provider: .bitbucket) }
@@ -65,6 +68,7 @@ public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Twitch.
     var twitch: ThirdParty { .init(provider: .twitch) }
 }
+#endif
 
 public extension StytchClient.OAuth {
     /// The dedicated parameters type for ``authenticate(parameters:)-172ak`` calls.

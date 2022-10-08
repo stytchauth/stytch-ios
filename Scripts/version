@@ -1,0 +1,49 @@
+#! /usr/bin/env ruby
+#
+VERSION_FILE_PATH = 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
+
+def project_root
+  File.expand_path('../../', __FILE__)
+end
+
+def version_file
+  File.join(project_root, VERSION_FILE_PATH)
+end
+
+def current_version
+  version = File.readlines(version_file)[1].sub(/.*major: (\d+), minor: (\d+), patch: (\d+).*/, '\1.\2.\3')
+
+  version.strip
+end
+
+def increment_version(increment_type)
+  major, minor, patch = current_version.split('.').map(&:to_i)
+
+  case increment_type
+  when 'major'
+    major += 1
+    patch = 0
+  when 'minor'
+    minor += 1
+    patch = 0
+  when 'patch'
+    patch += 1
+  else
+    puts 'Unexpected or missing increment type'
+    exit 1
+  end
+
+  new_contents = """extension Version {
+    static let current: Self = .init(major: #{major}, minor: #{minor}, patch: #{patch})
+}\n"""
+  File.open(version_file, 'w') do |file|
+    file.write(new_contents)
+  end
+end
+
+case ARGV[0]
+when 'show-current'
+  puts current_version
+when 'increment'
+  increment_version(ARGV[1])
+end
