@@ -12,12 +12,16 @@ jobs:
 
     - uses: actions/checkout@v3
 
+    - name: Bootstrap
+      run: |
+        make setup
+        make tools
+
     - name: Publish to Cocoapods
       run: |
-        gem install cocoapods
         set -eo pipefail
-        pod lib lint --allow-warnings
-        pod trunk push --allow-warnings
+        bundle exec pod lib lint --allow-warnings
+        bundle exec pod trunk push --allow-warnings
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
 
