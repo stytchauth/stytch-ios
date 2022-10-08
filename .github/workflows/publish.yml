@@ -1,0 +1,28 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: [ self-hosted, apple-silicon ]
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Publish to Cocoapods
+      run: |
+        gem install cocoapods
+        set -eo pipefail
+        pod lib lint --allow-warnings
+        pod trunk push --allow-warnings
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
+#     - name: Publish to Carthage
+#       run: Scripts/publish-to-carthage ${{ github.ref_name }}
+#       env:
+#         S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+#         S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}

@@ -1,0 +1,23 @@
+#! /usr/bin/env ruby
+
+require 'json'
+require 'net/http'
+require 'uri'
+
+version = ARGV[0]
+
+# fetch current carthage json file
+uri = URI('https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json')
+res = Net::HTTP.get_response(uri)
+response = res.body if res.is_a?(Net::HTTPSuccess)
+# parse into hash
+hash = JSON.parse(response)
+
+# add new version to hash
+hash[version] = "https://github.com/stytchauth/stytch-swift/releases/download/#{version}/StytchCore.xcframework.zip"
+
+# create tmp json file
+puts hash
+
+# publish json file to s3
+

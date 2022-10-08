@@ -11,6 +11,24 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - platform
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - semver-major
+        - breaking-change
+    - title: Exciting New Features and Notable Changes 🎉
+      labels:
+        - semver-minor
+        - enhancement
+    - title: Other Changes
+      labels:
+        - "*"
+
 jobs:
   release:
     runs-on: [ self-hosted, apple-silicon ]
@@ -42,11 +60,13 @@ jobs:
         cd .build/Build/Products/Release-iphoneos
         zip -r StytchCore.doccarchive.zip StytchCore.doccarchive
 
-    - name: Release
+    - name: Publish to GitHub
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        draft: true # TODO: - change this so it's not draft
+        draft: true # Should be edited and published manually to trigger cocoapods/carthage updates, if changed here, must change "types: [created]" for Publish workflow
         files: |
           StytchCore.xcframework.zip
           .build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip
+        generate_release_notes: true
+
