@@ -12,8 +12,6 @@ on:
 
 jobs:
   release:
-    env:
-      GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
 
     runs-on: [ self-hosted, apple-silicon ]
 
@@ -24,11 +22,12 @@ jobs:
     - name: Ensure unique tag
       run: if [[ $(git tag -l $(Scripts/version show-current)) ]]; then exit 1; fi
 
-    - name: Create tag
-      run: git tag $(Scripts/version show-current)
-
-    - name: Push tag
-      run: git push --tags
+    - name: Create and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: |
+        git tag $(Scripts/version show-current)
+        git push --tags
 
     - name: Bump version
       run: |
@@ -37,3 +36,8 @@ jobs:
         git commit -m "[version] Increment to $(Scripts/version show-current)" --author "CI <ci@stytch.com>"
         gh pr create --body 'As titled' --fill
         gh pr merge --auto
+
+    - name: Approve version PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: gh pr review --approve
