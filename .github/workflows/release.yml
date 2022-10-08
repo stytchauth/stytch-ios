@@ -26,8 +26,8 @@ jobs:
 
     - name: Ensure SDK version matches current tag
       run: |
-        if [[ "$(Scripts/current-version)" != ${{ github.ref_name }} ]]; then
-          echo "Tag '${{ github.ref_name }}' not equal to $(Scripts/current-version)"
+        if [[ "$(Scripts/version show-current)" != ${{ github.ref_name }} ]]; then
+          echo "Tag '${{ github.ref_name }}' not equal to $(Scripts/version show-current)"
           exit 1
         fi
 
