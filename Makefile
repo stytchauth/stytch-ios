@@ -1,5 +1,5 @@
-IOS_VERSION=$(xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
-WATCHOS_VERSION=$(xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
+IOS_VERSION := $(shell xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
+WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
 
 ARM64=arch -arm64
 PIPEFAIL=set -o pipefail
