@@ -1,5 +1,5 @@
-OS_VERSION=16.0
-WATCH_OS_VERSION=9.0
+IOS_VERSION=xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/'
+WATCHOS_VERSION=xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/'
 
 ARM64=arch -arm64
 PIPEFAIL=set -o pipefail
@@ -20,7 +20,7 @@ demo:
 	bundle exec --gemfile=StytchDemo/Gemfile Scripts/demo start
 
 docs: codegen
-	$(ARM64) xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$$(xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/') -destination generic/platform=iOS -derivedDataPath .build
+	$(ARM64) xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
 
 docs-site: docs
 	$(ARM64) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs --hosting-base-path stytch-swift
@@ -40,13 +40,13 @@ test tests test-macos: codegen
 	$(ARM64) swift test --enable-code-coverage
 
 test-ios: codegen
-	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk iphonesimulator$(OS_VERSION) -destination "OS=$(OS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
+	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
 
 test-tvos: codegen
-	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk appletvsimulator$(OS_VERSION) -destination "OS=$(OS_VERSION),name=Apple TV" | $(XCPRETTY)
+	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
 
 test-watchos: codegen
-	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk watchsimulator$(WATCH_OS_VERSION) -destination "OS=$(WATCH_OS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
+	$(PIPEFAIL) && $(ARM64) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 tools:
 	$(ARM64) mint bootstrap
