@@ -11,24 +11,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
-changelog:
-  exclude:
-    labels:
-      - ignore-for-release
-      - platform
-  categories:
-    - title: Breaking Changes 🛠
-      labels:
-        - semver-major
-        - breaking-change
-    - title: Exciting New Features and Notable Changes 🎉
-      labels:
-        - semver-minor
-        - enhancement
-    - title: Other Changes
-      labels:
-        - "*"
-
 jobs:
   release:
     runs-on: [ self-hosted, apple-silicon ]
