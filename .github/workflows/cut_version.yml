@@ -5,11 +5,10 @@ on:
     inputs:
       release_type:
         type: choice
-        description: The intended type of release
+        description: The intended type of release (patch requires manual handling)
         options:
           - major
           - minor
-          - patch
 
 jobs:
   release:
@@ -17,13 +16,20 @@ jobs:
 
     steps:
 
-    - name: Release type
-      run: |
-        echo "Release type: ${{ github.event.inputs.release_type }}"
+    - uses: actions/checkout@v3
 
-      # ensure tag doesn't exist
-      # check that version has already been incremented appropriately for corresponding release type
-      # create tag
-      # push tag
-      # create PR for incrementing version (major/minor only)
-      # Add semver-${{ github.event.inputs.release_type }} label to PR
+    - name: Ensure unique tag
+      run: if [[ $(git tag -l $(Scripts/version show-current)) ]]; then exit 1; fi
+
+    - name: Create tag
+      run: git tag $(Scripts/version show-current)
+
+    - name: Push tag
+      run: git push --tags
+
+    - name: Bump version
+      run: |
+        Scripts/version increment ${{ github.event.inputs.release_type }}
+        git add 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
+        git commit -m "[version] Increment to $(Scripts/version show-current)" --author "ci@stytch.com"
+        gh pr create --body 'As titled' --fill
