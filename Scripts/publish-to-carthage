@@ -29,15 +29,11 @@ file_contents = JSON.pretty_generate(hash)
 # delete the tmp file
 tmp_file.unlink
 
-# publish updated content to s3 and adjust ACL to public-read
+# publish updated content to s3
 s3_client.put_object(
   bucket: S3_BUCKET,
   key: S3_OBJECT_KEY,
   body: file_contents,
+  acl: 'public-read',
   content_type: 'application/json'
-)
-s3_client.put_object_acl(
-  bucket: S3_BUCKET,
-  key: S3_OBJECT_KEY,
-  acl: 'public-read'
 )
