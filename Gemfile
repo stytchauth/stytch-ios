@@ -3,5 +3,5 @@
 source "https://rubygems.org"
 
 gem 'aws-sdk-s3'
-gem 'xcpretty'
 gem 'cocoapods'
+gem 'xcpretty'
