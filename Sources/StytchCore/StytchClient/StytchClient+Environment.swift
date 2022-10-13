@@ -74,6 +74,7 @@ extension StytchClient {
             return timer
         }
 
+        #if !os(watchOS)
         var openUrl: (URL) -> Void = { url in
             DispatchQueue.main.async {
                 #if os(macOS)
@@ -83,5 +84,6 @@ extension StytchClient {
                 #endif
             }
         }
+        #endif
     }
 }

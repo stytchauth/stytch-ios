@@ -1,0 +1,39 @@
+#! /usr/bin/env ruby
+
+require 'aws-sdk-s3'
+require 'json'
+require 'tempfile'
+
+version = ARGV[0]
+
+S3_REGION = 'us-east-1'
+S3_BUCKET = 'public-assets-stytch-com'
+S3_OBJECT_KEY = 'sdks/swift/carthage/StytchCore.json'
+
+s3_client = Aws::S3::Client.new(region: S3_REGION)
+
+tmp_file = Tempfile.new
+
+# get the existing carthage json file
+s3_client.get_object(
+  response_target: tmp_file.path,
+  bucket: S3_BUCKET,
+  key: S3_OBJECT_KEY
+)
+
+# parse into hash, add new version to hash, and pretty print contents
+hash = JSON.parse(tmp_file.read)
+hash[version] = "https://github.com/stytchauth/stytch-swift/releases/download/#{version}/StytchCore.xcframework.zip"
+file_contents = JSON.pretty_generate(hash)
+
+# delete the tmp file
+tmp_file.unlink
+
+# publish updated content to s3
+s3_client.put_object(
+  bucket: S3_BUCKET,
+  key: S3_OBJECT_KEY,
+  body: file_contents,
+  acl: 'public-read',
+  content_type: 'application/json'
+)

@@ -1,17 +1,17 @@
 import AuthenticationServices
 
 struct AppleOAuthClient {
-    private var authenticate: (ASAuthorizationControllerPresentationContextProviding?, String) async throws -> Result
+    private var authenticate: (@escaping (ASAuthorizationController) -> Void, String) async throws -> Result
 
-    init(authenticate: @escaping (ASAuthorizationControllerPresentationContextProviding?, String) async throws -> AppleOAuthClient.Result) {
+    init(authenticate: @escaping (@escaping (ASAuthorizationController) -> Void, String) async throws -> AppleOAuthClient.Result) {
         self.authenticate = authenticate
     }
 
     func authenticate(
-        presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil,
+        configureController: @escaping (ASAuthorizationController) -> Void,
         nonce: String
     ) async throws -> Result {
-        try await authenticate(presentationContextProvider, nonce)
+        try await authenticate(configureController, nonce)
     }
 }
 

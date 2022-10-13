@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: [ self-hosted, apple-silicon ]
+
+    steps:
+
+    - uses: actions/checkout@v3
+      ref: ${{ github.event.release.tag_name }}
+
+    - name: Bootstrap
+      run: |
+        make setup
+        make tools
+
+    - name: Publish to Cocoapods
+      run: |
+        set -eo pipefail
+        bundle exec pod lib lint --allow-warnings
+        bundle exec pod trunk push --allow-warnings
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
+    - name: Publish to Carthage
+      run: bundle exec Scripts/publish-to-carthage $(Scripts/version show-current)
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

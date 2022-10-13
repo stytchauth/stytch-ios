@@ -1,0 +1,43 @@
+name: Cut version
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        description: The intended type of release (patch requires manual handling)
+        options:
+          - major
+          - minor
+
+jobs:
+  release:
+
+    runs-on: [ self-hosted, apple-silicon ]
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Ensure unique tag
+      run: if [[ $(git tag -l $(Scripts/version show-current)) ]]; then exit 1; fi
+
+    - name: Create and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: |
+        git tag $(Scripts/version show-current)
+        git push --tags
+
+    - name: Bump version
+      run: |
+        Scripts/version increment ${{ github.event.inputs.release_type }}
+        git add 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
+        git commit -m "[version] Increment to $(Scripts/version show-current)" --author "CI <ci@stytch.com>"
+        gh pr create --body 'As titled' --fill
+        gh pr merge --auto
+
+    - name: Approve version PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      run: gh pr review --approve
