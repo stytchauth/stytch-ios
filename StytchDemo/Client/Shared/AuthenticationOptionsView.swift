@@ -19,6 +19,17 @@ struct AuthenticationOptionsView: View {
             }
             .padding()
 
+            if #available(iOS 16.0, macOS 13.0, *), session != nil {
+                NavigationLink("Authenticate with Passkeys") {
+                    PasskeysAuthenticationView {
+                        onAuth($0, $1)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .padding()
+                }
+                .padding()
+            }
+
             NavigationLink("Authenticate with OTP") {
                 OTPAuthenticationView(session: session) {
                     onAuth($0, $1)
