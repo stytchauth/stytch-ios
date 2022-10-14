@@ -18,7 +18,7 @@ enum BaseRoute: RouteType {
         case let .otps(route):
             return "otps".appendingPath(route.path)
         case let .passkeys(route):
-            return "web_authn".appendingPath(route.path)
+            return "webauthn".appendingPath(route.path)
         case let .passwords(route):
             return "passwords".appendingPath(route.path)
         case let .sessions(route):
