@@ -36,6 +36,12 @@ setup:
 	$(ARM64) brew bundle
 	$(ARM64) bundle install
 
+test-all: codegen
+	$(MAKE) test
+	$(MAKE) test-ios
+	$(MAKE) test-tvos
+	$(MAKE) test-watchos
+
 test tests test-macos: codegen
 	$(ARM64) swift test --enable-code-coverage
 
