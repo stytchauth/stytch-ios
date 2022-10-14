@@ -24,10 +24,10 @@ struct PasskeysAuthenticationView: View {
         case .register:
             TextField("Username", text: $username)
                 .textContentType(.username)
-                #if os(iOS)
+            #if os(iOS)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
-                #endif
+            #endif
             Button("Register") {
                 Task {
                     do {
