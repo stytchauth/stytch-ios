@@ -87,6 +87,7 @@ public extension StytchClient.Passkeys {
     }
 
     struct AuthenticateParameters {
+        // swiftlint:disable duplicate_enum_cases
         public enum RequestBehavior {
             #if os(iOS)
             case `default`(preferLocalCredentials: Bool)
@@ -101,6 +102,8 @@ public extension StytchClient.Passkeys {
             public static let defaultPlatformValue: RequestBehavior = .default
             #endif
         }
+
+        // swiftlint:enable duplicate_enum_cases
 
         let domain: String
         let sessionDuration: Minutes

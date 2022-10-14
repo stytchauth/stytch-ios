@@ -17,7 +17,7 @@ final class PasskeysTestCase: BaseTestCase {
             BasicResponse(requestId: "request_id_123", statusCode: 200)
         )
         Current.passkeysClient.registerCredential = { _, _, _, _ in
-            return MockRegistration(
+            MockRegistration(
                 rawAttestationObject: .init("fake_attestation_data".utf8),
                 rawClientDataJSON: .init("fake_json".utf8),
                 credentialID: .init("fake_id".utf8)
@@ -63,12 +63,15 @@ final class PasskeysTestCase: BaseTestCase {
     }
 }
 
+// swiftlint:disable unavailable_function
 final class MockAssertion: NSObject, ASAuthorizationPublicKeyCredentialAssertion {
-    var rawAuthenticatorData: Data!
+    static var supportsSecureCoding: Bool = false
 
-    var userID: Data!
+    var rawAuthenticatorData: Data
 
-    var signature: Data!
+    var userID: Data
+
+    var signature: Data
 
     var rawClientDataJSON: Data
 
@@ -88,21 +91,20 @@ final class MockAssertion: NSObject, ASAuthorizationPublicKeyCredentialAssertion
         self.credentialID = credentialID
     }
 
-    func copy(with zone: NSZone? = nil) -> Any {
-        fatalError()
+    init?(coder _: NSCoder) {
+        fatalError("Unimplemented")
     }
 
-    static var supportsSecureCoding: Bool = false
-
-    func encode(with coder: NSCoder) {
+    func copy(with _: NSZone? = nil) -> Any {
+        fatalError("Unimplemented")
     }
 
-    init?(coder: NSCoder) {
-        fatalError()
-    }
+    func encode(with _: NSCoder) {}
 }
 
 final class MockRegistration: NSObject, ASAuthorizationPublicKeyCredentialRegistration {
+    static var supportsSecureCoding: Bool = false
+
     var rawAttestationObject: Data?
 
     var rawClientDataJSON: Data
@@ -115,16 +117,15 @@ final class MockRegistration: NSObject, ASAuthorizationPublicKeyCredentialRegist
         self.credentialID = credentialID
     }
 
-    func copy(with zone: NSZone? = nil) -> Any {
-        fatalError()
+    init?(coder _: NSCoder) {
+        fatalError("Unimplemented")
     }
 
-    static var supportsSecureCoding: Bool = false
-
-    func encode(with coder: NSCoder) {
+    func copy(with _: NSZone? = nil) -> Any {
+        fatalError("Unimplemented")
     }
 
-    init?(coder: NSCoder) {
-        fatalError()
-    }
+    func encode(with _: NSCoder) {}
 }
+
+// swiftlint:enable unavailable_function
