@@ -5,6 +5,7 @@
 import Combine
 import Foundation
 
+{% if type.annotations.ExcludeWatchOS %}#if !os(watchOS){% endif %}
 {% for attribute in type.attributes.available %}{{ attribute }}{% endfor %}
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
@@ -43,6 +44,8 @@ public extension {{ type.name }} {
         .eraseToAnyPublisher()
     }
 }
+{% if type.annotations.ExcludeWatchOS %}#endif{% endif %}
+
 // sourcery:end
 {% endfor %}
 {% endfor %}

@@ -2,7 +2,8 @@ import AuthenticationServices
 import XCTest
 @testable import StytchCore
 
-@available(macOS 12.0, iOS 16.0, *)
+#if !os(watchOS)
+@available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 final class PasskeysTestCase: BaseTestCase {
     func testRegister() async throws {
         var requests: [URLRequest] = []
@@ -41,9 +42,11 @@ final class PasskeysTestCase: BaseTestCase {
         Current.networkingClient = try .success(verifyingRequest: { requests.append($0) }, startResponse, AuthenticateResponse.mock)
         var requestBehaviorIsAutoFill = false
         Current.passkeysClient.assertCredential = { _, _, requestBehavior in
+            #if os(iOS)
             if case .autoFill = requestBehavior {
                 requestBehaviorIsAutoFill = true
             }
+            #endif
             return MockAssertion(
                 rawAuthenticatorData: .init("fake_auth_data".utf8),
                 userID: .init("fake_user_id".utf8),
@@ -53,8 +56,17 @@ final class PasskeysTestCase: BaseTestCase {
             )
         }
         Current.timer = { _, _, _ in .init() }
-        _ = try await StytchClient.passkeys.authenticate(parameters: .init(domain: "something.blah.com", requestBehavior: .autoFill))
+        #if os(iOS)
+        let parameters: StytchClient.Passkeys.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .autoFill)
+        #else
+        let parameters: StytchClient.Passkeys.AuthenticateParameters = .init(domain: "something.blah.com")
+        #endif
+        _ = try await StytchClient.passkeys.authenticate(parameters: parameters)
+        #if os(iOS)
         XCTAssertTrue(requestBehaviorIsAutoFill)
+        #else
+        XCTAssertFalse(requestBehaviorIsAutoFill)
+        #endif
         XCTAssertEqual(requests[0].httpBody, Data("{\"domain\":\"something.blah.com\"}".utf8))
         XCTAssertEqual(requests[1].httpBody, Data("{\"session_duration_minutes\":30,\"public_key_credential\":\"{\\\"rawId\\\":\\\"ZmFrZV9pZA\\\",\\\"id\\\":\\\"ZmFrZV9pZA\\\",\\\"response\\\":{\\\"clientDataJSON\\\":\\\"ZmFrZV9qc29u\\\",\\\"signature\\\":\\\"ZmFrZV9zaWduYXR1cmU\\\",\\\"authenticatorData\\\":\\\"ZmFrZV9hdXRoX2RhdGE\\\",\\\"userHandle\\\":\\\"ZmFrZV91c2VyX2lk\\\"},\\\"type\\\":\\\"public-key\\\"}\"}".utf8))
         XCTAssertEqual(requests[0].url?.absoluteString, "https://web.stytch.com/sdk/v1/webauthn/authenticate/start")
@@ -129,3 +141,4 @@ final class MockRegistration: NSObject, ASAuthorizationPublicKeyCredentialRegist
 }
 
 // swiftlint:enable unavailable_function
+#endif

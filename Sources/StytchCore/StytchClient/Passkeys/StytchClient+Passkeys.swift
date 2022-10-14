@@ -3,6 +3,7 @@ import Foundation
 #if !os(watchOS)
 public extension StytchClient {
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
+    // sourcery: ExcludeWatchOS
     struct Passkeys {
         let router: NetworkingRouter<PasskeysRoute>
 
