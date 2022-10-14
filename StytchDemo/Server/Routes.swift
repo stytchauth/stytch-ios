@@ -14,7 +14,7 @@ private extension HttpServer {
         GET["/apple-app-site-association", "/.well-known/apple-app-site-association"] = { _ in
             .ok(.json([
                 "applinks": ["details": [["appIDs": [configuration.appleAppId]]]],
-                "webcredentials": ["apps": [configuration.appleAppId]]
+                "webcredentials": ["apps": [configuration.appleAppId]],
             ]))
         }
 
