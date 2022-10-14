@@ -1,6 +1,7 @@
 import AuthenticationServices
 
-@available(macOS 12.0, iOS 16.0, *)
+#if !os(watchOS)
+@available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 extension PasskeysClient {
     static let live: Self = .init(
         registerCredential: { domain, challenge, username, userId in
@@ -39,10 +40,15 @@ extension PasskeysClient {
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
                 delegate.continuation = continuation
                 switch requestBehavior {
+                #if os(iOS)
                 case .autoFill:
                     controller.performAutoFillAssistedRequests()
                 case let .default(preferLocalCredentials):
                     controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
+                #else
+                case .default:
+                    controller.performRequests()
+                #endif
                 }
             }
 
@@ -55,7 +61,7 @@ extension PasskeysClient {
     )
 }
 
-@available(macOS 12.0, iOS 16.0, *)
+@available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 extension PasskeysClient {
     final class Delegate: NSObject, ASAuthorizationControllerDelegate {
         var continuation: CheckedContinuation<ASAuthorizationCredential, Error>?
@@ -75,3 +81,4 @@ extension PasskeysClient {
         }
     }
 }
+#endif
