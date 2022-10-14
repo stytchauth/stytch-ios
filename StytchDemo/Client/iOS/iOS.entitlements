@@ -9,6 +9,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:example.com</string>
+		<string>webcredentials: example.com</string>
 	</array>
 </dict>
 </plist>

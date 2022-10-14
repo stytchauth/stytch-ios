@@ -70,12 +70,16 @@ class Runner
   def update_client_config(tunnel_url:)
     system("/usr/libexec/PlistBuddy -c 'set :StytchHostURL #{tunnel_url}' #{File.join(File.dirname(demo_project_file), "Client/Shared/StytchConfiguration.plist")}")
     [:iOS, :macOS].each do |client|
-      update_applinks_entitlement(tunnel_url: tunnel_url, client: client)
+      update_associated_domains_entitlement(tunnel_url: tunnel_url, client: client)
     end
   end
 
-  def update_applinks_entitlement(tunnel_url:,client:)
-    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{tunnel_url.sub('https://', '')}' #{File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")}")
+  def update_associated_domains_entitlement(tunnel_url:,client:)
+    puts client
+    domain = "#{tunnel_url.sub('https://', '')}"
+    entitlements_file = File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks: #{domain}' #{entitlements_file}")
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:1 webcredentials: #{domain}' #{entitlements_file}")
   end
 
   def prompt_for_redirect_url
