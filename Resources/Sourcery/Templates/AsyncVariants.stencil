@@ -5,6 +5,7 @@
 import Combine
 import Foundation
 
+{% for attribute in type.attributes.available %}{{ attribute }}{% endfor %}
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
 {% set methodDeclaration %}{{ methodName }}({% for parameter in method.parameters %}{{ parameter.asSource }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endset %}
