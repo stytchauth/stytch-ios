@@ -4,11 +4,13 @@ import Foundation
 public extension StytchClient {
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
     // sourcery: ExcludeWatchOS
+    /// docs
     struct Passkeys {
         let router: NetworkingRouter<PasskeysRoute>
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// docs
         public func register(parameters: RegisterParameters) async throws -> BasicResponse {
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
@@ -39,6 +41,7 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// docs
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: .authenticateStart,
@@ -70,6 +73,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
+    /// docs
     static var passkeys: Passkeys {
         .init(router: router.scopedRouter(BaseRoute.passkeys))
     }
@@ -77,29 +81,38 @@ public extension StytchClient {
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
+    /// docs
     struct RegisterParameters: Encodable {
         let domain: String
         let username: String
 
+        /// docs
         public init(domain: String, username: String) {
             self.domain = domain
             self.username = username
         }
     }
 
+    /// docs
     struct AuthenticateParameters {
         // swiftlint:disable duplicate_enum_cases
+        /// docs
         public enum RequestBehavior {
             #if os(iOS)
+            /// docs
             case `default`(preferLocalCredentials: Bool)
+            /// docs
             case autoFill
             #else
+            /// docs
             case `default`
             #endif
 
             #if os(iOS)
+            /// docs
             public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
             #else
+            /// docs
             public static let defaultPlatformValue: RequestBehavior = .default
             #endif
         }
@@ -110,6 +123,7 @@ public extension StytchClient.Passkeys {
         let sessionDuration: Minutes
         let requestBehavior: RequestBehavior
 
+        /// docs
         public init(
             domain: String,
             sessionDuration: Minutes = .defaultSessionDuration,
