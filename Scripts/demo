@@ -139,7 +139,6 @@ end
 case ARGV[0]
 when 'start'
   begin
-    # TODO: allow passing port through optparse
     Runner.new.run(port: 8080)
   rescue Interrupt
     Runner.new.cleanup
