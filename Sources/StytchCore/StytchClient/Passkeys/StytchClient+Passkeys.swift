@@ -24,7 +24,7 @@ public extension StytchClient {
                 userId: startResp.userId
             )
 
-            guard let attestationObject = credential.rawAttestationObject else { throw StytchError.oauthCredentialInvalid } // FIXME: - fix error
+            guard let attestationObject = credential.rawAttestationObject else { throw StytchError.passkeysMissingAttestationObject }
 
             let response: BasicResponse = try await router.post(
                 to: .register,
@@ -254,12 +254,11 @@ private extension StytchClient.Passkeys {
             try container.encode(response, forKey: .response)
         }
 
-        func wrapped(sessionDuration: Minutes? = nil) throws -> CredentialWrapper {
-            guard let credential = String(data: try JSONEncoder().encode(self), encoding: .utf8) else { throw StytchError.oauthCredentialInvalid } // FIXME: error
-            return CredentialWrapper(publicKeyCredential: credential, sessionDurationMinutes: sessionDuration)
+        func wrapped(sessionDuration: Minutes? = nil) throws -> CredentialContainer {
+            .init(publicKeyCredential: try asJson(encoder: .init()), sessionDurationMinutes: sessionDuration)
         }
 
-        struct CredentialWrapper: Encodable {
+        struct CredentialContainer: Encodable {
             let publicKeyCredential: String
             let sessionDurationMinutes: Minutes?
         }

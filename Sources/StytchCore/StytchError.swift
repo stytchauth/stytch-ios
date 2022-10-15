@@ -68,6 +68,18 @@ public extension StytchError {
         errorType: "oauth_generic_invalid_start_url",
         errorMessage: "The start url was invalid or improperly formatted."
     )
+    static let passkeysInvalidPublicKeyCredentialType: Self = .init(
+        errorType: "passkeys_invalid_credential_type",
+        errorMessage: "The public key credential type was not of the expected type."
+    )
+    static let passkeysMissingAttestationObject: Self = .init(
+        errorType: "passkeys_missing_attestation_object",
+        errorMessage: "The public key credential is missing the attestation object."
+    )
+    static let jsonDataNotConvertibleToString: Self = .init(
+        errorType: "json_data_not_convertible_to_string",
+        errorMessage: "JSON data unable to be converted to String type."
+    )
 }
 
 private extension URL {

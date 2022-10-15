@@ -47,7 +47,7 @@ extension KeychainClient {
                 querySegment[kSecAttrGeneric] = generic
             }
             if let accessControl = try? value.accessPolicy?.accessControl {
-                querySegment[kSecAttrAccessControl] = accessControl // FIXME: - messed up on ios 15 simulator
+                querySegment[kSecAttrAccessControl] = accessControl
             }
             return querySegment
         }
