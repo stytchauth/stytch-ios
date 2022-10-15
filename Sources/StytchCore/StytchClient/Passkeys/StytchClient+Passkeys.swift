@@ -2,15 +2,16 @@ import Foundation
 
 #if !os(watchOS)
 public extension StytchClient {
+    /// Passkeys are an extremely simple authentication mechanism which securely syncs key sets across your devices — access-controlled via FaceID/TouchID — ultimately enabling WebAuthN-powered public-key authentication with Stytch's servers.
+    /// NOTE: This initial implementation can only be used for second-factor authentication. A user must already be authenticated via another Stytch factor prior to calling these methods.
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
     // sourcery: ExcludeWatchOS
-    /// docs
     struct Passkeys {
         let router: NetworkingRouter<PasskeysRoute>
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// docs
+        /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
         public func register(parameters: RegisterParameters) async throws -> BasicResponse {
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
@@ -41,7 +42,7 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// docs
+        /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: .authenticateStart,
@@ -73,7 +74,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
-    /// docs
+    /// The interface for interacting with passkeys products.
     static var passkeys: Passkeys {
         .init(router: router.scopedRouter(BaseRoute.passkeys))
     }
@@ -81,38 +82,40 @@ public extension StytchClient {
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
-    /// docs
+    /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable {
         let domain: String
         let username: String
 
-        /// docs
+        /// - Parameters:
+        ///   - domain: The domain for which your passkey is to be registered.
+        ///   - username: The username associated with your user. In the future, it will be required this is a valid email address or phone number.
         public init(domain: String, username: String) {
             self.domain = domain
             self.username = username
         }
     }
 
-    /// docs
+    /// A dedicated parameters type for passkeys `authenticate` calls.
     struct AuthenticateParameters {
         // swiftlint:disable duplicate_enum_cases
-        /// docs
+        /// A type representing the desired request behavior
         public enum RequestBehavior {
             #if os(iOS)
-            /// docs
+            /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
             case `default`(preferLocalCredentials: Bool)
-            /// docs
+            /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
             case autoFill
             #else
-            /// docs
+            /// Uses the default request behavior
             case `default`
             #endif
 
             #if os(iOS)
-            /// docs
+            /// The RequestBehavior parameter's default value for this platform — `.default(prefersLocalCredentials: false)`
             public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
             #else
-            /// docs
+            /// The RequestBehavior parameter's default value for this platform — `.default`
             public static let defaultPlatformValue: RequestBehavior = .default
             #endif
         }
@@ -123,7 +126,10 @@ public extension StytchClient.Passkeys {
         let sessionDuration: Minutes
         let requestBehavior: RequestBehavior
 
-        /// docs
+        /// - Parameters:
+        ///   - domain: The domain for which your passkey is to be registered.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - requestBehavior: The  desired behavior of the authentication request. Defaults to a value specific for the platform `RequestBehavior.defaultPlatformValue`
         public init(
             domain: String,
             sessionDuration: Minutes = .defaultSessionDuration,
