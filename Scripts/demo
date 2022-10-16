@@ -75,11 +75,10 @@ class Runner
   end
 
   def update_associated_domains_entitlement(tunnel_url:,client:)
-    puts client
     domain = "#{tunnel_url.sub('https://', '')}"
     entitlements_file = File.join(File.dirname(demo_project_file), "Client/#{client}/#{client}.entitlements")
-    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks: #{domain}' #{entitlements_file}")
-    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:1 webcredentials: #{domain}' #{entitlements_file}")
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:0 applinks:#{domain}' #{entitlements_file}")
+    system("/usr/libexec/PlistBuddy -c 'set :com.apple.developer.associated-domains:1 webcredentials:#{domain}' #{entitlements_file}")
   end
 
   def prompt_for_redirect_url
