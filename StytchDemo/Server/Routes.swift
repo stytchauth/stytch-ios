@@ -12,7 +12,10 @@ private extension HttpServer {
         GET["/"] = { _ in .ok(.htmlBody("Hello, world!")) }
 
         GET["/apple-app-site-association", "/.well-known/apple-app-site-association"] = { _ in
-            .ok(.json(["applinks": ["details": [["appIDs": [configuration.appleAppId]]]]]))
+            .ok(.json([
+                "applinks": ["details": [["appIDs": [configuration.appleAppId]]]],
+                "webcredentials": ["apps": [configuration.appleAppId]],
+            ]))
         }
 
         GET["/hobbies"] = HobbiesController.list

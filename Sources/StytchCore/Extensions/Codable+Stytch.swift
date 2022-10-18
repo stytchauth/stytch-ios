@@ -9,7 +9,14 @@ extension KeyedDecodingContainer {
 }
 
 extension Encodable {
-    func base64EncodedString() throws -> String {
-        (try Current.jsonEncoder.encode(self)).base64EncodedString()
+    func base64EncodedString(encoder: JSONEncoder = Current.jsonEncoder) throws -> String {
+        (try encoder.encode(self)).base64EncodedString()
+    }
+
+    func asJson(encoder: JSONEncoder) throws -> String {
+        guard let jsonString = String(data: try encoder.encode(self), encoding: .utf8) else {
+            throw StytchError.jsonDataNotConvertibleToString
+        }
+        return jsonString
     }
 }
