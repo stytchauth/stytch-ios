@@ -11,7 +11,8 @@ jobs:
     steps:
 
     - uses: actions/checkout@v3
-      ref: ${{ github.event.release.tag_name }}
+      with:
+        ref: ${{ github.event.release.tag_name }}
 
     - name: Bootstrap
       run: |
