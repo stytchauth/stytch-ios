@@ -45,7 +45,7 @@ jobs:
         git commit -m "[version] Increment to $(Scripts/version show-current)" --author "CI <ci@stytch.com>"
         git push --set-upstream origin "$branch_name"
         gh pr create --body 'As titled' --fill
-        gh pr merge --auto
+        gh pr merge --auto --squash
 
     - name: Approve version PR
       env:
