@@ -32,6 +32,7 @@ public extension User {
         let passwordId: String
         let requiresReset: Bool
     }
+
     struct CryptoWallet: Codable {
         /// The id of the crypto wallet.
         public var id: String { cryptoWalletId }
