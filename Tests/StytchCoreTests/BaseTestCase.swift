@@ -77,6 +77,7 @@ extension User {
             emails: [],
             userId: userId,
             name: .init(firstName: "first", lastName: "last", middleName: nil),
+            password: nil,
             phoneNumbers: [],
             providers: [],
             status: .active,
