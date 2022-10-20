@@ -11,7 +11,7 @@ on:
           - minor
 
 jobs:
-  release:
+  cut-version:
 
     runs-on: [ self-hosted, apple-silicon ]
 
@@ -29,7 +29,14 @@ jobs:
         git tag $(Scripts/version show-current)
         git push --tags
 
+    - name: Git Config
+      run: |
+        git config --local user.name "CI"
+        git config --local user.email "ci@stytch.com"
+
     - name: Bump version
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         Scripts/version increment ${{ github.event.inputs.release_type }}
         git add 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
