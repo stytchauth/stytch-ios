@@ -12,6 +12,8 @@ public struct User: Codable {
     let userId: String
     /// The user's name.
     public let name: Name
+    /// The user's passwords.
+    public let password: Password?
     /// The user's phone numbers.
     public let phoneNumbers: [PhoneNumber]
     /// The user's oauth providers.
@@ -25,6 +27,12 @@ public struct User: Codable {
 }
 
 public extension User {
+    struct Password: Codable {
+        public var id: String { passwordId }
+        let passwordId: String
+        let requiresReset: Bool
+    }
+
     struct CryptoWallet: Codable {
         /// The id of the crypto wallet.
         public var id: String { cryptoWalletId }
