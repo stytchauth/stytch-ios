@@ -39,10 +39,11 @@ jobs:
         GH_TOKEN: ${{ secrets.CI_TOKEN }}
       run: |
         Scripts/version increment ${{ github.event.inputs.release_type }}
-        git checkout -b "version-increment/$(Scripts/version show-current)"
+        branch_name = "version-increment/$(Scripts/version show-current)"
+        git checkout -b "$branch_name"
         git add 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
         git commit -m "[version] Increment to $(Scripts/version show-current)" --author "CI <ci@stytch.com>"
-        git push
+        git push --set-upstream origin "$branch_name"
         gh pr create --body 'As titled' --fill
         gh pr merge --auto
 
