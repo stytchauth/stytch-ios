@@ -63,13 +63,17 @@ extension StytchClient.OAuth.ThirdParty {
         case coinbase
         case discord
         case facebook
+        case figma
         case github
         case gitlab
         case google
         case linkedin
         case microsoft
         case slack
+        case snapchat
+        case tiktok
         case twitch
+        case twitter
     }
 }
 #endif

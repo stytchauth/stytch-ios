@@ -47,6 +47,9 @@ public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Facebook.
     var facebook: ThirdParty { .init(provider: .facebook) }
 
+    /// The interface for authenticating a user with Figma.
+    var figma: ThirdParty { .init(provider: .figma) }
+
     /// The interface for authenticating a user with GitHub.
     var github: ThirdParty { .init(provider: .github) }
 
@@ -65,8 +68,17 @@ public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Slack.
     var slack: ThirdParty { .init(provider: .slack) }
 
+    /// The interface for authenticating a user with Snapchat.
+    var snapchat: ThirdParty { .init(provider: .snapchat) }
+
+    /// The interface for authenticating a user with TikTok.
+    var tiktok: ThirdParty { .init(provider: .tiktok) }
+
     /// The interface for authenticating a user with Twitch.
     var twitch: ThirdParty { .init(provider: .twitch) }
+
+    /// The interface for authenticating a user with Twitter.
+    var twitter: ThirdParty { .init(provider: .twitter) }
 }
 #endif
 
