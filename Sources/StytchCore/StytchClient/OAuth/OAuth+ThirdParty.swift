@@ -71,6 +71,7 @@ extension StytchClient.OAuth.ThirdParty {
         case microsoft
         case slack
         case snapchat
+        case spotify
         case tiktok
         case twitch
         case twitter

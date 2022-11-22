@@ -71,6 +71,9 @@ public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Snapchat.
     var snapchat: ThirdParty { .init(provider: .snapchat) }
 
+    /// The interface for authenticating a user with Spotify.
+    var spotify: ThirdParty { .init(provider: .spotify) }
+
     /// The interface for authenticating a user with TikTok.
     var tiktok: ThirdParty { .init(provider: .tiktok) }
 

@@ -88,6 +88,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.slack
         case .snapchat:
             return StytchClient.oauth.snapchat
+        case .spotify:
+            return StytchClient.oauth.spotify
         case .tiktok:
             return StytchClient.oauth.tiktok
         case .twitch:
