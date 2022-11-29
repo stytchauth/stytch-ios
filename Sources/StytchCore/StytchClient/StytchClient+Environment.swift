@@ -1,4 +1,9 @@
 import Foundation
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 // swiftlint:disable identifier_name
 #if DEBUG
@@ -45,6 +50,8 @@ extension StytchClient {
 
         var defaults: UserDefaults = .standard
 
+        var appleOAuthClient: AppleOAuthClient = .live
+
         var networkingClient: NetworkingClient = .live
 
         var cryptoClient: CryptoClient = .live
@@ -59,6 +66,23 @@ extension StytchClient {
 
         var keychainClient: KeychainClient = .live
 
+        #if !os(watchOS)
+        // swiftlint:disable:next implicitly_unwrapped_optional
+        private var _passkeysClent: Any! = {
+            if #available(macOS 12.0, iOS 16.0, tvOS 16.0, *) {
+                return PasskeysClient.live
+            }
+            return nil
+        }()
+
+        @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
+        var passkeysClient: PasskeysClient {
+            // swiftlint:disable:next force_cast
+            get { _passkeysClent as! PasskeysClient }
+            set { _passkeysClent = newValue }
+        }
+        #endif
+
         var date: () -> Date = Date.init
 
         var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
@@ -68,5 +92,17 @@ extension StytchClient {
             runloop.add(timer, forMode: .common)
             return timer
         }
+
+        #if !os(watchOS)
+        var openUrl: (URL) -> Void = { url in
+            DispatchQueue.main.async {
+                #if os(macOS)
+                NSWorkspace.shared.open(url)
+                #else
+                UIApplication.shared.open(url)
+                #endif
+            }
+        }
+        #endif
     }
 }

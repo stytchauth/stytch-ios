@@ -2,6 +2,7 @@ import CryptoKit
 import XCTest
 @testable import StytchCore
 
+#if !os(tvOS) && !os(watchOS)
 final class BiometricsTestCase: BaseTestCase {
     func testRegistration() async throws {
         XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
@@ -61,8 +62,6 @@ final class BiometricsTestCase: BaseTestCase {
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
 
-        Current.defaults.set(true, forKey: "biometric_registration_available")
-
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
         Current.networkingClient = try .success(
@@ -88,27 +87,4 @@ final class BiometricsTestCase: BaseTestCase {
         _ = try await StytchClient.biometrics.authenticate(parameters: .init())
     }
 }
-
-extension NetworkingClient {
-    static func success<T: Codable>(
-        verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
-        _ response: T
-    ) throws -> NetworkingClient {
-        try .mock(
-            verifyingRequest: verifyingRequest,
-            returning: .success(Current.jsonEncoder.encode(DataContainer(data: response)))
-        )
-    }
-
-    static func success<A: Codable, B: Codable>(
-        verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
-        _ firstResponse: A,
-        _ secondResponse: B
-    ) throws -> NetworkingClient {
-        try .mock(
-            verifyingRequest: verifyingRequest,
-            returning: .success(Current.jsonEncoder.encode(DataContainer(data: firstResponse))),
-            .success(Current.jsonEncoder.encode(DataContainer(data: secondResponse)))
-        )
-    }
-}
+#endif

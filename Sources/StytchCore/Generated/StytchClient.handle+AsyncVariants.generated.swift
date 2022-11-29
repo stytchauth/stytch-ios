@@ -6,11 +6,11 @@ import Foundation
 public extension StytchClient {
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponseType`` will be returned to you asynchronously, with a `sessionDuration` of
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration, completion: @escaping Completion<DeeplinkHandledStatus>) {
         Task {
             do {
@@ -23,11 +23,11 @@ public extension StytchClient {
 
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponseType`` will be returned to you asynchronously, with a `sessionDuration` of
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The desired session duration in ``Minutes``. Defaults to 30.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     static func handle(url: URL, sessionDuration: Minutes = .defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus, Error> {
         return Deferred {
             Future({ promise in

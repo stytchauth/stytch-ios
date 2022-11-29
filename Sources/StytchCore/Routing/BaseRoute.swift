@@ -1,7 +1,9 @@
 enum BaseRoute: RouteType {
     case biometrics(BiometricsRoute)
     case magicLinks(MagicLinksRoute)
+    case oauth(OAuthRoute)
     case otps(OneTimePasscodesRoute)
+    case passkeys(PasskeysRoute)
     case passwords(PasswordsRoute)
     case sessions(SessionsRoute)
     case users(UsersRoute)
@@ -12,8 +14,12 @@ enum BaseRoute: RouteType {
             return "biometrics".appendingPath(route.path)
         case let .magicLinks(route):
             return "magic_links".appendingPath(route.path)
+        case let .oauth(route):
+            return "oauth".appendingPath(route.path)
         case let .otps(route):
             return "otps".appendingPath(route.path)
+        case let .passkeys(route):
+            return "webauthn".appendingPath(route.path)
         case let .passwords(route):
             return "passwords".appendingPath(route.path)
         case let .sessions(route):

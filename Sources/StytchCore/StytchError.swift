@@ -56,6 +56,30 @@ public extension StytchError {
         errorType: "no_biometric_registrations",
         errorMessage: "There are no biometric registrations available. Must authenticate with other methods and add a new biometric registration before calling this method."
     )
+    static let oauthCredentialInvalid: Self = .init(
+        errorType: "oauth_apple_credential_invalid",
+        errorMessage: "The Sign In With Apple authorization credential was an invalid type/format."
+    )
+    static let oauthCredentialMissingIdToken: Self = .init(
+        errorType: "oauth_apple_missing_id_token",
+        errorMessage: "The Sign In With Apple authorization credential was missing an id_token."
+    )
+    static let oauthInvalidStartUrl: Self = .init(
+        errorType: "oauth_generic_invalid_start_url",
+        errorMessage: "The start url was invalid or improperly formatted."
+    )
+    static let passkeysInvalidPublicKeyCredentialType: Self = .init(
+        errorType: "passkeys_invalid_credential_type",
+        errorMessage: "The public key credential type was not of the expected type."
+    )
+    static let passkeysMissingAttestationObject: Self = .init(
+        errorType: "passkeys_missing_attestation_object",
+        errorMessage: "The public key credential is missing the attestation object."
+    )
+    static let jsonDataNotConvertibleToString: Self = .init(
+        errorType: "json_data_not_convertible_to_string",
+        errorMessage: "JSON data unable to be converted to String type."
+    )
 }
 
 private extension URL {

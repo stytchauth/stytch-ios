@@ -26,4 +26,26 @@ extension NetworkingClient {
             }
         }
     }
+
+    static func success<T: Codable>(
+        verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
+        _ response: T
+    ) throws -> NetworkingClient {
+        try .mock(
+            verifyingRequest: verifyingRequest,
+            returning: .success(Current.jsonEncoder.encode(DataContainer(data: response)))
+        )
+    }
+
+    static func success<A: Codable, B: Codable>(
+        verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
+        _ firstResponse: A,
+        _ secondResponse: B
+    ) throws -> NetworkingClient {
+        try .mock(
+            verifyingRequest: verifyingRequest,
+            returning: .success(Current.jsonEncoder.encode(DataContainer(data: firstResponse))),
+            .success(Current.jsonEncoder.encode(DataContainer(data: secondResponse)))
+        )
+    }
 }

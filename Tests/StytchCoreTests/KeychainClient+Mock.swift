@@ -6,6 +6,8 @@ extension KeychainClient {
 
         return .init { item in
             keychainItems[item.name] ?? []
+        } valueExistsForItem: { item in
+            keychainItems[item.name].map { !$0.isEmpty } ?? false
         } setValueForItem: { value, item in
             let queryResult: KeychainClient.QueryResult = .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: value.label, account: value.account, generic: nil)
             var results = keychainItems[item.name, default: []]

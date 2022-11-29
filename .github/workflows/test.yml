@@ -36,8 +36,17 @@ jobs:
     - name: Lint
       run: make lint
 
-    - name: Test
-      run: make test
+    - name: Test iOS
+      run: make test-ios
+
+    - name: Test tvOS
+      run: make test-tvos
+
+    - name: Test watchOS
+      run: make test-watchos
+
+    - name: Test macOS
+      run: make test-macos
 
     - name: Coverage
       run: |

@@ -1,15 +1,15 @@
 import Foundation
 import Security
-#if canImport(LocalAuthentication)
+#if !os(tvOS)
 import LocalAuthentication
 #endif
 
 extension KeychainClient {
     static let live: Self = {
-        #if canImport(LocalAuthentication)
+        #if !os(tvOS)
         let updateQueryWithLAContext: (inout [CFString: Any]) -> LAContext = { query in
             let context = LAContext()
-            #if !os(tvOS)
+            #if !os(watchOS)
             context.localizedReason = NSLocalizedString(
                 "keychain_client.la_context_reason",
                 value: "Authenticate with biometrics",
@@ -22,13 +22,28 @@ extension KeychainClient {
         }
         #endif
 
+        let valueExistsForItem: (Item) -> Bool = { item in
+            var result: CFTypeRef?
+
+            var query = item.getQuery
+
+            #if !os(tvOS)
+            let context = updateQueryWithLAContext(&query)
+            context.interactionNotAllowed = true
+            #endif
+
+            let status = SecItemCopyMatching(query as CFDictionary, &result)
+
+            return [errSecSuccess, errSecInteractionNotAllowed].contains(status)
+        }
+
         return .init { item in
             var result: CFTypeRef?
 
             var query = item.getQuery
 
-            #if canImport(LocalAuthentication)
-            let context = updateQueryWithLAContext(&query)
+            #if !os(tvOS)
+            _ = updateQueryWithLAContext(&query)
             #endif
 
             guard case errSecSuccess = SecItemCopyMatching(query as CFDictionary, &result) else {
@@ -55,21 +70,18 @@ extension KeychainClient {
                     generic: dict[kSecAttrGeneric] as? Data
                 )
             }
+        } valueExistsForItem: { item in
+            valueExistsForItem(item)
         } setValueForItem: { value, item in
             let status: OSStatus
 
             var query = item.baseQuery
 
-            #if canImport(LocalAuthentication)
-            let context = updateQueryWithLAContext(&query)
+            #if !os(tvOS)
+            _ = updateQueryWithLAContext(&query)
             #endif
 
-            let itemExists = SecItemCopyMatching(
-                query.merging([kSecAttrSynchronizable: kSecAttrSynchronizableAny]) as CFDictionary,
-                nil
-            ) == errSecSuccess
-
-            if itemExists {
+            if valueExistsForItem(item) {
                 status = SecItemUpdate(
                     query as CFDictionary,
                     item.updateQuerySegment(for: value) as CFDictionary

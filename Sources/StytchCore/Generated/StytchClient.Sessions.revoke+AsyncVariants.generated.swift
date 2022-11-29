@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchClient.Sessions {
     /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
-    func revoke(completion: @escaping Completion<SessionsRevokeResponse>) {
+    func revoke(completion: @escaping Completion<BasicResponse>) {
         Task {
             do {
                 completion(.success(try await revoke()))
@@ -16,7 +16,7 @@ public extension StytchClient.Sessions {
     }
 
     /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
-    func revoke() -> AnyPublisher<SessionsRevokeResponse, Error> {
+    func revoke() -> AnyPublisher<BasicResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
