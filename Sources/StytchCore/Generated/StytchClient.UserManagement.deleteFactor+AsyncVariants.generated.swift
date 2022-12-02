@@ -4,24 +4,24 @@ import Combine
 import Foundation
 
 public extension StytchClient.UserManagement {
-    /// Some docs
-    func get(completion: @escaping Completion<UserResponse>) {
+    /// Deletes, by id, an existing authentication factor associated with the current user.
+    func deleteFactor(_ factor: AuthenticationFactor, completion: @escaping Completion<UserResponse>) {
         Task {
             do {
-                completion(.success(try await get()))
+                completion(.success(try await deleteFactor(factor)))
             } catch {
                 completion(.failure(error))
             }
         }
     }
 
-    /// Some docs
-    func get() -> AnyPublisher<UserResponse, Error> {
+    /// Deletes, by id, an existing authentication factor associated with the current user.
+    func deleteFactor(_ factor: AuthenticationFactor) -> AnyPublisher<UserResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await get()))
+                        promise(.success(try await deleteFactor(factor)))
                     } catch {
                         promise(.failure(error))
                     }

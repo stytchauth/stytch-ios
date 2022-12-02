@@ -3,12 +3,12 @@
 import Combine
 import Foundation
 
-public extension StytchClient.User {
+public extension StytchClient.UserManagement {
     /// Some docs
-    func delete(_ parameters: DeleteParameters, completion: @escaping Completion<UserResponse>) {
+    func deleteFactor(_ factor: AuthenticationFactor, completion: @escaping Completion<UserResponse>) {
         Task {
             do {
-                completion(.success(try await delete(parameters)))
+                completion(.success(try await deleteFactor(factor)))
             } catch {
                 completion(.failure(error))
             }
@@ -16,12 +16,12 @@ public extension StytchClient.User {
     }
 
     /// Some docs
-    func delete(_ parameters: DeleteParameters) -> AnyPublisher<UserResponse, Error> {
+    func deleteFactor(_ factor: AuthenticationFactor) -> AnyPublisher<UserResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await delete(parameters)))
+                        promise(.success(try await deleteFactor(factor)))
                     } catch {
                         promise(.failure(error))
                     }
