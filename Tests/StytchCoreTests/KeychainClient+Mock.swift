@@ -1,5 +1,5 @@
-@testable import StytchCore
 import Foundation
+@testable import StytchCore
 
 extension KeychainClient {
     static func mock() -> Self {

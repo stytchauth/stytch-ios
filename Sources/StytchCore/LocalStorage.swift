@@ -11,7 +11,9 @@ struct LocalStorage {
 
     private let lock: NSLock = .init()
 
-    subscript <T: LocalStorageKey>(storageKey: T.Type) -> T.Value? {
+    private init() {}
+
+    subscript<T: LocalStorageKey>(storageKey: T.Type) -> T.Value? {
         get {
             lock.withLock {
                 storage[ObjectIdentifier(storageKey)] as? T.Value
@@ -23,6 +25,4 @@ struct LocalStorage {
             }
         }
     }
-
-    private init() {}
 }
