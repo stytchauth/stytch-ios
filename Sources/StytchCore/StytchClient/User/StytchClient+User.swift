@@ -21,14 +21,6 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants
         /// Some docs
-        public func update(_ parameters: UpdateParameters) async throws -> UserResponse {
-            try await updatingCachedUser {
-                try await router.put(to: .index, parameters: parameters)
-            }
-        }
-
-        // sourcery: AsyncVariants
-        /// Some docs
         public func delete(_ parameters: DeleteParameters) async throws -> UserResponse {
             try await updatingCachedUser {
                 switch parameters.factor {
