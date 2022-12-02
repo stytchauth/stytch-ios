@@ -60,7 +60,7 @@ extension StytchClient {
 
         let sessionStorage: SessionStorage = .init()
 
-        var userStorage: UserStorage = .init()
+        var localStorage: LocalStorage = .instance
 
         var cookieClient: CookieClient = .live
 
