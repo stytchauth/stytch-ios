@@ -1,6 +1,10 @@
 import Foundation
 
 final class SessionStorage {
+    var activeSessionExists: Bool {
+        (sessionJwt ?? sessionToken) != nil
+    }
+
     private(set) var sessionToken: Session.Token? {
         get {
             try? Current.keychainClient.get(.sessionToken).map(Session.Token.opaque)

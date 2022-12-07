@@ -21,7 +21,7 @@ public extension StytchClient {
         /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
         public func register(parameters: RegisterParameters) async throws -> AuthenticateResponseType {
             // Early out if not authenticated
-            guard (Current.sessionStorage.sessionToken ?? Current.sessionStorage.sessionJwt) != nil else {
+            guard Current.sessionStorage.activeSessionExists else {
                 throw StytchError.noCurrentSession
             }
 
