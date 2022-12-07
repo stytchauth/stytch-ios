@@ -5,8 +5,17 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
-        public func loginOrCreate(parameters: LoginOrCreateParameters) async throws -> LoginOrCreateResponse {
+        public func loginOrCreate(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(to: .loginOrCreate(parameters.deliveryMethod), parameters: parameters)
+        }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Wraps Stytch's OTP [sms/send](https://stytch.com/docs/api/send-otp-by-sms), [whatsapp/send](https://stytch.com/docs/api/whatsapp-send), and [email/send](https://stytch.com/docs/api/send-otp-by-email) endpoints. Requests a one-time passcode for an existing user to log in or attach the included factor to their current account.
+        public func send(parameters: Parameters) async throws -> OTPResponse {
+            try await router.post(
+                to: Current.sessionStorage.activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
+                parameters: parameters
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -44,8 +53,8 @@ public extension StytchClient.OneTimePasscodes {
 }
 
 public extension StytchClient.OneTimePasscodes {
-    /// The dedicated parameters type for OTP `loginOrCreate` calls.
-    struct LoginOrCreateParameters: Encodable {
+    /// The dedicated parameters type for OTP `loginOrCreate` and `send` calls.
+    struct Parameters: Encodable {
         private enum CodingKeys: String, CodingKey { case phoneNumber, email, expiration = "expiration_minutes" }
 
         let deliveryMethod: DeliveryMethod
@@ -73,16 +82,14 @@ public extension StytchClient.OneTimePasscodes {
 }
 
 public extension StytchClient.OneTimePasscodes {
-    /// The concrete response type for OTP `loginOrCreate` calls.
-    typealias LoginOrCreateResponse = Response<LoginOrCreateResponseData>
+    /// The concrete response type for OTP `loginOrCreate` and `send` calls.
+    typealias OTPResponse = Response<OTPResponseData>
 
-    /// The underlying data for OTP `loginOrCreate` responses.
-    struct LoginOrCreateResponseData: Codable {
+    /// The underlying data for OTP `loginOrCreate` and `send` responses.
+    struct OTPResponseData: Codable {
         public let methodId: String
     }
-}
 
-public extension StytchClient.OneTimePasscodes.LoginOrCreateParameters {
     /// The mechanism use to deliver one-time passcodes.
     enum DeliveryMethod {
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
