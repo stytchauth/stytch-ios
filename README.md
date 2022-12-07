@@ -61,6 +61,9 @@ There are a number of authentication products currently supported by the SDK, wi
 - Sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
+- User Management
+    - Get or fetch the current user object (sync/cached or async options available)
+    - Delete factors by id from the current user
 
 #### Async Options
 

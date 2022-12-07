@@ -20,6 +20,7 @@ Product | Methods | Delivery mechanisms
 ``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-812fz``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-7b3rx``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()`` | N/A
 ``StytchClient/OAuth-swift.struct`` | ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak``, ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-858tw``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)`` | N/A
 ``StytchClient/Sessions-swift.struct`` | ``StytchClient/Sessions-swift.struct/revoke()-4jc0p``, ``StytchClient/Sessions-swift.struct/authenticate(parameters:)-41u13`` | N/A
+``StytchClient/UserManagement`` | ``StytchClient/UserManagement/syncUser``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h`` | N/A
 
 **Async Options**: Async functions are available via various mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
 
