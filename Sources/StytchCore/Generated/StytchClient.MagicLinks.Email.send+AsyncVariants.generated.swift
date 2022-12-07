@@ -4,7 +4,7 @@ import Combine
 import Foundation
 
 public extension StytchClient.MagicLinks.Email {
-    /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or to attach the included email factor to their current account.
+    /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or attach the included email factor to their current account.
     func send(parameters: SendParameters, completion: @escaping Completion<BasicResponse>) {
         Task {
             do {
@@ -15,7 +15,7 @@ public extension StytchClient.MagicLinks.Email {
         }
     }
 
-    /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or to attach the included email factor to their current account.
+    /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or attach the included email factor to their current account.
     func send(parameters: SendParameters) -> AnyPublisher<BasicResponse, Error> {
         return Deferred {
             Future({ promise in
