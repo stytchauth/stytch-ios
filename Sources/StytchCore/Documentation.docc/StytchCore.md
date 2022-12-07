@@ -14,7 +14,7 @@ There are a number of authentication products currently supported by the SDK, wi
 
 Product | Methods | Delivery mechanisms
 --- | --- | ---
-``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-4aa9c`` | Email 
+``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-7ic79``, ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-9vd2t``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-4aa9c`` | Email 
 ``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-8qxx5``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-353x1``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
 ``StytchClient/OneTimePasscodes`` | ``StytchClient/OneTimePasscodes/loginOrCreate(parameters:)-8glu3``, ``StytchClient/OneTimePasscodes/authenticate(parameters:)-151as`` | SMS, WhatsApp, Email
 ``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-812fz``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-7b3rx``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()`` | N/A
