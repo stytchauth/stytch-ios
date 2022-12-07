@@ -23,7 +23,7 @@ public extension StytchClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or to attach the included email factor to their current account.
         public func send(parameters: SendParameters) async throws -> BasicResponse {
-            return try await router.post(
+            try await router.post(
                 to: Current.sessionStorage.activeSessionExists ? .sendSecondary : .sendPrimary,
                 parameters: parameters
             )

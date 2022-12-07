@@ -1,6 +1,4 @@
 enum OneTimePasscodesRoute: RouteType {
-    typealias DeliveryMethod = StytchClient.OneTimePasscodes.DeliveryMethod
-
     case authenticate
     case loginOrCreate(DeliveryMethod)
     case sendPrimary(DeliveryMethod)
@@ -18,4 +16,8 @@ enum OneTimePasscodesRoute: RouteType {
             return deliveryMethod.path.appendingPath("send/secondary")
         }
     }
+}
+
+extension OneTimePasscodesRoute {
+    typealias DeliveryMethod = StytchClient.OneTimePasscodes.DeliveryMethod
 }
