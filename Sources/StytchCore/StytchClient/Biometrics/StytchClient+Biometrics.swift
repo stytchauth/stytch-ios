@@ -10,8 +10,19 @@ public extension StytchClient {
             Current.keychainClient.valueExistsForItem(.privateKeyRegistration)
         }
 
-        /// Clears existing biometric registrations stored on device. Useful when removing a user from a given device.
-        public func removeRegistration() throws {
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Removes the current device's existing biometric registration from both the device itself and from the server.
+        public func removeRegistration() async throws {
+            guard let queryResult: KeychainClient.QueryResult = try? Current.keychainClient.get(.privateKeyRegistration).first else {
+                return
+            }
+
+            // Delete registration from backend
+            if let registration = try queryResult.generic.map({ try Current.jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
+                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: .init(rawValue: registration.registrationId)))
+            }
+
+            // Remove local registration
             try Current.keychainClient.removeItem(.privateKeyRegistration)
         }
 
