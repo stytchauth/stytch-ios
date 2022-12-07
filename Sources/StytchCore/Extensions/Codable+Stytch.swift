@@ -6,6 +6,10 @@ extension KeyedDecodingContainer {
     func decode<T: Decodable>(key: Key) throws -> T {
         try decode(T.self, forKey: key)
     }
+
+    func optionalDecode<T: Decodable>(key: Key) throws -> T? {
+        try decodeIfPresent(T.self, forKey: key)
+    }
 }
 
 extension Encodable {
