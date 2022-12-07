@@ -24,6 +24,24 @@ public struct User: Codable {
     public let totps: [TOTP]
     /// The user's WebAuthn registrations.
     public let webauthnRegistrations: [WebAuthNRegistration]
+    /// The user's Biometric registrations.
+    public let biometricRegistrations: [BiometricRegistration]
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.cryptoWallets = try container.decodeIfPresent([User.CryptoWallet].self, forKey: .cryptoWallets) ?? []
+        self.emails = try container.decodeIfPresent([User.Email].self, forKey: .emails) ?? []
+        self.userId = try container.decode(String.self, forKey: .userId)
+        self.name = try container.decode(User.Name.self, forKey: .name)
+        self.password = try container.decodeIfPresent(User.Password.self, forKey: .password)
+        self.phoneNumbers = try container.decodeIfPresent([User.PhoneNumber].self, forKey: .phoneNumbers) ?? []
+        self.providers = try container.decodeIfPresent([User.Provider].self, forKey: .providers) ?? []
+        self.status = try container.decode(User.UserStatus.self, forKey: .status)
+        self.totps = try container.decodeIfPresent([User.TOTP].self, forKey: .totps) ?? []
+        self.webauthnRegistrations = try container.decodeIfPresent([User.WebAuthNRegistration].self, forKey: .webauthnRegistrations) ?? []
+        self.biometricRegistrations = try container.decodeIfPresent([User.BiometricRegistration].self, forKey: .biometricRegistrations) ?? []
+    }
 }
 
 public extension User {
@@ -119,5 +137,14 @@ public extension User {
         /// The id of the registration.
         public var id: ID { webauthnRegistrationId }
         let webauthnRegistrationId: ID
+    }
+
+    struct BiometricRegistration: Codable {
+        public typealias ID = Identifier<Self, String>
+        /// The verification status of the registration.
+        public let verified: Bool
+        /// The id of the registration.
+        public var id: ID { biometricRegistrationId }
+        let biometricRegistrationId: ID
     }
 }
