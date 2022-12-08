@@ -43,7 +43,7 @@ public struct User: Codable {
         biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
     }
 
-    internal init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: String, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
+    init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: String, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
         self.createdAt = createdAt
         self.cryptoWallets = cryptoWallets
         self.emails = emails
