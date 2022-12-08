@@ -1,5 +1,5 @@
 public struct Identifier<T, RawValue> {
-    let rawValue: RawValue
+    public let rawValue: RawValue
 }
 
 extension Identifier: ExpressibleByStringLiteral, ExpressibleByUnicodeScalarLiteral, ExpressibleByExtendedGraphemeClusterLiteral where RawValue == String {
