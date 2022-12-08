@@ -4,8 +4,8 @@ protocol LocalStorageKey<Value>: Sendable {
     associatedtype Value: Sendable
 }
 
-struct LocalStorage {
-    static var instance: Self = .init()
+final class LocalStorage {
+    static var instance: LocalStorage = .init()
 
     private var storage: [ObjectIdentifier: Any] = [:]
 
