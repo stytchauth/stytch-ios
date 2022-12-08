@@ -3,7 +3,7 @@ import XCTest
 
 final class OneTimePasscodesTestCase: BaseTestCase {
     func testOtpLoginOrCreate() async throws {
-        let container: DataContainer<StytchClient.OneTimePasscodes.LoginOrCreateResponse> = .init(
+        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
             data: .init(
                 requestId: "1234",
                 statusCode: 200,
@@ -16,7 +16,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         try await [
             (
-                StytchClient.OneTimePasscodes.LoginOrCreateParameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                StytchClient.OneTimePasscodes.Parameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 "{\"expiration_minutes\":3,\"phone_number\":\"+12345678901\"}"
             ),

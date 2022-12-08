@@ -82,7 +82,8 @@ extension User {
             providers: [],
             status: .active,
             totps: [],
-            webauthnRegistrations: []
+            webauthnRegistrations: [],
+            biometricRegistrations: []
         )
     }
 }

@@ -8,7 +8,7 @@ final class MagicLinksTestCase: BaseTestCase {
         var request: URLRequest?
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
+        let parameters: StytchClient.MagicLinks.Email.LoginOrCreateParameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             loginExpiration: 30,

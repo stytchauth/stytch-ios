@@ -42,6 +42,21 @@ public struct User: Codable {
         webauthnRegistrations = try container.optionalDecode(key: .webauthnRegistrations) ?? []
         biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
     }
+
+    internal init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: String, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
+        self.createdAt = createdAt
+        self.cryptoWallets = cryptoWallets
+        self.emails = emails
+        self.userId = userId
+        self.name = name
+        self.password = password
+        self.phoneNumbers = phoneNumbers
+        self.providers = providers
+        self.status = status
+        self.totps = totps
+        self.webauthnRegistrations = webauthnRegistrations
+        self.biometricRegistrations = biometricRegistrations
+    }
 }
 
 public extension User {
