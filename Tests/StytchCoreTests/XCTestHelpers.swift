@@ -27,7 +27,7 @@ enum XCTHTTPMethod: String {
 }
 
 @resultBuilder
-struct XCTHTTPBodyContainsBuilder {
+enum XCTHTTPBodyContainsBuilder {
     static func buildBlock(_ components: String...) -> [String] {
         components
     }
