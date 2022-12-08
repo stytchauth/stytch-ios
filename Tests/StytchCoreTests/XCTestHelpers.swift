@@ -14,7 +14,7 @@ func XCTAssertRequest(
     if case let bodyContents = bodyContains(), !bodyContents.isEmpty {
         let bodyString = try XCTUnwrap(String(data: XCTUnwrap(request.httpBody), encoding: .utf8))
         bodyContents.forEach { content in
-            XCTAssertTrue(bodyString.contains(content), "Body missing: \(content)\nBody: \(bodyString)", file: file, line: line)
+            XCTAssertTrue(bodyString.contains(content), "Content missing from body: \(content)\nBody: \(bodyString)", file: file, line: line)
         }
     }
 }
