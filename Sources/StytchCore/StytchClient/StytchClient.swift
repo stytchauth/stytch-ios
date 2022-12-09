@@ -14,7 +14,10 @@ public struct StytchClient {
     static var router: NetworkingRouter<BaseRoute> = .init()
 
     private(set) var configuration: Configuration? = {
-        guard let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) else { return nil }
+        guard
+            let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"),
+            let data = try? Data(contentsOf: url)
+        else { return nil }
 
         return try? PropertyListDecoder().decode(Configuration.self, from: data)
     }() {

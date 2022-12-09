@@ -16,7 +16,7 @@ final class PasswordModel: ObservableObject {
                 let resp = try await StytchClient.passwords.strengthCheck(
                     parameters: .init(email: email.presence, password: password)
                 )
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.strength = resp.score / 4
                     self.isValid = resp.validPassword
                     self.warning = resp.feedback.warning

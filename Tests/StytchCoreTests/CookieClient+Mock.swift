@@ -6,10 +6,15 @@ extension CookieClient {
 
     static func mock() -> Self {
         testCookies = []
+        let lock: NSLock = .init()
         return .init { cookie in
-            testCookies.append(cookie)
+            lock.withLock {
+                testCookies.append(cookie)
+            }
         } deleteCookieNamed: { name in
-            testCookies.removeAll { $0.name == name }
+            lock.withLock {
+                testCookies.removeAll { $0.name == name }
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ final class OAuthTestCase: BaseTestCase {
         Current.networkingClient = try .success(verifyingRequest: { request = $0 }, AuthenticateResponse.mock)
         Current.timer = { _, _, _ in .init() }
 
-        await XCTAssertThrowsError(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
+        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
         _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 

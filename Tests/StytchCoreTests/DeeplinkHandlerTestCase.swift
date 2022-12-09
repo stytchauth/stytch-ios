@@ -19,7 +19,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
 
         let handledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345&stytch_token_type=magic_links"))
 
-        await XCTAssertThrowsError(try await StytchClient.handle(url: handledUrl))
+        await XCTAssertThrowsErrorAsync(try await StytchClient.handle(url: handledUrl))
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .emlPKCECodeVerifier)
 

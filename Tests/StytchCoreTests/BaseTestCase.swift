@@ -10,6 +10,7 @@ class BaseTestCase: XCTestCase {
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()
         Current.cryptoClient = .live
+        Current.localStorage = .init()
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
             return .init()
@@ -33,23 +34,6 @@ class BaseTestCase: XCTestCase {
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
-    }
-}
-
-extension XCTest {
-    func XCTAssertThrowsError<T: Sendable>(
-        _ expression: @autoclosure () async throws -> T,
-        _ message: @autoclosure () -> String = "",
-        file: StaticString = #filePath,
-        line: UInt = #line,
-        _ errorHandler: (_ error: Error) -> Void = { _ in }
-    ) async {
-        do {
-            _ = try await expression()
-            XCTFail(message(), file: file, line: line)
-        } catch {
-            errorHandler(error)
-        }
     }
 }
 
@@ -82,7 +66,8 @@ extension User {
             providers: [],
             status: .active,
             totps: [],
-            webauthnRegistrations: []
+            webauthnRegistrations: [],
+            biometricRegistrations: []
         )
     }
 }

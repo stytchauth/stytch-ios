@@ -15,6 +15,8 @@ enum MagicLinksRoute: RouteType {
 extension MagicLinksRoute {
     enum EmailRoute: String, RouteType {
         case loginOrCreate = "login_or_create"
+        case sendPrimary = "send/primary"
+        case sendSecondary = "send/secondary"
 
         var path: Path { .init(rawValue: rawValue) }
     }

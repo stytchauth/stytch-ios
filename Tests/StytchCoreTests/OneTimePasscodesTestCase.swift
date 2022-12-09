@@ -3,7 +3,7 @@ import XCTest
 
 final class OneTimePasscodesTestCase: BaseTestCase {
     func testOtpLoginOrCreate() async throws {
-        let container: DataContainer<StytchClient.OneTimePasscodes.LoginOrCreateResponse> = .init(
+        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
             data: .init(
                 requestId: "1234",
                 statusCode: 200,
@@ -16,7 +16,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         try await [
             (
-                StytchClient.OneTimePasscodes.LoginOrCreateParameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                StytchClient.OneTimePasscodes.Parameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 "{\"expiration_minutes\":3,\"phone_number\":\"+12345678901\"}"
             ),
@@ -46,6 +46,105 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
+        }
+    }
+
+    func testOtpSendWithNoSession() async throws {
+        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
+            data: .init(
+                requestId: "1234",
+                statusCode: 200,
+                wrapped: .init(methodId: "method_id_1234")
+            )
+        )
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data), .success(data), .success(data))
+
+        XCTAssertFalse(Current.sessionStorage.activeSessionExists)
+
+        let expectedValues: [ExpectedValues] = [
+            .init(
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/primary",
+                bodyContains: [
+                    ("expiration_minutes", 3),
+                    ("phone_number", "+12345678901"),
+                ]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
+                bodyContains: [("phone_number", "+11098765432")]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                bodyContains: [("email", "test@stytch.com")]
+            ),
+        ]
+        try await expectedValues.asyncForEach { expected in
+            let response = try await StytchClient.otps.send(parameters: expected.parameters)
+            XCTAssertEqual(response.methodId, "method_id_1234")
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertEqual(response.requestId, "1234")
+
+            // Verify request
+            guard let request = request else { XCTFail("Request should be present"); return }
+
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, bodyContains: expected.bodyContains)
+
+            XCTAssertNil(StytchClient.sessions.sessionJwt)
+            XCTAssertNil(StytchClient.sessions.sessionToken)
+        }
+    }
+
+    func testOtpSendWithActiveSession() async throws {
+        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
+            data: .init(
+                requestId: "1234",
+                statusCode: 200,
+                wrapped: .init(methodId: "method_id_1234")
+            )
+        )
+        let data = try Current.jsonEncoder.encode(container)
+        var request: URLRequest?
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data), .success(data), .success(data))
+
+        try Current.keychainClient.set("123", for: .sessionToken)
+
+        XCTAssertTrue(Current.sessionStorage.activeSessionExists)
+
+        let expectedValues: [ExpectedValues] = [
+            .init(
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
+                bodyContains: [
+                    ("expiration_minutes", 3),
+                    ("phone_number", "+12345678901"),
+                ]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
+                bodyContains: [("phone_number", "+11098765432")]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
+                bodyContains: [("email", "test@stytch.com")]
+            ),
+        ]
+        try await expectedValues.asyncForEach { expected in
+            let response = try await StytchClient.otps.send(parameters: expected.parameters)
+            XCTAssertEqual(response.methodId, "method_id_1234")
+            XCTAssertEqual(response.statusCode, 200)
+            XCTAssertEqual(response.requestId, "1234")
+
+            // Verify request
+            guard let request = request else { XCTFail("Request should be present"); return }
+
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, bodyContains: expected.bodyContains)
         }
     }
 
@@ -81,5 +180,13 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/otps/authenticate")
         XCTAssertEqual(request?.httpMethod, "POST")
         XCTAssertEqual(request?.httpBody, Data("{\"token\":\"i_am_code\",\"method_id\":\"method_id_fake_id\",\"session_duration_minutes\":20}".utf8))
+    }
+}
+
+private extension OneTimePasscodesTestCase {
+    struct ExpectedValues {
+        let parameters: StytchClient.OneTimePasscodes.Parameters
+        let urlString: String
+        let bodyContains: [(String, JSON)]
     }
 }

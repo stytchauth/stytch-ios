@@ -23,7 +23,40 @@ public struct User: Codable {
     /// The user's totps.
     public let totps: [TOTP]
     /// The user's WebAuthn registrations.
-    public let webauthnRegistrations: [WebAuthNRegistrations]
+    public let webauthnRegistrations: [WebAuthNRegistration]
+    /// The user's Biometric registrations.
+    public let biometricRegistrations: [BiometricRegistration]
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        createdAt = try container.decode(key: .createdAt)
+        cryptoWallets = try container.optionalDecode(key: .cryptoWallets) ?? []
+        emails = try container.optionalDecode(key: .emails) ?? []
+        userId = try container.decode(key: .userId)
+        name = try container.decode(key: .name)
+        password = try container.optionalDecode(key: .password)
+        phoneNumbers = try container.optionalDecode(key: .phoneNumbers) ?? []
+        providers = try container.optionalDecode(key: .providers) ?? []
+        status = try container.decode(key: .status)
+        totps = try container.optionalDecode(key: .totps) ?? []
+        webauthnRegistrations = try container.optionalDecode(key: .webauthnRegistrations) ?? []
+        biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
+    }
+
+    init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: String, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
+        self.createdAt = createdAt
+        self.cryptoWallets = cryptoWallets
+        self.emails = emails
+        self.userId = userId
+        self.name = name
+        self.password = password
+        self.phoneNumbers = phoneNumbers
+        self.providers = providers
+        self.status = status
+        self.totps = totps
+        self.webauthnRegistrations = webauthnRegistrations
+        self.biometricRegistrations = biometricRegistrations
+    }
 }
 
 public extension User {
@@ -34,9 +67,10 @@ public extension User {
     }
 
     struct CryptoWallet: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The id of the crypto wallet.
-        public var id: String { cryptoWalletId }
-        let cryptoWalletId: String
+        public var id: ID { cryptoWalletId }
+        let cryptoWalletId: ID
         /// The address of the cryptowallet.
         public var address: String { cryptoWalletAddress }
         let cryptoWalletAddress: String
@@ -48,11 +82,12 @@ public extension User {
     }
 
     struct Email: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The email address.
         public let email: String
         /// The id of the email.
-        public var id: String { emailId }
-        let emailId: String
+        public var id: ID { emailId }
+        let emailId: ID
         /// The verification status of the email.
         public let verified: Bool
     }
@@ -64,6 +99,12 @@ public extension User {
         public let lastName: String?
         /// The user's middle name.
         public let middleName: String?
+
+        public init(firstName: String? = nil, lastName: String? = nil, middleName: String? = nil) {
+            self.firstName = firstName
+            self.lastName = lastName
+            self.middleName = middleName
+        }
     }
 
     struct Provider: Codable {
@@ -74,11 +115,12 @@ public extension User {
     }
 
     struct PhoneNumber: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The phone number.
         public let phoneNumber: String
         /// The id of the phone number.
-        public var id: String { phoneId }
-        let phoneId: String
+        public var id: ID { phoneId }
+        let phoneId: ID
         /// The verification status of the phone number.
         public let verified: Bool
     }
@@ -91,14 +133,16 @@ public extension User {
     }
 
     struct TOTP: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The id of the TOTP.
-        public var id: String { totpId }
-        let totpId: String
+        public var id: ID { totpId }
+        let totpId: ID
         /// The verification status of the TOTP.
         public let verified: Bool
     }
 
-    struct WebAuthNRegistrations: Codable {
+    struct WebAuthNRegistration: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The domain of the WebAuthN registration.
         public let domain: String
         /// The user agent of the registration.
@@ -106,7 +150,16 @@ public extension User {
         /// The verification status of the registration.
         public let verified: Bool
         /// The id of the registration.
-        public var id: String { webauthnRegistrationId }
-        let webauthnRegistrationId: String
+        public var id: ID { webauthnRegistrationId }
+        let webauthnRegistrationId: ID
+    }
+
+    struct BiometricRegistration: Codable {
+        public typealias ID = Identifier<Self, String>
+        /// The verification status of the registration.
+        public let verified: Bool
+        /// The id of the registration.
+        public var id: ID { biometricRegistrationId }
+        let biometricRegistrationId: ID
     }
 }
