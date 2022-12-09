@@ -12,7 +12,7 @@ extension KeychainClient {
             lock.withLock { keychainItems[item.name].map { !$0.isEmpty } ?? false }
         } setValueForItem: { value, item in
             lock.withLock {
-                let queryResult: KeychainClient.QueryResult = .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: value.label, account: value.account, generic: nil)
+                let queryResult: KeychainClient.QueryResult = .init(data: value.data, createdAt: .init(), modifiedAt: .init(), label: value.label, account: value.account, generic: value.generic)
                 var results = keychainItems[item.name, default: []]
                 if let index = results.firstIndex(where: { $0.label == queryResult.label && $0.account == queryResult.account }) {
                     results[index] = queryResult

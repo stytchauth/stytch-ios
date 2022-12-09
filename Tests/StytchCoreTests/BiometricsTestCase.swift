@@ -86,5 +86,42 @@ final class BiometricsTestCase: BaseTestCase {
 
         _ = try await StytchClient.biometrics.authenticate(parameters: .init())
     }
+
+    func testRegistrationRemoval() async throws {
+        XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
+
+        let regId = "bio_reg_123"
+        let userId = "user_123"
+        let email = "example@stytch.com"
+        let privateKey = Curve25519.Signing.PrivateKey()
+
+        Current.cryptoClient.signChallengeWithPrivateKey = { challenge, _ in
+            .init((0..<challenge.count).map { UInt8($0) })
+        }
+
+        try Current.keychainClient.set(
+            key: privateKey.rawRepresentation,
+            registration: .init(userId: userId, userLabel: email, registrationId: regId),
+            accessPolicy: .deviceOwnerAuthenticationWithBiometrics
+        )
+
+        XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
+
+        Current.networkingClient = try .success(
+            verifyingRequest: { request in
+                print("ELLLO")
+                try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/users/biometric_registrations/bio_reg_123", method: .delete)
+            },
+            UserResponse(
+                requestId: "req_123",
+                statusCode: 200,
+                wrapped: .mock(userId: "user_63823")
+            )
+        )
+
+        _ = try await StytchClient.biometrics.removeRegistration()
+
+        XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
+    }
 }
 #endif
