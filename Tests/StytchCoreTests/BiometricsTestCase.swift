@@ -109,7 +109,6 @@ final class BiometricsTestCase: BaseTestCase {
 
         Current.networkingClient = try .success(
             verifyingRequest: { request in
-                print("ELLLO")
                 try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/users/biometric_registrations/bio_reg_123", method: .delete)
             },
             UserResponse(
