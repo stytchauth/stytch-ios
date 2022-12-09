@@ -1,5 +1,5 @@
-@testable import StytchCore
 import XCTest
+@testable import StytchCore
 
 final class UserManagementTestCase: BaseTestCase {
     func testSync() throws {
