@@ -9,7 +9,7 @@ xctest_path="$(find $bin_path -name '*.xctest')"
 
 profdata_path="$bin_path/codecov/default.profdata"
 pkg_contents_path="$xctest_path/Contents/MacOS/$(basename $xctest_path .xctest)"
-ignore_regex="\.build|Tests|\.generated.swift|\+Live.swift|\+Mock.swift"
+ignore_regex="\.build|Tests|\.generated.swift|\+Live.swift|\+Mock.swift|Sources/StytchCore/KeychainClient/Migrations"
 
 mkdir -p .coverage
 
