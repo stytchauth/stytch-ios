@@ -63,31 +63,25 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         XCTAssertFalse(Current.sessionStorage.activeSessionExists)
 
-        struct ExpectedValues {
-            let parameters: StytchClient.OneTimePasscodes.Parameters
-            let urlString: String
-            @XCTHTTPBodyContainsBuilder let bodyContains: () -> [String]
-        }
         let expectedValues: [ExpectedValues] = [
             .init(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
-                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/primary"
-            ) {
-                ("expiration_minutes", 3)
-                ("phone_number", "+12345678901")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/primary",
+                bodyContains: [
+                    ("expiration_minutes", 3),
+                    ("phone_number", "+12345678901"),
+                ]
+            ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary"
-            ) {
-                ("phone_number", "+11098765432")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
+                bodyContains: [("phone_number", "+11098765432")]
+            ),
             .init(
                 parameters: .init(deliveryMethod: .email("test@stytch.com")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary"
-            ) {
-                ("email", "test@stytch.com")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                bodyContains: [("email", "test@stytch.com")]
+            ),
         ]
         try await expectedValues.asyncForEach { expected in
             let response = try await StytchClient.otps.send(parameters: expected.parameters)
@@ -121,31 +115,25 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         XCTAssertTrue(Current.sessionStorage.activeSessionExists)
 
-        struct ExpectedValues {
-            let parameters: StytchClient.OneTimePasscodes.Parameters
-            let urlString: String
-            @XCTHTTPBodyContainsBuilder let bodyContains: () -> [String]
-        }
         let expectedValues: [ExpectedValues] = [
             .init(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
-                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/secondary"
-            ) {
-                ("expiration_minutes", 3)
-                ("phone_number", "+12345678901")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
+                bodyContains: [
+                    ("expiration_minutes", 3),
+                    ("phone_number", "+12345678901"),
+                ]
+            ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary"
-            ) {
-                ("phone_number", "+11098765432")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
+                bodyContains: [("phone_number", "+11098765432")]
+            ),
             .init(
                 parameters: .init(deliveryMethod: .email("test@stytch.com")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary"
-            ) {
-                ("email", "test@stytch.com")
-            },
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
+                bodyContains: [("email", "test@stytch.com")]
+            ),
         ]
         try await expectedValues.asyncForEach { expected in
             let response = try await StytchClient.otps.send(parameters: expected.parameters)
@@ -192,5 +180,13 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/otps/authenticate")
         XCTAssertEqual(request?.httpMethod, "POST")
         XCTAssertEqual(request?.httpBody, Data("{\"token\":\"i_am_code\",\"method_id\":\"method_id_fake_id\",\"session_duration_minutes\":20}".utf8))
+    }
+}
+
+private extension OneTimePasscodesTestCase {
+    struct ExpectedValues {
+        let parameters: StytchClient.OneTimePasscodes.Parameters
+        let urlString: String
+        let bodyContains: [(String, JSON)]
     }
 }

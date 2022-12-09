@@ -1,6 +1,6 @@
 import Foundation
 
-public enum JSON: Hashable {
+public enum JSON: Hashable, Equatable {
     case array([JSON])
     case object([String: JSON])
     case string(String)

@@ -1,3 +1,4 @@
+import StytchCore
 import XCTest
 
 func XCTAssertThrowsErrorAsync<T: Sendable>(
@@ -19,17 +20,17 @@ func XCTAssertRequest(
     _ request: URLRequest?,
     urlString: String,
     method: XCTHTTPMethod,
-    @XCTHTTPBodyContainsBuilder bodyContains: () -> [String] = { [] },
+    bodyContains: [(key: String, value: JSON)] = [],
     line: UInt = #line,
     file: StaticString = #file
 ) throws {
     guard let request = request else { return }
     XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
     XCTAssertEqual(request.httpMethod, method.rawValue, file: file, line: line)
-    if case let bodyContents = bodyContains(), !bodyContents.isEmpty {
-        let bodyString = try XCTUnwrap(String(data: XCTUnwrap(request.httpBody), encoding: .utf8))
-        bodyContents.forEach { content in
-            XCTAssertTrue(bodyString.contains(content), "Content missing from body: \(content)\nBody: \(bodyString)", file: file, line: line)
+    if !bodyContains.isEmpty {
+        let bodyJSON = try JSONDecoder().decode(JSON.self, from: XCTUnwrap(request.httpBody))
+        bodyContains.forEach { content in
+            XCTAssertEqual(bodyJSON[content.key], content.value, file: file, line: line)
         }
     }
 }
@@ -39,24 +40,4 @@ enum XCTHTTPMethod: String {
     case delete = "DELETE"
     case post = "POST"
     case put = "PUT"
-}
-
-@resultBuilder
-enum XCTHTTPBodyContainsBuilder {
-    static func buildPartialBlock<T: LosslessStringConvertible>(first: (String, T)) -> [String] {
-        ["\"\(first.0)\":\(jsonValue(first.1))"]
-    }
-
-    static func buildPartialBlock<T: LosslessStringConvertible>(accumulated: [String], next: (String, T)) -> [String] {
-        accumulated + buildPartialBlock(first: next)
-    }
-
-    private static func jsonValue<T: LosslessStringConvertible>(_ value: T) -> String {
-        switch value {
-        case is any Numeric:
-            return "\(value)"
-        default:
-            return "\"\(value)\""
-        }
-    }
 }
