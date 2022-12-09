@@ -1,37 +1,35 @@
 import XCTest
 
-extension XCTest {
-    func XCTAssertThrowsError<T: Sendable>(
-        _ expression: @autoclosure () async throws -> T,
-        _ message: @autoclosure () -> String = "",
-        file: StaticString = #filePath,
-        line: UInt = #line,
-        _ errorHandler: (_ error: Error) -> Void = { _ in }
-    ) async {
-        do {
-            _ = try await expression()
-            XCTFail(message(), file: file, line: line)
-        } catch {
-            errorHandler(error)
-        }
+func XCTAssertThrowsErrorAsync<T: Sendable>(
+    _ expression: @autoclosure () async throws -> T,
+    _ message: @autoclosure () -> String = "",
+    file: StaticString = #filePath,
+    line: UInt = #line,
+    _ errorHandler: (_ error: Error) -> Void = { _ in }
+) async {
+    do {
+        _ = try await expression()
+        XCTFail(message(), file: file, line: line)
+    } catch {
+        errorHandler(error)
     }
+}
 
-    func XCTAssertRequest(
-        _ request: URLRequest?,
-        urlString: String,
-        method: XCTHTTPMethod,
-        @XCTHTTPBodyContainsBuilder bodyContains: () -> [String] = { [] },
-        line: UInt = #line,
-        file: StaticString = #file
-    ) throws {
-        guard let request = request else { return }
-        XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
-        XCTAssertEqual(request.httpMethod, method.rawValue, file: file, line: line)
-        if case let bodyContents = bodyContains(), !bodyContents.isEmpty {
-            let bodyString = try XCTUnwrap(String(data: XCTUnwrap(request.httpBody), encoding: .utf8))
-            bodyContents.forEach { content in
-                XCTAssertTrue(bodyString.contains(content), "Content missing from body: \(content)\nBody: \(bodyString)", file: file, line: line)
-            }
+func XCTAssertRequest(
+    _ request: URLRequest?,
+    urlString: String,
+    method: XCTHTTPMethod,
+    @XCTHTTPBodyContainsBuilder bodyContains: () -> [String] = { [] },
+    line: UInt = #line,
+    file: StaticString = #file
+) throws {
+    guard let request = request else { return }
+    XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
+    XCTAssertEqual(request.httpMethod, method.rawValue, file: file, line: line)
+    if case let bodyContents = bodyContains(), !bodyContents.isEmpty {
+        let bodyString = try XCTUnwrap(String(data: XCTUnwrap(request.httpBody), encoding: .utf8))
+        bodyContents.forEach { content in
+            XCTAssertTrue(bodyString.contains(content), "Content missing from body: \(content)\nBody: \(bodyString)", file: file, line: line)
         }
     }
 }

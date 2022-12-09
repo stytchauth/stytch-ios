@@ -41,7 +41,7 @@ final class PasswordsTestCase: BaseTestCase {
     }
 
     func testReset() async throws {
-        await XCTAssertThrowsError(_ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")))
+        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")))
 
         var request: URLRequest?
         let startData = try Current.jsonEncoder.encode(DataContainer(data: BasicResponse(requestId: "123", statusCode: 200)))
