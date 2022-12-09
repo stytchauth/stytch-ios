@@ -28,19 +28,20 @@ enum XCTHTTPMethod: String {
 
 @resultBuilder
 enum XCTHTTPBodyContainsBuilder {
-    static func buildBlock(_ components: String...) -> [String] {
-        components
+    static func buildPartialBlock<T: LosslessStringConvertible>(first: (String, T)) -> [String] {
+        ["\"\(first.0)\":\(jsonValue(first.1))"]
     }
 
-    static func buildExpression(_ expression: (String, String)) -> String {
-        "\"\(expression.0)\":\"\(expression.1)\""
+    static func buildPartialBlock<T: LosslessStringConvertible>(accumulated: [String], next: (String, T)) -> [String] {
+        accumulated + buildPartialBlock(first: next)
     }
 
-    static func buildExpression(_ expression: (String, Int)) -> String {
-        "\"\(expression.0)\":\(expression.1)"
-    }
-
-    static func buildExpression(_ expression: (String, String)) -> [String] {
-        [Self.buildExpression(expression)]
+    private static func jsonValue<T: LosslessStringConvertible>(_ value: T) -> String {
+        switch value {
+        case is any Numeric:
+            return "\(value)"
+        default:
+            return "\"\(value)\""
+        }
     }
 }
