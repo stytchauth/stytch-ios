@@ -10,6 +10,7 @@ class BaseTestCase: XCTestCase {
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()
         Current.cryptoClient = .live
+        Current.localStorage = .init()
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
             return .init()

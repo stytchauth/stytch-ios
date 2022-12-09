@@ -5,13 +5,9 @@ protocol LocalStorageKey<Value>: Sendable {
 }
 
 final class LocalStorage {
-    static var instance: LocalStorage = .init()
-
     private var storage: [ObjectIdentifier: Any] = [:]
 
     private let lock: NSLock = .init()
-
-    private init() {}
 
     subscript<T: LocalStorageKey>(storageKey: T.Type) -> T.Value? {
         get {
