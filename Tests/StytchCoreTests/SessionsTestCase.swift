@@ -13,6 +13,8 @@ final class SessionsTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
+        XCTAssertNil(StytchClient.sessions.session)
+
         Current.sessionStorage.updateSession(
             .mock(userId: "i_am_user"),
             tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
@@ -33,6 +35,7 @@ final class SessionsTestCase: BaseTestCase {
 
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+        XCTAssertNotNil(StytchClient.sessions.session)
     }
 
     func testSessionsRevoke() async throws {
