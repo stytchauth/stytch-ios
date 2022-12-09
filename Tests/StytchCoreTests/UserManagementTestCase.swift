@@ -27,10 +27,7 @@ final class UserManagementTestCase: BaseTestCase {
         let container: DataContainer<UserResponse> = .init(data: userResponse)
         let data = try Current.jsonEncoder.encode(container)
         var request: URLRequest?
-        Current.networkingClient = .mock(
-            verifyingRequest: { request = $0 },
-            returning: .success(data), .success(data), .success(data), .success(data), .success(data)
-        )
+        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data), .success(data), .success(data), .success(data), .success(data))
 
         let factors: [(factor: StytchClient.UserManagement.AuthenticationFactor, pathComponent: String, id: String)] = [
             (.email(id: .init(rawValue: "email_123983")), "emails", "email_123983"),
