@@ -49,6 +49,26 @@ final class NetworkingClientTestCase: XCTestCase {
         }
     }
 
+    func testMockNetworkingClient() async throws {
+        StytchClient.configure(
+            publicToken: "xyz",
+            hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
+        )
+        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
+            data: .init(
+                requestId: "1234",
+                statusCode: 200,
+                wrapped: .init(methodId: "method_id_1234")
+            )
+        )
+        let data = try Current.jsonEncoder.encode(container)
+        Current.networkingClient = .mock(returning: .success(data))
+        let response: StytchClient.OneTimePasscodes.OTPResponse = try await StytchClient.router.get(route: .otps(.authenticate))
+        XCTAssertEqual(response.methodId, "method_id_1234")
+        XCTAssertEqual(response.requestId, "1234")
+        XCTAssertEqual(response.statusCode, 200)
+    }
+
     private func verifyRequest(
         _ method: NetworkingClient.Method = .get,
         url: URL? = nil,

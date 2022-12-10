@@ -11,9 +11,16 @@ final class OAuthTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.oauth.apple.start(parameters: .init())
 
-        XCTAssertEqual(
-            request.httpBody,
-            Data("{\"session_duration_minutes\":30,\"nonce\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\",\"id_token\":\"id_token_123\",\"name\":{\"first_name\":\"user\"}}".utf8)
+        try XCTAssertRequest(
+            request,
+            urlString: "https://web.stytch.com/sdk/v1/oauth/apple/id_token/authenticate",
+            method: .post,
+            bodyContains: [
+                ("session_duration_minutes", 30),
+                ("nonce", "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"),
+                ("id_token", "id_token_123"),
+                ("name.first_name", "user"),
+            ]
         )
     }
 
@@ -26,9 +33,15 @@ final class OAuthTestCase: BaseTestCase {
         _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
-        XCTAssertEqual(
-            request.httpBody,
-            .init("{\"token\":\"i-am-token\",\"session_duration_minutes\":12,\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\"}".utf8)
+        try XCTAssertRequest(
+            request,
+            urlString: "https://web.stytch.com/sdk/v1/oauth/authenticate",
+            method: .post,
+            bodyContains: [
+                ("session_duration_minutes", 12),
+                ("code_verifier", "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"),
+                ("token", "i-am-token"),
+            ]
         )
     }
 }

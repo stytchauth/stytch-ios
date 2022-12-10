@@ -21,4 +21,17 @@ final class ExtensionsTestCase: BaseTestCase {
             try testIsLocalHost(urlString: urlString, expectation: expectation)
         }
     }
+
+    func testAssertRequest() async throws {
+        var request = URLRequest(url: try XCTUnwrap(URL(string: "https://www.example.com")))
+        let json: JSON = ["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"]
+        request.httpBody = try JSONEncoder().encode(json)
+        request.httpMethod = "POST"
+
+        try XCTAssertRequest(request, urlString: "https://www.example.com", method: .post, bodyContains: [
+            ("examplekey1", ["examplekey2": "examplevalue1"]),
+            ("examplekey1.examplekey2", "examplevalue1"),
+            ("examplekey3", "examplevalue2")
+        ])
+    }
 }
