@@ -28,10 +28,11 @@ final class ExtensionsTestCase: BaseTestCase {
         request.httpBody = try JSONEncoder().encode(json)
         request.httpMethod = "POST"
 
-        try XCTAssertRequest(request, urlString: "https://www.example.com", method: .post, bodyContains: [
-            ("examplekey1", ["examplekey2": "examplevalue1"]),
-            ("examplekey1.examplekey2", "examplevalue1"),
-            ("examplekey3", "examplevalue2")
-        ])
+        try XCTAssertRequest(
+            request,
+            urlString: "https://www.example.com",
+            method: .post,
+            bodyEquals: ["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"]
+        )
     }
 }

@@ -20,7 +20,7 @@ func XCTAssertRequest(
     _ request: URLRequest?,
     urlString: String,
     method: XCTHTTPMethod,
-    bodyContains: [(key: String, value: JSON)]? = nil,
+    bodyEquals expectedBody: JSON? = nil,
     headersEqual expectedHeaders: [String: String]? = nil,
     line: UInt = #line,
     file: StaticString = #file
@@ -28,20 +28,9 @@ func XCTAssertRequest(
     let request = try XCTUnwrap(request)
     XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
     XCTAssertEqual(request.httpMethod, method.rawValue, file: file, line: line)
-    if let bodyContains = bodyContains {
+    if let expectedBody = expectedBody {
         let bodyJSON = try JSONDecoder().decode(JSON.self, from: XCTUnwrap(request.httpBody))
-        if bodyContains.isEmpty {
-            XCTAssertEqual(bodyJSON, [])
-        } else {
-            bodyContains.forEach { content in
-                XCTAssertEqual(
-                    content.key.components(separatedBy: ".").reduce(bodyJSON) { $0?[$1] },
-                    content.value,
-                    file: file,
-                    line: line
-                )
-            }
-        }
+        XCTAssertEqual(bodyJSON, expectedBody)
     }
     if let expectedHeaders = expectedHeaders {
         XCTAssertEqual(request.allHTTPHeaderFields, expectedHeaders)

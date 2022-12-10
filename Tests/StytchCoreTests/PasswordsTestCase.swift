@@ -12,10 +12,10 @@ final class PasswordsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords", method: .post, bodyContains: [
-            ("email", "user@stytch.com"),
-            ("session_duration_minutes", 26),
-            ("password", "password123"),
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords", method: .post, bodyEquals: [
+            "email": "user@stytch.com",
+            "session_duration_minutes": 26,
+            "password": "password123",
         ])
     }
 
@@ -26,10 +26,10 @@ final class PasswordsTestCase: BaseTestCase {
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         _ = try await StytchClient.passwords.authenticate(parameters: passwordParams)
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/authenticate", method: .post, bodyContains: [
-            ("email", "user@stytch.com"),
-            ("session_duration_minutes", 26),
-            ("password", "password123"),
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/authenticate", method: .post, bodyEquals: [
+            "email": "user@stytch.com",
+            "session_duration_minutes": 26,
+            "password": "password123",
         ])
     }
 
@@ -39,8 +39,8 @@ final class PasswordsTestCase: BaseTestCase {
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         _ = try await StytchClient.passwords.strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters(email: nil, password: "p@ssword123"))
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/strength_check", method: .post, bodyContains: [
-            ("password", "p@ssword123"),
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/strength_check", method: .post, bodyEquals: [
+            "password": "p@ssword123",
         ])
     }
 
@@ -53,23 +53,23 @@ final class PasswordsTestCase: BaseTestCase {
         Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(startData), .success(finishData))
         _ = try await StytchClient.passwords.resetByEmailStart(parameters: .init(email: "user@stytch.com", loginUrl: nil, loginExpiration: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15))
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset/start", method: .post, bodyContains: [
-            ("email", "user@stytch.com"),
-            ("reset_password_expiration_minutes", 15),
-            ("reset_password_redirect_url", "https://stytch.com/reset"),
-            ("code_challenge", "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8"),
-            ("code_challenge_method", "S256"),
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset/start", method: .post, bodyEquals: [
+            "email": "user@stytch.com",
+            "reset_password_expiration_minutes": 15,
+            "reset_password_redirect_url": "https://stytch.com/reset",
+            "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+            "code_challenge_method": "S256",
         ])
 
         Current.timer = { _, _, _ in .init() }
 
         _ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset", method: .post, bodyContains: [
-            ("token", "12345"),
-            ("code_verifier", "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"),
-            ("session_duration_minutes", 30),
-            ("password", "iAMpasswordHEARmeROAR"),
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset", method: .post, bodyEquals: [
+            "token": "12345",
+            "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+            "session_duration_minutes": 30,
+            "password": "iAMpasswordHEARmeROAR",
         ])
     }
 }

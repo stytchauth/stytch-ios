@@ -15,11 +15,11 @@ final class OAuthTestCase: BaseTestCase {
             request,
             urlString: "https://web.stytch.com/sdk/v1/oauth/apple/id_token/authenticate",
             method: .post,
-            bodyContains: [
-                ("session_duration_minutes", 30),
-                ("nonce", "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"),
-                ("id_token", "id_token_123"),
-                ("name.first_name", "user"),
+            bodyEquals: [
+                "session_duration_minutes": 30,
+                "nonce": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+                "id_token": "id_token_123",
+                "name": ["first_name": "user"],
             ]
         )
     }
@@ -37,10 +37,10 @@ final class OAuthTestCase: BaseTestCase {
             request,
             urlString: "https://web.stytch.com/sdk/v1/oauth/authenticate",
             method: .post,
-            bodyContains: [
-                ("session_duration_minutes", 12),
-                ("code_verifier", "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"),
-                ("token", "i-am-token"),
+            bodyEquals: [
+                "session_duration_minutes": 12,
+                "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+                "token": "i-am-token",
             ]
         )
     }
