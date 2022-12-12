@@ -56,7 +56,7 @@ final class MagicLinksTestCase: BaseTestCase {
             request,
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/primary",
             method: .post,
-            bodyEquals: [
+            body: [
                 "code_challenge_method": "S256",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email": "asdf@stytch.com",
@@ -94,7 +94,7 @@ final class MagicLinksTestCase: BaseTestCase {
             request,
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/secondary",
             method: .post,
-            bodyEquals: [
+            body: [
                 "code_challenge_method": "S256",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email": "asdf@stytch.com",

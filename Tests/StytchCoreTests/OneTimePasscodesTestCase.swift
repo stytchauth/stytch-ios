@@ -31,10 +31,10 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 ["email": "test@stytch.com"]
             ),
         ]
-        .asyncForEach { params, urlString, bodyEquals in
+        .asyncForEach { params, urlString, body in
             _ = try await StytchClient.otps.loginOrCreate(parameters: params)
 
-            try XCTAssertRequest(request, urlString: urlString, method: .post, bodyEquals: bodyEquals)
+            try XCTAssertRequest(request, urlString: urlString, method: .post, body: body)
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
@@ -59,23 +59,23 @@ final class OneTimePasscodesTestCase: BaseTestCase {
             .init(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/primary",
-                bodyEquals: ["expiration_minutes": 3, "phone_number": "+12345678901"]
+                body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
-                bodyEquals: ["phone_number": "+11098765432"]
+                body: ["phone_number": "+11098765432"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email("test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
-                bodyEquals: ["email": "test@stytch.com"]
+                body: ["email": "test@stytch.com"]
             ),
         ]
         try await expectedValues.asyncForEach { expected in
             _ = try await StytchClient.otps.send(parameters: expected.parameters)
 
-            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, bodyEquals: expected.bodyEquals)
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, body: expected.body)
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
@@ -102,22 +102,22 @@ final class OneTimePasscodesTestCase: BaseTestCase {
             .init(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
-                bodyEquals: ["expiration_minutes": 3, "phone_number": "+12345678901"]
+                body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
-                bodyEquals: ["phone_number": "+11098765432"]
+                body: ["phone_number": "+11098765432"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email("test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
-                bodyEquals: ["email": "test@stytch.com"]
+                body: ["email": "test@stytch.com"]
             ),
         ]
         try await expectedValues.asyncForEach { expected in
             _ = try await StytchClient.otps.send(parameters: expected.parameters)
-            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, bodyEquals: expected.bodyEquals)
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, body: expected.body)
         }
     }
 
@@ -143,7 +143,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/otps/authenticate", method: .post, bodyEquals: [
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/otps/authenticate", method: .post, body: [
             "token": "i_am_code",
             "method_id": "method_id_fake_id",
             "session_duration_minutes": 20,
@@ -155,6 +155,6 @@ private extension OneTimePasscodesTestCase {
     struct ExpectedValues {
         let parameters: StytchClient.OneTimePasscodes.Parameters
         let urlString: String
-        let bodyEquals: JSON
+        let body: JSON
     }
 }

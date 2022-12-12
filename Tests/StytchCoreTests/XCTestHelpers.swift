@@ -20,8 +20,8 @@ func XCTAssertRequest(
     _ request: URLRequest?,
     urlString: String,
     method: XCTHTTPMethod,
-    bodyEquals expectedBody: JSON? = nil,
-    headersEqual expectedHeaders: [String: String]? = nil,
+    body expectedBody: JSON? = nil,
+    headers expectedHeaders: [String: String]? = nil,
     line: UInt = #line,
     file: StaticString = #file
 ) throws {

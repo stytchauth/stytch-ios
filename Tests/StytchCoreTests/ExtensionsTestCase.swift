@@ -32,7 +32,7 @@ final class ExtensionsTestCase: BaseTestCase {
             request,
             urlString: "https://www.example.com",
             method: .post,
-            bodyEquals: ["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"]
+            body: ["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"]
         )
     }
 }
