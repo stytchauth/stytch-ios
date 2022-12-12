@@ -55,14 +55,13 @@ final class MagicLinksTestCase: BaseTestCase {
         try XCTAssertRequest(
             request,
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/primary",
-            method: .post,
-            bodyContains: [
-                ("code_challenge_method", "S256"),
-                ("code_challenge", "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8"),
-                ("email", "asdf@stytch.com"),
-                ("login_magic_link_url", "https://myapp.com/login"),
-                ("login_expiration_minutes", 30),
-            ]
+            method: .post([
+                "code_challenge_method": "S256",
+                "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+                "email": "asdf@stytch.com",
+                "login_magic_link_url": "https://myapp.com/login",
+                "login_expiration_minutes": 30,
+            ])
         )
     }
 
@@ -93,14 +92,13 @@ final class MagicLinksTestCase: BaseTestCase {
         try XCTAssertRequest(
             request,
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/secondary",
-            method: .post,
-            bodyContains: [
-                ("code_challenge_method", "S256"),
-                ("code_challenge", "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8"),
-                ("email", "asdf@stytch.com"),
-                ("login_magic_link_url", "https://myapp.com/login"),
-                ("login_expiration_minutes", 30),
-            ]
+            method: .post([
+                "code_challenge_method": "S256",
+                "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+                "email": "asdf@stytch.com",
+                "login_magic_link_url": "https://myapp.com/login",
+                "login_expiration_minutes": 30,
+            ])
         )
     }
 
