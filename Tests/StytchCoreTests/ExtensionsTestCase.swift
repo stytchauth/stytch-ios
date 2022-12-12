@@ -31,8 +31,7 @@ final class ExtensionsTestCase: BaseTestCase {
         try XCTAssertRequest(
             request,
             urlString: "https://www.example.com",
-            method: .post,
-            body: ["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"]
+            method: .post(["examplekey1": ["examplekey2": "examplevalue1"], "examplekey3": "examplevalue2"])
         )
     }
 }

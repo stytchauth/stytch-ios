@@ -26,8 +26,7 @@ final class SessionsTestCase: BaseTestCase {
         try XCTAssertRequest(
             request,
             urlString: "https://web.stytch.com/sdk/v1/sessions/authenticate",
-            method: .post,
-            body: ["session_duration_minutes": 15]
+            method: .post(["session_duration_minutes": 15])
         )
 
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
@@ -54,7 +53,7 @@ final class SessionsTestCase: BaseTestCase {
 
         _ = try await StytchClient.sessions.revoke()
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post, body: [:])
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNil(StytchClient.sessions.sessionJwt)
         XCTAssertNil(StytchClient.sessions.sessionToken)

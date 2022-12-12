@@ -34,7 +34,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         .asyncForEach { params, urlString, body in
             _ = try await StytchClient.otps.loginOrCreate(parameters: params)
 
-            try XCTAssertRequest(request, urlString: urlString, method: .post, body: body)
+            try XCTAssertRequest(request, urlString: urlString, method: .post(body))
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
@@ -75,7 +75,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         try await expectedValues.asyncForEach { expected in
             _ = try await StytchClient.otps.send(parameters: expected.parameters)
 
-            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, body: expected.body)
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post(expected.body))
 
             XCTAssertNil(StytchClient.sessions.sessionJwt)
             XCTAssertNil(StytchClient.sessions.sessionToken)
@@ -117,7 +117,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         ]
         try await expectedValues.asyncForEach { expected in
             _ = try await StytchClient.otps.send(parameters: expected.parameters)
-            try XCTAssertRequest(request, urlString: expected.urlString, method: .post, body: expected.body)
+            try XCTAssertRequest(request, urlString: expected.urlString, method: .post(expected.body))
         }
     }
 
@@ -143,11 +143,15 @@ final class OneTimePasscodesTestCase: BaseTestCase {
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/otps/authenticate", method: .post, body: [
-            "token": "i_am_code",
-            "method_id": "method_id_fake_id",
-            "session_duration_minutes": 20,
-        ])
+        try XCTAssertRequest(
+            request,
+            urlString: "https://web.stytch.com/sdk/v1/otps/authenticate",
+            method: .post([
+                "token": "i_am_code",
+                "method_id": "method_id_fake_id",
+                "session_duration_minutes": 20,
+            ])
+        )
     }
 }
 
