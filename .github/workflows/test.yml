@@ -28,8 +28,7 @@ jobs:
     - name: Codegen
       run: |
         make codegen
-        if [[ ! -z $(git status --porcelain | grep -v Brewfile.lock.json) ]]; then
-          git status --porcelain
+        if [[ ! -z $(git status --porcelain | grep -v 'Brewfile.lock.json\|Gemfile.lock') ]]; then
           echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
           exit 1
         fi
