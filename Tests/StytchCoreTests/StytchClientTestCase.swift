@@ -10,17 +10,11 @@ final class StytchClientTestCase: BaseTestCase {
         StytchClient.configure(publicToken: "xyz", hostUrl: try XCTUnwrap(URL(string: "https://myapp.com")))
         let response: String? = try await StytchClient.router.get(route: .sessions(.authenticate))
 
-        // Verify request
-        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/sessions/authenticate")
-        XCTAssertEqual(request?.httpMethod, "GET")
-        XCTAssertEqual(
-            request?.allHTTPHeaderFields,
-            [
-                "Content-Type": "application/json",
-                "X-SDK-Client": try Current.clientInfo.base64EncodedString(),
-                "Authorization": "Basic eHl6Onh5eg==",
-            ]
-        )
+        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/sessions/authenticate", method: .get, headers: [
+            "Content-Type": "application/json",
+            "X-SDK-Client": try Current.clientInfo.base64EncodedString(),
+            "Authorization": "Basic eHl6Onh5eg==",
+        ])
 
         XCTAssertEqual(response, "Hello, World!")
     }

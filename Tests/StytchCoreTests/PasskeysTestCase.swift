@@ -25,11 +25,18 @@ final class PasskeysTestCase: BaseTestCase {
             )
         }
         _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com", username: "test@stytch.com"))
-        XCTAssertEqual(requests[0].httpBody, Data("{\"username\":\"test@stytch.com\",\"domain\":\"something.blah.com\"}".utf8))
-        XCTAssertEqual(requests[1].httpBody, Data("{\"public_key_credential\":\"{\\\"rawId\\\":\\\"ZmFrZV9pZA\\\",\\\"id\\\":\\\"ZmFrZV9pZA\\\",\\\"response\\\":{\\\"clientDataJSON\\\":\\\"ZmFrZV9qc29u\\\",\\\"attestationObject\\\":\\\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\\\"},\\\"type\\\":\\\"public-key\\\"}\"}".utf8))
-        XCTAssertEqual(requests[0].url?.absoluteString, "https://web.stytch.com/sdk/v1/webauthn/register/start")
-        XCTAssertEqual(requests[1].url?.absoluteString, "https://web.stytch.com/sdk/v1/webauthn/register")
-        XCTAssertTrue(requests.allSatisfy { $0.httpMethod == "POST" })
+        try XCTAssertRequest(
+            requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/register/start",
+            method: .post(["username": "test@stytch.com", "domain": "something.blah.com"])
+        )
+        try XCTAssertRequest(
+            requests[1],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/register",
+            method: .post([
+                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\"},\"type\":\"public-key\"}",
+            ])
+        )
     }
 
     func testAuthenticate() async throws {
@@ -67,11 +74,19 @@ final class PasskeysTestCase: BaseTestCase {
         #else
         XCTAssertFalse(requestBehaviorIsAutoFill)
         #endif
-        XCTAssertEqual(requests[0].httpBody, Data("{\"domain\":\"something.blah.com\"}".utf8))
-        XCTAssertEqual(requests[1].httpBody, Data("{\"session_duration_minutes\":30,\"public_key_credential\":\"{\\\"rawId\\\":\\\"ZmFrZV9pZA\\\",\\\"id\\\":\\\"ZmFrZV9pZA\\\",\\\"response\\\":{\\\"clientDataJSON\\\":\\\"ZmFrZV9qc29u\\\",\\\"signature\\\":\\\"ZmFrZV9zaWduYXR1cmU\\\",\\\"authenticatorData\\\":\\\"ZmFrZV9hdXRoX2RhdGE\\\",\\\"userHandle\\\":\\\"ZmFrZV91c2VyX2lk\\\"},\\\"type\\\":\\\"public-key\\\"}\"}".utf8))
-        XCTAssertEqual(requests[0].url?.absoluteString, "https://web.stytch.com/sdk/v1/webauthn/authenticate/start")
-        XCTAssertEqual(requests[1].url?.absoluteString, "https://web.stytch.com/sdk/v1/webauthn/authenticate")
-        XCTAssertTrue(requests.allSatisfy { $0.httpMethod == "POST" })
+        try XCTAssertRequest(
+            requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate/start",
+            method: .post(["domain": "something.blah.com"])
+        )
+        try XCTAssertRequest(
+            requests[1],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate",
+            method: .post([
+                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"signature\":\"ZmFrZV9zaWduYXR1cmU\",\"authenticatorData\":\"ZmFrZV9hdXRoX2RhdGE\",\"userHandle\":\"ZmFrZV91c2VyX2lk\"},\"type\":\"public-key\"}",
+                "session_duration_minutes": 30,
+            ])
+        )
     }
 }
 
