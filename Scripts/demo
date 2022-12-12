@@ -1,7 +1,5 @@
 #! /usr/bin/env ruby
 
-require 'dotenv'
-
 class String
   # colorization
   def colorize(color_code)
@@ -111,6 +109,7 @@ class Runner
   end
 
   def load_env
+    require 'dotenv'
     Dotenv.load(File.join(demo_root, '.env'))
   end
 
