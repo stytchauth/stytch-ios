@@ -1,3 +1,4 @@
+import AuthenticationServices
 import Foundation
 
 #if !os(watchOS)
@@ -18,15 +19,27 @@ public extension StytchClient.OAuth {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// Docs
-        public func start(parameters: WebAuthSessionStartParameters) async throws -> String {
-            let callbackScheme = "stytch-authentication"
+        /// Initiates the OAuth flow by using the included parameters to generate a URL and start an `ASWebAuthenticationSession`.
+        /// **NOTE:** The user will be prompted for permission to use "stytch.com" to sign in — you may want to inform your users of this expectation.
+        /// The user will see an in-app browser—with shared sessions from their default browser—which will dismiss after completing the authentication challenge with the identity provider.
+        ///
+        /// **Usage:**
+        /// ``` swift
+        /// let (token, url) = try await StytchClient.oauth.google.start(parameters: parameters)
+        /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
+        /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
+        /// ```
+        /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak`` method as well as the redirect url to inform whether this authentication was a login or signup.
+        public func start(parameters: WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
+            guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
+                throw StytchError.oauthInvalidRedirectScheme
+            }
             let url = try generateStartUrl(
-                loginRedirectUrl: webAuthenticationUrl(scheme: callbackScheme, path: parameters.loginRedirectPath),
-                signupRedirectUrl: webAuthenticationUrl(scheme: callbackScheme, path: parameters.signupRedirectPath),
+                loginRedirectUrl: parameters.loginRedirectUrl,
+                signupRedirectUrl: parameters.signupRedirectUrl,
                 customScopes: parameters.customScopes
             )
-            return try await WebAuthenticationSessionClient.live.initiate(
+            return try await Current.webAuthSessionClient.initiate(
                 url: url,
                 callbackUrlScheme: callbackScheme,
                 presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider()
@@ -63,13 +76,6 @@ public extension StytchClient.OAuth {
             return url
         }
 
-        private func webAuthenticationUrl(scheme: String, path: String) throws -> URL {
-            guard let url = URL(string: "\(scheme)://\(path.drop(while: { $0 == "/" }))") else {
-                throw StytchError.oauthInvalidStartUrl // FIXME: -
-            }
-            return url
-        }
-
         /// The dedicated parameters type for the ``start(parameters:)-239i4`` call.
         public struct DefaultBrowserStartParameters {
             let loginRedirectUrl: URL?
@@ -93,24 +99,24 @@ public extension StytchClient.OAuth {
 
         /// The dedicated parameters type for the ``start(parameters:)-3cetj`` call.
         public struct WebAuthSessionStartParameters {
-            let loginRedirectPath: String
-            let signupRedirectPath: String
+            let loginRedirectUrl: URL
+            let signupRedirectUrl: URL
             let customScopes: [String]?
             let presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
 
             /// - Parameters:
-            ///   - loginRedirectFIXME: The url an existing user is redirected to after authenticating with the identity provider. This should be a url that redirects back to your app. If this value is not passed, the default login redirect URL set in the Stytch Dashboard is used. If you have not set a default login redirect URL, an error is returned.
-            ///   - signupRedirectFIXME: The url a new user is redirected to after authenticating with the identity provider. This should be a url that redirects back to your app. If this value is not passed, the default sign-up redirect URL set in the Stytch Dashboard is used. If you have not set a default sign-up redirect URL, an error is returned.
+            ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+            ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
             ///   - customScopes: Any additional scopes to be requested from the identity provider.
-            ///   - presentationContextProvider: FIXME: -
+            ///   - presentationContextProvider: You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
             public init(
-                loginRedirectPath: String,
-                signupRedirectPath: String,
+                loginRedirectUrl: URL,
+                signupRedirectUrl: URL,
                 customScopes: [String]? = nil,
                 presentationContextProvider: ASWebAuthenticationPresentationContextProviding? = nil
             ) {
-                self.loginRedirectPath = loginRedirectPath
-                self.signupRedirectPath = signupRedirectPath
+                self.loginRedirectUrl = loginRedirectUrl
+                self.signupRedirectUrl = signupRedirectUrl
                 self.customScopes = customScopes
                 self.presentationContextProvider = presentationContextProvider
             }
@@ -135,58 +141,3 @@ extension StytchClient.OAuth.ThirdParty {
     }
 }
 #endif
-
-import AuthenticationServices
-
-struct WebAuthenticationSessionClient {
-    private let initiate: (URL, String, ASWebAuthenticationPresentationContextProviding) async throws -> String
-
-    init(initiate: @escaping @MainActor (URL, String, ASWebAuthenticationPresentationContextProviding) async throws -> String) {
-        self.initiate = initiate
-    }
-
-    /// Returns: token
-    @MainActor 
-    func initiate(
-        url: URL,
-        callbackUrlScheme: String,
-        presentationContextProvider: ASWebAuthenticationPresentationContextProviding
-    ) async throws -> String {
-        try await initiate(url, callbackUrlScheme, presentationContextProvider)
-    }
-}
-
-extension WebAuthenticationSessionClient {
-    static var live: Self {
-        .init { url, callbackUrlScheme, presentationContextProvider in
-            try await withCheckedThrowingContinuation { continuation in
-                let session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackUrlScheme) { url, error in
-                    guard let url = url else {
-                        continuation.resume(throwing: StytchError.unrecognizedDeeplinkTokenType) // FIXME: asdf
-                        return
-                    }
-                    do {
-                        guard let token = try StytchClient.tokenValues(for: url)?.1 else {
-                            continuation.resume(throwing: StytchError.unrecognizedDeeplinkTokenType) // FIXME: asdf
-                            return
-                        }
-                        continuation.resume(returning: token)
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                }
-                session.presentationContextProvider = presentationContextProvider
-                session.start()
-            }
-        }
-    }
-}
-
-extension WebAuthenticationSessionClient {
-    final class DefaultPresentationProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
-        @MainActor
-        func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-            .init()
-        }
-    }
-}

@@ -66,6 +66,8 @@ extension StytchClient {
 
         var keychainClient: KeychainClient = .live
 
+        var webAuthSessionClient: WebAuthenticationSessionClient = .live
+
         #if !os(watchOS)
         // swiftlint:disable:next implicitly_unwrapped_optional
         private var _passkeysClent: Any! = {
