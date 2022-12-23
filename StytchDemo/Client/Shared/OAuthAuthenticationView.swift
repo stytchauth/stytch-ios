@@ -29,12 +29,19 @@ struct OAuthAuthenticationView: View {
 
     private func button(for provider: Provider) -> some View {
         Button("Authenticate with \(provider.rawValue.capitalized)") {
-            do {
-                try provider.interface.start(
-                    parameters: .init(loginRedirectUrl: serverUrl, signupRedirectUrl: serverUrl)
-                )
-            } catch {
-                print(error)
+            Task {
+                do {
+                    let (token, _) = try await provider.interface.start(
+                        parameters: .init(
+                            loginRedirectUrl: URL(string: "stytch-authentication://login")!,
+                            signupRedirectUrl: URL(string: "stytch-authentication://signup")!
+                        )
+                    )
+                    let resp = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: 10))
+                    onAuth(resp.session, resp.user)
+                } catch {
+                    print(error)
+                }
             }
         }
     }

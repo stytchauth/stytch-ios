@@ -47,7 +47,7 @@ struct OTPAuthenticationView: View {
         }
         #endif
 
-        func deliveryMethod(_ value: String) -> StytchClient.OneTimePasscodes.LoginOrCreateParameters.DeliveryMethod {
+        func deliveryMethod(_ value: String) -> StytchClient.OneTimePasscodes.DeliveryMethod {
             let normalizedPhone: () -> String = { "+1" + value.filter(\.isNumber) }
             switch self {
             case .whatsapp:
@@ -135,7 +135,7 @@ struct OTPAuthenticationView: View {
     func login() {
         isLoading = true
         Task {
-            let otpParams: StytchClient.OneTimePasscodes.LoginOrCreateParameters = .init(
+            let otpParams: StytchClient.OneTimePasscodes.Parameters = .init(
                 deliveryMethod: deliveryMethod.deliveryMethod(deliveryMethodValue)
             )
             do {
