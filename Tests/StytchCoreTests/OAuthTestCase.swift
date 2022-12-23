@@ -70,7 +70,7 @@ extension OAuthTestCase {
     }
 
     func testThirdPartyASWebAuthSession() async throws {
-        Current.webAuthSessionClient = .init { url, callbackScheme, provider in
+        Current.webAuthSessionClient = .init { _, callbackScheme, _ in
             ("random-token", try XCTUnwrap(URL(string: "\(callbackScheme)://something")))
         }
         var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
