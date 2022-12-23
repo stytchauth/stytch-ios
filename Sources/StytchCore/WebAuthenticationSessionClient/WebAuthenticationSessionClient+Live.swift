@@ -31,7 +31,7 @@ extension WebAuthenticationSessionClient {
 extension WebAuthenticationSessionClient {
     final class DefaultPresentationProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
         @MainActor
-        func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        func presentationAnchor(for _: ASWebAuthenticationSession) -> ASPresentationAnchor {
             .init()
         }
     }

@@ -3,7 +3,7 @@ import AuthenticationServices
 struct WebAuthenticationSessionClient {
     private let initiate: (URL, String, ASWebAuthenticationPresentationContextProviding) async throws -> (token: String, url: URL)
 
-    init(initiate: @escaping @MainActor (URL, String, ASWebAuthenticationPresentationContextProviding) async throws -> (token: String, url: URL)) {
+    init(initiate: @MainActor @escaping (URL, String, ASWebAuthenticationPresentationContextProviding) async throws -> (token: String, url: URL)) {
         self.initiate = initiate
     }
 
