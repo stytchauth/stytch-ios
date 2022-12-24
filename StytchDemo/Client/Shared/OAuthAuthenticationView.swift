@@ -4,6 +4,7 @@ import SwiftUI
 struct OAuthAuthenticationView: View {
     let onAuth: (Session, User) -> Void
     @Environment(\.presentationMode) private var presentationMode
+    @State private var confirmingThirdParty: Bool = false
 
     private var serverUrl: URL { configuration.serverUrl }
 
@@ -21,14 +22,23 @@ struct OAuthAuthenticationView: View {
         }
         .padding()
 
-        ForEach(Provider.allCases) { provider in
-            button(for: provider)
+        Button("Authenticate with Third Party") {
+            confirmingThirdParty = true
         }
+        .confirmationDialog(
+            "Third Party",
+            isPresented: $confirmingThirdParty,
+            actions: {
+                ForEach(Provider.allCases) { provider in
+                    button(for: provider)
+                }
+            }
+        )
         .padding()
     }
 
     private func button(for provider: Provider) -> some View {
-        Button("Authenticate with \(provider.rawValue.capitalized)") {
+        Button("\(provider.rawValue.capitalized)") {
             Task {
                 do {
                     let (token, _) = try await provider.interface.start(
@@ -50,10 +60,14 @@ struct OAuthAuthenticationView: View {
 private enum Provider: String, CaseIterable, Identifiable {
     case amazon
     case facebook
+    case figma
     case github
     case google
     case linkedin
     case slack
+    case snapchat
+    case tiktok
+    case twitter
 
     var id: String {
         rawValue
@@ -65,6 +79,8 @@ private enum Provider: String, CaseIterable, Identifiable {
             return StytchClient.oauth.amazon
         case .facebook:
             return StytchClient.oauth.facebook
+        case .figma:
+            return StytchClient.oauth.figma
         case .github:
             return StytchClient.oauth.github
         case .google:
@@ -73,6 +89,12 @@ private enum Provider: String, CaseIterable, Identifiable {
             return StytchClient.oauth.linkedin
         case .slack:
             return StytchClient.oauth.slack
+        case .snapchat:
+            return StytchClient.oauth.snapchat
+        case .tiktok:
+            return StytchClient.oauth.tiktok
+        case .twitter:
+            return StytchClient.oauth.twitter
         }
     }
 }
