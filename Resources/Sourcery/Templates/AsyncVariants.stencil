@@ -5,7 +5,8 @@
 import Combine
 import Foundation
 
-{% if type.annotations.ExcludeWatchOS %}#if !os(watchOS){% endif %}
+{% set excludeWatchOS %}#if !os(watchOS){% endset %}
+{% if type.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% elif method.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% endif %}
 {% for attribute in type.attributes.available %}{{ attribute }}{% endfor %}
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
@@ -18,6 +19,7 @@ public extension {{ type.name }} {
 {% endfor %}
 {% endset %}
     {{ methodDocs }}
+    {% for attribute in method.attributes.available %}{{ attribute }}{% endfor %}
     {{ methodKeywords }} {{ methodDeclaration }}{% if method.parameters.count != 0 %}, {% endif %}completion: @escaping Completion<{{ returnType }}>) {
         Task {
             do {
@@ -29,6 +31,7 @@ public extension {{ type.name }} {
     }
 
     {{ methodDocs }}
+    {% for attribute in method.attributes.available %}{{ attribute }}{% endfor %}
     {{ methodKeywords }} {{ methodDeclaration }}) -> AnyPublisher<{{ returnType }}, Error> {
         return Deferred {
             Future({ promise in
@@ -44,7 +47,8 @@ public extension {{ type.name }} {
         .eraseToAnyPublisher()
     }
 }
-{% if type.annotations.ExcludeWatchOS %}#endif{% endif %}
+{% set excludeWatchOS %}#endif{% endset %}
+{% if type.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% elif method.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% endif %}
 
 // sourcery:end
 {% endfor %}
