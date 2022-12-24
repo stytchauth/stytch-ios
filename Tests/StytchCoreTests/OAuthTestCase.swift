@@ -50,7 +50,7 @@ extension OAuthTestCase {
         var url: URL!
         Current.openUrl = { url = $0 }
 
-        let startParameters: StytchClient.OAuth.ThirdParty.StartParameters = .init(
+        let startParameters: StytchClient.OAuth.ThirdParty.DefaultBrowserStartParameters = .init(
             loginRedirectUrl: try XCTUnwrap(.init(string: "i-am-url://auth")),
             customScopes: ["scope:1", "scope:2"]
         )
@@ -67,6 +67,37 @@ extension OAuthTestCase {
         }
 
         XCTAssertNotNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
+    }
+
+    @available(tvOS 16.0, *)
+    func testThirdPartyASWebAuthSession() async throws {
+        Current.webAuthSessionClient = .init { params in
+            ("random-token", try XCTUnwrap(URL(string: "\(params.callbackUrlScheme)://something")))
+        }
+        var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
+
+        let createParams: (URL) -> StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters = { url in
+            .init(
+                loginRedirectUrl: url.appendingPathComponent("/login"),
+                signupRedirectUrl: url.appendingPathComponent("/signup")
+            )
+        }
+
+        let invalidStartParams = createParams(baseUrl)
+
+        try await StytchClient.OAuth.ThirdParty.Provider.allCases.asyncForEach { provider in
+            await XCTAssertThrowsErrorAsync(try await provider.interface.start(parameters: invalidStartParams))
+        }
+
+        baseUrl = try XCTUnwrap(URL(string: "custom-scheme://blah"))
+
+        let validStartParams = createParams(baseUrl)
+
+        try await StytchClient.OAuth.ThirdParty.Provider.allCases.asyncForEach { provider in
+            let (token, url) = try await provider.interface.start(parameters: validStartParams)
+            XCTAssertEqual(token, "random-token")
+            XCTAssertEqual(url.absoluteString, "custom-scheme://something")
+        }
     }
 }
 

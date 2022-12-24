@@ -1,0 +1,45 @@
+import AuthenticationServices
+
+#if !os(watchOS)
+@available(tvOS 16.0, *)
+extension WebAuthenticationSessionClient {
+    static let live: Self = .init { parameters in
+        try await withCheckedThrowingContinuation { continuation in
+            let session = ASWebAuthenticationSession(url: parameters.url, callbackURLScheme: parameters.callbackUrlScheme) { url, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                guard let url = url else {
+                    continuation.resume(throwing: StytchError.oauthASWebAuthMissingUrl)
+                    return
+                }
+                do {
+                    guard let token = try StytchClient.tokenValues(for: url)?.1 else {
+                        continuation.resume(throwing: StytchError.missingDeeplinkToken)
+                        return
+                    }
+                    continuation.resume(returning: (token, url))
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+            #if !os(tvOS)
+            session.presentationContextProvider = parameters.presentationContextProvider
+            #endif
+            session.start()
+        }
+    }
+}
+#endif
+
+#if !os(tvOS) && !os(watchOS)
+extension WebAuthenticationSessionClient {
+    final class DefaultPresentationProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
+        @MainActor
+        func presentationAnchor(for _: ASWebAuthenticationSession) -> ASPresentationAnchor {
+            .init()
+        }
+    }
+}
+#endif

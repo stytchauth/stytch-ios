@@ -48,6 +48,10 @@ public extension StytchError {
         errorType: "unrecognized_deeplink_token_type",
         errorMessage: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links`, `oauth`, or `reset_password`"
     )
+    static let missingDeeplinkToken: Self = .init(
+        errorType: "missing_deeplink_token_type",
+        errorMessage: "Deeplink received with no underlying `stytch_token` value."
+    )
     static let noCurrentSession: Self = .init(
         errorType: "no_current_session",
         errorMessage: "There is no session currently available. Must authenticate prior to calling this method."
@@ -68,6 +72,15 @@ public extension StytchError {
         errorType: "oauth_generic_invalid_start_url",
         errorMessage: "The start url was invalid or improperly formatted."
     )
+    static let oauthInvalidRedirectScheme: Self = .init(
+        errorType: "oauth_generic_invalid_redirect_scheme",
+        errorMessage: "The scheme from the given redirect urls was invalid. Possible reasons include: nil scheme, non-custom scheme (using http or https), or differing schemes for login/signup urls."
+    )
+    static let oauthASWebAuthMissingUrl: Self = .init(
+        errorType: "oauth_generic_aswebauth_missing_url",
+        errorMessage: "The underlying ASWebAuthenticationSession failed to return a URL"
+    )
+
     static let passkeysInvalidPublicKeyCredentialType: Self = .init(
         errorType: "passkeys_invalid_credential_type",
         errorMessage: "The public key credential type was not of the expected type."
