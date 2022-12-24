@@ -83,6 +83,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.discord
         case .facebook:
             return StytchClient.oauth.facebook
+        case .figma:
+            return StytchClient.oauth.figma
         case .github:
             return StytchClient.oauth.github
         case .gitlab:
@@ -95,8 +97,16 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.microsoft
         case .slack:
             return StytchClient.oauth.slack
+        case .snapchat:
+            return StytchClient.oauth.snapchat
+        case .spotify:
+            return StytchClient.oauth.spotify
+        case .tiktok:
+            return StytchClient.oauth.tiktok
         case .twitch:
             return StytchClient.oauth.twitch
+        case .twitter:
+            return StytchClient.oauth.twitter
         }
     }
 }
