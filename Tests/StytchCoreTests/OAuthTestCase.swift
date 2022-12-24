@@ -69,9 +69,10 @@ extension OAuthTestCase {
         XCTAssertNotNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
     }
 
+    @available(tvOS 16.0, *)
     func testThirdPartyASWebAuthSession() async throws {
-        Current.webAuthSessionClient = .init { _, callbackScheme, _ in
-            ("random-token", try XCTUnwrap(URL(string: "\(callbackScheme)://something")))
+        Current.webAuthSessionClient = .init { params in
+            ("random-token", try XCTUnwrap(URL(string: "\(params.callbackUrlScheme)://something")))
         }
         var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
 

@@ -17,6 +17,7 @@ struct WebAuthenticationSessionClient {
     }
 }
 
+@available(tvOS 16.0, *)
 extension WebAuthenticationSessionClient {
     struct Parameters {
         let url: URL
