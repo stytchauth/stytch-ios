@@ -81,7 +81,6 @@ extension StytchClient {
             set { _webAuthSessionClient = newValue }
         }
 
-        // swiftlint:disable:next implicitly_unwrapped_optional
         private var _passkeysClent: Any? = {
             if #available(macOS 12.0, iOS 16.0, tvOS 16.0, *) {
                 return PasskeysClient.live

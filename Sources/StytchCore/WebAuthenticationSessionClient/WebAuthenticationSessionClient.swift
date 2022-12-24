@@ -15,7 +15,9 @@ struct WebAuthenticationSessionClient {
     ) async throws -> (token: String, url: URL) {
         try await initiate(parameters)
     }
+}
 
+extension WebAuthenticationSessionClient {
     struct Parameters {
         let url: URL
         let callbackUrlScheme: String
