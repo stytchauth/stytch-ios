@@ -66,11 +66,23 @@ extension StytchClient {
 
         var keychainClient: KeychainClient = .live
 
-        var webAuthSessionClient: WebAuthenticationSessionClient = .live
-
         #if !os(watchOS)
+        private var _webAuthSessionClient: Any? = {
+            if #available(tvOS 16.0, *) {
+                return WebAuthenticationSessionClient.live
+            }
+            return nil
+        }()
+
+        @available(tvOS 16.0, *)
+        var webAuthSessionClient: WebAuthenticationSessionClient {
+            // swiftlint:disable:next force_cast
+            get { _webAuthSessionClient as! WebAuthenticationSessionClient }
+            set { _webAuthSessionClient = newValue }
+        }
+
         // swiftlint:disable:next implicitly_unwrapped_optional
-        private var _passkeysClent: Any! = {
+        private var _passkeysClent: Any? = {
             if #available(macOS 12.0, iOS 16.0, tvOS 16.0, *) {
                 return PasskeysClient.live
             }

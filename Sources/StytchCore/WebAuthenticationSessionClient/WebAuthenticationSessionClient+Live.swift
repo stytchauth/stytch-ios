@@ -1,9 +1,11 @@
 import AuthenticationServices
 
+#if !os(watchOS)
+@available(tvOS 16.0, *)
 extension WebAuthenticationSessionClient {
-    static let live: Self = .init { url, callbackUrlScheme, presentationContextProvider in
+    static let live: Self = .init { parameters in
         try await withCheckedThrowingContinuation { continuation in
-            let session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackUrlScheme) { url, error in
+            let session = ASWebAuthenticationSession(url: parameters.url, callbackURLScheme: parameters.callbackUrlScheme) { url, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return
@@ -22,12 +24,16 @@ extension WebAuthenticationSessionClient {
                     continuation.resume(throwing: error)
                 }
             }
-            session.presentationContextProvider = presentationContextProvider
+            #if !os(tvOS)
+            session.presentationContextProvider = parameters.presentationContextProvider
+            #endif
             session.start()
         }
     }
 }
+#endif
 
+#if !os(tvOS) && !os(watchOS)
 extension WebAuthenticationSessionClient {
     final class DefaultPresentationProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
         @MainActor
@@ -36,3 +42,4 @@ extension WebAuthenticationSessionClient {
         }
     }
 }
+#endif

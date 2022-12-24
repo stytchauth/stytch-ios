@@ -4,6 +4,7 @@ import Foundation
 #if !os(watchOS)
 public extension StytchClient.OAuth {
     /// The SDK provides the ability to integrate with third-party identity providers for OAuth experiences beyond the natively-supported Sign In With Apple flow.
+    // sourcery: ExcludeWatchOS
     struct ThirdParty {
         let provider: Provider
 
@@ -18,7 +19,8 @@ public extension StytchClient.OAuth {
             Current.openUrl(url)
         }
 
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        @available(tvOS 16.0, *) // Comments must be below attributes
+        // sourcery: AsyncVariants, ExcludeWatchOS (NOTE: - must use /// doc comment styling)
         /// Initiates the OAuth flow by using the included parameters to generate a URL and start an `ASWebAuthenticationSession`.
         /// **NOTE:** The user will be prompted for permission to use "stytch.com" to sign in — you may want to inform your users of this expectation.
         /// The user will see an in-app browser—with shared sessions from their default browser—which will dismiss after completing the authentication challenge with the identity provider.
@@ -39,11 +41,16 @@ public extension StytchClient.OAuth {
                 signupRedirectUrl: parameters.signupRedirectUrl,
                 customScopes: parameters.customScopes
             )
-            return try await Current.webAuthSessionClient.initiate(
+            #if !os(tvOS)
+            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(
                 url: url,
                 callbackUrlScheme: callbackScheme,
                 presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider()
             )
+            #else
+            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)
+            #endif
+            return try await Current.webAuthSessionClient.initiate(parameters: webClientParams)
         }
 
         private func generateStartUrl(
@@ -98,10 +105,12 @@ public extension StytchClient.OAuth {
         }
 
         /// The dedicated parameters type for the ``start(parameters:)-3cetj`` call.
+        @available(tvOS 16.0, *)
         public struct WebAuthSessionStartParameters {
             let loginRedirectUrl: URL
             let signupRedirectUrl: URL
             let customScopes: [String]?
+            #if !os(tvOS)
             let presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
 
             /// - Parameters:
@@ -120,6 +129,22 @@ public extension StytchClient.OAuth {
                 self.customScopes = customScopes
                 self.presentationContextProvider = presentationContextProvider
             }
+            #else
+            /// - Parameters:
+            ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+            ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+            ///   - customScopes: Any additional scopes to be requested from the identity provider.
+            ///   - presentationContextProvider: You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
+            public init(
+                loginRedirectUrl: URL,
+                signupRedirectUrl: URL,
+                customScopes: [String]? = nil
+            ) {
+                self.loginRedirectUrl = loginRedirectUrl
+                self.signupRedirectUrl = signupRedirectUrl
+                self.customScopes = customScopes
+            }
+            #endif
         }
     }
 }
