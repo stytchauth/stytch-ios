@@ -36,6 +36,9 @@ jobs:
     - name: Lint
       run: make lint
 
+    - name: Clear DerivedData
+      run: rm -r ~/Library/Developer/Xcode/DerivedData/*
+
     - name: Test macOS
       run: make test-macos
 
