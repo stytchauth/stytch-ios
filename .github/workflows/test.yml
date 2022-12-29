@@ -40,7 +40,7 @@ jobs:
       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
 
     - name: Erase simulators
-      run: xcrun simctl erase all
+      run: xcrun simctl shutdown all && xcrun simctl erase all
 
     - name: Test macOS
       run: make test-macos
