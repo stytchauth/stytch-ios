@@ -41,7 +41,7 @@ jobs:
 
 #     - run: xcode-select -p
 
-    - run: echo $MACHINE_PW | sudo -S xcodebuild -license
+    - run: echo -n "$MACHINE_PW" | sudo -S xcodebuild -license
       env:
         MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
 
