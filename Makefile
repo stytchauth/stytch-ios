@@ -3,7 +3,7 @@ WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watc
 
 ARM64=arch -arm64
 PIPEFAIL=set -o pipefail
-XCPRETTY=bundle exec xcpretty
+XCPRETTY=cat
 
 .PHONY: coverage codegen docs format lint setup test tests test-ios test-macos test-tvos test-watchos tools
 
