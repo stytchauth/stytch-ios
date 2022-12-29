@@ -36,18 +36,20 @@ jobs:
     - name: Lint
       run: make lint
 
-    - name: Clear DerivedData
-      run: rm -r ~/Library/Developer/Xcode/DerivedData/*
+#     - name: Clear DerivedData
+#       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
 
-    - run: xcode-select -p
+#     - run: xcode-select -p
 
-    - run: sudo xcodebuild -license
+    - run: echo $MACHINE_PW | sudo -S xcodebuild -license 2> /dev/null
+      env:
+        MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
 
     - run: xcrun simctl list devices
 
-    - name: Erase simulators
-      run: |
-        xcrun simctl shutdown all && xcrun simctl erase all
+#     - name: Erase simulators
+#       run: |
+#         xcrun simctl shutdown all && xcrun simctl erase all
 
     - name: Test macOS
       run: make test-macos
