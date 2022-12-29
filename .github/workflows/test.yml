@@ -44,6 +44,7 @@ jobs:
     - run: echo -n "$MACHINE_PW" | sudo -S xcodebuild -license accept
       env:
         MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
+    - run: $(xcode-select -p)/usr/bin/simctl help
     - run: xcrun simctl help
 
     - run: xcrun simctl diagnose
