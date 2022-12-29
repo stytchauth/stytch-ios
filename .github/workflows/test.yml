@@ -36,14 +36,14 @@ jobs:
     - name: Lint
       run: make lint
 
+    - name: Test macOS
+      run: make test-macos
+
     - name: Test watchOS
       run: make test-watchos
 
     - name: Test tvOS
       run: make test-tvos
-
-    - name: Test macOS
-      run: make test-macos
 
     - name: Test iOS
       run: make test-ios
