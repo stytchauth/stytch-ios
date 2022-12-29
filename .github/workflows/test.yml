@@ -39,9 +39,14 @@ jobs:
     - name: Clear DerivedData
       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
 
+    - run: xcode-select -p
+
+    - run: xcodebuild -license
+
+    - run: xcrun simctl list devices
+
     - name: Erase simulators
       run: |
-        xcrun simctl list devices
         xcrun simctl shutdown all && xcrun simctl erase all
 
     - name: Test macOS
