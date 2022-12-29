@@ -45,6 +45,8 @@ jobs:
       env:
         MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
 
+    - run: xcrun simctl diagnose
+
     - run: xcrun simctl list devices
 
 #     - name: Erase simulators
