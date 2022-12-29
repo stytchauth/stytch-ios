@@ -41,7 +41,7 @@ jobs:
 
     - run: xcode-select -p
 
-    - run: xcodebuild -license
+    - run: sudo xcodebuild -license
 
     - run: xcrun simctl list devices
 
