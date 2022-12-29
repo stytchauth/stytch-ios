@@ -47,6 +47,8 @@ jobs:
     - run: |
         ls /Applications | grep Xcode
         xcode-select -p
+    - run: cat $(xcode-select -p)/usr/bin/simctl
+    - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
     - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
     - run: $(xcode-select -p)/usr/bin/simctl help
     - run: xcrun simctl help
