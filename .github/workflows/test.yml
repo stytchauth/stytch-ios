@@ -48,6 +48,7 @@ jobs:
         ls /Applications | grep Xcode
         xcode-select -p
     - run: cat $(xcode-select -p)/usr/bin/simctl
+    - run: echo $(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist" 2>&1)
     - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
     - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
     - run: $(xcode-select -p)/usr/bin/simctl help
