@@ -35,14 +35,18 @@ jobs:
         path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
+    - name: Brew Bin
+       id: brew-bin
+       run: echo "value=$(brew --prefix)/bin" >> $GITHUB_OUTPUT
+
     - name: Cache Brew
       id: cache-brew
       uses: actions/cache@v3
       with:
         path: |
-          /usr/local/bin/mint
-          /usr/local/bin/lcov
-        key: ${{ runner.os }}-brew-v2-${{ hashFiles('Brewfile') }}
+          ${{ steps.brew-bin.outputs.value }}/mint
+          ${{ steps.brew-bin.outputs.value }}/lcov
+        key: ${{ runner.os }}-brew-v3-${{ hashFiles('Brewfile') }}
 
     - name: Bootstrap
       env:
