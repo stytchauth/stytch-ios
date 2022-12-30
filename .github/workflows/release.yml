@@ -7,22 +7,23 @@ on:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
 jobs:
   release:
-    runs-on: [ self-hosted, apple-silicon ]
+    runs-on: macos-12
 
     steps:
 
     - uses: actions/checkout@v3
 
     - name: Bootstrap
-      run: |
-        make setup
-        make tools
+      uses: ./.github/actions/bootstrap
 
     - name: Ensure SDK version matches current tag
       run: |
