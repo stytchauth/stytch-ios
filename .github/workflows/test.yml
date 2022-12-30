@@ -32,8 +32,17 @@ jobs:
       id: cache-mint
       uses: actions/cache@v3
       with:
-        path: ~/.mint/bin
+        path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
+
+    - name: Cache Brew
+      id: cache-brew
+      uses: actions/cache@v3
+      with:
+        path: |
+          /usr/local/bin/mint
+          /usr/local/bin/lcov
+        key: ${{ runner.os }}-brew-v2-${{ hashFiles('Brewfile') }}
 
     - name: Bootstrap
       env:
