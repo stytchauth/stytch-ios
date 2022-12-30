@@ -7,6 +7,9 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'
   pull_request:
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
@@ -14,27 +17,27 @@ concurrency:
 jobs:
 
   test:
-    runs-on: [ self-hosted, apple-silicon ]
+    runs-on: macos-12 #[ self-hosted, apple-silicon ]
 
     steps:
 
-#     - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-#     - name: Bootstrap
-#       run: |
-#         make setup
-#         make tools
+    - name: Bootstrap
+      run: |
+        make setup
+        make tools
 
-#     - name: Codegen
-#       run: |
-#         make codegen
-#         if [[ ! -z $(git status --porcelain | grep -v 'Brewfile.lock.json\|Gemfile.lock') ]]; then
-#           echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
-#           exit 1
-#         fi
+    - name: Codegen
+      run: |
+        make codegen
+        if [[ ! -z $(git status --porcelain | grep -v 'Brewfile.lock.json\|Gemfile.lock') ]]; then
+          echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
+          exit 1
+        fi
 
-#     - name: Lint
-#       run: make lint
+    - name: Lint
+      run: make lint
 
 #     - name: Clear DerivedData
 #       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
@@ -52,20 +55,20 @@ jobs:
     # - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
     # - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
     # - run: $(xcode-select -p)/usr/bin/simctl help
-    - run: ping -c 3 google.com
-    - run: |
-        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
-        PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-        softwareupdate -i "$PROD" --verbose;
-    - run: xcrun simctl help
+    # - run: ping -c 3 google.com
+    # - run: |
+    #     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+    #     PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
+    #     softwareupdate -i "$PROD" --verbose;
+    # - run: xcrun simctl help
 
-    - run: xcrun simctl diagnose
+    # - run: xcrun simctl diagnose
 
-    - run: xcrun simctl list devices
+    # - run: xcrun simctl list devices
 
-#     - name: Erase simulators
-#       run: |
-#         xcrun simctl shutdown all && xcrun simctl erase all
+# #     - name: Erase simulators
+# #       run: |
+# #         xcrun simctl shutdown all && xcrun simctl erase all
 
     - name: Test macOS
       run: make test-macos
