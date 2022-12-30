@@ -27,7 +27,7 @@ jobs:
         run: |
           matrix_values='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
           has_watchos_pr_label() {
-            if [[ gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos' ]]; then echo '1'; fi
+            if [[ $(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos') ]]; then echo '1'; fi
           }
           # [[ ${{ github.event.pull_request.number }} ]]
           if [[ $(${{ github.ref == 'refs/heads/main' }}) || $(has_watchos_pr_label) ]]; then
