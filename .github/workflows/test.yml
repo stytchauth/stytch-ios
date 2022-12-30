@@ -35,17 +35,6 @@ jobs:
         path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
-    - name: Brew Dir
-      id: brew-dir
-      run: echo "value=$(brew --prefix)/Cellar" >> $GITHUB_OUTPUT
-
-    - name: Cache Brew
-      id: cache-brew
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.brew-dir.outputs.value }}
-        key: ${{ runner.os }}-brew-v1-${{ hashFiles('Brewfile') }}
-
     - name: Bootstrap
       run: |
         make setup # NOTE: - CI won't run bundle install
