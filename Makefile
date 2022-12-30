@@ -34,7 +34,7 @@ lint:
 	$(ARCH) mint run swiftformat --lint .
 
 setup:
-	$(ARCH) brew bundle
+	$(ARCH) brew bundle --verbose
 	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
@@ -56,4 +56,4 @@ test-watchos: codegen
 	$(PIPEFAIL) && $(ARCH) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 tools:
-	$(ARCH) mint bootstrap --verbose
+	$(ARCH) mint bootstrap

@@ -38,8 +38,8 @@ jobs:
     - name: Brew Bin
       id: brew-bin
       run: |
-        echo "mint=$(readlink -f `which mint`)" >> $GITHUB_OUTPUT
-        echo "lcov=$(readlink -f `which lcov`)" >> $GITHUB_OUTPUT
+        echo "mint=$(readlink -f $(which mint))" >> $GITHUB_OUTPUT
+        echo "lcov=$(readlink -f $(which lcov))" >> $GITHUB_OUTPUT
 
     - name: Cache Brew
       id: cache-brew
