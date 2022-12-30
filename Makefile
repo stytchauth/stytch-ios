@@ -35,7 +35,7 @@ lint:
 	$(ARCH) mint run swiftformat --lint .
 
 setup:
-	$(ARCH) brew bundle
+	$(ARCH) brew install gh lcov mint
 	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
