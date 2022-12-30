@@ -46,3 +46,8 @@ fastlane/test_output
 
 # Demo
 StytchDemo/*file.lock*
+
+# Dependencies
+.mint/
+.bundle/
+vendor/
