@@ -5,6 +5,6 @@
 # Asset/File Codegen
 # SwiftGen/SwiftGen@6.5.1
 # Annotation Codegen
-krzysztofzablocki/Sourcery@1.8.0
+#krzysztofzablocki/Sourcery@1.8.0
 # Release generation
-#unsignedapps/swift-create-xcframework@v2.1.0
+unsignedapps/swift-create-xcframework@v2.1.0
