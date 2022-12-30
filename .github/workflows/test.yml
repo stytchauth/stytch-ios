@@ -62,7 +62,7 @@ jobs:
       run: make test-${{ matrix.test-os }}
 
     - name: Coverage
-      if: ${{ matrix.test-os }} == 'macos'
+      if: matrix.test-os == 'macos'
       run: |
         make coverage
         Scripts/generate-coverage-summary .coverage/lcov.json >> $GITHUB_STEP_SUMMARY
