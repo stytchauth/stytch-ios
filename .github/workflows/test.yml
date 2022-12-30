@@ -32,7 +32,7 @@ jobs:
       id: cache-mint
       uses: actions/cache@v3
       with:
-        path: $HOME/.mint
+        path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
     - name: Brew Dir
