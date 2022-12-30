@@ -24,6 +24,8 @@ jobs:
 
     steps:
       - id: set-matrix
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           matrix_values='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
           has_watchos_pr_label() {
