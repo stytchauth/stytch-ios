@@ -29,13 +29,12 @@ jobs:
         run: |
           matrix_values='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
           has_watchos_pr_label() {
-            if [[ $(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos') ]]; then echo '1'; fi
+            if [[ ${{ github.event.pull_request.number }} && $(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos') ]]; then echo '1'; fi
           }
-          # [[ ${{ github.event.pull_request.number }} ]]
           if [[ $(${{ github.ref == 'refs/heads/main' }}) || $(has_watchos_pr_label) ]]; then
-          # if [[ || contains(github.event.pull_request.labels.*.name, 'test-watchos') }}) ]]; then
             matrix_values+=',{"test-os":"watchos"}'
           fi
+          echo $matrix_values
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   test:
