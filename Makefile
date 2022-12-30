@@ -56,4 +56,4 @@ test-watchos: codegen
 	$(PIPEFAIL) && $(ARCH) xcodebuild test -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 tools:
-	$(ARCH) mint bootstrap
+	$(ARCH) mint bootstrap --verbose
