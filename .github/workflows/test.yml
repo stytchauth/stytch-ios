@@ -52,6 +52,7 @@ jobs:
     # - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
     # - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
     # - run: $(xcode-select -p)/usr/bin/simctl help
+    - run: ping -c 3 google.com
     - run: |
         touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
         PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
