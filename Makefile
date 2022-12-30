@@ -1,7 +1,8 @@
 IOS_VERSION := $(shell xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
 WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
 
-ARCH=arch -$(shell [ -z "$$CI" ] && echo "arm64e" || echo "x86_64")
+IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
+ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64e")
 PIPEFAIL=set -o pipefail
 XCPRETTY=cat
 
@@ -34,7 +35,7 @@ lint:
 
 setup:
 	$(ARCH) brew bundle
-	$(ARCH) bundle install
+	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
 	$(MAKE) test

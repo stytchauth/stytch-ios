@@ -17,15 +17,27 @@ concurrency:
 jobs:
 
   test:
-    runs-on: macos-12 #[ self-hosted, apple-silicon ]
+    runs-on: macos-12
 
     steps:
 
     - uses: actions/checkout@v3
 
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+        bundler-cache: true
+
+    - name: Cache Mint
+      id: cache-mint
+      uses: actions/cache@v3
+      with:
+        path: $HOME/.mint
+        key: ${{ runner.os }}-mint-v1-{{ hashFiles('Mintfile') }}
+
     - name: Bootstrap
       run: |
-        make setup
+        make setup # NOTE: - CI won't run bundle install
         make tools
 
     - name: Codegen
@@ -38,37 +50,6 @@ jobs:
 
     - name: Lint
       run: make lint
-
-#     - name: Clear DerivedData
-#       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
-
-#     - run: xcode-select -p
-
-#     - run: echo -n "$MACHINE_PW" | sudo -S xcodebuild -license accept
-#       env:
-#         MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
-    # - run: |
-    #     ls /Applications | grep Xcode
-    #     xcode-select -p
-    # - run: cat $(xcode-select -p)/usr/bin/simctl
-    # - run: echo $(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist" 2>&1)
-    # - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
-    # - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
-    # - run: $(xcode-select -p)/usr/bin/simctl help
-    # - run: ping -c 3 google.com
-    # - run: |
-    #     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
-    #     PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-    #     softwareupdate -i "$PROD" --verbose;
-    # - run: xcrun simctl help
-
-    # - run: xcrun simctl diagnose
-
-    # - run: xcrun simctl list devices
-
-# #     - name: Erase simulators
-# #       run: |
-# #         xcrun simctl shutdown all && xcrun simctl erase all
 
     - name: Test macOS
       run: make test-macos
