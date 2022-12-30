@@ -36,6 +36,8 @@ jobs:
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
     - name: Bootstrap
+      env:
+        HOMEBREW_NO_AUTO_UPDATE: 1
       run: |
         make setup # NOTE: - CI won't run bundle install
         make tools
