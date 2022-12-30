@@ -16,36 +16,15 @@ jobs:
     runs-on: macos-12
 
     steps:
-
-    - uses: actions/checkout@v3
+    - name: Bootstrap
+      uses: ./.github/actions/bootstrap
       with:
-        path: main
+        checkout-path: main
 
     - uses: actions/checkout@v3
       with:
         ref: docs/live
         path: docs-live
-
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: .ruby-version
-        bundler-cache: true
-
-    - name: Cache Mint
-      id: cache-mint
-      uses: actions/cache@v3
-      with:
-        path: ~/.mint
-        key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
-
-    - name: Bootstrap
-      env:
-        HOMEBREW_NO_AUTO_UPDATE: 1
-        HOMEBREW_NO_INSTALL_CLEANUP: 1
-      working-directory: main
-      run: |
-        make setup
-        make tools
 
     - name: Codegen
       working-directory: main
