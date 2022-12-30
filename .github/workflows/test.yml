@@ -36,8 +36,8 @@ jobs:
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
     - name: Brew Bin
-       id: brew-bin
-       run: echo "value=$(brew --prefix)/bin" >> $GITHUB_OUTPUT
+      id: brew-bin
+      run: echo "value=$(brew --prefix)/bin" >> $GITHUB_OUTPUT
 
     - name: Cache Brew
       id: cache-brew
