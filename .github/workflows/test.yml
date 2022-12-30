@@ -41,6 +41,7 @@ jobs:
       run: make lint
 
     - name: Test
+      if: matrix.test-os != 'watchos' || github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'test-watchos')
       run: make test-${{ matrix.test-os }}
 
     - name: Coverage
