@@ -4,16 +4,18 @@ on:
     branches:
       - main
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
 jobs:
   docs:
-    runs-on: [ self-hosted, apple-silicon ]
+    runs-on: macos-12
 
     steps:
-
     - uses: actions/checkout@v3
       with:
         path: main
@@ -24,10 +26,7 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
-      working-directory: main
-      run: |
-        make setup
-        make tools
+      uses: ./.github/actions/bootstrap
 
     - name: Codegen
       working-directory: main

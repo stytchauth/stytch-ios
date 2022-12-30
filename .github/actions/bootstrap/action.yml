@@ -1,0 +1,26 @@
+name: Bootstrap
+on:
+  workflow_call:
+
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: .ruby-version
+        bundler-cache: true
+
+    - name: Cache Mint
+      uses: actions/cache@v3
+      with:
+        path: ~/.mint
+        key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
+
+    - name: Bootstrap
+      shell: bash
+      env:
+        HOMEBREW_NO_AUTO_UPDATE: 1
+        HOMEBREW_NO_INSTALL_CLEANUP: 1
+      run: |
+        NO_BUNDLE=1 make setup
+        make tools

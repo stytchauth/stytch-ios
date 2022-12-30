@@ -10,10 +10,12 @@ on:
           - major
           - minor
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+
 jobs:
   cut-version:
-
-    runs-on: [ self-hosted, apple-silicon ]
+    runs-on: ubuntu-latest
 
     steps:
 

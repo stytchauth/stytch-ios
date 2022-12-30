@@ -1,11 +1,11 @@
 IOS_VERSION := $(shell xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
 WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
-TEST=xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
 
 IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
-ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64e")
+ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
+TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
 
 .PHONY: coverage codegen docs format lint setup test tests test-ios test-macos test-tvos test-watchos tools
 
@@ -36,7 +36,7 @@ lint:
 
 setup:
 	$(ARCH) brew bundle
-	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
+	@if [ ! $$NO_BUNDLE ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
 	$(MAKE) test
@@ -48,13 +48,13 @@ test tests test-macos: codegen
 	$(ARCH) swift test --enable-code-coverage --disable-automatic-resolution --skip-update
 
 test-ios: codegen
-	$(PIPEFAIL) && $(ARCH) $(TEST) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
+	$(TEST) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
 
 test-tvos: codegen
-	$(PIPEFAIL) && $(ARCH) $(TEST) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
+	$(TEST) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
 
 test-watchos: codegen
-	$(PIPEFAIL) && $(ARCH) $(TEST) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
+	$(TEST) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 tools:
 	$(ARCH) mint bootstrap
