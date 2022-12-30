@@ -1,6 +1,6 @@
 IOS_VERSION := $(shell xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
 WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
-TEST=xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
+TEST=xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -scheme Stytch -sdk
 
 IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
 ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64e")
