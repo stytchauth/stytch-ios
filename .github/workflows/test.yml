@@ -35,10 +35,6 @@ jobs:
 
 #     - name: Lint
 #       run: make lint
-      - run: |
-          touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
-          PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
-          softwareupdate -i "$PROD" --verbose;
 
 #     - name: Clear DerivedData
 #       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
@@ -56,6 +52,10 @@ jobs:
     # - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
     # - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
     # - run: $(xcode-select -p)/usr/bin/simctl help
+    - run: |
+        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+        PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
+        softwareupdate -i "$PROD" --verbose;
     - run: xcrun simctl help
 
     - run: xcrun simctl diagnose
