@@ -18,40 +18,44 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v3
+#     - uses: actions/checkout@v3
 
-    - name: Bootstrap
-      run: |
-        make setup
-        make tools
+#     - name: Bootstrap
+#       run: |
+#         make setup
+#         make tools
 
-    - name: Codegen
-      run: |
-        make codegen
-        if [[ ! -z $(git status --porcelain | grep -v 'Brewfile.lock.json\|Gemfile.lock') ]]; then
-          echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
-          exit 1
-        fi
+#     - name: Codegen
+#       run: |
+#         make codegen
+#         if [[ ! -z $(git status --porcelain | grep -v 'Brewfile.lock.json\|Gemfile.lock') ]]; then
+#           echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
+#           exit 1
+#         fi
 
-    - name: Lint
-      run: make lint
+#     - name: Lint
+#       run: make lint
+      - run: |
+          touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
+          PROD=$(softwareupdate -l | grep "\*.*Command Line" | tail -n 1 | sed 's/^[^C]* //')
+          softwareupdate -i "$PROD" --verbose;
 
 #     - name: Clear DerivedData
 #       run: rm -r ~/Library/Developer/Xcode/DerivedData/*
 
 #     - run: xcode-select -p
 
-    - run: echo -n "$MACHINE_PW" | sudo -S xcodebuild -license accept
-      env:
-        MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
-    - run: |
-        ls /Applications | grep Xcode
-        xcode-select -p
-    - run: cat $(xcode-select -p)/usr/bin/simctl
-    - run: echo $(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist" 2>&1)
-    - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
-    - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
-    - run: $(xcode-select -p)/usr/bin/simctl help
+#     - run: echo -n "$MACHINE_PW" | sudo -S xcodebuild -license accept
+#       env:
+#         MACHINE_PW: ${{ secrets.VIRTUAL_MACHINE_PW }}
+    # - run: |
+    #     ls /Applications | grep Xcode
+    #     xcode-select -p
+    # - run: cat $(xcode-select -p)/usr/bin/simctl
+    # - run: echo $(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/Info.plist" 2>&1)
+    # - run: $(xcode-select -p)/usr/bin/xcodebuild -runFirstLaunch
+    # - run: /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl help
+    # - run: $(xcode-select -p)/usr/bin/simctl help
     - run: xcrun simctl help
 
     - run: xcrun simctl diagnose
