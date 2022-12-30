@@ -23,13 +23,15 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
     steps:
+      - uses: actions/checkout@v3
+
       - id: set-matrix
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           matrix_values='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
           has_watchos_pr_label() {
-            if [[ ${{ github.event.pull_request.number }} && $(gh pr view ${{ github.event.pull_request.url }} --json labels --jq '.labels[].name' | grep 'test-watchos') ]]; then echo '1'; fi
+            if [[ ${{ github.event.pull_request.number }} && $(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos') ]]; then echo '1'; fi
           }
           if [[ $(${{ github.ref == 'refs/heads/main' }}) || $(has_watchos_pr_label) ]]; then
             matrix_values+=',{"test-os":"watchos"}'
