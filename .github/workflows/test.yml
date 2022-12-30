@@ -25,11 +25,14 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          matrixvalues='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
-          if [[ $(${{ github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'test-watchos') }}) ]]; then
-            matrixvalues+=',{"test-os":"watchos"}'
+          matrix_values='{"test-os":"ios"},{"test-os":"macos"},{"test-os":"tvos"}'
+# [[ ${{ github.event.pull_request.number }} ]]
+          has_watchos_pr_label={ if [[ gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[].name' | grep 'test-watchos' ]]; then echo '1'; fi }()
+          if [[ $(${{ github.ref == 'refs/heads/main' }}) ]] || [[ $(has_watchos_pr_label) ]]; then
+          # if [[ || contains(github.event.pull_request.labels.*.name, 'test-watchos') }}) ]]; then
+            matrix_values+=',{"test-os":"watchos"}'
           fi
-          echo "matrix={\"include\":[${matrixvalues}]}" >> $GITHUB_OUTPUT
+          echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   test:
     runs-on: macos-12
