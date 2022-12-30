@@ -36,7 +36,7 @@ lint:
 
 setup:
 	$(ARCH) brew bundle
-	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
+	@if [ ! $$NO_BUNDLE ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
 	$(MAKE) test
