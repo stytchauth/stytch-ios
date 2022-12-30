@@ -34,7 +34,7 @@ lint:
 	$(ARCH) mint run swiftformat --lint .
 
 setup:
-	brew bundle --verbose
+	$(ARCH) brew bundle
 	@if [ ! $(IS_CI) ]; then $(ARCH) bundle install; fi
 
 test-all: codegen
