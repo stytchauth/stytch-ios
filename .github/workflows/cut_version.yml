@@ -15,7 +15,7 @@ env:
 
 jobs:
   cut-version:
-    runs-on: macos-12
+    runs-on: ubuntu-latest
 
     steps:
 
