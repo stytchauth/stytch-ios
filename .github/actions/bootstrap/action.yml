@@ -2,6 +2,11 @@ name: Bootstrap
 on:
   workflow_call:
 
+inputs:
+  working-directory:
+    required: false
+    default: ''
+
 runs:
   using: composite
   steps:
@@ -21,6 +26,7 @@ runs:
       env:
         HOMEBREW_NO_AUTO_UPDATE: 1
         HOMEBREW_NO_INSTALL_CLEANUP: 1
+      working-directory: ${{ inputs.working-directory }}
       run: |
         NO_BUNDLE=1 make setup
         make tools

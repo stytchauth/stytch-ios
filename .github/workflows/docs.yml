@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
@@ -26,8 +27,9 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
-      working-directory: main
       uses: ./.github/actions/bootstrap
+      with:
+        working-directory: main
 
     - name: Codegen
       working-directory: main
