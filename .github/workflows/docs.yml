@@ -19,13 +19,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Bootstrap
+      uses: ./.github/actions/bootstrap
+
     - uses: actions/checkout@v3
       with:
         ref: docs/live
         path: docs-live
-
-    - name: Bootstrap
-      uses: ./.github/actions/bootstrap
 
     - name: Codegen
       run: make codegen
