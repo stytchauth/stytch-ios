@@ -18,8 +18,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        path: main
 
     - uses: actions/checkout@v3
       with:
@@ -28,23 +26,18 @@ jobs:
 
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
-      with:
-        working-directory: main
 
     - name: Codegen
-      working-directory: main
       run: make codegen
 
     - name: Generate docs
-      working-directory: main
       run: make docs-site
 
     - name: Publish docs
-      working-directory: main
       run: |
         current_sha="$(git rev-parse @)"
-        rsync -a .build/docs ../docs-live/
-        cd ../docs-live
+        rsync -a .build/docs docs-live/
+        cd docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
         git push
