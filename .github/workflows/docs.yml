@@ -27,7 +27,7 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
-      uses: ./primary/.github/actions/bootstrap
+      uses: primary/.github/actions/bootstrap
       with:
         working-directory: primary
 
