@@ -19,8 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Bootstrap
-      uses: ./.github/actions/bootstrap
+#     - name: Bootstrap
+#       uses: ./.github/actions/bootstrap
 
     - uses: actions/checkout@v3
       with:
