@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        path: primary
+        path: main
 
     - uses: actions/checkout@v3
       with:
@@ -27,20 +27,18 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
-      uses: primary/.github/actions/bootstrap
-      with:
-        working-directory: primary
+      uses: ./main/.github/actions/bootstrap
 
     - name: Codegen
-      working-directory: primary
+      working-directory: main
       run: make codegen
 
     - name: Generate docs
-      working-directory: primary
+      working-directory: main
       run: make docs-site
 
     - name: Publish docs
-      working-directory: primary
+      working-directory: main
       run: |
         current_sha="$(git rev-parse @)"
         rsync -a .build/docs ../docs-live/
