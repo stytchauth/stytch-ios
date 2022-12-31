@@ -26,6 +26,7 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
+      working-directory: main
       uses: ./.github/actions/bootstrap
 
     - name: Codegen
