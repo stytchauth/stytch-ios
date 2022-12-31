@@ -27,7 +27,9 @@ jobs:
         path: docs-live
 
     - name: Bootstrap
-      uses: ./main/.github/actions/bootstrap
+      uses: ./.github/actions/bootstrap
+      with:
+        working-directory: main
 
     - name: Codegen
       working-directory: main
