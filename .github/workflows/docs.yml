@@ -17,27 +17,27 @@ jobs:
     runs-on: macos-12
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-#     - name: Bootstrap
-#       uses: ./.github/actions/bootstrap
+  #     - name: Bootstrap
+  #       uses: ./.github/actions/bootstrap
 
-    - uses: actions/checkout@v3
-      with:
-        ref: docs/live
-        path: docs-live
+      - uses: actions/checkout@v3
+        with:
+          ref: docs/live
+          path: docs-live
 
-    - name: Codegen
-      run: make codegen
+      - name: Codegen
+        run: make codegen
 
-    - name: Generate docs
-      run: make docs-site
+      - name: Generate docs
+        run: make docs-site
 
-    - name: Publish docs
-      run: |
-        current_sha="$(git rev-parse @)"
-        rsync -a .build/docs docs-live/
-        cd docs-live
-        git add docs
-        git commit --author="CI <ci@stytch.com>" -m "$current_sha"
-        git push
+      - name: Publish docs
+        run: |
+          current_sha="$(git rev-parse @)"
+          rsync -a .build/docs docs-live/
+          cd docs-live
+          git add docs
+          git commit --author="CI <ci@stytch.com>" -m "$current_sha"
+          git push
