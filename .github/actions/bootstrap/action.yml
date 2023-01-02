@@ -23,7 +23,7 @@ runs:
         deps=$(sed "s/brew '\(.*\)'.*/\1/" Brewfile | grep -v 'gh')
         brew_prefix="$(brew --prefix)/Cellar"
         paths=$(echo $deps | sed "s#^#$brew_prefix/#g")
-        cache_key=$(echo $deps | tr -d '\n' | sed 's/ //g')
+        cache_key=$(echo $deps | tr -d '\n' | sed 's/ /-/g')
         echo "deps<<EOF" >> $GITHUB_OUTPUT
         echo "$deps" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
