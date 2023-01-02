@@ -25,7 +25,7 @@ runs:
         paths=$(echo $deps | sed "s#^#$brew_prefix/#g")
         cache_key=$(echo $deps | tr -d '\n')
         echo "deps<<EOF" >> $GITHUB_OUTPUT
-        echo "$deps" >> $GITHUB_OUTPUT
+        echo "($deps)" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
         echo "cache-key=$cache_key" >> $GITHUB_OUTPUT
         echo "paths<<EOF" >> $GITHUB_OUTPUT
