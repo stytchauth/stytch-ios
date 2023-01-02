@@ -24,9 +24,13 @@ runs:
         brew_prefix="$(brew --prefix)/Cellar"
         paths=$(echo $deps | sed "s#^#$brew_prefix/#g")
         cache_key=$(echo $deps | tr -d '\n')
-        echo "deps=$deps" >> $GITHUB_OUTPUT
+        echo "deps<<EOF" >> $GITHUB_OUTPUT
+        echo "$deps" >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_ENV
         echo "cache-key=$cache_key" >> $GITHUB_OUTPUT
-        echo "paths=$paths" >> $GITHUB_OUTPUT
+        echo "paths<<EOF" >> $GITHUB_OUTPUT
+        echo "$paths" >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_ENV
 
     - name: Cache Brew
       uses: actions/cache@v3
