@@ -25,7 +25,7 @@ runs:
         paths=$(echo $deps | sed "s#^#$brew_prefix/#g")
         cache_key=$(echo $deps | tr -d '\n')
         echo "deps<<EOF" >> $GITHUB_OUTPUT
-        echo "($deps)" >> $GITHUB_OUTPUT
+        echo "$deps" >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
         echo "cache-key=$cache_key" >> $GITHUB_OUTPUT
         echo "paths<<EOF" >> $GITHUB_OUTPUT
@@ -44,6 +44,6 @@ runs:
         HOMEBREW_NO_AUTO_UPDATE: 1
         HOMEBREW_NO_INSTALL_CLEANUP: 1
       run: |
-        for dep in ${{ steps.brew-cache.outputs.deps }}; do brew install $dep; done
+        while read -r dep; do brew instal "$dep"; done <<< ${{ steps.brew-cache.outputs.deps }}
         # NO_BUNDLE=1 make setup
         make tools
