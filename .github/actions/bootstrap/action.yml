@@ -44,9 +44,6 @@ runs:
         HOMEBREW_NO_AUTO_UPDATE: 1
         HOMEBREW_NO_INSTALL_CLEANUP: 1
       run: |
-        while IFS="\n" read -r dep; do
-          echo "brew install $dep"
-          brew install "$dep"
-        done <<< "${{ steps.brew-cache.outputs.deps }}"
+        echo ${{ steps.brew-cache.outputs.deps }} | xargs brew install
         # NO_BUNDLE=1 make setup
         make tools
