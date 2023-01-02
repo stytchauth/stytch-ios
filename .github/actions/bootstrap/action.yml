@@ -45,6 +45,7 @@ runs:
         HOMEBREW_NO_INSTALL_CLEANUP: 1
       run: |
         while IFS="\n" read -r dep; do
+          echo "brew install $dep"
           brew install "$dep"
         done <<< "${{ steps.brew-cache.outputs.deps }}"
         # NO_BUNDLE=1 make setup
