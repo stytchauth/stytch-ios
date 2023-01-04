@@ -48,9 +48,10 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
+        # Release should be edited and published manually to trigger cocoapods/carthage updates. If --draft removed, must change "types: [created]" for Publish workflow
         gh release create \
           ${{ github.ref_name }} \
           StytchCore.xcframework.zip \
           ./build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip \
-          --draft \ # Should be edited and published manually to trigger cocoapods/carthage updates, if changed here, must change "types: [created]" for Publish workflow
+          --draft \
           --generate-notes
