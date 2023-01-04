@@ -44,12 +44,11 @@ jobs:
         zip -r StytchCore.doccarchive.zip StytchCore.doccarchive
 
     - name: Publish to GitHub
-      uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
-      with:
-        draft: true # Should be edited and published manually to trigger cocoapods/carthage updates, if changed here, must change "types: [created]" for Publish workflow
-        files: |
-          StytchCore.xcframework.zip
-          .build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip
-        generate_release_notes: true
-
+      run: |
+        gh release create \
+          ${{ github.ref_name }} \
+          StytchCore.xcframework.zip \
+          ./build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip \
+          --draft \ # Should be edited and published manually to trigger cocoapods/carthage updates, if changed here, must change "types: [created]" for Publish workflow
+          --generate-notes
