@@ -34,7 +34,7 @@ jobs:
 
     - name: Create XCFramework
       run: |
-        arch -arm64 mint run swift-create-xcframework --zip --xc-setting SKIP_INSTALL=NO --xc-setting BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+        make xc-framework
         mv StytchCore.zip StytchCore.xcframework.zip
 
     - name: Build docs
@@ -44,12 +44,14 @@ jobs:
         zip -r StytchCore.doccarchive.zip StytchCore.doccarchive
 
     - name: Publish to GitHub
-      uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
-      with:
-        draft: true # Should be edited and published manually to trigger cocoapods/carthage updates, if changed here, must change "types: [created]" for Publish workflow
-        files: |
-          StytchCore.xcframework.zip
-          .build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip
-        generate_release_notes: true
-
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        # Release should be edited and published manually to trigger cocoapods/carthage updates. If --draft removed, must change "types: [created]" for Publish workflow
+        gh release create \
+          ${{ github.ref_name }} \
+          StytchCore.xcframework.zip \
+          ./build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip \
+          --draft \
+          --generate-notes
