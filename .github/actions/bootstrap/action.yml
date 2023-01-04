@@ -16,6 +16,25 @@ runs:
         path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
 
+    - name: Brew cache params
+      shell: bash
+      id: brew-cache
+      run: |
+        deps=$(sed "s/brew '\(.*\)'.*/\1/" Brewfile | grep -v 'gh')
+        brew_prefix="$(brew --prefix)/Cellar"
+        paths=$(echo "$deps" | sed "s#^#$brew_prefix/#g")
+        cache_key=$(echo $deps | tr -d '\n' | sed 's/ /-/g')
+        echo "cache-key=$cache_key" >> $GITHUB_OUTPUT
+        echo "paths<<EOF" >> $GITHUB_OUTPUT
+        echo "$paths" >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+
+    - name: Cache Brew
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.brew-cache.outputs.paths }}
+        key: ${{ runner.os }}-v1-${{ steps.brew-cache.outputs.cache-key }}
+
     - name: Bootstrap
       shell: bash
       env:
