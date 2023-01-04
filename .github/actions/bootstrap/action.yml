@@ -24,9 +24,6 @@ runs:
         brew_prefix="$(brew --prefix)/Cellar"
         paths=$(echo "$deps" | sed "s#^#$brew_prefix/#g")
         cache_key=$(echo $deps | tr -d '\n' | sed 's/ /-/g')
-        echo "deps<<EOF" >> $GITHUB_OUTPUT
-        echo "$deps" >> $GITHUB_OUTPUT
-        echo 'EOF' >> $GITHUB_OUTPUT
         echo "cache-key=$cache_key" >> $GITHUB_OUTPUT
         echo "paths<<EOF" >> $GITHUB_OUTPUT
         echo "$paths" >> $GITHUB_OUTPUT
@@ -44,6 +41,5 @@ runs:
         HOMEBREW_NO_AUTO_UPDATE: 1
         HOMEBREW_NO_INSTALL_CLEANUP: 1
       run: |
-        # NO_BUNDLE=1 make setup # Run brew install directly vs make setup
-        echo "${{ steps.brew-cache.outputs.deps }}" | xargs brew link || echo "${{ steps.brew-cache.outputs.deps }}" | xargs brew install
+        NO_BUNDLE=1 make setup
         make tools
