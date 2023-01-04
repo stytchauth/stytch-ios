@@ -58,3 +58,6 @@ test-watchos: codegen
 
 tools:
 	$(ARCH) mint bootstrap
+
+xc-framework:
+	$(ARCH) mint run swift-create-xcframework --zip --xc-setting SKIP_INSTALL=NO --xc-setting BUILD_LIBRARY_FOR_DISTRIBUTION=YES
