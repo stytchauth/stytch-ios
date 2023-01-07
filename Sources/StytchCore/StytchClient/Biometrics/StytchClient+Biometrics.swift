@@ -56,7 +56,7 @@ public extension StytchClient {
             )
 
             let registration: KeychainClient.KeyRegistration = .init(
-                userId: finishResponse.user.id,
+                userId: finishResponse.user.id.rawValue,
                 userLabel: parameters.identifier,
                 registrationId: finishResponse.biometricRegistrationId
             )

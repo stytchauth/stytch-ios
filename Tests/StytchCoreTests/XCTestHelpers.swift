@@ -29,10 +29,10 @@ func XCTAssertRequest(
     XCTAssertEqual(request.httpMethod, method.stringValue, file: file, line: line)
     if let expectedBody = method.body {
         let bodyJSON = try JSONDecoder().decode(JSON.self, from: XCTUnwrap(request.httpBody))
-        XCTAssertEqual(bodyJSON, expectedBody)
+        XCTAssertEqual(bodyJSON, expectedBody, file: file, line: line)
     }
     if let expectedHeaders = expectedHeaders {
-        XCTAssertEqual(request.allHTTPHeaderFields, expectedHeaders)
+        XCTAssertEqual(request.allHTTPHeaderFields, expectedHeaders, file: file, line: line)
     }
 }
 

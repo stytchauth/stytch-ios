@@ -59,7 +59,7 @@ extension User {
             createdAt: Current.date(),
             cryptoWallets: [],
             emails: [],
-            userId: userId,
+            userId: .init(rawValue: userId),
             name: .init(firstName: "first", lastName: "last", middleName: nil),
             password: nil,
             phoneNumbers: [],
