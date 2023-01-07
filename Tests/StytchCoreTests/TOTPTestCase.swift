@@ -16,7 +16,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totp.create(parameters: .init())
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totp", method: .post(["expiration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps", method: .post(["expiration_minutes": 30]))
     }
 
     func testAuthenticate() async throws {
@@ -26,7 +26,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totp.authenticate(parameters: .init(totpCode: "test-code"))
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totp/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 30]))
     }
 
     func testRecover() async throws {
@@ -36,7 +36,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totp.recover(parameters: .init(recoveryCode: "recover-edoc"))
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totp/recover", method: .post(["recovery_code": "recover-edoc", "session_duration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recover", method: .post(["recovery_code": "recover-edoc", "session_duration_minutes": 30]))
     }
 
     func testRecoveryCodes() async throws {
@@ -44,7 +44,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totp.recoveryCodes()
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totp/recovery_codes", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recovery_codes", method: .post([:]))
     }
 }
 

@@ -26,7 +26,7 @@ enum BaseRoute: RouteType {
         case let .sessions(route):
             return "sessions".appendingPath(route.path)
         case let .totp(route):
-            return "totp".appendingPath(route.path)
+            return "totps".appendingPath(route.path)
         case let .users(route):
             return "users".appendingPath(route.path)
         }
