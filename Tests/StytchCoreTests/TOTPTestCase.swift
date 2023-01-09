@@ -1,5 +1,5 @@
-@testable import StytchCore
 import XCTest
+@testable import StytchCore
 
 final class TOTPTestCase: BaseTestCase {
     var networkInterceptor: NetworkingClientInterceptor = .init()
@@ -40,7 +40,7 @@ final class TOTPTestCase: BaseTestCase {
     }
 
     func testRecoveryCodes() async throws {
-        try networkInterceptor.appendSuccess(StytchClient.TOTP.RecoveryCodesResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totps: [.init(a: .init(totpId: "", verified: false), b: .init(recoveryCodes: ["1234", "5678"]))])))
+        try networkInterceptor.appendSuccess(StytchClient.TOTP.RecoveryCodesResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totps: [.init(lhs: .init(totpId: "", verified: false), rhs: .init(recoveryCodes: ["1234", "5678"]))])))
 
         _ = try await StytchClient.totp.recoveryCodes()
 
