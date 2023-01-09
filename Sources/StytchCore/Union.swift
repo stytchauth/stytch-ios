@@ -8,7 +8,6 @@ public struct Union<LHS, RHS> {
         self.rhs = rhs
     }
 
-
     public subscript<T>(dynamicMember member: KeyPath<LHS, T>) -> T {
         lhs[keyPath: member]
     }

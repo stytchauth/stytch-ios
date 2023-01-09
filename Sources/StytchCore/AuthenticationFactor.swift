@@ -40,6 +40,10 @@ public extension Session.AuthenticationFactor {
     var phoneNumber: String? {
         rawData["phone_factor"]["phone_number"]?.stringValue
     }
+
+    var deliveryMethod: String? {
+        rawData["delivery_method"]?.stringValue
+    }
 }
 
 #if DEBUG
