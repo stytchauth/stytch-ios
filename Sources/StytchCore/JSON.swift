@@ -7,6 +7,10 @@ public enum JSON: Hashable, Equatable {
     case number(Double)
     case boolean(Bool)
 
+    init() {
+        self = .object([:])
+    }
+
     public var stringValue: String? {
         if case let .string(value) = self {
             return value

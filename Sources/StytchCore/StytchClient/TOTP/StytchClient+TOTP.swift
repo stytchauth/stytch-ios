@@ -11,7 +11,7 @@ public extension StytchClient {
         }
 
         public func recoveryCodes() async throws -> RecoveryCodesResponse {
-            try await router.post(to: .recoveryCodes, parameters: JSON.object([:]))
+            try await router.post(to: .recoveryCodes, parameters: JSON())
         }
 
         public func recover(parameters: RecoverParameters) async throws -> RecoverResponse {
