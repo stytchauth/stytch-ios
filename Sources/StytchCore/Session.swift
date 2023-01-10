@@ -4,6 +4,8 @@ import Foundation
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
 public struct Session: Decodable {
+    public typealias ID = Identifier<Self, String>
+
     private enum CodingKeys: String, CodingKey {
         case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
     }
@@ -17,20 +19,20 @@ public struct Session: Decodable {
     /// The date this session was last accessed.
     public let lastAccessedAt: Date
     /// The id for this session.
-    public let sessionId: String
+    public let sessionId: Session.ID
     /// The date this session began.
     public let startedAt: Date
     /// The user id associated with this session.
-    public let userId: String
+    public let userId: User.ID
 
     init(
         attributes: Session.Attributes,
         authenticationFactors: [AuthenticationFactor],
         expiresAt: Date,
         lastAccessedAt: Date,
-        sessionId: String,
+        sessionId: Session.ID,
         startedAt: Date,
-        userId: String
+        userId: User.ID
     ) {
         self.attributes = attributes
         self.authenticationFactors = authenticationFactors

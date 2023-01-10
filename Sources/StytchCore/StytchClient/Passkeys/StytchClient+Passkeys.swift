@@ -182,10 +182,10 @@ extension StytchClient.Passkeys {
             case publicKeyCredentialCreationOptions
         }
 
-        let userId: String
+        let userId: User.ID
         let challenge: Data
 
-        init(userId: String, challenge: Data) {
+        init(userId: User.ID, challenge: Data) {
             self.userId = userId
             self.challenge = challenge
         }
@@ -212,10 +212,10 @@ extension StytchClient.Passkeys {
             case publicKeyCredentialRequestOptions
         }
 
-        let userId: String
+        let userId: User.ID
         let challenge: Data
 
-        init(userId: String, challenge: Data) {
+        init(userId: User.ID, challenge: Data) {
             self.userId = userId
             self.challenge = challenge
         }

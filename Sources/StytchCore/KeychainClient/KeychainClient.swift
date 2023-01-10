@@ -69,9 +69,9 @@ extension KeychainClient {
     }
 
     struct KeyRegistration: Codable {
-        let userId: String
+        let userId: User.ID
         let userLabel: String
-        let registrationId: String
+        let registrationId: User.BiometricRegistration.ID
     }
 
     enum KeychainError: Swift.Error {

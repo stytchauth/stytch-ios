@@ -59,12 +59,12 @@ extension Array where Element == UInt8 {
 }
 
 extension User {
-    static func mock(userId: String) -> Self {
+    static func mock(userId: ID) -> Self {
         .init(
             createdAt: Current.date(),
             cryptoWallets: [],
             emails: [],
-            userId: .init(rawValue: userId),
+            userId: userId,
             name: .init(firstName: "first", lastName: "last", middleName: nil),
             password: nil,
             phoneNumbers: [],
@@ -79,7 +79,7 @@ extension User {
 
 extension AuthenticateResponse {
     static var mock: Self {
-        let userId = "im_a_user_id"
+        let userId: User.ID = "im_a_user_id"
         return .init(
             requestId: "1234",
             statusCode: 200,
@@ -94,7 +94,7 @@ extension AuthenticateResponse {
 }
 
 extension Session {
-    static func mock(userId: String) -> Self {
+    static func mock(userId: User.ID) -> Self {
         let refDate = Date()
 
         return .init(
