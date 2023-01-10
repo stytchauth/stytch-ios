@@ -18,13 +18,13 @@ public struct Union<LHS, RHS> {
 }
 
 extension Union: Codable where LHS: Codable, RHS: Codable {
-    public func encode(to encoder: Encoder) throws {
-        try lhs.encode(to: encoder)
-        try rhs.encode(to: encoder)
-    }
-
     public init(from decoder: Decoder) throws {
         lhs = try .init(from: decoder)
         rhs = try .init(from: decoder)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        try lhs.encode(to: encoder)
+        try rhs.encode(to: encoder)
     }
 }
