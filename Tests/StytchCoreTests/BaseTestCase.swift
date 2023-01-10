@@ -2,10 +2,13 @@ import XCTest
 @testable import StytchCore
 
 class BaseTestCase: XCTestCase {
+    // swiftlint:disable:next test_case_accessibility
+    var networkInterceptor: NetworkingClientInterceptor = .init()
+
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        Current.networkingClient = .failing
+        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest(request:))
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()
@@ -34,6 +37,8 @@ class BaseTestCase: XCTestCase {
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
+
+        networkInterceptor.reset()
     }
 }
 

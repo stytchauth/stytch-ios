@@ -2,15 +2,6 @@ import XCTest
 @testable import StytchCore
 
 final class TOTPTestCase: BaseTestCase {
-    var networkInterceptor: NetworkingClientInterceptor = .init()
-
-    override func setUp() {
-        super.setUp()
-
-        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest(request:))
-        networkInterceptor.reset()
-    }
-
     func testCreate() async throws {
         try networkInterceptor.appendSuccess(StytchClient.TOTP.CreateResponse(requestId: "", statusCode: 200, wrapped: .init(totpId: "", secret: "", qrCode: "", recoveryCodes: [], user: .mock(userId: ""), userId: "")))
 
@@ -47,4 +38,3 @@ final class TOTPTestCase: BaseTestCase {
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recovery_codes", method: .post([:]))
     }
 }
-

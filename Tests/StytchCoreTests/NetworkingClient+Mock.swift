@@ -2,11 +2,6 @@ import XCTest
 @testable import StytchCore
 
 extension NetworkingClient {
-    static let failing: NetworkingClient = .init { _ in
-        XCTFail("Must use your own custom networking client")
-        return (.init(), .init())
-    }
-
     static func mock(
         verifyingRequest: @escaping (URLRequest) throws -> Void = { _ in },
         returning results: Result<Data, Swift.Error>...
