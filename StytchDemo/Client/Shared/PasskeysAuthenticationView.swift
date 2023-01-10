@@ -3,7 +3,7 @@ import SwiftUI
 
 @available(iOS 16.0, macOS 13.0, *)
 struct PasskeysAuthenticationView: View {
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
     @State private var username: String = ""
     @State private var intent: Intent = .register
@@ -44,8 +44,7 @@ struct PasskeysAuthenticationView: View {
             Button("Authenticate") {
                 Task {
                     do {
-                        let resp = try await StytchClient.passkeys.authenticate(parameters: .init(domain: domain))
-                        onAuth(resp.session, resp.user)
+                        onAuth(try await StytchClient.passkeys.authenticate(parameters: .init(domain: domain)))
                     } catch {
                         print(error)
                     }

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct OTPAuthenticationView: View {
     let session: Session?
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
 
     @State private var deliveryMethod: DeliveryMethod = .sms
     @State private var deliveryMethodValue: String = ""
@@ -153,8 +153,7 @@ struct OTPAuthenticationView: View {
         Task {
             let params: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDuration: 30)
             do {
-                let response = try await StytchClient.otps.authenticate(parameters: params)
-                onAuth(response.session, response.user)
+                onAuth(try await StytchClient.otps.authenticate(parameters: params))
             } catch {
                 print(error)
             }

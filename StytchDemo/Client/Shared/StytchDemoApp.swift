@@ -21,7 +21,7 @@ struct StytchDemoApp: App {
                     _ = try await StytchClient.sessions.revoke()
                     sessionUser = nil
                 }
-            } onAuth: { sessionUser = ($0, $1) }
+            } onAuth: { sessionUser = ($0.session, $0.user) }
                 .padding()
                 .frame(minHeight: 250)
                 .task {
@@ -42,8 +42,8 @@ struct StytchDemoApp: App {
                 // Prevent deeplink from opening new window
                 .handlesExternalEvents(preferring: [], allowing: ["*"])
                 .sheet(item: $resetPasswordToken, onDismiss: nil) { wrapped in
-                    ResetPasswordView(token: wrapped.token) { session, user in
-                        sessionUser = (session, user)
+                    ResetPasswordView(token: wrapped.token) { response in
+                        sessionUser = (response.session, response.user)
                         resetPasswordToken = nil
                     }
                 }
