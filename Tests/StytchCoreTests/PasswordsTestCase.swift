@@ -5,15 +5,15 @@ final class PasswordsTestCase: BaseTestCase {
     private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDuration: 26)
 
     func testCreate() async throws {
-        var request: URLRequest?
-        let userId = "user_id_123"
-        let data = try Current.jsonEncoder.encode(DataContainer(data: StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am", userId: userId, user: .mock(userId: userId), sessionToken: "session_token_431", sessionJwt: "jwt_8534", session: .mock(userId: userId)))))
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        let userId: User.ID = ""
+        networkInterceptor.responses {
+            StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am", userId: userId, user: .mock(userId: userId), sessionToken: "session_token_431", sessionJwt: "jwt_8534", session: .mock(userId: userId)))
+        }
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/passwords",
             method: .post([
                 "email": "user@stytch.com",
