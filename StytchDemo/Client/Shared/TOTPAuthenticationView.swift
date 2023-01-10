@@ -12,8 +12,16 @@ struct TOTPAuthenticationView: View {
             if !secret.isEmpty {
                 Text("Secret: " + secret).textSelection(.enabled)
             }
+
+            Spacer()
+
             TextField("Code", text: $code)
-            Button("Submit Code") {
+                .textFieldStyle(.roundedBorder)
+                .padding()
+
+            Spacer()
+
+            Button("Submit code") {
                 Task {
                     do {
                         onAuth(try await StytchClient.totp.authenticate(parameters: .init(totpCode: code)))
@@ -23,8 +31,9 @@ struct TOTPAuthenticationView: View {
                 }
             }
             .disabled(code.isEmpty)
+            .buttonStyle(.borderedProminent)
 
-            Button("Create secret") {
+            Button("Generate new secret") {
                 Task {
                     do {
                         let resp = try await StytchClient.totp.create(parameters: .init())
@@ -34,6 +43,7 @@ struct TOTPAuthenticationView: View {
                     }
                 }
             }
+            .buttonStyle(.bordered)
         }
     }
 }
