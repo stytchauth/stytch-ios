@@ -3,7 +3,9 @@ import XCTest
 
 final class TOTPTestCase: BaseTestCase {
     func testCreate() async throws {
-        try networkInterceptor.appendSuccess(StytchClient.TOTP.CreateResponse(requestId: "", statusCode: 200, wrapped: .init(totpId: "", secret: "", qrCode: "", recoveryCodes: [], user: .mock(userId: ""), userId: "")))
+        networkInterceptor.responses {
+            StytchClient.TOTP.CreateResponse(requestId: "", statusCode: 200, wrapped: .init(totpId: "", secret: "", qrCode: "", recoveryCodes: [], user: .mock(userId: ""), userId: ""))
+        }
 
         _ = try await StytchClient.totp.create(parameters: .init())
 
@@ -11,7 +13,7 @@ final class TOTPTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        try networkInterceptor.appendSuccess(AuthenticateResponse.mock)
+        networkInterceptor.responses { AuthenticateResponse.mock }
 
         Current.timer = { _, _, _ in .init() }
 
@@ -21,7 +23,9 @@ final class TOTPTestCase: BaseTestCase {
     }
 
     func testRecover() async throws {
-        try networkInterceptor.appendSuccess(StytchClient.TOTP.RecoverResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totpId: "", user: .mock(userId: ""), session: .mock(userId: ""), sessionToken: "", sessionJwt: "")))
+        networkInterceptor.responses {
+            StytchClient.TOTP.RecoverResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totpId: "", user: .mock(userId: ""), session: .mock(userId: ""), sessionToken: "", sessionJwt: ""))
+        }
 
         Current.timer = { _, _, _ in .init() }
 
@@ -31,7 +35,9 @@ final class TOTPTestCase: BaseTestCase {
     }
 
     func testRecoveryCodes() async throws {
-        try networkInterceptor.appendSuccess(StytchClient.TOTP.RecoveryCodesResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totps: [.init(lhs: .init(totpId: "", verified: false), rhs: .init(recoveryCodes: ["1234", "5678"]))])))
+        networkInterceptor.responses {
+            StytchClient.TOTP.RecoveryCodesResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totps: [.init(lhs: .init(totpId: "", verified: false), rhs: .init(recoveryCodes: ["1234", "5678"]))]))
+        }
 
         _ = try await StytchClient.totp.recoveryCodes()
 
