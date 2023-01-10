@@ -3,12 +3,7 @@ import XCTest
 
 final class SessionsTestCase: BaseTestCase {
     func testSessionsAuthenticate() async throws {
-        let authResponse: AuthenticateResponse = .mock
-        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
-
+        networkInterceptor.responses { AuthenticateResponse.mock }
         let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDuration: 15)
 
         Current.timer = { _, _, _ in .init() }
@@ -24,7 +19,7 @@ final class SessionsTestCase: BaseTestCase {
         _ = try await StytchClient.sessions.authenticate(parameters: parameters)
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/sessions/authenticate",
             method: .post(["session_duration_minutes": 15])
         )
@@ -35,11 +30,7 @@ final class SessionsTestCase: BaseTestCase {
     }
 
     func testSessionsRevoke() async throws {
-        let container: DataContainer<BasicResponse> = .init(data: .init(requestId: "request_id", statusCode: 200))
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
-
+        networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
@@ -53,7 +44,7 @@ final class SessionsTestCase: BaseTestCase {
 
         _ = try await StytchClient.sessions.revoke()
 
-        try XCTAssertRequest(request, urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNil(StytchClient.sessions.sessionJwt)
         XCTAssertNil(StytchClient.sessions.sessionToken)

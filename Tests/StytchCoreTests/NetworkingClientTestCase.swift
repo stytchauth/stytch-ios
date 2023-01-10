@@ -2,8 +2,6 @@ import XCTest
 @testable import StytchCore
 
 final class NetworkingClientTestCase: XCTestCase {
-    private var networkingClient: NetworkingClient = .mock(returning: .success(.init()))
-
     func testCustomHeaders() async throws {
         let headers = ["CUSTOM": "HEADER"]
         try await verifyRequest(
@@ -49,26 +47,6 @@ final class NetworkingClientTestCase: XCTestCase {
         }
     }
 
-    func testMockNetworkingClient() async throws {
-        StytchClient.configure(
-            publicToken: "xyz",
-            hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
-        )
-        let container: DataContainer<StytchClient.OneTimePasscodes.OTPResponse> = .init(
-            data: .init(
-                requestId: "1234",
-                statusCode: 200,
-                wrapped: .init(methodId: "method_id_1234")
-            )
-        )
-        let data = try Current.jsonEncoder.encode(container)
-        Current.networkingClient = .mock(returning: .success(data))
-        let response: StytchClient.OneTimePasscodes.OTPResponse = try await StytchClient.router.get(route: .otps(.authenticate))
-        XCTAssertEqual(response.methodId, "method_id_1234")
-        XCTAssertEqual(response.requestId, "1234")
-        XCTAssertEqual(response.statusCode, 200)
-    }
-
     private func verifyRequest(
         _ method: NetworkingClient.Method = .get,
         url: URL? = nil,
@@ -76,7 +54,7 @@ final class NetworkingClientTestCase: XCTestCase {
         onClientCreate: ((NetworkingClient) -> Void)? = nil,
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
     ) async throws {
-        networkingClient = .init { request in
+        let networkingClient: NetworkingClient = .init { request in
             onPerformRequest(request, line)
             return (.init(), .init())
         }

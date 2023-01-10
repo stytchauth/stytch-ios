@@ -24,14 +24,12 @@ final class PasswordsTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        var request: URLRequest?
-        let data = try Current.jsonEncoder.encode(DataContainer(data: AuthenticateResponse.mock))
+        networkInterceptor.responses { AuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
         _ = try await StytchClient.passwords.authenticate(parameters: passwordParams)
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/passwords/authenticate",
             method: .post([
                 "email": "user@stytch.com",
@@ -42,13 +40,13 @@ final class PasswordsTestCase: BaseTestCase {
     }
 
     func testStrengthCheck() async throws {
-        var request: URLRequest?
-        let data = try Current.jsonEncoder.encode(DataContainer(data: StytchClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, feedback: .init(suggestions: [], warning: "meh. do something.")))))
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        networkInterceptor.responses {
+            StytchClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, feedback: .init(suggestions: [], warning: "meh. do something.")))
+        }
         _ = try await StytchClient.passwords.strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters(email: nil, password: "p@ssword123"))
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/passwords/strength_check",
             method: .post([
                 "password": "p@ssword123",
@@ -59,14 +57,14 @@ final class PasswordsTestCase: BaseTestCase {
     func testReset() async throws {
         await XCTAssertThrowsErrorAsync(_ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")))
 
-        var request: URLRequest?
-        let startData = try Current.jsonEncoder.encode(DataContainer(data: BasicResponse(requestId: "123", statusCode: 200)))
-        let finishData = try Current.jsonEncoder.encode(DataContainer(data: AuthenticateResponse.mock))
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(startData), .success(finishData))
+        networkInterceptor.responses {
+            BasicResponse(requestId: "123", statusCode: 200)
+            AuthenticateResponse.mock
+        }
         _ = try await StytchClient.passwords.resetByEmailStart(parameters: .init(email: "user@stytch.com", loginUrl: nil, loginExpiration: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15))
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset/start",
             method: .post([
                 "email": "user@stytch.com",
@@ -82,7 +80,7 @@ final class PasswordsTestCase: BaseTestCase {
         _ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[1],
             urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset",
             method: .post([
                 "token": "12345",
