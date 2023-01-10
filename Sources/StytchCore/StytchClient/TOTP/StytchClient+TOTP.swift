@@ -61,7 +61,7 @@ public extension StytchClient.TOTP {
         let recoveryCode: String
         let sessionDuration: Minutes
 
-        init(recoveryCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        public init(recoveryCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.recoveryCode = recoveryCode
             self.sessionDuration = sessionDuration
         }
@@ -74,12 +74,12 @@ public extension StytchClient.TOTP {
     typealias RecoveryCodesResponse = Response<RecoveryCodesResponseData>
 
     struct CreateResponseData: Codable {
-        let totpId: User.TOTP.ID
-        let secret: String
-        let qrCode: String
-        let recoveryCodes: [String]
-        let user: User
-        let userId: User.ID
+        public let totpId: User.TOTP.ID
+        public let secret: String
+        public let qrCode: String
+        public let recoveryCodes: [String]
+        public let user: User
+        public let userId: User.ID
     }
 
     struct RecoverResponseData: Codable, AuthenticateResponseDataType {
