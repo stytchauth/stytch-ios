@@ -3,7 +3,7 @@ import XCTest
 @testable import StytchCore
 
 final class NetworkingClientInterceptor {
-    var requests: [URLRequest] = []
+    private(set) var requests: [URLRequest] = []
     private var responses: [Result<Data, Error>] = []
 
     func reset() {
