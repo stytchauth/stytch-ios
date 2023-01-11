@@ -12,8 +12,8 @@ struct SessionView: View {
                 .font(.title)
                 .padding()
             #endif
-            Text("User ID: " + session.userId)
-            Text("Session ID: " + session.sessionId)
+            Text("User ID: " + session.userId.rawValue)
+            Text("Session ID: " + session.sessionId.rawValue)
             Text("Started at: " + session.startedAt.formatted(date: .abbreviated, time: .shortened))
             Text("Expires at: " + session.expiresAt.formatted(date: .abbreviated, time: .shortened))
             Text("User agent: " + (session.attributes.userAgent.presence ?? "N/A"))
