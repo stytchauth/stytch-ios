@@ -33,7 +33,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "signup_expiration_minutes": 30,
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
-                "login_expiration_minutes": 30
+                "login_expiration_minutes": 30,
             ])
         )
     }
