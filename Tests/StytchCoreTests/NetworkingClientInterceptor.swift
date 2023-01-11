@@ -4,7 +4,7 @@ import XCTest
 
 final class NetworkingClientInterceptor {
     var requests: [URLRequest] = []
-    var responses: [Result<Data, Error>] = []
+    private var responses: [Result<Data, Error>] = []
 
     func reset() {
         requests = []
