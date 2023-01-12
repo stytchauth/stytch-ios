@@ -24,7 +24,7 @@ struct TOTPAuthenticationView: View {
             Button("Submit code") {
                 Task {
                     do {
-                        onAuth(try await StytchClient.totp.authenticate(parameters: .init(totpCode: code)))
+                        onAuth(try await StytchClient.totps.authenticate(parameters: .init(totpCode: code)))
                     } catch {
                         print(error)
                     }
@@ -36,7 +36,7 @@ struct TOTPAuthenticationView: View {
             Button("Generate new secret") {
                 Task {
                     do {
-                        let resp = try await StytchClient.totp.create(parameters: .init())
+                        let resp = try await StytchClient.totps.create(parameters: .init())
                         self.secret = resp.secret
                     } catch {
                         print(error)

@@ -7,7 +7,7 @@ final class TOTPTestCase: BaseTestCase {
             StytchClient.TOTP.CreateResponse(requestId: "", statusCode: 200, wrapped: .init(totpId: "", secret: "", qrCode: "", recoveryCodes: [], user: .mock(userId: ""), userId: ""))
         }
 
-        _ = try await StytchClient.totp.create(parameters: .init())
+        _ = try await StytchClient.totps.create(parameters: .init())
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps", method: .post(["expiration_minutes": 30]))
     }
@@ -17,7 +17,7 @@ final class TOTPTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        _ = try await StytchClient.totp.authenticate(parameters: .init(totpCode: "test-code"))
+        _ = try await StytchClient.totps.authenticate(parameters: .init(totpCode: "test-code"))
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 30]))
     }
@@ -29,7 +29,7 @@ final class TOTPTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        _ = try await StytchClient.totp.recover(parameters: .init(recoveryCode: "recover-edoc"))
+        _ = try await StytchClient.totps.recover(parameters: .init(recoveryCode: "recover-edoc"))
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recover", method: .post(["recovery_code": "recover-edoc", "session_duration_minutes": 30]))
     }
@@ -39,7 +39,7 @@ final class TOTPTestCase: BaseTestCase {
             StytchClient.TOTP.RecoveryCodesResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totps: [.init(lhs: .init(totpId: "", verified: false), rhs: .init(recoveryCodes: ["1234", "5678"]))]))
         }
 
-        _ = try await StytchClient.totp.recoveryCodes()
+        _ = try await StytchClient.totps.recoveryCodes()
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recovery_codes", method: .post([:]))
     }
