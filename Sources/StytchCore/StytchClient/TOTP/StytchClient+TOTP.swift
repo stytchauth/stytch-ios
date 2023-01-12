@@ -3,21 +3,25 @@ public extension StytchClient {
     struct TOTP {
         let router: NetworkingRouter<TOTPRoute>
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [create](https://stytch.com/docs/api/totp-create) endpoint. Call this method to create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR code or enter the secret.
         public func create(parameters: CreateParameters) async throws -> CreateResponse {
             try await router.post(to: .create, parameters: parameters)
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
             try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [recovery_codes](https://stytch.com/docs/api/totp-get-recovery-codes) endpoint. Call this method to retrieve the recovery codes for a TOTP instance tied to a user. Note: If a user has enrolled another MFA method, this method will require MFA. See the [Multi-factor authentication](https://stytch.com/docs/sdks/javascript-sdk#resources_multi-factor-authentication) section for more details.
         public func recoveryCodes() async throws -> RecoveryCodesResponse {
             try await router.post(to: .recoveryCodes, parameters: JSON())
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [recover](https://stytch.com/docs/api/totp-recover) endpoint. Call this method to authenticate a recovery code for a TOTP instance.
         public func recover(parameters: RecoverParameters) async throws -> RecoverResponse {
             try await router.post(to: .recover, parameters: parameters)
