@@ -104,7 +104,7 @@ public extension StytchClient.OAuth {
             }
         }
 
-        /// The dedicated parameters type for the ``start(parameters:)-3cetj`` call.
+        /// The dedicated parameters type for the ``start(parameters:)-p3l8`` call.
         @available(tvOS 16.0, *)
         public struct WebAuthSessionStartParameters {
             let loginRedirectUrl: URL

@@ -35,7 +35,7 @@ public extension StytchClient {
 }
 
 public extension StytchClient.TOTP {
-    /// A dedicated parameters type for TOTP `create` calls.
+    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
     struct CreateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case expiration = "expiration_minutes"
@@ -49,7 +49,7 @@ public extension StytchClient.TOTP {
         }
     }
 
-    /// A dedicated parameters type for TOTP `authenticate` calls.
+    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-1tfsj`` calls.
     struct AuthenticateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case totpCode
@@ -68,7 +68,7 @@ public extension StytchClient.TOTP {
         }
     }
 
-    /// A dedicated parameters type for TOTP `recover` calls.
+    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` calls.
     struct RecoverParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case recoveryCode
@@ -89,14 +89,14 @@ public extension StytchClient.TOTP {
 }
 
 public extension StytchClient.TOTP {
-    /// The concrete response type for TOTP `create` calls.
+    /// The concrete response type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
     typealias CreateResponse = Response<CreateResponseData>
-    /// The concrete response type for TOTP `recover` calls.
+    /// The concrete response type for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` calls.
     typealias RecoverResponse = Response<RecoverResponseData>
-    /// The concrete response type for TOTP `recoveryCodes` calls.
+    /// The concrete response type for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` calls.
     typealias RecoveryCodesResponse = Response<RecoveryCodesResponseData>
 
-    /// The underlying data for TOTP `create` responses.
+    /// The underlying data for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` responses.
     struct CreateResponseData: Codable {
         public let totpId: User.TOTP.ID
         public let secret: String
@@ -106,7 +106,7 @@ public extension StytchClient.TOTP {
         public let userId: User.ID
     }
 
-    /// The underlying data for TOTP `recover` responses.
+    /// The underlying data for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` responses.
     struct RecoverResponseData: Codable, AuthenticateResponseDataType {
         public let userId: User.ID
         public let totpId: User.TOTP.ID
@@ -116,13 +116,13 @@ public extension StytchClient.TOTP {
         public let sessionJwt: String
     }
 
-    /// The underlying data for TOTP `recoveryCodes` responses.
+    /// The underlying data for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` responses.
     struct RecoveryCodesResponseData: Codable {
         public let userId: User.ID
         public let totps: [Union<User.TOTP, RecoveryCodes>]
     }
 
-    /// Additional data unioned to the `User.TOTP` type.
+    /// Additional data unioned to the ``User`` type.
     struct RecoveryCodes: Codable {
         public let recoveryCodes: [String]
     }

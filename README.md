@@ -58,6 +58,11 @@ There are a number of authentication products currently supported by the SDK, wi
     - Create or authenticate a user
     - Check password strength
     - Reset a password
+- TOTPs
+    - Create a new time-based one-time passcode (TOTP) secret for storage in an authenticator app
+    - Authenticate a TOTP
+    - Get a user's recovery codes
+    - Authenticate a recovery code
 - Sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
