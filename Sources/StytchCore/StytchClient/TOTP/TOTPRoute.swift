@@ -1,4 +1,4 @@
-enum TOTPRoute: RouteType {
+enum TOTPsRoute: RouteType {
     case create
     case authenticate
     case recoveryCodes
