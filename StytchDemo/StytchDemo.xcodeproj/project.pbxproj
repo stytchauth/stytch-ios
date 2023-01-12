@@ -51,6 +51,8 @@
 		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
 		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
+		22B523B5296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
 		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 		22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
@@ -88,6 +90,7 @@
 		22909094284DD5EE00ADD3C4 /* HobbiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesView.swift; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPAuthenticationView.swift; sourceTree = "<group>"; };
 		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
 		22BE9A1128481EFE00E29245 /* ServerRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRunner.swift; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 				224F7D49280CEDD0000230FA /* EmailAuthenticationView.swift */,
 				223F88BB2894D08500CE2B0C /* Passwords */,
 				2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */,
+				22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */,
 				224F7D4C280CEDF5000230FA /* SessionView.swift */,
 				224F7D3B280CC5DE000230FA /* Assets.xcassets */,
 			);
@@ -401,6 +405,7 @@
 				22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B6289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */,
 				22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
 				223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
@@ -423,6 +428,7 @@
 				22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */,
 				223F88B7289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */,
 				224F7D4B280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
+				22B523B5296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */,
 				22E2E06228ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
 				223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D40280CC5DE000230FA /* ContentView.swift in Sources */,

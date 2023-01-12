@@ -3,10 +3,9 @@ import XCTest
 
 final class MagicLinksTestCase: BaseTestCase {
     func testMagicLinksEmailLoginOrCreate() async throws {
-        let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        networkInterceptor.responses {
+            BasicResponse(requestId: "1234", statusCode: 200)
+        }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.LoginOrCreateParameters = .init(
             email: "asdf@stytch.com",
@@ -24,17 +23,23 @@ final class MagicLinksTestCase: BaseTestCase {
 
         XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
-        // Verify request
-        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create")
-        XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"code_challenge_method\":\"S256\",\"signup_magic_link_url\":\"https:\\/\\/myapp.com\\/signup\",\"code_challenge\":\"V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8\",\"signup_expiration_minutes\":30,\"email\":\"asdf@stytch.com\",\"login_magic_link_url\":\"https:\\/\\/myapp.com\\/login\",\"login_expiration_minutes\":30}".utf8))
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create",
+            method: .post([
+                "code_challenge_method": "S256",
+                "signup_magic_link_url": "https://myapp.com/signup",
+                "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+                "signup_expiration_minutes": 30,
+                "email": "asdf@stytch.com",
+                "login_magic_link_url": "https://myapp.com/login",
+                "login_expiration_minutes": 30,
+            ])
+        )
     }
 
     func testMagicLinksSendWithNoSession() async throws {
-        let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        networkInterceptor.responses { BasicResponse(requestId: "1234", statusCode: 200) }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.SendParameters = .init(
             email: "asdf@stytch.com",
@@ -43,7 +48,6 @@ final class MagicLinksTestCase: BaseTestCase {
         )
 
         XCTAssertFalse(Current.sessionStorage.activeSessionExists)
-
         XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
@@ -53,7 +57,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/primary",
             method: .post([
                 "code_challenge_method": "S256",
@@ -66,10 +70,7 @@ final class MagicLinksTestCase: BaseTestCase {
     }
 
     func testMagicLinksSendWithActiveSession() async throws {
-        let container = DataContainer(data: BasicResponse(requestId: "1234", statusCode: 200))
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        networkInterceptor.responses { BasicResponse(requestId: "1234", statusCode: 200) }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchClient.MagicLinks.Email.SendParameters = .init(
             email: "asdf@stytch.com",
@@ -80,7 +81,6 @@ final class MagicLinksTestCase: BaseTestCase {
         try Current.keychainClient.set("123", for: .sessionToken)
 
         XCTAssertTrue(Current.sessionStorage.activeSessionExists)
-
         XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
@@ -90,7 +90,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/secondary",
             method: .post([
                 "code_challenge_method": "S256",
@@ -104,10 +104,7 @@ final class MagicLinksTestCase: BaseTestCase {
 
     func testMagicLinksAuthenticate() async throws {
         let authResponse: AuthenticateResponse = .mock
-        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
-        let data = try Current.jsonEncoder.encode(container)
-        var request: URLRequest?
-        Current.networkingClient = .mock(verifyingRequest: { request = $0 }, returning: .success(data))
+        networkInterceptor.responses { authResponse }
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
             sessionDuration: 15
@@ -131,9 +128,10 @@ final class MagicLinksTestCase: BaseTestCase {
 
         XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
 
-        // Verify request
-        XCTAssertEqual(request?.url?.absoluteString, "https://web.stytch.com/sdk/v1/magic_links/authenticate")
-        XCTAssertEqual(request?.httpMethod, "POST")
-        XCTAssertEqual(request?.httpBody, Data("{\"token\":\"12345\",\"session_duration_minutes\":15,\"code_verifier\":\"e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741\"}".utf8))
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/magic_links/authenticate",
+            method: .post(["token": "12345", "session_duration_minutes": 15, "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
+        )
     }
 }

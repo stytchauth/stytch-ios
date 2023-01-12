@@ -4,7 +4,7 @@ import SwiftUI
 
 struct PasswordAuthenticationView: View {
     private var serverUrl: URL { configuration.serverUrl }
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
 
     @StateObject private var model = PasswordModel()
 
@@ -96,11 +96,9 @@ struct PasswordAuthenticationView: View {
             do {
                 switch authOption {
                 case .signUp:
-                    let resp = try await model.signUp()
-                    onAuth(resp.session, resp.user)
+                    onAuth(try await model.signUp())
                 case .logIn:
-                    let resp = try await model.login()
-                    onAuth(resp.session, resp.user)
+                    onAuth(try await model.login())
                 }
             } catch {
                 print(error)

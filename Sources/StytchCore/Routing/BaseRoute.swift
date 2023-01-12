@@ -6,6 +6,7 @@ enum BaseRoute: RouteType {
     case passkeys(PasskeysRoute)
     case passwords(PasswordsRoute)
     case sessions(SessionsRoute)
+    case totp(TOTPRoute)
     case users(UsersRoute)
 
     var path: Path {
@@ -24,6 +25,8 @@ enum BaseRoute: RouteType {
             return "passwords".appendingPath(route.path)
         case let .sessions(route):
             return "sessions".appendingPath(route.path)
+        case let .totp(route):
+            return "totps".appendingPath(route.path)
         case let .users(route):
             return "users".appendingPath(route.path)
         }

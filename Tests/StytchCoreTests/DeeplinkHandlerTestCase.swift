@@ -3,10 +3,7 @@ import XCTest
 
 final class DeeplinkHandlerTestCase: BaseTestCase {
     func testHandleUrl() async throws {
-        let authResponse: AuthenticateResponse = .mock
-        let container: DataContainer<AuthenticateResponse> = .init(data: authResponse)
-        let data = try Current.jsonEncoder.encode(container)
-        Current.networkingClient = .mock(returning: .success(data))
+        networkInterceptor.responses { AuthenticateResponse.mock }
 
         let notHandledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345"))
 

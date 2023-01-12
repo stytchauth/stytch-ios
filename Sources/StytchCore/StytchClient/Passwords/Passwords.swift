@@ -87,8 +87,8 @@ public extension StytchClient.Passwords {
 
     /// The underlying data for passwords `create` calls.
     struct CreateResponseData: Decodable, AuthenticateResponseDataType {
-        public let emailId: String
-        public let userId: String
+        public let emailId: User.Email.ID
+        public let userId: User.ID
         public let user: User
         public let sessionToken: String
         public let sessionJwt: String

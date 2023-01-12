@@ -1,6 +1,8 @@
 import Foundation
 
 public struct User: Codable {
+    public typealias ID = Identifier<Self, String>
+
     /// The date the user was originally created.
     public let createdAt: Date
     /// The user's cryptowallets.
@@ -8,8 +10,8 @@ public struct User: Codable {
     /// The user's emails'
     public let emails: [Email]
     /// The id of the user.
-    public var id: String { userId }
-    let userId: String
+    public var id: ID { userId }
+    let userId: ID
     /// The user's name.
     public let name: Name
     /// The user's passwords.
@@ -43,7 +45,7 @@ public struct User: Codable {
         biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
     }
 
-    init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: String, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
+    init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: ID, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
         self.createdAt = createdAt
         self.cryptoWallets = cryptoWallets
         self.emails = emails
@@ -61,8 +63,10 @@ public struct User: Codable {
 
 public extension User {
     struct Password: Codable {
-        public var id: String { passwordId }
-        let passwordId: String
+        public typealias ID = Identifier<Self, String>
+
+        public var id: ID { passwordId }
+        let passwordId: ID
         let requiresReset: Bool
     }
 

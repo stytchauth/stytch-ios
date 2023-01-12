@@ -2,6 +2,8 @@ public struct Identifier<T, RawValue> {
     public let rawValue: RawValue
 }
 
+extension Identifier: Equatable where RawValue: Equatable {}
+
 extension Identifier: ExpressibleByStringLiteral, ExpressibleByUnicodeScalarLiteral, ExpressibleByExtendedGraphemeClusterLiteral where RawValue == String {
     public typealias UnicodeScalarLiteralType = String
     public typealias ExtendedGraphemeClusterLiteralType = String

@@ -1,18 +1,15 @@
 import XCTest
 @testable import StytchCore
 
-// swiftlint:disable implicitly_unwrapped_optional
-
 final class OAuthTestCase: BaseTestCase {
     func testApple() async throws {
-        var request: URLRequest!
-        Current.networkingClient = try .success(verifyingRequest: { request = $0 }, AuthenticateResponse.mock)
+        networkInterceptor.responses { AuthenticateResponse.mock }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.oauth.apple.start(parameters: .init())
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/oauth/apple/id_token/authenticate",
             method: .post([
                 "session_duration_minutes": 30,
@@ -24,8 +21,7 @@ final class OAuthTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        var request: URLRequest!
-        Current.networkingClient = try .success(verifyingRequest: { request = $0 }, AuthenticateResponse.mock)
+        networkInterceptor.responses { AuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
@@ -33,7 +29,7 @@ final class OAuthTestCase: BaseTestCase {
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
-            request,
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/oauth/authenticate",
             method: .post([
                 "session_duration_minutes": 12,
@@ -47,7 +43,7 @@ final class OAuthTestCase: BaseTestCase {
 #if !os(watchOS)
 extension OAuthTestCase {
     func testThirdParty() throws {
-        var url: URL!
+        var url: URL?
         Current.openUrl = { url = $0 }
 
         let startParameters: StytchClient.OAuth.ThirdParty.DefaultBrowserStartParameters = .init(
@@ -61,7 +57,7 @@ extension OAuthTestCase {
             try provider.interface.start(parameters: startParameters)
 
             XCTAssertEqual(
-                url.absoluteString,
+                url?.absoluteString,
                 "https://api.stytch.com/v1/public/oauth/\(provider.rawValue)/start?code_challenge=V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8&public_token=xyz&login_redirect_url=i-am-url://auth&custom_scopes=scope:1%20scope:2"
             )
         }

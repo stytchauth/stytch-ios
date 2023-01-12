@@ -19,7 +19,7 @@ public extension StytchClient {
 
             // Delete registration from backend
             if let registration = try queryResult.generic.map({ try Current.jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
-                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: .init(rawValue: registration.registrationId)))
+                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: registration.registrationId))
             }
 
             // Remove local registration
@@ -175,12 +175,12 @@ extension StytchClient.Biometrics {
 
     struct AuthenticateStartResponse: Codable {
         let challenge: Data
-        let biometricRegistrationId: String
+        let biometricRegistrationId: User.BiometricRegistration.ID
     }
 
     struct AuthenticateCompleteParameters: Codable {
         let signature: Data
-        let biometricRegistrationId: String
+        let biometricRegistrationId: User.BiometricRegistration.ID
         let sessionDurationMinutes: Minutes
     }
 
@@ -189,7 +189,7 @@ extension StytchClient.Biometrics {
     }
 
     struct RegisterStartResponse: Codable {
-        let biometricRegistrationId: String
+        let biometricRegistrationId: User.BiometricRegistration.ID
         let challenge: Data
     }
 
@@ -198,13 +198,13 @@ extension StytchClient.Biometrics {
             case biometricRegistrationId, signature, sessionDuration = "session_duration_minutes"
         }
 
-        let biometricRegistrationId: String
+        let biometricRegistrationId: User.BiometricRegistration.ID
         let signature: Data
         let sessionDuration: Minutes
     }
 
     struct RegisterCompleteResponseData: Decodable, AuthenticateResponseDataType {
-        let biometricRegistrationId: String
+        let biometricRegistrationId: User.BiometricRegistration.ID
         let user: User
         let session: Session
         let sessionToken: String

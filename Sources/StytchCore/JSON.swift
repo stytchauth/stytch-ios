@@ -28,6 +28,10 @@ public enum JSON: Hashable, Equatable {
         return nil
     }
 
+    init() {
+        self = .object([:])
+    }
+
     public subscript(key: String) -> JSON? {
         guard case let .object(dict) = self else { return nil }
         return dict[key]

@@ -4,7 +4,7 @@ import SwiftUI
 struct ContentView: View {
     var sessionUser: (Session, User)?
     let logOut: () -> Void
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
     @State private var presentationOption: PresentationOption?
 
     var body: some View {

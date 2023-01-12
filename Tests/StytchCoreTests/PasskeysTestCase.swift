@@ -6,17 +6,16 @@ import XCTest
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 final class PasskeysTestCase: BaseTestCase {
     func testRegister() async throws {
-        var requests: [URLRequest] = []
-        let startResponse: Response<StytchClient.Passkeys.RegisterStartResponseData> = .init(
-            requestId: "123",
-            statusCode: 200,
-            wrapped: .init(userId: "user_id_123", challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32))
+        let startResponse: StytchClient.Passkeys.RegisterStartResponseData = .init(
+            userId: "user_id_123",
+            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         )
-        Current.networkingClient = try .success(
-            verifyingRequest: { requests.append($0) },
-            startResponse,
-            BasicResponse(requestId: "request_id_123", statusCode: 200)
-        )
+        networkInterceptor.responses {
+            Success {
+                Response(requestId: "", statusCode: 200, wrapped: startResponse)
+                BasicResponse(requestId: "request_id_123", statusCode: 200)
+            }
+        }
         Current.passkeysClient.registerCredential = { _, _, _, _ in
             MockRegistration(
                 rawAttestationObject: .init("fake_attestation_data".utf8),
@@ -26,12 +25,12 @@ final class PasskeysTestCase: BaseTestCase {
         }
         _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com", username: "test@stytch.com"))
         try XCTAssertRequest(
-            requests[0],
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/register/start",
             method: .post(["username": "test@stytch.com", "domain": "something.blah.com"])
         )
         try XCTAssertRequest(
-            requests[1],
+            networkInterceptor.requests[1],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/register",
             method: .post([
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\"},\"type\":\"public-key\"}",
@@ -40,13 +39,14 @@ final class PasskeysTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        var requests: [URLRequest] = []
-        let startResponse: Response<StytchClient.Passkeys.AuthenticateStartResponseData> = .init(
-            requestId: "123",
-            statusCode: 200,
-            wrapped: .init(userId: "user_id_123", challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32))
+        let startResponse: StytchClient.Passkeys.AuthenticateStartResponseData = .init(
+            userId: "user_id_123",
+            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         )
-        Current.networkingClient = try .success(verifyingRequest: { requests.append($0) }, startResponse, AuthenticateResponse.mock)
+        networkInterceptor.responses {
+            Response(requestId: "", statusCode: 200, wrapped: startResponse)
+            AuthenticateResponse.mock
+        }
         var requestBehaviorIsAutoFill = false
         Current.passkeysClient.assertCredential = { _, _, requestBehavior in
             #if os(iOS)
@@ -75,12 +75,12 @@ final class PasskeysTestCase: BaseTestCase {
         XCTAssertFalse(requestBehaviorIsAutoFill)
         #endif
         try XCTAssertRequest(
-            requests[0],
+            networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate/start",
             method: .post(["domain": "something.blah.com"])
         )
         try XCTAssertRequest(
-            requests[1],
+            networkInterceptor.requests[1],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate",
             method: .post([
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"signature\":\"ZmFrZV9zaWduYXR1cmU\",\"authenticatorData\":\"ZmFrZV9hdXRoX2RhdGE\",\"userHandle\":\"ZmFrZV91c2VyX2lk\"},\"type\":\"public-key\"}",

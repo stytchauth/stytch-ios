@@ -2,7 +2,7 @@ import StytchCore
 import SwiftUI
 
 struct OAuthAuthenticationView: View {
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
     @State private var confirmingThirdParty: Bool = false
 
@@ -12,8 +12,7 @@ struct OAuthAuthenticationView: View {
         Button("Authenticate with Apple") {
             Task {
                 do {
-                    let resp = try await StytchClient.oauth.apple.start(parameters: .init())
-                    onAuth(resp.session, resp.user)
+                    onAuth(try await StytchClient.oauth.apple.start(parameters: .init()))
                     presentationMode.wrappedValue.dismiss()
                 } catch {
                     print(error)
@@ -47,8 +46,7 @@ struct OAuthAuthenticationView: View {
                             signupRedirectUrl: URL(string: "stytch-authentication://signup")!
                         )
                     )
-                    let resp = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: 10))
-                    onAuth(resp.session, resp.user)
+                    onAuth(try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: 10)))
                 } catch {
                     print(error)
                 }

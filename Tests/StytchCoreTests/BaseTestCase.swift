@@ -2,10 +2,13 @@ import XCTest
 @testable import StytchCore
 
 class BaseTestCase: XCTestCase {
+    // swiftlint:disable:next test_case_accessibility
+    var networkInterceptor: NetworkingClientInterceptor = .init()
+
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        Current.networkingClient = .failing
+        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest(request:))
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()
@@ -34,6 +37,8 @@ class BaseTestCase: XCTestCase {
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         )
+
+        networkInterceptor.reset()
     }
 }
 
@@ -54,7 +59,7 @@ extension Array where Element == UInt8 {
 }
 
 extension User {
-    static func mock(userId: String) -> Self {
+    static func mock(userId: ID) -> Self {
         .init(
             createdAt: Current.date(),
             cryptoWallets: [],
@@ -74,7 +79,7 @@ extension User {
 
 extension AuthenticateResponse {
     static var mock: Self {
-        let userId = "im_a_user_id"
+        let userId: User.ID = "im_a_user_id"
         return .init(
             requestId: "1234",
             statusCode: 200,
@@ -89,17 +94,17 @@ extension AuthenticateResponse {
 }
 
 extension Session {
-    static func mock(userId: String) -> Self {
+    static func mock(userId: User.ID) -> Self {
         let refDate = Date()
 
         return .init(
             attributes: .init(ipAddress: "", userAgent: ""),
             authenticationFactors: [
                 .init(
-                    rawData: .object([
+                    rawData: [
                         "type": "magic_link",
                         "last_authenticated_at": .string(ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
-                    ]),
+                    ],
                     kind: "magic_link",
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
                 ),

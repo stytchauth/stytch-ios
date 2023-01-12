@@ -10,7 +10,7 @@ extension PasskeysClient {
             let request = platformProvider.createCredentialRegistrationRequest(
                 challenge: challenge,
                 name: username, // We likely want to enforce this to be an email or phone number (if acct exists, must also be in active session during registration)
-                userID: .init(userId.utf8) // WebAuthN backend currently relies on session auth, so isn't a pending user id
+                userID: .init(userId.rawValue.utf8) // WebAuthN backend currently relies on session auth, so isn't a pending user id
             )
             let controller = ASAuthorizationController(authorizationRequests: [request])
             let delegate = Delegate()

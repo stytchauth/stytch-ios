@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AuthenticationOptionsView: View {
     let session: Session?
-    let onAuth: (Session, User) -> Void
+    let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
@@ -13,7 +13,7 @@ struct AuthenticationOptionsView: View {
 
             NavigationLink("Authenticate with Password") {
                 PasswordAuthenticationView {
-                    onAuth($0, $1)
+                    onAuth($0)
                     presentationMode.wrappedValue.dismiss()
                 }
             }
@@ -22,7 +22,7 @@ struct AuthenticationOptionsView: View {
             if #available(iOS 16.0, macOS 13.0, *), session != nil {
                 NavigationLink("Authenticate with Passkeys") {
                     PasskeysAuthenticationView {
-                        onAuth($0, $1)
+                        onAuth($0)
                         presentationMode.wrappedValue.dismiss()
                     }
                     .padding()
@@ -32,7 +32,7 @@ struct AuthenticationOptionsView: View {
 
             NavigationLink("Authenticate with OTP") {
                 OTPAuthenticationView(session: session) {
-                    onAuth($0, $1)
+                    onAuth($0)
                     presentationMode.wrappedValue.dismiss()
                 }
             }
@@ -40,7 +40,7 @@ struct AuthenticationOptionsView: View {
 
             NavigationLink("Authenticate with OAuth") {
                 OAuthAuthenticationView {
-                    onAuth($0, $1)
+                    onAuth($0)
                     presentationMode.wrappedValue.dismiss()
                 }
             }
@@ -50,8 +50,7 @@ struct AuthenticationOptionsView: View {
                 Button("Authenticate with Biometrics") {
                     Task {
                         do {
-                            let resp = try await StytchClient.biometrics.authenticate(parameters: .init())
-                            onAuth(resp.session, resp.user)
+                            onAuth(try await StytchClient.biometrics.authenticate(parameters: .init()))
                             presentationMode.wrappedValue.dismiss()
                         } catch {
                             print(error)
@@ -63,8 +62,7 @@ struct AuthenticationOptionsView: View {
                 Button("Register Biometrics") {
                     Task {
                         do {
-                            let resp = try await StytchClient.biometrics.register(parameters: .init(identifier: ""))
-                            onAuth(resp.session, resp.user)
+                            onAuth(try await StytchClient.biometrics.register(parameters: .init(identifier: "")))
                             presentationMode.wrappedValue.dismiss()
                         } catch {
                             print(error)
@@ -73,6 +71,14 @@ struct AuthenticationOptionsView: View {
                 }
                 .padding()
             }
+
+            NavigationLink("Authenticate with TOTP") {
+                TOTPAuthenticationView {
+                    onAuth($0)
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+            .padding()
         }
     }
 }
