@@ -144,3 +144,9 @@ enum SuccessResponsesBuilder {
 struct ResponsesContainer {
     let responses: [Result<any Codable, Error>]
 }
+
+struct ExpectedRequest<T> {
+    let parameters: T
+    let urlString: String
+    let body: JSON
+}

@@ -5,8 +5,10 @@ import XCTest
 #if !os(watchOS)
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 final class PasskeysTestCase: BaseTestCase {
+    private typealias Base = StytchClient.Passkeys
+
     func testRegister() async throws {
-        let startResponse: StytchClient.Passkeys.RegisterStartResponseData = .init(
+        let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         )
@@ -39,7 +41,7 @@ final class PasskeysTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        let startResponse: StytchClient.Passkeys.AuthenticateStartResponseData = .init(
+        let startResponse: Base.AuthenticateStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         )
@@ -64,9 +66,9 @@ final class PasskeysTestCase: BaseTestCase {
         }
         Current.timer = { _, _, _ in .init() }
         #if os(iOS)
-        let parameters: StytchClient.Passkeys.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .autoFill)
+        let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .autoFill)
         #else
-        let parameters: StytchClient.Passkeys.AuthenticateParameters = .init(domain: "something.blah.com")
+        let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com")
         #endif
         _ = try await StytchClient.passkeys.authenticate(parameters: parameters)
         #if os(iOS)
@@ -154,6 +156,5 @@ final class MockRegistration: NSObject, ASAuthorizationPublicKeyCredentialRegist
 
     func encode(with _: NSCoder) {}
 }
-
 // swiftlint:enable unavailable_function
 #endif

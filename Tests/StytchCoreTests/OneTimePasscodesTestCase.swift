@@ -2,12 +2,16 @@ import XCTest
 @testable import StytchCore
 
 final class OneTimePasscodesTestCase: BaseTestCase {
+    private typealias Base = StytchClient.OneTimePasscodes
+    private typealias ExpectedValues = ExpectedRequest<Base.Parameters>
+
+    private let response: Base.OTPResponse = .init(
+        requestId: "1234",
+        statusCode: 200,
+        wrapped: .init(methodId: "method_id_1234")
+    )
+
     func testOtpLoginOrCreate() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
             response
             response
@@ -43,11 +47,6 @@ final class OneTimePasscodesTestCase: BaseTestCase {
     }
 
     func testOtpSendWithNoSession() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
             response
             response
@@ -91,11 +90,6 @@ final class OneTimePasscodesTestCase: BaseTestCase {
     }
 
     func testOtpSendWithActiveSession() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
             response
             response
@@ -132,7 +126,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
     func testOtpAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        let parameters: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(
+        let parameters: Base.AuthenticateParameters = .init(
             code: "i_am_code",
             methodId: "method_id_fake_id",
             sessionDuration: 20
@@ -157,13 +151,5 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 "session_duration_minutes": 20,
             ])
         )
-    }
-}
-
-private extension OneTimePasscodesTestCase {
-    struct ExpectedValues {
-        let parameters: StytchClient.OneTimePasscodes.Parameters
-        let urlString: String
-        let body: JSON
     }
 }
