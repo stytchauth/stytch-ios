@@ -7,12 +7,14 @@ final class MagicLinksTestCase: BaseTestCase {
             BasicResponse(requestId: "1234", statusCode: 200)
         }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: StytchClient.MagicLinks.Email.LoginOrCreateParameters = .init(
+        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             loginExpiration: 30,
+            loginTemplateId: "g'day",
             signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
-            signupExpiration: 30
+            signupExpiration: 30,
+            signupTemplateId: "mate"
         )
 
         XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
@@ -34,6 +36,8 @@ final class MagicLinksTestCase: BaseTestCase {
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
+                "login_template_id": "g'day",
+                "signup_template_id": "mate",
             ])
         )
     }
@@ -41,10 +45,11 @@ final class MagicLinksTestCase: BaseTestCase {
     func testMagicLinksSendWithNoSession() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "1234", statusCode: 200) }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: StytchClient.MagicLinks.Email.SendParameters = .init(
+        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            loginExpiration: 30
+            loginExpiration: 30,
+            loginTemplateId: "hello"
         )
 
         XCTAssertFalse(Current.sessionStorage.activeSessionExists)
@@ -65,6 +70,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
+                "login_template_id": "hello",
             ])
         )
     }
@@ -72,7 +78,7 @@ final class MagicLinksTestCase: BaseTestCase {
     func testMagicLinksSendWithActiveSession() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "1234", statusCode: 200) }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
-        let parameters: StytchClient.MagicLinks.Email.SendParameters = .init(
+        let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             loginExpiration: 30

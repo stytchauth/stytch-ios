@@ -5,14 +5,16 @@ struct EmailAuthenticationView: View {
     private var serverUrl: URL { configuration.serverUrl }
 
     @State private var email: String = ""
+    @State private var loginTemplateId: String = ""
+    @State private var signupTemplateId: String = ""
     @State private var isLoading = false
     @State private var checkEmailPresented = false
 
-    @Environment(\.openURL) var openUrl
+    @Environment(\.openURL) private var openUrl
 
     var body: some View {
         VStack {
-            TextField(text: $email, label: { Text("Email") })
+            TextField("Email", text: $email)
                 .onSubmit(login)
                 .padding()
                 .textFieldStyle(.roundedBorder)
@@ -21,6 +23,24 @@ struct EmailAuthenticationView: View {
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
                 .textContentType(.emailAddress)
+            #endif
+
+            TextField("Signup template ID", text: $signupTemplateId)
+                .onSubmit(login)
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .disableAutocorrection(true)
+            #if !os(macOS)
+                .textInputAutocapitalization(.never)
+            #endif
+
+            TextField("Login template ID", text: $loginTemplateId)
+                .onSubmit(login)
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .disableAutocorrection(true)
+            #if !os(macOS)
+                .textInputAutocapitalization(.never)
             #endif
 
             Button(action: login, label: {
@@ -51,7 +71,13 @@ struct EmailAuthenticationView: View {
         Task {
             do {
                 _ = try await StytchClient.magicLinks.email.loginOrCreate(
-                    parameters: .init(email: email, loginMagicLinkUrl: serverUrl, signupMagicLinkUrl: serverUrl)
+                    parameters: .init(
+                        email: email,
+                        loginMagicLinkUrl: serverUrl,
+                        loginTemplateId: loginTemplateId.presence,
+                        signupMagicLinkUrl: serverUrl,
+                        signupTemplateId: signupTemplateId.presence
+                    )
                 )
                 checkEmailPresented = true
             } catch {

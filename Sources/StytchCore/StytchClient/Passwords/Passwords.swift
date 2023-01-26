@@ -124,6 +124,7 @@ public extension StytchClient.Passwords {
             case loginExpiration = "login_expiration_minutes"
             case resetPasswordUrl = "reset_password_redirect_url"
             case resetPasswordExpiration = "reset_password_expiration_minutes"
+            case resetPasswordTemplateId
         }
 
         public let email: String
@@ -131,6 +132,7 @@ public extension StytchClient.Passwords {
         public let loginExpiration: Minutes?
         public let resetPasswordUrl: URL?
         public let resetPasswordExpiration: Minutes?
+        public let resetPasswordTemplateId: String?
 
         /// - Parameters:
         ///   - email: The user's email address.
@@ -138,18 +140,21 @@ public extension StytchClient.Passwords {
         ///   - loginExpiration: Set the expiration for the direct login link, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
         ///   - resetPasswordUrl: The url that the user clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
         ///   - resetPasswordExpiration: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
+        ///   - resetPasswordTemplateId: Use a custom template for password reset emails. By default, it will use your default email template. The template must be a template using our built-in customizations or a custom HTML email for Passwords - Password reset.
         public init(
             email: String,
             loginUrl: URL? = nil,
             loginExpiration: Minutes? = nil,
             resetPasswordUrl: URL? = nil,
-            resetPasswordExpiration: Minutes? = nil
+            resetPasswordExpiration: Minutes? = nil,
+            resetPasswordTemplateId: String? = nil
         ) {
             self.email = email
             self.loginUrl = loginUrl
             self.loginExpiration = loginExpiration
             self.resetPasswordUrl = resetPasswordUrl
             self.resetPasswordExpiration = resetPasswordExpiration
+            self.resetPasswordTemplateId = resetPasswordTemplateId
         }
     }
 

@@ -2,12 +2,16 @@ import XCTest
 @testable import StytchCore
 
 final class OneTimePasscodesTestCase: BaseTestCase {
+    private typealias Base = StytchClient.OneTimePasscodes
+    private typealias ExpectedValues = ExpectedRequest<Base.Parameters>
+
+    private let response: Base.OTPResponse = .init(
+        requestId: "1234",
+        statusCode: 200,
+        wrapped: .init(methodId: "method_id_1234")
+    )
+
     func testOtpLoginOrCreate() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
             response
             response
@@ -16,7 +20,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: StytchClient.OneTimePasscodes.Parameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
@@ -26,7 +30,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
                 body: ["email": "test@stytch.com"]
             ),
@@ -43,12 +47,8 @@ final class OneTimePasscodesTestCase: BaseTestCase {
     }
 
     func testOtpSendWithNoSession() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
+            response
             response
             response
             response
@@ -68,7 +68,12 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                body: ["email": "test@stytch.com", "login_template_id": "fake-id", "signup_template_id": "blah"]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
                 body: ["email": "test@stytch.com"]
             ),
@@ -85,11 +90,6 @@ final class OneTimePasscodesTestCase: BaseTestCase {
     }
 
     func testOtpSendWithActiveSession() async throws {
-        let response: StytchClient.OneTimePasscodes.OTPResponse = .init(
-            requestId: "1234",
-            statusCode: 200,
-            wrapped: .init(methodId: "method_id_1234")
-        )
         networkInterceptor.responses {
             response
             response
@@ -112,7 +112,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
                 body: ["email": "test@stytch.com"]
             ),
@@ -126,7 +126,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
     func testOtpAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        let parameters: StytchClient.OneTimePasscodes.AuthenticateParameters = .init(
+        let parameters: Base.AuthenticateParameters = .init(
             code: "i_am_code",
             methodId: "method_id_fake_id",
             sessionDuration: 20
@@ -151,13 +151,5 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 "session_duration_minutes": 20,
             ])
         )
-    }
-}
-
-private extension OneTimePasscodesTestCase {
-    struct ExpectedValues {
-        let parameters: StytchClient.OneTimePasscodes.Parameters
-        let urlString: String
-        let body: JSON
     }
 }

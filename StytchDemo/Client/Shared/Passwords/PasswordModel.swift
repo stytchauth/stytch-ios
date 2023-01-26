@@ -9,6 +9,7 @@ final class PasswordModel: ObservableObject {
     @Published var warning = ""
     @Published var feedback = ""
     @Published var isValid = false
+    @Published var resetTemplateId: String = ""
 
     func checkStrength() {
         Task {
@@ -31,7 +32,12 @@ final class PasswordModel: ObservableObject {
     @discardableResult
     func resetPasswordStart() async throws -> BasicResponse {
         try await StytchClient.passwords.resetByEmailStart(
-            parameters: .init(email: email, loginUrl: configuration.serverUrl, resetPasswordUrl: configuration.serverUrl)
+            parameters: .init(
+                email: email,
+                loginUrl: configuration.serverUrl,
+                resetPasswordUrl: configuration.serverUrl,
+                resetPasswordTemplateId: resetTemplateId.presence
+            )
         )
     }
 
