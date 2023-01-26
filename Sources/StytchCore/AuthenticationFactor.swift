@@ -21,12 +21,16 @@ public extension Session {
     }
 }
 
-extension Session.AuthenticationFactor: Decodable {
+extension Session.AuthenticationFactor: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         lastAuthenticatedAt = try container.decode(key: .lastAuthenticatedAt)
         kind = try container.decode(key: .kind)
         rawData = try .init(from: decoder)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        try rawData.encode(to: encoder)
     }
 }
 
@@ -45,11 +49,3 @@ public extension Session.AuthenticationFactor {
         rawData["delivery_method"]?.stringValue
     }
 }
-
-#if DEBUG
-extension Session.AuthenticationFactor: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        try rawData.encode(to: encoder)
-    }
-}
-#endif
