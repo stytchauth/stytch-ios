@@ -84,8 +84,8 @@ struct HobbyList: Codable {
 
 extension HobbiesView {
     final class Model: ObservableObject {
-        @Published var hobbies: [Hobby] = []
-        @Published var onAuthError: Void?
+        @Published private(set) var hobbies: [Hobby] = []
+        @Published private(set) var onAuthError: Void?
 
         func fetch() {
             Task {

@@ -7,6 +7,8 @@ struct OTPAuthenticationView: View {
 
     @State private var deliveryMethod: DeliveryMethod = .sms
     @State private var deliveryMethodValue: String = ""
+    @State private var loginTemplateId: String = ""
+    @State private var signupTemplateId: String = ""
     @State private var isLoading = false
     @State private var methodId = ""
     @State private var otp = ""
@@ -47,7 +49,7 @@ struct OTPAuthenticationView: View {
         }
         #endif
 
-        func deliveryMethod(_ value: String) -> StytchClient.OneTimePasscodes.DeliveryMethod {
+        func deliveryMethod(_ value: String, loginTemplateId: String?, signupTemplateId: String?) -> StytchClient.OneTimePasscodes.DeliveryMethod {
             let normalizedPhone: () -> String = { "+1" + value.filter(\.isNumber) }
             switch self {
             case .whatsapp:
@@ -55,7 +57,7 @@ struct OTPAuthenticationView: View {
             case .sms:
                 return .sms(phoneNumber: normalizedPhone())
             case .email:
-                return .email(value)
+                return .email(email: value, loginTemplateId: loginTemplateId.presence, signupTemplateId: signupTemplateId.presence)
             }
         }
     }
@@ -75,7 +77,7 @@ struct OTPAuthenticationView: View {
             Spacer()
 
             if methodId.isEmpty {
-                TextField(text: $deliveryMethodValue, label: { Text(deliveryMethod.label) })
+                TextField(deliveryMethod.label, text: $deliveryMethodValue)
                     .onSubmit(login)
                     .padding()
                     .textFieldStyle(.roundedBorder)
@@ -85,6 +87,26 @@ struct OTPAuthenticationView: View {
                     .keyboardType(deliveryMethod.keyboardType)
                     .textContentType(deliveryMethod.contentType)
                 #endif
+
+                if deliveryMethod == .email {
+                    TextField("Signup template ID", text: $signupTemplateId)
+                        .onSubmit(login)
+                        .padding()
+                        .textFieldStyle(.roundedBorder)
+                        .disableAutocorrection(true)
+                    #if !os(macOS)
+                        .textInputAutocapitalization(.never)
+                    #endif
+
+                    TextField("Login template ID", text: $loginTemplateId)
+                        .onSubmit(login)
+                        .padding()
+                        .textFieldStyle(.roundedBorder)
+                        .disableAutocorrection(true)
+                    #if !os(macOS)
+                        .textInputAutocapitalization(.never)
+                    #endif
+                }
             } else {
                 TextField(text: $otp, label: { Text("One-time Code") })
                     .onSubmit(authenticate)
@@ -136,7 +158,11 @@ struct OTPAuthenticationView: View {
         isLoading = true
         Task {
             let otpParams: StytchClient.OneTimePasscodes.Parameters = .init(
-                deliveryMethod: deliveryMethod.deliveryMethod(deliveryMethodValue)
+                deliveryMethod: deliveryMethod.deliveryMethod(
+                    deliveryMethodValue,
+                    loginTemplateId: loginTemplateId.presence,
+                    signupTemplateId: signupTemplateId.presence
+                )
             )
             do {
                 let response = try await StytchClient.otps.loginOrCreate(parameters: otpParams)

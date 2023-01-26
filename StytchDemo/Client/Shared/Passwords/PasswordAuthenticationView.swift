@@ -31,7 +31,7 @@ struct PasswordAuthenticationView: View {
             Toggle("Hide Password", isOn: $model.isSecure)
                 .padding(.horizontal)
 
-            TextField(text: $model.email, label: { Text("Email") })
+            TextField("Email", text: $model.email)
                 .padding()
                 .textFieldStyle(.roundedBorder)
                 .disableAutocorrection(true)
@@ -49,6 +49,14 @@ struct PasswordAuthenticationView: View {
                 password: $model.password,
                 publisher: model.$password
             )
+
+            TextField("Reset template ID", text: $model.resetTemplateId)
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .disableAutocorrection(true)
+            #if !os(macOS)
+                .textInputAutocapitalization(.never)
+            #endif
 
             if authOption == .signUp {
                 PasswordFeedbackView(strength: model.strength, warning: model.warning, feedback: model.feedback)
