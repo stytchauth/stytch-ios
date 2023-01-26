@@ -74,7 +74,7 @@ final class PasswordsTestCase: BaseTestCase {
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "code_challenge_method": "S256",
-                "reset_password_template_id": "one-two-buckle-my-shoe"
+                "reset_password_template_id": "one-two-buckle-my-shoe",
             ])
         )
 

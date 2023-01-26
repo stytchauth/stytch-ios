@@ -37,7 +37,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
                 "login_template_id": "g'day",
-                "signup_template_id": "mate"
+                "signup_template_id": "mate",
             ])
         )
     }
@@ -70,7 +70,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
-                "login_template_id": "hello"
+                "login_template_id": "hello",
             ])
         )
     }
