@@ -3,7 +3,7 @@ import Foundation
 /**
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
-public struct Session: Decodable {
+public struct Session {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
@@ -13,7 +13,7 @@ public struct Session: Decodable {
     /// Attributes of this session.
     public let attributes: Attributes
     /// A list of authentication factors associated with this session.
-    public var authenticationFactors: [AuthenticationFactor]
+    public let authenticationFactors: [AuthenticationFactor]
     /// The date the session expires.
     public let expiresAt: Date
     /// The date this session was last accessed.
@@ -24,25 +24,9 @@ public struct Session: Decodable {
     public let startedAt: Date
     /// The user id associated with this session.
     public let userId: User.ID
+}
 
-    init(
-        attributes: Session.Attributes,
-        authenticationFactors: [AuthenticationFactor],
-        expiresAt: Date,
-        lastAccessedAt: Date,
-        sessionId: Session.ID,
-        startedAt: Date,
-        userId: User.ID
-    ) {
-        self.attributes = attributes
-        self.authenticationFactors = authenticationFactors
-        self.expiresAt = expiresAt
-        self.lastAccessedAt = lastAccessedAt
-        self.sessionId = sessionId
-        self.startedAt = startedAt
-        self.userId = userId
-    }
-
+extension Session: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         attributes = try container.decode(key: .attributes)
@@ -52,6 +36,17 @@ public struct Session: Decodable {
         sessionId = try container.decode(key: .sessionId)
         startedAt = try container.decode(key: .startedAt)
         userId = try container.decode(key: .userId)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(attributes, forKey: .attributes)
+        try container.encode(authenticationFactors, forKey: .authenticationFactors)
+        try container.encode(expiresAt, forKey: .expiresAt)
+        try container.encode(lastAccessedAt, forKey: .lastAccessedAt)
+        try container.encode(sessionId, forKey: .sessionId)
+        try container.encode(startedAt, forKey: .startedAt)
+        try container.encode(userId, forKey: .userId)
     }
 }
 
@@ -109,18 +104,3 @@ public extension Session {
         }
     }
 }
-
-#if DEBUG
-extension Session: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(attributes, forKey: .attributes)
-        try container.encode(authenticationFactors, forKey: .authenticationFactors)
-        try container.encode(expiresAt, forKey: .expiresAt)
-        try container.encode(lastAccessedAt, forKey: .lastAccessedAt)
-        try container.encode(sessionId, forKey: .sessionId)
-        try container.encode(startedAt, forKey: .startedAt)
-        try container.encode(userId, forKey: .userId)
-    }
-}
-#endif

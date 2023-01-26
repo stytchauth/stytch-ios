@@ -57,7 +57,7 @@ public extension Optional where Wrapped == JSON {
     }
 }
 
-extension JSON: Decodable {
+extension JSON: Codable {
     public init(from decoder: Decoder) throws {
         do {
             var container = try decoder.unkeyedContainer()
@@ -81,6 +81,44 @@ extension JSON: Decodable {
                     }
                 }
             }
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case let .object(values):
+            struct RawKey: CodingKey {
+                let intValue: Int?
+                let stringValue: String
+
+                init(stringValue: String) {
+                    self.stringValue = stringValue
+                    intValue = nil
+                }
+
+                init?(intValue: Int) {
+                    self.intValue = intValue
+                    stringValue = ""
+                }
+            }
+            var container = encoder.container(keyedBy: RawKey.self)
+            for (key, value) in values {
+                try container.encode(value, forKey: RawKey(stringValue: key))
+            }
+        case let .array(values):
+            var container = encoder.unkeyedContainer()
+            for value in values {
+                try container.encode(value)
+            }
+        case let .boolean(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .number(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .string(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
         }
     }
 }
@@ -119,46 +157,6 @@ extension JSON: ExpressibleByDictionaryLiteral {
 extension JSON: ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: BooleanLiteralType) {
         self = .boolean(value)
-    }
-}
-
-extension JSON: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        switch self {
-        case let .object(values):
-            struct RawKey: CodingKey {
-                let intValue: Int?
-                let stringValue: String
-
-                init(stringValue: String) {
-                    self.stringValue = stringValue
-                    intValue = nil
-                }
-
-                init?(intValue: Int) {
-                    self.intValue = intValue
-                    stringValue = ""
-                }
-            }
-            var container = encoder.container(keyedBy: RawKey.self)
-            for (key, value) in values {
-                try container.encode(value, forKey: RawKey(stringValue: key))
-            }
-        case let .array(values):
-            var container = encoder.unkeyedContainer()
-            for value in values {
-                try container.encode(value)
-            }
-        case let .boolean(value):
-            var container = encoder.singleValueContainer()
-            try container.encode(value)
-        case let .number(value):
-            var container = encoder.singleValueContainer()
-            try container.encode(value)
-        case let .string(value):
-            var container = encoder.singleValueContainer()
-            try container.encode(value)
-        }
     }
 }
 #endif

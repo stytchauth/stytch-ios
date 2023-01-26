@@ -1,6 +1,6 @@
 import Foundation
 
-public struct User: Codable {
+public struct User {
     public typealias ID = Identifier<Self, String>
 
     /// The date the user was originally created.
@@ -28,7 +28,9 @@ public struct User: Codable {
     public let webauthnRegistrations: [WebAuthNRegistration]
     /// The user's Biometric registrations.
     public let biometricRegistrations: [BiometricRegistration]
+}
 
+extension User: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         createdAt = try container.decode(key: .createdAt)
@@ -43,21 +45,6 @@ public struct User: Codable {
         totps = try container.optionalDecode(key: .totps) ?? []
         webauthnRegistrations = try container.optionalDecode(key: .webauthnRegistrations) ?? []
         biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
-    }
-
-    init(createdAt: Date, cryptoWallets: [User.CryptoWallet], emails: [User.Email], userId: ID, name: User.Name, password: User.Password? = nil, phoneNumbers: [User.PhoneNumber], providers: [User.Provider], status: User.UserStatus, totps: [User.TOTP], webauthnRegistrations: [User.WebAuthNRegistration], biometricRegistrations: [User.BiometricRegistration]) {
-        self.createdAt = createdAt
-        self.cryptoWallets = cryptoWallets
-        self.emails = emails
-        self.userId = userId
-        self.name = name
-        self.password = password
-        self.phoneNumbers = phoneNumbers
-        self.providers = providers
-        self.status = status
-        self.totps = totps
-        self.webauthnRegistrations = webauthnRegistrations
-        self.biometricRegistrations = biometricRegistrations
     }
 }
 
