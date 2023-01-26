@@ -61,7 +61,9 @@ final class PasswordsTestCase: BaseTestCase {
             BasicResponse(requestId: "123", statusCode: 200)
             AuthenticateResponse.mock
         }
-        _ = try await StytchClient.passwords.resetByEmailStart(parameters: .init(email: "user@stytch.com", loginUrl: nil, loginExpiration: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15))
+        _ = try await StytchClient.passwords.resetByEmailStart(
+            parameters: .init(email: "user@stytch.com", loginUrl: nil, loginExpiration: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15, resetPasswordTemplateId: "one-two-buckle-my-shoe")
+        )
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -72,6 +74,7 @@ final class PasswordsTestCase: BaseTestCase {
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "code_challenge_method": "S256",
+                "reset_password_template_id": "one-two-buckle-my-shoe"
             ])
         )
 

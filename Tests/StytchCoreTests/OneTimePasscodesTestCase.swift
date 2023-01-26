@@ -16,7 +16,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: StytchClient.OneTimePasscodes.Parameters(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
                 urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
@@ -26,7 +26,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
                 body: ["email": "test@stytch.com"]
             ),
@@ -52,6 +52,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         XCTAssertFalse(Current.sessionStorage.activeSessionExists)
@@ -68,7 +69,12 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah")),
+                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                body: ["email": "test@stytch.com", "login_template_id": "fake-id", "signup_template_id": "blah"]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
                 body: ["email": "test@stytch.com"]
             ),
@@ -112,7 +118,7 @@ final class OneTimePasscodesTestCase: BaseTestCase {
                 body: ["phone_number": "+11098765432"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email("test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
                 body: ["email": "test@stytch.com"]
             ),

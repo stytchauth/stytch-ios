@@ -55,7 +55,13 @@ public extension StytchClient.OneTimePasscodes {
 public extension StytchClient.OneTimePasscodes {
     /// The dedicated parameters type for OTP `loginOrCreate` and `send` calls.
     struct Parameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case phoneNumber, email, expiration = "expiration_minutes" }
+        private enum CodingKeys: String, CodingKey {
+            case phoneNumber
+            case email
+            case expiration = "expiration_minutes"
+            case loginTemplateId
+            case signupTemplateId
+        }
 
         let deliveryMethod: DeliveryMethod
         let expiration: Minutes?
@@ -74,8 +80,10 @@ public extension StytchClient.OneTimePasscodes {
             switch deliveryMethod {
             case let .sms(value), let .whatsapp(value):
                 try container.encode(value, forKey: .phoneNumber)
-            case let .email(value):
-                try container.encode(value, forKey: .email)
+            case let .email(email, loginTemplateId, signupTemplateId):
+                try container.encode(email, forKey: .email)
+                try container.encodeIfPresent(loginTemplateId, forKey: .loginTemplateId)
+                try container.encodeIfPresent(signupTemplateId, forKey: .signupTemplateId)
             }
         }
     }
@@ -96,8 +104,8 @@ public extension StytchClient.OneTimePasscodes {
         case sms(phoneNumber: String)
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
         case whatsapp(phoneNumber: String)
-        /// The email address of the user to send the one-time passcode to.
-        case email(String)
+        /// The email address of the user to send the one-time passcode to as well as the custom email template ID values. NOTE: - signupTemplateID will be ignored for ``StytchClient/OneTimePasscodes/send(parameters:)-6f247``
+        case email(email: String, loginTemplateId: String? = nil, signupTemplateId: String? = nil)
 
         var path: Path {
             switch self {
