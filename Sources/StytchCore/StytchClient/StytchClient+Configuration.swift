@@ -4,7 +4,7 @@ extension StytchClient {
     struct Configuration {
         private enum CodingKeys: String, CodingKey { case hostUrl = "StytchHostURL", publicToken = "StytchPublicToken" }
 
-        let hostUrl: URL
+        let hostUrl: URL?
 
         let publicToken: String
 

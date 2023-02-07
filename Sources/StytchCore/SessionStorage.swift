@@ -47,7 +47,7 @@ final class SessionStorage {
             )
     }
 
-    func updateSession(_ session: Session, tokens: [Session.Token], hostUrl: URL) {
+    func updateSession(_ session: Session, tokens: [Session.Token], hostUrl: URL?) {
         self.session = session
         tokens.forEach { token in
             updatePersistentStorage(token: token)
@@ -104,8 +104,8 @@ final class SessionStorage {
             .forEach(updatePersistentStorage(token:))
     }
 
-    private func cookieFor(token: Session.Token, expiresAt: Date, hostUrl: URL) -> HTTPCookie? {
-        guard let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
+    private func cookieFor(token: Session.Token, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
+        guard let hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
 
         var properties: [HTTPCookiePropertyKey: Any] = [
             .name: token.name,
