@@ -50,7 +50,7 @@ public struct StytchClient {
     public static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
-    ) async throws -> DeeplinkHandledStatus {
+    ) async throws -> DeeplinkHandledStatus<AuthenticateResponseType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             return .notHandled
         }
@@ -112,26 +112,5 @@ public struct StytchClient {
                 print(error)
             }
         }
-    }
-}
-
-public extension StytchClient {
-    /**
-     Represents whether a deeplink was able to be handled
-     Session-related information when appropriate.
-     */
-    enum DeeplinkHandledStatus {
-        /// The handler was successfully able to handle the given item.
-        case handled(AuthenticateResponseType)
-        /// The handler was unable to handle the given item.
-        case notHandled
-        /// The handler recognized the token type, but manual handing is required. This should only be encountered for password reset deeplinks.
-        case manualHandlingRequired(DeeplinkTokenType, token: String)
-    }
-
-    enum DeeplinkTokenType: String {
-        case magicLinks = "magic_links"
-        case oauth
-        case passwordReset = "reset_password"
     }
 }
