@@ -40,6 +40,11 @@ final class SessionStorage {
         set { Current.localStorage.session = newValue }
     }
 
+    private(set) var memberSession: MemberSession? {
+        get { Current.localStorage.memberSession }
+        set { Current.localStorage.memberSession = newValue }
+    }
+
     init() {
         NotificationCenter.default
             .addObserver(
@@ -50,16 +55,26 @@ final class SessionStorage {
             )
     }
 
-    func updateSession(_ session: Session, tokens: [Session.Token], hostUrl: URL?) {
-        self.session = session
+    func updateSession(_ sessionKind: SessionKind, tokens: [SessionToken], hostUrl: URL?) {
+        switch sessionKind {
+        case let .member(session):
+            self.memberSession = session
+        case let .user(session):
+            self.session = session
+        }
         tokens.forEach { token in
             updatePersistentStorage(token: token)
 
-            if let cookie = cookieFor(token: token, expiresAt: session.expiresAt, hostUrl: hostUrl) {
+            if let cookie = cookieFor(token: token, expiresAt: sessionKind.expiresAt, hostUrl: hostUrl) {
                 Current.cookieClient.set(cookie: cookie)
             }
         }
-        Current.sessionsPollingClient.start()
+        switch sessionKind {
+        case .member:
+            Current.memberSessionsPollingClient.start()
+        case .user:
+            Current.sessionsPollingClient.start()
+        }
     }
 
     func updatePersistentStorage(token: SessionToken) {
@@ -79,6 +94,7 @@ final class SessionStorage {
             .map(\.name)
             .forEach(Current.cookieClient.deleteCookie(named:))
         Current.sessionsPollingClient.stop()
+        Current.memberSessionsPollingClient.stop()
     }
 
     @objc
@@ -123,5 +139,19 @@ final class SessionStorage {
         }
 
         return HTTPCookie(properties: properties)
+    }
+
+    enum SessionKind {
+        case member(MemberSession)
+        case user(Session)
+
+        var expiresAt: Date {
+            switch self {
+            case let .member(session):
+                return session.expiresAt
+            case let .user(session):
+                return session.expiresAt
+            }
+        }
     }
 }

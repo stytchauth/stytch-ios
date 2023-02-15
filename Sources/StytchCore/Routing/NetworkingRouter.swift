@@ -67,7 +67,7 @@ extension NetworkingRouter {
             let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
                 Current.sessionStorage.updateSession(
-                    sessionResponse.session,
+                    .user(sessionResponse.session),
                     tokens: [
                         .jwt(sessionResponse.sessionJwt),
                         .opaque(sessionResponse.sessionToken),
@@ -75,6 +75,16 @@ extension NetworkingRouter {
                     hostUrl: configuration.hostUrl
                 )
                 Current.localStorage.user = sessionResponse.user
+            } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
+                Current.sessionStorage.updateSession(
+                    .member(sessionResponse.memberSession),
+                    tokens: [
+                        .jwt(sessionResponse.sessionJwt),
+                        .opaque(sessionResponse.sessionToken),
+                    ],
+                    hostUrl: configuration.hostUrl
+                )
+                Current.localStorage.member = sessionResponse.member
             }
             return dataContainer.data
         } catch let error as StytchError where error.statusCode == 401 {
