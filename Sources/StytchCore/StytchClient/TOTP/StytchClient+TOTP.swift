@@ -11,8 +11,8 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
-            try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .authenticate, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

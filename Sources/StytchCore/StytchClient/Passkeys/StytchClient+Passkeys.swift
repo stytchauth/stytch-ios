@@ -43,7 +43,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: .authenticateStart,
                 parameters: StartParameters(domain: parameters.domain)
@@ -67,7 +67,7 @@ public extension StytchClient {
                         userHandle: credential.userID
                     )
                 ).wrapped(sessionDuration: parameters.sessionDuration)
-            ) as AuthenticateResponse
+            )
         }
     }
 }

@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchClient.TOTP {
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponseType>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchClient.TOTP {
     }
 
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponseType, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

@@ -22,8 +22,8 @@ public extension StytchClient {
         ///   a. We force a password reset to ensure that the user is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
         /// 2. The user used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account takeover attack.
-        public func authenticate(parameters: PasswordParameters) async throws -> AuthenticateResponseType {
-            try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
+        public func authenticate(parameters: PasswordParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .authenticate, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -45,7 +45,7 @@ public extension StytchClient {
         /// Reset the user’s password and authenticate them. This endpoint checks that the magic link token is valid, hasn’t expired, or already been used – and can optionally require additional security settings, such as the IP address and user agent matching the initial reset request.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
-        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponseType {
+        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
             guard let codeVerifier: String = try? Current.keychainClient.get(.pwResetByEmailPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }

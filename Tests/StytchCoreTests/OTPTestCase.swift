@@ -1,8 +1,8 @@
 import XCTest
 @testable import StytchCore
 
-final class OneTimePasscodesTestCase: BaseTestCase {
-    private typealias Base = StytchClient.OneTimePasscodes
+final class OTPTestCase: BaseTestCase {
+    private typealias Base = StytchClient.OTP
     private typealias ExpectedValues = ExpectedRequest<Base.Parameters>
 
     private let response: Base.OTPResponse = .init(

@@ -30,7 +30,7 @@ public extension StytchClient {
         /// When a valid/active session exists, this method will add a biometric registration for the current user. The user will later be able to start a new session with biometrics or use biometrics as an additional authentication factor.
         ///
         /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
-        public func register(parameters: RegisterParameters) async throws -> AuthenticateResponseType {
+        public func register(parameters: RegisterParameters) async throws -> RegisterCompleteResponse {
             // Early out if not authenticated
             guard Current.sessionStorage.activeSessionExists else {
                 throw StytchError.noCurrentSession
@@ -72,7 +72,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             guard let queryResult: KeychainClient.QueryResult = try Current.keychainClient.get(.privateKeyRegistration).first else {
                 throw StytchError.noBiometricRegistrationsAvailable
             }
@@ -93,7 +93,7 @@ public extension StytchClient {
                     biometricRegistrationId: startResponse.biometricRegistrationId,
                     sessionDurationMinutes: parameters.sessionDuration
                 )
-            ) as AuthenticateResponse
+            )
         }
     }
 }
@@ -106,6 +106,8 @@ public extension StytchClient {
 #endif
 
 public extension StytchClient.Biometrics {
+    typealias RegisterCompleteResponse = Response<RegisterCompleteResponseData>
+
     /// A dedicated parameters type for biometrics `authenticate` calls.
     struct AuthenticateParameters {
         let sessionDuration: Minutes
@@ -137,6 +139,14 @@ public extension StytchClient.Biometrics {
             self.accessPolicy = accessPolicy
             self.sessionDuration = sessionDuration
         }
+    }
+
+    struct RegisterCompleteResponseData: Codable, AuthenticateResponseDataType {
+        let biometricRegistrationId: User.BiometricRegistration.ID
+        let user: User
+        let session: Session
+        let sessionToken: String
+        let sessionJwt: String
     }
 }
 
@@ -202,16 +212,4 @@ extension StytchClient.Biometrics {
         let signature: Data
         let sessionDuration: Minutes
     }
-
-    struct RegisterCompleteResponseData: Decodable, AuthenticateResponseDataType {
-        let biometricRegistrationId: User.BiometricRegistration.ID
-        let user: User
-        let session: Session
-        let sessionToken: String
-        let sessionJwt: String
-    }
 }
-
-#if DEBUG
-extension StytchClient.Biometrics.RegisterCompleteResponseData: Encodable {}
-#endif

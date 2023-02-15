@@ -1,7 +1,7 @@
 public extension StytchClient {
     /// One-time passcodes can be sent via email, phone number, or WhatsApp. One-time passcodes allow for a quick and seamless login experience on their own, or can layer on top of another login product like Email magic links to provide extra security as a multi-factor authentication (MFA) method.
-    struct OneTimePasscodes {
-        let router: NetworkingRouter<OneTimePasscodesRoute>
+    struct OTP {
+        let router: NetworkingRouter<OTPRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
@@ -20,21 +20,21 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
-            try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .authenticate, parameters: parameters)
         }
     }
 }
 
 public extension StytchClient {
     /// The interface for interacting with one-time-passcodes products.
-    static var otps: OneTimePasscodes { .init(router: router.scopedRouter(BaseRoute.otps)) }
+    static var otps: OTP { .init(router: router.scopedRouter { $0.otps }) }
 }
 
-public extension StytchClient.OneTimePasscodes {
+public extension StytchClient.OTP {
     /// The dedicated parameters type for OTP `authenticate` calls.
     struct AuthenticateParameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case code = "token", methodId, sessionDuration = "session_duration_minutes" }
+        private enum CodingKeys: String, CodingKey { case code = "token", methodId, sessionDuration = "sessionDurationMinutes" }
 
         let code: String
         let methodId: String
@@ -52,13 +52,13 @@ public extension StytchClient.OneTimePasscodes {
     }
 }
 
-public extension StytchClient.OneTimePasscodes {
+public extension StytchClient.OTP {
     /// The dedicated parameters type for OTP `loginOrCreate` and `send` calls.
     struct Parameters: Encodable {
         private enum CodingKeys: String, CodingKey {
             case phoneNumber
             case email
-            case expiration = "expiration_minutes"
+            case expiration = "expirationMinutes"
             case loginTemplateId
             case signupTemplateId
         }
@@ -89,7 +89,7 @@ public extension StytchClient.OneTimePasscodes {
     }
 }
 
-public extension StytchClient.OneTimePasscodes {
+public extension StytchClient.OTP {
     /// The concrete response type for OTP `loginOrCreate` and `send` calls.
     typealias OTPResponse = Response<OTPResponseData>
 

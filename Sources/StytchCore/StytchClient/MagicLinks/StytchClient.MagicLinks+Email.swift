@@ -3,7 +3,7 @@ import Foundation
 public extension StytchClient.MagicLinks {
     /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
     struct Email {
-        let router: NetworkingRouter<MagicLinksRoute.EmailRoute>
+        let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status current account.
@@ -33,7 +33,7 @@ public extension StytchClient.MagicLinks {
     }
 
     /// The interface for interacting with email magic links.
-    var email: Email { .init(router: router.scopedRouter(MagicLinksRoute.email)) }
+    var email: Email { .init(router: router.scopedRouter { $0.email }) }
 }
 
 public extension StytchClient.MagicLinks.Email {
@@ -43,8 +43,8 @@ public extension StytchClient.MagicLinks.Email {
             case email
             case loginMagicLinkUrl
             case signupMagicLinkUrl
-            case loginExpiration = "login_expiration_minutes"
-            case signupExpiration = "signup_expiration_minutes"
+            case loginExpiration = "loginExpirationMinutes"
+            case signupExpiration = "signupExpirationMinutes"
             case loginTemplateId
             case signupTemplateId
         }

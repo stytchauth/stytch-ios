@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchClient.OAuth {
     /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponseType>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchClient.OAuth {
     }
 
     /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponseType, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

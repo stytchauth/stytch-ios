@@ -1,9 +1,9 @@
 /// The concrete response type for `authenticate` calls.
-typealias AuthenticateResponse = Response<AuthenticateResponseData>
+public typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
-public typealias AuthenticateResponseType = BasicResponseType & AuthenticateResponseDataType
+typealias AuthenticateResponseType = BasicResponseType & AuthenticateResponseDataType
 
-public protocol AuthenticateResponseDataType {
+protocol AuthenticateResponseDataType {
     /// The current user object.
     var user: User { get }
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
@@ -15,13 +15,13 @@ public protocol AuthenticateResponseDataType {
 }
 
 /// The underlying data for `authenticate` calls.
-struct AuthenticateResponseData: Codable, AuthenticateResponseDataType {
+public struct AuthenticateResponseData: Codable, AuthenticateResponseDataType {
     /// The current user object.
-    let user: User
+    public let user: User
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
-    let sessionToken: String
+    public let sessionToken: String
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
-    let sessionJwt: String
+    public let sessionJwt: String
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
-    let session: Session
+    public let session: Session
 }

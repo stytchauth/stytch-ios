@@ -7,7 +7,7 @@ public extension StytchClient.OAuth {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
-        public func start(parameters: StartParameters) async throws -> AuthenticateResponseType {
+        public func start(parameters: StartParameters) async throws -> AuthenticateResponse {
             let rawNonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
             let authenticateResult = try await Current.appleOAuthClient.authenticate(
                 configureController: { controller in
@@ -25,7 +25,7 @@ public extension StytchClient.OAuth {
                     sessionDurationMinutes: parameters.sessionDuration,
                     name: authenticateResult.name
                 )
-            ) as AuthenticateResponse
+            )
         }
     }
 }
