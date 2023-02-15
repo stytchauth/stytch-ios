@@ -31,7 +31,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with TOTP products.
-    static var totps: TOTP { .init(router: router.scopedRouter(BaseRoute.totp)) }
+    static var totps: TOTP { .init(router: router.scopedRouter { $0.totp }) }
 }
 
 public extension StytchClient.TOTP {

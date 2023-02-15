@@ -78,7 +78,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init(router: router.scopedRouter(BaseRoute.passwords)) }
+    static var passwords: Passwords { .init(router: router.scopedRouter { $0.passwords }) }
 }
 
 public extension StytchClient.Passwords {
@@ -97,7 +97,7 @@ public extension StytchClient.Passwords {
 
     /// The dedicated parameters type for password `create` and `authenticate` calls.
     struct PasswordParameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "session_duration_minutes" }
+        private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "sessionDurationMinutes" }
 
         let email: String
         let password: String
@@ -120,10 +120,10 @@ public extension StytchClient.Passwords {
     struct ResetByEmailStartParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
             case email
-            case loginUrl = "login_redirect_url"
-            case loginExpiration = "login_expiration_minutes"
-            case resetPasswordUrl = "reset_password_redirect_url"
-            case resetPasswordExpiration = "reset_password_expiration_minutes"
+            case loginUrl = "loginRedirectUrl"
+            case loginExpiration = "loginExpirationMinutes"
+            case resetPasswordUrl = "resetPasswordRedirectUrl"
+            case resetPasswordExpiration = "resetPasswordExpirationMinutes"
             case resetPasswordTemplateId
         }
 
@@ -160,7 +160,7 @@ public extension StytchClient.Passwords {
 
     /// The dedicated parameters type for passwords `resetByEmail` calls.
     struct ResetByEmailParameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case token, password, sessionDuration = "session_duration_minutes" }
+        private enum CodingKeys: String, CodingKey { case token, password, sessionDuration = "sessionDurationMinutes" }
 
         public let token: String
         public let password: String

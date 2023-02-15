@@ -76,7 +76,7 @@ public extension StytchClient {
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
     /// The interface for interacting with passkeys products.
     static var passkeys: Passkeys {
-        .init(router: router.scopedRouter(BaseRoute.passkeys))
+        .init(router: router.scopedRouter { $0.passkeys })
     }
 }
 

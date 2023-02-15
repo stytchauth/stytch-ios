@@ -22,12 +22,12 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with OAuth products.
-    static var oauth: OAuth { .init(router: router.scopedRouter(BaseRoute.oauth)) }
+    static var oauth: OAuth { .init(router: router.scopedRouter { $0.oauth }) }
 }
 
 public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Apple.
-    var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
+    var apple: Apple { .init(router: router.scopedRouter { $0.apple }) }
 }
 
 #if !os(watchOS)

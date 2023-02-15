@@ -101,7 +101,7 @@ public extension StytchClient {
 #if !os(tvOS) && !os(watchOS)
 public extension StytchClient {
     /// The interface for interacting with biometrics products.
-    static var biometrics: Biometrics { .init(router: router.scopedRouter(BaseRoute.biometrics)) }
+    static var biometrics: Biometrics { .init(router: router.scopedRouter { $0.biometrics }) }
 }
 #endif
 

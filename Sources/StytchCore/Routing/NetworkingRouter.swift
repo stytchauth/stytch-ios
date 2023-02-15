@@ -5,16 +5,21 @@ protocol RouteType {
 }
 
 struct NetworkingRouter<Route: RouteType> {
+    // Provides simpler ergonomics for deeply-nested routes
+    let routeType: Route.Type = Route.self
+    
+    private let getConfiguration: () -> Configuration?
     private let pathForRoute: (Route) -> Path
 
-    private init(_ pathForRoute: @escaping (Route) -> Path) {
+    private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
+        self.getConfiguration = getConfiguration
         self.pathForRoute = pathForRoute
     }
 
     func scopedRouter<ScopedRoute: RouteType>(
-        _ transformToRoute: @escaping (ScopedRoute) -> Route
+        _ transformToRoute: @escaping (Route.Type) -> (ScopedRoute) -> Route
     ) -> NetworkingRouter<ScopedRoute> {
-        .init { path(for: transformToRoute($0)) }
+        .init { path(for: transformToRoute(Route.self)($0)) } getConfiguration: { getConfiguration() }
     }
 
     private func path(for route: Route) -> Path {
@@ -49,7 +54,7 @@ extension NetworkingRouter {
         _ method: NetworkingClient.Method,
         route: Route
     ) async throws -> Response {
-        guard let configuration = StytchClient.instance.configuration else {
+        guard let configuration = getConfiguration() else {
             throw StytchError.clientNotConfigured
         }
 
@@ -81,8 +86,12 @@ extension NetworkingRouter {
     }
 }
 
-extension NetworkingRouter where Route == BaseRoute {
-    init() { self.init { $0.path } }
+protocol BaseRouteType: RouteType {}
+
+extension NetworkingRouter where Route: BaseRouteType {
+    init(getConfiguration: @escaping () -> Configuration?) {
+        self.init { $0.path } getConfiguration: { getConfiguration() }
+    }
 }
 
 private extension HTTPURLResponse {
