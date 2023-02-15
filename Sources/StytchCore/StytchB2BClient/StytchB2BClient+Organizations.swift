@@ -4,6 +4,10 @@ public extension StytchB2BClient {
     struct Organizations {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute>
 
+        public func getSync() -> Organization? {
+            Current.localStorage.organization
+        }
+
         public func get() async throws -> OrganizationResponse {
             let response: OrganizationResponse = try await router.get(route: .base)
             Current.localStorage.organization = response.organization

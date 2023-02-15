@@ -2,6 +2,12 @@ import XCTest
 @testable import StytchCore
 
 final class B2BOrganizationsTestCase: BaseTestCase {
+    func testSync() throws {
+        XCTAssertNil(StytchB2BClient.organization.getSync())
+        Current.localStorage.organization = .mock
+        XCTAssertNotNil(StytchB2BClient.organization.getSync())
+    }
+
     func testGet() async throws {
         networkInterceptor.responses { StytchB2BClient.Organizations.OrganizationResponse(requestId: "123", statusCode: 200, wrapped: .init(organization: .mock)) }
         XCTAssertNil(StytchB2BClient.organization.getSync())

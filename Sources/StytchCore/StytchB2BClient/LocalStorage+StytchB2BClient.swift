@@ -1,3 +1,13 @@
+extension LocalStorage {
+    private enum OrganizationStorageKey: LocalStorageKey {
+        typealias Value = Organization
+    }
+
+    var organization: Organization? {
+        get { Current.localStorage[OrganizationStorageKey.self] }
+        set { Current.localStorage[OrganizationStorageKey.self] = newValue }
+    }
+}
 
 extension LocalStorage {
     private enum MemberStorageKey: LocalStorageKey {
