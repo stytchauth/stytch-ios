@@ -5,9 +5,9 @@ final class SessionStorage {
         (sessionJwt ?? sessionToken) != nil
     }
 
-    private(set) var sessionToken: Session.Token? {
+    private(set) var sessionToken: SessionToken? {
         get {
-            try? Current.keychainClient.get(.sessionToken).map(Session.Token.opaque)
+            try? Current.keychainClient.get(.sessionToken).map(SessionToken.opaque)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionToken
@@ -20,9 +20,9 @@ final class SessionStorage {
         }
     }
 
-    private(set) var sessionJwt: Session.Token? {
+    private(set) var sessionJwt: SessionToken? {
         get {
-            try? Current.keychainClient.get(.sessionJwt).map(Session.Token.jwt)
+            try? Current.keychainClient.get(.sessionJwt).map(SessionToken.jwt)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionJwt
@@ -35,7 +35,10 @@ final class SessionStorage {
         }
     }
 
-    private(set) var session: Session?
+    private(set) var session: Session? {
+        get { Current.localStorage.session }
+        set { Current.localStorage.session = newValue }
+    }
 
     init() {
         NotificationCenter.default
@@ -59,7 +62,7 @@ final class SessionStorage {
         Current.sessionsPollingClient.start()
     }
 
-    func updatePersistentStorage(token: Session.Token) {
+    func updatePersistentStorage(token: SessionToken) {
         switch token.kind {
         case .jwt:
             sessionJwt = token
@@ -72,7 +75,7 @@ final class SessionStorage {
         session = nil
         sessionToken = nil
         sessionJwt = nil
-        Session.Token.Kind.allCases
+        SessionToken.Kind.allCases
             .map(\.name)
             .forEach(Current.cookieClient.deleteCookie(named:))
         Current.sessionsPollingClient.stop()
@@ -85,7 +88,7 @@ final class SessionStorage {
         guard let cookies = storage.cookies else { return }
 
         cookies
-            .filter { Session.Token.Kind.allCases.map(\.name).contains($0.name) }
+            .filter { SessionToken.Kind.allCases.map(\.name).contains($0.name) }
             .compactMap { cookie in
                 // If the cookie is expired, discard the cookie/value
                 if let expiresAt = cookie.expiresDate, expiresAt <= Current.date() {
@@ -93,9 +96,9 @@ final class SessionStorage {
                 }
 
                 switch cookie.name {
-                case Session.Token.Kind.jwt.name:
+                case SessionToken.Kind.jwt.name:
                     return .jwt(cookie.value)
-                case Session.Token.Kind.opaque.name:
+                case SessionToken.Kind.opaque.name:
                     return .opaque(cookie.value)
                 default:
                     return nil
@@ -104,7 +107,7 @@ final class SessionStorage {
             .forEach(updatePersistentStorage(token:))
     }
 
-    private func cookieFor(token: Session.Token, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
+    private func cookieFor(token: SessionToken, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
         guard let hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
 
         var properties: [HTTPCookiePropertyKey: Any] = [

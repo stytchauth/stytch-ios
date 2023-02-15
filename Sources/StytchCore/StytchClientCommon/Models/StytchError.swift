@@ -33,7 +33,7 @@ public struct StytchError: Error, Decodable, Equatable {
 public extension StytchError {
     static let clientNotConfigured: Self = .init(
         errorType: "client_not_configured",
-        errorMessage: "StytchClient not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `StytchClient.configure(hostUrl:publicToken:)` prior to other StytchClient calls.",
+        errorMessage: "StytchClient not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `StytchClient.configure(publicToken:hostUrl:)` prior to other StytchClient calls.",
         errorUrl: .readmeUrl(withFragment: "configuration")
     )
     static let pckeNotAvailable: Self = .init(
