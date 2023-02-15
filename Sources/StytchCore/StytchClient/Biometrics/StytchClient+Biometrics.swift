@@ -205,7 +205,7 @@ extension StytchClient.Biometrics {
 
     private struct RegisterFinishParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
-            case biometricRegistrationId, signature, sessionDuration = "session_duration_minutes"
+            case biometricRegistrationId, signature, sessionDuration = "sessionDurationMinutes"
         }
 
         let biometricRegistrationId: User.BiometricRegistration.ID

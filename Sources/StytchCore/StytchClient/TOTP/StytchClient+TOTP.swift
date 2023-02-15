@@ -38,7 +38,7 @@ public extension StytchClient.TOTP {
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
     struct CreateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
-            case expiration = "expiration_minutes"
+            case expiration = "expirationMinutes"
         }
 
         let expiration: Minutes
@@ -53,7 +53,7 @@ public extension StytchClient.TOTP {
     struct AuthenticateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case totpCode
-            case sessionDuration = "session_duration_minutes"
+            case sessionDuration = "sessionDurationMinutes"
         }
 
         let totpCode: String
@@ -72,7 +72,7 @@ public extension StytchClient.TOTP {
     struct RecoverParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case recoveryCode
-            case sessionDuration = "session_duration_minutes"
+            case sessionDuration = "sessionDurationMinutes"
         }
 
         let recoveryCode: String
