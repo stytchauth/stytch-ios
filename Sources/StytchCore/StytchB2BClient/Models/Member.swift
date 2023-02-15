@@ -13,8 +13,10 @@ public struct Member: Codable {
     public let untrustedMetadata: JSON
 
     let memberId: ID
+}
 
-    public enum Status: String, Codable {
+public extension Member {
+    enum Status: String, Codable {
         case pending
         case active
         case deleted

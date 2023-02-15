@@ -9,7 +9,7 @@ extension StytchClient {
         case sessions(SessionsRoute)
         case totp(TOTPRoute)
         case users(UsersRoute)
-        
+
         var path: Path {
             switch self {
             case let .biometrics(route):

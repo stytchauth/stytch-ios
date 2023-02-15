@@ -29,24 +29,24 @@ public struct Sessions<AuthResponseType: Decodable> {
     }
 }
 
-extension Sessions where AuthResponseType == B2BAuthenticateResponse {
-    public internal(set) var memberSession: MemberSession? {
+public extension Sessions where AuthResponseType == B2BAuthenticateResponse {
+    internal(set) var memberSession: MemberSession? {
         get { Current.localStorage.memberSession }
         set { Current.localStorage.memberSession = newValue }
     }
 }
 
-extension Sessions where AuthResponseType == AuthenticateResponse {
+public extension Sessions where AuthResponseType == AuthenticateResponse {
     /// If logged in, returns the cached session object.
-    public internal(set) var session: Session? {
+    internal(set) var session: Session? {
         get { Current.localStorage.session }
         set { Current.localStorage.session = newValue }
     }
 }
 
-extension StytchClient {
+public extension StytchClient {
     /// The interface for interacting with sessions products.
-    public static var sessions: Sessions<AuthenticateResponse> { .init(router: router.scopedRouter { $0.sessions }) }
+    static var sessions: Sessions<AuthenticateResponse> { .init(router: router.scopedRouter { $0.sessions }) }
 }
 
 public extension Sessions {
@@ -62,4 +62,3 @@ public extension Sessions {
         }
     }
 }
-

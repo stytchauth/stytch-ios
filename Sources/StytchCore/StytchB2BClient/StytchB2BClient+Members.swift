@@ -1,6 +1,4 @@
 public extension StytchB2BClient {
-    static var member: Members { .init(router: organization.router.scopedRouter { $0.members }) }
-
     struct Members {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute.MembersRoute>
 
@@ -14,6 +12,10 @@ public extension StytchB2BClient {
             return response
         }
     }
+}
+
+public extension StytchB2BClient {
+    static var member: Members { .init(router: organization.router.scopedRouter { $0.members }) }
 }
 
 public extension StytchB2BClient.Members {

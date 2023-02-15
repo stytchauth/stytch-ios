@@ -17,35 +17,25 @@ extension StytchClientType {
         }
     }
 
-    mutating func postInit() {
-        guard
-            let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"),
-            let data = try? Data(contentsOf: url)
-        else { return }
-
-        self.configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
-
-        updateHeaderProvider()
-        runKeychainMigrations()
-    }
-
+    // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
         instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl)
     }
 
+    // swiftlint:disable:next identifier_name
     static func _tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
-            guard
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                let queryItems = components.queryItems,
-                let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }), let type = typeQuery.value,
-                let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
-            else {
-                return nil
-            }
-            guard let tokenType = DeeplinkTokenType(rawValue: type) else {
-                throw StytchError.unrecognizedDeeplinkTokenType
-            }
-            return (tokenType, token)
+        guard
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            let queryItems = components.queryItems,
+            let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }), let type = typeQuery.value,
+            let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
+        else {
+            return nil
+        }
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else {
+            throw StytchError.unrecognizedDeeplinkTokenType
+        }
+        return (tokenType, token)
     }
 
     // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
@@ -55,6 +45,18 @@ extension StytchClientType {
         try Current.keychainClient.set(codeVerifier, for: keychainItem)
 
         return (Current.cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
+    }
+
+    mutating func postInit() {
+        guard
+            let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"),
+            let data = try? Data(contentsOf: url)
+        else { return }
+
+        configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
+
+        updateHeaderProvider()
+        runKeychainMigrations()
     }
 
     // To be called after configuration

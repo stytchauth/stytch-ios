@@ -46,12 +46,12 @@ extension CodeChallengedParameters {
             self.rawValue = rawValue
         }
 
-        init?(intValue: Int) {
-            return nil
+        init?(intValue _: Int) {
+            nil
         }
 
-        init?(stringValue: String) {
-            return nil
+        init?(stringValue _: String) {
+            nil
         }
     }
 }

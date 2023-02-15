@@ -19,4 +19,3 @@ extension LocalStorage {
         set { self[SessionStorageKey.self] = newValue }
     }
 }
-

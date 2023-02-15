@@ -7,7 +7,7 @@ protocol RouteType {
 struct NetworkingRouter<Route: RouteType> {
     // Provides simpler ergonomics for deeply-nested routes
     let routeType: Route.Type = Route.self
-    
+
     private let getConfiguration: () -> Configuration?
     private let pathForRoute: (Route) -> Path
 

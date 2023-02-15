@@ -16,6 +16,7 @@ extension StytchB2BClient {
             }
         }
     }
+
     enum MagicLinksRoute: RouteType {
         case authenticate
         case email(EmailRoute)
@@ -40,6 +41,7 @@ extension StytchB2BClient {
             }
         }
     }
+
     enum OrganizationsRoute: RouteType {
         case base
         case members(MembersRoute)
@@ -54,6 +56,7 @@ extension StytchB2BClient {
         }
 
         enum MembersRoute: String, RouteType {
+            // swiftlint:disable:next identifier_name
             case me
 
             var path: Path {

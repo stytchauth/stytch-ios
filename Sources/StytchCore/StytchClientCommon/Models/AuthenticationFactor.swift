@@ -1,23 +1,23 @@
 import Foundation
 
-    /**
-     A type which describes an factor used to authenticate a session.
-     E.g. An email which was used to log in, or a phone which was used
-     via SMS as an OTP second factor.
-     */
-    public struct AuthenticationFactor: Hashable {
-        private enum CodingKeys: String, CodingKey {
-            case lastAuthenticatedAt
-            case kind = "type"
-        }
-
-        /// The underlying data representing this factor. Includes additional information about the specific factor ids and values.
-        public let rawData: JSON
-        /// The type of factor, e.g. magic link, OTP, TOTP, etc.
-        public let kind: String
-        /// The date this factor was last used to authenticate.
-        public let lastAuthenticatedAt: Date
+/**
+ A type which describes an factor used to authenticate a session.
+ E.g. An email which was used to log in, or a phone which was used
+ via SMS as an OTP second factor.
+ */
+public struct AuthenticationFactor: Hashable {
+    private enum CodingKeys: String, CodingKey {
+        case lastAuthenticatedAt
+        case kind = "type"
     }
+
+    /// The underlying data representing this factor. Includes additional information about the specific factor ids and values.
+    public let rawData: JSON
+    /// The type of factor, e.g. magic link, OTP, TOTP, etc.
+    public let kind: String
+    /// The date this factor was last used to authenticate.
+    public let lastAuthenticatedAt: Date
+}
 
 extension AuthenticationFactor: Codable {
     public init(from decoder: Decoder) throws {

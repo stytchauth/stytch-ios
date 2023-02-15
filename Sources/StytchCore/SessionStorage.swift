@@ -58,7 +58,7 @@ final class SessionStorage {
     func updateSession(_ sessionKind: SessionKind, tokens: [SessionToken], hostUrl: URL?) {
         switch sessionKind {
         case let .member(session):
-            self.memberSession = session
+            memberSession = session
         case let .user(session):
             self.session = session
         }
@@ -124,7 +124,7 @@ final class SessionStorage {
     }
 
     private func cookieFor(token: SessionToken, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
-        guard let hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
+        guard let hostUrl = hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
 
         var properties: [HTTPCookiePropertyKey: Any] = [
             .name: token.name,
@@ -140,7 +140,9 @@ final class SessionStorage {
 
         return HTTPCookie(properties: properties)
     }
+}
 
+extension SessionStorage {
     enum SessionKind {
         case member(MemberSession)
         case user(Session)

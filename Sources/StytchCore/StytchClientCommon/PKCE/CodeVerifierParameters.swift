@@ -35,12 +35,12 @@ extension CodeVerifierParameters {
             self.rawValue = rawValue
         }
 
-        init?(stringValue: String) {
-            return nil
+        init?(stringValue _: String) {
+            nil
         }
 
-        init?(intValue: Int) {
-            return nil
+        init?(intValue _: Int) {
+            nil
         }
 
         static func codeVerifier(prefix: String?) -> Self {
