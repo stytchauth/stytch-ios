@@ -3,17 +3,17 @@ import XCTest
 
 final class UserManagementTestCase: BaseTestCase {
     func testSync() throws {
-        XCTAssertNil(StytchClient.user.syncUser)
+        XCTAssertNil(StytchClient.user.getSync())
         Current.localStorage.user = .mock(userId: "123")
-        XCTAssertNotNil(StytchClient.user.syncUser)
+        XCTAssertNotNil(StytchClient.user.getSync())
     }
 
     func testGet() async throws {
         networkInterceptor.responses { UserResponse(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123")) }
-        XCTAssertNil(StytchClient.user.syncUser)
+        XCTAssertNil(StytchClient.user.getSync())
         let getUserResponse = try await StytchClient.user.get()
-        XCTAssertNotNil(StytchClient.user.syncUser)
-        XCTAssertEqual(getUserResponse.id, StytchClient.user.syncUser?.id)
+        XCTAssertNotNil(StytchClient.user.getSync())
+        XCTAssertEqual(getUserResponse.id, StytchClient.user.getSync()?.id)
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/users/me", method: .get)
     }
 
@@ -36,10 +36,10 @@ final class UserManagementTestCase: BaseTestCase {
         ]
 
         try await factors.enumerated().asyncForEach { index, values in
-            Current.localStorage = .init()
-            XCTAssertNil(StytchClient.user.syncUser)
+            Current.localStorage.user = nil
+            XCTAssertNil(StytchClient.user.getSync())
             _ = try await StytchClient.user.deleteFactor(values.factor)
-            XCTAssertNotNil(StytchClient.user.syncUser)
+            XCTAssertNotNil(StytchClient.user.getSync())
             try XCTAssertRequest(networkInterceptor.requests[index], urlString: "https://web.stytch.com/sdk/v1/users/\(values.pathComponent)/\(values.id)", method: .delete)
         }
     }
