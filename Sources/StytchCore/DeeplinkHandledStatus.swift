@@ -13,7 +13,7 @@ public enum DeeplinkHandledStatus<AuthenticateResponse> {
 
 public enum DeeplinkTokenType: String {
     case magicLinks = "magic_links"
-    case multiTenantMagicLInks = "multi_tenant_magic_links"
+    case multiTenantMagicLinks = "multi_tenant_magic_links"
     case oauth
     case passwordReset = "reset_password"
 }
