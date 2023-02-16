@@ -49,7 +49,7 @@ public extension StytchClient.TOTP {
         }
     }
 
-    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-1tfsj`` calls.
+    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-2ck6w`` calls.
     struct AuthenticateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case totpCode

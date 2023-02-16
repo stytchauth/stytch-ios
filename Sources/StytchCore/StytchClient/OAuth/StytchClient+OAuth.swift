@@ -86,7 +86,7 @@ public extension StytchClient.OAuth {
 #endif
 
 public extension StytchClient.OAuth {
-    /// The dedicated parameters type for ``authenticate(parameters:)-172ak`` calls.
+    /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
     struct AuthenticateParameters: Encodable {
         private enum CodingKeys: String, CodingKey { case token, sessionDuration = "sessionDurationMinutes" }
 

@@ -33,7 +33,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
-protocol BasicResponseType {
+public protocol BasicResponseType {
     var requestId: String { get }
     var statusCode: UInt { get }
 }
@@ -63,15 +63,15 @@ extension Response where Wrapped == EmptyCodable {
 extension Response: BasicResponseType {}
 
 extension Response: AuthenticateResponseDataType where Wrapped: AuthenticateResponseDataType {
-    var user: User { wrapped.user }
-    var sessionToken: String { wrapped.sessionToken }
-    var sessionJwt: String { wrapped.sessionJwt }
-    var session: Session { wrapped.session }
+    public var user: User { wrapped.user }
+    public var sessionToken: String { wrapped.sessionToken }
+    public var sessionJwt: String { wrapped.sessionJwt }
+    public var session: Session { wrapped.session }
 }
 
 extension Response: B2BAuthenticateResponseDataType where Wrapped: B2BAuthenticateResponseDataType {
-    var member: Member { wrapped.member }
-    var memberSession: MemberSession { wrapped.memberSession }
-    var sessionToken: String { wrapped.sessionToken }
-    var sessionJwt: String { wrapped.sessionJwt }
+    public var member: Member { wrapped.member }
+    public var memberSession: MemberSession { wrapped.memberSession }
+    public var sessionToken: String { wrapped.sessionToken }
+    public var sessionJwt: String { wrapped.sessionJwt }
 }

@@ -1,9 +1,9 @@
 /// The concrete response type for `authenticate` calls.
 public typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
-typealias AuthenticateResponseType = BasicResponseType & AuthenticateResponseDataType
+public typealias AuthenticateResponseType = BasicResponseType & AuthenticateResponseDataType
 
-protocol AuthenticateResponseDataType {
+public protocol AuthenticateResponseDataType {
     /// The current user object.
     var user: User { get }
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.

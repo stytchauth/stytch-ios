@@ -9,9 +9,9 @@ public struct B2BAuthenticateResponseData: Codable, B2BAuthenticateResponseDataT
     public let sessionJwt: String
 }
 
-typealias B2BAuthenticateResponseType = BasicResponseType & B2BAuthenticateResponseDataType
+public typealias B2BAuthenticateResponseType = BasicResponseType & B2BAuthenticateResponseDataType
 
-protocol B2BAuthenticateResponseDataType {
+public protocol B2BAuthenticateResponseDataType {
     var memberSession: MemberSession { get }
     var member: Member { get }
     var sessionToken: String { get }

@@ -142,11 +142,11 @@ public extension StytchClient.Biometrics {
     }
 
     struct RegisterCompleteResponseData: Codable, AuthenticateResponseDataType {
-        let biometricRegistrationId: User.BiometricRegistration.ID
-        let user: User
-        let session: Session
-        let sessionToken: String
-        let sessionJwt: String
+        public let biometricRegistrationId: User.BiometricRegistration.ID
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
     }
 }
 

@@ -31,7 +31,7 @@ public extension StytchClient.OAuth {
 }
 
 public extension StytchClient.OAuth.Apple {
-    /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-858tw`` calls.
+    /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-7rkef`` calls.
     struct StartParameters {
         let sessionDuration: Minutes
         #if !os(watchOS)
