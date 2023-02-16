@@ -53,8 +53,8 @@ public struct StytchClient: StytchClientType {
             return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .oauth:
             return try await .handled(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
-        case .passwordReset:
-            return .manualHandlingRequired(.passwordReset, token: token)
+        case .passwordReset, .multiTenantMagicLInks:
+            return .manualHandlingRequired(tokenType, token: token)
         }
     }
 }

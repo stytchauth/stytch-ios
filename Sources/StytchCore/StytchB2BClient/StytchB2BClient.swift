@@ -46,9 +46,9 @@ public struct StytchB2BClient: StytchClientType {
         }
 
         switch tokenType {
-        case .magicLinks:
+        case .multiTenantMagicLInks:
             return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
-        case .oauth, .passwordReset:
+        case .oauth, .passwordReset, .magicLinks:
             return .manualHandlingRequired(tokenType, token: token)
         }
     }
