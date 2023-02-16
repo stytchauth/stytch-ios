@@ -44,11 +44,6 @@ public extension Sessions where AuthResponseType == AuthenticateResponse {
     }
 }
 
-public extension StytchClient {
-    /// The interface for interacting with sessions products.
-    static var sessions: Sessions<AuthenticateResponse> { .init(router: router.scopedRouter { $0.sessions }) }
-}
-
 public extension Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
     struct AuthenticateParameters: Encodable {
