@@ -79,6 +79,7 @@ extension B2BAuthenticateResponse {
         wrapped: .init(
             memberSession: .mock,
             member: .mock,
+            organization: .mock,
             sessionToken: "xyzasdf",
             sessionJwt: "i'mvalidjson"
         )
