@@ -73,7 +73,7 @@ public extension StytchB2BClient.MagicLinks {
 }
 
 public extension StytchB2BClient.MagicLinks.Email {
-    /// The dedicated parameters type for ``loginOrSignup`` calls.
+    /// The dedicated parameters type for `loginOrSignup` calls.
     struct Parameters: Codable {
         let organizationId: Organization.ID
         let email: String
