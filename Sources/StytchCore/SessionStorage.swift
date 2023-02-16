@@ -1,9 +1,17 @@
+import Combine
 import Foundation
 
 final class SessionStorage {
     var activeSessionExists: Bool {
         (sessionJwt ?? sessionToken) != nil
     }
+
+    private(set) lazy var onAuthChange = _onAuthChange
+        .map { [weak self] in self?.sessionToken == nil }
+        .removeDuplicates()
+        .map { [weak self] _ in self?.sessionToken?.value }
+
+    private let _onAuthChange = PassthroughSubject<Void, Never>()
 
     private(set) var sessionToken: SessionToken? {
         get {
@@ -62,6 +70,7 @@ final class SessionStorage {
         case let .user(session):
             self.session = session
         }
+
         tokens.forEach { token in
             updatePersistentStorage(token: token)
 
@@ -69,6 +78,9 @@ final class SessionStorage {
                 Current.cookieClient.set(cookie: cookie)
             }
         }
+
+        _onAuthChange.send(())
+
         switch sessionKind {
         case .member:
             Current.memberSessionsPollingClient.start()
@@ -88,11 +100,18 @@ final class SessionStorage {
 
     func reset() {
         session = nil
+        memberSession = nil
         sessionToken = nil
         sessionJwt = nil
+
+        Current.localStorage.user = nil
+        Current.localStorage.organization = nil
+        Current.localStorage.member = nil
+
         SessionToken.Kind.allCases
             .map(\.name)
             .forEach(Current.cookieClient.deleteCookie(named:))
+        _onAuthChange.send(())
         Current.sessionsPollingClient.stop()
         Current.memberSessionsPollingClient.stop()
     }
@@ -121,6 +140,8 @@ final class SessionStorage {
                 }
             }
             .forEach(updatePersistentStorage(token:))
+
+        _onAuthChange.send(())
     }
 
     private func cookieFor(token: SessionToken, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
