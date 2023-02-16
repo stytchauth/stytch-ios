@@ -10,6 +10,8 @@ public struct B2BAuthenticateResponseData: Codable, B2BAuthenticateResponseDataT
     public let memberSession: MemberSession
     /// The current member object.
     public let member: Member
+    /// The current organization object.
+    public let organization: Organization
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
     public let sessionToken: String
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
@@ -21,6 +23,8 @@ public protocol B2BAuthenticateResponseDataType {
     var memberSession: MemberSession { get }
     /// The current member object.
     var member: Member { get }
+    /// The current organization object.
+    var organization: Organization { get }
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
     var sessionToken: String { get }
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.

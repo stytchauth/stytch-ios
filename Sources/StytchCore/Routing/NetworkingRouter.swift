@@ -82,6 +82,7 @@ extension NetworkingRouter {
                     hostUrl: configuration.hostUrl
                 )
                 Current.localStorage.member = sessionResponse.member
+                Current.localStorage.organization = sessionResponse.organization
             }
             return dataContainer.data
         } catch let error as StytchError where error.statusCode == 401 {
