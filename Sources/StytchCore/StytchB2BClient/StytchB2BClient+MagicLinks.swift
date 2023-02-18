@@ -75,6 +75,15 @@ public extension StytchB2BClient.MagicLinks {
 public extension StytchB2BClient.MagicLinks.Email {
     /// The dedicated parameters type for `loginOrSignup` calls.
     struct Parameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case organizationId
+            case email = "emailAddress"
+            case loginRedirectUrl
+            case signupRedirectUrl
+            case loginTemplateId
+            case signupTemplateId
+        }
+
         let organizationId: Organization.ID
         let email: String
         let loginRedirectUrl: URL?
@@ -95,10 +104,10 @@ public extension StytchB2BClient.MagicLinks.Email {
         public init(
             organizationId: Organization.ID,
             email: String,
-            loginRedirectUrl: URL?,
-            signupRedirectUrl: URL?,
-            loginTemplateId: String?,
-            signupTemplateId: String?
+            loginRedirectUrl: URL? = nil,
+            signupRedirectUrl: URL? = nil,
+            loginTemplateId: String? = nil,
+            signupTemplateId: String? = nil
         ) {
             self.organizationId = organizationId
             self.email = email

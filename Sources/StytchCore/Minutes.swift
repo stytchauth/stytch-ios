@@ -11,6 +11,10 @@ public struct Minutes: Codable {
         var container = encoder.singleValueContainer()
         try container.encode(rawValue)
     }
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
 }
 
 extension Minutes: ExpressibleByIntegerLiteral {

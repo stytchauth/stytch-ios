@@ -1,5 +1,9 @@
 public struct Identifier<T, RawValue> {
     public let rawValue: RawValue
+
+    public init(rawValue: RawValue) {
+        self.rawValue = rawValue
+    }
 }
 
 extension Identifier: Equatable where RawValue: Equatable {}

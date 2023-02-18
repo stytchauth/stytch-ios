@@ -2,6 +2,14 @@ import Foundation
 
 /// A type representing an error within the Stytch ecosystem.
 public struct StytchError: Error, Decodable, Equatable {
+    private enum CodingKeys: CodingKey {
+        case statusCode
+        case requestId
+        case errorType
+        case errorMessage
+        case errorUrl
+    }
+
     /// The HTTP status code associated with the error. Nil if error originated from the client.
     public let statusCode: Int?
     /// The id of the request. Nil if error originated from the client.
@@ -27,6 +35,15 @@ public struct StytchError: Error, Decodable, Equatable {
         self.errorType = errorType
         self.errorMessage = errorMessage
         self.errorUrl = errorUrl
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        statusCode = try container.decodeIfPresent(Int.self, forKey: .statusCode)
+        requestId = try container.decodeIfPresent(String.self, forKey: .requestId)
+        errorType = try container.decode(String.self, forKey: .errorType)
+        errorMessage = try container.decode(String.self, forKey: .errorMessage)
+        errorUrl = try? container.decodeIfPresent(URL.self, forKey: .errorUrl)
     }
 }
 

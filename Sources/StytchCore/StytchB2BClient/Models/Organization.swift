@@ -17,4 +17,13 @@ public struct Organization: Codable {
     public let logoUrl: URL?
     public let trustedMetadata: JSON
     let organizationId: ID
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        organizationId = try container.decode(ID.self, forKey: .organizationId)
+        name = try container.decode(String.self, forKey: .name)
+        slug = try container.decode(String.self, forKey: .slug)
+        logoUrl = try? container.decodeIfPresent(URL.self, forKey: .logoUrl)
+        trustedMetadata = try container.decode(JSON.self, forKey: .trustedMetadata)
+    }
 }
