@@ -32,7 +32,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
                 "pkce_code_challenge_method": "S256",
                 "signup_redirect_url": "https://myapp.com/signup",
                 "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
-                "email": "asdf@stytch.com",
+                "email_address": "asdf@stytch.com",
                 "login_redirect_url": "https://myapp.com/login",
                 "login_template_id": "g'day",
                 "signup_template_id": "mate",
