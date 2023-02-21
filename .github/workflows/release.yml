@@ -53,6 +53,6 @@ jobs:
         gh release create \
           ${{ github.ref_name }} \
           StytchCore.xcframework.zip \
-          ./build/Build/Products/Release-iphoneos/StytchCore.doccarchive.zip \
+          StytchCore.doccarchive.zip \
           --draft \
           --generate-notes
