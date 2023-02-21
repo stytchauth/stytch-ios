@@ -7,7 +7,7 @@ public extension StytchClient.Biometrics {
     /// When a valid/active session exists, this method will add a biometric registration for the current user. The user will later be able to start a new session with biometrics or use biometrics as an additional authentication factor.
     /// 
     /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
-    func register(parameters: RegisterParameters, completion: @escaping Completion<AuthenticateResponseType>) {
+    func register(parameters: RegisterParameters, completion: @escaping Completion<RegisterCompleteResponse>) {
         Task {
             do {
                 completion(.success(try await register(parameters: parameters)))
@@ -20,7 +20,7 @@ public extension StytchClient.Biometrics {
     /// When a valid/active session exists, this method will add a biometric registration for the current user. The user will later be able to start a new session with biometrics or use biometrics as an additional authentication factor.
     /// 
     /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
-    func register(parameters: RegisterParameters) -> AnyPublisher<AuthenticateResponseType, Error> {
+    func register(parameters: RegisterParameters) -> AnyPublisher<RegisterCompleteResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

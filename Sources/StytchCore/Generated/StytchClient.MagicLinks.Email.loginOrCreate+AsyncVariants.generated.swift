@@ -4,7 +4,7 @@ import Combine
 import Foundation
 
 public extension StytchClient.MagicLinks.Email {
-    /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status current account.
+    /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status of an existing account.
     func loginOrCreate(parameters: Parameters, completion: @escaping Completion<BasicResponse>) {
         Task {
             do {
@@ -15,7 +15,7 @@ public extension StytchClient.MagicLinks.Email {
         }
     }
 
-    /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status current account.
+    /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status of an existing account.
     func loginOrCreate(parameters: Parameters) -> AnyPublisher<BasicResponse, Error> {
         return Deferred {
             Future({ promise in

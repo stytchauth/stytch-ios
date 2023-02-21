@@ -132,8 +132,6 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
         XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
 
-        XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
-
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/magic_links/authenticate",

@@ -14,14 +14,14 @@ There are a number of authentication products currently supported by the SDK, wi
 
 Product | Methods | Delivery mechanisms
 --- | --- | ---
-``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-4aa9c`` | Email 
-``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-8qxx5``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-353x1``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
-``StytchClient/OneTimePasscodes`` | ``StytchClient/OneTimePasscodes/loginOrCreate(parameters:)-8i9gy``, ``StytchClient/OneTimePasscodes/send(parameters:)-6f247``, ``StytchClient/OneTimePasscodes/authenticate(parameters:)-151as`` | SMS, WhatsApp, Email
-``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-812fz``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-7b3rx``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()-7a8j9`` | N/A
-``StytchClient/OAuth-swift.struct`` | ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak``, ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-858tw``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-239i4``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-p3l8`` | N/A
-``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-1tfsj``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk`` | N/A
-``StytchClient/Sessions-swift.struct`` | ``StytchClient/Sessions-swift.struct/revoke()-4jc0p``, ``StytchClient/Sessions-swift.struct/authenticate(parameters:)-41u13`` | N/A
-``StytchClient/UserManagement`` | ``StytchClient/UserManagement/syncUser``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h`` | N/A
+``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-27v6k`` | Email 
+``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-9xbzg``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-79mm8``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | N/A
+``StytchClient/OTP`` | ``StytchClient/OTP/loginOrCreate(parameters:)-c61b``, ``StytchClient/OTP/send(parameters:)-3xcc9``, ``StytchClient/OTP/authenticate(parameters:)-5ums0`` | SMS, WhatsApp, Email
+``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-m8w7``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-8ycmb``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()-7a8j9`` | N/A
+``StytchClient/OAuth-swift.struct`` | ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd``, ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-7rkef``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-239i4``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-p3l8`` | N/A
+``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-2ck6w``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk`` | N/A
+``Sessions`` | ``Sessions/revoke()-7teh7``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
+``StytchClient/UserManagement`` | ``StytchClient/UserManagement/getSync()``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h`` | N/A
 
 **Async Options**: Async functions are available via various mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
 
@@ -53,9 +53,6 @@ YourContentView().onOpenUrl { url in
 
 ### Response Types
 
-- ``AuthenticateResponseType``
-- ``AuthenticateResponseDataType``
-- ``BasicResponseType``
 - ``BasicResponse``
 - ``Response``
 

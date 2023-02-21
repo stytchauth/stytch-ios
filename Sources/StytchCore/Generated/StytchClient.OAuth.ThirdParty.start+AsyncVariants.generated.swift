@@ -15,7 +15,7 @@ public extension StytchClient.OAuth.ThirdParty {
     /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
     /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
     /// ```
-    /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak`` method as well as the redirect url to inform whether this authentication was a login or signup.
+    /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
     @available(tvOS 16.0, *)
     func start(parameters: WebAuthSessionStartParameters, completion: @escaping Completion<(token: String, url: URL)>) {
         Task {
@@ -37,7 +37,7 @@ public extension StytchClient.OAuth.ThirdParty {
     /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
     /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
     /// ```
-    /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak`` method as well as the redirect url to inform whether this authentication was a login or signup.
+    /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
     @available(tvOS 16.0, *)
     func start(parameters: WebAuthSessionStartParameters) -> AnyPublisher<(token: String, url: URL), Error> {
         return Deferred {

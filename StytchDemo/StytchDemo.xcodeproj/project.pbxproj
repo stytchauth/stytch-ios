@@ -11,6 +11,13 @@
 		2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
 		2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
 		2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
+		2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531A299EE16D00BA9126 /* AppDelegate.swift */; };
+		2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531C299EE16D00BA9126 /* SceneDelegate.swift */; };
+		2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531E299EE16D00BA9126 /* RootViewController.swift */; };
+		22315322299EE16D00BA9126 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22315320299EE16D00BA9126 /* Main.storyboard */; };
+		22315324299EE16E00BA9126 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22315323299EE16E00BA9126 /* Assets.xcassets */; };
+		22315327299EE16E00BA9126 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22315325299EE16E00BA9126 /* LaunchScreen.storyboard */; };
+		2231532D299EE5E700BA9126 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2231532C299EE5E700BA9126 /* StytchCore */; };
 		223F88B6289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */; };
 		223F88B7289249C700CE2B0C /* PasswordAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */; };
 		223F88B92894D05000CE2B0C /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88B82894D05000CE2B0C /* ResetPasswordView.swift */; };
@@ -34,6 +41,13 @@
 		224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
 		224FC03628486013009C9740 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 224FC03528486013009C9740 /* Swifter */; };
 		224FC03A28488591009C9740 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FC03928488591009C9740 /* Configuration.swift */; };
+		2254779029A05C0C003DF229 /* AppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254778F29A05C0C003DF229 /* AppViewController.swift */; };
+		2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779129A05C3E003DF229 /* AuthHomeViewController.swift */; };
+		2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779329A05C6A003DF229 /* MagicLinksViewController.swift */; };
+		2254779629A05C93003DF229 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779529A05C93003DF229 /* Constants.swift */; };
+		2254779829A05D08003DF229 /* MemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779729A05D08003DF229 /* MemberViewController.swift */; };
+		2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779929A05D37003DF229 /* OrganizationViewController.swift */; };
+		2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779B29A05D4E003DF229 /* SessionsViewController.swift */; };
 		226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 226375C5280CBAE0000CDD49 /* StytchCore */; };
 		2266CF2728FA0B32005EFFC6 /* PasskeysAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2266CF2628FA0B32005EFFC6 /* PasskeysAuthenticationView.swift */; };
 		2266CF2828FA0B32005EFFC6 /* PasskeysAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2266CF2628FA0B32005EFFC6 /* PasskeysAuthenticationView.swift */; };
@@ -62,6 +76,14 @@
 /* Begin PBXFileReference section */
 		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
 		2222D1432835C341008CEBD7 /* StytchConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchConfiguration.plist; sourceTree = "<group>"; };
+		22315318299EE16D00BA9126 /* B2BWorkbench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = B2BWorkbench.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2231531A299EE16D00BA9126 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2231531C299EE16D00BA9126 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2231531E299EE16D00BA9126 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		22315321299EE16D00BA9126 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		22315323299EE16E00BA9126 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		22315326299EE16E00BA9126 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		22315328299EE16E00BA9126 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		223F88B5289249C700CE2B0C /* PasswordAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordAuthenticationView.swift; sourceTree = "<group>"; };
 		223F88B82894D05000CE2B0C /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
 		223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFeedbackView.swift; sourceTree = "<group>"; };
@@ -77,6 +99,13 @@
 		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		2254778F29A05C0C003DF229 /* AppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewController.swift; sourceTree = "<group>"; };
+		2254779129A05C3E003DF229 /* AuthHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHomeViewController.swift; sourceTree = "<group>"; };
+		2254779329A05C6A003DF229 /* MagicLinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinksViewController.swift; sourceTree = "<group>"; };
+		2254779529A05C93003DF229 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2254779729A05D08003DF229 /* MemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberViewController.swift; sourceTree = "<group>"; };
+		2254779929A05D37003DF229 /* OrganizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationViewController.swift; sourceTree = "<group>"; };
+		2254779B29A05D4E003DF229 /* SessionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
 		2266CF2628FA0B32005EFFC6 /* PasskeysAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasskeysAuthenticationView.swift; sourceTree = "<group>"; };
 		22909078284D9F4600ADD3C4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2290907B284D9F7000ADD3C4 /* AuthenticationOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationOptionsView.swift; sourceTree = "<group>"; };
@@ -101,6 +130,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		22315315299EE16D00BA9126 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2231532D299EE5E700BA9126 /* StytchCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		229B82152809EA3F007BC3F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -129,6 +166,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22315319299EE16D00BA9126 /* B2BWorkbench */ = {
+			isa = PBXGroup;
+			children = (
+				2231531A299EE16D00BA9126 /* AppDelegate.swift */,
+				2231531C299EE16D00BA9126 /* SceneDelegate.swift */,
+				2254778F29A05C0C003DF229 /* AppViewController.swift */,
+				2231531E299EE16D00BA9126 /* RootViewController.swift */,
+				2254779129A05C3E003DF229 /* AuthHomeViewController.swift */,
+				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
+				2254779529A05C93003DF229 /* Constants.swift */,
+				22315320299EE16D00BA9126 /* Main.storyboard */,
+				22315323299EE16E00BA9126 /* Assets.xcassets */,
+				22315325299EE16E00BA9126 /* LaunchScreen.storyboard */,
+				22315328299EE16E00BA9126 /* Info.plist */,
+			);
+			path = B2BWorkbench;
+			sourceTree = "<group>";
+		};
 		223F88BB2894D08500CE2B0C /* Passwords */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +242,17 @@
 			path = iOS;
 			sourceTree = "<group>";
 		};
+		2254779D29A06EBB003DF229 /* AuthMethodControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2254779329A05C6A003DF229 /* MagicLinksViewController.swift */,
+				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
+				2254779729A05D08003DF229 /* MemberViewController.swift */,
+				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
+			);
+			path = AuthMethodControllers;
+			sourceTree = "<group>";
+		};
 		2290908A284DC2E600ADD3C4 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +280,7 @@
 				22BE99F82847FDC800E29245 /* Client */,
 				22E4346A280A133900FB45F0 /* StytchPlayground.playground */,
 				22BE99FE2847FFA300E29245 /* Server */,
+				22315319299EE16D00BA9126 /* B2BWorkbench */,
 				229B82192809EA3F007BC3F1 /* Products */,
 				22E4345E2809EF2200FB45F0 /* Frameworks */,
 			);
@@ -225,6 +292,7 @@
 				229B82182809EA3F007BC3F1 /* StytchDemo.app */,
 				229B821E2809EA3F007BC3F1 /* StytchDemo.app */,
 				22BE99FD2847FFA300E29245 /* StytchDemo (Server) */,
+				22315318299EE16D00BA9126 /* B2BWorkbench.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -264,6 +332,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		22315317299EE16D00BA9126 /* B2BWorkbench */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22315329299EE16E00BA9126 /* Build configuration list for PBXNativeTarget "B2BWorkbench" */;
+			buildPhases = (
+				22315314299EE16D00BA9126 /* Sources */,
+				22315315299EE16D00BA9126 /* Frameworks */,
+				22315316299EE16D00BA9126 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = B2BWorkbench;
+			packageProductDependencies = (
+				2231532C299EE5E700BA9126 /* StytchCore */,
+			);
+			productName = B2BWorkbench;
+			productReference = 22315318299EE16D00BA9126 /* B2BWorkbench.app */;
+			productType = "com.apple.product-type.application";
+		};
 		229B82172809EA3F007BC3F1 /* StytchDemo (iOS) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 229B82292809EA3F007BC3F1 /* Build configuration list for PBXNativeTarget "StytchDemo (iOS)" */;
@@ -332,9 +420,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1400;
 				TargetAttributes = {
+					22315317299EE16D00BA9126 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					229B82172809EA3F007BC3F1 = {
 						CreatedOnToolsVersion = 13.3;
 					};
@@ -366,11 +457,22 @@
 				229B82172809EA3F007BC3F1 /* StytchDemo (iOS) */,
 				229B821D2809EA3F007BC3F1 /* StytchDemo (macOS) */,
 				22BE99FC2847FFA300E29245 /* StytchDemo (Server) */,
+				22315317299EE16D00BA9126 /* B2BWorkbench */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		22315316299EE16D00BA9126 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22315327299EE16E00BA9126 /* LaunchScreen.storyboard in Resources */,
+				22315324299EE16E00BA9126 /* Assets.xcassets in Resources */,
+				22315322299EE16D00BA9126 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		229B82162809EA3F007BC3F1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -392,6 +494,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		22315314299EE16D00BA9126 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */,
+				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
+				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
+				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
+				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
+				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
+				2254779829A05D08003DF229 /* MemberViewController.swift in Sources */,
+				2254779629A05C93003DF229 /* Constants.swift in Sources */,
+				2254779029A05C0C003DF229 /* AppViewController.swift in Sources */,
+				2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		229B82142809EA3F007BC3F1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -464,7 +583,89 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		22315320299EE16D00BA9126 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22315321299EE16D00BA9126 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		22315325299EE16E00BA9126 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22315326299EE16E00BA9126 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		2231532A299EE16E00BA9126 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.B2BWorkbench;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2231532B299EE16E00BA9126 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.B2BWorkbench;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		229B82272809EA3F007BC3F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -740,6 +941,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		22315329299EE16E00BA9126 /* Build configuration list for PBXNativeTarget "B2BWorkbench" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2231532A299EE16E00BA9126 /* Debug */,
+				2231532B299EE16E00BA9126 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		229B820F2809EA3E007BC3F1 /* Build configuration list for PBXProject "StytchDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -798,6 +1008,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2231532C299EE5E700BA9126 /* StytchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchCore;
+		};
 		224F7D47280CEC58000230FA /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;

@@ -58,6 +58,8 @@ extension StytchClient {
 
         var sessionsPollingClient: PollingClient = .sessions
 
+        var memberSessionsPollingClient: PollingClient = .memberSessions
+
         let sessionStorage: SessionStorage = .init()
 
         var localStorage: LocalStorage = .init()

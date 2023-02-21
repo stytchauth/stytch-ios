@@ -7,7 +7,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             guard let codeVerifier: String = try Current.keychainClient.get(.oauthPKCECodeVerifier) else {
                 throw StytchError.pckeNotAvailable
             }
@@ -22,12 +22,12 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with OAuth products.
-    static var oauth: OAuth { .init(router: router.scopedRouter(BaseRoute.oauth)) }
+    static var oauth: OAuth { .init(router: router.scopedRouter { $0.oauth }) }
 }
 
 public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Apple.
-    var apple: Apple { .init(router: router.scopedRouter(OAuthRoute.apple)) }
+    var apple: Apple { .init(router: router.scopedRouter { $0.apple }) }
 }
 
 #if !os(watchOS)
@@ -86,9 +86,9 @@ public extension StytchClient.OAuth {
 #endif
 
 public extension StytchClient.OAuth {
-    /// The dedicated parameters type for ``authenticate(parameters:)-172ak`` calls.
+    /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
     struct AuthenticateParameters: Encodable {
-        private enum CodingKeys: String, CodingKey { case token, sessionDuration = "session_duration_minutes" }
+        private enum CodingKeys: String, CodingKey { case token, sessionDuration = "sessionDurationMinutes" }
 
         let token: String
         let sessionDuration: Minutes

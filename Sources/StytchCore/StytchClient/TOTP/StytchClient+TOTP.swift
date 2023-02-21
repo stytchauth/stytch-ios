@@ -11,8 +11,8 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponseType {
-            try await router.post(to: .authenticate, parameters: parameters) as AuthenticateResponse
+        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .authenticate, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -31,14 +31,14 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with TOTP products.
-    static var totps: TOTP { .init(router: router.scopedRouter(BaseRoute.totp)) }
+    static var totps: TOTP { .init(router: router.scopedRouter { $0.totp }) }
 }
 
 public extension StytchClient.TOTP {
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
     struct CreateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
-            case expiration = "expiration_minutes"
+            case expiration = "expirationMinutes"
         }
 
         let expiration: Minutes
@@ -49,11 +49,11 @@ public extension StytchClient.TOTP {
         }
     }
 
-    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-1tfsj`` calls.
+    /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-2ck6w`` calls.
     struct AuthenticateParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case totpCode
-            case sessionDuration = "session_duration_minutes"
+            case sessionDuration = "sessionDurationMinutes"
         }
 
         let totpCode: String
@@ -72,7 +72,7 @@ public extension StytchClient.TOTP {
     struct RecoverParameters: Encodable {
         enum CodingKeys: String, CodingKey {
             case recoveryCode
-            case sessionDuration = "session_duration_minutes"
+            case sessionDuration = "sessionDurationMinutes"
         }
 
         let recoveryCode: String

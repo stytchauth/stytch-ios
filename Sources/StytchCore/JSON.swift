@@ -7,25 +7,29 @@ public enum JSON: Hashable, Equatable {
     case number(Double)
     case boolean(Bool)
 
+    public var arrayValue: [JSON]? {
+        guard case let .array(value) = self else { return nil }
+        return value
+    }
+
+    public var objectValue: [String: JSON]? {
+        guard case let .object(value) = self else { return nil }
+        return value
+    }
+
     public var stringValue: String? {
-        if case let .string(value) = self {
-            return value
-        }
-        return nil
+        guard case let .string(value) = self else { return nil }
+        return value
     }
 
     public var boolValue: Bool? {
-        if case let .boolean(value) = self {
-            return value
-        }
-        return nil
+        guard case let .boolean(value) = self else { return nil }
+        return value
     }
 
     public var numberValue: Double? {
-        if case let .number(value) = self {
-            return value
-        }
-        return nil
+        guard case let .number(value) = self else { return nil }
+        return value
     }
 
     init() {

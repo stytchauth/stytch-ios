@@ -4,14 +4,14 @@ import XCTest
 final class SessionsTestCase: BaseTestCase {
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDuration: 15)
+        let parameters: Sessions<StytchClient.AuthResponseType>.AuthenticateParameters = .init(sessionDuration: 15)
 
         Current.timer = { _, _, _ in .init() }
 
         XCTAssertNil(StytchClient.sessions.session)
 
         Current.sessionStorage.updateSession(
-            .mock(userId: "i_am_user"),
+            .user(.mock(userId: "i_am_user")),
             tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
@@ -34,7 +34,7 @@ final class SessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
-            .mock(userId: "i_am_user"),
+            .user(.mock(userId: "i_am_user")),
             tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )

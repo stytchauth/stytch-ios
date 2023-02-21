@@ -4,7 +4,7 @@ public extension StytchClient {
         let router: NetworkingRouter<UsersRoute>
 
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
-        public var syncUser: User? {
+        public func getSync() -> User? {
             Current.localStorage.user
         }
 
@@ -45,7 +45,7 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with user-management products.
-    static var user: UserManagement { .init(router: router.scopedRouter(BaseRoute.users)) }
+    static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
 
 /// The response type for user-management calls.

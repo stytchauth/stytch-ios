@@ -31,7 +31,7 @@ public extension StytchClient.OAuth {
         /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
         /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
         /// ```
-        /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-172ak`` method as well as the redirect url to inform whether this authentication was a login or signup.
+        /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
         public func start(parameters: WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
             guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
                 throw StytchError.oauthInvalidRedirectScheme
