@@ -19,8 +19,8 @@ public struct Organization: Codable {
     let organizationId: ID
 }
 
-extension Organization {
-    public init(from decoder: Decoder) throws {
+public extension Organization {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         organizationId = try container.decode(ID.self, forKey: .organizationId)
         name = try container.decode(String.self, forKey: .name)

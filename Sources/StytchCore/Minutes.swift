@@ -2,6 +2,10 @@
 public struct Minutes: Codable {
     let rawValue: UInt
 
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         rawValue = try container.decode(UInt.self)
@@ -10,10 +14,6 @@ public struct Minutes: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(rawValue)
-    }
-
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
     }
 }
 
