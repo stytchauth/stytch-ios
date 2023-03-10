@@ -33,15 +33,15 @@ jobs:
           path: docs-live
 
       - id: set-matrix
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           matrix_values='{"ref":"main","ref-label":"main"}'
           latest_ref=$(git tag --list | sort -V | tail -1)
-          matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
+          if [[ ${{ github.ref_name }} == "$latest_ref" ]]; then
+            matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
+          fi
 
           for ref in $(git tag --list); do
-            docs_path="docs/live/$ref"
+            docs_path="docs-live/docs/$ref"
             mkdir -p $docs_path
             if [[ $(find $docs_path -type d -empty) ]]; then
               matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
