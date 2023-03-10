@@ -29,11 +29,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          matrix_values='{"ref":"main"}'
+          matrix_values='{"ref":"main","ref-label":"main"}'
 
           for ref in $(git tag --list); do
-            matrix_values+=",{\"ref\": \"$ref\"}"
+            matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
           done
+
+          latest_ref=$(git describe --tags --abbrev=0)
+
+          matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
 
           echo "matrix-values=[${matrix_values}]" >> $GITHUB_OUTPUT
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
@@ -61,15 +65,15 @@ jobs:
 
     - name: Generate docs
       run: |
-        mkdir -p docs/live/${{ matrix.ref }}
-        if [[ $(find docs/live/${{ matrix.ref }} -type d -empty) ]]; then
+        mkdir -p docs/live/${{ matrix.ref-label }}
+        if [[ $(find docs/live/${{ matrix.ref-label }} -type d -empty) ]]; then
           make codegen
-          REF=${{ matrix.ref }} make docs-site
+          REF=${{ matrix.ref-label }} make docs-site
         fi
 
     - uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.ref }}
+        name: ${{ matrix.ref-label }}
         path: .build/docs
 
   publish-docs:
@@ -89,7 +93,7 @@ jobs:
 
     - name: Publish docs
       run: |
-        for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref'); do
+        for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref-label'); do
           rsync -a "artifacts/$ref" docs-live/docs
         done
 
