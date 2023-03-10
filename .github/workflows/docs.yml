@@ -106,8 +106,7 @@ jobs:
           rsync -a "$unzipped_path" docs-live/docs
         done
 
-        current_sha="$(git rev-parse @)"
         cd docs-live
         git add docs
-        git commit --author="CI <ci@stytch.com>" -m "$current_sha"
+        git commit --author="CI <ci@stytch.com>" -m ${{ github.sha }}
         git push
