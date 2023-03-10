@@ -34,17 +34,17 @@ jobs:
 
       - id: set-matrix
         run: |
-          matrix_values='{"ref":"main","ref-label":"main"}'
+          matrix_values='{"ref":"main","ref_label":"main"}'
           latest_ref=$(git tag --list | sort -V | tail -1)
           if [[ ${{ github.ref_name }} == "$latest_ref" ]]; then
-            matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
+            matrix_values+=",{\"ref\":\"$latest_ref\",\"ref_label\":\"latest\"}"
           fi
 
           for ref in $(git tag --list); do
             docs_path="docs-live/docs/$ref"
             mkdir -p $docs_path
             if [[ $(find $docs_path -type d -empty) ]]; then
-              matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
+              matrix_values+=",{\"ref\":\"$ref\",\"ref_label\":\"$ref\"}"
             fi
           done
 
@@ -68,7 +68,7 @@ jobs:
       uses: ./.github/actions/bootstrap
 
     - name: Generate docs
-      run: REF=${{ matrix.ref-label }} make docs-site
+      run: REF=${{ matrix.ref_label }} make docs-site
 
     - name: Zip docs site
       run: |
@@ -78,7 +78,7 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.ref-label }}
+        name: ${{ matrix.ref_label }}
         path: DocsSite.zip
 
   publish-docs:
@@ -99,7 +99,7 @@ jobs:
     - name: Publish docs
       run: |
         mkdir unzipped-docs
-        for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref-label'); do
+        for ref in $(echo ${{ toJSON(needs.set-matrix.outputs.matrix-values) }} | jq -r '.[].ref_label'); do
           unzipped_path="unzipped-docs/$ref"
           mkdir -p "$unzipped_path"
           unzip "artifacts/$ref/DocsSite.zip" -d "$unzipped_path"
