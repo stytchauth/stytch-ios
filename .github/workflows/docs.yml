@@ -24,8 +24,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: main
 
       - run: git fetch --tags origin
 
