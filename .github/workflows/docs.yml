@@ -25,19 +25,26 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/checkout@v3
+        with:
+          ref: docs/live
+          path: docs-live
+
       - id: set-matrix
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           matrix_values='{"ref":"main","ref-label":"main"}'
+          latest_ref=$(git describe --tags --abbrev=0)
+          matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
 
           for ref in $(git tag --list); do
-            matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
+            docs_path="docs/live/$ref"
+            mkdir -p $docs_path
+            if [[ $(find $docs_path -type d -empty) ]]; then
+              matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
+            fi
           done
-
-          latest_ref=$(git describe --tags --abbrev=0)
-
-          matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
 
           echo "matrix-values=[${matrix_values}]" >> $GITHUB_OUTPUT
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
@@ -55,21 +62,11 @@ jobs:
       with:
         ref: ${{ matrix.ref }}
 
-    - uses: actions/checkout@v3
-      with:
-        ref: docs/live
-        path: docs-live
-
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
 
     - name: Generate docs
-      run: |
-        mkdir -p docs/live/${{ matrix.ref-label }}
-        if [[ $(find docs/live/${{ matrix.ref-label }} -type d -empty) || ${{ matrix.ref-label }} == 'main' || ${{ matrix.ref-label }} == 'latest' ]]; then
-          make codegen
-          REF=${{ matrix.ref-label }} make docs-site
-        fi
+      run: REF=${{ matrix.ref-label }} make docs-site
 
     - uses: actions/upload-artifact@v3
       with:
