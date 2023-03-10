@@ -107,6 +107,10 @@ jobs:
         done
 
         cd docs-live
+
+        git config user.email "ci@stytch.com"
+        git config user.name "CI"
+
         git add docs
         git commit --author="CI <ci@stytch.com>" -m ${{ github.sha }}
         git push
