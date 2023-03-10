@@ -1,8 +1,11 @@
 name: Docs
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
@@ -12,30 +15,86 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
 jobs:
-  docs:
+  set-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix-values: ${{ steps.set-matrix.outputs.matrix-values }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          ref: docs/live
+          path: docs-live
+
+      - id: set-matrix
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          matrix_values='{"ref":"main","ref-label":"main"}'
+          latest_ref=$(git describe --tags --abbrev=0)
+          matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
+
+          for ref in $(git tag --list); do
+            docs_path="docs/live/$ref"
+            mkdir -p $docs_path
+            if [[ $(find $docs_path -type d -empty) ]]; then
+              matrix_values+=",{\"ref\":\"$ref\",\"ref-label\":\"$ref\"}"
+            fi
+          done
+
+          echo "matrix-values=[${matrix_values}]" >> $GITHUB_OUTPUT
+          echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
+
+  generate-docs:
     runs-on: macos-12
+
+    needs: set-matrix
+
+    strategy:
+      matrix: ${{ fromJSON(needs.set-matrix.outputs.matrix) }}
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ matrix.ref }}
 
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
 
+    - name: Generate docs
+      run: REF=${{ matrix.ref-label }} make docs-site
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.ref-label }}
+        path: .build/docs
+
+  publish-docs:
+    runs-on: ubuntu-latest
+
+    needs: [set-matrix, generate-docs]
+
+    steps:
     - uses: actions/checkout@v3
       with:
         ref: docs/live
         path: docs-live
 
-    - name: Codegen
-      run: make codegen
-
-    - name: Generate docs
-      run: make docs-site
+    - uses: actions/download-artifact@v3
+      with:
+        path: artifacts
 
     - name: Publish docs
       run: |
+        for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref-label'); do
+          rsync -a "artifacts/$ref" docs-live/docs
+        done
+
         current_sha="$(git rev-parse @)"
-        rsync -a .build/docs docs-live/
         cd docs-live
         git add docs
         git commit --author="CI <ci@stytch.com>" -m "$current_sha"
