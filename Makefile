@@ -6,6 +6,7 @@ ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
 TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
+HOSTING_BASE_PATH=$(shell echo stytch-swift/$$REF | sed 's:/$$::')
 
 .PHONY: coverage codegen docs format lint setup test tests test-ios test-macos test-tvos test-watchos tools
 
@@ -25,7 +26,7 @@ docs: codegen
 	$(ARCH) xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
 
 docs-site: docs
-	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs --hosting-base-path stytch-swift
+	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs --hosting-base-path $(HOSTING_BASE_PATH)
 
 format:
 	$(ARCH) mint run swiftformat .
