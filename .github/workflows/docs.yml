@@ -99,7 +99,7 @@ jobs:
     - name: Publish docs
       run: |
         mkdir unzipped-docs
-        for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref_label'); do
+        for ref in $(echo ${{ toJSON(needs.set-matrix.outputs.matrix-values) }} | jq -r '.[].ref_label'); do
           unzipped_path="unzipped-docs/$ref"
           mkdir -p "$unzipped_path"
           unzip "artifacts/$ref/DocsSite.zip" -d "$unzipped_path"
