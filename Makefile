@@ -23,7 +23,7 @@ demo:
 	bundle exec --gemfile=StytchDemo/Gemfile Scripts/demo start
 
 docs: codegen
-	$(ARCH) xcodebuild docbuild -scheme StytchCore -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
+	$(ARCH) xcodebuild clean docbuild -scheme StytchCore -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
 
 docs-site: docs
 	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs --hosting-base-path $(HOSTING_BASE_PATH)
