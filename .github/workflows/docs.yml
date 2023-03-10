@@ -24,6 +24,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - run: git fetch --tags origin
 
       - uses: actions/checkout@v3
         with:
@@ -35,7 +39,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           matrix_values='{"ref":"main","ref-label":"main"}'
-          latest_ref=$(git describe --tags --abbrev=0)
+          latest_ref=$(git tag --list | sort -V | tail -1)
           matrix_values+=",{\"ref\":\"$latest_ref\",\"ref-label\":\"latest\"}"
 
           for ref in $(git tag --list); do
