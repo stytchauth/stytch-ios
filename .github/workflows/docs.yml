@@ -70,10 +70,16 @@ jobs:
     - name: Generate docs
       run: REF=${{ matrix.ref-label }} make docs-site
 
+    - name: Zip docs site
+      run: |
+        cd .build/docs
+        zip -r ../../DocsSite.zip .
+        cd -
+
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.ref-label }}
-        path: .build/docs
+        path: DocsSite.zip
 
   publish-docs:
     runs-on: ubuntu-latest
@@ -92,8 +98,12 @@ jobs:
 
     - name: Publish docs
       run: |
+        mkdir unzipped-docs
         for ref in $(echo "${{ toJSON(needs.set-matrix.outputs.matrix-values) }}" | jq -r '.[].ref-label'); do
-          rsync -a "artifacts/$ref" docs-live/docs
+          unzipped_path="unzipped-docs/$ref"
+          mkdir -p "$unzipped_path"
+          unzip "artifacts/$ref/DocsSite.zip" -d "$unzipped_path"
+          rsync -a "$unzipped_path" docs-live/docs
         done
 
         current_sha="$(git rev-parse @)"
