@@ -2,6 +2,9 @@ import Foundation
 
 public extension StytchClient {
     /// Biometric authentication enables your users to leverage their devices' built-in biometric authenticators such as FaceID and TouchID for quick and seamless login experiences.
+    ///
+    /// ## Important Notes
+    /// - To use Biometric authentication, you must set `NSFaceIDUsageDescription` in your app's `Info.plist`.
     struct Biometrics {
         let router: NetworkingRouter<BiometricsRoute>
 
