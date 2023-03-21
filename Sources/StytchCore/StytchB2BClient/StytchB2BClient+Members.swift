@@ -1,4 +1,5 @@
 public extension StytchB2BClient {
+    /// The SDK allows you to view the current member's information, such as fetching (or viewing the most recent cached version) of the current member.
     struct Members {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute.MembersRoute>
 

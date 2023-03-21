@@ -1,6 +1,7 @@
 import Foundation
 
 // TODO: include optional expiration here
+/// Represents one of two kinds of tokens used to represent a session (see ``SessionToken/Kind-swift.enum``, for more info.) These tokens are used to authenticate the current user/member.
 public struct SessionToken: Equatable {
     /// A type representing the different kinds of session tokens available.
     public enum Kind: CaseIterable {

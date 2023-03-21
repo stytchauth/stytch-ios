@@ -1,4 +1,5 @@
 public extension StytchB2BClient {
+    /// The SDK allows you to view the member's current organization information, such as fetching (or viewing the most recent cached version) of the current organziation.
     struct Organizations {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute>
 
@@ -18,6 +19,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient {
+    /// The interface for interacting with organizations products.
     static var organization: Organizations { .init(router: router.scopedRouter { $0.organizations }) }
 }
 

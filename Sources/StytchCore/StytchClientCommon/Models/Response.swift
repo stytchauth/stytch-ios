@@ -33,6 +33,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 }
 
+/// Represents the interface for basic responses.
 public protocol BasicResponseType {
     var requestId: String { get }
     var statusCode: UInt { get }

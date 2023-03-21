@@ -1,8 +1,10 @@
 /// The concrete response type for `authenticate` calls.
 public typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
+/// Represents the interface of responses for `authenticate` calls.
 public typealias AuthenticateResponseType = BasicResponseType & AuthenticateResponseDataType
 
+/// The interface which a data type must conform to for all underlying data in `authenticate` responses.
 public protocol AuthenticateResponseDataType {
     /// The current user object.
     var user: User { get }

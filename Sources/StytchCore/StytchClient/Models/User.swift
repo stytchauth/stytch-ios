@@ -1,5 +1,6 @@
 import Foundation
 
+/// A type defining a user; including information about their name, status, the auth factors associated with them, and more.
 public struct User {
     public typealias ID = Identifier<Self, String>
 
