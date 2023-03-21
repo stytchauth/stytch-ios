@@ -1,5 +1,6 @@
 import Foundation
 
+/// A data type representing an organization of which a member may belong to.
 public struct Organization: Codable {
     public typealias ID = Identifier<Self, String>
 

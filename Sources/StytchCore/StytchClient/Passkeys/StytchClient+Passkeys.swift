@@ -3,7 +3,10 @@ import Foundation
 #if !os(watchOS)
 public extension StytchClient {
     /// Passkeys are an extremely simple authentication mechanism which securely syncs key sets across your devices — access-controlled via FaceID/TouchID — ultimately enabling WebAuthN-powered public-key authentication with Stytch's servers.
-    /// NOTE: This initial implementation can only be used for second-factor authentication. A user must already be authenticated via another Stytch factor prior to calling these methods.
+    ///
+    /// ## Important Notes
+    /// - This initial implementation can only be used for second-factor authentication. A user must already be authenticated via another Stytch factor prior to calling these methods.
+    /// - To use Passkey authentication, you must set `NSFaceIDUsageDescription` in your app's `Info.plist`.
     @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
     // sourcery: ExcludeWatchOS
     struct Passkeys {

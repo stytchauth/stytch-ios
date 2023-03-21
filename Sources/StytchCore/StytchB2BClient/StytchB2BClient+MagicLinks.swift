@@ -24,6 +24,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient.MagicLinks {
+    /// The interface for interacting with email magic links.
     var email: Email { .init(router: router.scopedRouter { $0.email }) }
 }
 

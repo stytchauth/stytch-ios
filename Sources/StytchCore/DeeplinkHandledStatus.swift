@@ -11,6 +11,7 @@ public enum DeeplinkHandledStatus<AuthenticateResponse> {
     case manualHandlingRequired(DeeplinkTokenType, token: String)
 }
 
+/// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
 public enum DeeplinkTokenType: String {
     case magicLinks = "magic_links"
     case multiTenantMagicLinks = "multi_tenant_magic_links"

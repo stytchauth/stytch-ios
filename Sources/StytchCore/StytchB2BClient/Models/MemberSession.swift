@@ -1,5 +1,6 @@
 import Foundation
 
+/// A type defining a member's session; including information about its validity, expiry, factors associated with this session, and more.
 public struct MemberSession: Codable {
     public typealias ID = Identifier<Self, String>
 

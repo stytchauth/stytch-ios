@@ -1,3 +1,4 @@
+/// A simple, generic, wrapper type which combines two values and provides dynamic-member-access to the underlying wrapped values.
 @dynamicMemberLookup
 public struct Union<LHS, RHS> {
     let lhs: LHS
