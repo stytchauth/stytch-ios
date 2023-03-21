@@ -1,0 +1,61 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Configuring Stytch") {
+        This is how you configure Stytch
+        
+<!--        @Image(source: <#file#>, alt: "<#accessible description#>")-->
+    }
+    
+    @Section(title: "Add Stytch as project dependency.") {
+        @ContentAndMedia {
+            Add Stytch as a package dependency
+            
+<!--            @Image(source: <#file#>, alt: "<#accessible description#>")-->
+        }
+        
+        @Steps {
+            @Step {
+                Select your project within the Xcode Project Navigator
+                
+                @Image(source: output-1.png, alt: "blah")
+            }
+            @Step {
+                Select your project from within the Project and Targets pane
+                
+                @Image(source: output-2.png, alt: "blah")
+            }
+            @Step {
+                Select Package Dependencies from the main window
+                
+                @Image(source: output-3.png, alt: "blah")
+            }
+            @Step {
+                Click the plus arrow to add a new dependency
+                
+                @Image(source: output-4.png, alt: "blah")
+            }
+            @Step {
+                Search for https://github.com/stytchauth/stytch-swift and confirm addition to your project
+                
+                @Image(source: output-5.jpg, alt: "blah")
+            }
+            
+            @Step {
+                Select your app target and add StytchCore as a new dependency
+                
+                @Image(source: output-6.jpg, alt: "blah")
+            }
+            
+            @Step {
+                Open your app delegate file.
+                
+                @Code(name: "AppDelegate.swift", file: 01-configuring-code-01.swift)
+            }
+            
+            @Step {
+                Import StytchCore and add configuration code
+                
+                @Code(name: "AppDelegate.swift", file: 01-configuring-code-02.swift)
+            }
+        }
+    }
+}
