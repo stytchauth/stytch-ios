@@ -1,3 +1,5 @@
+<div align=center>
+
 ![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
 ![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
@@ -7,15 +9,21 @@
 ![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stytch.svg)
 
+</div>
+
 * [Getting Started](#getting-started)
   * [What is Stytch?](#what-is-stytch)
   * [Why should I use the Stytch SDK?](#why-should-i-use-the-stytch-sdk)
   * [What can I do with the Stytch SDK?](#what-can-i-do-with-the-stytch-sdk)
+    * [Consumer apps](#consumer-apps)
+    * [B2B apps](#b2b-apps)
     * [Async Options](#async-options)
   * [How do I start using Stytch?](#how-do-i-start-using-stytch)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
+    * [Consumer apps](#consumer-apps)
+    * [B2B apps](#b2b-apps)
   * [Configuration](#configuration)
   * [Authenticating](#authenticating)
 * [Documentation](#documentation)
@@ -46,6 +54,8 @@ _ = try await StytchClient.handle(url: deeplinkUrl)
 
 There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The full list of currently supported products is as follows:
 
+#### Consumer apps
+
 - Magic links
     - Send/authenticate magic links via Email
 - Biometrics
@@ -70,6 +80,18 @@ There are a number of authentication products currently supported by the SDK, wi
     - Get or fetch the current user object (sync/cached or async options available)
     - Delete factors by id from the current user
 
+#### B2B apps
+
+- Magic links
+    - Send/authenticate magic links via Email
+- Sessions
+    - Authenticate/refresh an existing session
+    - Revoke a session (Sign out)
+- Members
+    - Get or fetch the current member object (sync/cached or async options available)
+- Organizations
+    - Get or fetch the current members's organization
+    
 #### Async Options
 
 The SDK provides several different mechanisms for handling the asynchronous code, so you can choose what best suits your needs.
@@ -120,9 +142,10 @@ Unlike with the other dependency managers, when using CocoaPods you'll import `S
 
 ### Configuration
 
-To start using the StytchClient, you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Client/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
+To start using one of the Stytch clients (StytchClient or StytchB2BClient), you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Client/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
+
 If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/Client/macOS/macOS.entitlements)).
 
 ![Entitlements screenshot](Resources/Assets/Entitlements-dark-mode.png#gh-dark-mode-only)
@@ -135,8 +158,7 @@ This example shows a hypothetical SwiftUI App file, with custom configuration (s
 ``` swift
 @main
 struct YourApp: App {
-    private let stytchPublicToken = "your-public-token"
-    private let hostUrl = URL(string: "https://your-backend.com")!
+    private let stytchPublicToken = "your-public-token" // Perhaps fetched from your backend
 
     @State private var session: Session?
 
@@ -144,7 +166,7 @@ struct YourApp: App {
         WindowGroup {
             ContentView(session: session) 
                 .task {
-                    StytchClient.configure(publicToken: stytchPublicToken, hostUrl: hostUrl)
+                    StytchClient.configure(publicToken: stytchPublicToken)
                 }
                 // Handle web-browsing/universal deeplinks
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
@@ -216,13 +238,13 @@ Full reference documentation is available [here](https://stytchauth.github.io/st
 1. How does the SDK compare to the API?
     1. The SDK, for the most part, mirrors the API directly — though it provides a more opinionated take on interacting with these methods; managing local state on your behalf and introducing some defaults (viewable in the corresponding init/function reference docs). A primary benefit of using the SDK is that you can interact with Stytch directly from the client, without relaying calls through your backend.
 1. What are the some of the default behaviors of the SDK?
-    1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are not cached by the SDK, these must be pulled from the `authenticate` responses and stored by the application. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
+    1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are cached in memory by the SDK, though these must first be received by a successful `authenticate` call. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
 1. Are there guides or sample apps available to see this in use?
-    1. Yes! There is a SwiftUI macOS/iOS Demo App included in this repo, available [here](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo).
+    1. Yes! There is a UIKit example consumer app available [here](https://github.com/stytchauth/stytch-ios-uikit-example). Also, there is a [SwiftUI macOS/iOS Consumer app](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo/Client) and a [UIKit iOS B2B app](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo/B2BWorkbench) included in this repo.
 
 ### Questions?
 
-Feel free to reach out any time at support@stytch.com or in our [Slack](https://join.slack.com/t/stytch/shared_invite/zt-nil4wo92-jApJ9Cl32cJbEd9esKkvyg)
+Feel free to reach out any time at [support@stytch.com](mailto:support@stytch.com), in our [Slack](https://join.slack.com/t/stytch/shared_invite/zt-nil4wo92-jApJ9Cl32cJbEd9esKkvyg), or in our [forum](https://forum.stytch.com).
 
 ## License
 
