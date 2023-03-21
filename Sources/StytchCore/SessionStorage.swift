@@ -15,43 +15,61 @@ final class SessionStorage {
 
     private(set) var sessionToken: SessionToken? {
         get {
-            try? Current.keychainClient.get(.sessionToken).map(SessionToken.opaque)
+            try? keychainClient.get(.sessionToken).map(SessionToken.opaque)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionToken
             if let newValue = newValue {
-                try? Current.keychainClient.set(newValue.value, for: keychainItem)
+                try? keychainClient.set(newValue.value, for: keychainItem)
             } else {
-                try? Current.keychainClient.removeItem(keychainItem)
-                Current.cookieClient.deleteCookie(named: keychainItem.name)
+                try? keychainClient.removeItem(keychainItem)
+                cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
     }
 
     private(set) var sessionJwt: SessionToken? {
         get {
-            try? Current.keychainClient.get(.sessionJwt).map(SessionToken.jwt)
+            try? keychainClient.get(.sessionJwt).map(SessionToken.jwt)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionJwt
             if let newValue = newValue {
-                try? Current.keychainClient.set(newValue.value, for: keychainItem)
+                try? keychainClient.set(newValue.value, for: keychainItem)
             } else {
-                try? Current.keychainClient.removeItem(keychainItem)
-                Current.cookieClient.deleteCookie(named: keychainItem.name)
+                try? keychainClient.removeItem(keychainItem)
+                cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
     }
 
     private(set) var session: Session? {
-        get { Current.localStorage.session }
-        set { Current.localStorage.session = newValue }
+        get { localStorage.session }
+        set { localStorage.session = newValue }
     }
 
     private(set) var memberSession: MemberSession? {
-        get { Current.localStorage.memberSession }
-        set { Current.localStorage.memberSession = newValue }
+        get { localStorage.memberSession }
+        set { localStorage.memberSession = newValue }
     }
+
+    @Dependency(\.localStorage)
+    private var localStorage
+
+    @Dependency(\.cookieClient)
+    private var cookieClient
+
+    @Dependency(\.keychainClient)
+    private var keychainClient
+
+    @Dependency(\.sessionsPollingClient)
+    private var sessionsPollingClient
+
+    @Dependency(\.memberSessionsPollingClient)
+    private var memberSessionsPollingClient
+
+    @Dependency(\.date)
+    private var date
 
     init() {
         NotificationCenter.default
@@ -75,7 +93,7 @@ final class SessionStorage {
             updatePersistentStorage(token: token)
 
             if let cookie = cookieFor(token: token, expiresAt: sessionKind.expiresAt, hostUrl: hostUrl) {
-                Current.cookieClient.set(cookie: cookie)
+                cookieClient.set(cookie: cookie)
             }
         }
 
@@ -83,9 +101,9 @@ final class SessionStorage {
 
         switch sessionKind {
         case .member:
-            Current.memberSessionsPollingClient.start()
+            memberSessionsPollingClient.start()
         case .user:
-            Current.sessionsPollingClient.start()
+            sessionsPollingClient.start()
         }
     }
 
@@ -104,16 +122,16 @@ final class SessionStorage {
         sessionToken = nil
         sessionJwt = nil
 
-        Current.localStorage.user = nil
-        Current.localStorage.organization = nil
-        Current.localStorage.member = nil
+        localStorage.user = nil
+        localStorage.organization = nil
+        localStorage.member = nil
 
         SessionToken.Kind.allCases
             .map(\.name)
-            .forEach(Current.cookieClient.deleteCookie(named:))
+            .forEach(cookieClient.deleteCookie(named:))
         _onAuthChange.send(())
-        Current.sessionsPollingClient.stop()
-        Current.memberSessionsPollingClient.stop()
+        sessionsPollingClient.stop()
+        memberSessionsPollingClient.stop()
     }
 
     @objc
@@ -126,7 +144,7 @@ final class SessionStorage {
             .filter { SessionToken.Kind.allCases.map(\.name).contains($0.name) }
             .compactMap { cookie in
                 // If the cookie is expired, discard the cookie/value
-                if let expiresAt = cookie.expiresDate, expiresAt <= Current.date() {
+                if let expiresAt = cookie.expiresDate, expiresAt <= date() {
                     return nil
                 }
 

@@ -1,23 +1,29 @@
 import Combine
 
-/// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
+/// The SDK may be used to check whether a user has a cached session, view the session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
 public struct Sessions<AuthResponseType: Decodable> {
     let router: NetworkingRouter<SessionsRoute>
 
-    /// An opaque token representing your current session, which your servers can check with Stytch's servers to verify your session status.
-    public var sessionToken: SessionToken? { Current.sessionStorage.sessionToken }
+    @Dependency(\.sessionStorage)
+    private var sessionStorage
+
+    @Dependency(\.localStorage)
+    private var localStorage
+
+    /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.
+    public var sessionToken: SessionToken? { sessionStorage.sessionToken }
 
     /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
-    public var sessionJwt: SessionToken? { Current.sessionStorage.sessionJwt }
+    public var sessionJwt: SessionToken? { sessionStorage.sessionJwt }
 
-    /// A publisher which emits following a change in authentication status and returns either the current opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-    public var onAuthChange: AnyPublisher<String?, Never> { Current.sessionStorage.onAuthChange.eraseToAnyPublisher() }
+    /// A publisher which emits following a change in authentication status and returns either the opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
+    public var onAuthChange: AnyPublisher<String?, Never> { sessionStorage.onAuthChange.eraseToAnyPublisher() }
 
     /// If your app has cookies disabled or simply receives updated session tokens from your backend via means other than
     /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
     /// and persistent storage are kept up-to-date. You should include both the opaque token and the jwt.
     public func update(sessionTokens tokens: [SessionToken]) {
-        tokens.forEach(Current.sessionStorage.updatePersistentStorage)
+        tokens.forEach(sessionStorage.updatePersistentStorage)
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -36,16 +42,16 @@ public struct Sessions<AuthResponseType: Decodable> {
 
 public extension Sessions where AuthResponseType == B2BAuthenticateResponse {
     internal(set) var memberSession: MemberSession? {
-        get { Current.localStorage.memberSession }
-        set { Current.localStorage.memberSession = newValue }
+        get { localStorage.memberSession }
+        set { localStorage.memberSession = newValue }
     }
 }
 
 public extension Sessions where AuthResponseType == AuthenticateResponse {
     /// If logged in, returns the cached session object.
     internal(set) var session: Session? {
-        get { Current.localStorage.session }
-        set { Current.localStorage.session = newValue }
+        get { localStorage.session }
+        set { localStorage.session = newValue }
     }
 }
 

@@ -8,25 +8,37 @@ public extension StytchClient {
     struct Biometrics {
         let router: NetworkingRouter<BiometricsRoute>
 
+        @Dependency(\.cryptoClient)
+        private var cryptoClient
+
+        @Dependency(\.keychainClient)
+        private var keychainClient
+
+        @Dependency(\.sessionStorage.activeSessionExists)
+        private var activeSessionExists
+
+        @Dependency(\.jsonDecoder)
+        private var jsonDecoder
+
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
-            Current.keychainClient.valueExistsForItem(.privateKeyRegistration)
+            keychainClient.valueExistsForItem(.privateKeyRegistration)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Removes the current device's existing biometric registration from both the device itself and from the server.
         public func removeRegistration() async throws {
-            guard let queryResult: KeychainClient.QueryResult = try? Current.keychainClient.get(.privateKeyRegistration).first else {
+            guard let queryResult: KeychainClient.QueryResult = try? keychainClient.get(.privateKeyRegistration).first else {
                 return
             }
 
             // Delete registration from backend
-            if let registration = try queryResult.generic.map({ try Current.jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
+            if let registration = try queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
                 _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: registration.registrationId))
             }
 
             // Remove local registration
-            try Current.keychainClient.removeItem(.privateKeyRegistration)
+            try keychainClient.removeItem(.privateKeyRegistration)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -35,11 +47,11 @@ public extension StytchClient {
         /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
         public func register(parameters: RegisterParameters) async throws -> RegisterCompleteResponse {
             // Early out if not authenticated
-            guard Current.sessionStorage.activeSessionExists else {
+            guard activeSessionExists else {
                 throw StytchError.noCurrentSession
             }
 
-            let (privateKey, publicKey) = Current.cryptoClient.generateKeyPair()
+            let (privateKey, publicKey) = cryptoClient.generateKeyPair()
 
             let startResponse: RegisterStartResponse = try await router.post(
                 to: .register(.start),
@@ -50,7 +62,7 @@ public extension StytchClient {
                 to: .register(.complete),
                 parameters: RegisterFinishParameters(
                     biometricRegistrationId: startResponse.biometricRegistrationId,
-                    signature: Current.cryptoClient.signChallengeWithPrivateKey(
+                    signature: cryptoClient.signChallengeWithPrivateKey(
                         startResponse.challenge,
                         privateKey
                     ),
@@ -64,7 +76,7 @@ public extension StytchClient {
                 registrationId: finishResponse.biometricRegistrationId
             )
 
-            try Current.keychainClient.set(
+            try keychainClient.set(
                 key: privateKey,
                 registration: registration,
                 accessPolicy: parameters.accessPolicy.keychainValue
@@ -76,12 +88,12 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let queryResult: KeychainClient.QueryResult = try Current.keychainClient.get(.privateKeyRegistration).first else {
+            guard let queryResult: KeychainClient.QueryResult = try keychainClient.get(.privateKeyRegistration).first else {
                 throw StytchError.noBiometricRegistrationsAvailable
             }
 
             let privateKey = queryResult.data
-            let publicKey = try Current.cryptoClient.publicKeyForPrivateKey(privateKey)
+            let publicKey = try cryptoClient.publicKeyForPrivateKey(privateKey)
 
             let startResponse: AuthenticateStartResponse = try await router.post(
                 to: .authenticate(.start),
@@ -92,7 +104,7 @@ public extension StytchClient {
             return try await router.post(
                 to: .authenticate(.complete),
                 parameters: AuthenticateCompleteParameters(
-                    signature: Current.cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
+                    signature: cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
                     biometricRegistrationId: startResponse.biometricRegistrationId,
                     sessionDurationMinutes: parameters.sessionDuration
                 )

@@ -8,6 +8,9 @@ final class PollingClient {
     private var retryClient: RetryClient?
     private var timer: Timer?
 
+    @Dependency(\.timer)
+    private var createTimer
+
     init(
         interval: TimeInterval,
         maxRetries: UInt,
@@ -25,7 +28,7 @@ final class PollingClient {
         retryClient?.cancel()
         retryClient = nil
 
-        timer = Current.timer(interval, .main) { [weak self] in
+        timer = createTimer(interval, .main) { [weak self] in
             guard let self = self else { return }
             self.retryClient?.cancel()
             self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
@@ -52,6 +55,9 @@ private extension PollingClient {
         private let queue: DispatchQueue
         private var isCancelled: Bool = false
         private let task: Task
+
+        @Dependency(\.asyncAfter)
+        private var asyncAfter
 
         init(
             maxRetries: UInt,
@@ -86,7 +92,7 @@ private extension PollingClient {
             if currentRetryValue == 0 {
                 wrappedTask()
             } else {
-                Current.asyncAfter(queue, delayForRetry(currentRetryValue), wrappedTask)
+                asyncAfter(queue, delayForRetry(currentRetryValue), wrappedTask)
             }
         }
 

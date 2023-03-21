@@ -5,17 +5,23 @@ public extension StytchClient.OAuth {
     struct Apple {
         let router: NetworkingRouter<OAuthRoute.AppleRoute>
 
+        @Dependency(\.cryptoClient)
+        private var cryptoClient
+
+        @Dependency(\.appleOAuthClient)
+        private var appleOAuthClient
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
         public func start(parameters: StartParameters) async throws -> AuthenticateResponse {
-            let rawNonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-            let authenticateResult = try await Current.appleOAuthClient.authenticate(
+            let rawNonce = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
+            let authenticateResult = try await appleOAuthClient.authenticate(
                 configureController: { controller in
                     #if !os(watchOS)
                     controller.presentationContextProvider = parameters.presentationContextProvider
                     #endif
                 },
-                nonce: Current.cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
+                nonce: cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
             )
             return try await router.post(
                 to: .authenticate,

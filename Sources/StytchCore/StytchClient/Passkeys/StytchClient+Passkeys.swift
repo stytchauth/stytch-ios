@@ -12,6 +12,9 @@ public extension StytchClient {
     struct Passkeys {
         let router: NetworkingRouter<PasskeysRoute>
 
+        @Dependency(\.passkeysClient)
+        private var passkeysClient
+
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
@@ -21,7 +24,7 @@ public extension StytchClient {
                 parameters: parameters
             )
 
-            let credential = try await Current.passkeysClient.registerCredential(
+            let credential = try await passkeysClient.registerCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
                 username: parameters.username,
@@ -52,7 +55,7 @@ public extension StytchClient {
                 parameters: StartParameters(domain: parameters.domain)
             )
 
-            let credential = try await Current.passkeysClient.assertCredential(
+            let credential = try await passkeysClient.assertCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
                 requestBehavior: parameters.requestBehavior

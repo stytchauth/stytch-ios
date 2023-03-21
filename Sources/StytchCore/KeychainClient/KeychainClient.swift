@@ -9,6 +9,9 @@ struct KeychainClient {
 
     let removeItem: (Item) throws -> Void
 
+    @Dependency(\.jsonEncoder)
+    private var jsonEncoder
+
     init(
         get: @escaping (Item) throws -> [QueryResult],
         valueExistsForItem: @escaping (Item) -> Bool,
@@ -50,7 +53,7 @@ extension KeychainClient {
                 data: key,
                 account: nil, // By setting as nil, the primary key will be the Item.name and nil, thus allowing only one registration to be stored.
                 label: registration.userLabel,
-                generic: Current.jsonEncoder.encode(registration),
+                generic: jsonEncoder.encode(registration),
                 accessPolicy: accessPolicy
             ),
             .privateKeyRegistration
