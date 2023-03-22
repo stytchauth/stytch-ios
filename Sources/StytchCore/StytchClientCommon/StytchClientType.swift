@@ -9,6 +9,10 @@ protocol StytchClientType {
 }
 
 extension StytchClientType {
+    private static var keychainClient: KeychainClient { Current.keychainClient }
+
+    private static var cryptoClient: CryptoClient { Current.cryptoClient }
+
     var configuration: Configuration? {
         get { localStorage.configuration }
         set {
@@ -28,10 +32,6 @@ extension StytchClientType {
     private var jsonEncoder: JSONEncoder { Current.jsonEncoder }
 
     private var clientInfo: ClientInfo { Current.clientInfo }
-
-    private static var keychainClient: KeychainClient { Current.keychainClient }
-
-    private static var cryptoClient: CryptoClient { Current.cryptoClient }
 
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {

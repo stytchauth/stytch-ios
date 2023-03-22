@@ -3,8 +3,7 @@ public extension StytchB2BClient {
     struct Organizations {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute>
 
-        @Dependency(\.localStorage)
-        private var localStorage
+        @Dependency(\.localStorage) private var localStorage
 
         /// Returns the most-recent cached copy of the organization object, if it has already been fetched via another method, else nil.
         public func getSync() -> Organization? {

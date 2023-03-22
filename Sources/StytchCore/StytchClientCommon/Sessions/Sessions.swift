@@ -4,11 +4,9 @@ import Combine
 public struct Sessions<AuthResponseType: Decodable> {
     let router: NetworkingRouter<SessionsRoute>
 
-    @Dependency(\.sessionStorage)
-    private var sessionStorage
+    @Dependency(\.sessionStorage) private var sessionStorage
 
-    @Dependency(\.localStorage)
-    private var localStorage
+    @Dependency(\.localStorage) private var localStorage
 
     /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.
     public var sessionToken: SessionToken? { sessionStorage.sessionToken }

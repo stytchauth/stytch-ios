@@ -53,23 +53,17 @@ final class SessionStorage {
         set { localStorage.memberSession = newValue }
     }
 
-    @Dependency(\.localStorage)
-    private var localStorage
+    @Dependency(\.localStorage) private var localStorage
 
-    @Dependency(\.cookieClient)
-    private var cookieClient
+    @Dependency(\.cookieClient) private var cookieClient
 
-    @Dependency(\.keychainClient)
-    private var keychainClient
+    @Dependency(\.keychainClient) private var keychainClient
 
-    @Dependency(\.sessionsPollingClient)
-    private var sessionsPollingClient
+    @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
 
-    @Dependency(\.memberSessionsPollingClient)
-    private var memberSessionsPollingClient
+    @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
 
-    @Dependency(\.date)
-    private var date
+    @Dependency(\.date) private var date
 
     init() {
         NotificationCenter.default

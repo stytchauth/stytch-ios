@@ -3,8 +3,7 @@ public extension StytchClient {
     struct UserManagement {
         let router: NetworkingRouter<UsersRoute>
 
-        @Dependency(\.localStorage)
-        private var localStorage
+        @Dependency(\.localStorage) private var localStorage
 
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
         public func getSync() -> User? {

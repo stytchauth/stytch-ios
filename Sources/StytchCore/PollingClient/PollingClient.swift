@@ -8,8 +8,7 @@ final class PollingClient {
     private var retryClient: RetryClient?
     private var timer: Timer?
 
-    @Dependency(\.timer)
-    private var createTimer
+    @Dependency(\.timer) private var createTimer
 
     init(
         interval: TimeInterval,
@@ -56,8 +55,7 @@ private extension PollingClient {
         private var isCancelled: Bool = false
         private let task: Task
 
-        @Dependency(\.asyncAfter)
-        private var asyncAfter
+        @Dependency(\.asyncAfter) private var asyncAfter
 
         init(
             maxRetries: UInt,

@@ -5,8 +5,7 @@ public extension StytchB2BClient {
     struct MagicLinks {
         let router: NetworkingRouter<MagicLinksRoute>
 
-        @Dependency(\.keychainClient)
-        private var keychainClient
+        @Dependency(\.keychainClient) private var keychainClient
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.

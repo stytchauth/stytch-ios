@@ -8,11 +8,9 @@ public extension StytchClient.OAuth {
     struct ThirdParty {
         let provider: Provider
 
-        @Dependency(\.openUrl)
-        private var openUrl
+        @Dependency(\.openUrl) private var openUrl
 
-        @Dependency(\.webAuthSessionClient)
-        private var webAuthSessionClient
+        @Dependency(\.webAuthSessionClient) private var webAuthSessionClient
 
         /// Initiates the OAuth flow by using the included parameters to generate a URL and pass this off to the system's default browser. The user will be redirected to the corresponding redirectUrl (this should be back into the application), after completing the authentication challenge with the identity provider.
         public func start(parameters: DefaultBrowserStartParameters) throws {

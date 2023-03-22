@@ -67,7 +67,7 @@ struct Environment {
 
     var keychainClient: KeychainClient = .live
 
-#if !os(watchOS)
+    #if !os(watchOS)
     private var _webAuthSessionClient: Any? = {
         if #available(tvOS 16.0, *) {
             return WebAuthenticationSessionClient.live
@@ -95,7 +95,7 @@ struct Environment {
         get { _passkeysClent as! PasskeysClient }
         set { _passkeysClent = newValue }
     }
-#endif
+    #endif
 
     var date: () -> Date = Date.init
 
@@ -107,15 +107,15 @@ struct Environment {
         return timer
     }
 
-#if !os(watchOS)
+    #if !os(watchOS)
     var openUrl: (URL) -> Void = { url in
         DispatchQueue.main.async {
-#if os(macOS)
+            #if os(macOS)
             NSWorkspace.shared.open(url)
-#else
+            #else
             UIApplication.shared.open(url)
-#endif
+            #endif
         }
     }
-#endif
+    #endif
 }

@@ -8,17 +8,13 @@ public extension StytchClient {
     struct Biometrics {
         let router: NetworkingRouter<BiometricsRoute>
 
-        @Dependency(\.cryptoClient)
-        private var cryptoClient
+        @Dependency(\.cryptoClient) private var cryptoClient
 
-        @Dependency(\.keychainClient)
-        private var keychainClient
+        @Dependency(\.keychainClient) private var keychainClient
 
-        @Dependency(\.sessionStorage.activeSessionExists)
-        private var activeSessionExists
+        @Dependency(\.sessionStorage.activeSessionExists) private var activeSessionExists
 
-        @Dependency(\.jsonDecoder)
-        private var jsonDecoder
+        @Dependency(\.jsonDecoder) private var jsonDecoder
 
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {

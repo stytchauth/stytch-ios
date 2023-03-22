@@ -6,22 +6,18 @@ protocol RouteType {
 
 struct NetworkingRouter<Route: RouteType> {
     private let getConfiguration: () -> Configuration?
+
     private let pathForRoute: (Route) -> Path
 
-    @Dependency(\.jsonEncoder)
-    private var jsonEncoder
+    @Dependency(\.jsonEncoder) private var jsonEncoder
 
-    @Dependency(\.jsonDecoder)
-    private var jsonDecoder
+    @Dependency(\.jsonDecoder) private var jsonDecoder
 
-    @Dependency(\.networkingClient)
-    private var networkingClient
+    @Dependency(\.networkingClient) private var networkingClient
 
-    @Dependency(\.sessionStorage)
-    private var sessionStorage
+    @Dependency(\.sessionStorage) private var sessionStorage
 
-    @Dependency(\.localStorage)
-    private var localStorage
+    @Dependency(\.localStorage) private var localStorage
 
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
         self.getConfiguration = getConfiguration

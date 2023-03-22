@@ -12,8 +12,7 @@ public extension StytchClient {
     struct Passkeys {
         let router: NetworkingRouter<PasskeysRoute>
 
-        @Dependency(\.passkeysClient)
-        private var passkeysClient
+        @Dependency(\.passkeysClient) private var passkeysClient
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

@@ -5,8 +5,7 @@ public extension StytchClient {
     struct OAuth {
         let router: NetworkingRouter<OAuthRoute>
 
-        @Dependency(\.keychainClient)
-        private var keychainClient
+        @Dependency(\.keychainClient) private var keychainClient
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.

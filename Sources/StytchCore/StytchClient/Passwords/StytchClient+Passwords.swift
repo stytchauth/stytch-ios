@@ -6,8 +6,7 @@ public extension StytchClient {
     struct Passwords {
         let router: NetworkingRouter<PasswordsRoute>
 
-        @Dependency(\.keychainClient)
-        private var keychainClient
+        @Dependency(\.keychainClient) private var keychainClient
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Create a new user with a password and an authenticated session for the user if requested. If a user with this email already exists in the project, an error will be returned.

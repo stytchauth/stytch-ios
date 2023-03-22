@@ -3,8 +3,7 @@ public extension StytchB2BClient {
     struct Members {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute.MembersRoute>
 
-        @Dependency(\.localStorage)
-        private var localStorage
+        @Dependency(\.localStorage) private var localStorage
 
         /// Returns the most-recent cached copy of the member object, if it has already been fetched via another method, else nil.
         public func getSync() -> Member? {
