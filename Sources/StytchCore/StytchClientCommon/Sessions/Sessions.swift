@@ -29,13 +29,12 @@ public struct Sessions<AuthResponseType: Decodable> {
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
     /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
     public func revoke(parameters: RevokeParameters = .init()) async throws -> BasicResponse {
-        let clearSession = { Current.sessionStorage.reset() }
         do {
             let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
-            clearSession()
+            Current.sessionStorage.reset()
             return response
         } catch {
-            if parameters.forceClear { clearSession() }
+            if parameters.forceClear { Current.sessionStorage.reset() }
             throw error
         }
     }
@@ -68,6 +67,7 @@ public extension Sessions {
             self.sessionDuration = sessionDuration
         }
     }
+
     /// The dedicated parameters type for session `revoke` calls.
     struct RevokeParameters {
         let forceClear: Bool
