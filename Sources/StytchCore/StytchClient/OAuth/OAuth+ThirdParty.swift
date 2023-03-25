@@ -10,6 +10,7 @@ public extension StytchClient.OAuth {
 
         @Dependency(\.openUrl) private var openUrl
 
+        @available(tvOS 16.0, *)
         @Dependency(\.webAuthSessionClient) private var webAuthSessionClient
 
         /// Initiates the OAuth flow by using the included parameters to generate a URL and pass this off to the system's default browser. The user will be redirected to the corresponding redirectUrl (this should be back into the application), after completing the authentication challenge with the identity provider.
