@@ -33,10 +33,10 @@
     @Volume(name: "Intermediate Stytch Usage") {
         Go a bit deeper into what's possible and really start to flex your auth muscles. 
         
-        @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+        @Image(source: toc-volume-2-hero, alt: "something")
         
         @Chapter(name: "Going deeper") {
-            @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+            @Image(source: toc-volume-2-chapter-1, alt: "something")
 
             @TutorialReference(tutorial: "doc:SendTokensInAuthorizationHeader")
             @TutorialReference(tutorial: "doc:ManageTheCurrentUser")
@@ -47,10 +47,10 @@
     @Volume(name: "Advanced Stytch") {
         Learn advanced usage of the SDK to better enable your app's specific needs.
         
-        @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+        @Image(source: toc-volume-3-hero, alt: "something")
 
         @Chapter(name: "Pushing the limits") {
-            @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+            @Image(source: toc-volume-3-chapter-1, alt: "something")
 
             @TutorialReference(tutorial: "doc:ManageSessionsManually")
             @TutorialReference(tutorial: "doc:RebuildUIOnAuthChange")
