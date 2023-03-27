@@ -1,15 +1,13 @@
-@Tutorial(time: 20) {
-    @Intro(title: "Configuring Stytch") {
-        This is how you configure Stytch
+@Tutorial(time: 10) {
+    @Intro(title: "Initial setup") {
+        This tutorial will walk you through the initial process for setting up the <doc:StytchClient>. 
         
-<!--        @Image(source: <#file#>, alt: "<#accessible description#>")-->
+<!--        @Image(source: output-1.png, alt: "") This will be an underlay image-->
     }
     
-    @Section(title: "Add Stytch as project dependency.") {
+    @Section(title: "Add Stytch to your project.") {
         @ContentAndMedia {
-            Add Stytch as a package dependency
-            
-<!--            @Image(source: <#file#>, alt: "<#accessible description#>")-->
+            Add Stytch as a package dependency for your Xcode or SPM project.
         }
         
         @Steps {
@@ -34,11 +32,21 @@
                 @Image(source: output-4.png, alt: "blah")
             }
             @Step {
-                Search for https://github.com/stytchauth/stytch-swift and confirm addition to your project
+                Search for <https://github.com/stytchauth/stytch-swift> and confirm addition to your project
                 
                 @Image(source: output-5.jpg, alt: "blah")
             }
+        }
+    }
+    
+    @Section(title: "Configure the StytchClient") {
+        @ContentAndMedia {
+            Add Stytch as a package dependency
             
+<!--            @Image(source: <#file#>, alt: "<#accessible description#>")-->
+        }
+        
+        @Steps {
             @Step {
                 Select your app target and add StytchCore as a new dependency
                 
@@ -52,9 +60,15 @@
             }
             
             @Step {
-                Import StytchCore and add configuration code
+                Import StytchCore.
                 
                 @Code(name: "AppDelegate.swift", file: 01-configuring-code-02.swift)
+            }
+            
+            @Step {
+                Add configuration code.
+                
+                @Code(name: "AppDelegate.swift", file: 01-configuring-code-03.swift)
             }
         }
     }

@@ -1,0 +1,59 @@
+@Tutorials(name: "Tutorials") {
+    @Intro(title: "Stytch Tutorials") {
+        Go from zero Stytch knowledge to using your first authentication products!
+
+        @Image(source: toc-hero, alt: "something")
+    }
+    
+    @Volume(name: "Stytch Basics") {
+        Set up Stytch in your project and start making your first authentication calls.
+        
+        @Image(source: toc-volume-1-hero, alt: "something")
+        
+        @Chapter(name: "Getting started") {
+            
+            @Image(source: toc-volume-1-chapter-1, alt: "something")
+            
+            @TutorialReference(tutorial: "doc:AddAndConfigure")
+            @TutorialReference(tutorial: "doc:AddEML")
+        }
+        
+        @Chapter(name: "Using more auth methods") {
+            Add more authentication methods to your app's arsenal.
+            
+            @Image(source: toc-volume-1-chapter-2, alt: "something")
+            
+            @TutorialReference(tutorial: "doc:AddBiometrics")
+            @TutorialReference(tutorial: "doc:AddSMSOTP")
+            @TutorialReference(tutorial: "doc:AddOAuth")
+        }
+    }
+    
+    
+    @Volume(name: "Intermediate Stytch Usage") {
+        Go a bit deeper into what's possible and really start to flex your auth muscles. 
+        
+        @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+        
+        @Chapter(name: "Going deeper") {
+            @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+
+            @TutorialReference(tutorial: "doc:SendTokensInAuthorizationHeader")
+            @TutorialReference(tutorial: "doc:ManageTheCurrentUser")
+            @TutorialReference(tutorial: "doc:StepUpAuthMFA")
+        }
+    }
+    
+    @Volume(name: "Advanced Stytch") {
+        Learn advanced usage of the SDK to better enable your app's specific needs.
+        
+        @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+
+        @Chapter(name: "Pushing the limits") {
+            @Image(source: chapter1-slothcreatorEssentials.png, alt: "something")
+
+            @TutorialReference(tutorial: "doc:ManageSessionsManually")
+            @TutorialReference(tutorial: "doc:RebuildUIOnAuthChange")
+        }
+    }
+}
