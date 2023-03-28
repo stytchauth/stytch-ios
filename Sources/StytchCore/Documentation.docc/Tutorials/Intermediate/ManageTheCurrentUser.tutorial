@@ -66,4 +66,34 @@
             }
         }
     }
+        
+    @Section(title: "Attach new factor to existing user") {
+        @ContentAndMedia {
+            At some point, you may need to add an email or phone number to an existing user. This section will help you do so!
+        }
+        
+        @Steps {
+            @Step {
+                Open the file from the previous sections.
+
+                @Code(name: UserSettingsViewController.swift, file: 03-manage-the-current-user-01.swift)
+            }
+
+            @Step {
+                Add a method to attach an email factor to the current user.
+
+                @Code(name: UserSettingsViewController.swift, file: 03-manage-the-current-user-02.swift)
+            }
+
+            @Step {
+                Use the <doc:StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1> method to initiate the email send.
+
+                @Code(name: UserSettingsViewController.swift, file: 03-manage-the-current-user-03.swift)
+            }
+
+            @Step {
+                Ensure deeplink handling is set up as configured in <doc:AddEML>. You're all done!
+            }
+        }
+    }
 }
