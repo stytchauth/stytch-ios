@@ -19,6 +19,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
     ) -> Bool {
         // Handle universal links
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL {
+            return deeplinkCoordinator.handle(url: url)
+        }
         return true
     }
 
@@ -28,7 +31,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
         // Handle custom scheme deeplinks
-        return true
+        return deeplinkCoordinator.handle(url: url)
     }
 }
 

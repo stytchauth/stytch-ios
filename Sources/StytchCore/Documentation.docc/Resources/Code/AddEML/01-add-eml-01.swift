@@ -5,10 +5,8 @@ import UIKit
 final class AppDelegate: NSObject, UIApplicationDelegate {
     ...
 
-    private let deeplinkCoordinator: DeeplinkCoordinator
-
     override init() {
-        deeplinkCoordinator = .init(handlers: [])
+        ...
 
         super.init()
     }
@@ -28,27 +26,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
         // Handle custom scheme deeplinks
-        return true
-    }
-}
-
-protocol DeeplinkHandler {
-    func canHandle(url: URL) -> Bool
-    func handle(url: URL)
-}
-
-final class DeeplinkCoordinator {
-    let handlers: [DeeplinkHandler]
-
-    init(handlers: [DeeplinkHandler]) {
-        self.handlers = handlers
-    }
-
-    func handle(url: URL) -> Bool {
-        guard let handler = handlers.first(where: { $0.canHandle(url: url) }) else {
-            return false
-        }
-        handler.handle(url: url)
         return true
     }
 }
