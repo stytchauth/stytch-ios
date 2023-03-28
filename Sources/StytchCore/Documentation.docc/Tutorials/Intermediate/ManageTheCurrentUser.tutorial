@@ -1,0 +1,69 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Manage the current user") {
+        This tutorial will teach you a few of the things you can do to manage Stytch users.
+    }
+    
+    @Section(title: "Get current user") {
+        @ContentAndMedia {
+            Get the latest information about the user.
+        }
+        
+        @Steps {
+            @Step {
+                Open the file where you would like to fetch user information.
+                
+                @Code(name: UserSettingsViewController.swift, file: 01-manage-the-current-user-01.swift)
+            }
+            
+            @Step {
+                Import <doc:StytchCore>.
+                
+                @Code(name: UserSettingsViewController.swift, file: 01-manage-the-current-user-02.swift)
+            }
+
+            @Step {
+                Use the cached user information if present.
+                
+                @Code(name: UserSettingsViewController.swift, file: 01-manage-the-current-user-03.swift)
+            }
+
+            @Step {
+                If there is no cached user, fetch the current user.
+                
+                @Code(name: UserSettingsViewController.swift, file: 01-manage-the-current-user-04.swift)
+            }
+        }
+    }
+
+    @Section(title: "Delete auth factors") {
+        @ContentAndMedia {
+            If you need to remove an auth factor from a user, like a phone number or email address, you can easily do with <doc:StytchClient/UserManagement>.
+        }
+        
+        @Steps {
+            @Step {
+                Open the file from `Section 1`.
+                
+                @Code(name: UserSettingsViewController.swift, file: 02-manage-the-current-user-01.swift)
+            }
+            
+            @Step {
+                Add method to delete desired auth factor.
+                
+                @Code(name: UserSettingsViewController.swift, file: 02-manage-the-current-user-02.swift)
+            }
+            
+            @Step {
+                Determine the ID of the factor you intend to delete.
+                
+                @Code(name: UserSettingsViewController.swift, file: 02-manage-the-current-user-03.swift)
+            }
+            
+            @Step {
+                Use <doc:StytchClient/UserManagement/deleteFactor(_:)-5nh6h> to delete the corresponding auth factor and update the UI.
+                
+                @Code(name: UserSettingsViewController.swift, file: 02-manage-the-current-user-04.swift)
+            }
+        }
+    }
+}
