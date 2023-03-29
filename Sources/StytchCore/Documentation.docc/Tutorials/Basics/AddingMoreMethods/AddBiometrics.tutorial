@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 10) {
     @Intro(title: "Add Biometrics") {
         Biometrics is one of the most efficient forms of authentication on mobile devices. Learn how to add it to your app here!
         
