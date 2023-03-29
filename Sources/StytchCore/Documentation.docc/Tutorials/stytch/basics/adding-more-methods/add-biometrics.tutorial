@@ -7,7 +7,7 @@
     
     @Section(title: "Register and authenticate with Biometrics") {
         @ContentAndMedia {
-            Add Stytch as a package dependency
+            Learn how to get your user set up to use biometrics.
         }
         
         @Steps {
