@@ -14,19 +14,19 @@
             @Step {
                 Select your project and app target using the project navigator in Xcode and open the `Signing & Capabilities` tab.
                 
-                @Image(source: 01-add-oauth-01.png, alt: "blah")
+                @Image(source: 01-add-oauth-01.png, alt: "Project and app target selection in Xcode project navigator.")
             }
 
             @Step {
                 Click the `+ Capability` button.
                 
-                @Image(source: 01-add-oauth-02.png, alt: "blah")
+                @Image(source: 01-add-oauth-02.png, alt: "Highlight of the + Capability button in Xcode")
             }
 
             @Step {
                 Select `Sign In With Apple` to add the capability to your app target.
                 
-                @Image(source: 01-add-oauth-03.png, alt: "blah")
+                @Image(source: 01-add-oauth-03.png, alt: "Shows the Sign In With Apple capability selected")
             }
 
             @Step {
