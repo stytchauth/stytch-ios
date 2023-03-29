@@ -1,6 +1,6 @@
 @Tutorials(name: "Tutorials") {
     @Intro(title: "Stytch Tutorials") {
-        Go from zero Stytch knowledge to using your first authentication products!
+        Go from zero Stytch knowledge to expert usage of our authentication products!
 
         @Image(source: toc-hero, alt: "something")
     }
@@ -44,7 +44,7 @@
     }
     
     @Volume(name: "Advanced Stytch") {
-        Learn advanced usage of the SDK to better enable your app's specific needs.
+        Learn advanced usage of the SDK to better enable your app's custom needs.
         
         @Image(source: toc-volume-3-hero, alt: "something")
 
