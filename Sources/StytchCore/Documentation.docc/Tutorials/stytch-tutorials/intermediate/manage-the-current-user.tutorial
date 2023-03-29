@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 10) {
     @Intro(title: "Manage the current user") {
         This tutorial will teach you a few of the things you can do to manage Stytch users.
     }
@@ -92,7 +92,7 @@
             }
 
             @Step {
-                Ensure deeplink handling is set up as configured in <doc:AddEML>. You're all done!
+                Ensure deeplink handling is set up as configured in <doc:add-eml>. You're all done!
             }
         }
     }

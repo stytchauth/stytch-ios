@@ -1,8 +1,8 @@
-@Tutorial(time: 10) {
+@Tutorial(time: 5) {
     @Intro(title: "Add OAuth") {
         Using OAuth, or social logins, are a familiar and low-friction way to authenticate your users. Learn how to add them in this tutorial!
 
-        _As a prerequisite to this tutorial, you should visit <https://stytch.com/dashboard/oauth> and set up your OAuth configuration for both Apple and Google.
+        _As a prerequisite to this tutorial, you should visit <https://stytch.com/dashboard/oauth> and set up your OAuth configuration for both Apple and Google._
     }
     
     @Section(title: "Add Sign In With Apple") {
@@ -86,7 +86,7 @@
             }
 
             @Step {
-                Call <doc:StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-e6x4> on the <doc:StytchClient/OAuth-swift.struct/google> struct.
+                Call <doc:StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-p3l8> on the <doc:StytchClient/OAuth-swift.struct/google> struct.
                 
                 @Code(name: AuthenticationViewController.swift, file: 02-add-oauth-05.swift)
             }

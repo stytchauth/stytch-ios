@@ -1,6 +1,6 @@
-@Tutorials(name: "Tutorials") {
+@Tutorials(name: "Stytch") {
     @Intro(title: "Stytch Tutorials") {
-        Go from zero Stytch knowledge to expert usage of our authentication products!
+        Go from zero to fully featured authentication in your iOS app powered by Stytch
 
         @Image(source: toc-hero, alt: "something")
     }
@@ -14,8 +14,8 @@
             
             @Image(source: toc-volume-1-chapter-1, alt: "something")
             
-            @TutorialReference(tutorial: "doc:AddAndConfigure")
-            @TutorialReference(tutorial: "doc:AddEML")
+            @TutorialReference(tutorial: "doc:initial-setup")
+            @TutorialReference(tutorial: "doc:add-eml")
         }
         
         @Chapter(name: "Using more auth methods") {
@@ -23,8 +23,8 @@
             
             @Image(source: toc-volume-1-chapter-2, alt: "something")
             
-            @TutorialReference(tutorial: "doc:AddBiometrics")
-            @TutorialReference(tutorial: "doc:AddOAuth")
+            @TutorialReference(tutorial: "doc:add-biometrics")
+            @TutorialReference(tutorial: "doc:add-oauth")
         }
     }
     
@@ -37,9 +37,9 @@
         @Chapter(name: "Going deeper") {
             @Image(source: toc-volume-2-chapter-1, alt: "something")
 
-            @TutorialReference(tutorial: "doc:SendTokensInAuthorizationHeader")
-            @TutorialReference(tutorial: "doc:ManageTheCurrentUser")
-            @TutorialReference(tutorial: "doc:StepUpAuthMFA")
+            @TutorialReference(tutorial: "doc:send-tokens-in-auth-header")
+            @TutorialReference(tutorial: "doc:manage-the-current-user")
+            @TutorialReference(tutorial: "doc:step-up-auth-mfa")
         }
     }
     
@@ -51,8 +51,8 @@
         @Chapter(name: "Pushing the limits") {
             @Image(source: toc-volume-3-chapter-1, alt: "something")
 
-            @TutorialReference(tutorial: "doc:ManageSessionsManually")
-            @TutorialReference(tutorial: "doc:RebuildUIOnAuthChange")
+            @TutorialReference(tutorial: "doc:manage-sessions-manually")
+            @TutorialReference(tutorial: "doc:rebuild-ui-on-auth-change")
         }
     }
 }

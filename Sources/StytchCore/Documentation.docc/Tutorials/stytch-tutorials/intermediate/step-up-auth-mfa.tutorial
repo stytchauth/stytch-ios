@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 10) {
     @Intro(title: "Step up auth/MFA") {
         If your app has functionality which requires higher levels of security on certain screens vs others, you may want to consider using step-up authentication or MFA. This tutorial will teach you a simple way of doing this with Stytch.
     }
