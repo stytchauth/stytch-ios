@@ -37,7 +37,7 @@
 
     @Section(title: "Delete auth factors") {
         @ContentAndMedia {
-            If you need to remove an auth factor from a user, like a phone number or email address, you can easily do with <doc:StytchClient/UserManagement>.
+            If you need to remove an auth factor from a user, like a phone number or email address, you can easily do so with <doc:StytchClient/UserManagement>.
         }
         
         @Steps {

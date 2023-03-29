@@ -22,7 +22,7 @@
             }
 
             @Step {
-                Import StytchCore.
+                Import <doc:StytchCore>.
                 
                 @Code(name: AuthenticationClient.swift, file: 01-manage-sessions-manually-03.swift)
             }

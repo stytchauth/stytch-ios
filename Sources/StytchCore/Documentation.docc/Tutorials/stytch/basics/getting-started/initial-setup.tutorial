@@ -10,37 +10,37 @@
         
         @Steps {
             @Step {
-                Select your project within the Xcode Project Navigator
+                Select your project within the Xcode Project Navigator.
                 
                 @Image(source: 01-add-and-configure-01, alt: "Selecting the project within the project navigator")
             }
 
             @Step {
-                Select your app target from within the Project and Targets pane
+                Select your app target from within the Project and Targets pane.
                 
                 @Image(source: 01-add-and-configure-02, alt: "Selecting the app target")
             }
 
             @Step {
-                Select Package Dependencies from the main window
+                Select Package Dependencies from the main window.
                 
                 @Image(source: 01-add-and-configure-03, alt: "Selecting Package Dependencies")
             }
 
             @Step {
-                Click the plus arrow to add a new dependency
+                Click the plus arrow to add a new dependency.
                 
                 @Image(source: 01-add-and-configure-04, alt: "Selecting the new dependency button")
             }
 
             @Step {
-                Search for <https://github.com/stytchauth/stytch-swift> and confirm addition to your project
+                Search for <https://github.com/stytchauth/stytch-swift> and confirm addition to your project.
                 
                 @Image(source: 01-add-and-configure-05, alt: "Selecting https://github.com/stytchauth/stytch-swift as a dependency")
             }
 
             @Step {
-                Select your app target and add StytchCore as a new dependency
+                Select your app target and add StytchCore as a new dependency.
                 
                 @Image(source: 01-add-and-configure-06, alt: "Adding the new dependency to the target")
             }
@@ -49,7 +49,7 @@
     
     @Section(title: "Configure the StytchClient") {
         @ContentAndMedia {
-            Add Stytch as a package dependency
+            Add Stytch as a package dependency.
         }
         
         @Steps {
@@ -61,7 +61,7 @@
             }
             
             @Step {
-                Import StytchCore.
+                Import <doc:StytchCore>.
                 
                 @Code(name: AppDelegate.swift, file: 02-add-and-configure-02.swift)
             }

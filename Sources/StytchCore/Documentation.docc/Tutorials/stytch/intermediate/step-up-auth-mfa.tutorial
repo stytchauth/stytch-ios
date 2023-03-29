@@ -40,7 +40,7 @@
             }
 
             @Step {
-                After SMS OTP is initiated, send the user to an intermediate `OTPCodeVerificationViewController` with a success destination of the `EditSettingsViewController`
+                After SMS OTP is initiated, send the user to an intermediate `OTPCodeVerificationViewController` with a success destination of the `EditSettingsViewController`.
                 
                 @Code(name: UserSettingsViewController.swift, file: 01-step-up-auth-mfa-06.swift)
             }
