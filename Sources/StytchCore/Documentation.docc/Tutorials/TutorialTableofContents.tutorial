@@ -24,7 +24,6 @@
             @Image(source: toc-volume-1-chapter-2, alt: "something")
             
             @TutorialReference(tutorial: "doc:AddBiometrics")
-            @TutorialReference(tutorial: "doc:AddSMSOTP")
             @TutorialReference(tutorial: "doc:AddOAuth")
         }
     }
