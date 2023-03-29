@@ -1,4 +1,4 @@
-@Tutorial(time: 10) {
+@Tutorial(time: 5) {
     @Intro(title: "Send tokens in the Authorization header") {
         Many mobile applications choose to use a Bearer token header instead of cookies to inform their backend of the current user's authentication status. This tutorial will show you how you can do this for your networking client.
     }

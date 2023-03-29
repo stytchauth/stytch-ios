@@ -1,4 +1,4 @@
-@Tutorial(time: 10) {
+@Tutorial(time: 5) {
     @Intro(title: "Manage Sessions manually") {
         If the out-of-the-box sessions product doesn't work for your needs, there are options available for manual intervention and manipulation.
     }

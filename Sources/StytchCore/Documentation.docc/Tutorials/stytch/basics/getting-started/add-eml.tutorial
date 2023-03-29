@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 10) {
     @Intro(title: "Add Email Magic Links") {
         Email Magic Links are a great, user-friendly way to get started using Stytch!
         
