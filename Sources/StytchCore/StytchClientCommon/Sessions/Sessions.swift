@@ -35,10 +35,10 @@ public struct Sessions<AuthResponseType: Decodable> {
     public func revoke(parameters: RevokeParameters = .init()) async throws -> BasicResponse {
         do {
             let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
-            Current.sessionStorage.reset()
+            sessionStorage.reset()
             return response
         } catch {
-            if parameters.forceClear { Current.sessionStorage.reset() }
+            if parameters.forceClear { sessionStorage.reset() }
             throw error
         }
     }
