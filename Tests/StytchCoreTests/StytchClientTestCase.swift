@@ -10,7 +10,7 @@ final class StytchClientTestCase: BaseTestCase {
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/sessions/authenticate", method: .get, headers: [
             "Content-Type": "application/json",
-            "X-SDK-Client": try Current.clientInfo.base64EncodedString(),
+            "X-SDK-Client": try Current.clientInfo.base64EncodedString(encoder: Current.jsonEncoder),
             "Authorization": "Basic eHl6Onh5eg==",
         ])
 

@@ -4,8 +4,8 @@ extension LocalStorage {
     }
 
     var user: User? {
-        get { Current.localStorage[UserStorageKey.self] }
-        set { Current.localStorage[UserStorageKey.self] = newValue }
+        get { self[UserStorageKey.self] }
+        set { self[UserStorageKey.self] = newValue }
     }
 }
 

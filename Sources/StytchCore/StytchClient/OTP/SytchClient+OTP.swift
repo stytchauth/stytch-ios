@@ -3,6 +3,8 @@ public extension StytchClient {
     struct OTP {
         let router: NetworkingRouter<OTPRoute>
 
+        @Dependency(\.sessionStorage.activeSessionExists) private var activeSessionExists
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
         public func loginOrCreate(parameters: Parameters) async throws -> OTPResponse {
@@ -13,7 +15,7 @@ public extension StytchClient {
         /// Wraps Stytch's OTP [sms/send](https://stytch.com/docs/api/send-otp-by-sms), [whatsapp/send](https://stytch.com/docs/api/whatsapp-send), and [email/send](https://stytch.com/docs/api/send-otp-by-email) endpoints. Requests a one-time passcode for an existing user to log in or attach the included factor to their current account.
         public func send(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(
-                to: Current.sessionStorage.activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
+                to: activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
                 parameters: parameters
             )
         }
