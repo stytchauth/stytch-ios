@@ -34,7 +34,7 @@
             }
 
             @Step {
-                Ensure your backend modifies the response to your client with a `Set-Cookie` header and the session tokens. The <StytchClient> will automatically listen for updates to these cookies and update the local state accordingly.
+                Ensure your backend modifies the response to your client with a `Set-Cookie` header containing the session tokens. The <doc:StytchClient> will automatically listen for updates to these cookies and update the local state accordingly.
                 
                 @Code(name: authentication_controller.rb, file: 01-manage-sessions-manually-04.rb)
             }
@@ -43,7 +43,7 @@
     
     @Section(title: "Update Session tokens using update(sessionTokens:)") {
         @ContentAndMedia {
-            If your app has cookies disabled, or if you otherwise prefer, you can also receive updated session tokens in network responses from your backend and update the token programmatically.
+            If your app has cookies disabled, or if you otherwise prefer, you can also receive updated session tokens in the response body from your backend and update the tokens programmatically.
         }
         
         @Steps {
