@@ -32,6 +32,11 @@ public struct StytchClient: StytchClientType {
         try _tokenValues(for: url)
     }
 
+    /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchClient/tokenValues(for:)``
+    public static func canHandle(url: URL) -> Bool {
+        _canHandle(url: url)
+    }
+
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.

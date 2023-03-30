@@ -38,6 +38,11 @@ extension StytchClientType {
         return (tokenType, token)
     }
 
+    // swiftlint:disable:next identifier_name
+    static func _canHandle(url: URL) -> Bool {
+        (try? _tokenValues(for: url)) != nil
+    }
+
     // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
     static func generateAndStorePKCE(keychainItem: KeychainClient.Item) throws -> (challenge: String, method: String) {
         let codeVerifier = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
