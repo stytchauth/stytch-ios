@@ -5,6 +5,8 @@ public extension StytchClient.MagicLinks {
     struct Email {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
+        @Dependency(\.sessionStorage.activeSessionExists) private var activeSessionExists
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status of an existing account.
         public func loginOrCreate(parameters: Parameters) async throws -> BasicResponse {
@@ -26,7 +28,7 @@ public extension StytchClient.MagicLinks {
             let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .emlPKCECodeVerifier)
 
             return try await router.post(
-                to: Current.sessionStorage.activeSessionExists ? .sendSecondary : .sendPrimary,
+                to: activeSessionExists ? .sendSecondary : .sendPrimary,
                 parameters: CodeChallengedParameters(codeChallenge: codeChallenge, codeChallengeMethod: codeChallengeMethod, wrapped: parameters)
             )
         }

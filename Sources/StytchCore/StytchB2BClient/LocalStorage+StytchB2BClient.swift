@@ -4,8 +4,8 @@ extension LocalStorage {
     }
 
     var organization: Organization? {
-        get { Current.localStorage[OrganizationStorageKey.self] }
-        set { Current.localStorage[OrganizationStorageKey.self] = newValue }
+        get { self[OrganizationStorageKey.self] }
+        set { self[OrganizationStorageKey.self] = newValue }
     }
 }
 
@@ -15,8 +15,8 @@ extension LocalStorage {
     }
 
     var member: Member? {
-        get { Current.localStorage[MemberStorageKey.self] }
-        set { Current.localStorage[MemberStorageKey.self] = newValue }
+        get { self[MemberStorageKey.self] }
+        set { self[MemberStorageKey.self] = newValue }
     }
 }
 

@@ -3,16 +3,18 @@ public extension StytchB2BClient {
     struct Organizations {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute>
 
+        @Dependency(\.localStorage) private var localStorage
+
         /// Returns the most-recent cached copy of the organization object, if it has already been fetched via another method, else nil.
         public func getSync() -> Organization? {
-            Current.localStorage.organization
+            localStorage.organization
         }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current organization.
         public func get() async throws -> OrganizationResponse {
             let response: OrganizationResponse = try await router.get(route: .base)
-            Current.localStorage.organization = response.organization
+            localStorage.organization = response.organization
             return response
         }
     }

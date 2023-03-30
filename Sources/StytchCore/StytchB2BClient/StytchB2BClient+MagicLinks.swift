@@ -5,10 +5,12 @@ public extension StytchB2BClient {
     struct MagicLinks {
         let router: NetworkingRouter<MagicLinksRoute>
 
+        @Dependency(\.keychainClient) private var keychainClient
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try? Current.keychainClient.get(.emlPKCECodeVerifier) else { throw StytchError.pckeNotAvailable }
+            guard let codeVerifier: String = try? keychainClient.get(.emlPKCECodeVerifier) else { throw StytchError.pckeNotAvailable }
 
             return try await router.post(
                 to: .authenticate,

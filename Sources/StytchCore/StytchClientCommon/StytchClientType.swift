@@ -9,13 +9,29 @@ protocol StytchClientType {
 }
 
 extension StytchClientType {
+    private static var keychainClient: KeychainClient { Current.keychainClient }
+
+    private static var cryptoClient: CryptoClient { Current.cryptoClient }
+
     var configuration: Configuration? {
-        get { Current.localStorage.configuration }
+        get { localStorage.configuration }
         set {
-            Current.localStorage.configuration = newValue
+            localStorage.configuration = newValue
             updateHeaderProvider()
         }
     }
+
+    private var sessionStorage: SessionStorage { Current.sessionStorage }
+
+    private var localStorage: LocalStorage { Current.localStorage }
+
+    private var networkingClient: NetworkingClient { Current.networkingClient }
+
+    private var defaults: UserDefaults { Current.defaults }
+
+    private var jsonEncoder: JSONEncoder { Current.jsonEncoder }
+
+    private var clientInfo: ClientInfo { Current.clientInfo }
 
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
@@ -45,11 +61,11 @@ extension StytchClientType {
 
     // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
     static func generateAndStorePKCE(keychainItem: KeychainClient.Item) throws -> (challenge: String, method: String) {
-        let codeVerifier = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
+        let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
 
-        try Current.keychainClient.set(codeVerifier, for: keychainItem)
+        try keychainClient.set(codeVerifier, for: keychainItem)
 
-        return (Current.cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
+        return (cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
     }
 
     mutating func postInit() {
@@ -66,12 +82,12 @@ extension StytchClientType {
 
     // To be called after configuration
     private func updateHeaderProvider() {
-        let clientInfoString = try? Current.clientInfo.base64EncodedString()
+        let clientInfoString = try? clientInfo.base64EncodedString(encoder: jsonEncoder)
 
-        Current.networkingClient.headerProvider = { [weak localStorage = Current.localStorage] in
+        networkingClient.headerProvider = { [weak localStorage, weak sessionStorage] in
             guard let configuration = localStorage?.configuration else { return [:] }
 
-            let sessionToken = Current.sessionStorage.sessionToken?.value ?? configuration.publicToken
+            let sessionToken = sessionStorage?.sessionToken?.value ?? configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
 
             return [
@@ -85,12 +101,12 @@ extension StytchClientType {
     private func runKeychainMigrations() {
         KeychainClient.migrations.forEach { migration in
             let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
-            guard !Current.defaults.bool(forKey: migrationName) else {
+            guard !defaults.bool(forKey: migrationName) else {
                 return
             }
             do {
                 try migration.run()
-                Current.defaults.set(true, forKey: migrationName)
+                defaults.set(true, forKey: migrationName)
             } catch {
                 print(error)
             }
@@ -99,12 +115,12 @@ extension StytchClientType {
 }
 
 private extension LocalStorage {
-    private enum ConfigurationLocalStorageKey: LocalStorageKey {
+    private enum ConfigurationStorageKey: LocalStorageKey {
         typealias Value = Configuration
     }
 
     var configuration: Configuration? {
-        get { Current.localStorage[ConfigurationLocalStorageKey.self] }
-        set { Current.localStorage[ConfigurationLocalStorageKey.self] = newValue }
+        get { self[ConfigurationStorageKey.self] }
+        set { self[ConfigurationStorageKey.self] = newValue }
     }
 }
