@@ -99,6 +99,8 @@ struct Environment {
 
     var date: () -> Date = Date.init
 
+    var uuid: () -> UUID = UUID.init
+
     var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
 
     var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
