@@ -25,6 +25,8 @@ extension StytchClientType {
 
     private var localStorage: LocalStorage { Current.localStorage }
 
+    private var keychainClient: KeychainClient { Current.keychainClient }
+
     private var networkingClient: NetworkingClient { Current.networkingClient }
 
     private var defaults: UserDefaults { Current.defaults }
@@ -32,6 +34,8 @@ extension StytchClientType {
     private var jsonEncoder: JSONEncoder { Current.jsonEncoder }
 
     private var clientInfo: ClientInfo { Current.clientInfo }
+
+    private var uuid: () -> UUID { Current.uuid }
 
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
@@ -69,14 +73,12 @@ extension StytchClientType {
     }
 
     mutating func postInit() {
-        guard
-            let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"),
-            let data = try? Data(contentsOf: url)
-        else { return }
-
-        configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
+        if let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) {
+            configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
+        }
 
         updateHeaderProvider()
+        resetKeychainOnFreshInstall()
         runKeychainMigrations()
     }
 
@@ -95,6 +97,18 @@ extension StytchClientType {
                 "Authorization": "Basic \(authToken)",
                 "X-SDK-Client": clientInfoString ?? "",
             ]
+        }
+    }
+
+    private func resetKeychainOnFreshInstall() {
+        guard
+            case let installIdDefaultsKey = "stytch_install_id_defaults_key",
+            defaults.string(forKey: installIdDefaultsKey) == nil
+        else { return }
+
+        defaults.set(uuid().uuidString, forKey: installIdDefaultsKey)
+        KeychainClient.Item.allItems.forEach { item in
+            try? keychainClient.removeItem(item)
         }
     }
 

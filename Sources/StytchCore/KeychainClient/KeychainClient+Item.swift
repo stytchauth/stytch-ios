@@ -64,6 +64,20 @@ extension KeychainClient.Item {
 }
 
 extension KeychainClient.Item {
+    // TODO: - set up linting or codegen to ensure any new `KeychainClient.Item` added (this file or elsewhere) is added to this array
+    static var allItems: [Self] {
+        [
+            .privateKeyRegistration,
+            .sessionToken,
+            .sessionJwt,
+            .emlPKCECodeVerifier,
+            .pwResetByEmailPKCECodeVerifier,
+            .oauthPKCECodeVerifier,
+        ]
+    }
+}
+
+extension KeychainClient.Item {
     struct Value {
         let data: Data
         let account: String?

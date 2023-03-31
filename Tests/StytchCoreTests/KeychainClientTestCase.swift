@@ -58,4 +58,18 @@ final class KeychainClientTestCase: BaseTestCase {
         XCTAssertNil(results.first?.account)
         XCTAssertEqual(results.first?.label, "user@example.com")
     }
+
+    func testKeychainReset() throws {
+        let installIdKey = "stytch_install_id_defaults_key"
+        Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
+        try Current.keychainClient.set("token", for: .sessionToken)
+        try Current.keychainClient.set("token_jwt", for: .sessionJwt)
+        StytchClient.instance.postInit()
+        XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
+        XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
+        Current.defaults.removeObject(forKey: installIdKey)
+        StytchClient.instance.postInit()
+        XCTAssertNil(try Current.keychainClient.get(.sessionToken))
+        XCTAssertNil(try Current.keychainClient.get(.sessionJwt))
+    }
 }
