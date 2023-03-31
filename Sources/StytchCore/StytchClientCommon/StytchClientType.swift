@@ -73,12 +73,9 @@ extension StytchClientType {
     }
 
     mutating func postInit() {
-        guard
-            let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"),
-            let data = try? Data(contentsOf: url)
-        else { return }
-
-        configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
+        if let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) {
+            configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
+        }
 
         updateHeaderProvider()
         resetKeychainOnFreshInstall()
@@ -109,7 +106,7 @@ extension StytchClientType {
             defaults.string(forKey: installIdDefaultsKey) == nil
         else { return }
 
-        defaults.set(uuid(), forKey: installIdDefaultsKey)
+        defaults.set(uuid().uuidString, forKey: installIdDefaultsKey)
         KeychainClient.Item.allItems.forEach { item in
             try? keychainClient.removeItem(item)
         }
