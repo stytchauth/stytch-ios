@@ -11,7 +11,7 @@ on:
           - minor
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
 jobs:
   cut-version:
