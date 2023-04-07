@@ -12,7 +12,9 @@ struct OAuthAuthenticationView: View {
         Button("Authenticate with Apple") {
             Task {
                 do {
-                    onAuth(try await StytchClient.oauth.apple.start(parameters: .init()))
+                    let response = try await StytchClient.oauth.apple.start(parameters: .init())
+                    print("User created: ", response.userCreated)
+                    onAuth(response)
                     presentationMode.wrappedValue.dismiss()
                 } catch {
                     print(error)
