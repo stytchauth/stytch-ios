@@ -3,7 +3,13 @@ import XCTest
 
 final class OAuthTestCase: BaseTestCase {
     func testApple() async throws {
-        networkInterceptor.responses { AuthenticateResponse.mock }
+        networkInterceptor.responses {
+            StytchClient.OAuth.Apple.AuthenticateResponse(
+                requestId: "",
+                statusCode: 200,
+                wrapped: .init(user: .mock(userId: ""), sessionToken: "", sessionJwt: "", session: .mock(userId: ""), userCreated: false)
+            )
+        }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.oauth.apple.start(parameters: .init())
