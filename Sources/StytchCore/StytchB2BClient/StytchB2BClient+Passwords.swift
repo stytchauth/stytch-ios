@@ -119,7 +119,9 @@ public extension StytchB2BClient.Passwords {
             self.sessionDuration = sessionDuration
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
     struct ResetByEmailStartParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
@@ -166,7 +168,9 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmail` calls.
     struct ResetByEmailParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
@@ -189,7 +193,9 @@ public extension StytchB2BClient.Passwords {
             self.sessionDuration = sessionDuration
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
     struct ResetByExistingPasswordParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
@@ -226,7 +232,9 @@ public extension StytchB2BClient.Passwords {
             self.sessionDuration = sessionDuration
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetBySession` calls.
     struct ResetBySessionParameters: Encodable {
         public let organizationId: Organization.ID
@@ -240,7 +248,9 @@ public extension StytchB2BClient.Passwords {
             self.password = password
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     /// The concrete response type for passwords `strengthCheck` calls.
     typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
 

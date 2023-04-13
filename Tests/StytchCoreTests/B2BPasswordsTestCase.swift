@@ -38,7 +38,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/strength_check",
             method: .post([
                 "password": "p@ssword123",
-                "email_address": "bob@loblaw.com"
+                "email_address": "bob@loblaw.com",
             ])
         )
     }
