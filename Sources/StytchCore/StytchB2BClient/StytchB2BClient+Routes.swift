@@ -6,21 +6,11 @@ extension StytchB2BClient {
         case sessions(SessionsRoute)
 
         var path: Path {
-            return "b2b".appendingPath(blah.0).appendingPath(blah.1.path)
-//            let base: Path = "b2b"
-//            switch self {
-//            case let .magicLinks(route):
-//                return base.appendingPath("magic_links").appendingPath(route.path)
-//            case let .organizations(route):
-//                return base.appendingPath("organizations").appendingPath(route.path)
-//            case let .passwords(route):
-//                return base.appendingPath("passwords").appendingPath(route.path)
-//            case let .sessions(route):
-//                return base.appendingPath("sessions").appendingPath(route.path)
-//            }
+            let (base, next) = routeComponents
+            return "b2b".appendingPath(base).appendingPath(next.path)
         }
 
-        var blah: (Path, RouteType) {
+        private var routeComponents: (base: Path, next: RouteType) {
             switch self {
             case let .magicLinks(route):
                 return ("magic_links", route)
