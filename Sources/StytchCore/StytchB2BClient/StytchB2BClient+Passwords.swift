@@ -23,7 +23,7 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates a password reset for the email address provided. This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .pwResetByEmailPKCECodeVerifier)
+            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
 
             return try await router.post(
                 to: .resetByEmail(.start),
@@ -40,7 +40,7 @@ public extension StytchB2BClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the member is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try? keychainClient.get(.pwResetByEmailPKCECodeVerifier) else {
+            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -49,7 +49,7 @@ public extension StytchB2BClient {
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
 
-            try? keychainClient.removeItem(.pwResetByEmailPKCECodeVerifier)
+            try? keychainClient.removeItem(.codeVerifierPKCE)
 
             return response
         }

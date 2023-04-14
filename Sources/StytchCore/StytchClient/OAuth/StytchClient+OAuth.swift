@@ -10,7 +10,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier: String = try keychainClient.get(.oauthPKCECodeVerifier) else {
+            guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
                 throw StytchError.pckeNotAvailable
             }
 
