@@ -18,6 +18,14 @@ final class AuthHomeViewController: UIViewController {
         })
     }()
 
+    private lazy var passwordsButton: UIButton = {
+        var configuration: UIButton.Configuration = .borderedProminent()
+        configuration.title = "Passwords"
+        return .init(configuration: configuration, primaryAction: .init { [weak navigationController] _ in
+            navigationController?.pushViewController(PasswordsViewController(), animated: true)
+        })
+    }()
+
     private lazy var sessionsButton: UIButton = {
         var configuration: UIButton.Configuration = .borderedProminent()
         configuration.title = "Sessions"
@@ -58,6 +66,7 @@ final class AuthHomeViewController: UIViewController {
         ])
 
         stackView.addArrangedSubview(emlButton)
+        stackView.addArrangedSubview(passwordsButton)
         stackView.addArrangedSubview(sessionsButton)
         stackView.addArrangedSubview(memberButton)
         stackView.addArrangedSubview(organizationButton)
