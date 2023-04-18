@@ -233,8 +233,6 @@ final class PasswordsViewController: UIViewController {
         }
     }
 
-
-
     private func presentAlert(message: String) {
         DispatchQueue.main.async {
             let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
