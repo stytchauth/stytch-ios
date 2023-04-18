@@ -66,7 +66,7 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the session is valid and hasn’t expired or been revoked.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetBySession(parameters: ResetBySessionParameters) async throws -> B2BAuthenticateResponse {
+        public func resetBySession(parameters: ResetBySessionParameters) async throws -> ResetBySessionResponse {
             try await router.post(to: .resetBySession, parameters: parameters)
         }
 
@@ -235,6 +235,19 @@ public extension StytchB2BClient.Passwords {
 }
 
 public extension StytchB2BClient.Passwords {
+    /// The concrete response type for passwords `resetBySession` calls.
+    typealias ResetBySessionResponse = Response<ResetBySessionResponseData>
+
+    /// The underlying data for passwords `resetBySession` calls.
+    struct ResetBySessionResponseData: Codable {
+        /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+        public let memberSession: MemberSession
+        /// The current member object.
+        public let member: Member
+        /// The current organization object.
+        public let organization: Organization
+    }
+
     /// The dedicated parameters type for passwords `resetBySession` calls.
     struct ResetBySessionParameters: Encodable {
         public let organizationId: Organization.ID
