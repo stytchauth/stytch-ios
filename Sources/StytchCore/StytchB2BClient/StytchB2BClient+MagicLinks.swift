@@ -10,7 +10,7 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try? keychainClient.get(.emlPKCECodeVerifier) else { throw StytchError.pckeNotAvailable }
+            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else { throw StytchError.pckeNotAvailable }
 
             return try await router.post(
                 to: .authenticate,
@@ -38,7 +38,7 @@ public extension StytchB2BClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_signup](https://stytch.com/docs/b2b/api/send-login-signup-email) endpoint. Requests an email magic link for a member to log in or signup depending on the presence and/or status of an existing account.
         public func loginOrSignup(parameters: Parameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .emlPKCECodeVerifier)
+            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
 
             return try await router.post(
                 to: .loginOrSignup,

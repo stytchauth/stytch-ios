@@ -16,13 +16,13 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             signupTemplateId: "mate"
         )
 
-        XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.keychainClient.get(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -50,9 +50,9 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         await XCTAssertThrowsErrorAsync(try await StytchB2BClient.magicLinks.authenticate(parameters: parameters))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .emlPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 
-        XCTAssertNotNil(try Current.keychainClient.get(.emlPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
         Current.timer = { _, _, _ in .init() }
 

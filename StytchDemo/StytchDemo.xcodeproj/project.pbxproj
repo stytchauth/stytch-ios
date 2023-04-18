@@ -28,6 +28,7 @@
 		223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BF2894D0D500CE2B0C /* PasswordView.swift */; };
 		223F88C32894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
 		223F88C42894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
+		224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */; };
 		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
@@ -89,6 +90,7 @@
 		223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFeedbackView.swift; sourceTree = "<group>"; };
 		223F88BF2894D0D500CE2B0C /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		223F88C22894D0F500CE2B0C /* PasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordModel.swift; sourceTree = "<group>"; };
+		224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsViewController.swift; sourceTree = "<group>"; };
 		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				2254779329A05C6A003DF229 /* MagicLinksViewController.swift */,
+				224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */,
 				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
 				2254779729A05D08003DF229 /* MemberViewController.swift */,
 				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
@@ -499,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */,
+				224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */,
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
