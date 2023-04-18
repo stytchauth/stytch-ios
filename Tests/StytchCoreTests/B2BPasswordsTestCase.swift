@@ -104,7 +104,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
     }
 
     func testResetBySession() async throws {
-        networkInterceptor.responses { B2BAuthenticateResponse.mock }
+        networkInterceptor.responses { StytchB2BClient.Passwords.ResetBySessionResponse(requestId: "", statusCode: 200, wrapped: .init(memberSession: .mock, member: .mock, organization: .mock)) }
         Current.timer = { _, _, _ in .init() }
 
         _ = try await client.resetBySession(parameters: .init(organizationId: "org123", password: "hi, i'm Tom."))

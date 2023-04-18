@@ -31,7 +31,7 @@ final class OAuthTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
-        _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
+        _ = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
@@ -57,7 +57,7 @@ extension OAuthTestCase {
             customScopes: ["scope:1", "scope:2"]
         )
 
-        XCTAssertNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
+        XCTAssertNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
         try StytchClient.OAuth.ThirdParty.Provider.allCases.forEach { provider in
             try provider.interface.start(parameters: startParameters)
@@ -68,7 +68,7 @@ extension OAuthTestCase {
             )
         }
 
-        XCTAssertNotNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
     }
 
     @available(tvOS 16.0, *)
