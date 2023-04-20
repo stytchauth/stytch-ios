@@ -122,6 +122,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.linkedin
         case .microsoft:
             return StytchClient.oauth.microsoft
+        case .salesforce:
+            return StytchClient.oauth.salesforce
         case .slack:
             return StytchClient.oauth.slack
         case .snapchat:
