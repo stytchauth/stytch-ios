@@ -1,23 +1,27 @@
 public extension StytchB2BClient {
+    /// The SDK allows you to view the member's current organization information, such as fetching (or viewing the most recent cached version) of the current organziation.
     struct Organizations {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute>
 
+        @Dependency(\.localStorage) private var localStorage
+
         /// Returns the most-recent cached copy of the organization object, if it has already been fetched via another method, else nil.
         public func getSync() -> Organization? {
-            Current.localStorage.organization
+            localStorage.organization
         }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current organization.
         public func get() async throws -> OrganizationResponse {
             let response: OrganizationResponse = try await router.get(route: .base)
-            Current.localStorage.organization = response.organization
+            localStorage.organization = response.organization
             return response
         }
     }
 }
 
 public extension StytchB2BClient {
+    /// The interface for interacting with organizations products.
     static var organization: Organizations { .init(router: router.scopedRouter { $0.organizations }) }
 }
 

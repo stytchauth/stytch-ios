@@ -1,3 +1,4 @@
+/// A generic type which enables type-safety for string-based identifiers.
 public struct Identifier<T, RawValue> {
     public let rawValue: RawValue
 

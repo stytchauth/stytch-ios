@@ -6,7 +6,18 @@ protocol RouteType {
 
 struct NetworkingRouter<Route: RouteType> {
     private let getConfiguration: () -> Configuration?
+
     private let pathForRoute: (Route) -> Path
+
+    @Dependency(\.jsonEncoder) private var jsonEncoder
+
+    @Dependency(\.jsonDecoder) private var jsonDecoder
+
+    @Dependency(\.networkingClient) private var networkingClient
+
+    @Dependency(\.sessionStorage) private var sessionStorage
+
+    @Dependency(\.localStorage) private var localStorage
 
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
         self.getConfiguration = getConfiguration
@@ -29,14 +40,14 @@ extension NetworkingRouter {
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
-        try await performRequest(.post(Current.jsonEncoder.encode(parameters)), route: route)
+        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
     }
 
     func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
-        try await performRequest(.put(Current.jsonEncoder.encode(parameters)), route: route)
+        try await performRequest(.put(jsonEncoder.encode(parameters)), route: route)
     }
 
     func get<Response: Decodable>(route: Route) async throws -> Response {
@@ -55,15 +66,15 @@ extension NetworkingRouter {
             throw StytchError.clientNotConfigured
         }
 
-        let (data, response) = try await Current.networkingClient.performRequest(
+        let (data, response) = try await networkingClient.performRequest(
             method,
             url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
         )
         do {
-            try response.verifyStatus(data: data)
-            let dataContainer = try Current.jsonDecoder.decode(DataContainer<Response>.self, from: data)
+            try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
+            let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
-                Current.sessionStorage.updateSession(
+                sessionStorage.updateSession(
                     .user(sessionResponse.session),
                     tokens: [
                         .jwt(sessionResponse.sessionJwt),
@@ -71,9 +82,9 @@ extension NetworkingRouter {
                     ],
                     hostUrl: configuration.hostUrl
                 )
-                Current.localStorage.user = sessionResponse.user
+                localStorage.user = sessionResponse.user
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
-                Current.sessionStorage.updateSession(
+                sessionStorage.updateSession(
                     .member(sessionResponse.memberSession),
                     tokens: [
                         .jwt(sessionResponse.sessionJwt),
@@ -81,12 +92,12 @@ extension NetworkingRouter {
                     ],
                     hostUrl: configuration.hostUrl
                 )
-                Current.localStorage.member = sessionResponse.member
-                Current.localStorage.organization = sessionResponse.organization
+                localStorage.member = sessionResponse.member
+                localStorage.organization = sessionResponse.organization
             }
             return dataContainer.data
         } catch let error as StytchError where error.statusCode == 401 {
-            Current.sessionStorage.reset()
+            sessionStorage.reset()
             throw error
         } catch {
             throw error
@@ -103,13 +114,13 @@ extension NetworkingRouter where Route: BaseRouteType {
 }
 
 private extension HTTPURLResponse {
-    func verifyStatus(data: Data) throws {
+    func verifyStatus(data: Data, jsonDecoder: JSONDecoder) throws {
         guard (400..<600).contains(statusCode) else { return }
 
         let error: Error
 
         do {
-            error = try Current.jsonDecoder.decode(StytchError.self, from: data)
+            error = try jsonDecoder.decode(StytchError.self, from: data)
         } catch _ {
             var message = (500..<600).contains(statusCode) ?
                 "Server networking error." :

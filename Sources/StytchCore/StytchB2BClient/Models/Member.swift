@@ -1,5 +1,6 @@
 import Foundation
 
+/// A type defining an organization member; including information about their name, status, the auth factors associated with them, and more.
 public struct Member: Codable {
     public typealias ID = Identifier<Self, String>
 
@@ -30,6 +31,7 @@ public extension Member {
     }
 }
 
+/// A type representing a specific SSO registration.
 public struct SSORegistration: Codable {
     public typealias ID = Identifier<Self, String>
 

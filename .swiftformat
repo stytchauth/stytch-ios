@@ -2,6 +2,7 @@
 
 --exclude StytchPlayground.playground
 --exclude Sources/StytchCore/Generated
+--exclude Sources/StytchCore/Documentation.docc/Resources
 
 # format options
 
