@@ -44,10 +44,18 @@ final class MagicLinksViewController: UIViewController {
         return textField
     }()
 
-    private lazy var button: UIButton = {
+    private lazy var sendButton: UIButton = {
         var configuration: UIButton.Configuration = .borderedProminent()
         configuration.title = "Submit"
         return .init(configuration: configuration, primaryAction: submitAction)
+    }()
+
+    private lazy var discoverySendButton: UIButton = {
+        var configuration: UIButton.Configuration = .borderedProminent()
+        configuration.title = "Discover Send"
+        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
+            self?.submitDiscovery()
+        })
     }()
 
     private let defaults: UserDefaults = .standard
@@ -70,7 +78,8 @@ final class MagicLinksViewController: UIViewController {
         stackView.addArrangedSubview(emailTextField)
         stackView.addArrangedSubview(orgIdTextField)
         stackView.addArrangedSubview(redirectUrlTextField)
-        stackView.addArrangedSubview(button)
+        stackView.addArrangedSubview(sendButton)
+        stackView.addArrangedSubview(discoverySendButton)
 
         emailTextField.text = defaults.string(forKey: Constants.emailDefaultsKey)
         orgIdTextField.text = defaults.string(forKey: Constants.orgIdDefaultsKey)
@@ -95,6 +104,35 @@ final class MagicLinksViewController: UIViewController {
                         email: email,
                         loginRedirectUrl: redirectUrl,
                         signupRedirectUrl: redirectUrl
+                    )
+                )
+                message = "Check your email!"
+            } catch {
+                message = error.localizedDescription
+            }
+
+            let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            alertController.addAction(.init(title: "OK", style: .default))
+            present(alertController, animated: true)
+        }
+    }
+
+    func submitDiscovery() {
+        guard let email = emailTextField.text, !email.isEmpty else { return }
+        guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
+        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
+
+        defaults.set(email, forKey: Constants.emailDefaultsKey)
+        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+
+        Task {
+            let message: String
+            do {
+                _ = try await StytchB2BClient.magicLinks.email.discoverySend(
+                    parameters: .init(
+                        email: email,
+                        redirectUrl: redirectUrl
                     )
                 )
                 message = "Check your email!"
