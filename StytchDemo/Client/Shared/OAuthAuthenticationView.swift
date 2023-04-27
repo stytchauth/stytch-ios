@@ -64,6 +64,7 @@ private enum Provider: String, CaseIterable, Identifiable {
     case github
     case google
     case linkedin
+    case salesforce
     case slack
     case snapchat
     case tiktok
@@ -87,6 +88,8 @@ private enum Provider: String, CaseIterable, Identifiable {
             return StytchClient.oauth.google
         case .linkedin:
             return StytchClient.oauth.linkedin
+        case .salesforce:
+            return StytchClient.oauth.salesforce
         case .slack:
             return StytchClient.oauth.slack
         case .snapchat:

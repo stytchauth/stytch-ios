@@ -170,6 +170,7 @@ extension StytchClient.OAuth.ThirdParty {
         case google
         case linkedin
         case microsoft
+        case salesforce
         case slack
         case snapchat
         case spotify

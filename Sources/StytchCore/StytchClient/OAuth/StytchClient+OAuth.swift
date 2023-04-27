@@ -67,6 +67,9 @@ public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Microsoft.
     var microsoft: ThirdParty { .init(provider: .microsoft) }
 
+    /// The interface for authenticating a user with Salesforce.
+    var salesforce: ThirdParty { .init(provider: .salesforce) }
+
     /// The interface for authenticating a user with Slack.
     var slack: ThirdParty { .init(provider: .slack) }
 

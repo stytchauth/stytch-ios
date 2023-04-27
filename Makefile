@@ -1,5 +1,5 @@
-IOS_VERSION := $(shell xcodebuild -showsdks | grep iphoneos | sed 's/\(.*iphoneos\)\(.*\)/\2/')
-WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep watchos | sed 's/\(.*watchos\)\(.*\)/\2/')
+IOS_VERSION := $(shell xcodebuild -showsdks | grep 'sdk iphoneos' | sed 's/\(.*iphoneos\)\(.*\)/\2/')
+WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep 'sdk watchos' | sed 's/\(.*watchos\)\(.*\)/\2/')
 
 IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
 ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
