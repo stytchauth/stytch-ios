@@ -48,7 +48,7 @@
             }
             
             @Step {
-                Call <doc:StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-7rkef> to kick off the authentication flow. The system will take it from there!
+                Call <doc:StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg> to kick off the authentication flow. The system will take it from there!
                 
                 @Code(name: AuthenticationViewController.swift, file: 01-add-oauth-04.swift)
             }
