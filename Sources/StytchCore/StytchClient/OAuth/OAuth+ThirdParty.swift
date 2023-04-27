@@ -68,7 +68,7 @@ public extension StytchClient.OAuth {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
 
             var queryParameters = [
-                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier).challenge),
+                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
                 ("public_token", publicToken),
             ]
 
@@ -169,6 +169,7 @@ extension StytchClient.OAuth.ThirdParty {
         case google
         case linkedin
         case microsoft
+        case salesforce
         case slack
         case snapchat
         case spotify

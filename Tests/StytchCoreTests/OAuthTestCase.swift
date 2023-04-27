@@ -3,7 +3,13 @@ import XCTest
 
 final class OAuthTestCase: BaseTestCase {
     func testApple() async throws {
-        networkInterceptor.responses { AuthenticateResponse.mock }
+        networkInterceptor.responses {
+            StytchClient.OAuth.Apple.AuthenticateResponse(
+                requestId: "",
+                statusCode: 200,
+                wrapped: .init(user: .mock(userId: ""), sessionToken: "", sessionJwt: "", session: .mock(userId: ""), userCreated: false)
+            )
+        }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.oauth.apple.start(parameters: .init())
@@ -25,7 +31,7 @@ final class OAuthTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
-        _ = try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier)
+        _ = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
@@ -51,7 +57,7 @@ extension OAuthTestCase {
             customScopes: ["scope:1", "scope:2"]
         )
 
-        XCTAssertNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
+        XCTAssertNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
         try StytchClient.OAuth.ThirdParty.Provider.allCases.forEach { provider in
             try provider.interface.start(parameters: startParameters)
@@ -62,7 +68,7 @@ extension OAuthTestCase {
             )
         }
 
-        XCTAssertNotNil(try Current.keychainClient.get(.oauthPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
     }
 
     @available(tvOS 16.0, *)
@@ -122,6 +128,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.linkedin
         case .microsoft:
             return StytchClient.oauth.microsoft
+        case .salesforce:
+            return StytchClient.oauth.salesforce
         case .slack:
             return StytchClient.oauth.slack
         case .snapchat:

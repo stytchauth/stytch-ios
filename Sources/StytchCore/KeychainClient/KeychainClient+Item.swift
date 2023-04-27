@@ -58,9 +58,7 @@ extension KeychainClient.Item {
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)
-    static let emlPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_eml_pkce_code_verifier")
-    static let pwResetByEmailPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_password_reset_by_email_pkce_code_verifier")
-    static let oauthPKCECodeVerifier: Self = .init(kind: .token, name: "stytch_oauth_pkce_code_verifier")
+    static let codeVerifierPKCE: Self = .init(kind: .token, name: "stytch_code_verifier_pkce")
 }
 
 extension KeychainClient.Item {
@@ -70,9 +68,7 @@ extension KeychainClient.Item {
             .privateKeyRegistration,
             .sessionToken,
             .sessionJwt,
-            .emlPKCECodeVerifier,
-            .pwResetByEmailPKCECodeVerifier,
-            .oauthPKCECodeVerifier,
+            .codeVerifierPKCE,
         ]
     }
 }
