@@ -23,7 +23,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 switch try await StytchB2BClient.handle(url: url, sessionDuration: 60) {
                 case let .handled(response):
                     // Handled via RootVC onAuthChange publisher
-                    print(response)
+                    switch response {
+                    case .auth:
+                        print(response)
+                    case let .discovery(authResponse):
+                        print(authResponse)
+                    }
                 case let .manualHandlingRequired(_, token):
                     guard let controller = window?.rootViewController?.navigationController?.viewControllers.last as? PasswordsViewController else {
                         fatalError("Passwords controller should still be last")

@@ -1,11 +1,11 @@
 import Foundation
 
 struct CodeVerifierParameters<T: Encodable>: Encodable {
-    let codingPrefix: String?
+    let codingPrefix: CodeCodingPrefix?
     let codeVerifier: String
     let wrapped: T
 
-    init(codingPrefix: String? = nil, codeVerifier: String, wrapped: T) {
+    init(codingPrefix: CodeCodingPrefix? = nil, codeVerifier: String, wrapped: T) {
         self.codingPrefix = codingPrefix
         self.codeVerifier = codeVerifier
         self.wrapped = wrapped
@@ -16,7 +16,7 @@ struct CodeVerifierParameters<T: Encodable>: Encodable {
 
         try wrapped.encode(to: encoder)
 
-        try container.encode(codeVerifier, forKey: .codeVerifier(prefix: codingPrefix))
+        try container.encode(codeVerifier, forKey: .codeVerifier(prefix: codingPrefix?.rawValue))
     }
 }
 

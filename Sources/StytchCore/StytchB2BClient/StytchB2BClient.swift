@@ -29,12 +29,14 @@ public struct StytchB2BClient: StytchClientType {
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
-        try _tokenValues(for: url)
+        guard let (type, token) = try _tokenValues(for: url) else { return nil }
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchError.unrecognizedDeeplinkTokenType }
+        return (tokenType, token)
     }
 
     /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchB2BClient/tokenValues(for:)``
     public static func canHandle(url: URL) -> Bool {
-        _canHandle(url: url)
+        (try? _tokenValues(for: url)) != nil
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -45,16 +47,40 @@ public struct StytchB2BClient: StytchClientType {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
-    public static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<B2BAuthenticateResponse> {
+    public static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             return .notHandled
         }
 
         switch tokenType {
+        case .discovery:
+            return try await .handled(.discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
         case .multiTenantMagicLinks:
-            return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
-        case .oauth, .passwordReset, .magicLinks:
-            return .notHandled
+            return try await .handled(.auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        case .multiTenantPasswords:
+            return .manualHandlingRequired(.multiTenantPasswords, token: token)
+        #if !os(watchOS)
+        case .sso:
+            return try await .handled(.auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        #endif
         }
+    }
+}
+
+public extension StytchB2BClient {
+    /// Represents the type of deeplink token which has been parsed. e.g. `discovery` or `sso`.
+    enum DeeplinkTokenType: String {
+        case discovery
+        case multiTenantMagicLinks = "multi_tenant_magic_links"
+        case multiTenantPasswords = "multi_tenant_passwords"
+        #if !os(watchOS)
+        case sso
+        #endif
+    }
+
+    /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
+    enum DeeplinkResponse {
+        case auth(B2BAuthenticateResponse)
+        case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
     }
 }

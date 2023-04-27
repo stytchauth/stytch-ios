@@ -1,9 +1,11 @@
 extension StytchB2BClient {
     enum BaseRoute: BaseRouteType {
+        case discovery(DiscoveryRoute)
         case magicLinks(MagicLinksRoute)
         case organizations(OrganizationsRoute)
         case passwords(PasswordsRoute)
         case sessions(SessionsRoute)
+        case sso(SSORoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -12,6 +14,8 @@ extension StytchB2BClient {
 
         private var routeComponents: (base: Path, next: RouteType) {
             switch self {
+            case let .discovery(route):
+                return ("discovery", route)
             case let .magicLinks(route):
                 return ("magic_links", route)
             case let .organizations(route):
@@ -20,28 +24,64 @@ extension StytchB2BClient {
                 return ("passwords", route)
             case let .sessions(route):
                 return ("sessions", route)
+            case let .sso(route):
+                return ("sso", route)
+            }
+        }
+    }
+
+    enum SSORoute: RouteType {
+        case authenticate
+
+        var path: Path {
+            switch self {
+            case .authenticate:
+                return "authenticate"
+            }
+        }
+    }
+
+    enum DiscoveryRoute: RouteType {
+        case organizations
+        case intermediateSessionsExchange
+        case organizationsCreate
+
+        var path: Path {
+            switch self {
+            case .organizations:
+                return "organizations"
+            case .organizationsCreate:
+                return "organizations/create"
+            case .intermediateSessionsExchange:
+                return "intermediate_sessions/exchange"
             }
         }
     }
 
     enum MagicLinksRoute: RouteType {
         case authenticate
+        case discoveryAuthenticate
         case email(EmailRoute)
 
         var path: Path {
             switch self {
             case .authenticate:
                 return "authenticate"
+            case .discoveryAuthenticate:
+                return "discovery/authenticate"
             case let .email(route):
                 return "email".appendingPath(route.path)
             }
         }
 
         enum EmailRoute: RouteType {
+            case discoverySend
             case loginOrSignup
 
             var path: Path {
                 switch self {
+                case .discoverySend:
+                    return "discovery/send"
                 case .loginOrSignup:
                     return "login_or_signup"
                 }

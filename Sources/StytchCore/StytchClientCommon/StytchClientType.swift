@@ -1,11 +1,12 @@
 import Foundation
 
 protocol StytchClientType {
-    associatedtype AuthResponseType: Decodable
+    associatedtype DeeplinkResponse
+    associatedtype DeeplinkTokenType
 
     static var instance: Self { get set }
 
-    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<AuthResponseType>
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 }
 
 extension StytchClientType {
@@ -43,7 +44,7 @@ extension StytchClientType {
     }
 
     // swiftlint:disable:next identifier_name
-    static func _tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
+    static func _tokenValues(for url: URL) throws -> (tokenType: String, token: String)? {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
@@ -52,15 +53,7 @@ extension StytchClientType {
         else {
             return nil
         }
-        guard let tokenType = DeeplinkTokenType(rawValue: type) else {
-            throw StytchError.unrecognizedDeeplinkTokenType
-        }
-        return (tokenType, token)
-    }
-
-    // swiftlint:disable:next identifier_name
-    static func _canHandle(url: URL) -> Bool {
-        (try? _tokenValues(for: url)) != nil
+        return (tokenType: type, token)
     }
 
     // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)

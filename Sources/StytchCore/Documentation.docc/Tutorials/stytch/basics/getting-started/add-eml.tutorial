@@ -30,7 +30,7 @@
             }
             
             @Step {
-                Add a handler for Stytch deeplinks inside of which you'll utilize the StytchClient's <doc:StytchClient/handle(url:sessionDuration:)-9nztz> method.
+                Add a handler for Stytch deeplinks inside of which you'll utilize the StytchClient's <doc:StytchClient/handle(url:sessionDuration:)-14mfc> method.
 
                 @Code(name: AppDelegate.swift, file: 01-add-eml-04.swift)
             }

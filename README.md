@@ -84,6 +84,17 @@ There are a number of authentication products currently supported by the SDK, wi
 
 - Magic links
     - Send/authenticate magic links via Email
+    - Send/authenticate discovery magic links via Email
+- Passwords
+    - Authenticate a member
+    - Check password strength
+    - Reset a password
+- Discovery
+    - Discover member's existing organizations
+    - Create a new organization
+    - Exchange a session for a different organization
+- SSO
+    - Start/authenticate an SSO authentication flow
 - Sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)

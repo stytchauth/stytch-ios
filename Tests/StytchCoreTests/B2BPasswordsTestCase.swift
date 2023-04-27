@@ -29,7 +29,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
     func testStrengthCheck() async throws {
         networkInterceptor.responses {
-            StytchB2BClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, feedback: .init(suggestions: [], warning: "meh. do something.")))
+            StytchB2BClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, strengthPolicy: "something", breachDetectionOnCreate: true, zxcvbnFeedback: .init(suggestions: [], warning: "meh. do something."), ludsFeedback: nil))
         }
         _ = try await client.strengthCheck(parameters: .init(email: "bob@loblaw.com", password: "p@ssword123"))
 

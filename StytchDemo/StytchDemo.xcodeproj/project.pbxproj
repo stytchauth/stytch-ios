@@ -66,6 +66,8 @@
 		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
 		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */; };
+		22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ABFABA29F7690100927518 /* SSOViewController.swift */; };
 		22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22B523B5296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
@@ -121,6 +123,8 @@
 		22909094284DD5EE00ADD3C4 /* HobbiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesView.swift; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewController.swift; sourceTree = "<group>"; };
+		22ABFABA29F7690100927518 /* SSOViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOViewController.swift; sourceTree = "<group>"; };
 		22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPAuthenticationView.swift; sourceTree = "<group>"; };
 		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
@@ -252,6 +256,8 @@
 				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
 				2254779729A05D08003DF229 /* MemberViewController.swift */,
 				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
+				22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */,
+				22ABFABA29F7690100927518 /* SSOViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -508,6 +514,8 @@
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
 				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
+				22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */,
+				22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */,
 				2254779829A05D08003DF229 /* MemberViewController.swift in Sources */,
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,
 				2254779029A05C0C003DF229 /* AppViewController.swift in Sources */,
