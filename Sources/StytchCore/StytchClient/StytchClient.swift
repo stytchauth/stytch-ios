@@ -66,9 +66,9 @@ public struct StytchClient: StytchClientType {
     }
 }
 
-extension StytchClient {
+public extension StytchClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
-    public enum DeeplinkTokenType: String {
+    enum DeeplinkTokenType: String {
         case magicLinks = "magic_links"
         case oauth
         case passwordReset = "reset_password"

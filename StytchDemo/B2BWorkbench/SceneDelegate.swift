@@ -26,7 +26,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     switch response {
                     case .auth:
                         print(response)
-                        break
                     case let .discovery(authResponse):
                         print(authResponse)
                     }

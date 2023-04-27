@@ -108,7 +108,6 @@ final class DiscoveryViewController: UIViewController {
         guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
 
-
         Task {
             do {
                 let response = try await StytchB2BClient.discovery.exchangeIntermediateSession(
