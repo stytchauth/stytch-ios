@@ -3,6 +3,7 @@
 import Combine
 import Foundation
 
+#if !os(watchOS)
 public extension StytchB2BClient.SSO {
     /// Start an SSO authentication flow.
     @available(tvOS 16.0, *)
@@ -33,3 +34,4 @@ public extension StytchB2BClient.SSO {
         .eraseToAnyPublisher()
     }
 }
+#endif

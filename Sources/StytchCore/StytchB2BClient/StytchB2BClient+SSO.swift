@@ -1,6 +1,7 @@
 import AuthenticationServices
 import Foundation
 
+#if !os(watchOS)
 public extension StytchB2BClient {
     /**
      * Single-Sign On (SSO) refers to the ability for a user to use a single identity to authenticate and gain access to
@@ -11,6 +12,7 @@ public extension StytchB2BClient {
      * Stytch supports the following SSO protocols:
      * - SAML
      */
+    // sourcery: ExcludeWatchOS
     struct SSO {
         let router: NetworkingRouter<SSORoute>
 
@@ -151,3 +153,4 @@ public extension StytchB2BClient.SSO {
         #endif
     }
 }
+#endif

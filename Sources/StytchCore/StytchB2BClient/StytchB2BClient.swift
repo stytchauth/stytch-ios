@@ -59,8 +59,10 @@ public struct StytchB2BClient: StytchClientType {
             return try await .handled(.auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
             return .manualHandlingRequired(.multiTenantPasswords, token: token)
+        #if !os(watchOS)
         case .sso:
             return try await .handled(.auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        #endif
         }
     }
 }
@@ -71,7 +73,9 @@ public extension StytchB2BClient {
         case discovery
         case multiTenantMagicLinks = "multi_tenant_magic_links"
         case multiTenantPasswords = "multi_tenant_passwords"
+        #if !os(watchOS)
         case sso
+        #endif
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.

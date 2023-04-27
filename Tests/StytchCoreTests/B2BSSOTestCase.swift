@@ -1,6 +1,7 @@
 import XCTest
 @testable import StytchCore
 
+#if !os(watchOS)
 final class B2BSSOTestCase: BaseTestCase {
     @available(tvOS 16.0, *)
     func testStart() async throws {
@@ -49,3 +50,4 @@ final class B2BSSOTestCase: BaseTestCase {
         )
     }
 }
+#endif
