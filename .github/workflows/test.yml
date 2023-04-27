@@ -37,7 +37,7 @@ jobs:
               return 1
             fi
           }
-          if ${{ github.ref == 'refs/heads/main' }} || [[ $(has_watchos_pr_label) ]]; then
+          if ${{ github.ref == 'refs/heads/main' }} || [[ $(has_watchos_pr_label) -eq 0 ]]; then
             matrix_values+=',{"test-os":"watchos"}'
           fi
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
