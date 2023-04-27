@@ -292,12 +292,25 @@ public extension StytchB2BClient.Passwords {
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
         public let breachedPassword: Bool
-        public let feedback: Feedback
+        public let strengthPolicy: String
+        public let breachDetectionOnCreate: Bool
+        public let zxcvbnFeedback: ZxcvbnFeedback?
+        public let ludsFeedback: LudsFeedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
-        public struct Feedback: Codable {
+        public struct ZxcvbnFeedback: Codable {
             public let suggestions: [String]
             public let warning: String
+        }
+
+        /// LUDS-specific password feedback.
+        public struct LudsFeedback: Codable {
+            public let hasLowerCase: Bool
+            public let hasUpperCase: Bool
+            public let hasDigit: Bool
+            public let hasSymbol: Bool
+            public let missingComplexity: Int
+            public let missingCharacters: Int
         }
     }
 }
