@@ -4,7 +4,7 @@ import XCTest
 final class B2BSessionsTestCase: BaseTestCase {
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
-        let parameters: Sessions<StytchB2BClient.AuthResponseType>.AuthenticateParameters = .init(sessionDuration: 15)
+        let parameters: Sessions<B2BAuthenticateResponse>.AuthenticateParameters = .init(sessionDuration: 15)
 
         Current.timer = { _, _, _ in .init() }
 
