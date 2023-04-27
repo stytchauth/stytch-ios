@@ -22,7 +22,7 @@ Product | Methods | Delivery mechanisms
 ``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-m8w7``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-8ycmb``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()-7a8j9`` | N/A
 ``StytchClient/OAuth-swift.struct`` | ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd``, ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-7rkef``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-239i4``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-p3l8`` | N/A
 ``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-2ck6w``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk`` | N/A
-``Sessions`` | ``Sessions/revoke()-7teh7``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
+``Sessions`` | ``Sessions/revoke(parameters:)-7lw27``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
 ``StytchClient/UserManagement`` | ``StytchClient/UserManagement/getSync()``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h`` | N/A
 
 ### B2B apps
@@ -30,7 +30,7 @@ Product | Methods | Delivery mechanisms
 Product | Methods | Delivery mechanisms
 --- | --- | ---
 ``StytchB2BClient/MagicLinks-swift.struct`` | ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/loginOrSignup(parameters:)-6rrup``, ``StytchB2BClient/MagicLinks-swift.struct/authenticate(parameters:)-9bkrj`` | Email 
-``Sessions`` | ``Sessions/revoke()-7teh7``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
+``Sessions`` | ``Sessions/revoke(parameters:)-7lw27``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
 ``StytchB2BClient/Members`` | ``StytchB2BClient/Members/getSync()``, ``StytchB2BClient/Members/get()-7fdhf`` | N/A
 ``StytchB2BClient/Organizations`` | ``StytchB2BClient/Organizations/getSync()``, ``StytchB2BClient/Organizations/get()-2esfw`` | N/A
 

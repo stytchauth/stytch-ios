@@ -9,7 +9,7 @@ extension KeychainClient {
             ]
             .forEach { item in
                 let status = SecItemUpdate(
-                    [kSecAttrAccount: item.name, kSecClass: kSecClassGenericPassword] as CFDictionary,
+                    [kSecAttrAccount: item.name as CFString, kSecClass: kSecClassGenericPassword] as CFDictionary,
                     [kSecAttrService: item.name] as CFDictionary
                 )
                 guard [errSecSuccess, errSecItemNotFound].contains(status) else {
