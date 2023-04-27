@@ -2,6 +2,7 @@ import XCTest
 @testable import StytchCore
 
 final class B2BSSOTestCase: BaseTestCase {
+    @available(tvOS 16.0, *)
     func testStart() async throws {
         Current.webAuthSessionClient = .init { params in
             ("random-token", try XCTUnwrap(URL(string: "\(params.callbackUrlScheme)://something")))
