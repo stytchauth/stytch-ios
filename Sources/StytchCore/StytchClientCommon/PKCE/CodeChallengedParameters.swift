@@ -1,12 +1,16 @@
 import Foundation
 
+enum CodeCodingPrefix: String {
+    case pkce
+}
+
 struct CodeChallengedParameters<T: Encodable>: Encodable {
-    let codingPrefix: String?
+    let codingPrefix: CodeCodingPrefix?
     let codeChallenge: String
     let codeChallengeMethod: String
     let wrapped: T
 
-    init(codingPrefix: String? = nil, codeChallenge: String, codeChallengeMethod: String, wrapped: T) {
+    init(codingPrefix: CodeCodingPrefix? = nil, codeChallenge: String, codeChallengeMethod: String, wrapped: T) {
         self.codingPrefix = codingPrefix
         self.codeChallenge = codeChallenge
         self.codeChallengeMethod = codeChallengeMethod
@@ -18,8 +22,8 @@ struct CodeChallengedParameters<T: Encodable>: Encodable {
 
         try wrapped.encode(to: encoder)
 
-        try container.encode(codeChallenge, forKey: .codeChallenge(prefix: codingPrefix))
-        try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod(prefix: codingPrefix))
+        try container.encode(codeChallenge, forKey: .codeChallenge(prefix: codingPrefix?.rawValue))
+        try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod(prefix: codingPrefix?.rawValue))
     }
 }
 
