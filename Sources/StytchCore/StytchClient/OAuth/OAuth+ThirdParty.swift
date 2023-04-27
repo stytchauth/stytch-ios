@@ -16,6 +16,7 @@ public extension StytchClient.OAuth {
         }
 
         /// Initiates the OAuth flow by using the included parameters to generate a URL and pass this off to the system's default browser. The user will be redirected to the corresponding redirectUrl (this should be back into the application), after completing the authentication challenge with the identity provider.
+        @available(*, deprecated) 
         public func start(parameters: DefaultBrowserStartParameters) throws {
             let url = try generateStartUrl(
                 loginRedirectUrl: parameters.loginRedirectUrl,
