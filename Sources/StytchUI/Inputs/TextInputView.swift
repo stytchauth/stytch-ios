@@ -6,9 +6,23 @@ protocol TextInputType: UIView {
 }
 
 class TextInputView<TextInput: TextInputType>: UIView {
-    var onTextChanged: (Bool) -> Void = { _ in }
+    var onTextChanged: (Bool) -> Void {
+        get { _onTextChanged }
+        set {
+            _onTextChanged = { [unowned self] isValid in
+                if isValid, !hasBeenValid {
+                    hasBeenValid = true
+                }
+                newValue(isValid)
+            }
+        }
+    }
+
+    private var _onTextChanged: (Bool) -> Void = { _ in }
 
     final var isValid: Bool { textInput.isValid }
+
+    final private(set) var hasBeenValid = false
 
     let textInput: TextInput = .init()
 
@@ -74,4 +88,3 @@ class TextInputView<TextInput: TextInputType>: UIView {
         }
     }
 }
-

@@ -24,11 +24,7 @@ final class AuthInputViewController: BaseViewController<InputAction, StytchUICli
 
     private let phoneNumberInput: PhoneNumberInput = .init()
 
-    private var phoneNumberHasBeenValid = false
-
     private let emailInput: EmailInput = .init()
-
-    private var emailHasBeenValid = false
 
     private lazy var continueButton: UIButton = {
         let button = Button.primary(title: "Continue") { [weak self] in
@@ -98,9 +94,8 @@ final class AuthInputViewController: BaseViewController<InputAction, StytchUICli
 
             self.continueButton.isEnabled = isValid
 
-            switch (self.phoneNumberHasBeenValid, isValid) {
+            switch (self.phoneNumberInput.hasBeenValid, isValid) {
             case (_, true):
-                self.phoneNumberHasBeenValid = true
                 self.phoneNumberInput.setErrorText(nil)
             case (true, false):
                 self.phoneNumberInput.setErrorText(
@@ -116,9 +111,8 @@ final class AuthInputViewController: BaseViewController<InputAction, StytchUICli
 
             self.continueButton.isEnabled = isValid
 
-            switch (self.emailHasBeenValid, isValid) {
+            switch (self.emailInput.hasBeenValid, isValid) {
             case (_, true):
-                self.emailHasBeenValid = true
                 self.emailInput.setErrorText(nil)
             case (true, false):
                 self.emailInput.setErrorText(
