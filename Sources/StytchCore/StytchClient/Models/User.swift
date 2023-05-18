@@ -29,6 +29,10 @@ public struct User {
     public let webauthnRegistrations: [WebAuthNRegistration]
     /// The user's Biometric registrations.
     public let biometricRegistrations: [BiometricRegistration]
+
+    public let untrustedMetadata: JSON?
+    /// COMMENT
+    public let trustedMetadata: JSON?
 }
 
 extension User: Codable {
@@ -46,6 +50,8 @@ extension User: Codable {
         totps = try container.optionalDecode(key: .totps) ?? []
         webauthnRegistrations = try container.optionalDecode(key: .webauthnRegistrations) ?? []
         biometricRegistrations = try container.optionalDecode(key: .biometricRegistrations) ?? []
+        untrustedMetadata = try container.optionalDecode(key: .untrustedMetadata)
+        trustedMetadata = try container.optionalDecode(key: .trustedMetadata)
     }
 }
 
