@@ -23,6 +23,10 @@ class BorderedTextField: UITextField {
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
         bounds.inset(by: insets)
     }
+
+    override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        super.rightViewRect(forBounds: bounds).offsetBy(dx: -insets.right, dy: 0)
+    }
 }
 
 extension UITextField {

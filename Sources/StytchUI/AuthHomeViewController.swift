@@ -13,7 +13,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
         return label
     }()
 
-    private let separatorView: LabelSeparatorView = .orSeparator
+    private let separatorView: LabelSeparatorView = .orSeparator()
 
     private let poweredByStytch: UIImageView = {
         let view = UIImageView()

@@ -2,15 +2,7 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class OAuthViewController: BaseViewController<OAuthAction, StytchUIClient.Configuration.OAuth> {
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .vertical
-        view.spacing = 12
-        return view
-    }()
-
+final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, Never, OAuthAction> {
     private lazy var googleButton: Button = .secondary(
         image: .google,
         title: NSLocalizedString("stytch.oauthGoogleTitle", value: "Continue with Google", comment: "")
@@ -27,7 +19,7 @@ final class OAuthViewController: BaseViewController<OAuthAction, StytchUIClient.
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configuration.providers.forEach { provider in
+        config.providers.forEach { provider in
             switch provider {
             case .apple:
                 stackView.addArrangedSubview(appleButton)
@@ -38,14 +30,9 @@ final class OAuthViewController: BaseViewController<OAuthAction, StytchUIClient.
             }
         }
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        attachStackView(within: view)
 
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             googleButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             appleButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             appleButton.heightAnchor.constraint(equalToConstant: .buttonHeight),

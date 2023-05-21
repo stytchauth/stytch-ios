@@ -1,6 +1,14 @@
 import UIKit
 
 final class EmailInput: TextInputView<EmailTextField> {
+    var isEnabled: Bool {
+        get { textInput.isEnabled }
+        set {
+            textInput.isEnabled = newValue
+            textInput.textColor = isEnabled ? .label : .disabled2
+            updateBorderColor()
+        }
+    }
     var text: String? { textInput.text }
 
     override func setUp() {
@@ -12,7 +20,7 @@ final class EmailInput: TextInputView<EmailTextField> {
     }
 }
 
-final class EmailTextField: UITextField, TextInputType {
+final class EmailTextField: BorderedTextField, TextInputType {
     var isValid: Bool {
         guard let text else { return false }
 
@@ -30,11 +38,8 @@ final class EmailTextField: UITextField, TextInputType {
         autocorrectionType = .no
         textContentType = .emailAddress
         keyboardType = .emailAddress
-        layer.borderColor = UIColor.placeholder.cgColor
-        layer.borderWidth = 1
-        layer.cornerRadius = .cornerRadius
-        leftView = UIView(frame: .init(x: 0, y: 0, width: 10, height: 10))
-        leftViewMode = .always
+        background = UIColor.clear.image()
+        disabledBackground = UIColor.disabled.image()
     }
 
     @available(*, unavailable)

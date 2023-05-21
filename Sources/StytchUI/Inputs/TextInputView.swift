@@ -3,6 +3,7 @@ import UIKit
 protocol TextInputType: UIView {
     var isValid: Bool { get }
     var fields: [UIView] { get }
+    var isEnabled: Bool { get }
 }
 
 class TextInputView<TextInput: TextInputType>: UIView {
@@ -80,11 +81,18 @@ class TextInputView<TextInput: TextInputType>: UIView {
         invalidateIntrinsicContentSize()
     }
 
-    private func updateBorderColor() {
+    func updateBorderColor() {
+        let borderColor: UIColor
+        switch (errorLabel.isHidden, textInput.isEnabled) {
+        case (false, _):
+            borderColor = .error
+        case (true, true):
+            borderColor = .placeholder
+        case (true, false):
+            borderColor = .lightBorder
+        }
         textInput.fields.forEach { view in
-            view.layer.borderColor = errorLabel.isHidden ?
-            UIColor.placeholder.cgColor :
-            UIColor.error.cgColor
+            view.layer.borderColor = borderColor.cgColor
         }
     }
 }

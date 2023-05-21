@@ -1,6 +1,7 @@
 import StytchCore
 import UIKit
 
+// FIXME: - convert to BaseViewController
 final class OTPCodeViewController: UIViewController {
     private let stackView: UIStackView = {
         let view = UIStackView()
@@ -13,7 +14,7 @@ final class OTPCodeViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.textColor = .brand
+        label.textColor = .label
         label.text = NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
         return label
     }()

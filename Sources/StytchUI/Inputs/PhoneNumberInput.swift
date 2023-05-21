@@ -39,6 +39,8 @@ extension PhoneNumberInput: CountryCodePickerDelegate {
 }
 
 final class PhoneNumberInputContainer: UIView, TextInputType {
+    var isEnabled: Bool { textField.isEnabled }
+
     var isValid: Bool { textField.isValidNumber }
 
     var fields: [UIView] { [textField, countrySelectorButton] }
@@ -49,12 +51,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
         field.withDefaultPickerUI = true
         field.withPrefix = false
         field.withExamplePlaceholder = true
-        field.layer.borderColor = UIColor.placeholder.cgColor
-        field.layer.borderWidth = 1
-        field.layer.cornerRadius = .cornerRadius
-        let view = UIView(frame: .init(x: 0, y: 0, width: 10, height: 10))
-        field.leftView = view
-        field.leftViewMode = .always
+        field.applyBorderedStyle()
         return field
     }()
 
