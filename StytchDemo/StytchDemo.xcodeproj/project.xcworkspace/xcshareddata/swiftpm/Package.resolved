@@ -1,32 +1,43 @@
 {
-  "pins" : [
-    {
-      "identity" : "jwt-kit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vapor/jwt-kit.git",
-      "state" : {
-        "revision" : "87ce13a1df913ba4d51cf00606df7ef24d455571",
-        "version" : "4.7.0"
+  "object": {
+    "pins": [
+      {
+        "package": "jwt-kit",
+        "repositoryURL": "https://github.com/vapor/jwt-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "87ce13a1df913ba4d51cf00606df7ef24d455571",
+          "version": "4.7.0"
+        }
+      },
+      {
+        "package": "PhoneNumberKit",
+        "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
+        "state": {
+          "branch": null,
+          "revision": "0fd43eb71d215afd0f9453d8e94200c9d6faf28a",
+          "version": "3.5.10"
+        }
+      },
+      {
+        "package": "swift-crypto",
+        "repositoryURL": "https://github.com/apple/swift-crypto.git",
+        "state": {
+          "branch": null,
+          "revision": "92a04c10fc5ce0504f8396aac7392126033e547c",
+          "version": "2.2.2"
+        }
+      },
+      {
+        "package": "Swifter",
+        "repositoryURL": "https://github.com/namolnad/swifter.git",
+        "state": {
+          "branch": "update-to-async",
+          "revision": "a51ae97214d6d24e18aa9e824eea5f1f4021d171",
+          "version": null
+        }
       }
-    },
-    {
-      "identity" : "swift-crypto",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-crypto.git",
-      "state" : {
-        "revision" : "92a04c10fc5ce0504f8396aac7392126033e547c",
-        "version" : "2.2.2"
-      }
-    },
-    {
-      "identity" : "swifter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/namolnad/swifter.git",
-      "state" : {
-        "branch" : "update-to-async",
-        "revision" : "a51ae97214d6d24e18aa9e824eea5f1f4021d171"
-      }
-    }
-  ],
-  "version" : 2
+    ]
+  },
+  "version": 1
 }
