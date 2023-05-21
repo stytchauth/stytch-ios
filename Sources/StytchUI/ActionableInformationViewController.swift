@@ -44,7 +44,7 @@ final class ActionableInformationViewController: BaseViewController<Empty, AIVCS
         stackView.addArrangedSubview(infoLabel)
         stackView.addArrangedSubview(retryButton)
 
-        if case let .loaded(state) = state, let secondaryAction = state.secondaryAction {
+        if let secondaryAction = state.secondaryAction {
             stackView.addArrangedSubview(separatorView)
             stackView.setCustomSpacing(38, after: separatorView)
             secondaryActionButton.setTitle(secondaryAction.title, for: .normal)
@@ -60,16 +60,11 @@ final class ActionableInformationViewController: BaseViewController<Empty, AIVCS
         )
     }
 
-    override func stateDidUpdate(state: ControllerState) {
-        switch state {
-        case .initial, .loading:
-            break
-        case let .loaded(state):
-            titleLabel.text = state.title
-            let (info, action) = attrStrings(state: state)
-            infoLabel.attributedText = info
-            retryButton.setAttributedTitle(action, for: .normal)
-        }
+    override func stateDidUpdate(state: State) {
+        titleLabel.text = state.title
+        let (info, action) = attrStrings(state: state)
+        infoLabel.attributedText = info
+        retryButton.setAttributedTitle(action, for: .normal)
     }
 
     private func attrStrings(state: AIVCState) -> (info: NSAttributedString, action: NSAttributedString) {

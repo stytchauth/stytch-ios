@@ -2,7 +2,7 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, Never, OAuthAction> {
+final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, Empty, OAuthAction> {
     private lazy var googleButton: Button = .secondary(
         image: .google,
         title: NSLocalizedString("stytch.oauthGoogleTitle", value: "Continue with Google", comment: "")

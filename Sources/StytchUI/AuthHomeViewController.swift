@@ -2,7 +2,7 @@ import PhoneNumberKit
 import StytchCore
 import UIKit
 
-final class AuthHomeViewController: BaseViewController<StytchUIClient.Configuration, Never, AppAction> {
+final class AuthHomeViewController: BaseViewController<StytchUIClient.Configuration, Empty, AppAction> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = {
@@ -31,7 +31,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
         if let oauthConfig = config.oauth {
-            let oauthController = OAuthViewController(config: oauthConfig) { .oauth($0) }
+            let oauthController = OAuthViewController(oauthConfig) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(contentsOf: [
@@ -44,7 +44,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
         if let inputConfig = config.input {
-            let inputController = AuthInputViewController(config: inputConfig) { .input($0) }
+            let inputController = AuthInputViewController(inputConfig) { .input($0) }
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(contentsOf: [
@@ -83,6 +83,4 @@ enum InputAction {
     case didTapCountryCode(input: PhoneNumberInput)
     case didTapContinueEmail(email: String)
     case didTapContinuePhone(phone: String)
-}
-struct State {
 }

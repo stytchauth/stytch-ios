@@ -6,8 +6,8 @@ struct PasswordVCState {
         case login
         case enterNewPassword
     }
-    let email: String
     let intent: Intent
+    let email: String
     let magicLinksEnabled: Bool
 }
 
@@ -20,13 +20,11 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, E
         return label
     }()
 
-    private lazy var emailLoginLinkButton: UIButton = {
-        Button.primary(
-            title: NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
-        ) { [weak self] in
-//            self?.didTapContinue()
-        }
-    }()
+    private lazy var emailLoginLinkButton: Button = .primary(
+        title: NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
+    ) { [weak self] in
+        //            self?.didTapContinue()
+    }
 
     private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
 
@@ -76,35 +74,28 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, E
         return button
     }()
 
-    private lazy var continueButton: UIButton = {
-        let button = Button.primary(title: "Continue") { [weak self] in // FIXME: - localize
+    private lazy var continueButton: Button = .primary(title: "Continue") { [weak self] in // FIXME: - localize
 //            self?.didTapContinue()
         }
-        button.isEnabled = false
-        return button
-    }()
 
-    private lazy var forgotPasswordButton: UIButton = {
-        Button.tertiary(
-            title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
-        ) { [weak self] in
-//            self?.didTapContinue()
-        }
-    }()
+    private lazy var forgotPasswordButton: Button = .tertiary(
+        title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
+    ) { [weak self] in
+        //            self?.didTapContinue()
+    }
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
 
-    private lazy var emailLoginCodeButton: UIButton = {
-        Button.tertiary(
-            title: NSLocalizedString("stytch.passwordEmailLoginCode", value: "Email me a login code", comment: "")
-        ) { [weak self] in
-//            self?.didTapContinue()
-        }
-    }()
+    private lazy var emailLoginCodeButton: Button = .tertiary(
+        title: NSLocalizedString("stytch.passwordEmailLoginCode", value: "Email me a login code", comment: "")
+    ) { [weak self] in
+        //            self?.didTapContinue()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        continueButton.isEnabled = false
         emailInput.textInput.placeholder = nil
         forgotPasswordButton.setTitleColor(.secondary, for: .normal)
 
@@ -140,46 +131,41 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, E
         )
     }
 
-    override func stateDidUpdate(state: ControllerState) {
-        switch state {
-        case .initial, .loading:
-            break
-        case let .loaded(state):
-            emailLoginLinkButton.isHidden = true
-            upperSeparator.isHidden = true
-            finishCreatingLabel.isHidden = true
-            forgotPasswordButton.isHidden = true
-            lowerSeparator.isHidden = true
-            emailLoginCodeButton.isHidden = true
-            emailLoginLinkButton.isHidden = true
+    override func stateDidUpdate(state: State) {
+        emailLoginLinkButton.isHidden = true
+        upperSeparator.isHidden = true
+        finishCreatingLabel.isHidden = true
+        forgotPasswordButton.isHidden = true
+        lowerSeparator.isHidden = true
+        emailLoginCodeButton.isHidden = true
+        emailLoginLinkButton.isHidden = true
 
-            emailInput.textInput.text = state.email
-            emailInput.isEnabled = true
-            passwordInput.textInput.textContentType = .newPassword
+        emailInput.textInput.text = state.email
+        emailInput.isEnabled = true
+        passwordInput.textInput.textContentType = .newPassword
 
-            // FIXME: localize
-            switch state.intent {
-            case .signup:
-                if state.magicLinksEnabled {
-                    titleLabel.text = "Choose how you would like to create your account."
-                    emailLoginLinkButton.isHidden = false
-                    upperSeparator.isHidden = false
-                    finishCreatingLabel.isHidden = false
-                } else {
-                    titleLabel.text = "Create account"
-                }
-            case .enterNewPassword:
-                emailInput.isEnabled = false
-                titleLabel.text = "Set a new password"
-            case .login:
-                titleLabel.text = "Log in"
-                forgotPasswordButton.isHidden = false
-                passwordInput.textInput.textContentType = .password
-                emailInput.isEnabled = false
-                if state.magicLinksEnabled {
-                    lowerSeparator.isHidden = false
-                    emailLoginCodeButton.isHidden = false
-                }
+        // FIXME: localize
+        switch state.intent {
+        case .signup:
+            if state.magicLinksEnabled {
+                titleLabel.text = "Choose how you would like to create your account."
+                emailLoginLinkButton.isHidden = false
+                upperSeparator.isHidden = false
+                finishCreatingLabel.isHidden = false
+            } else {
+                titleLabel.text = "Create account"
+            }
+        case .enterNewPassword:
+            emailInput.isEnabled = false
+            titleLabel.text = "Set a new password"
+        case .login:
+            titleLabel.text = "Log in"
+            forgotPasswordButton.isHidden = false
+            passwordInput.textInput.textContentType = .password
+            emailInput.isEnabled = false
+            if state.magicLinksEnabled {
+                lowerSeparator.isHidden = false
+                emailLoginCodeButton.isHidden = false
             }
         }
     }

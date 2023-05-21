@@ -18,7 +18,7 @@ final class AuthRootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let homeController = AuthHomeViewController(config: config) { $0 }
+        let homeController = AuthHomeViewController(config) { $0 }
         let navigationController = UINavigationController(rootViewController: homeController)
 
         addChild(navigationController)

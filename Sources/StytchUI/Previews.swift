@@ -13,9 +13,8 @@ struct StytchUI_Previews: PreviewProvider {
 
 
         ActionableInformationViewController(
-            state: .loaded(
-                .forgotPassword(email: "dan@stytch.com")
-            )
+            state: .forgotPassword(email: "dan@stytch.com")
+
         ) { .oauth($0) }
             .inNavigationController()
             .toControllerView()
@@ -23,11 +22,11 @@ struct StytchUI_Previews: PreviewProvider {
 
         if #available(iOS 15, *) {
             PasswordViewController(
-                state: .loaded(.init(
-                    email: "dan.loman@gmail.com",
+                state: .init(
                     intent: .signup,
+                    email: "dan.loman@gmail.com",
                     magicLinksEnabled: true
-                ))
+                )
             ) { _ in .oauth(.didTap(provider: .apple)) }
             //            state: .loaded(
             //                .forgotPassword(email: "dan@stytch.com")

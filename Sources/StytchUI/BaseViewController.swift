@@ -1,16 +1,15 @@
 import UIKit
 
-class BaseViewController<Config, State, Action>: UIViewController {
-    enum ControllerState {
-        case initial
-        case loading
-        case loaded(State)
-    }
+class BaseViewController<_Config, _State, _Action>: UIViewController {
+    typealias Config = _Config
+    typealias State = _State
+    typealias Action = _Action
+
     private let actionTransformer: (Action) -> AppAction
 
     let config: Config
 
-    var state: ControllerState {
+    var state: State {
         didSet {
             stateDidUpdate(state: state)
         }
@@ -24,7 +23,7 @@ class BaseViewController<Config, State, Action>: UIViewController {
         return view
     }()
 
-    init(config: Config, state: ControllerState = .initial, actionTransformer: @escaping (Action) -> AppAction) {
+    init(config: Config, state: State, actionTransformer: @escaping (Action) -> AppAction) {
         self.config = config
         self.state = state
         self.actionTransformer = actionTransformer
@@ -64,7 +63,7 @@ class BaseViewController<Config, State, Action>: UIViewController {
 
     func willPerform(action: Action) {}
 
-    func stateDidUpdate(state: ControllerState) {}
+    func stateDidUpdate(state: State) {}
 }
 
 protocol ActionDelegate {
@@ -81,7 +80,13 @@ extension UIResponder {
 }
 
 extension BaseViewController where Config == Empty {
-    convenience init(_ config: Config = .init(), state: ControllerState = .initial, actionTransformer: @escaping (Action) -> AppAction) {
+    convenience init(_ config: Config = .init(), state: State, actionTransformer: @escaping (Action) -> AppAction) {
+        self.init(config: config, state: state, actionTransformer: actionTransformer)
+    }
+}
+
+extension BaseViewController where State == Empty {
+    convenience init(_ config: Config, state: State = .init(), actionTransformer: @escaping (Action) -> AppAction) {
         self.init(config: config, state: state, actionTransformer: actionTransformer)
     }
 }

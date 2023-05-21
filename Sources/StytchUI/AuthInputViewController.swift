@@ -1,6 +1,6 @@
 import UIKit
 
-final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Never, InputAction> {
+final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Empty, InputAction> {
     private enum Input {
         case email
         case phone
