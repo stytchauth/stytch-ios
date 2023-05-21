@@ -45,6 +45,8 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.layoutMargins = .zero
+
         switch config {
         case let .magicLink(sms), let .password(sms), let .magicLinkAndPassword(sms):
             if sms {

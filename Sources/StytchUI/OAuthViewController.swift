@@ -19,6 +19,8 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.layoutMargins = .zero
+
         config.providers.forEach { provider in
             switch provider {
             case .apple:
