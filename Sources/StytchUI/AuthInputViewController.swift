@@ -1,18 +1,10 @@
 import UIKit
 
-final class AuthInputViewController: BaseViewController<InputAction, StytchUIClient.Configuration.Input> {
+final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Never, InputAction> {
     private enum Input {
         case email
         case phone
     }
-
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .vertical
-        view.spacing = 12
-        return view
-    }()
 
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
@@ -53,7 +45,7 @@ final class AuthInputViewController: BaseViewController<InputAction, StytchUICli
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        switch configuration {
+        switch config {
         case let .magicLink(sms), let .password(sms), let .magicLinkAndPassword(sms):
             if sms {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
@@ -69,20 +61,11 @@ final class AuthInputViewController: BaseViewController<InputAction, StytchUICli
         }
         stackView.addArrangedSubview(continueButton)
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        attachStackView(within: view)
 
-        var constraints: [NSLayoutConstraint] = [
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ]
-        constraints.append(
-            contentsOf: stackView.arrangedSubviews
-                .map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+        NSLayoutConstraint.activate(
+            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
-        NSLayoutConstraint.activate(constraints)
 
         phoneNumberInput.onButtonPressed = { [weak self] phoneNumberKit in
             guard let self else { return }

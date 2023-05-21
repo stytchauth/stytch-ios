@@ -2,30 +2,18 @@ import PhoneNumberKit
 import StytchCore
 import UIKit
 
-final class AuthHomeViewController: BaseViewController<AppAction, StytchUIClient.Configuration> {
+final class AuthHomeViewController: BaseViewController<StytchUIClient.Configuration, Never, AppAction> {
     private let scrollView: UIScrollView = .init()
-
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .vertical
-        view.spacing = 24
-        return view
-    }()
 
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.textColor = .brand
+        label.textColor = .label
         label.text = NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
         return label
     }()
 
-    private let separatorView = {
-        let view = LabelSeparatorView()
-        view.text = NSLocalizedString("stytch.orSeparator", value: "or", comment: "")
-        return view
-    }()
+    private let separatorView: LabelSeparatorView = .orSeparator
 
     private let poweredByStytch: UIImageView = {
         let view = UIImageView()
@@ -34,7 +22,7 @@ final class AuthHomeViewController: BaseViewController<AppAction, StytchUIClient
     }()
 
     private var showOrSeparator: Bool {
-        configuration.oauth != nil && configuration.input != nil
+        config.oauth != nil && config.input != nil
     }
 
     override func viewDidLoad() {
@@ -42,54 +30,44 @@ final class AuthHomeViewController: BaseViewController<AppAction, StytchUIClient
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let oauthConfig = configuration.oauth {
-            let oauthController = OAuthViewController(configuration: oauthConfig) { [weak self] action in
-                self?.perform(action: .oauth(action))
-            }
+        if let oauthConfig = config.oauth {
+            let oauthController = OAuthViewController(config: oauthConfig) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(contentsOf: [
-                oauthController.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                oauthController.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                oauthController.view.leadingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.leadingAnchor),
+                oauthController.view.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
             ])
         }
         if showOrSeparator {
             stackView.addArrangedSubview(separatorView)
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if let inputConfig = configuration.input {
-            let inputController = AuthInputViewController(configuration: inputConfig) { [weak self] action in
-                self?.perform(action: .input(action))
-            }
+        if let inputConfig = config.input {
+            let inputController = AuthInputViewController(config: inputConfig) { .input($0) }
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(contentsOf: [
-                inputController.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                inputController.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                inputController.view.leadingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.leadingAnchor),
+                inputController.view.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
             ])
         }
         if true {
             stackView.addArrangedSubview(poweredByStytch)
         }
-        let spacerView = UIView()
-        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
-        stackView.addArrangedSubview(spacerView)
+        stackView.addArrangedSubview(SpacerView())
 
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(stackView)
+        attachStackView(within: scrollView)
+
+        scrollView.layoutMargins = .init(top: .verticalMargin, left: .horizontalMargin, bottom: .verticalMargin, right: .horizontalMargin)
 
         constraints.append(contentsOf: [
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .horizontalMargin),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -.horizontalMargin),
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .verticalMargin),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.verticalMargin),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         NSLayoutConstraint.activate(constraints)
     }
@@ -108,31 +86,3 @@ enum InputAction {
 }
 struct State {
 }
-
-// TODO: - make themeable
-// TODO: - make customizable (what buttons go where)
-import SwiftUI
-
-struct Content_Previews: PreviewProvider {
-    static var previews: some View {
-        ControllerView(AuthRootViewController(configuration: .init(
-            oauth: .init(providers: [.thirdParty(.google), .apple]),
-            input: .magicLink(sms: true)
-        )))
-    }
-}
-
-struct ControllerView<UIViewControllerType: UIViewController>: UIViewControllerRepresentable {
-    private let controller: UIViewControllerType
-
-    init(_ controller: UIViewControllerType) {
-        self.controller = controller
-    }
-
-    func makeUIViewController(context: Context) -> UIViewControllerType {
-        controller
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-}
-

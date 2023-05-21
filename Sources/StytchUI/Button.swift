@@ -79,4 +79,12 @@ extension Button {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         return button
     }
+
+    static func tertiary(title: String, onTap: @escaping () -> Void) -> Button {
+        let button = Button(type: .custom)
+        button.setTitleColor(.brand, for: .normal)
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        return button
+    }
 }

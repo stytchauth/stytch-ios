@@ -2,8 +2,8 @@ import StytchCore
 import UIKit
 
 public enum StytchUIClient {
-    public static func presentController(with configuration: Configuration, from controller: UIViewController) {
-        let authController = AuthRootViewController(configuration: configuration)
+    public static func presentController(with config: Configuration, from controller: UIViewController) {
+        let authController = AuthRootViewController(config: config)
         controller.present(authController, animated: true) // TODO: add callback for when auth is completed
     }
 }

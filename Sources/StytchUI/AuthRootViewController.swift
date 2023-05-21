@@ -2,10 +2,10 @@ import PhoneNumberKit
 import UIKit
 
 final class AuthRootViewController: UIViewController {
-    private let configuration: StytchUIClient.Configuration
+    private let config: StytchUIClient.Configuration
 
-    init(configuration: StytchUIClient.Configuration) {
-        self.configuration = configuration
+    init(config: StytchUIClient.Configuration) {
+        self.config = config
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -18,16 +18,16 @@ final class AuthRootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let homeController = AuthHomeViewController(configuration: configuration) { [weak self] action in
-            self?.handle(action: action)
-        }
+        let homeController = AuthHomeViewController(config: config) { $0 }
         let navigationController = UINavigationController(rootViewController: homeController)
 
         addChild(navigationController)
         view.addSubview(navigationController.view)
         navigationController.view.frame = view.bounds
     }
+}
 
+extension AuthRootViewController: ActionDelegate {
     func handle(action: AppAction) {
         switch action {
         case let .input(action):
