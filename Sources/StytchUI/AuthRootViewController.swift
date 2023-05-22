@@ -35,15 +35,15 @@ extension AuthRootViewController: ActionDelegate {
     func handle(action: AppAction) {
         switch action {
         case let .actionableInfo(action):
-            print(action)
+            handle(aiAction: action)
         case let .input(action):
             handle(inputAction: action)
         case let .oauth(action):
             handle(oauthAction: action)
         case let .otp(action):
-            print(action)
+            handle(otpAction: action)
         case let .password(action):
-            print(action)
+            handle(passwordAction: action)
         }
     }
 
@@ -91,6 +91,41 @@ extension AuthRootViewController: ActionDelegate {
         switch oauthAction {
         case let .didTap(provider):
             print(provider)
+        }
+    }
+
+    private func handle(passwordAction: PasswordVCAction) {
+        print(passwordAction)
+        switch passwordAction {
+        case let .didTapEmailLoginLink(email):
+            break
+        case let .didTapLogin(email, password):
+            break
+        case let .didTapSignup(email, password):
+            break
+        case let .didTapSetPassword(email, password):
+            break
+        case let .didTapForgotPassword(email):
+            break
+        }
+    }
+
+    private func handle(otpAction: OTPVCAction) {
+        switch otpAction {
+        case let .didTapResendCode(phone):
+            print(phone)
+        case let .didEnterCode(code, methodId):
+            print(code)
+        }
+    }
+
+    private func handle(aiAction: AIVCAction) {
+        print(aiAction)
+        switch aiAction {
+        case .didTapCreatePassword:
+            break
+        case .didTapLoginWithoutPassword:
+            break
         }
     }
 }
