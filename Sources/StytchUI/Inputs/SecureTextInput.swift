@@ -1,10 +1,14 @@
 import UIKit
 
 final class SecureTextInput: TextInputView<SecureTextField> {
+    private(set) lazy var progressBar: ProgressBar = .init()
+
     var text: String? { textInput.text }
 
     override func setUp() {
         textInput.addTarget(self, action: #selector(textDidChange(sender:)), for: .editingChanged)
+        supplementaryView = progressBar
+        progressBar.isHidden = true
     }
 
     @objc private func textDidChange(sender: UITextField) {

@@ -115,6 +115,10 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         emailInput.textInput.placeholder = nil
         forgotPasswordButton.setTitleColor(.secondary, for: .normal)
 
+        passwordInput.onTextChanged = { [weak self] isValid in
+            self?.continueButton.isEnabled = isValid
+        }
+
         attachStackView(within: view)
 
         stackView.addArrangedSubview(titleLabel)

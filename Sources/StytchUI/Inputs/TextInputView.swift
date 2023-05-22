@@ -39,6 +39,19 @@ class TextInputView<TextInput: TextInputType>: UIView {
         return view
     }()
 
+    var supplementaryView: UIView? {
+        didSet {
+            guard let supplementaryView else {
+                oldValue?.removeFromSuperview()
+                return
+            }
+
+            stackView.insertArrangedSubview(supplementaryView, at: 1)
+            stackView.setCustomSpacing(.spacingRegular, after: textInput)
+            stackView.setCustomSpacing(8, after: supplementaryView)
+        }
+    }
+
     private let feedbackLabel: UILabel = {
         let label = UILabel()
         label.textColor = .error
