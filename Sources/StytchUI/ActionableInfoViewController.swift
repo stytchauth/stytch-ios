@@ -87,7 +87,7 @@ struct AIVCState {
 
 enum AIVCAction {
     case didTapCreatePassword
-    case didTapLoginWithoutPassword
+    case didTapLoginWithoutPassword(email: String)
 }
 
 extension AIVCState {
@@ -144,7 +144,7 @@ extension AIVCState {
                 .string(.period)
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword)
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email))
         )
     }
 
@@ -157,7 +157,7 @@ extension AIVCState {
                 .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: ""))
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword)
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email))
         )
     }
 }

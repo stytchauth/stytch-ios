@@ -1,4 +1,5 @@
 import PhoneNumberKit
+import StytchCore
 import UIKit
 
 final class AuthRootViewController: UIViewController {
@@ -90,6 +91,24 @@ extension AuthRootViewController: ActionDelegate {
     private func handle(oauthAction: OAuthVCAction) {
         switch oauthAction {
         case let .didTap(provider):
+            switch provider {
+            case .apple:
+                Task {
+                    let result = try await StytchClient.oauth.apple.start(parameters: .init())
+                    // TODO: dismiss and pass back auth response
+                }
+            case let .thirdParty(provider):
+                Task {
+                    let (token, url) = try await provider.client.start(
+                        parameters: .init(
+                            loginRedirectUrl: .init(string: "")!,
+                            signupRedirectUrl: .init(string: "")!
+                        )
+                    )
+                    let result = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
+                    // TODO: dismiss, pass back auth response (and tell whether new/returning)
+                }
+            }
             print(provider)
         }
     }
@@ -98,7 +117,9 @@ extension AuthRootViewController: ActionDelegate {
         print(passwordAction)
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
-            break
+            // TODO: send login link
+            let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
+            navController?.pushViewController(controller, animated: true)
         case let .didTapLogin(email, password):
             break
         case let .didTapSignup(email, password):
@@ -106,13 +127,16 @@ extension AuthRootViewController: ActionDelegate {
         case let .didTapSetPassword(email, password):
             break
         case let .didTapForgotPassword(email):
-            break
+            // TODO: initiate pw reset
+            let controller = ActionableInfoViewController(state: .forgotPassword(email: email)) { .actionableInfo($0) }
+            navController?.pushViewController(controller, animated: true)
         }
     }
 
     private func handle(otpAction: OTPVCAction) {
         switch otpAction {
         case let .didTapResendCode(phone):
+            // TODO present alert, and update VC after send code confirmation is pressed
             print(phone)
         case let .didEnterCode(code, methodId):
             print(code)
@@ -124,8 +148,54 @@ extension AuthRootViewController: ActionDelegate {
         switch aiAction {
         case .didTapCreatePassword:
             break
-        case .didTapLoginWithoutPassword:
+        case let .didTapLoginWithoutPassword(email):
+            // TODO: send email
+            let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
+            navController?.pushViewController(controller, animated: true)
             break
+        }
+    }
+}
+
+private extension StytchClient.OAuth.ThirdParty.Provider {
+    var client: StytchClient.OAuth.ThirdParty {
+        switch self {
+        case .amazon:
+            return StytchClient.oauth.amazon
+        case .bitbucket:
+            return StytchClient.oauth.bitbucket
+        case .coinbase:
+            return StytchClient.oauth.coinbase
+        case .discord:
+            return StytchClient.oauth.discord
+        case .facebook:
+            return StytchClient.oauth.facebook
+        case .figma:
+            return StytchClient.oauth.figma
+        case .github:
+            return StytchClient.oauth.github
+        case .gitlab:
+            return StytchClient.oauth.gitlab
+        case .google:
+            return StytchClient.oauth.google
+        case .linkedin:
+            return StytchClient.oauth.linkedin
+        case .microsoft:
+            return StytchClient.oauth.microsoft
+        case .salesforce:
+            return StytchClient.oauth.salesforce
+        case .slack:
+            return StytchClient.oauth.slack
+        case .snapchat:
+            return StytchClient.oauth.snapchat
+        case .spotify:
+            return StytchClient.oauth.spotify
+        case .tiktok:
+            return StytchClient.oauth.tiktok
+        case .twitch:
+            return StytchClient.oauth.twitch
+        case .twitter:
+            return StytchClient.oauth.twitter
         }
     }
 }

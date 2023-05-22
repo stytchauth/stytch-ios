@@ -3,6 +3,7 @@ import UIKit
 
 public enum StytchUIClient {
     public static func presentController(with config: Configuration, from controller: UIViewController) {
+        StytchClient.configure(publicToken: config.publicToken)
         let authController = AuthRootViewController(config: config)
         controller.present(authController, animated: true) // TODO: add callback for when auth is completed
     }
@@ -10,6 +11,7 @@ public enum StytchUIClient {
 
 public extension StytchUIClient {
     struct Configuration {
+        let publicToken: String
         let oauth: OAuth?
         let input: Input?
 

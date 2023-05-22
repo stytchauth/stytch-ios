@@ -4,6 +4,7 @@ struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
+                publicToken: "",
                 oauth: .init(providers: [.thirdParty(.google), .apple, .thirdParty(.coinbase)]),
                 input: .magicLinkAndPassword(sms: true)
             )
