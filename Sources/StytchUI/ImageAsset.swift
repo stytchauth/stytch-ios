@@ -1,6 +1,7 @@
 import UIKit
 
 enum ImageAsset: String {
+    // FIXME: add image assets for all third-party providers
     case google
     case poweredByStytch
 
