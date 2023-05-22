@@ -1,6 +1,12 @@
 import UIKit
 
-final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Empty, InputAction> {
+enum AuthInputVCAction {
+    case didTapCountryCode(input: PhoneNumberInput)
+    case didTapContinueEmail(email: String)
+    case didTapContinuePhone(phone: String, formattedPhone: String)
+}
+
+final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Empty, AuthInputVCAction> {
     private enum Input {
         case email
         case phone
@@ -121,7 +127,12 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
         case .email:
             perform(action: .didTapContinueEmail(email: emailInput.text ?? ""))
         case .phone:
-            perform(action: .didTapContinuePhone(phone: phoneNumberInput.phoneNumberE164 ?? ""))
+            perform(
+                action: .didTapContinuePhone(
+                    phone: phoneNumberInput.phoneNumberE164 ?? "",
+                    formattedPhone: phoneNumberInput.formattedPhoneNumber ?? ""
+                )
+            )
         }
     }
 }

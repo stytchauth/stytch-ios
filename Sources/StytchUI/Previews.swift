@@ -4,38 +4,44 @@ struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
-                oauth: .init(providers: [.thirdParty(.google), .apple]),
-                input: .magicLink(sms: true)
+                oauth: .init(providers: [.thirdParty(.google), .apple, .thirdParty(.coinbase)]),
+                input: .magicLinkAndPassword(sms: true)
             )
         )
         .toControllerView()
         .previewDisplayName("Root")
 
 
-        ActionableInformationViewController(
+        ActionableInfoViewController(
             state: .forgotPassword(email: "dan@stytch.com")
 
-        ) { .oauth($0) }
+        ) { .actionableInfo($0) }
             .inNavigationController()
             .toControllerView()
             .previewDisplayName("AIVC")
 
-        if #available(iOS 15, *) {
-            PasswordViewController(
-                state: .init(
-                    intent: .signup,
-                    email: "dan.loman@gmail.com",
-                    magicLinksEnabled: true
-                )
-            ) { _ in .oauth(.didTap(provider: .apple)) }
-            //            state: .loaded(
-            //                .forgotPassword(email: "dan@stytch.com")
-            //            )
-            //        ) { .oauth($0) }
-                .inNavigationController()
-                .toControllerView()
-                .previewDisplayName("PW")
-        }
+        PasswordViewController(
+            state: .init(
+                intent: .enterNewPassword,
+                email: "dan.loman@gmail.com",
+                magicLinksEnabled: false
+            )
+        ) { .password($0) }
+            .inNavigationController()
+            .toControllerView()
+            .previewDisplayName("PW")
+
+        OTPCodeViewController(
+            state: .init(
+                phoneNumberE164: "888-888-8888",
+                formattedPhoneNumber: "(888) 888-8888",
+                methodId: "",
+                codeExpiry: .init().advanced(by: 120)
+            )
+        ) { .otp($0) }
+            .inNavigationController()
+            .toControllerView()
+            .previewDisplayName("OTP")
     }
 }
 

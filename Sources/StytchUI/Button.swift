@@ -43,9 +43,9 @@ class Button: UIButton {
 }
 
 extension Button {
-    static func secondary(image: ImageAsset, title: String, onTap: @escaping () -> Void) -> Button {
+    static func secondary(image asset: ImageAsset?, title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
-        button.setImage(image.image, for: .normal)
+        button.setImage(asset?.image, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.setInsets(
             forContentPadding: .zero,

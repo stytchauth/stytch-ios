@@ -1,23 +1,22 @@
 import StytchCore
 import UIKit
 
-// FIXME: - convert to BaseViewController
-final class OTPCodeViewController: UIViewController {
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .vertical
-        view.spacing = 24
-        return view
-    }()
+enum OTPVCAction {
+    case didTapResendCode(phone: String)
+    case didEnterCode(_ code: String, methodId: String)
+}
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.textColor = .label
-        label.text = NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
-        return label
-    }()
+struct OTPVCState {
+    let phoneNumberE164: String
+    let formattedPhoneNumber: String
+    let methodId: String
+    let codeExpiry: Date
+}
+
+final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAction> {
+    private let titleLabel: UILabel = .makeTitleLabel(
+        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
+    )
 
     private let phoneLabel: UILabel = {
         let label = UILabel()
@@ -28,14 +27,8 @@ final class OTPCodeViewController: UIViewController {
     }()
 
     private let codeField: UITextField = {
-        let field = UITextField()
-        field.layer.borderColor = UIColor.placeholder.cgColor
-        field.layer.borderWidth = 1
-        field.layer.cornerRadius = .cornerRadius
+        let field = BorderedTextField()
         field.textContentType = .oneTimeCode
-        let view = UIView(frame: .init(x: 0, y: 0, width: 10, height: 10))
-        field.leftView = view
-        field.leftViewMode = .always
         return field
     }()
 
@@ -47,18 +40,17 @@ final class OTPCodeViewController: UIViewController {
         return label
     }()
 
-    private let expiryButton: UIButton = {
-        let button = UIButton(type: .custom)
+    private lazy var expiryButton: Button = {
+        let button = Button.tertiary(
+            title: ""
+        ) { [weak self] in
+            guard let self else { return }
+            self.perform(action: .didTapResendCode(phone: self.state.phoneNumberE164))
+        }
         button.setTitleColor(.secondary, for: .normal)
         button.contentHorizontalAlignment = .leading
         button.titleLabel?.numberOfLines = 0
         return button
-    }()
-
-    private let poweredByStytch: UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(named: "PoweredByStytch")
-        return view
     }()
 
     private let dateFormatter: DateComponentsFormatter = {
@@ -69,41 +61,25 @@ final class OTPCodeViewController: UIViewController {
 
     private var timer: Timer?
 
-    private var methodId = ""
-
-    private var phoneNumberE164 = ""
-
-    private var codeExpiry = Date()
-
-    private var onAuthenticate: (AuthenticateResponse) -> Void = { _ in }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
+        stackView.spacing = 24
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(phoneLabel)
         stackView.addArrangedSubview(codeField)
         stackView.addArrangedSubview(errorLabel)
         stackView.addArrangedSubview(expiryButton)
-        stackView.addArrangedSubview(poweredByStytch)
-        let spacerView = UIView()
-        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
-        stackView.addArrangedSubview(spacerView)
+        stackView.addArrangedSubview(SpacerView())
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .horizontalMargin),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -.horizontalMargin),
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .verticalMargin),
-            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.verticalMargin),
-            codeField.heightAnchor.constraint(equalToConstant: 45),
-            codeField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            errorLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            expiryButton.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-        ])
+        stackView.setCustomSpacing(.spacingLarge, after: titleLabel)
+
+        attachStackView(within: view)
+
+        NSLayoutConstraint.activate(
+            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+        )
 
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: codeField, queue: .main) { [weak self] notification in
             self?.textChanged()
@@ -112,20 +88,10 @@ final class OTPCodeViewController: UIViewController {
         expiryButton.addTarget(self, action: #selector(resendCode), for: .touchUpInside)
     }
 
-    func configure(
-        phoneNumberE164: String,
-        formattedPhoneNumber: String,
-        methodId: String,
-        codeExpiry: Date,
-        onAuthenticate: @escaping (AuthenticateResponseType) -> Void
-    ) {
-        self.phoneNumberE164 = phoneNumberE164
-        self.methodId = methodId
-        self.codeExpiry = codeExpiry
-        self.onAuthenticate = onAuthenticate
+    override func stateDidUpdate(state: State) {
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
-            string: formattedPhoneNumber,
+            string: state.formattedPhoneNumber,
             attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
         )
         attributedText.append(attributedPhone)
@@ -141,22 +107,25 @@ final class OTPCodeViewController: UIViewController {
 
         guard let code = codeField.text, code.count == 6 else { return }
 
-        Task {
-            do {
-                let result = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
-                onAuthenticate(result)
-            } catch let error as StytchError where error.errorType == "otp_code_not_found" {
-                stackView.setCustomSpacing(2, after: codeField)
-                errorLabel.isHidden = false
-            }
-        }
+        perform(action: .didEnterCode(code, methodId: state.methodId))
+        // TODO: find way to communicate error back to this VC
+//
+//        Task {
+//            do {
+//                let result = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+//                onAuthenticate(result)
+//            } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+//                stackView.setCustomSpacing(2, after: codeField)
+//                errorLabel.isHidden = false
+//            }
+//        }
     }
 
     @objc private func updateExiryText() {
         guard
             case let currentDate = Date(),
-            codeExpiry > currentDate,
-            let dateString = dateFormatter.string(from: currentDate, to: codeExpiry)
+            state.codeExpiry > currentDate,
+            let dateString = dateFormatter.string(from: currentDate, to: state.codeExpiry)
         else {
             expiryButton.setAttributedTitle(
                 expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
@@ -167,21 +136,22 @@ final class OTPCodeViewController: UIViewController {
         }
 
         expiryButton.setAttributedTitle(
-            expiryAttributedText(initialSegment: .localizedStringWithFormat(NSLocalizedString("stytch.otpCodeExpiresIn", value: "Your code expires in %s.", comment: ""), dateString)),
+            expiryAttributedText(initialSegment: .localizedStringWithFormat(NSLocalizedString("stytch.otpCodeExpiresIn", value: "Your code expires in %@.", comment: ""), dateString)),
             for: .normal
         )
     }
 
     @objc private func resendCode() {
-        Task {
-            do {
-                codeExpiry = Date().addingTimeInterval(120)
-                let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumberE164), expiration: 2))
-                methodId = result.methodId
-            } catch {
-                print(error)
-            }
-        }
+        perform(action: .didTapResendCode(phone: state.phoneNumberE164)) // FIXME: perhaps this should be self contained, similar to pw strength check
+//        Task {
+//            do {
+//                codeExpiry = Date().addingTimeInterval(120)
+//                let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumberE164), expiration: 2))
+//                methodId = result.methodId
+//            } catch {
+//                print(error)
+//            }
+//        }
     }
 
     private func expiryAttributedText(initialSegment: String) -> NSAttributedString {

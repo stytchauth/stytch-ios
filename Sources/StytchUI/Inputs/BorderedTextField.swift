@@ -1,6 +1,10 @@
 import UIKit
 
 class BorderedTextField: UITextField {
+    override var intrinsicContentSize: CGSize {
+        .init(width: UIView.noIntrinsicMetric, height: .buttonHeight)
+    }
+
     var insets: UIEdgeInsets = .zero
 
     override init(frame: CGRect) {

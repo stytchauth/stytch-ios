@@ -41,6 +41,7 @@ class BaseViewController<_Config, _State, _Action>: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .systemBackground
         view.layoutMargins = .default
     }
 

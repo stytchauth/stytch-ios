@@ -5,13 +5,9 @@ import UIKit
 final class AuthHomeViewController: BaseViewController<StytchUIClient.Configuration, Empty, AppAction> {
     private let scrollView: UIScrollView = .init()
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.textColor = .label
-        label.text = NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
-        return label
-    }()
+    private let titleLabel: UILabel = .makeTitleLabel(
+        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
+    )
 
     private let separatorView: LabelSeparatorView = .orSeparator()
 
@@ -27,6 +23,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // TODO: make call to find out whether we should show powered by stytch (show loading before)
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
@@ -73,14 +70,9 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
     }
 }
 enum AppAction {
-    case oauth(OAuthAction)
-    case input(InputAction)
-}
-enum OAuthAction {
-    case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
-}
-enum InputAction {
-    case didTapCountryCode(input: PhoneNumberInput)
-    case didTapContinueEmail(email: String)
-    case didTapContinuePhone(phone: String)
+    case actionableInfo(AIVCAction)
+    case input(AuthInputVCAction)
+    case oauth(OAuthVCAction)
+    case otp(OTPVCAction)
+    case password(PasswordVCAction)
 }

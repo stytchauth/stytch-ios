@@ -1,13 +1,7 @@
 import UIKit
 
-final class ActionableInformationViewController: BaseViewController<Empty, AIVCState, OAuthAction> {
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 24, weight: .semibold) // FIXME: turn into reusable title font
-        label.textColor = .label
-        return label
-    }()
+final class ActionableInfoViewController: BaseViewController<Empty, AIVCState, AIVCAction> {
+    private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
         let label = UILabel()
@@ -88,9 +82,15 @@ struct AIVCState {
     let title: String
     let infoComponents: [AttrStringComponent]
     let actionComponents: [AttrStringComponent]
-    let secondaryAction: (title: String, action: () -> OAuthAction)?
+    let secondaryAction: (title: String, action: AIVCAction)?
 }
 
+enum AIVCAction {
+    case didTapCreatePassword
+    case didTapLoginWithoutPassword
+}
+
+// FIXME: localize
 extension AIVCState {
     static func forgotPassword(email: String) -> Self {
         .init(
@@ -115,7 +115,7 @@ extension AIVCState {
             title: "Check your email",
             infoComponents: ["A login link was sent to you at ", .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Create a password instead", { .didTap(provider: .apple) })
+            secondaryAction: ("Create a password instead", .didTapCreatePassword)
         )
     }
 
@@ -133,7 +133,7 @@ extension AIVCState {
             title: "Check your email to set a new password",
             infoComponents: ["We want to make sure your account is secure and that it’s really you logging in! A login link was sent to you at ", .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Login without a password", { .didTap(provider: .apple) })
+            secondaryAction: ("Login without a password", .didTapLoginWithoutPassword)
         )
     }
 
@@ -142,7 +142,7 @@ extension AIVCState {
             title: "Check your email to set a new password",
             infoComponents: ["A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", .bold(.string(email)), " to reset your password."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Login without a password", { .didTap(provider: .apple) })
+            secondaryAction: ("Login without a password", .didTapLoginWithoutPassword)
         )
     }
 }
