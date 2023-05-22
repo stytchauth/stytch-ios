@@ -52,7 +52,7 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        stackView.spacing = 24
+        stackView.spacing = .spacingLarge
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(phoneLabel)
@@ -60,7 +60,7 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         stackView.addArrangedSubview(expiryButton)
         stackView.addArrangedSubview(SpacerView())
 
-        stackView.setCustomSpacing(.spacingLarge, after: titleLabel)
+        stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
 
         attachStackView(within: view)
 

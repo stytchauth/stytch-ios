@@ -33,7 +33,7 @@ final class ActionableInfoViewController: BaseViewController<Empty, AIVCState, A
         super.viewDidLoad()
 
         view.layoutMargins = .init(top: .verticalMargin, left: .horizontalMargin, bottom: .verticalMargin, right: .horizontalMargin)
-        stackView.spacing = 32
+        stackView.spacing = .spacingHuge
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(infoLabel)
         stackView.addArrangedSubview(retryButton)

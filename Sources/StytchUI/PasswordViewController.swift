@@ -131,15 +131,15 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         stackView.addArrangedSubview(emailLoginCodeButton)
         stackView.addArrangedSubview(SpacerView())
 
-        stackView.setCustomSpacing(.spacingLarge, after: titleLabel)
-        stackView.setCustomSpacing(.spacingLarge, after: emailLoginLinkButton)
-        stackView.setCustomSpacing(.spacingLarge, after: upperSeparator)
-        stackView.setCustomSpacing(.spacingLarge, after: finishCreatingLabel)
-        stackView.setCustomSpacing(.spacingLarge, after: passwordInput)
+        stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
+        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkButton)
+        stackView.setCustomSpacing(.spacingHuge, after: upperSeparator)
+        stackView.setCustomSpacing(.spacingHuge, after: finishCreatingLabel)
+        stackView.setCustomSpacing(.spacingHuge, after: passwordInput)
         stackView.setCustomSpacing(.spacingTiny, after: emailInputLabel)
         stackView.setCustomSpacing(.spacingTiny, after: passwordInputLabel)
         [continueButton, forgotPasswordButton, lowerSeparator].forEach {
-            stackView.setCustomSpacing(38.5, after: $0)
+            stackView.setCustomSpacing(38, after: $0)
         }
 
         NSLayoutConstraint.activate(
