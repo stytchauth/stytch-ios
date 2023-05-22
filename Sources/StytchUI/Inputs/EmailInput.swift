@@ -6,7 +6,7 @@ final class EmailInput: TextInputView<EmailTextField> {
         set {
             textInput.isEnabled = newValue
             textInput.textColor = isEnabled ? .label : .disabled2
-            updateBorderColor()
+            update()
         }
     }
 

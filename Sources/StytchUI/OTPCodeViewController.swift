@@ -77,10 +77,13 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         }
         // FIXME: for error
         if false {
-            self.codeInput.setErrorText(NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
+            self.codeInput.setFeedback(
+                .error(
+                    NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
+                )
             )
         } else {
-            self.codeInput.setErrorText(nil)
+            self.codeInput.setFeedback(nil)
         }
 
         expiryButton.addTarget(self, action: #selector(resendCode), for: .touchUpInside)

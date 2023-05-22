@@ -7,6 +7,11 @@ protocol TextInputType: UIView {
 }
 
 class TextInputView<TextInput: TextInputType>: UIView {
+    enum Feedback {
+        case error(String)
+        case normal(String)
+    }
+
     var onTextChanged: (Bool) -> Void {
         get { _onTextChanged }
         set {
@@ -34,7 +39,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
         return view
     }()
 
-    private let errorLabel: UILabel = {
+    private let feedbackLabel: UILabel = {
         let label = UILabel()
         label.textColor = .error
         label.isHidden = true
@@ -42,13 +47,17 @@ class TextInputView<TextInput: TextInputType>: UIView {
     }()
 
     final override var intrinsicContentSize: CGSize {
-        stackView.systemLayoutSizeFitting(.init(width: bounds.width, height: .infinity))
+        stackView.systemLayoutSizeFitting(
+            .init(width: bounds.width, height: .infinity)
+        )
     }
+
+    private var feedback: Feedback?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         stackView.addArrangedSubview(textInput)
-        stackView.addArrangedSubview(errorLabel)
+        stackView.addArrangedSubview(feedbackLabel)
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
@@ -74,22 +83,31 @@ class TextInputView<TextInput: TextInputType>: UIView {
 
     func setUp() {}
 
-    final func setErrorText(_ text: String?) {
-        errorLabel.text = text
-        errorLabel.isHidden = text == nil
-        updateBorderColor()
+    final func setFeedback(_ feedback: Feedback?) {
+        self.feedback = feedback
+        switch feedback {
+        case let .error(text), let .normal(text):
+            feedbackLabel.text = text
+        case .none:
+            feedbackLabel.text = nil
+        }
+        feedbackLabel.isHidden = feedback == nil
+        update()
         invalidateIntrinsicContentSize()
     }
 
-    func updateBorderColor() {
+    func update() {
         let borderColor: UIColor
-        switch (errorLabel.isHidden, textInput.isEnabled) {
-        case (false, _):
+        switch (feedback, textInput.isEnabled) {
+        case (.error, _):
             borderColor = .error
-        case (true, true):
+            feedbackLabel.textColor = .error
+        case (_, true):
             borderColor = .placeholder
-        case (true, false):
+            feedbackLabel.textColor = .brand
+        case (_, false):
             borderColor = .lightBorder
+            feedbackLabel.textColor = .brand
         }
         textInput.fields.forEach { view in
             view.layer.borderColor = borderColor.cgColor

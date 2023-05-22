@@ -87,10 +87,12 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
 
             switch (self.phoneNumberInput.hasBeenValid, isValid) {
             case (_, true):
-                self.phoneNumberInput.setErrorText(nil)
+                self.phoneNumberInput.setFeedback(nil)
             case (true, false):
-                self.phoneNumberInput.setErrorText(
-                    NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
+                self.phoneNumberInput.setFeedback(
+                    .error(
+                        NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
+                    )
                 )
             case (false, false):
                 break
@@ -104,10 +106,12 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
 
             switch (self.emailInput.hasBeenValid, isValid) {
             case (_, true):
-                self.emailInput.setErrorText(nil)
+                self.emailInput.setFeedback(nil)
             case (true, false):
-                self.emailInput.setErrorText(
-                    NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
+                self.emailInput.setFeedback(
+                    .error(
+                        NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
+                    )
                 )
             case (false, false):
                 break
