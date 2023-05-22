@@ -160,22 +160,21 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         emailInput.isEnabled = true
         passwordInput.textInput.textContentType = .newPassword
 
-        // FIXME: localize
         switch state.intent {
         case .signup:
             if state.magicLinksEnabled {
-                titleLabel.text = "Choose how you would like to create your account."
+                titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
                 emailLoginLinkButton.isHidden = false
                 upperSeparator.isHidden = false
                 finishCreatingLabel.isHidden = false
             } else {
-                titleLabel.text = "Create account"
+                titleLabel.text = NSLocalizedString("stytch.pwCreateAccount", value: "Create account", comment: "")
             }
         case .enterNewPassword:
             emailInput.isEnabled = false
-            titleLabel.text = "Set a new password"
+            titleLabel.text = NSLocalizedString("stytch.pwSetNewPW", value: "Set a new password", comment: "")
         case .login:
-            titleLabel.text = "Log in"
+            titleLabel.text = NSLocalizedString("stytch.pwLogIn", value: "Log in", comment: "")
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false

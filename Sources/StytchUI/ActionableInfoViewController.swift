@@ -90,12 +90,15 @@ enum AIVCAction {
     case didTapLoginWithoutPassword
 }
 
-// FIXME: localize
 extension AIVCState {
     static func forgotPassword(email: String) -> Self {
         .init(
-            title: "Forgot password?",
-            infoComponents: ["A link to reset your password was sent to you at ", .bold(.string(email)), "."],
+            title: NSLocalizedString("stytch.aiForgotPW", value: "Forgot password?", comment: ""),
+            infoComponents: [
+                .string(NSLocalizedString("stytch.linkToResetPWSent", value: "A link to reset your password was sent to you at ", comment: "")),
+                .bold(.string(email)),
+
+            ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil
         )
@@ -103,8 +106,8 @@ extension AIVCState {
 
     static func checkYourEmail(email: String) -> Self {
         .init(
-            title: "Check your email",
-            infoComponents: ["A login link was sent to you at ", .bold(.string(email)), "."],
+            title: .checkEmail,
+            infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil
         )
@@ -112,17 +115,21 @@ extension AIVCState {
 
     static func checkYourEmailCreatePWInstead(email: String) -> Self {
         .init(
-            title: "Check your email",
-            infoComponents: ["A login link was sent to you at ", .bold(.string(email)), "."],
+            title: .checkEmail,
+            infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Create a password instead", .didTapCreatePassword)
+            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword)
         )
     }
 
     static func checkYourEmailReset(email: String) -> Self {
         .init(
-            title: "Check your email to set a new password",
-            infoComponents: ["A login link was sent to you at ", .bold(.string(email)), " to create a password for your account."],
+            title: .checkEmailForNewPW,
+            infoComponents: [
+                .string(.loginLinkSentToYou),
+                .bold(.string(email)),
+                .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: ""))
+            ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil
         )
@@ -130,25 +137,44 @@ extension AIVCState {
 
     static func checkYourEmailResetReturning(email: String) -> Self {
         .init(
-            title: "Check your email to set a new password",
-            infoComponents: ["We want to make sure your account is secure and that it’s really you logging in! A login link was sent to you at ", .bold(.string(email)), "."],
+            title: .checkEmailForNewPW,
+            infoComponents: [
+                .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in! A login link was sent to you at ", comment: "")),
+                .bold(.string(email)),
+                .string(.period)
+            ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Login without a password", .didTapLoginWithoutPassword)
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword)
         )
     }
 
     static func checkYourEmailResetBreached(email: String) -> Self {
         .init(
-            title: "Check your email to set a new password",
-            infoComponents: ["A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", .bold(.string(email)), " to reset your password."],
+            title: .checkEmailForNewPW,
+            infoComponents: [
+                .string(NSLocalizedString("stytch.aiPWBreach", value: "A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", comment: "")),
+                .bold(.string(email)),
+                .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: ""))
+            ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: ("Login without a password", .didTapLoginWithoutPassword)
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword)
         )
     }
 }
 
 extension [AttrStringComponent] {
     static var didntGetItResendEmail: Self {
-        ["Didn't get it? ", .bold("Resend email")]
+        [
+            .string(NSLocalizedString("stytch.aiDidntGetIt", value: "Didn't get it? ", comment: "")),
+            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: "")))
+        ]
     }
+}
+
+private extension String {
+    static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
+    static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
+    static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
+    static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
+    static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
 }
