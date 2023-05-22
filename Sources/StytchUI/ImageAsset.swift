@@ -1,12 +1,18 @@
+import StytchCore
 import UIKit
 
-enum ImageAsset: String {
-    // FIXME: add image assets for all third-party providers
-    case google
+enum ImageAsset {
+    case oauthIcon(StytchClient.OAuth.ThirdParty.Provider)
     case poweredByStytch
 
     var image: UIImage? {
-        .init(named: rawValue.lowercased(), in: .module, compatibleWith: nil)
+        let imageName: String
+        switch self {
+        case let .oauthIcon(provider):
+            imageName = provider.rawValue.lowercased()
+        case .poweredByStytch:
+            imageName = "poweredbystytch"
+        }
+        return .init(named: imageName, in: .module, compatibleWith: nil)
     }
 }
-

@@ -66,7 +66,7 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
 
 private extension StytchClient.OAuth.ThirdParty.Provider {
     var imageAsset: ImageAsset? {
-        .init(rawValue: rawValue)
+        .oauthIcon(self)
     }
 }
 
