@@ -1,3 +1,4 @@
+import StytchCore
 import UIKit
 
 struct PasswordVCState {
@@ -108,6 +109,8 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         self?.perform(action: .didTapEmailLoginLink(email: email))
     }
 
+    private var strengthCheckWorkItem: DispatchWorkItem?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -116,6 +119,7 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         forgotPasswordButton.setTitleColor(.secondary, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
+            self?.setNeedsStrengthCheck()
             self?.continueButton.isEnabled = isValid
         }
 
@@ -193,28 +197,47 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         passwordInput.textInput.isSecureTextEntry.toggle()
     }
 
-//    private func checkStrength() {
-//        guard let password = passwordTextField.text, !password.isEmpty else { return }
-//
-//        if let email = emailTextField.text, !email.isEmpty {
-//            defaults.set(email, forKey: Constants.emailDefaultsKey)
-//        }
-//
-//        Task {
-//            do {
-//                let response = try await passwordClient.strengthCheck(parameters: .init(email: emailTextField.text, password: password))
-//                presentAlert(message: try encodeToJson(response))
-//            } catch {
+    private func setNeedsStrengthCheck() {
+        guard passwordInput.isValid else {
+            passwordInput.supplementaryView?.isHidden = true
+            passwordInput.setFeedback(nil)
+            return
+        }
+        strengthCheckWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.checkStrength()
+        }
+
+        strengthCheckWorkItem = workItem
+
+        DispatchQueue.global().asyncAfter(
+            deadline: .now().advanced(by: .milliseconds(250)),
+            execute: workItem
+        )
+    }
+
+    private func checkStrength() {
+        guard let password = passwordInput.text, !password.isEmpty else { return }
+
+        Task { @MainActor in
+            do {
+//                let response = StytchClient.Passwords.StrengthCheckResponse(requestId: "", statusCode: 200, wrapped: .init(validPassword: true, score: 4, breachedPassword: false, feedback: .init(suggestions: [], warning: "")))
+
+                let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: emailInput.text, password: password))
+//                DispatchQueue.main.async {
+                if let warning = response.feedback?.warning, !warning.isEmpty {
+                    passwordInput.setFeedback(.error(warning))
+                } else if let feedback = response.feedback?.suggestions.first {
+                    passwordInput.setFeedback(.normal(feedback))
+                }
+                passwordInput.progressBar.isHidden = false
+                passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
+//                }
+            } catch {
 //                print(error)
-//            }
-//        }
-//    }
-//
-//    private func presentAlert(message: String) {
-//        DispatchQueue.main.async {
-//            let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-//            controller.addAction(.init(title: "OK", style: .default))
-//            self.present(controller, animated: true)
-//        }
-//    }
+            }
+        }
+
+    }
 }

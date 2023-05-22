@@ -204,7 +204,7 @@ public extension StytchClient.Passwords {
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
         public let breachedPassword: Bool
-        public let feedback: Feedback
+        public let feedback: Feedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
         public struct Feedback: Codable {
