@@ -2,8 +2,8 @@ import StytchCore
 import UIKit
 
 enum OTPVCAction {
-    case didTapResendCode(phone: String)
-    case didEnterCode(_ code: String, methodId: String)
+    case didTapResendCode(phone: String, controller: OTPCodeViewController)
+    case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
 }
 
 struct OTPVCState {
@@ -32,8 +32,7 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         let button = Button.tertiary(
             title: ""
         ) { [weak self] in
-            guard let self else { return }
-            self.perform(action: .didTapResendCode(phone: self.state.phoneNumberE164))
+            self?.presentCodeResetConfirmation()
         }
         button.setTitleColor(.secondary, for: .normal)
         button.contentHorizontalAlignment = .leading
@@ -71,22 +70,9 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         codeInput.onTextChanged = { [weak self] isValid in
             guard let self, let code = self.codeInput.text, code.count == 6 else { return }
 
-            self.perform(action: .didEnterCode(code, methodId: state.methodId))
-            // TODO: find way to communicate error back to this VC
+            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
 
         }
-        // FIXME: for error
-        if false {
-            self.codeInput.setFeedback(
-                .error(
-                    NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
-                )
-            )
-        } else {
-            self.codeInput.setFeedback(nil)
-        }
-
-        expiryButton.addTarget(self, action: #selector(resendCode), for: .touchUpInside)
     }
 
     override func stateDidUpdate(state: State) {
@@ -100,6 +86,14 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         phoneLabel.attributedText = attributedText
         updateExiryText()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExiryText), userInfo: nil, repeats: true)
+    }
+
+    func showInvalidCode() {
+        codeInput.setFeedback(
+            .error(
+                NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
+            )
+        )
     }
 
 //        Task {
@@ -132,17 +126,23 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         )
     }
 
-    @objc private func resendCode() {
-        perform(action: .didTapResendCode(phone: state.phoneNumberE164)) // FIXME: perhaps this should be self contained, similar to pw strength check
-//        Task {
-//            do {
-//                codeExpiry = Date().addingTimeInterval(120)
-//                let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumberE164), expiration: 2))
-//                methodId = result.methodId
-//            } catch {
-//                print(error)
-//            }
-//        }
+    private func resendCode() {
+        perform(action: .didTapResendCode(phone: state.phoneNumberE164, controller: self))
+    }
+
+    private func presentCodeResetConfirmation() {
+        let controller = UIAlertController(
+            title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
+            message: .localizedStringWithFormat(
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), state.formattedPhoneNumber),
+            preferredStyle: .alert
+        )
+        controller.addAction(.init(title: NSLocalizedString("stytch.otpCancel", value: "Cancel", comment: ""), style: .default))
+        controller.addAction(.init(title: NSLocalizedString("stytch.otpConfirm", value: "Send code", comment: ""), style: .default) { [weak self] _ in
+            self?.resendCode()
+        })
+        controller.view.tintColor = .label
+        present(controller, animated: true)
     }
 
     private func expiryAttributedText(initialSegment: String) -> NSAttributedString {

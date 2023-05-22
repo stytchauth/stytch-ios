@@ -56,7 +56,7 @@ extension AuthRootViewController: ActionDelegate {
             case .magicLinkAndPassword:
                 // TODO: check if user is new/returning
                 let controller = PasswordViewController(
-                    state: .init(intent: .login, email: email, magicLinksEnabled: false)) { .password($0) }
+                    state: .init(intent: .login, email: email, magicLinksEnabled: true)) { .password($0) }
                 navController?.pushViewController(controller, animated: true)
             case .password:
                 // TODO: check if user is new/returning
@@ -64,22 +64,37 @@ extension AuthRootViewController: ActionDelegate {
                     state: .init(intent: .login, email: email, magicLinksEnabled: false)) { .password($0) }
                 navController?.pushViewController(controller, animated: true)
             case .magicLink:
-                // TODO: fire off magic link and push actionable info
-                break
+                Task { @MainActor in
+                    do {
+                        _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: email)) // FIXME: should take in magic link urls as part of config
+                        // FIXME: need to handle deeplinks
+                        let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
+                        navController?.pushViewController(controller, animated: true)
+                    } catch {
+                        
+                    }
+                }
             case .smsOnly, .none:
                 break
             }
         case let .didTapContinuePhone(phone, formattedPhone):
-            // TODO: fire off sms otp request
-            let controller = OTPCodeViewController(
-                state: .init(
-                    phoneNumberE164: phone,
-                    formattedPhoneNumber: formattedPhone,
-                    methodId: "", // TODO: get methodID from request
-                    codeExpiry: .init() // TODO: derive this value from the request
-                )
-            ) { .otp($0) }
-            navController?.pushViewController(controller, animated: true)
+            Task { @MainActor in
+                do {
+                    let expiry = Date().addingTimeInterval(120)
+                    let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
+                    let controller = OTPCodeViewController(
+                        state: .init(
+                            phoneNumberE164: phone,
+                            formattedPhoneNumber: formattedPhone,
+                            methodId: result.methodId,
+                            codeExpiry: expiry
+                        )
+                    ) { .otp($0) }
+                    navController?.pushViewController(controller, animated: true)
+                } catch {
+
+                }
+            }
         case let .didTapCountryCode(input):
             let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit)
             countryPickerViewController.delegate = input
@@ -103,7 +118,7 @@ extension AuthRootViewController: ActionDelegate {
                         parameters: .init(
                             loginRedirectUrl: .init(string: "")!,
                             signupRedirectUrl: .init(string: "")!
-                        )
+                        ) // FIXME: use real redirect url
                     )
                     let result = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
                     // TODO: dismiss, pass back auth response (and tell whether new/returning)
@@ -117,10 +132,17 @@ extension AuthRootViewController: ActionDelegate {
         print(passwordAction)
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
-            // TODO: send login link
-            let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
-            navController?.pushViewController(controller, animated: true)
+            Task { @MainActor in
+                do {
+                    _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: email)) // FIXME: use redirect urls from config
+                    let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
+                    navController?.pushViewController(controller, animated: true)
+                } catch {
+
+                }
+            }
         case let .didTapLogin(email, password):
+
             break
         case let .didTapSignup(email, password):
             break
@@ -135,11 +157,30 @@ extension AuthRootViewController: ActionDelegate {
 
     private func handle(otpAction: OTPVCAction) {
         switch otpAction {
-        case let .didTapResendCode(phone):
-            // TODO present alert, and update VC after send code confirmation is pressed
-            print(phone)
-        case let .didEnterCode(code, methodId):
-            print(code)
+        case let .didTapResendCode(phone, controller):
+            Task { @MainActor in
+                do {
+                    let expiry = Date().addingTimeInterval(120)
+                    let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
+                    controller.state = .init(
+                        phoneNumberE164: phone,
+                        formattedPhoneNumber: controller.state.formattedPhoneNumber,
+                        methodId: result.methodId,
+                        codeExpiry: expiry
+                    )
+                } catch {
+
+                }
+            }
+        case let .didEnterCode(code, methodId, controller):
+            Task { @MainActor in
+                do {
+                    let result = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+                    // TODO: dismiss, pass back auth response (and tell whether new/returning)
+                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                    controller.showInvalidCode()
+                }
+            }
         }
     }
 

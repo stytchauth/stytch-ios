@@ -71,6 +71,7 @@ extension Button {
 
     static func primary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
+        button.onTap = onTap
         button.setBackgroundImage(UIColor.disabled.image(), for: .disabled)
         button.setBackgroundImage(UIColor.brand.image(), for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -82,6 +83,7 @@ extension Button {
 
     static func tertiary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
+        button.onTap = onTap
         button.setTitleColor(.brand, for: .normal)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)

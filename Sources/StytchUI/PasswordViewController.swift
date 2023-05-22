@@ -13,7 +13,6 @@ struct PasswordVCState {
 }
 
 enum PasswordVCAction {
-//    case checkPasswordStrength(email: String, password: String) // FIXME: just make strength call directly in this VC since it's all self contained
     case didTapEmailLoginLink(email: String)
     case didTapLogin(email: String, password: String)
     case didTapSignup(email: String, password: String)
@@ -217,6 +216,7 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
         )
     }
 
+    // TODO: manage this dependency better in the future
     private func checkStrength() {
         guard let password = passwordInput.text, !password.isEmpty else { return }
 
