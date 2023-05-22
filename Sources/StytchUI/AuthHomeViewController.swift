@@ -18,7 +18,8 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
     }()
 
     private var showOrSeparator: Bool {
-        config.oauth != nil && config.input != nil
+        guard let oauthConfig = config.oauth, !oauthConfig.providers.isEmpty else { return false }
+        return config.input != nil
     }
 
     override func viewDidLoad() {
@@ -27,7 +28,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let oauthConfig = config.oauth {
+        if let oauthConfig = config.oauth, !oauthConfig.providers.isEmpty {
             let oauthController = OAuthViewController(oauthConfig) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
