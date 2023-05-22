@@ -26,19 +26,7 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         return label
     }()
 
-    private let codeField: UITextField = {
-        let field = BorderedTextField()
-        field.textContentType = .oneTimeCode
-        return field
-    }()
-
-    private let errorLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .error
-        label.text = NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
-        label.isHidden = true
-        return label
-    }()
+    private let codeInput: CodeInput = .init()
 
     private lazy var expiryButton: Button = {
         let button = Button.tertiary(
@@ -68,8 +56,7 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(phoneLabel)
-        stackView.addArrangedSubview(codeField)
-        stackView.addArrangedSubview(errorLabel)
+        stackView.addArrangedSubview(codeInput)
         stackView.addArrangedSubview(expiryButton)
         stackView.addArrangedSubview(SpacerView())
 
@@ -81,8 +68,19 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: codeField, queue: .main) { [weak self] notification in
-            self?.textChanged()
+        codeInput.onTextChanged = { [weak self] isValid in
+            guard let self, let code = self.codeInput.text, code.count == 6 else { return }
+
+            self.perform(action: .didEnterCode(code, methodId: state.methodId))
+            // TODO: find way to communicate error back to this VC
+
+        }
+        // FIXME: for error
+        if false {
+            self.codeInput.setErrorText(NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
+            )
+        } else {
+            self.codeInput.setErrorText(nil)
         }
 
         expiryButton.addTarget(self, action: #selector(resendCode), for: .touchUpInside)
@@ -101,15 +99,6 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExiryText), userInfo: nil, repeats: true)
     }
 
-    private func textChanged() {
-        errorLabel.isHidden = true
-        stackView.setCustomSpacing(stackView.spacing, after: codeField)
-
-        guard let code = codeField.text, code.count == 6 else { return }
-
-        perform(action: .didEnterCode(code, methodId: state.methodId))
-        // TODO: find way to communicate error back to this VC
-//
 //        Task {
 //            do {
 //                let result = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
@@ -119,7 +108,6 @@ final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAc
 //                errorLabel.isHidden = false
 //            }
 //        }
-    }
 
     @objc private func updateExiryText() {
         guard

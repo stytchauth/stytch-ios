@@ -9,6 +9,7 @@ final class EmailInput: TextInputView<EmailTextField> {
             updateBorderColor()
         }
     }
+
     var text: String? { textInput.text }
 
     override func setUp() {
