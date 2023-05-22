@@ -6,7 +6,7 @@ struct StytchUI_Previews: PreviewProvider {
             config: .init(
                 publicToken: "",
                 oauth: .init(providers: [.thirdParty(.google), .apple, .thirdParty(.coinbase)]),
-                input: .magicLinkAndPassword(sms: true)
+                input: .magicLink(sms: true)
             )
         )
         .toControllerView()
@@ -23,7 +23,7 @@ struct StytchUI_Previews: PreviewProvider {
 
         PasswordViewController(
             state: .init(
-                intent: .enterNewPassword,
+                intent: .enterNewPassword(token: ""),
                 email: "dan.loman@gmail.com",
                 magicLinksEnabled: false
             )

@@ -142,16 +142,42 @@ extension AuthRootViewController: ActionDelegate {
                 }
             }
         case let .didTapLogin(email, password):
+            Task { @MainActor in
+                do {
+                    let response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password))
+                    // TODO: dismiss, pass back auth response (and tell whether new/returning)
+                } catch {
 
-            break
+                }
+            }
         case let .didTapSignup(email, password):
-            break
-        case let .didTapSetPassword(email, password):
-            break
+            Task { @MainActor in
+                do {
+                    let response = try await StytchClient.passwords.create(parameters: .init(email: email, password: password))
+                    // TODO: dismiss, pass back auth response (and tell whether new/returning)
+                } catch {
+
+                }
+            }
+        case let .didTapSetPassword(token, password):
+            Task { @MainActor in
+                do {
+                    let response = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password))
+                    // TODO: dismiss, pass back auth response (and tell whether new/returning)
+                } catch {
+
+                }
+            }
         case let .didTapForgotPassword(email):
-            // TODO: initiate pw reset
-            let controller = ActionableInfoViewController(state: .forgotPassword(email: email)) { .actionableInfo($0) }
-            navController?.pushViewController(controller, animated: true)
+            Task { @MainActor in
+                do {
+                    _ = try await StytchClient.passwords.resetByEmailStart(parameters: .init(email: email)) // FIXME: use redirect urls from config
+                    let controller = ActionableInfoViewController(state: .forgotPassword(email: email)) { .actionableInfo($0) }
+                    navController?.pushViewController(controller, animated: true)
+                } catch {
+
+                }
+            }
         }
     }
 
@@ -187,13 +213,26 @@ extension AuthRootViewController: ActionDelegate {
     private func handle(aiAction: AIVCAction) {
         print(aiAction)
         switch aiAction {
-        case .didTapCreatePassword:
-            break
+        case let .didTapCreatePassword(email):
+            Task { @MainActor in
+                do {
+                    _ = try await StytchClient.passwords.resetByEmailStart(parameters: .init(email: email)) // FIXME: use other redirect urls
+                    let controller = ActionableInfoViewController(state: .checkYourEmailReset(email: email)) { .actionableInfo($0) }
+                    navController?.pushViewController(controller, animated: true)
+                } catch {
+
+                }
+            }
         case let .didTapLoginWithoutPassword(email):
-            // TODO: send email
-            let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
-            navController?.pushViewController(controller, animated: true)
-            break
+            Task { @MainActor in
+                do {
+                    _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: .init(email: email)) // FIXME: grab redirect urls
+                    let controller = ActionableInfoViewController(state: .checkYourEmail(email: email)) { .actionableInfo($0) }
+                    navController?.pushViewController(controller, animated: true)
+                } catch {
+
+                }
+            }
         }
     }
 }

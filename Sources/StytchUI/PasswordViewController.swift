@@ -5,7 +5,7 @@ struct PasswordVCState {
     enum Intent {
         case signup
         case login
-        case enterNewPassword
+        case enterNewPassword(token: String)
     }
     let intent: Intent
     let email: String
@@ -16,7 +16,7 @@ enum PasswordVCAction {
     case didTapEmailLoginLink(email: String)
     case didTapLogin(email: String, password: String)
     case didTapSignup(email: String, password: String)
-    case didTapSetPassword(email: String, password: String)
+    case didTapSetPassword(token: String, password: String)
     case didTapForgotPassword(email: String)
 }
 
@@ -83,8 +83,8 @@ final class PasswordViewController: BaseViewController<Empty, PasswordVCState, P
     ) { [weak self] in
         guard let self, let email = self.emailInput.text, let password = self.passwordInput.text else { return }
         switch state.intent {
-        case .enterNewPassword:
-            self.perform(action: .didTapSetPassword(email: email, password: password))
+        case let .enterNewPassword(token):
+            self.perform(action: .didTapSetPassword(token: token, password: password))
         case .login:
             self.perform(action: .didTapLogin(email: email, password: password))
         case .signup:

@@ -86,7 +86,7 @@ struct AIVCState {
 }
 
 enum AIVCAction {
-    case didTapCreatePassword
+    case didTapCreatePassword(email: String)
     case didTapLoginWithoutPassword(email: String)
 }
 
@@ -118,7 +118,7 @@ extension AIVCState {
             title: .checkEmail,
             infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword)
+            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword(email: email))
         )
     }
 
@@ -135,6 +135,7 @@ extension AIVCState {
         )
     }
 
+    // TODO: determine how to know when to show this (should be after a returning user w/ password logs in via magic link, but what tells us that password was breached). maybe in loginOrCreate response or authenticate response
     static func checkYourEmailResetReturning(email: String) -> Self {
         .init(
             title: .checkEmailForNewPW,
