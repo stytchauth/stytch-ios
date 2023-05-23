@@ -91,8 +91,16 @@ struct AuthenticationOptionsView: View {
             isPresented: $authPresented,
             config: .init(
                 publicToken: configuration.publicToken,
-                oauth: .init(providers: [.apple, .thirdParty(.google)]),
-                input: .magicLinkAndPassword(sms: true)
+                products: [
+                    .oauth(.init(
+                        providers: [.apple, .thirdParty(.google)],
+                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                    )),
+                    .magicLink(),
+                    .password(),
+                    .sms()
+                ]
             )
         )
     }

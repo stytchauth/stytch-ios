@@ -6,7 +6,7 @@ enum AuthInputVCAction {
     case didTapContinuePhone(phone: String, formattedPhone: String)
 }
 
-final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, AuthInputVCAction> {
+final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration, AuthInputVCAction> {
     private enum Input {
         case email
         case phone
@@ -53,9 +53,11 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
 
         view.layoutMargins = .zero
 
-        switch state {
-        case let .magicLink(sms), let .password(sms), let .magicLinkAndPassword(sms):
-            if sms {
+        if state.sms != nil, state.magicLink == nil, state.password == nil {
+            stackView.addArrangedSubview(phoneNumberInput)
+            activeInput = .phone
+        } else {
+            if state.sms != nil {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
                 stackView.addArrangedSubview(segmentedControl)
 
@@ -63,9 +65,6 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
             }
             stackView.addArrangedSubview(emailInput)
             activeInput = .email
-        case .smsOnly:
-            stackView.addArrangedSubview(phoneNumberInput)
-            activeInput = .phone
         }
         stackView.addArrangedSubview(continueButton)
 

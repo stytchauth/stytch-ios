@@ -168,7 +168,6 @@ extension AIVCState {
         )
     }
 
-    // TODO: determine how to know when to show this (should be after a returning user w/ password logs in via magic link, but what tells us that password was breached). maybe in loginOrCreate response or authenticate response
     static func checkYourEmailResetReturning(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
             email: email,

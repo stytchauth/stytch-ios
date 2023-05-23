@@ -18,8 +18,17 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
     }()
 
     private var showOrSeparator: Bool {
-        guard let oauthConfig = state.config.oauth, !oauthConfig.providers.isEmpty else { return false }
-        return state.config.input != nil
+        state.config.products.contains { product in
+            guard case let .oauth(config) = product else { return false}
+            return !config.providers.isEmpty
+        } && state.config.products.contains { product in
+            switch product {
+            case .magicLink, .password, .sms:
+                return true
+            case .oauth:
+                return false
+            }
+        }
     }
 
     override func viewDidLoad() {
@@ -41,8 +50,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let oauthConfig = state.config.oauth, !oauthConfig.providers.isEmpty {
-            let oauthController = OAuthViewController(state: oauthConfig) { .oauth($0) }
+        if let config = state.config.oauth, !config.providers.isEmpty {
+            let oauthController = OAuthViewController(state: config) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
@@ -51,8 +60,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
             stackView.addArrangedSubview(separatorView)
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if let inputConfig = state.config.input {
-            let inputController = AuthInputViewController(state: inputConfig) { .input($0) }
+        if state.config.inputProductsEnabled {
+            let inputController = AuthInputViewController(state: state.config) { .input($0) }
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
