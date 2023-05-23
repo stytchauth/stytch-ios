@@ -13,11 +13,10 @@ final class EmailInput: TextInputView<EmailTextField> {
     var text: String? { textInput.text }
 
     override func setUp() {
-        textInput.addTarget(self, action: #selector(textDidChange(sender:)), for: .editingChanged)
-    }
-
-    @objc private func textDidChange(sender: UITextField) {
-        onTextChanged(isValid)
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] notification in
+            guard let self else { return }
+            self.onTextChanged(self.isValid)
+        }
     }
 }
 

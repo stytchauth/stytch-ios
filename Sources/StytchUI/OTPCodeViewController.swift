@@ -68,10 +68,15 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         )
 
         codeInput.onTextChanged = { [weak self] isValid in
-            guard let self, let code = self.codeInput.text, code.count == 6 else { return }
+            guard let self, let code = self.codeInput.text, isValid else { return }
 
             self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
+        }
 
+        codeInput.onReturn = { [weak self] isValid in
+            guard let self, let code = self.codeInput.text, isValid else { return }
+
+            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
         }
     }
 

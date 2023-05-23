@@ -59,7 +59,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
         let button = UIButton(type: .system)
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18)
-        button.contentEdgeInsets = .init(top: 0, left: 14, bottom: 0, right: 14)
+        button.contentEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
         button.layer.borderColor = UIColor.placeholder.cgColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = .cornerRadius

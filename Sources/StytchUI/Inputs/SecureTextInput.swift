@@ -6,13 +6,12 @@ final class SecureTextInput: TextInputView<SecureTextField> {
     var text: String? { textInput.text }
 
     override func setUp() {
-        textInput.addTarget(self, action: #selector(textDidChange(sender:)), for: .editingChanged)
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] notification in
+            guard let self else { return }
+            self.onTextChanged(self.isValid)
+        }
         supplementaryView = progressBar
         progressBar.isHidden = true
-    }
-
-    @objc private func textDidChange(sender: UITextField) {
-        onTextChanged(isValid)
     }
 }
 
