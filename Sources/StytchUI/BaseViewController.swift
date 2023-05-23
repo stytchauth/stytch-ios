@@ -41,16 +41,26 @@ class BaseViewController<_State, _Action>: UIViewController {
         view.layoutMargins = .default
     }
 
-    final func attachStackView(within superview: UIView) {
+    final func attachStackView(within superview: UIView, usingLayoutMarginsGuide: Bool = true) {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         superview.addSubview(stackView)
-        NSLayoutConstraint.activate([
-            stackView.widthAnchor.constraint(equalTo: superview.layoutMarginsGuide.widthAnchor),
-            stackView.leadingAnchor.constraint(equalTo: superview.layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: superview.layoutMarginsGuide.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor),
-        ])
+        if usingLayoutMarginsGuide {
+            NSLayoutConstraint.activate([
+                stackView.widthAnchor.constraint(equalTo: superview.layoutMarginsGuide.widthAnchor),
+                stackView.leadingAnchor.constraint(equalTo: superview.layoutMarginsGuide.leadingAnchor),
+                stackView.trailingAnchor.constraint(equalTo: superview.layoutMarginsGuide.trailingAnchor),
+                stackView.topAnchor.constraint(equalTo: superview.layoutMarginsGuide.topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: superview.layoutMarginsGuide.bottomAnchor),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                stackView.widthAnchor.constraint(equalTo: superview.widthAnchor),
+                stackView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+                stackView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+                stackView.topAnchor.constraint(equalTo: superview.topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
+            ])
+        }
     }
 
     final func perform(action: Action) {
@@ -77,7 +87,7 @@ extension UIResponder {
 }
 
 extension BaseViewController where State == Empty {
-    convenience init(state: State = .init(), actionTransformer: @escaping (Action) -> AuthHomeAction) {
+    convenience init(_ state: State = .init(), actionTransformer: @escaping (Action) -> AuthHomeAction) {
         self.init(state: state, actionTransformer: actionTransformer)
     }
 }

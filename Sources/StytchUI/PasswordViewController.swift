@@ -227,16 +227,12 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         )
     }
 
-    // TODO: manage this dependency better in the future
     private func checkStrength() {
         guard let password = passwordInput.text, !password.isEmpty else { return }
 
         Task { @MainActor in
             do {
-//                let response = StytchClient.Passwords.StrengthCheckResponse(requestId: "", statusCode: 200, wrapped: .init(validPassword: true, score: 4, breachedPassword: false, feedback: .init(suggestions: [], warning: "")))
-
                 let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: emailInput.text, password: password))
-//                DispatchQueue.main.async {
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {
@@ -244,14 +240,11 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
                 } else {
                     passwordInput.setFeedback(nil)
                 }
-                passwordInput.progressBar.isHidden = false
                 passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
-//                }
             } catch {
-//                print(error)
+                presentAlert(error: error)
             }
         }
-
     }
 }
 

@@ -24,7 +24,20 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // TODO: make call to find out whether we should show powered by stytch (show loading before)
+
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
@@ -32,10 +45,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
             let oauthController = OAuthViewController(state: oauthConfig) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
-            constraints.append(contentsOf: [
-                oauthController.view.leadingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.leadingAnchor),
-                oauthController.view.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
-            ])
+            constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
         if showOrSeparator {
             stackView.addArrangedSubview(separatorView)
@@ -45,29 +55,24 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
             let inputController = AuthInputViewController(state: inputConfig) { .input($0) }
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
-            constraints.append(contentsOf: [
-                inputController.view.leadingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.leadingAnchor),
-                inputController.view.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
-            ])
+            constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
         if !state.bootstrap.disableSdkWatermark {
             stackView.addArrangedSubview(poweredByStytch)
         }
         stackView.addArrangedSubview(SpacerView())
 
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
-        attachStackView(within: scrollView)
-
-        scrollView.layoutMargins = .init(top: .verticalMargin, left: .horizontalMargin, bottom: .verticalMargin, right: .horizontalMargin)
-
-        constraints.append(contentsOf: [
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        ])
         NSLayoutConstraint.activate(constraints)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 }
 
