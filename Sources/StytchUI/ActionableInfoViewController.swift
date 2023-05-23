@@ -32,6 +32,9 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        retryButton.addTarget(self, action: #selector(didTapRetry(sender:)), for: .touchUpInside)
+        secondaryActionButton.addTarget(self, action: #selector(didTapSecondaryAction(sender:)), for: .touchUpInside)
+
         view.layoutMargins = .init(top: .verticalMargin, left: .horizontalMargin, bottom: .verticalMargin, right: .horizontalMargin)
         stackView.spacing = .spacingHuge
         stackView.addArrangedSubview(titleLabel)
@@ -61,6 +64,26 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         retryButton.setAttributedTitle(action, for: .normal)
     }
 
+    @objc private func didTapRetry(sender: UIButton) {
+        let controller = UIAlertController(
+            title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
+            message: .localizedStringWithFormat(
+                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), state.email),
+            preferredStyle: .alert
+        )
+        controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
+        controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
+            self?.state.retryAction()
+        })
+        controller.view.tintColor = .label
+        present(controller, animated: true)
+    }
+
+    @objc private func didTapSecondaryAction(sender: UIButton) {
+        guard let (_, action) = state.secondaryAction else { return }
+        perform(action: action)
+    }
+
     private func attrStrings(state: AIVCState) -> (info: NSAttributedString, action: NSAttributedString) {
         let transformer: ([AttrStringComponent]) -> NSAttributedString = { components in
             components.reduce(into: NSMutableAttributedString(string: "")) { partial, next in
@@ -79,10 +102,12 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
 }
 
 struct AIVCState {
+    let email: String
     let title: String
     let infoComponents: [AttrStringComponent]
     let actionComponents: [AttrStringComponent]
     let secondaryAction: (title: String, action: AIVCAction)?
+    let retryAction: () -> Void
 }
 
 enum AIVCAction {
@@ -91,8 +116,9 @@ enum AIVCAction {
 }
 
 extension AIVCState {
-    static func forgotPassword(email: String) -> Self {
+    static func forgotPassword(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: NSLocalizedString("stytch.aiForgotPW", value: "Forgot password?", comment: ""),
             infoComponents: [
                 .string(NSLocalizedString("stytch.linkToResetPWSent", value: "A link to reset your password was sent to you at ", comment: "")),
@@ -100,30 +126,36 @@ extension AIVCState {
 
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil
+            secondaryAction: nil,
+            retryAction: retryAction
         )
     }
 
-    static func checkYourEmail(email: String) -> Self {
+    static func checkYourEmail(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: .checkEmail,
             infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil
+            secondaryAction: nil,
+            retryAction: retryAction
         )
     }
 
-    static func checkYourEmailCreatePWInstead(email: String) -> Self {
+    static func checkYourEmailCreatePWInstead(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: .checkEmail,
             infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword(email: email))
+            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword(email: email)),
+            retryAction: retryAction
         )
     }
 
-    static func checkYourEmailReset(email: String) -> Self {
+    static func checkYourEmailReset(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: .checkEmailForNewPW,
             infoComponents: [
                 .string(.loginLinkSentToYou),
@@ -131,13 +163,15 @@ extension AIVCState {
                 .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: ""))
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil
+            secondaryAction: nil,
+            retryAction: retryAction
         )
     }
 
     // TODO: determine how to know when to show this (should be after a returning user w/ password logs in via magic link, but what tells us that password was breached). maybe in loginOrCreate response or authenticate response
-    static func checkYourEmailResetReturning(email: String) -> Self {
+    static func checkYourEmailResetReturning(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: .checkEmailForNewPW,
             infoComponents: [
                 .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in! A login link was sent to you at ", comment: "")),
@@ -145,12 +179,14 @@ extension AIVCState {
                 .string(.period)
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email))
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
+            retryAction: retryAction
         )
     }
 
-    static func checkYourEmailResetBreached(email: String) -> Self {
+    static func checkYourEmailResetBreached(email: String, retryAction: @escaping () -> Void) -> Self {
         .init(
+            email: email,
             title: .checkEmailForNewPW,
             infoComponents: [
                 .string(NSLocalizedString("stytch.aiPWBreach", value: "A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", comment: "")),
@@ -158,7 +194,8 @@ extension AIVCState {
                 .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: ""))
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email))
+            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
+            retryAction: retryAction
         )
     }
 }
