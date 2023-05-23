@@ -1,3 +1,4 @@
+//@testable
 import StytchCore
 import UIKit
 
@@ -23,8 +24,8 @@ enum PasswordVCAction {
 final class PasswordViewController: BaseViewController<PasswordVCState, PasswordVCAction> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
-    private lazy var emailLoginLinkButton: Button = .primary(
-        title: NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
+    private lazy var emailLoginLinkPrimaryButton: Button = .primary(
+        title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
         self?.perform(action: .didTapEmailLoginLink(email: email))
@@ -101,8 +102,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
 
-    private lazy var emailLoginCodeButton: Button = .tertiary(
-        title: NSLocalizedString("stytch.passwordEmailLoginCode", value: "Email me a login link", comment: "") // FIXME: guessing this should be link instead of code since this is only EML
+    private lazy var emailLoginLinkTertiaryButton: Button = .tertiary(
+        title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
         self?.perform(action: .didTapEmailLoginLink(email: email))
@@ -125,7 +126,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         attachStackView(within: view)
 
         stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(emailLoginLinkButton)
+        stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
         stackView.addArrangedSubview(upperSeparator)
         stackView.addArrangedSubview(finishCreatingLabel)
         stackView.addArrangedSubview(emailInputLabel)
@@ -135,11 +136,11 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(forgotPasswordButton)
         stackView.addArrangedSubview(lowerSeparator)
-        stackView.addArrangedSubview(emailLoginCodeButton)
+        stackView.addArrangedSubview(emailLoginLinkTertiaryButton)
         stackView.addArrangedSubview(SpacerView())
 
         stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
-        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkButton)
+        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkPrimaryButton)
         stackView.setCustomSpacing(.spacingHuge, after: upperSeparator)
         stackView.setCustomSpacing(.spacingHuge, after: finishCreatingLabel)
         stackView.setCustomSpacing(.spacingHuge, after: passwordInput)
@@ -155,13 +156,13 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     }
 
     override func stateDidUpdate(state: State) {
-        emailLoginLinkButton.isHidden = true
+        emailLoginLinkPrimaryButton.isHidden = true
         upperSeparator.isHidden = true
         finishCreatingLabel.isHidden = true
         forgotPasswordButton.isHidden = true
         lowerSeparator.isHidden = true
-        emailLoginCodeButton.isHidden = true
-        emailLoginLinkButton.isHidden = true
+        emailLoginLinkTertiaryButton.isHidden = true
+        emailLoginLinkPrimaryButton.isHidden = true
 
         emailInput.textInput.text = state.email
         emailInput.isEnabled = true
@@ -171,7 +172,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         case .signup:
             if state.magicLinksEnabled {
                 titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
-                emailLoginLinkButton.isHidden = false
+                emailLoginLinkPrimaryButton.isHidden = false
                 upperSeparator.isHidden = false
                 finishCreatingLabel.isHidden = false
             } else {
@@ -187,7 +188,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             emailInput.isEnabled = false
             if state.magicLinksEnabled {
                 lowerSeparator.isHidden = false
-                emailLoginCodeButton.isHidden = false
+                emailLoginLinkTertiaryButton.isHidden = false
             }
         }
     }
@@ -240,4 +241,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         }
 
     }
+}
+
+private extension String {
+    static let emailLoginLink: String = NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
 }
