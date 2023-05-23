@@ -1,6 +1,8 @@
 import UIKit
 
 class Button: UIButton {
+    private let feedback = UIImpactFeedbackGenerator(style: .light)
+
     override var intrinsicContentSize: CGSize {
         .init(width: UIView.noIntrinsicMetric, height: .buttonHeight)
     }
@@ -19,6 +21,7 @@ class Button: UIButton {
     }
 
     @objc private func didTapButton() {
+        feedback.impactOccurred()
         onTap()
     }
 
@@ -43,6 +46,19 @@ class Button: UIButton {
 }
 
 extension Button {
+    static func primary(title: String, onTap: @escaping () -> Void) -> Button {
+        let button = Button(type: .custom)
+        button.onTap = onTap
+        button.setBackgroundImage(UIColor.disabled.image(), for: .disabled)
+        button.setBackgroundImage(UIColor.brand.image(), for: .normal)
+        button.setBackgroundImage(UIColor.brand.withAlphaComponent(0.7).image(), for: .highlighted)
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.placeholder, for: .disabled)
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        return button
+    }
+
     static func secondary(image asset: ImageAsset?, title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
         button.setImage(asset?.image, for: .normal)
@@ -69,22 +85,11 @@ extension Button {
         return button
     }
 
-    static func primary(title: String, onTap: @escaping () -> Void) -> Button {
-        let button = Button(type: .custom)
-        button.onTap = onTap
-        button.setBackgroundImage(UIColor.disabled.image(), for: .disabled)
-        button.setBackgroundImage(UIColor.brand.image(), for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.placeholder, for: .disabled)
-        button.setTitle(title, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        return button
-    }
-
     static func tertiary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
         button.onTap = onTap
         button.setTitleColor(.brand, for: .normal)
+        button.setTitleColor(.systemGray, for: .highlighted)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         return button
