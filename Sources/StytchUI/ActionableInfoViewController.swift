@@ -73,7 +73,9 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
         controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
-            self?.state.retryAction()
+            Task { @MainActor in
+                try await self?.state.retryAction()
+            }
         })
         controller.view.tintColor = .label
         present(controller, animated: true)
@@ -107,7 +109,7 @@ struct AIVCState {
     let infoComponents: [AttrStringComponent]
     let actionComponents: [AttrStringComponent]
     let secondaryAction: (title: String, action: AIVCAction)?
-    let retryAction: () -> Void
+    let retryAction: RetryAction
 }
 
 enum AIVCAction {
@@ -116,7 +118,8 @@ enum AIVCAction {
 }
 
 extension AIVCState {
-    static func forgotPassword(email: String, retryAction: @escaping () -> Void) -> Self {
+    typealias RetryAction = () async throws -> Void
+    static func forgotPassword(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: NSLocalizedString("stytch.aiForgotPW", value: "Forgot password?", comment: ""),
@@ -131,7 +134,7 @@ extension AIVCState {
         )
     }
 
-    static func checkYourEmail(email: String, retryAction: @escaping () -> Void) -> Self {
+    static func checkYourEmail(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: .checkEmail,
@@ -142,7 +145,7 @@ extension AIVCState {
         )
     }
 
-    static func checkYourEmailCreatePWInstead(email: String, retryAction: @escaping () -> Void) -> Self {
+    static func checkYourEmailCreatePWInstead(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: .checkEmail,
@@ -153,7 +156,7 @@ extension AIVCState {
         )
     }
 
-    static func checkYourEmailReset(email: String, retryAction: @escaping () -> Void) -> Self {
+    static func checkYourEmailReset(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: .checkEmailForNewPW,
@@ -168,12 +171,12 @@ extension AIVCState {
         )
     }
 
-    static func checkYourEmailResetReturning(email: String, retryAction: @escaping () -> Void) -> Self {
+    static func checkYourEmailResetReturning(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: .checkEmailForNewPW,
             infoComponents: [
-                .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in! A login link was sent to you at ", comment: "")),
+                .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in. A login link was sent to you at ", comment: "")),
                 .bold(.string(email)),
                 .string(.period)
             ],
@@ -183,7 +186,7 @@ extension AIVCState {
         )
     }
 
-    static func checkYourEmailResetBreached(email: String, retryAction: @escaping () -> Void) -> Self {
+    static func checkYourEmailResetBreached(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             email: email,
             title: .checkEmailForNewPW,

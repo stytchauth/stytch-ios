@@ -99,10 +99,15 @@ extension AuthRootViewController: ActionDelegate {
     private func handle(inputAction: AuthInputVCAction) async throws {
         switch inputAction {
         case let .didTapContinueEmail(email):
-            if config.magicLink != nil, config.password != nil {
+            if config.magicLink != nil, let password = config.password {
                 let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
                 guard let intent = userSearch.userType.passwordIntent else {
-                    try await handle(passwordAction: .didTapForgotPassword(email: email))
+                    let params = params(email: email, password: password)
+                    _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
+                    let controller = ActionableInfoViewController(
+                        state: .checkYourEmailResetReturning(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
+                    ) { .actionableInfo($0) }
+                    navController?.pushViewController(controller, animated: true)
                     return
                 }
                 let controller = PasswordViewController(
@@ -112,9 +117,7 @@ extension AuthRootViewController: ActionDelegate {
                 let parameters = params(email: email, magicLink: magicLink)
                 _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
                 let controller = ActionableInfoViewController(
-                    state: .checkYourEmail(email: email) {
-                        Task { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters) }
-                    }
+                    state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters) }
                 ) { .actionableInfo($0) }
                 navController?.pushViewController(controller, animated: true)
             }
@@ -138,22 +141,6 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private var sessionDuration: Minutes {
-        config.session?.sessionDuration ?? .defaultSessionDuration
-    }
-
-    private func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
-        .init(
-            email: email,
-            loginMagicLinkUrl: magicLink.loginMagicLinkUrl,
-            loginExpiration: magicLink.loginExpiration,
-            loginTemplateId: magicLink.loginTemplateId,
-            signupMagicLinkUrl: magicLink.signupMagicLinkUrl,
-            signupExpiration: magicLink.signupExpiration,
-            signupTemplateId: magicLink.signupTemplateId
-        )
-    }
-
     private func handle(oauthAction: OAuthVCAction) async throws {
         guard let oauth = config.oauth else { return }
 
@@ -171,17 +158,6 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
-        .init(
-            email: email,
-            loginUrl: password.loginURL,
-            loginExpiration: password.loginExpiration,
-            resetPasswordUrl: password.resetPasswordURL,
-            resetPasswordExpiration: password.resetPasswordExpiration,
-            resetPasswordTemplateId: password.resetPasswordTemplateId
-        )
-    }
-
     private func handle(passwordAction: PasswordVCAction) async throws {
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
@@ -189,9 +165,7 @@ extension AuthRootViewController: ActionDelegate {
             let params = params(email: email, magicLink: magicLink)
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
             let controller = ActionableInfoViewController(
-                state: .checkYourEmail(email: email) {
-                    Task { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
-                }
+                state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
             ) { .actionableInfo($0) }
             navController?.pushViewController(controller, animated: true)
         case let .didTapLogin(email, password):
@@ -206,9 +180,7 @@ extension AuthRootViewController: ActionDelegate {
             let params = params(email: email, password: password)
             _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
             let controller = ActionableInfoViewController(
-                state: .forgotPassword(email: email) {
-                    Task { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
-                }
+                state: .forgotPassword(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
             ) { .actionableInfo($0) }
             navController?.pushViewController(controller, animated: true)
         }
@@ -245,14 +217,37 @@ extension AuthRootViewController: ActionDelegate {
             let params = params(email: email, magicLink: magicLink)
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
             let controller = ActionableInfoViewController(
-                state: .checkYourEmail(email: email) {
-                    Task {
-                        _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
-                    }
-                }
+                state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
             ) { .actionableInfo($0) }
             navController?.pushViewController(controller, animated: true)
         }
+    }
+
+    private var sessionDuration: Minutes {
+        config.session?.sessionDuration ?? .defaultSessionDuration
+    }
+
+    private func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+        .init(
+            email: email,
+            loginUrl: password.loginURL,
+            loginExpiration: password.loginExpiration,
+            resetPasswordUrl: password.resetPasswordURL,
+            resetPasswordExpiration: password.resetPasswordExpiration,
+            resetPasswordTemplateId: password.resetPasswordTemplateId
+        )
+    }
+
+    private func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
+        .init(
+            email: email,
+            loginMagicLinkUrl: magicLink.loginMagicLinkUrl,
+            loginExpiration: magicLink.loginExpiration,
+            loginTemplateId: magicLink.loginTemplateId,
+            signupMagicLinkUrl: magicLink.signupMagicLinkUrl,
+            signupExpiration: magicLink.signupExpiration,
+            signupTemplateId: magicLink.signupTemplateId
+        )
     }
 }
 

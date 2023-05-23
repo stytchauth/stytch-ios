@@ -94,11 +94,17 @@ struct AuthenticationOptionsView: View {
                 products: [
                     .oauth(.init(
                         providers: [.apple, .thirdParty(.google)],
-                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                        loginRedirectUrl: .init(string: "stytch-demo://login")!,
+                        signupRedirectUrl: .init(string: "stytch-demo://signup")!
                     )),
-                    .magicLink(),
-                    .password(),
+                    .magicLink(.init(
+                        loginMagicLinkUrl: .init(string: "stytch-demo://login")!,
+                        signupMagicLinkUrl: .init(string: "stytch-demo://signup")
+                    )),
+                    .password(.init(
+                        loginURL: .init(string: "stytch-demo://login")!,
+                        resetPasswordURL: .init(string: "stytch-demo://reset")!
+                    )),
                     .sms()
                 ]
             )
