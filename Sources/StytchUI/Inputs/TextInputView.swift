@@ -54,15 +54,17 @@ class TextInputView<TextInput: TextInputType>: UIView {
 
     private let feedbackLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 0
         label.textColor = .error
         label.isHidden = true
         return label
     }()
 
     final override var intrinsicContentSize: CGSize {
-        stackView.systemLayoutSizeFitting(
+        let contentSize = stackView.systemLayoutSizeFitting(
             .init(width: bounds.width, height: .infinity)
         )
+        return .init(width: UIView.noIntrinsicMetric, height: contentSize.height)
     }
 
     private var feedback: Feedback?
@@ -80,7 +82,8 @@ class TextInputView<TextInput: TextInputType>: UIView {
                 stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
                 stackView.topAnchor.constraint(equalTo: topAnchor),
                 stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                textInput.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+                textInput.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+                feedbackLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             ] + textInput.fields.map { view in
                 view.heightAnchor.constraint(equalToConstant: 42)
             }
@@ -92,6 +95,11 @@ class TextInputView<TextInput: TextInputType>: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        feedbackLabel.preferredMaxLayoutWidth = stackView.bounds.width
     }
 
     func setUp() {}

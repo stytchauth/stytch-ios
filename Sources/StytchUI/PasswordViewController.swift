@@ -75,6 +75,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         button.imageView?.contentMode = .scaleAspectFit
         button.tintColor = .secondary
         button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([button.heightAnchor.constraint(equalToConstant: 12.5)])
         return button
     }()
@@ -119,7 +120,12 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         forgotPasswordButton.setTitleColor(.secondary, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
-            self?.setNeedsStrengthCheck()
+            switch self?.state.intent {
+            case .enterNewPassword, .signup:
+                self?.setNeedsStrengthCheck()
+            case .none, .login:
+                break
+            }
             self?.continueButton.isEnabled = isValid
         }
 
@@ -163,6 +169,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         lowerSeparator.isHidden = true
         emailLoginLinkTertiaryButton.isHidden = true
         emailLoginLinkPrimaryButton.isHidden = true
+        passwordInput.progressBar.isHidden = true
 
         emailInput.textInput.text = state.email
         emailInput.isEnabled = true
@@ -178,7 +185,9 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             } else {
                 titleLabel.text = NSLocalizedString("stytch.pwCreateAccount", value: "Create account", comment: "")
             }
+            passwordInput.progressBar.isHidden = false
         case .enterNewPassword:
+            passwordInput.progressBar.isHidden = false
             emailInput.isEnabled = false
             titleLabel.text = NSLocalizedString("stytch.pwSetNewPW", value: "Set a new password", comment: "")
         case .login:
@@ -199,14 +208,15 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
     private func setNeedsStrengthCheck() {
         guard passwordInput.isValid else {
-            passwordInput.supplementaryView?.isHidden = true
             passwordInput.setFeedback(nil)
             return
         }
         strengthCheckWorkItem?.cancel()
 
         let workItem = DispatchWorkItem { [weak self] in
-            self?.checkStrength()
+            DispatchQueue.main.async {
+                self?.checkStrength()
+            }
         }
 
         strengthCheckWorkItem = workItem
@@ -231,6 +241,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {
                     passwordInput.setFeedback(.normal(feedback))
+                } else {
+                    passwordInput.setFeedback(nil)
                 }
                 passwordInput.progressBar.isHidden = false
                 passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
