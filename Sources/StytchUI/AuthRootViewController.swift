@@ -1,3 +1,4 @@
+import AuthenticationServices
 import PhoneNumberKit
 import StytchCore
 import UIKit
@@ -88,6 +89,7 @@ extension AuthRootViewController: ActionDelegate {
                 case let .password(action):
                     try await handle(passwordAction: action)
                 }
+            } catch ASAuthorizationError.canceled, ASWebAuthenticationSessionError.canceledLogin {
             } catch {
                 presentAlert(error: error)
             }
