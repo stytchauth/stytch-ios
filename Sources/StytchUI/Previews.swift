@@ -1,11 +1,12 @@
 import SwiftUI
+import StytchCore
 
 struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
                 publicToken: "",
-                oauth: .init(providers: [.thirdParty(.google), .apple, .thirdParty(.coinbase)]),
+                oauth: .init(providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)]),
                 input: .magicLink(sms: true)
             )
         )
@@ -14,8 +15,7 @@ struct StytchUI_Previews: PreviewProvider {
 
 
         ActionableInfoViewController(
-            state: .forgotPassword(email: "dan@stytch.com")
-
+            state: .forgotPassword(email: "dan@stytch.com") {}
         ) { .actionableInfo($0) }
             .inNavigationController()
             .toControllerView()
