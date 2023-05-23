@@ -1,4 +1,5 @@
 import StytchCore
+import StytchUI
 import SwiftUI
 
 let configuration: StytchDemoApp.Configuration = {
@@ -56,23 +57,26 @@ struct StytchDemoApp: App {
     }
 
     private func handle(url: URL) {
-        Task {
-            do {
-                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
-                case let .handled(response):
-                    self.sessionUser = (response.session, response.user)
-                case .notHandled:
-                    print("not handled")
-                case let .manualHandlingRequired(tokenType, token):
-                    guard tokenType == .passwordReset else {
-                        fatalError("unexpected token type")
-                    }
-                    self.resetPasswordToken = .init(token: token)
-                }
-            } catch {
-                handle(error: error)
-            }
+        if StytchUIClient.handle(url: url) {
+            print("handled")
         }
+//        Task {
+//            do {
+//                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+//                case let .handled(response):
+//                    self.sessionUser = (response.session, response.user)
+//                case .notHandled:
+//                    print("not handled")
+//                case let .manualHandlingRequired(tokenType, token):
+//                    guard tokenType == .passwordReset else {
+//                        fatalError("unexpected token type")
+//                    }
+//                    self.resetPasswordToken = .init(token: token)
+//                }
+//            } catch {
+//                handle(error: error)
+//            }
+//        }
     }
 
     private func handle(error: Error) {
@@ -94,10 +98,12 @@ struct StytchDemoApp: App {
 extension StytchDemoApp {
     // For simplicity, we'll mimic StytchClient.Configuration, simply to reuse that value. We'd likely have a different source of truth in a real application.
     struct Configuration: Decodable {
+        let publicToken: String
         let serverUrl: URL
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+            publicToken = try container.decode(String.self, forKey: .publicToken)
             do {
                 serverUrl = try container.decode(URL.self, forKey: .serverUrl)
             } catch {
@@ -111,6 +117,7 @@ extension StytchDemoApp {
 
         private enum CodingKeys: String, CodingKey {
             case serverUrl = "StytchHostURL"
+            case publicToken = "StytchPublicToken"
         }
     }
 }

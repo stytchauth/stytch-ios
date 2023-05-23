@@ -70,6 +70,7 @@
 		22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ABFABA29F7690100927518 /* SSOViewController.swift */; };
 		22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22B523B5296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
+		22B978052A1C4EE6000A35BC /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22B978042A1C4EE6000A35BC /* StytchUI */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
 		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 		22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
@@ -149,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */,
+				22B978052A1C4EE6000A35BC /* StytchUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +379,7 @@
 			name = "StytchDemo (iOS)";
 			packageProductDependencies = (
 				226375C5280CBAE0000CDD49 /* StytchCore */,
+				22B978042A1C4EE6000A35BC /* StytchUI */,
 			);
 			productName = "Stytch (iOS)";
 			productReference = 229B82182809EA3F007BC3F1 /* StytchDemo.app */;
@@ -1041,6 +1044,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */;
 			productName = JWTKit;
+		};
+		22B978042A1C4EE6000A35BC /* StytchUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchUI;
 		};
 		22E434612809EF2F00FB45F0 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;

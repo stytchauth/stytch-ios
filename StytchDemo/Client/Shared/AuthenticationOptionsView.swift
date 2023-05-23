@@ -1,13 +1,20 @@
 import StytchCore
+import StytchUI
 import SwiftUI
 
 struct AuthenticationOptionsView: View {
     let session: Session?
     let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
+    @State private var authPresented = false
 
     var body: some View {
         VStack {
+            Button("Authenticate with UI") {
+                authPresented = true
+            }
+                .padding()
+
             NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
                 .padding()
 
@@ -80,5 +87,13 @@ struct AuthenticationOptionsView: View {
             }
             .padding()
         }
+        .authenticationSheet(
+            isPresented: $authPresented,
+            config: .init(
+                publicToken: configuration.publicToken,
+                oauth: .init(providers: [.apple, .thirdParty(.google)]),
+                input: .magicLinkAndPassword(sms: true)
+            )
+        )
     }
 }
