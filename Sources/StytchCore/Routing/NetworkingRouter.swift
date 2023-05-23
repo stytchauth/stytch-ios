@@ -1,10 +1,10 @@
 import Foundation
 
-protocol RouteType {
+public protocol RouteType {
     var path: Path { get }
 }
 
-struct NetworkingRouter<Route: RouteType> {
+public struct NetworkingRouter<Route: RouteType> {
     private let getConfiguration: () -> Configuration?
 
     private let pathForRoute: (Route) -> Path
@@ -36,25 +36,25 @@ struct NetworkingRouter<Route: RouteType> {
 }
 
 extension NetworkingRouter {
-    func post<Parameters: Encodable, Response: Decodable>(
+    public func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
         try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
     }
 
-    func put<Parameters: Encodable, Response: Decodable>(
+    public func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
         try await performRequest(.put(jsonEncoder.encode(parameters)), route: route)
     }
 
-    func get<Response: Decodable>(route: Route) async throws -> Response {
+    public func get<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.get, route: route)
     }
 
-    func delete<Response: Decodable>(route: Route) async throws -> Response {
+    public func delete<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.delete, route: route)
     }
 

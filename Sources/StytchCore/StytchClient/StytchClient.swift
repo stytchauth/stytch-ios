@@ -13,6 +13,8 @@ public struct StytchClient: StytchClientType {
 
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
 
+    public static var uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
+
     private init() {
         postInit()
     }

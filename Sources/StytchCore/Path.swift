@@ -1,11 +1,11 @@
 import Foundation
 
-struct Path {
+public struct Path {
     let rawValue: String
 }
 
 extension Path: ExpressibleByStringLiteral {
-    init(stringLiteral value: StringLiteralType) {
+    public init(stringLiteral value: StringLiteralType) {
         rawValue = value
     }
 }
