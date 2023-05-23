@@ -6,13 +6,13 @@ enum OAuthVCAction {
     case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
 }
 
-final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, Empty, OAuthVCAction> {
+final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, OAuthVCAction> {
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.layoutMargins = .zero
 
-        config.providers.enumerated().forEach { index, provider in
+        state.providers.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -27,11 +27,11 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = config.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        guard let (_, provider) = state.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         perform(action: .didTap(provider: provider))
     }
 
-    private static func makeOauthButton(provider: Config.Provider) -> UIControl {
+    private static func makeOauthButton(provider: State.Provider) -> UIControl {
         switch provider {
         case .apple:
             return makeAppleButton()

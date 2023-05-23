@@ -13,7 +13,7 @@ struct OTPVCState {
     let codeExpiry: Date
 }
 
-final class OTPCodeViewController: BaseViewController<Empty, OTPVCState, OTPVCAction> {
+final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )

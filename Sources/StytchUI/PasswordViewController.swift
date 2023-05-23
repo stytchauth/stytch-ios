@@ -20,7 +20,7 @@ enum PasswordVCAction {
     case didTapForgotPassword(email: String)
 }
 
-final class PasswordViewController: BaseViewController<Empty, PasswordVCState, PasswordVCAction> {
+final class PasswordViewController: BaseViewController<PasswordVCState, PasswordVCAction> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private lazy var emailLoginLinkButton: Button = .primary(

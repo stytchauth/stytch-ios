@@ -2,7 +2,7 @@ import PhoneNumberKit
 import StytchCore
 import UIKit
 
-final class AuthHomeViewController: BaseViewController<StytchUIClient.Configuration, Empty, AppAction> {
+final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAction> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
@@ -11,15 +11,15 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
 
     private let separatorView: LabelSeparatorView = .orSeparator()
 
-    private let poweredByStytch: UIImageView = {
+    private lazy var poweredByStytch: UIImageView = {
         let view = UIImageView()
         view.image = ImageAsset.poweredByStytch.image
         return view
     }()
 
     private var showOrSeparator: Bool {
-        guard let oauthConfig = config.oauth, !oauthConfig.providers.isEmpty else { return false }
-        return config.input != nil
+        guard let oauthConfig = state.config.oauth, !oauthConfig.providers.isEmpty else { return false }
+        return state.config.input != nil
     }
 
     override func viewDidLoad() {
@@ -28,8 +28,8 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let oauthConfig = config.oauth, !oauthConfig.providers.isEmpty {
-            let oauthController = OAuthViewController(oauthConfig) { .oauth($0) }
+        if let oauthConfig = state.config.oauth, !oauthConfig.providers.isEmpty {
+            let oauthController = OAuthViewController(state: oauthConfig) { .oauth($0) }
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(contentsOf: [
@@ -41,8 +41,8 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
             stackView.addArrangedSubview(separatorView)
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if let inputConfig = config.input {
-            let inputController = AuthInputViewController(inputConfig) { .input($0) }
+        if let inputConfig = state.config.input {
+            let inputController = AuthInputViewController(state: inputConfig) { .input($0) }
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(contentsOf: [
@@ -50,7 +50,7 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
                 inputController.view.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
             ])
         }
-        if true {
+        if !state.bootstrap.disableSdkWatermark {
             stackView.addArrangedSubview(poweredByStytch)
         }
         stackView.addArrangedSubview(SpacerView())
@@ -70,7 +70,13 @@ final class AuthHomeViewController: BaseViewController<StytchUIClient.Configurat
         NSLayoutConstraint.activate(constraints)
     }
 }
-enum AppAction {
+
+struct AuthHomeState {
+    let bootstrap: Bootstrap
+    let config: StytchUIClient.Configuration
+}
+
+enum AuthHomeAction {
     case actionableInfo(AIVCAction)
     case input(AuthInputVCAction)
     case oauth(OAuthVCAction)

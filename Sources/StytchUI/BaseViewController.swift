@@ -1,13 +1,10 @@
 import UIKit
 
-class BaseViewController<_Config, _State, _Action>: UIViewController {
-    typealias Config = _Config
+class BaseViewController<_State, _Action>: UIViewController {
     typealias State = _State
     typealias Action = _Action
 
-    private let actionTransformer: (Action) -> AppAction
-
-    let config: Config
+    private let actionTransformer: (Action) -> AuthHomeAction
 
     var state: State {
         didSet {
@@ -23,8 +20,7 @@ class BaseViewController<_Config, _State, _Action>: UIViewController {
         return view
     }()
 
-    init(config: Config, state: State, actionTransformer: @escaping (Action) -> AppAction) {
-        self.config = config
+    init(state: State, actionTransformer: @escaping (Action) -> AuthHomeAction) {
         self.state = state
         self.actionTransformer = actionTransformer
 
@@ -68,7 +64,7 @@ class BaseViewController<_Config, _State, _Action>: UIViewController {
 }
 
 protocol ActionDelegate {
-    func handle(action: AppAction)
+    func handle(action: AuthHomeAction)
 }
 
 extension UIResponder {
@@ -80,14 +76,8 @@ extension UIResponder {
     }
 }
 
-extension BaseViewController where Config == Empty {
-    convenience init(_ config: Config = .init(), state: State, actionTransformer: @escaping (Action) -> AppAction) {
-        self.init(config: config, state: state, actionTransformer: actionTransformer)
-    }
-}
-
 extension BaseViewController where State == Empty {
-    convenience init(_ config: Config, state: State = .init(), actionTransformer: @escaping (Action) -> AppAction) {
-        self.init(config: config, state: state, actionTransformer: actionTransformer)
+    convenience init(state: State = .init(), actionTransformer: @escaping (Action) -> AuthHomeAction) {
+        self.init(state: state, actionTransformer: actionTransformer)
     }
 }

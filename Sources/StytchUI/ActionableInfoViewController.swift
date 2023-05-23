@@ -1,6 +1,6 @@
 import UIKit
 
-final class ActionableInfoViewController: BaseViewController<Empty, AIVCState, AIVCAction> {
+final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCAction> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {

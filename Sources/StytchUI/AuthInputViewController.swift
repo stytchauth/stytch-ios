@@ -6,7 +6,7 @@ enum AuthInputVCAction {
     case didTapContinuePhone(phone: String, formattedPhone: String)
 }
 
-final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, Empty, AuthInputVCAction> {
+final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration.Input, AuthInputVCAction> {
     private enum Input {
         case email
         case phone
@@ -53,7 +53,7 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
 
         view.layoutMargins = .zero
 
-        switch config {
+        switch state {
         case let .magicLink(sms), let .password(sms), let .magicLinkAndPassword(sms):
             if sms {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
