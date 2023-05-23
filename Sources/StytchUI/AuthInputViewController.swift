@@ -117,8 +117,6 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
                 break
             }
         }
-
-        continueButton.addTarget(self, action: #selector(didTapContinue), for: .touchUpInside)
     }
 
     @objc private func segmentDidUpdate(sender: UISegmentedControl) {
