@@ -9,6 +9,7 @@ extension StytchClient {
         case sessions(SessionsRoute)
         case totp(TOTPRoute)
         case users(UsersRoute)
+        // swiftlint:disable:next identifier_name
         case ui(UIRoute)
 
         var path: Path {

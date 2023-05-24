@@ -9,15 +9,16 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
     }
 
     var formattedPhoneNumber: String? {
-        isValid ? textField.phoneNumber.map { "+\($0.countryCode) \($0.numberString)"} : nil
+        isValid ? textField.phoneNumber.map { "+\($0.countryCode) \($0.numberString)" } : nil
     }
 
     var phoneNumberKit: PhoneNumberKit { textField.phoneNumberKit }
 
     private var textField: PhoneNumberTextField { textInput.textField }
 
+    // swiftlint:disable:next overridden_super_call
     override func setUp() {
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: .main) { [weak self] notification in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: .main) { [weak self] _ in
             guard let self else { return }
             self.onTextChanged(self.isValid)
         }
@@ -26,7 +27,7 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
         PhoneNumberKit.CountryCodePicker.forceModalPresentation = true
     }
 
-    @objc private func didTapButton(sender: UIButton) {
+    @objc private func didTapButton(sender _: UIButton) {
         onButtonPressed(textField.phoneNumberKit)
     }
 }
@@ -97,7 +98,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -110,9 +111,11 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
         guard let countryCode = textField.phoneNumberKit.countryCode(for: textField.currentRegion) else { return }
 
         let attributedText = NSMutableAttributedString(string: "+ \(countryCode)  ")
-        let attachment = NSTextAttachment(image: UIImage(systemName: "chevron.down")!)
-        attachment.setImageHeight(height: 10)
-        attributedText.append(NSAttributedString(attachment: attachment))
+        if let image = UIImage(systemName: "chevron.down") {
+            let attachment = NSTextAttachment(image: image)
+            attachment.setImageHeight(height: 10)
+            attributedText.append(NSAttributedString(attachment: attachment))
+        }
         countrySelectorButton.setAttributedTitle(attributedText, for: .normal)
     }
 }

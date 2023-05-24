@@ -15,13 +15,15 @@ extension UIColor {
         size: CGSize = CGSize(width: 2 * .cornerRadius, height: 2 * .cornerRadius),
         cornerRadius: CGFloat = .cornerRadius
     ) -> UIImage {
-        UIGraphicsImageRenderer(size: size).image { context in
-            setFill()
-            let rect = CGRect(origin: .zero, size: size)
-            UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
-            context.fill(rect)
-        }.resizableImage(
-            withCapInsets: .init(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius)
-        )
+        UIGraphicsImageRenderer(size: size)
+            .image { context in
+                setFill()
+                let rect = CGRect(origin: .zero, size: size)
+                UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius).addClip()
+                context.fill(rect)
+            }
+            .resizableImage(
+                withCapInsets: .init(top: cornerRadius, left: cornerRadius, bottom: cornerRadius, right: cornerRadius)
+            )
     }
 }

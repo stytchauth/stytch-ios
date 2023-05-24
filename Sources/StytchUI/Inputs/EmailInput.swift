@@ -12,8 +12,9 @@ final class EmailInput: TextInputView<EmailTextField> {
 
     var text: String? { textInput.text }
 
+    // swiftlint:disable:next overridden_super_call
     override func setUp() {
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] notification in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
             guard let self else { return }
             self.onTextChanged(self.isValid)
         }
@@ -29,6 +30,7 @@ final class EmailTextField: BorderedTextField, TextInputType {
 
     var fields: [UIView] { [self] }
 
+    // swiftlint:disable:next force_try
     private let regex: NSRegularExpression = try! .init(pattern: "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$", options: [.caseInsensitive])
 
     override init(frame: CGRect) {
@@ -43,7 +45,7 @@ final class EmailTextField: BorderedTextField, TextInputType {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

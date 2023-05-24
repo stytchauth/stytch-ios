@@ -8,16 +8,16 @@ final class AuthRootViewController: UIViewController {
 
     private var navController: UINavigationController?
 
+    private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
+
     init(config: StytchUIClient.Configuration) {
         self.config = config
 
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
-
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -97,8 +97,10 @@ extension AuthRootViewController: ActionDelegate {
             }
         }
     }
+}
 
-    private func handle(inputAction: AuthInputVCAction) async throws {
+private extension AuthRootViewController {
+    func handle(inputAction: AuthInputVCAction) async throws {
         switch inputAction {
         case let .didTapContinueEmail(email):
             if config.magicLink != nil, let password = config.password {
@@ -143,7 +145,7 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private func handle(oauthAction: OAuthVCAction) async throws {
+    func handle(oauthAction: OAuthVCAction) async throws {
         guard let oauth = config.oauth else { return }
 
         switch oauthAction {
@@ -160,7 +162,7 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private func handle(passwordAction: PasswordVCAction) async throws {
+    func handle(passwordAction: PasswordVCAction) async throws {
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
             guard let magicLink = config.magicLink else { return }
@@ -188,17 +190,17 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private func handle(otpAction: OTPVCAction) async throws {
+    func handle(otpAction: OTPVCAction) async throws {
         switch otpAction {
         case let .didTapResendCode(phone, controller):
-                    let expiry = Date().addingTimeInterval(120)
-                    let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
-                    controller.state = .init(
-                        phoneNumberE164: phone,
-                        formattedPhoneNumber: controller.state.formattedPhoneNumber,
-                        methodId: result.methodId,
-                        codeExpiry: expiry
-                    )
+            let expiry = Date().addingTimeInterval(120)
+            let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
+            controller.state = .init(
+                phoneNumberE164: phone,
+                formattedPhoneNumber: controller.state.formattedPhoneNumber,
+                methodId: result.methodId,
+                codeExpiry: expiry
+            )
         case let .didEnterCode(code, methodId, controller):
             do {
                 _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
@@ -210,7 +212,7 @@ extension AuthRootViewController: ActionDelegate {
         }
     }
 
-    private func handle(aiAction: AIVCAction) async throws {
+    func handle(aiAction: AIVCAction) async throws {
         switch aiAction {
         case let .didTapCreatePassword(email):
             try await handle(passwordAction: .didTapForgotPassword(email: email))
@@ -224,12 +226,14 @@ extension AuthRootViewController: ActionDelegate {
             navController?.pushViewController(controller, animated: true)
         }
     }
+}
 
-    private var sessionDuration: Minutes {
+private extension AuthRootViewController {
+    var sessionDuration: Minutes {
         config.session?.sessionDuration ?? .defaultSessionDuration
     }
 
-    private func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
             loginUrl: password.loginURL,
@@ -240,7 +244,7 @@ extension AuthRootViewController: ActionDelegate {
         )
     }
 
-    private func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
+    func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
         .init(
             email: email,
             loginMagicLinkUrl: magicLink.loginMagicLinkUrl,

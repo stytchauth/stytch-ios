@@ -74,7 +74,11 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        phoneNumberInput.onButtonPressed = { [weak self] phoneNumberKit in
+        setUpInputs()
+    }
+
+    private func setUpInputs() {
+        phoneNumberInput.onButtonPressed = { [weak self] _ in
             guard let self else { return }
             self.perform(action: .didTapCountryCode(input: self.phoneNumberInput))
         }
@@ -137,33 +141,3 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
         }
     }
 }
-//            switch configuration {
-//            case .magicLink:
-//            case .password:
-//            default:
-//            }
-//            perform(action: .)
-
-//        Task {
-//            do {
-//                guard let phoneNumber = phoneNumberInput.phoneNumberE164 else { return }
-//
-//                let codeExpiry = Date().addingTimeInterval(120)
-//
-//                let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phoneNumber), expiration: 2))
-//
-//                let controller = OTPCodeViewController()
-//                controller.configure(
-//                    phoneNumberE164: phoneNumber,
-//                    formattedPhoneNumber: phoneNumberInput.formattedPhoneNumber!,
-//                    methodId: result.methodId,
-//                    codeExpiry: codeExpiry
-//                ) { [weak self, weak controller] response in
-//                    controller?.dismiss(animated: true)
-//                    self?.authenticate(response: response)
-//                }
-//                self.present(controller, animated: true)
-//            } catch {
-//                print(error)
-//            }
-//        }

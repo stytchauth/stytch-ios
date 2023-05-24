@@ -13,7 +13,7 @@ struct AuthenticationOptionsView: View {
             Button("Authenticate with UI") {
                 authPresented = true
             }
-                .padding()
+            .padding()
 
             NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
                 .padding()
@@ -105,7 +105,7 @@ struct AuthenticationOptionsView: View {
                         loginURL: .init(string: "stytch-demo://login")!,
                         resetPasswordURL: .init(string: "stytch-demo://reset")!
                     )),
-                    .sms()
+                    .sms(),
                 ]
             )
         )

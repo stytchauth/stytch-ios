@@ -35,26 +35,26 @@ public struct NetworkingRouter<Route: RouteType> {
     }
 }
 
-extension NetworkingRouter {
-    public func post<Parameters: Encodable, Response: Decodable>(
+public extension NetworkingRouter {
+    func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
         try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
     }
 
-    public func put<Parameters: Encodable, Response: Decodable>(
+    func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
         try await performRequest(.put(jsonEncoder.encode(parameters)), route: route)
     }
 
-    public func get<Response: Decodable>(route: Route) async throws -> Response {
+    func get<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.get, route: route)
     }
 
-    public func delete<Response: Decodable>(route: Route) async throws -> Response {
+    func delete<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.delete, route: route)
     }
 

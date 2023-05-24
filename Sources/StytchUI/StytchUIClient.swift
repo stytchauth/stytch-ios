@@ -5,6 +5,7 @@ import UIKit
 public enum StytchUIClient {
     static var pendingResetEmail: String?
 
+    // swiftformat:disable modifierOrder
     fileprivate static weak var currentController: AuthRootViewController?
 
     private static var config: Configuration?
@@ -43,9 +44,9 @@ public enum StytchUIClient {
     static func setUpSessionChangeListener() {
         cancellable = StytchClient.sessions.onAuthChange
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak currentController] token in
+            .sink { [weak currentController] _ in
                 currentController?.presentingViewController?.dismiss(animated: true)
-            })
+            }
     }
 }
 
@@ -57,8 +58,8 @@ public extension StytchUIClient {
 
         var inputProductsEnabled: Bool {
             password != nil ||
-            magicLink != nil ||
-            sms != nil
+                magicLink != nil ||
+                sms != nil
         }
 
         var oauth: OAuth? {
@@ -192,8 +193,8 @@ public extension StytchUIClient {
 
 import SwiftUI
 
-extension View {
-    public func authenticationSheet(isPresented: Binding<Bool>, config: StytchUIClient.Configuration) -> some View {
+public extension View {
+    func authenticationSheet(isPresented: Binding<Bool>, config: StytchUIClient.Configuration) -> some View {
         sheet(isPresented: isPresented) {
             AuthenticationView(config: config)
         }
@@ -209,12 +210,12 @@ struct AuthenticationView: UIViewControllerRepresentable {
         self.config = config
     }
 
-    func makeUIViewController(context: Context) -> UIViewController {
+    func makeUIViewController(context _: Context) -> UIViewController {
         let controller = AuthRootViewController(config: config)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
         return controller
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    func updateUIViewController(_: UIViewController, context _: Context) {}
 }

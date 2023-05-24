@@ -1,5 +1,6 @@
 import UIKit
 
+// swiftlint:disable:next generic_type_name
 class BaseViewController<_State, _Action>: UIViewController {
     typealias State = _State
     typealias Action = _Action
@@ -30,7 +31,7 @@ class BaseViewController<_State, _Action>: UIViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -68,12 +69,12 @@ class BaseViewController<_State, _Action>: UIViewController {
         actionDelegate?.handle(action: actionTransformer(action))
     }
 
-    func willPerform(action: Action) {}
+    func willPerform(action _: Action) {}
 
-    func stateDidUpdate(state: State) {}
+    func stateDidUpdate(state _: State) {}
 }
 
-protocol ActionDelegate {
+protocol ActionDelegate: AnyObject {
     func handle(action: AuthHomeAction)
 }
 

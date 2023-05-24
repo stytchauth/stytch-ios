@@ -139,7 +139,8 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), state.formattedPhoneNumber),
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), state.formattedPhoneNumber
+            ),
             preferredStyle: .alert
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.otpCancel", value: "Cancel", comment: ""), style: .default))

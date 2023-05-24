@@ -16,7 +16,7 @@ class Button: UIButton {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -80,7 +80,7 @@ extension Button {
         button.setBackgroundImage(UIColor.black.withAlphaComponent(0.4).image(), for: .highlighted)
         button.onTap = onTap
         button.layer.borderColor = UIColor.label.cgColor
-        button.layer.borderWidth = 2/3
+        button.layer.borderWidth = 2 / 3
         button.layer.cornerRadius = .cornerRadius
         return button
     }

@@ -7,8 +7,9 @@ final class SecureTextInput: TextInputView<SecureTextField> {
 
     var onReturn: (Bool) -> Void = { _ in }
 
+    // swiftlint:disable:next overridden_super_call
     override func setUp() {
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] notification in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
             guard let self else { return }
             self.onTextChanged(self.isValid)
         }
@@ -31,13 +32,13 @@ final class SecureTextField: BorderedTextField, TextInputType {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 extension SecureTextInput: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_: UITextField) -> Bool {
         onReturn(isValid)
         return true
     }

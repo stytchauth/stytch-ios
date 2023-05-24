@@ -19,7 +19,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
 
     private var showOrSeparator: Bool {
         state.config.products.contains { product in
-            guard case let .oauth(config) = product else { return false}
+            guard case let .oauth(config) = product else { return false }
             return !config.providers.isEmpty
         } && state.config.products.contains { product in
             switch product {

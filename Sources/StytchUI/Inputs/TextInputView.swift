@@ -28,7 +28,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
 
     final var isValid: Bool { textInput.isValid }
 
-    final private(set) var hasBeenValid = false
+    private(set) final var hasBeenValid = false
 
     let textInput: TextInput = .init()
 
@@ -60,7 +60,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
         return label
     }()
 
-    final override var intrinsicContentSize: CGSize {
+    override final var intrinsicContentSize: CGSize {
         let contentSize = stackView.systemLayoutSizeFitting(
             .init(width: bounds.width, height: .infinity)
         )
@@ -93,7 +93,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

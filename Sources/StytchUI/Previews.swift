@@ -1,6 +1,7 @@
-import SwiftUI
 import StytchCore
+import SwiftUI
 
+// swiftlint:disable force_unwrapping
 struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
@@ -15,14 +16,13 @@ struct StytchUI_Previews: PreviewProvider {
                         )
                     ),
                     .magicLink(),
-                    .sms()
+                    .sms(),
                 ],
                 session: .init()
             )
         )
         .toControllerView()
         .previewDisplayName("Root")
-
 
         ActionableInfoViewController(
             state: .forgotPassword(email: "dan@stytch.com") {}
@@ -63,11 +63,11 @@ struct ControllerView: UIViewControllerRepresentable {
         self.controller = controller
     }
 
-    func makeUIViewController(context: Context) -> UIViewController {
+    func makeUIViewController(context _: Context) -> UIViewController {
         controller
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    func updateUIViewController(_: UIViewController, context _: Context) {}
 }
 
 extension UIViewController {

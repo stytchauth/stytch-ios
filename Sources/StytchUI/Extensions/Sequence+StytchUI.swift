@@ -1,5 +1,3 @@
-//import Foundation
-
 extension Sequence {
     func firstAs<T>(_ transform: (Element) -> T?) -> T? {
         for element in self {

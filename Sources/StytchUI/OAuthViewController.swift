@@ -30,8 +30,10 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
         guard let (_, provider) = state.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         perform(action: .didTap(provider: provider))
     }
+}
 
-    private static func makeOauthButton(provider: State.Provider) -> UIControl {
+private extension OAuthViewController {
+    static func makeOauthButton(provider: State.Provider) -> UIControl {
         switch provider {
         case .apple:
             return makeAppleButton()
@@ -40,7 +42,7 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
         }
     }
 
-    private static func makeAppleButton() -> ASAuthorizationAppleIDButton {
+    static func makeAppleButton() -> ASAuthorizationAppleIDButton {
         let button = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
         NSLayoutConstraint.activate([
             button.heightAnchor.constraint(equalToConstant: .buttonHeight),
@@ -51,7 +53,7 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
         return button
     }
 
-    private static func makeThirdPartyButton(provider: StytchClient.OAuth.ThirdParty.Provider) -> UIButton {
+    static func makeThirdPartyButton(provider: StytchClient.OAuth.ThirdParty.Provider) -> UIButton {
         let button = Button.secondary(
             image: provider.imageAsset,
             title: .localizedStringWithFormat(

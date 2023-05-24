@@ -120,34 +120,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
         attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
 
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
-        stackView.addArrangedSubview(upperSeparator)
-        stackView.addArrangedSubview(finishCreatingLabel)
-        stackView.addArrangedSubview(emailInputLabel)
-        stackView.addArrangedSubview(emailInput)
-        stackView.addArrangedSubview(passwordInputLabel)
-        stackView.addArrangedSubview(passwordInput)
-        stackView.addArrangedSubview(continueButton)
-        stackView.addArrangedSubview(forgotPasswordButton)
-        stackView.addArrangedSubview(lowerSeparator)
-        stackView.addArrangedSubview(emailLoginLinkTertiaryButton)
-        stackView.addArrangedSubview(SpacerView())
-
-        stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
-        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkPrimaryButton)
-        stackView.setCustomSpacing(.spacingHuge, after: upperSeparator)
-        stackView.setCustomSpacing(.spacingHuge, after: finishCreatingLabel)
-        stackView.setCustomSpacing(.spacingHuge, after: passwordInput)
-        stackView.setCustomSpacing(.spacingTiny, after: emailInputLabel)
-        stackView.setCustomSpacing(.spacingTiny, after: passwordInputLabel)
-        [continueButton, forgotPasswordButton, lowerSeparator].forEach {
-            stackView.setCustomSpacing(38, after: $0)
-        }
-
-        NSLayoutConstraint.activate(
-            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
-        )
+        setUpStackView()
 
         passwordInput.textInput.becomeFirstResponder()
     }
@@ -193,6 +166,37 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         }
     }
 
+    private func setUpStackView() {
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
+        stackView.addArrangedSubview(upperSeparator)
+        stackView.addArrangedSubview(finishCreatingLabel)
+        stackView.addArrangedSubview(emailInputLabel)
+        stackView.addArrangedSubview(emailInput)
+        stackView.addArrangedSubview(passwordInputLabel)
+        stackView.addArrangedSubview(passwordInput)
+        stackView.addArrangedSubview(continueButton)
+        stackView.addArrangedSubview(forgotPasswordButton)
+        stackView.addArrangedSubview(lowerSeparator)
+        stackView.addArrangedSubview(emailLoginLinkTertiaryButton)
+        stackView.addArrangedSubview(SpacerView())
+
+        stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
+        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkPrimaryButton)
+        stackView.setCustomSpacing(.spacingHuge, after: upperSeparator)
+        stackView.setCustomSpacing(.spacingHuge, after: finishCreatingLabel)
+        stackView.setCustomSpacing(.spacingHuge, after: passwordInput)
+        stackView.setCustomSpacing(.spacingTiny, after: emailInputLabel)
+        stackView.setCustomSpacing(.spacingTiny, after: passwordInputLabel)
+        [continueButton, forgotPasswordButton, lowerSeparator].forEach {
+            stackView.setCustomSpacing(38, after: $0)
+        }
+
+        NSLayoutConstraint.activate(
+            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+        )
+    }
+
     private func submit() {
         guard let email = emailInput.text, let password = passwordInput.text else { return }
 
@@ -206,7 +210,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         }
     }
 
-    @objc private func toggleSecureEntry(sender: UIButton) {
+    @objc private func toggleSecureEntry(sender _: UIButton) {
         passwordInput.textInput.isSecureTextEntry.toggle()
     }
 
@@ -258,6 +262,7 @@ struct PasswordVCState {
         case login
         case enterNewPassword(token: String)
     }
+
     let intent: Intent
     let email: String
     let magicLinksEnabled: Bool

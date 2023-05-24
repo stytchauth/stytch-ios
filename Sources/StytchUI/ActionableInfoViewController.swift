@@ -64,11 +64,12 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         retryButton.setAttributedTitle(action, for: .normal)
     }
 
-    @objc private func didTapRetry(sender: UIButton) {
+    @objc private func didTapRetry(sender _: UIButton) {
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), state.email),
+                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), state.email
+            ),
             preferredStyle: .alert
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
@@ -81,7 +82,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         present(controller, animated: true)
     }
 
-    @objc private func didTapSecondaryAction(sender: UIButton) {
+    @objc private func didTapSecondaryAction(sender _: UIButton) {
         guard let (_, action) = state.secondaryAction else { return }
         perform(action: action)
     }
@@ -126,7 +127,6 @@ extension AIVCState {
             infoComponents: [
                 .string(NSLocalizedString("stytch.linkToResetPWSent", value: "A link to reset your password was sent to you at ", comment: "")),
                 .bold(.string(email)),
-
             ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil,
@@ -163,7 +163,7 @@ extension AIVCState {
             infoComponents: [
                 .string(.loginLinkSentToYou),
                 .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: ""))
+                .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: "")),
             ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil,
@@ -178,7 +178,7 @@ extension AIVCState {
             infoComponents: [
                 .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in. A login link was sent to you at ", comment: "")),
                 .bold(.string(email)),
-                .string(.period)
+                .string(.period),
             ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
@@ -193,7 +193,7 @@ extension AIVCState {
             infoComponents: [
                 .string(NSLocalizedString("stytch.aiPWBreach", value: "A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", comment: "")),
                 .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: ""))
+                .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: "")),
             ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
@@ -206,7 +206,7 @@ extension [AttrStringComponent] {
     static var didntGetItResendEmail: Self {
         [
             .string(NSLocalizedString("stytch.aiDidntGetIt", value: "Didn't get it? ", comment: "")),
-            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: "")))
+            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
         ]
     }
 }
