@@ -20,7 +20,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
         label.text = NSLocalizedString("stytch.pwFinishCreatingLabel", value: "Finish creating your account by setting a password.", comment: "")
-        label.textColor = .label
+        label.textColor = .primaryText
         return label
     }()
 

@@ -37,7 +37,7 @@ class BaseViewController<VCState, VCAction>: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .background
         view.layoutMargins = .default
     }
 

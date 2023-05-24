@@ -134,4 +134,12 @@ class TextInputView<TextInput: TextInputType>: UIView {
             view.layer.borderColor = borderColor.cgColor
         }
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            update()
+        }
+    }
 }

@@ -6,8 +6,10 @@ extension UIColor {
     static let placeholder: UIColor = .init(red: 0.68, green: 0.74, blue: 0.77, alpha: 1.00)
     static let error: UIColor = .init(red: 0.55, green: 0.07, blue: 0.08, alpha: 1.00)
     static let disabled: UIColor = .init(red: 0.95, green: 0.96, blue: 0.96, alpha: 1.00)
+    static let disabledSecondary: UIColor = .init(red: 0.51, green: 0.59, blue: 0.63, alpha: 1.00)
     static let lightBorder: UIColor = .init(red: 0.90, green: 0.91, blue: 0.92, alpha: 1.00)
-    static let disabled2: UIColor = .init(red: 0.51, green: 0.59, blue: 0.63, alpha: 1.00)
+    static let background: UIColor = .systemBackground
+    static let primaryText: UIColor = .label
 }
 
 extension UIColor {

@@ -7,7 +7,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
-        label.textColor = .label
+        label.textColor = .primaryText
         return label
     }()
 
@@ -78,7 +78,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
                 try await self?.state.retryAction()
             }
         })
-        controller.view.tintColor = .label
+        controller.view.tintColor = .primaryText
         present(controller, animated: true)
     }
 

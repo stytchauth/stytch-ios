@@ -34,7 +34,6 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
 
 extension PhoneNumberInput: CountryCodePickerDelegate {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
-        print("googogole")
         textInput.countryCodePickerViewControllerDidPickCountry(country)
     }
 }

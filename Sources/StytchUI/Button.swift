@@ -43,6 +43,16 @@ class Button: UIButton {
         )
         imageEdgeInsets = .init(top: 16, left: 0, bottom: 16, right: -12)
     }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            if layer.borderColor != nil {
+                layer.borderColor = UIColor.primaryText.cgColor
+            }
+        }
+    }
 }
 
 extension Button {
@@ -71,15 +81,15 @@ extension Button {
             NSAttributedString(
                 string: title,
                 attributes: [
-                    .foregroundColor: UIColor.label,
+                    .foregroundColor: UIColor.primaryText,
                     .font: UIFont.systemFont(ofSize: 18, weight: .medium),
                 ]
             ),
             for: .normal
         )
-        button.setBackgroundImage(UIColor.black.withAlphaComponent(0.4).image(), for: .highlighted)
+        button.setBackgroundImage(UIColor.primaryText.withAlphaComponent(0.4).image(), for: .highlighted)
         button.onTap = onTap
-        button.layer.borderColor = UIColor.label.cgColor
+        button.layer.borderColor = UIColor.primaryText.cgColor
         button.layer.borderWidth = 2 / 3
         button.layer.cornerRadius = .cornerRadius
         return button

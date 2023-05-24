@@ -8,7 +8,7 @@ extension UIViewController {
             message: (error as? StytchError)?.message ?? error.localizedDescription,
             preferredStyle: .alert
         )
-        alertController.view.tintColor = .label
+        alertController.view.tintColor = .primaryText
         alertController.addAction(.init(title: NSLocalizedString("stytch.vcOK", value: "OK", comment: ""), style: .default))
         present(alertController, animated: true)
     }

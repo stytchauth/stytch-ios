@@ -65,8 +65,8 @@ final class AuthRootViewController: UIViewController {
         let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config)) { $0 }
         let navigationController = UINavigationController(rootViewController: homeController)
         navController = navigationController
-        navigationController.navigationBar.tintColor = .label
-        navigationController.navigationBar.barTintColor = .systemBackground
+        navigationController.navigationBar.tintColor = .primaryText
+        navigationController.navigationBar.barTintColor = .background
         navigationController.navigationBar.shadowImage = .init()
 
         addChild(navigationController)

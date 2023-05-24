@@ -124,7 +124,7 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         controller.addAction(.init(title: NSLocalizedString("stytch.otpConfirm", value: "Send code", comment: ""), style: .default) { [weak self] _ in
             self?.resendCode()
         })
-        controller.view.tintColor = .label
+        controller.view.tintColor = .primaryText
         present(controller, animated: true)
     }
 

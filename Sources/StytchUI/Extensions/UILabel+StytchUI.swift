@@ -6,7 +6,7 @@ extension UILabel {
         label.text = text
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 24, weight: .semibold)
-        label.textColor = .label
+        label.textColor = .primaryText
         return label
     }
 }
