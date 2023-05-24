@@ -37,8 +37,6 @@ final class AuthRootViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        overrideUserInterfaceStyle = .light
-
         Task { @MainActor in
             defer { activityIndicator.stopAnimating() }
             activityIndicator.startAnimating()

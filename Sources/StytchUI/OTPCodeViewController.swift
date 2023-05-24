@@ -9,7 +9,7 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
-        label.textColor = .brand
+        label.textColor = .primaryText
         return label
     }()
 
