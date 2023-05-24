@@ -8,8 +8,16 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
 
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
-        segmentedControl.insertSegment(withTitle: "Text", at: 0, animated: false)
-        segmentedControl.insertSegment(withTitle: "Email", at: 0, animated: false)
+        segmentedControl.insertSegment(
+            withTitle: NSLocalizedString("stytch.aivcText", value: "Text", comment: ""),
+            at: 0,
+            animated: false
+        )
+        segmentedControl.insertSegment(
+            withTitle: NSLocalizedString("stytch.aivcEmail", value: "Email", comment: ""),
+            at: 0,
+            animated: false
+        )
         segmentedControl.selectedSegmentIndex = 0
         return segmentedControl
     }()
@@ -19,7 +27,9 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
     private let emailInput: EmailInput = .init()
 
     private lazy var continueButton: UIButton = {
-        let button = Button.primary(title: "Continue") { [weak self] in
+        let button = Button.primary(
+            title: NSLocalizedString("stytch.aivcContinue", value: "Continue", comment: "")
+        ) { [weak self] in
             self?.didTapContinue()
         }
         button.isEnabled = false
