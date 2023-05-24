@@ -91,22 +91,23 @@ struct AuthenticationOptionsView: View {
             isPresented: $authPresented,
             config: .init(
                 publicToken: configuration.publicToken,
-                products: [
-                    .oauth(.init(
+                products: .init(
+                    oauth: .init(
                         providers: [.apple, .thirdParty(.google)],
-                        loginRedirectUrl: .init(string: "stytch-demo://login")!,
-                        signupRedirectUrl: .init(string: "stytch-demo://signup")!
-                    )),
-                    .magicLink(.init(
-                        loginMagicLinkUrl: .init(string: "stytch-demo://login")!,
-                        signupMagicLinkUrl: .init(string: "stytch-demo://signup")
-                    )),
-                    .password(.init(
-                        loginURL: .init(string: "stytch-demo://login")!,
-                        resetPasswordURL: .init(string: "stytch-demo://reset")!
-                    )),
-                    .sms(),
-                ]
+                        loginRedirectUrl: redirectUrl,
+                        signupRedirectUrl: redirectUrl
+                    ),
+                    password: .init(
+                        loginURL: redirectUrl,
+                        resetPasswordURL: redirectUrl,
+                        resetPasswordExpiration: 120
+                    ),
+                    magicLink: .init(
+                        loginMagicLinkUrl: redirectUrl,
+                        signupMagicLinkUrl: redirectUrl
+                    ),
+                    sms: .init()
+                )
             )
         )
     }

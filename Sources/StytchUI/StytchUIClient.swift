@@ -53,7 +53,7 @@ public enum StytchUIClient {
 public extension StytchUIClient {
     struct Configuration {
         let publicToken: String
-        let products: [Product]
+        let products: Products
         let session: Session?
 
         var inputProductsEnabled: Bool {
@@ -62,37 +62,17 @@ public extension StytchUIClient {
                 sms != nil
         }
 
-        var oauth: OAuth? {
-            products.firstAs { product in
-                guard case let .oauth(config) = product else { return nil }
-                return config
-            }
-        }
+        var oauth: OAuth? { products.oauth }
 
-        var password: Password? {
-            products.firstAs { product in
-                guard case let .password(config) = product else { return nil }
-                return config
-            }
-        }
+        var password: Password? { products.password }
 
-        var magicLink: MagicLink? {
-            products.firstAs { product in
-                guard case let .magicLink(config) = product else { return nil }
-                return config
-            }
-        }
+        var magicLink: MagicLink? { products.magicLink }
 
-        var sms: OTP? {
-            products.firstAs { product in
-                guard case let .sms(config) = product else { return nil }
-                return config
-            }
-        }
+        var sms: OTP? { products.sms }
 
         public init(
             publicToken: String,
-            products: [Product],
+            products: Products,
             session: Session? = nil
         ) {
             self.publicToken = publicToken
@@ -100,11 +80,23 @@ public extension StytchUIClient {
             self.session = session
         }
 
-        public enum Product {
-            case oauth(OAuth)
-            case password(Password = .init())
-            case magicLink(MagicLink = .init())
-            case sms(OTP = .init())
+        public struct Products {
+            let oauth: OAuth?
+            let password: Password?
+            let magicLink: MagicLink?
+            let sms: OTP?
+
+            public init(
+                oauth: OAuth? = nil,
+                password: Password? = nil,
+                magicLink: MagicLink? = nil,
+                sms: OTP? = nil
+            ) {
+                self.oauth = oauth
+                self.password = password
+                self.magicLink = magicLink
+                self.sms = sms
+            }
         }
 
         public struct OAuth {

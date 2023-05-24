@@ -7,17 +7,15 @@ struct StytchUI_Previews: PreviewProvider {
         AuthRootViewController(
             config: .init(
                 publicToken: "",
-                products: [
-                    .oauth(
-                        .init(
-                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
-                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                        )
+                products: .init(
+                    oauth: .init(
+                        providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
                     ),
-                    .magicLink(),
-                    .sms(),
-                ],
+                    magicLink: .init(),
+                    sms: .init()
+                ),
                 session: .init()
             )
         )
