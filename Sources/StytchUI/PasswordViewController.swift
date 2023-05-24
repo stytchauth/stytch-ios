@@ -1,27 +1,9 @@
-//@testable
 import StytchCore
 import UIKit
 
-struct PasswordVCState {
-    enum Intent {
-        case signup
-        case login
-        case enterNewPassword(token: String)
-    }
-    let intent: Intent
-    let email: String
-    let magicLinksEnabled: Bool
-}
-
-enum PasswordVCAction {
-    case didTapEmailLoginLink(email: String)
-    case didTapLogin(email: String, password: String)
-    case didTapSignup(email: String, password: String)
-    case didTapSetPassword(token: String, password: String)
-    case didTapForgotPassword(email: String)
-}
-
 final class PasswordViewController: BaseViewController<PasswordVCState, PasswordVCAction> {
+    private let scrollView: UIScrollView = .init()
+
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private lazy var emailLoginLinkPrimaryButton: Button = .primary(
@@ -62,7 +44,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
-        input.textInput.textContentType = .password
+        input.textInput.textContentType = .newPassword
         input.textInput.rightView = secureEntryToggleButton
         input.textInput.rightViewMode = .always
         return input
@@ -82,17 +64,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
     private lazy var continueButton: Button = .primary(
         title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
-    ) { [weak self] in
-        guard let self, let email = self.emailInput.text, let password = self.passwordInput.text else { return }
-        switch state.intent {
-        case let .enterNewPassword(token):
-            self.perform(action: .didTapSetPassword(token: token, password: password))
-        case .login:
-            self.perform(action: .didTapLogin(email: email, password: password))
-        case .signup:
-            self.perform(action: .didTapSignup(email: email, password: password))
-        }
-    }
+    ) { [weak self] in self?.submit() }
 
     private lazy var forgotPasswordButton: Button = .tertiary(
         title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
@@ -115,8 +87,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        continueButton.isEnabled = false
         emailInput.textInput.placeholder = nil
+        continueButton.isEnabled = false
         forgotPasswordButton.setTitleColor(.secondary, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
@@ -129,7 +101,24 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             self?.continueButton.isEnabled = isValid
         }
 
-        attachStackView(within: view)
+        passwordInput.onReturn = { [weak self] isValid in
+            guard isValid else { return }
+            self?.submit()
+        }
+
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
@@ -159,6 +148,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        passwordInput.textInput.becomeFirstResponder()
     }
 
     override func stateDidUpdate(state: State) {
@@ -199,6 +190,19 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
                 lowerSeparator.isHidden = false
                 emailLoginLinkTertiaryButton.isHidden = false
             }
+        }
+    }
+
+    private func submit() {
+        guard let email = emailInput.text, let password = passwordInput.text else { return }
+
+        switch state.intent {
+        case let .enterNewPassword(token):
+            perform(action: .didTapSetPassword(token: token, password: password))
+        case .login:
+            perform(action: .didTapLogin(email: email, password: password))
+        case .signup:
+            perform(action: .didTapSignup(email: email, password: password))
         }
     }
 
@@ -246,6 +250,25 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             }
         }
     }
+}
+
+struct PasswordVCState {
+    enum Intent {
+        case signup
+        case login
+        case enterNewPassword(token: String)
+    }
+    let intent: Intent
+    let email: String
+    let magicLinksEnabled: Bool
+}
+
+enum PasswordVCAction {
+    case didTapEmailLoginLink(email: String)
+    case didTapLogin(email: String, password: String)
+    case didTapSignup(email: String, password: String)
+    case didTapSetPassword(token: String, password: String)
+    case didTapForgotPassword(email: String)
 }
 
 private extension String {

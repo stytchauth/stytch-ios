@@ -66,6 +66,8 @@ final class AuthRootViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: homeController)
         navController = navigationController
         navigationController.navigationBar.tintColor = .label
+        navigationController.navigationBar.barTintColor = .systemBackground
+        navigationController.navigationBar.shadowImage = .init()
 
         addChild(navigationController)
         view.addSubview(navigationController.view)

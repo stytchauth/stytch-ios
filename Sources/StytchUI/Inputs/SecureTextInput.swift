@@ -5,6 +5,8 @@ final class SecureTextInput: TextInputView<SecureTextField> {
 
     var text: String? { textInput.text }
 
+    var onReturn: (Bool) -> Void = { _ in }
+
     override func setUp() {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] notification in
             guard let self else { return }
@@ -12,6 +14,7 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         }
         supplementaryView = progressBar
         progressBar.isHidden = true
+        textInput.delegate = self
     }
 }
 
@@ -30,5 +33,12 @@ final class SecureTextField: BorderedTextField, TextInputType {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension SecureTextInput: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        onReturn(isValid)
+        return true
     }
 }
