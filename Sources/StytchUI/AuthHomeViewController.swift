@@ -1,5 +1,3 @@
-import PhoneNumberKit
-import StytchCore
 import UIKit
 
 final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAction> {

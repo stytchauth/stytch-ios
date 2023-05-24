@@ -1,11 +1,5 @@
 import UIKit
 
-enum AuthInputVCAction {
-    case didTapCountryCode(input: PhoneNumberInput)
-    case didTapContinueEmail(email: String)
-    case didTapContinuePhone(phone: String, formattedPhone: String)
-}
-
 final class AuthInputViewController: BaseViewController<StytchUIClient.Configuration, AuthInputVCAction> {
     private enum Input {
         case email
@@ -140,4 +134,10 @@ final class AuthInputViewController: BaseViewController<StytchUIClient.Configura
             )
         }
     }
+}
+
+enum AuthInputVCAction {
+    case didTapCountryCode(input: PhoneNumberInput)
+    case didTapContinueEmail(email: String)
+    case didTapContinuePhone(phone: String, formattedPhone: String)
 }

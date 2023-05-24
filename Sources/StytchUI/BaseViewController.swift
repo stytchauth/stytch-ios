@@ -1,9 +1,8 @@
 import UIKit
 
-// swiftlint:disable:next generic_type_name
-class BaseViewController<_State, _Action>: UIViewController {
-    typealias State = _State
-    typealias Action = _Action
+class BaseViewController<VCState, VCAction>: UIViewController {
+    typealias State = VCState
+    typealias Action = VCAction
 
     private let actionTransformer: (Action) -> AuthHomeAction
 

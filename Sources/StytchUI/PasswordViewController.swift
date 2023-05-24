@@ -240,7 +240,8 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
         Task { @MainActor in
             do {
-                let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: emailInput.text, password: password))
+                let email = emailInput.text == .redactedEmail ? nil : emailInput.text
+                let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {

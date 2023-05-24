@@ -1,17 +1,4 @@
-import StytchCore
 import UIKit
-
-enum OTPVCAction {
-    case didTapResendCode(phone: String, controller: OTPCodeViewController)
-    case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
-}
-
-struct OTPVCState {
-    let phoneNumberE164: String
-    let formattedPhoneNumber: String
-    let methodId: String
-    let codeExpiry: Date
-}
 
 final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     private let titleLabel: UILabel = .makeTitleLabel(
@@ -101,16 +88,6 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         )
     }
 
-//        Task {
-//            do {
-//                let result = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
-//                onAuthenticate(result)
-//            } catch let error as StytchError where error.errorType == "otp_code_not_found" {
-//                stackView.setCustomSpacing(2, after: codeField)
-//                errorLabel.isHidden = false
-//            }
-//        }
-
     @objc private func updateExiryText() {
         guard
             case let currentDate = Date(),
@@ -157,4 +134,16 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         attributedString.append(appendedAttributedString)
         return attributedString
     }
+}
+
+enum OTPVCAction {
+    case didTapResendCode(phone: String, controller: OTPCodeViewController)
+    case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
+}
+
+struct OTPVCState {
+    let phoneNumberE164: String
+    let formattedPhoneNumber: String
+    let methodId: String
+    let codeExpiry: Date
 }

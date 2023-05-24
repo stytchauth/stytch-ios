@@ -2,10 +2,6 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-enum OAuthVCAction {
-    case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
-}
-
 final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, OAuthVCAction> {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,38 +62,12 @@ private extension OAuthViewController {
     }
 }
 
+enum OAuthVCAction {
+    case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
+}
+
 private extension StytchClient.OAuth.ThirdParty.Provider {
     var imageAsset: ImageAsset? {
         .oauthIcon(self)
     }
 }
-
-//
-//    @objc private func didTapGoogle() {
-//        Task {
-//            do {
-//                let (token, url) = try await StytchClient.oauth.google.start(
-//                    parameters: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters(
-//                        loginRedirectUrl: URL(string: "uikit-example://login")!,
-//                        signupRedirectUrl: URL(string: "uikit-example://signup")!
-//                    )
-//                )
-//                let result = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
-//                print(url.pathComponents.last == "login" ? "Welcome back!" : "Welcome")
-//                authenticate(response: result)
-//            } catch {
-//                print(error)
-//            }
-//        }
-//    }
-//
-//    @objc private func didTapApple() {
-//        Task {
-//            do {
-//                let result = try await StytchClient.oauth.apple.start(parameters: .init())
-//                authenticate(response: result)
-//            } catch {
-//                print(error)
-//            }
-//        }
-//    }

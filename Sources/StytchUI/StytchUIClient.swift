@@ -1,5 +1,6 @@
 import Combine
 import StytchCore
+import SwiftUI
 import UIKit
 
 public enum StytchUIClient {
@@ -26,7 +27,7 @@ public enum StytchUIClient {
             case .handled, .notHandled:
                 break
             case let .manualHandlingRequired(_, token):
-                let email = pendingResetEmail ?? "*****@*****"
+                let email = pendingResetEmail ?? .redactedEmail
                 if let currentController {
                     currentController.handlePasswordReset(token: token, email: email)
                 } else if let config {
@@ -47,6 +48,14 @@ public enum StytchUIClient {
             .sink { [weak currentController] _ in
                 currentController?.presentingViewController?.dismiss(animated: true)
             }
+    }
+}
+
+public extension View {
+    func authenticationSheet(isPresented: Binding<Bool>, config: StytchUIClient.Configuration) -> some View {
+        sheet(isPresented: isPresented) {
+            AuthenticationView(config: config)
+        }
     }
 }
 
@@ -183,16 +192,6 @@ public extension StytchUIClient {
     }
 }
 
-import SwiftUI
-
-public extension View {
-    func authenticationSheet(isPresented: Binding<Bool>, config: StytchUIClient.Configuration) -> some View {
-        sheet(isPresented: isPresented) {
-            AuthenticationView(config: config)
-        }
-    }
-}
-
 struct AuthenticationView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
 
@@ -210,4 +209,8 @@ struct AuthenticationView: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_: UIViewController, context _: Context) {}
+}
+
+extension String {
+    static let redactedEmail = "*****@*****"
 }

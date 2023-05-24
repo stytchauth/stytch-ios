@@ -1,4 +1,3 @@
-import StytchCore
 import SwiftUI
 
 // swiftlint:disable force_unwrapping

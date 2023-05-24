@@ -315,15 +315,6 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
 
 struct Bootstrap: Decodable {
     let disableSdkWatermark: Bool
-    // let emailDomains: [String]
-    // let cnameDomain: String
-    // let captchaSettings: JSON
-    // let pkceRequiredForEmailMagicLinks: Bool?
-    // let pkceRequiredForOauth: Bool?
-    // let pkceRequiredForPasswordResets: Bool?
-    // let pkceRequiredForSso: Bool?
-    // let slugPattern: String
-    // let createOrganizationEnabled: Bool
 }
 
 private struct UserSearchResponse: Decodable {
