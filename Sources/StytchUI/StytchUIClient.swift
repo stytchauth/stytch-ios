@@ -44,6 +44,7 @@ public enum StytchUIClient {
 
     static func setUpSessionChangeListener() {
         cancellable = StytchClient.sessions.onAuthChange
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak currentController] _ in
                 currentController?.presentingViewController?.dismiss(animated: true)
