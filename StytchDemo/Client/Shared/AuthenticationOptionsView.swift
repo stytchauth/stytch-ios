@@ -8,6 +8,8 @@ struct AuthenticationOptionsView: View {
     @Environment(\.presentationMode) private var presentationMode
     @State private var authPresented = false
 
+    var redirectUrl: URL { configuration.serverUrl }
+
     var body: some View {
         VStack {
             Button("Authenticate with UI") {
