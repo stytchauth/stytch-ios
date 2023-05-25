@@ -55,7 +55,7 @@ test-all: codegen
 
 .PHONY: test tests test-macos
 test tests test-macos: codegen
-	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" | $(XCPRETTY)
+	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
