@@ -96,8 +96,8 @@ struct AuthenticationOptionsView: View {
                 products: .init(
                     oauth: .init(
                         providers: [.apple, .thirdParty(.google)],
-                        loginRedirectUrl: redirectUrl,
-                        signupRedirectUrl: redirectUrl
+                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
                     ),
                     password: .init(
                         loginURL: redirectUrl,
