@@ -54,7 +54,7 @@ test-all: codegen
 
 .PHONY: test tests test-macos
 test tests test-macos: codegen
-	$(ARCH) swift test --enable-code-coverage --disable-automatic-resolution --skip-update
+	$(ARCH) swift test --enable-code-coverage --skip-update
 
 .PHONY: test-ios
 test-ios: codegen
