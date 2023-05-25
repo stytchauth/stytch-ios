@@ -56,6 +56,7 @@ public extension View {
     func authenticationSheet(isPresented: Binding<Bool>, config: StytchUIClient.Configuration) -> some View {
         sheet(isPresented: isPresented) {
             AuthenticationView(config: config)
+                .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }
 }
