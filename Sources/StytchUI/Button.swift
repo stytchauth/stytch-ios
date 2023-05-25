@@ -60,7 +60,7 @@ class Button: UIButton {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
             if let kind {
                 updateColors(for: kind)
             }

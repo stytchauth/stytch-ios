@@ -138,7 +138,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
             update()
         }
     }

@@ -28,7 +28,7 @@ private extension UIColor {
 extension UIColor {
     static let background: UIColor = .init { $0.userInterfaceStyle == .dark ? .charcoal : .white }
 
-    static let primaryText: UIColor = .init { $0.userInterfaceStyle == .dark ? .chalk : .black } // supposed to be charcoal
+    static let primaryText: UIColor = .init { $0.userInterfaceStyle == .dark ? .chalk : .black }
     static let placeholderText: UIColor = .init { $0.userInterfaceStyle == .dark ? .steel : .steel }
     static let disabledText: UIColor = .init { $0.userInterfaceStyle == .dark ? .steel : .steel }
     static let secondaryText: UIColor = .init { $0.userInterfaceStyle == .dark ? .cement : .slate }
