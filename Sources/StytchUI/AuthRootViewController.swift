@@ -57,8 +57,15 @@ final class AuthRootViewController: UIViewController {
         navController?.pushViewController(controller, animated: animated)
     }
 
+    @objc func dismissAuth() {
+        presentingViewController?.dismiss(animated: true)
+    }
+
     private func render(bootstrap: Bootstrap) {
         let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config)) { $0 }
+        if config.includeCloseButton {
+            homeController.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .close, target: self, action: #selector(dismissAuth))
+        }
         let navigationController = UINavigationController(rootViewController: homeController)
         navController = navigationController
         navigationController.navigationBar.tintColor = .primaryText

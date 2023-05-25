@@ -47,7 +47,7 @@ public enum StytchUIClient {
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak currentController] _ in
-                currentController?.presentingViewController?.dismiss(animated: true)
+                currentController?.dismissAuth()
             }
     }
 }
@@ -63,6 +63,7 @@ public extension View {
 public extension StytchUIClient {
     struct Configuration {
         let publicToken: String
+        let includeCloseButton: Bool
         let products: Products
         let session: Session?
 
@@ -82,10 +83,12 @@ public extension StytchUIClient {
 
         public init(
             publicToken: String,
+            includeCloseButton: Bool = false,
             products: Products,
             session: Session? = nil
         ) {
             self.publicToken = publicToken
+            self.includeCloseButton = includeCloseButton
             self.products = products
             self.session = session
         }
