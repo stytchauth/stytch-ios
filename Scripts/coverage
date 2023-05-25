@@ -4,14 +4,17 @@ function llvm-cov() {
     $(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov "$@"
 }
 
-bin_path="$(swift build --show-bin-path)"
-xctest_path="$(find $bin_path -name '*.xctest')"
-
-profdata_path="$bin_path/codecov/default.profdata"
-pkg_contents_path="$xctest_path/Contents/MacOS/$(basename $xctest_path .xctest)"
-ignore_regex="\.build|Tests|\.generated.swift|\+Live.swift|\+Mock.swift|Sources/StytchCore/KeychainClient/Migrations"
-
+mkdir -p .build
 mkdir -p .coverage
+
+bin_path=".build"
+
+xctest_path="$(find $bin_path -name '*.xctest')"
+profdata_path="$(find $bin_path -name '*.profdata')"
+
+contents_path="$xctest_path/Contents/MacOS/$(basename $xctest_path .xctest)"
+
+ignore_regex="\.build|Tests|\.generated.swift|\+Live.swift|\+Mock.swift|Sources/StytchCore/KeychainClient/Migrations"
 
 case "$1" in
     generate-html)
@@ -19,7 +22,7 @@ case "$1" in
             -format=lcov \
             -ignore-filename-regex="$ignore_regex" \
             -instr-profile="$profdata_path" \
-            "$pkg_contents_path" \
+            "$contents_path" \
             > .coverage/lcov.info
 
         genhtml .coverage/lcov.info --output-directory .coverage/
@@ -29,17 +32,21 @@ case "$1" in
             -format=text \
             -ignore-filename-regex="$ignore_regex" \
             -instr-profile="$profdata_path" \
-            "$pkg_contents_path" \
+            "$contents_path" \
             > .coverage/lcov.json
         ;;
     report)
         llvm-cov report \
             -ignore-filename-regex="$ignore_regex" \
             -instr-profile="$profdata_path" \
-            "$pkg_contents_path" \
+            "$contents_path" \
         ;;
     instr-profile-path)
-        echo "$profdata_path"
+        if [ -z "$profdata_path" ]; then
+          echo "MISSINGPATH"
+        else
+          echo "$profdata_path"
+        fi
         ;;
     *)
         echo 'Unrecognized command'
