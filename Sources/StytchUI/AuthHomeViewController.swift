@@ -62,6 +62,20 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
 
         NSLayoutConstraint.activate(constraints)
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if navigationItem.leftBarButtonItem == nil && navigationItem.rightBarButtonItem == nil {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 }
 
 struct AuthHomeState {

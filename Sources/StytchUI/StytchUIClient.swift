@@ -71,7 +71,7 @@ public extension View {
 public extension StytchUIClient {
     struct Configuration {
         let publicToken: String
-        let includeCloseButton: Bool
+        let navigation: Navigation?
         let products: Products
         let session: Session?
 
@@ -91,12 +91,12 @@ public extension StytchUIClient {
 
         public init(
             publicToken: String,
-            includeCloseButton: Bool = false,
+            navigation: Navigation? = nil,
             products: Products,
             session: Session? = nil
         ) {
             self.publicToken = publicToken
-            self.includeCloseButton = includeCloseButton
+            self.navigation = navigation
             self.products = products
             self.session = session
         }
@@ -199,6 +199,26 @@ public extension StytchUIClient {
 
             public init(sessionDuration: Minutes? = nil) {
                 self.sessionDuration = sessionDuration
+            }
+        }
+
+        public struct Navigation {
+            let closeButtonStyle: CloseButtonStyle?
+
+            /// - Parameter closeButtonStyle: Determines the type of close button used on the root view as well as its position.
+            public init(closeButtonStyle: CloseButtonStyle? = .close(.right)) {
+                self.closeButtonStyle = closeButtonStyle
+            }
+
+            public enum CloseButtonStyle {
+                case cancel(Position = .right)
+                case close(Position = .right)
+                case done(Position = .right)
+
+                public enum Position {
+                    case left
+                    case right
+                }
             }
         }
     }

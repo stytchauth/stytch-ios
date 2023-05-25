@@ -65,8 +65,15 @@ final class AuthRootViewController: UIViewController {
 
     private func render(bootstrap: Bootstrap) {
         let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config)) { $0 }
-        if config.includeCloseButton {
-            homeController.navigationItem.rightBarButtonItem = .init(barButtonSystemItem: .close, target: self, action: #selector(dismissAuth))
+        if let closeButton = config.navigation?.closeButtonStyle {
+            let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
+            switch closeButton.position {
+            case .left:
+                keyPath = \.navigationItem.leftBarButtonItem
+            case .right:
+                keyPath = \.navigationItem.rightBarButtonItem
+            }
+            homeController[keyPath: keyPath] = .init(barButtonSystemItem: closeButton.barButtonSystemItem, target: self, action: #selector(dismissAuth))
         }
         let navigationController = UINavigationController(rootViewController: homeController)
         navController = navigationController
@@ -330,4 +337,24 @@ private struct UserSearchResponse: Decodable {
     }
 
     let userType: UserType
+}
+
+private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
+    var barButtonSystemItem: UIBarButtonItem.SystemItem {
+        switch self {
+        case .cancel:
+            return .cancel
+        case .close:
+            return .close
+        case .done:
+            return .done
+        }
+    }
+
+    var position: Position {
+        switch self {
+        case let .cancel(position), let .close(position), let .done(position):
+            return position
+        }
+    }
 }

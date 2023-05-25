@@ -93,6 +93,7 @@ struct AuthenticationOptionsView: View {
             isPresented: $authPresented,
             config: .init(
                 publicToken: configuration.publicToken,
+                navigation: .init(),
                 products: .init(
                     oauth: .init(
                         providers: [.apple, .thirdParty(.google)],
