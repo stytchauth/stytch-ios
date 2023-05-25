@@ -66,7 +66,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if navigationItem.leftBarButtonItem == nil && navigationItem.rightBarButtonItem == nil {
+        if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
             navigationController?.setNavigationBarHidden(true, animated: animated)
         }
     }

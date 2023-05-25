@@ -211,14 +211,14 @@ public extension StytchUIClient {
             }
 
             public enum CloseButtonStyle {
-                case cancel(Position = .right)
-                case close(Position = .right)
-                case done(Position = .right)
+                case cancel(BarButtonPosition = .right)
+                case close(BarButtonPosition = .right)
+                case done(BarButtonPosition = .right)
+            }
 
-                public enum Position {
-                    case left
-                    case right
-                }
+            public enum BarButtonPosition {
+                case left
+                case right
             }
         }
     }

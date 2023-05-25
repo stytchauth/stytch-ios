@@ -351,7 +351,7 @@ private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
         }
     }
 
-    var position: Position {
+    var position: StytchUIClient.Configuration.Navigation.BarButtonPosition {
         switch self {
         case let .cancel(position), let .close(position), let .done(position):
             return position
