@@ -13,7 +13,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
 
     private let retryButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitleColor(.secondary, for: .normal)
+        button.setTitleColor(.secondaryText, for: .normal)
         button.contentHorizontalAlignment = .leading
         button.titleLabel?.numberOfLines = 0
         return button

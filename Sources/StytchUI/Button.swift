@@ -1,7 +1,20 @@
 import UIKit
 
 class Button: UIButton {
+    enum Kind {
+        case primary
+        case secondary
+        case tertiary
+    }
+
     private let feedback = UIImpactFeedbackGenerator(style: .light)
+
+    fileprivate var kind: Kind? {
+        didSet {
+            guard let kind else { return }
+            updateColors(for: kind)
+        }
+    }
 
     override var intrinsicContentSize: CGSize {
         .init(width: UIView.noIntrinsicMetric, height: .buttonHeight)
@@ -48,9 +61,25 @@ class Button: UIButton {
         super.traitCollectionDidChange(previousTraitCollection)
 
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            if layer.borderColor != nil {
-                layer.borderColor = UIColor.primaryText.cgColor
+            if let kind {
+                updateColors(for: kind)
             }
+        }
+    }
+
+    func updateColors(for kind: Kind) {
+        switch kind {
+        case .primary:
+            setBackgroundImage(UIColor.primaryButtonDisabled.image(), for: .disabled)
+            setBackgroundImage(UIColor.primaryButton.image(), for: .normal)
+            setBackgroundImage(UIColor.primaryButton.withAlphaComponent(0.7).image(), for: .highlighted)
+            setTitleColor(.primaryButtonText, for: .normal)
+            setTitleColor(.primaryButtonTextDisabled, for: .disabled)
+        case .secondary:
+            setBackgroundImage(UIColor.primaryText.withAlphaComponent(0.4).image(), for: .highlighted)
+            layer.borderColor = UIColor.secondaryButtonText.cgColor
+        case .tertiary:
+            setTitleColor(.tertiaryButton, for: .normal)
         }
     }
 }
@@ -58,12 +87,8 @@ class Button: UIButton {
 extension Button {
     static func primary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
+        button.kind = .primary
         button.onTap = onTap
-        button.setBackgroundImage(UIColor.disabled.image(), for: .disabled)
-        button.setBackgroundImage(UIColor.brand.image(), for: .normal)
-        button.setBackgroundImage(UIColor.brand.withAlphaComponent(0.7).image(), for: .highlighted)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.placeholder, for: .disabled)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         return button
@@ -71,6 +96,7 @@ extension Button {
 
     static func secondary(image asset: ImageAsset?, title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
+        button.kind = .secondary
         button.setImage(asset?.image, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.setInsets(
@@ -87,9 +113,7 @@ extension Button {
             ),
             for: .normal
         )
-        button.setBackgroundImage(UIColor.primaryText.withAlphaComponent(0.4).image(), for: .highlighted)
         button.onTap = onTap
-        button.layer.borderColor = UIColor.primaryText.cgColor
         button.layer.borderWidth = 2 / 3
         button.layer.cornerRadius = .cornerRadius
         return button
@@ -97,9 +121,8 @@ extension Button {
 
     static func tertiary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
+        button.kind = .tertiary
         button.onTap = onTap
-        button.setTitleColor(.brand, for: .normal)
-        button.setTitleColor(.systemGray, for: .highlighted)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         return button

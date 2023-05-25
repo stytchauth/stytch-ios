@@ -24,6 +24,8 @@ final class AuthRootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .background
+
         StytchClient.configure(publicToken: config.publicToken)
 
         activityIndicator.hidesWhenStopped = true

@@ -21,7 +21,7 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         ) { [weak self] in
             self?.presentCodeResetConfirmation()
         }
-        button.setTitleColor(.secondary, for: .normal)
+        button.setTitleColor(.secondaryText, for: .normal)
         button.contentHorizontalAlignment = .leading
         button.titleLabel?.numberOfLines = 0
         return button

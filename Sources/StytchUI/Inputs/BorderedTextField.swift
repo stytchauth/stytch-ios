@@ -9,7 +9,7 @@ class BorderedTextField: UITextField {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.borderColor = UIColor.placeholder.cgColor
+        layer.borderColor = UIColor.placeholderText.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = .cornerRadius
         insets = .init(top: 0, left: 10, bottom: 0, right: 10)
@@ -35,7 +35,7 @@ class BorderedTextField: UITextField {
 
 extension UITextField {
     func applyBorderedStyle() {
-        layer.borderColor = UIColor.placeholder.cgColor
+        layer.borderColor = UIColor.placeholderText.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = .cornerRadius
         leftView = .init(frame: .init(origin: .zero, size: .init(width: 10, height: 10)))

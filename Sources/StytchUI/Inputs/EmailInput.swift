@@ -5,7 +5,7 @@ final class EmailInput: TextInputView<EmailTextField> {
         get { textInput.isEnabled }
         set {
             textInput.isEnabled = newValue
-            textInput.textColor = isEnabled ? .primaryText : .disabledSecondary
+            textInput.textColor = isEnabled ? .primaryText : .disabledText
             update()
         }
     }
@@ -41,7 +41,7 @@ final class EmailTextField: BorderedTextField, TextInputType {
         textContentType = .emailAddress
         keyboardType = .emailAddress
         background = UIColor.clear.image()
-        disabledBackground = UIColor.disabled.image()
+        disabledBackground = UIColor.textfieldDisabled.image()
     }
 
     @available(*, unavailable)

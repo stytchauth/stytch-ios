@@ -25,7 +25,7 @@ final class LabelSeparatorView: UIView {
 
         subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
-        label.textColor = .placeholder
+        label.textColor = .placeholderText
 
         NSLayoutConstraint.activate([
             leadingBar.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -49,7 +49,7 @@ final class LabelSeparatorView: UIView {
 
     private static func makeSeparatorBar() -> UIView {
         let view = UIView()
-        view.backgroundColor = .placeholder
+        view.backgroundColor = .placeholderText
         return view
     }
 }

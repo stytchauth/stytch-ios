@@ -27,7 +27,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     private let emailInputLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .secondary
+        label.textColor = .secondaryText
         label.text = NSLocalizedString("stytch.emailInputLabel", value: "Email", comment: "")
         return label
     }()
@@ -37,7 +37,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     private let passwordInputLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .secondary
+        label.textColor = .secondaryText
         label.text = NSLocalizedString("stytch.passwordInputLabel", value: "Password", comment: "")
         return label
     }()
@@ -55,7 +55,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         button.adjustsImageWhenHighlighted = false
         button.setImage(UIImage(systemName: "eye"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .secondary
+        button.tintColor = .secondaryText
         button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([button.heightAnchor.constraint(equalToConstant: 12.5)])
@@ -89,7 +89,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
 
         emailInput.textInput.placeholder = nil
         continueButton.isEnabled = false
-        forgotPasswordButton.setTitleColor(.secondary, for: .normal)
+        forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
             switch self?.state.intent {

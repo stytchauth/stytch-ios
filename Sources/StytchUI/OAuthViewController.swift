@@ -45,7 +45,7 @@ private extension OAuthViewController {
         ])
         button.cornerRadius = .cornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .brand
+        button.tintColor = .primaryText
         return button
     }
 

@@ -31,16 +31,16 @@ final class ProgressBar: UIView {
         didSet {
             guard let progress else {
                 stackView.arrangedSubviews.forEach { view in
-                    view.backgroundColor = .placeholder
+                    view.backgroundColor = .progressDefault
                 }
                 return
             }
             let progressColor: UIColor = progress.rawValue < 2 ?
-                .error :
-                .brand
+                .progressDanger :
+                .progressSuccess
 
             stackView.arrangedSubviews.enumerated().forEach { index, view in
-                view.backgroundColor = index <= progress.rawValue ? progressColor : .placeholder
+                view.backgroundColor = index <= progress.rawValue ? progressColor : .progressDefault
             }
         }
     }
@@ -65,7 +65,7 @@ final class ProgressBar: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        stackView.arrangedSubviews.forEach { $0.backgroundColor = .placeholder }
+        stackView.arrangedSubviews.forEach { $0.backgroundColor = .progressDefault }
     }
 
     @available(*, unavailable)

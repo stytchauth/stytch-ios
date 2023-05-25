@@ -55,7 +55,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
     private let feedbackLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.textColor = .error
+        label.textColor = .dangerText
         label.isHidden = true
         return label
     }()
@@ -121,14 +121,14 @@ class TextInputView<TextInput: TextInputType>: UIView {
         let borderColor: UIColor
         switch (feedback, textInput.isEnabled) {
         case (.error, _):
-            borderColor = .error
-            feedbackLabel.textColor = .error
+            borderColor = .dangerText
+            feedbackLabel.textColor = .dangerText
         case (_, true):
-            borderColor = .placeholder
-            feedbackLabel.textColor = .brand
+            borderColor = .borderActive
+            feedbackLabel.textColor = .primaryText
         case (_, false):
-            borderColor = .lightBorder
-            feedbackLabel.textColor = .brand
+            borderColor = .borderActive
+            feedbackLabel.textColor = .primaryText
         }
         textInput.fields.forEach { view in
             view.layer.borderColor = borderColor.cgColor
