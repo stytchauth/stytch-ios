@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PhoneNumberKit",
+        "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
+        "state": {
+          "branch": null,
+          "revision": "6edd6e38a30aec087cb97f7377edf876c29a427e",
+          "version": "3.5.9"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
