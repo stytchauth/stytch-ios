@@ -1,5 +1,6 @@
-IOS_VERSION := $(shell xcodebuild -showsdks | grep 'sdk iphoneos' | sed 's/\(.*iphoneos\)\(.*\)/\2/')
-WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep 'sdk watchos' | sed 's/\(.*watchos\)\(.*\)/\2/')
+MACOS_VERSION := $(shell xcodebuild -showsdks | grep -m 1 'sdk macosx' | sed 's/\(.*macosx\)\(.*\)/\2/')
+IOS_VERSION := $(shell xcodebuild -showsdks | grep -m 1 'sdk iphoneos' | sed 's/\(.*iphoneos\)\(.*\)/\2/')
+WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep -m 1 'sdk watchos' | sed 's/\(.*watchos\)\(.*\)/\2/')
 
 IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
 ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
@@ -54,7 +55,7 @@ test-all: codegen
 
 .PHONY: test tests test-macos
 test tests test-macos: codegen
-	$(ARCH) swift test --enable-code-coverage --disable-automatic-resolution --skip-update
+	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen

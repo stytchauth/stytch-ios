@@ -41,7 +41,20 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testStrengthCheck() async throws {
         networkInterceptor.responses {
-            StytchClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, feedback: .init(suggestions: [], warning: "meh. do something.")))
+            StytchClient.Passwords.StrengthCheckResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .init(
+                    validPassword: false,
+                    score: 20,
+                    breachedPassword: true,
+                    feedback: .init(
+                        suggestions: [],
+                        warning: "meh. do something.",
+                        ludsRequirements: nil
+                    )
+                )
+            )
         }
         _ = try await StytchClient.passwords.strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters(email: nil, password: "p@ssword123"))
 
