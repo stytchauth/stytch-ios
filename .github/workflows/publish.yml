@@ -20,14 +20,6 @@ jobs:
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
 
-    - name: Publish to Cocoapods
-      run: |
-        set -eo pipefail
-        bundle exec pod lib lint --allow-warnings
-        bundle exec pod trunk push --allow-warnings
-      env:
-        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-
     - name: Publish to Carthage
       run: bundle exec Scripts/publish-to-carthage $(Scripts/version show-current)
       env:
