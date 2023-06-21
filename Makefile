@@ -7,7 +7,7 @@ ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
 TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
-HOSTING_BASE_PATH=$(shell echo stytch-swift/$$REF | sed 's:/$$::')
+HOSTING_BASE_PATH=$(shell echo stytch-ios/$$REF | sed 's:/$$::')
 
 .PHONY: coverage
 coverage:
