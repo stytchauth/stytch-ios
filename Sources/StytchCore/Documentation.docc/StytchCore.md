@@ -2,7 +2,7 @@
 
 Provides native access to the Stytch SDK methods for ultimate flexibility.
 
-The Swift SDK provides methods that communicate directly with the Stytch API. These help you get up and running with Stytch faster by removing the need to create endpoints on your backend to make requests to [Stytch](https://stytch.com).
+The iOS SDK provides methods that communicate directly with the Stytch API. These help you get up and running with Stytch faster by removing the need to create endpoints on your backend to make requests to [Stytch](https://stytch.com).
 
 _To see in-depth examples of basic, intermediate, and advanced usage of the Stytch SDK, check out our <doc:stytch>!_
 

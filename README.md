@@ -1,7 +1,7 @@
 <div align=center>
 
-![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
-![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
+![Stytch iOS SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
+![Stytch iOS SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
 ![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
@@ -38,7 +38,7 @@
 
 ### Why should I use the Stytch SDK?
 
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The iOS SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
 
 ``` swift
 import StytchCore
@@ -119,7 +119,7 @@ _To see in-depth examples of basic, intermediate, and advanced usage of the Styt
 
 ## Requirements
 
-The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
+The Stytch iOS SDK is compatible with apps targeting the following Apple platforms:
 - iOS 13+
 - macOS 10.15+
 - tvOS 13+
@@ -137,13 +137,13 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 
 ### Carthage
 
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch iOS SDK into your Xcode project, add the following to your Cartfile.
 ```
 binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json"
 ```
 
 ### CocoaPods
-[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
+[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch iOS SDK into your Xcode project, add the following to your Podfile.
 
 ```
 pod 'Stytch/StytchCore'
@@ -261,4 +261,4 @@ Feel free to reach out any time at [support@stytch.com](mailto:support@stytch.co
 
 ## License
 
-The Stytch Swift SDK is released under the MIT license. See [LICENSE](LICENSE) for details.
+The Stytch iOS SDK is released under the MIT license. See [LICENSE](LICENSE) for details.
