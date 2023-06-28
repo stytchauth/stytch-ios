@@ -72,7 +72,9 @@ extension User {
             status: .active,
             totps: [],
             webauthnRegistrations: [],
-            biometricRegistrations: []
+            biometricRegistrations: [],
+            untrustedMetadata: nil,
+            trustedMetadata: nil
         )
     }
 }

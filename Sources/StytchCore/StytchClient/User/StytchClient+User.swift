@@ -19,6 +19,13 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants
+        public func update(parameters: UpdateParameters) async throws -> UserResponse {
+            try await updatingCachedUser {
+                try await router.put(to: .index, parameters: parameters)
+            }
+        }
+
+        // sourcery: AsyncVariants
         /// Deletes, by id, an existing authentication factor associated with the current user.
         public func deleteFactor(_ factor: AuthenticationFactor) async throws -> UserResponse {
             try await updatingCachedUser {
@@ -61,5 +68,15 @@ public extension StytchClient.UserManagement {
         case email(id: User.Email.ID)
         case phoneNumber(id: User.PhoneNumber.ID)
         case webAuthnRegistration(id: User.WebAuthNRegistration.ID)
+    }
+
+    struct UpdateParameters: Encodable {
+        let name: User.Name?
+        let untrustedMetadata: JSON?
+
+        public init(name: User.Name? = nil, untrustedMetadata: JSON? = nil) {
+            self.name = name
+            self.untrustedMetadata = untrustedMetadata
+        }
     }
 }

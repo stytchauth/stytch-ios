@@ -17,6 +17,19 @@ final class UserManagementTestCase: BaseTestCase {
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/users/me", method: .get)
     }
 
+    func testUpdate() async throws {
+        networkInterceptor.responses { UserResponse(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123")) }
+        XCTAssertNil(StytchClient.user.getSync())
+        let updateUserResponse = try await StytchClient.user.update(parameters: .init(name: .init(firstName: "Dan"), untrustedMetadata: ["blah": 1]))
+        XCTAssertNotNil(StytchClient.user.getSync())
+        XCTAssertEqual(updateUserResponse.id, StytchClient.user.getSync()?.id)
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/users/me",
+            method: .put(["name": ["first_name": "Dan"], "untrusted_metadata": ["blah": 1]])
+        )
+    }
+
     func testDeleteFactor() async throws {
         let response: UserResponse = .init(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123"))
         networkInterceptor.responses {
