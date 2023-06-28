@@ -1,8 +1,8 @@
 import Foundation
 
 // FIXME: - move this code to the extracted client file
-import LocalAuthentication
 #if !os(tvOS) && !os(watchOS)
+import LocalAuthentication
 public extension StytchClient.Biometrics {
     enum Availability {
         case systemUnavailable(LAError.Code?)
