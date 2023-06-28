@@ -29,9 +29,9 @@ public struct User {
     public let webauthnRegistrations: [WebAuthNRegistration]
     /// The user's Biometric registrations.
     public let biometricRegistrations: [BiometricRegistration]
-
+    /// The user's untrusted metadata
     public let untrustedMetadata: JSON?
-    /// COMMENT
+    /// The user's trusted metadata
     public let trustedMetadata: JSON?
 }
 
