@@ -2,7 +2,7 @@
 
 Provides native access to the Stytch SDK methods for ultimate flexibility.
 
-The Swift SDK provides methods that communicate directly with the Stytch API. These help you get up and running with Stytch faster by removing the need to create endpoints on your backend to make requests to [Stytch](https://stytch.com).
+The iOS SDK provides methods that communicate directly with the Stytch API. These help you get up and running with Stytch faster by removing the need to create endpoints on your backend to make requests to [Stytch](https://stytch.com).
 
 _To see in-depth examples of basic, intermediate, and advanced usage of the Stytch SDK, check out our <doc:stytch>!_
 
@@ -44,7 +44,7 @@ Async functions are available via various mechanisms (Async/Await, Combine, call
 
  Prior to using any authentication methods, you must configure the StytchClient/StytchB2BClient via one of two techniques:
 1. Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` (consumer) or ``StytchB2BClient/configure(publicToken:hostUrl:)`` (B2B) functions.
-1. Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-swift/blob/main/StytchDemo/Client/Shared/StytchConfiguration.plist))
+1. Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-ios/blob/main/StytchDemo/Client/Shared/StytchConfiguration.plist))
  
 ### Usage
 

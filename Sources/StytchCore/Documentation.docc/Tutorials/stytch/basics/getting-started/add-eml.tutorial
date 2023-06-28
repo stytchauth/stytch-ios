@@ -2,7 +2,7 @@
     @Intro(title: "Add Email Magic Links") {
         Email Magic Links are a great, user-friendly way to get started using Stytch!
         
-        _Email Magic Links require redirection from an outside email client back into your app. As a prerequisite to this tutorial, you'll need to set up redirect urls in the [Stytch Dashboard](https://stytch.com/dashboard/redirect-urls) and ensure [Universal Links](https://github.com/stytchauth/stytch-swift#associated-domains) are configured on your website and in your app's entitlements._
+        _Email Magic Links require redirection from an outside email client back into your app. As a prerequisite to this tutorial, you'll need to set up redirect urls in the [Stytch Dashboard](https://stytch.com/dashboard/redirect-urls) and ensure [Universal Links](https://github.com/stytchauth/stytch-ios#associated-domains) are configured on your website and in your app's entitlements._
     }
     
     @Section(title: "Set up deeplink handling") {

@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name         = 'Stytch'
   s.version      = `Scripts/version show-current`.strip
   s.summary      = "A Swift SDK for using Stytch's user-authentication products on Apple platforms."
-  s.homepage     = 'https://github.com/stytchauth/stytch-swift'
+  s.homepage     = 'https://github.com/stytchauth/stytch-ios'
   s.license      = {
     :type => 'MIT',
     :file => 'LICENSE'
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
       'Dan Loman' => 'dan@stytch.com'
   }
   s.source       = {
-    :git => 'https://github.com/stytchauth/stytch-swift.git',
+    :git => 'https://github.com/stytchauth/stytch-ios.git',
     :tag => s.version.to_s
   }
 
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.5'
 
-  s.documentation_url = "https://stytchauth.github.io/stytch-swift/documentation/stytchcore/"
+  s.documentation_url = "https://stytchauth.github.io/stytch-ios/documentation/stytchcore/"
 
   s.default_subspec = 'StytchCore'
 

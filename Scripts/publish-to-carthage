@@ -23,7 +23,7 @@ s3_client.get_object(
 
 # parse into hash, add new version to hash, and pretty print contents
 hash = JSON.parse(tmp_file.read)
-hash[version] = "https://github.com/stytchauth/stytch-swift/releases/download/#{version}/StytchCore.xcframework.zip"
+hash[version] = "https://github.com/stytchauth/stytch-ios/releases/download/#{version}/StytchCore.xcframework.zip"
 file_contents = JSON.pretty_generate(hash)
 
 # delete the tmp file

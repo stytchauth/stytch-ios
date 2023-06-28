@@ -34,9 +34,9 @@
             }
 
             @Step {
-                Search for <https://github.com/stytchauth/stytch-swift> and confirm addition to your project.
+                Search for <https://github.com/stytchauth/stytch-ios> and confirm addition to your project.
                 
-                @Image(source: 01-add-and-configure-05, alt: "Selecting https://github.com/stytchauth/stytch-swift as a dependency")
+                @Image(source: 01-add-and-configure-05, alt: "Selecting https://github.com/stytchauth/stytch-ios as a dependency")
             }
 
             @Step {
