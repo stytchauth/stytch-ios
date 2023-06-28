@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_14.0.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
@@ -37,13 +37,13 @@ jobs:
               return 1
             fi
           }
-          if ${{ github.ref == 'refs/heads/main' }} || [[ $(has_watchos_pr_label) ]]; then
+          if ${{ github.ref == 'refs/heads/main' }} || [[ $(has_watchos_pr_label) -eq 0 ]]; then
             matrix_values+=',{"test-os":"watchos"}'
           fi
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   test:
-    runs-on: macos-12
+    runs-on: macos-13
 
     needs: set-matrix
 

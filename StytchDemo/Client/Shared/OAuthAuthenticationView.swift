@@ -12,7 +12,9 @@ struct OAuthAuthenticationView: View {
         Button("Authenticate with Apple") {
             Task {
                 do {
-                    onAuth(try await StytchClient.oauth.apple.start(parameters: .init()))
+                    let response = try await StytchClient.oauth.apple.start(parameters: .init())
+                    print("User created: ", response.userCreated)
+                    onAuth(response)
                     presentationMode.wrappedValue.dismiss()
                 } catch {
                     print(error)
@@ -62,6 +64,7 @@ private enum Provider: String, CaseIterable, Identifiable {
     case github
     case google
     case linkedin
+    case salesforce
     case slack
     case snapchat
     case tiktok
@@ -85,6 +88,8 @@ private enum Provider: String, CaseIterable, Identifiable {
             return StytchClient.oauth.google
         case .linkedin:
             return StytchClient.oauth.linkedin
+        case .salesforce:
+            return StytchClient.oauth.salesforce
         case .slack:
             return StytchClient.oauth.slack
         case .snapchat:

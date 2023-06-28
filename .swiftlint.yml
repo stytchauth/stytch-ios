@@ -5,6 +5,7 @@ included:
 excluded:
   - StytchPlayground.playground
   - Sources/StytchCore/Generated
+  - Sources/StytchCore/Documentation.docc/Resources
 
 disabled_rules:
   - line_length

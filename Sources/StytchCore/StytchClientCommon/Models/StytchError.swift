@@ -114,7 +114,7 @@ public extension StytchError {
 
 private extension URL {
     static func readmeUrl(withFragment fragment: String) -> Self? {
-        guard var urlComponents = URLComponents(string: "https://github.com/stytchauth/stytch-swift") else {
+        guard var urlComponents = URLComponents(string: "https://github.com/stytchauth/stytch-ios") else {
             return nil
         }
         urlComponents.fragment = fragment

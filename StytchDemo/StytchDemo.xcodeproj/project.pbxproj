@@ -28,6 +28,7 @@
 		223F88C12894D0D500CE2B0C /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88BF2894D0D500CE2B0C /* PasswordView.swift */; };
 		223F88C32894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
 		223F88C42894D0F500CE2B0C /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F88C22894D0F500CE2B0C /* PasswordModel.swift */; };
+		224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */; };
 		224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 224F7D3B280CC5DE000230FA /* Assets.xcassets */; };
 		224F7D3F280CC5DE000230FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D3C280CC5DE000230FA /* ContentView.swift */; };
@@ -65,6 +66,8 @@
 		22909093284DCC8E00ADD3C4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909092284DCC8E00ADD3C4 /* Controller.swift */; };
 		22909095284DD5EE00ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
 		22909096284DD64000ADD3C4 /* HobbiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22909094284DD5EE00ADD3C4 /* HobbiesView.swift */; };
+		22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */; };
+		22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ABFABA29F7690100927518 /* SSOViewController.swift */; };
 		22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22B523B5296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */; };
 		22BE9A082848071B00E29245 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A072848071B00E29245 /* Routes.swift */; };
@@ -89,6 +92,7 @@
 		223F88BC2894D09400CE2B0C /* PasswordFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordFeedbackView.swift; sourceTree = "<group>"; };
 		223F88BF2894D0D500CE2B0C /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		223F88C22894D0F500CE2B0C /* PasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordModel.swift; sourceTree = "<group>"; };
+		224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsViewController.swift; sourceTree = "<group>"; };
 		224F7D35280CC566000230FA /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		224F7D3B280CC5DE000230FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		224F7D3C280CC5DE000230FA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -119,6 +123,8 @@
 		22909094284DD5EE00ADD3C4 /* HobbiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HobbiesView.swift; sourceTree = "<group>"; };
 		229B82182809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		229B821E2809EA3F007BC3F1 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewController.swift; sourceTree = "<group>"; };
+		22ABFABA29F7690100927518 /* SSOViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOViewController.swift; sourceTree = "<group>"; };
 		22B523B3296CDF09009FFC18 /* TOTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPAuthenticationView.swift; sourceTree = "<group>"; };
 		22BE99FD2847FFA300E29245 /* StytchDemo (Server) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "StytchDemo (Server)"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22BE9A072848071B00E29245 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
@@ -246,9 +252,12 @@
 			isa = PBXGroup;
 			children = (
 				2254779329A05C6A003DF229 /* MagicLinksViewController.swift */,
+				224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */,
 				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
 				2254779729A05D08003DF229 /* MemberViewController.swift */,
 				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
+				22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */,
+				22ABFABA29F7690100927518 /* SSOViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -499,11 +508,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */,
+				224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */,
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
 				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
+				22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */,
+				22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */,
 				2254779829A05D08003DF229 /* MemberViewController.swift in Sources */,
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,
 				2254779029A05C0C003DF229 /* AppViewController.swift in Sources */,

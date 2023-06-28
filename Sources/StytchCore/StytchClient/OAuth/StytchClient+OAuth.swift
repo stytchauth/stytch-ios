@@ -5,10 +5,12 @@ public extension StytchClient {
     struct OAuth {
         let router: NetworkingRouter<OAuthRoute>
 
+        @Dependency(\.keychainClient) private var keychainClient
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier: String = try Current.keychainClient.get(.oauthPKCECodeVerifier) else {
+            guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -64,6 +66,9 @@ public extension StytchClient.OAuth {
 
     /// The interface for authenticating a user with Microsoft.
     var microsoft: ThirdParty { .init(provider: .microsoft) }
+
+    /// The interface for authenticating a user with Salesforce.
+    var salesforce: ThirdParty { .init(provider: .salesforce) }
 
     /// The interface for authenticating a user with Slack.
     var slack: ThirdParty { .init(provider: .slack) }

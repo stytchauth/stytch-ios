@@ -29,7 +29,14 @@ public struct StytchClient: StytchClientType {
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
-        try _tokenValues(for: url)
+        guard let (type, token) = try _tokenValues(for: url) else { return nil }
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchError.unrecognizedDeeplinkTokenType }
+        return (tokenType, token)
+    }
+
+    /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchClient/tokenValues(for:)``
+    public static func canHandle(url: URL) -> Bool {
+        (try? tokenValues(for: url)) != nil
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -43,7 +50,7 @@ public struct StytchClient: StytchClientType {
     public static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
-    ) async throws -> DeeplinkHandledStatus<AuthenticateResponse> {
+    ) async throws -> DeeplinkHandledStatus<AuthenticateResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             return .notHandled
         }
@@ -55,8 +62,15 @@ public struct StytchClient: StytchClientType {
             return try await .handled(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .passwordReset:
             return .manualHandlingRequired(tokenType, token: token)
-        case .multiTenantMagicLinks:
-            return .notHandled
         }
+    }
+}
+
+public extension StytchClient {
+    /// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
+    enum DeeplinkTokenType: String {
+        case magicLinks = "magic_links"
+        case oauth
+        case passwordReset = "reset_password"
     }
 }

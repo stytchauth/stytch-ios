@@ -8,7 +8,15 @@ public extension StytchClient.OAuth {
     struct ThirdParty {
         let provider: Provider
 
+        @Dependency(\.openUrl) private var openUrl
+
+        @available(tvOS 16.0, *)
+        private var webAuthSessionClient: WebAuthenticationSessionClient {
+            Current.webAuthSessionClient
+        }
+
         /// Initiates the OAuth flow by using the included parameters to generate a URL and pass this off to the system's default browser. The user will be redirected to the corresponding redirectUrl (this should be back into the application), after completing the authentication challenge with the identity provider.
+        @available(*, deprecated)
         public func start(parameters: DefaultBrowserStartParameters) throws {
             let url = try generateStartUrl(
                 loginRedirectUrl: parameters.loginRedirectUrl,
@@ -16,7 +24,7 @@ public extension StytchClient.OAuth {
                 customScopes: parameters.customScopes
             )
 
-            Current.openUrl(url)
+            openUrl(url)
         }
 
         @available(tvOS 16.0, *) // Comments must be below attributes
@@ -50,7 +58,7 @@ public extension StytchClient.OAuth {
             #else
             let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)
             #endif
-            return try await Current.webAuthSessionClient.initiate(parameters: webClientParams)
+            return try await webAuthSessionClient.initiate(parameters: webClientParams)
         }
 
         private func generateStartUrl(
@@ -61,7 +69,7 @@ public extension StytchClient.OAuth {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
 
             var queryParameters = [
-                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .oauthPKCECodeVerifier).challenge),
+                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
                 ("public_token", publicToken),
             ]
 
@@ -162,6 +170,7 @@ extension StytchClient.OAuth.ThirdParty {
         case google
         case linkedin
         case microsoft
+        case salesforce
         case slack
         case snapchat
         case spotify

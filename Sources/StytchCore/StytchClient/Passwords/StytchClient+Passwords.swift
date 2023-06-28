@@ -6,6 +6,8 @@ public extension StytchClient {
     struct Passwords {
         let router: NetworkingRouter<PasswordsRoute>
 
+        @Dependency(\.keychainClient) private var keychainClient
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Create a new user with a password and an authenticated session for the user if requested. If a user with this email already exists in the project, an error will be returned.
         ///
@@ -29,7 +31,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates a password reset for the email address provided. This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .pwResetByEmailPKCECodeVerifier)
+            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
 
             return try await router.post(
                 to: .resetByEmail(.start),
@@ -46,7 +48,7 @@ public extension StytchClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier: String = try? Current.keychainClient.get(.pwResetByEmailPKCECodeVerifier) else {
+            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else {
                 throw StytchError.pckeNotAvailable
             }
 
@@ -55,7 +57,7 @@ public extension StytchClient {
                 parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
             )
 
-            try? Current.keychainClient.removeItem(.pwResetByEmailPKCECodeVerifier)
+            try? keychainClient.removeItem(.codeVerifierPKCE)
 
             return response
         }
@@ -208,6 +210,17 @@ public extension StytchClient.Passwords {
         public struct Feedback: Codable {
             public let suggestions: [String]
             public let warning: String
+            public let ludsRequirements: LudsRequirement?
+        }
+
+        /// An explanation of how a given password passes or fails a LUDS check
+        public struct LudsRequirement: Codable {
+            public let hasLowerCase: Bool
+            public let hasUpperCase: Bool
+            public let hasDigit: Bool
+            public let hasSymbol: Bool
+            public let missingComplexity: Int
+            public let missingCharacters: Int
         }
     }
 }

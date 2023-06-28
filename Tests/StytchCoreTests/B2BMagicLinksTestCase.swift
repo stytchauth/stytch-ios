@@ -2,7 +2,7 @@ import XCTest
 @testable import StytchCore
 
 final class B2BMagicLinksTestCase: BaseTestCase {
-    func testMagicLinksEmailLoginOrSignup() async throws {
+    func testEmailLoginOrSignup() async throws {
         networkInterceptor.responses {
             BasicResponse(requestId: "1234", statusCode: 200)
         }
@@ -16,13 +16,13 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             signupTemplateId: "mate"
         )
 
-        XCTAssertTrue(try Current.keychainClient.get(.emlPKCECodeVerifier).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.get(.emlPKCECodeVerifier), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.keychainClient.get(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -40,7 +40,37 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
     }
 
-    func testMagicLinksAuthenticate() async throws {
+    func testEmailDiscoverySend() async throws {
+        networkInterceptor.responses {
+            BasicResponse(requestId: "1234", statusCode: 200)
+        }
+        let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
+        let parameters: StytchB2BClient.MagicLinks.Email.DiscoveryParameters = .init(
+            email: "asdf@stytch.com",
+            redirectUrl: baseUrl.appendingPathComponent("login"),
+            loginTemplateId: "g'day",
+            locale: "en"
+        )
+
+        XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
+
+        _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/discovery/send",
+            method: .post([
+                "pkce_code_challenge_method": "S256",
+                "discovery_redirect_url": "https://myapp.com/login",
+                "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+                "email_address": "asdf@stytch.com",
+                "login_template_id": "g'day",
+                "locale": "en",
+            ])
+        )
+    }
+
+    func testAuthenticate() async throws {
         let authResponse: B2BAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
@@ -50,9 +80,9 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         await XCTAssertThrowsErrorAsync(try await StytchB2BClient.magicLinks.authenticate(parameters: parameters))
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .emlPKCECodeVerifier)
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 
-        XCTAssertNotNil(try Current.keychainClient.get(.emlPKCECodeVerifier))
+        XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
         Current.timer = { _, _, _ in .init() }
 
@@ -68,6 +98,28 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/authenticate",
             method: .post(["magic_links_token": "12345", "session_duration_minutes": 15, "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
+        )
+    }
+
+    func testDiscoveryAuthenticate() async throws {
+        networkInterceptor.responses { StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse(requestId: "123", statusCode: 200, wrapped: .init(discoveredOrganizations: [], intermediateSessionToken: "IMS", email: "1@2.3")) }
+
+        let parameters: StytchB2BClient.MagicLinks.DiscoveryAuthenticateParameters = .init(token: "12345")
+
+        await XCTAssertThrowsErrorAsync(try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters))
+
+        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+
+        XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
+
+        Current.timer = { _, _, _ in .init() }
+
+        _ = try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/discovery/authenticate",
+            method: .post(["discovery_magic_links_token": "12345", "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
     }
 }

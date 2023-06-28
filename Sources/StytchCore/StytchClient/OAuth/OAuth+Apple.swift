@@ -5,17 +5,21 @@ public extension StytchClient.OAuth {
     struct Apple {
         let router: NetworkingRouter<OAuthRoute.AppleRoute>
 
+        @Dependency(\.cryptoClient) private var cryptoClient
+
+        @Dependency(\.appleOAuthClient) private var appleOAuthClient
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
         public func start(parameters: StartParameters) async throws -> AuthenticateResponse {
-            let rawNonce = try Current.cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-            let authenticateResult = try await Current.appleOAuthClient.authenticate(
+            let rawNonce = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
+            let authenticateResult = try await appleOAuthClient.authenticate(
                 configureController: { controller in
                     #if !os(watchOS)
                     controller.presentationContextProvider = parameters.presentationContextProvider
                     #endif
                 },
-                nonce: Current.cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
+                nonce: cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
             )
             return try await router.post(
                 to: .authenticate,
@@ -31,7 +35,24 @@ public extension StytchClient.OAuth {
 }
 
 public extension StytchClient.OAuth.Apple {
-    /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-7rkef`` calls.
+    /// The concrete response type for Sign In With Apple `authenticate` calls.
+    typealias AuthenticateResponse = Response<AuthenticateResponseData>
+
+    /// The underlying data for Sign In With Apple `authenticate` calls.
+    struct AuthenticateResponseData: Codable, AuthenticateResponseDataType {
+        /// The current user object.
+        public let user: User
+        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
+        public let sessionToken: String
+        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
+        public let sessionJwt: String
+        /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+        public let session: Session
+        /// Indicates if this is a new or returning user
+        public let userCreated: Bool
+    }
+
+    /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg`` calls.
     struct StartParameters {
         let sessionDuration: Minutes
         #if !os(watchOS)

@@ -13,7 +13,7 @@ extension KeyedDecodingContainer {
 }
 
 extension Encodable {
-    func base64EncodedString(encoder: JSONEncoder = Current.jsonEncoder) throws -> String {
+    func base64EncodedString(encoder: JSONEncoder) throws -> String {
         (try encoder.encode(self)).base64EncodedString()
     }
 
