@@ -54,7 +54,7 @@ public extension StytchB2BClient {
                 url: url,
                 callbackUrlScheme: callbackScheme,
                 presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider(),
-                clientType: ClientType.B2B
+                clientType: ClientType.b2b
             )
             #else
             let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)

@@ -15,7 +15,7 @@ extension WebAuthenticationSessionClient {
                     return
                 }
                 do {
-                    if (parameters.clientType == ClientType.Consumer) {
+                    if parameters.clientType == ClientType.consumer {
                         guard let token = try StytchClient.tokenValues(for: url)?.1 else {
                             continuation.resume(throwing: StytchError.missingDeeplinkToken)
                             return
