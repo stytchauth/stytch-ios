@@ -15,11 +15,19 @@ extension WebAuthenticationSessionClient {
                     return
                 }
                 do {
-                    guard let token = try StytchClient.tokenValues(for: url)?.1 else {
-                        continuation.resume(throwing: StytchError.missingDeeplinkToken)
-                        return
+                    if (parameters.clientType == ClientType.Consumer) {
+                        guard let token = try StytchClient.tokenValues(for: url)?.1 else {
+                            continuation.resume(throwing: StytchError.missingDeeplinkToken)
+                            return
+                        }
+                        continuation.resume(returning: (token, url))
+                    } else {
+                        guard let token = try StytchB2BClient.tokenValues(for: url)?.1 else {
+                            continuation.resume(throwing: StytchError.missingDeeplinkToken)
+                            return
+                        }
+                        continuation.resume(returning: (token, url))
                     }
-                    continuation.resume(returning: (token, url))
                 } catch {
                     continuation.resume(throwing: error)
                 }

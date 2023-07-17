@@ -53,7 +53,8 @@ public extension StytchClient.OAuth {
             let webClientParams: WebAuthenticationSessionClient.Parameters = .init(
                 url: url,
                 callbackUrlScheme: callbackScheme,
-                presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider()
+                presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider(),
+                clientType: ClientType.Consumer
             )
             #else
             let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)

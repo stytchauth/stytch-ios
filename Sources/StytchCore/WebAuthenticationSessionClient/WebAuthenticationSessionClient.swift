@@ -25,6 +25,7 @@ extension WebAuthenticationSessionClient {
         #if !os(tvOS)
         let presentationContextProvider: ASWebAuthenticationPresentationContextProviding
         #endif
+        let clientType: ClientType
     }
 }
 #endif
