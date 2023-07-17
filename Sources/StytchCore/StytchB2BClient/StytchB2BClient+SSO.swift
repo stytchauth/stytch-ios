@@ -57,7 +57,7 @@ public extension StytchB2BClient {
                 clientType: ClientType.b2b
             )
             #else
-            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)
+            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme, clientType: ClientType.b2b)
             #endif
             return try await webAuthSessionClient.initiate(parameters: webClientParams)
         }

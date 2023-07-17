@@ -57,7 +57,7 @@ public extension StytchClient.OAuth {
                 clientType: ClientType.consumer
             )
             #else
-            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme)
+            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme, clientType: ClientType.consumer)
             #endif
             return try await webAuthSessionClient.initiate(parameters: webClientParams)
         }
