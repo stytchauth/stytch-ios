@@ -24,6 +24,6 @@ jobs:
     - name: List file
       run: aws s3 ls s3://public-assets-stytch-com/sdks/swift/carthage/StytchCore.json
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.PROD_CDN_UPDATER_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_CDN_UPDATER_AWS_SECRET_ACCESS_KEY_ID }}
 
