@@ -178,6 +178,7 @@ extension StytchClient.OAuth.ThirdParty {
         case tiktok
         case twitch
         case twitter
+        case yahoo
     }
 }
 #endif

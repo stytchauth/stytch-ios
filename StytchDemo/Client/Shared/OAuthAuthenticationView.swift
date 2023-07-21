@@ -69,6 +69,8 @@ private enum Provider: String, CaseIterable, Identifiable {
     case snapchat
     case tiktok
     case twitter
+    case yahoo
+
 
     var id: String {
         rawValue
@@ -98,6 +100,8 @@ private enum Provider: String, CaseIterable, Identifiable {
             return StytchClient.oauth.tiktok
         case .twitter:
             return StytchClient.oauth.twitter
+        case .yahoo:
+            return StytchClient.oauth.yahoo
         }
     }
 }
