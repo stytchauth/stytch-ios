@@ -71,7 +71,6 @@ private enum Provider: String, CaseIterable, Identifiable {
     case twitter
     case yahoo
 
-
     var id: String {
         rawValue
     }
