@@ -97,6 +97,8 @@ struct Environment {
     }
     #endif
 
+    var dfpClient: DFPClient = .live
+
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init

@@ -38,6 +38,8 @@ extension StytchClientType {
 
     private var uuid: () -> UUID { Current.uuid }
 
+    private var dfpClient: DFPClient { Current.dfpClient }
+
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
         instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl)
