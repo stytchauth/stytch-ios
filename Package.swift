@@ -11,7 +11,7 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(name: "StytchCore", resources: [
-            .copy("DFPClient/dfp.html")
+            .copy("DFPClient/dfp.html"),
         ]),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
