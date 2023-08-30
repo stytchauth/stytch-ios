@@ -5,6 +5,6 @@
 	<key>StytchHostURL</key>
 	<string>https://example.com</string>
 	<key>StytchPublicToken</key>
-	<string>public-token-test-1944a878-2aa8-47ea-a580-01b22e46c7f4</string>
+	<string>public-token-example</string>
 </dict>
 </plist>

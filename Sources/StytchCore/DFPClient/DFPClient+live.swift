@@ -3,8 +3,12 @@ import UIKit
 import WebKit
 
 final class MessageHandler : NSObject, WKScriptMessageHandler {
+    var continuation: CheckedContinuation<String, Never>
+    init(continuation: CheckedContinuation<String, Never>) {
+        self.continuation = continuation
+    }
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print(message.body)
+        continuation.resume(returning: message.body as? String ?? "")
     }
 }
 
@@ -12,12 +16,11 @@ extension DFPClient {
     static let live: Self = .init(
         getTelemetryId: {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
-            DispatchQueue.main.async {
-                Task {
-                    do {
+            return await withCheckedContinuation { continuation in
+                DispatchQueue.main.async {
+                    Task {
                         if let topViewController = UIApplication.shared.topMostViewController {
-                            let webConfiguration = WKWebViewConfiguration()
-                            let messageHandler = MessageHandler()
+                            let messageHandler = MessageHandler(continuation: continuation)
                             let dfpFileUrl = Bundle.module.url(forResource: "dfp", withExtension: "html")!
                             let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)')", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                             let userContentController = WKUserContentController()
@@ -28,13 +31,15 @@ extension DFPClient {
                             let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
                             topViewController.view.addSubview(webView)
                             webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
+                        } else {
+                            continuation.resume(returning: "unable to inject telemetry webview")
                         }
                     }
                 }
             }
-            return ""
         }
     )
+    
 }
 
 extension UIViewController {

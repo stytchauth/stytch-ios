@@ -8,7 +8,7 @@
             function fetchTelemetryId(publicToken) {
                 window.GetTelemetryID(publicToken)
                     .then((telemetryId) => window.webkit.messageHandlers.StytchDFP.postMessage(telemetryId))
-                    .catch(console.error);
+                    .catch((error) => window.webkit.messageHandlers.StytchDFP.postMessage(error.message));
             }
         </script>
     </body>
