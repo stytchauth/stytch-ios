@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import UIKit
 import WebKit
@@ -74,3 +75,4 @@ extension UIApplication {
         return nil
     }
 }
+#endif
