@@ -10,7 +10,9 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(name: "StytchCore"),
+        .target(name: "StytchCore", resources: [
+            .copy("DFPClient/dfp.html"),
+        ]),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
