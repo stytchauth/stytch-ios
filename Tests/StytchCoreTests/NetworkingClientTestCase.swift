@@ -54,7 +54,7 @@ final class NetworkingClientTestCase: XCTestCase {
         onClientCreate: ((NetworkingClient) -> Void)? = nil,
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
     ) async throws {
-        let networkingClient: NetworkingClient = .init { request, dfpEnabled, publicToken in
+        let networkingClient: NetworkingClient = .init { request, _, _ in
             onPerformRequest(request, line)
             return (.init(), .init())
         }
