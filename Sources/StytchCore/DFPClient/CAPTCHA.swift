@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import RecaptchaEnterprise
 
@@ -14,3 +15,4 @@ struct CAPTCHA {
         self.executeRecaptcha = executeRecaptcha
     }
 }
+#endif

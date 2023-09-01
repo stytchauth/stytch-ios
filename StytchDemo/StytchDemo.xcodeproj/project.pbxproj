@@ -74,7 +74,6 @@
 		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 		22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
 		22E2E06228ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
-		77AC9C622AA0FEC8004059CF /* RecaptchaEnterprise in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9C612AA0FEC8004059CF /* RecaptchaEnterprise */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -151,7 +150,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				226375C6280CBAE0000CDD49 /* StytchCore in Frameworks */,
-				77AC9C622AA0FEC8004059CF /* RecaptchaEnterprise in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +379,6 @@
 			name = "StytchDemo (iOS)";
 			packageProductDependencies = (
 				226375C5280CBAE0000CDD49 /* StytchCore */,
-				77AC9C612AA0FEC8004059CF /* RecaptchaEnterprise */,
 			);
 			productName = "Stytch (iOS)";
 			productReference = 229B82182809EA3F007BC3F1 /* StytchDemo.app */;
@@ -1087,11 +1084,6 @@
 		22E434612809EF2F00FB45F0 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
-		};
-		77AC9C612AA0FEC8004059CF /* RecaptchaEnterprise */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 77AC9C5E2AA0FCCD004059CF /* XCRemoteSwiftPackageReference "recaptcha-enterprise-mobile-sdk" */;
-			productName = RecaptchaEnterprise;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

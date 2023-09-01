@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import RecaptchaEnterprise
 
@@ -25,3 +26,4 @@ extension CAPTCHA {
         }
     )
 }
+#endif

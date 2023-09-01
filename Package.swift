@@ -15,7 +15,7 @@ let package = Package(
         .target(
             name: "StytchCore",
             dependencies: [
-                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk"),
+                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
             ],
             resources: [
                 .copy("DFPClient/dfp.html"),
