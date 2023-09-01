@@ -14,6 +14,9 @@ public struct StytchClient: StytchClientType {
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
 
     private init() {
+        Task {
+            try await StytchClient.bootstrap.fetch()
+        }
         postInit()
     }
 

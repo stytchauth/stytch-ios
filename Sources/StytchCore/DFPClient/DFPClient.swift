@@ -1,9 +1,9 @@
 import Foundation
 
 struct DFPClient {
-    var getTelemetryId: () async throws -> String
+    var getTelemetryId: (String) async throws -> String
 
-    init(getTelemetryId: @escaping () async throws -> String) {
+    init(getTelemetryId: @escaping (String) async throws -> String) {
         self.getTelemetryId = getTelemetryId
     }
 }

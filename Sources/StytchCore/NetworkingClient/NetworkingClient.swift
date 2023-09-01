@@ -2,15 +2,19 @@ import Foundation
 
 final class NetworkingClient {
     var headerProvider: (() -> [String: String])?
+    
+    var dfpEnabled: Bool = false
+    
+    var publicToken: String = ""
 
-    private let handleRequest: (URLRequest) async throws -> (Data, HTTPURLResponse)
+    private let handleRequest: (URLRequest, Bool, String) async throws -> (Data, HTTPURLResponse)
 
-    init(handleRequest: @escaping (URLRequest) async throws -> (Data, HTTPURLResponse)) {
+    init(handleRequest: @escaping (URLRequest, Bool, String) async throws -> (Data, HTTPURLResponse)) {
         self.handleRequest = handleRequest
     }
 
     func performRequest(_ method: Method, url: URL) async throws -> (Data, HTTPURLResponse) {
-        try await handleRequest(urlRequest(url: url, method: method))
+        try await handleRequest(urlRequest(url: url, method: method), dfpEnabled, publicToken)
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {

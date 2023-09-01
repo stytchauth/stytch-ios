@@ -14,6 +14,9 @@ public struct StytchB2BClient: StytchClientType {
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
 
     private init() {
+        Task {
+            try await StytchClient.bootstrap.fetch()
+        }
         postInit()
     }
 
