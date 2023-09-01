@@ -9,7 +9,7 @@ extension NetworkingClient {
         let session: URLSession = .init(configuration: .default)
         return .init { request, dfpEnabled, publicToken in
             #if os(iOS)
-            if (dfpEnabled == true) {
+            if dfpEnabled == true {
                 let dfpTelemetryId = try await dfpClient.getTelemetryId(publicToken)
                 let captchaToken = try await captcha.executeRecaptcha()
             }

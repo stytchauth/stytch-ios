@@ -3,7 +3,7 @@ import Foundation
 import RecaptchaEnterprise
 
 final class CAPTCHA {
-    var recaptchaClient: RecaptchaClient? = nil
+    var recaptchaClient: RecaptchaClient?
 
     func executeRecaptcha() async throws -> String? {
         do {
@@ -13,7 +13,7 @@ final class CAPTCHA {
             return nil
         }
     }
-    
+
     func setCaptchaClient(siteKey: String) async throws {
         do {
             recaptchaClient = try await Recaptcha.getClient(withSiteKey: siteKey)

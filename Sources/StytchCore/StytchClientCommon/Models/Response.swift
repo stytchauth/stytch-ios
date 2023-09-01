@@ -17,7 +17,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId) ?? "unknown_request_id"
-        self.statusCode = try container.decodeIfPresent(UInt.self, forKey: .statusCode) ?? nil
+        self.statusCode = try container.decodeIfPresent(UInt.self, forKey: .statusCode)
         self.wrapped = try .init(from: decoder)
     }
 

@@ -2,9 +2,9 @@ import Foundation
 
 final class NetworkingClient {
     var headerProvider: (() -> [String: String])?
-    
+
     var dfpEnabled: Bool = false
-    
+
     var publicToken: String = ""
 
     private let handleRequest: (URLRequest, Bool, String) async throws -> (Data, HTTPURLResponse)

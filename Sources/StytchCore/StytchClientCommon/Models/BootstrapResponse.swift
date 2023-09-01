@@ -9,7 +9,7 @@ public protocol BootstrapResponseDataType {
     var disableSdkWatermark: Bool { get }
     var cnameDomain: String? { get }
     var emailDomains: [String] { get }
-    var captchaSettings: BootstrapResponseData.CaptchaSettings { get }
+    var captchaSettings: CaptchaSettings { get }
     var pkceRequiredForEmailMagicLinks: Bool { get }
     var pkceRequiredForPasswordResets: Bool { get }
     var pkceRequiredForOauth: Bool { get }
@@ -32,9 +32,9 @@ public struct BootstrapResponseData: Codable, BootstrapResponseDataType {
     public let slugPattern: String?
     public let createOrganizationEnabled: Bool
     public let dfpProtectedAuthEnabled: Bool
-    
-    public struct CaptchaSettings: Codable {
-        public let enabled: Bool
-        public let siteKey: String
-    }
+}
+
+public struct CaptchaSettings: Codable {
+    public let enabled: Bool
+    public let siteKey: String
 }

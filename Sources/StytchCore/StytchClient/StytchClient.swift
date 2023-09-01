@@ -15,7 +15,7 @@ public struct StytchClient: StytchClientType {
 
     private init() {
         Task {
-            try await StytchClient.bootstrap.fetch()
+            try await Self.bootstrap.fetch()
         }
         postInit()
     }

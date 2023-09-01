@@ -17,7 +17,7 @@ final class MessageHandler: NSObject, WKScriptMessageHandler {
 
 extension DFPClient {
     static let live: Self = .init { publicToken in
-        return await withCheckedContinuation { continuation in
+        await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 Task {
                     if let topViewController = UIApplication.shared.topMostViewController {

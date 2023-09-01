@@ -140,6 +140,7 @@ extension StytchB2BClient {
 
     enum BootstrapRoute: RouteType {
         case fetch(Path)
+
         var path: Path {
             switch self {
             case let .fetch(publicToken):
