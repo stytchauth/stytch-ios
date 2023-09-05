@@ -12,7 +12,7 @@ extension NetworkingClient {
             #if os(iOS)
             if dfpEnabled == true {
                 let oldBody = newRequest.httpBody ?? Data()
-                var newBody = try JSONSerialization.jsonObject(with: oldBody) as! Dictionary<String, AnyObject>
+                var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
                 newBody["dfp_telemetry_id"] = try await dfpClient.getTelemetryId(publicToken) as AnyObject
                 let bodyWithDfp = try JSONSerialization.data(withJSONObject: newBody)
                 newRequest.httpBody = bodyWithDfp
@@ -22,9 +22,9 @@ extension NetworkingClient {
                 let (data, response) = try await session.data(for: newRequest)
                 guard let response = response as? HTTPURLResponse else { throw NetworkingClient.Error.nonHttpResponse }
                 #if os(iOS)
-                if dfpEnabled == true && response.statusCode == 403 {
+                if dfpEnabled == true, response.statusCode == 403 {
                     let oldBody = newRequest.httpBody ?? Data()
-                    var newBody = try JSONSerialization.jsonObject(with: newRequest.httpBody!) as! Dictionary<String, AnyObject>
+                    var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
                     newBody["dfp_telemetry_id"] = try await dfpClient.getTelemetryId(publicToken) as AnyObject
                     newBody["captcha_token"] = try await captcha.executeRecaptcha() as AnyObject
                     let bodyWithDfp = try JSONSerialization.data(withJSONObject: newBody)
@@ -51,11 +51,11 @@ extension NetworkingClient {
                             return
                         }
                         #if os(iOS)
-                        if dfpEnabled == true && response.statusCode == 403 {
+                        if dfpEnabled == true, response.statusCode == 403 {
                             Task {
                                 var captchaRequest = newRequest
                                 let oldBody = captchaRequest.httpBody ?? Data()
-                                var newBody = try JSONSerialization.jsonObject(with: oldBody) as! Dictionary<String, AnyObject>
+                                var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
                                 newBody["dfp_telemetry_id"] = try await dfpClient.getTelemetryId(publicToken) as AnyObject
                                 newBody["captcha_token"] = try await captcha.executeRecaptcha() as AnyObject
                                 let bodyWithDfp = try JSONSerialization.data(withJSONObject: newBody)
@@ -74,7 +74,8 @@ extension NetworkingClient {
                                         return
                                     }
                                     continuation.resume(with: .success((data, response)))
-                                }.resume()
+                                }
+                                .resume()
                             }
                             return
                         }
