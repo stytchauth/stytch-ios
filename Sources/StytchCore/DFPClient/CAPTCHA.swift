@@ -2,17 +2,24 @@
 import Foundation
 import RecaptchaEnterprise
 
-struct CAPTCHA {
-    var getRecaptchaClient: (String) async throws -> RecaptchaClient?
+final class CAPTCHA {
+    var recaptchaClient: RecaptchaClient?
 
-    var executeRecaptcha: (RecaptchaClient?) async throws -> String?
+    func executeRecaptcha() async throws -> String? {
+        do {
+            return try await recaptchaClient?.execute(withAction: RecaptchaAction.login)
+        } catch let error as RecaptchaError {
+            print("RecaptchaClient execute error: \(String(describing: error.errorMessage)).")
+            return nil
+        }
+    }
 
-    init(
-        getRecaptchaClient: @escaping (String) async throws -> RecaptchaClient?,
-        executeRecaptcha: @escaping (RecaptchaClient?) async throws -> String?
-    ) {
-        self.getRecaptchaClient = getRecaptchaClient
-        self.executeRecaptcha = executeRecaptcha
+    func setCaptchaClient(siteKey: String) async throws {
+        do {
+            recaptchaClient = try await Recaptcha.getClient(withSiteKey: siteKey)
+        } catch let error as RecaptchaError {
+            print("RecaptchaClient creation error: \(String(describing: error.errorMessage)).")
+        }
     }
 }
 #endif

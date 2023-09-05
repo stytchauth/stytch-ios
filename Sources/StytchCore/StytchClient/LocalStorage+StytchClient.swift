@@ -19,3 +19,14 @@ extension LocalStorage {
         set { self[SessionStorageKey.self] = newValue }
     }
 }
+
+extension LocalStorage {
+    private enum BootstrapDataStorageKey: LocalStorageKey {
+        typealias Value = BootstrapResponseData
+    }
+
+    var bootstrapData: BootstrapResponseData? {
+        get { self[BootstrapDataStorageKey.self] }
+        set { self[BootstrapDataStorageKey.self] = newValue }
+    }
+}

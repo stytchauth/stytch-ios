@@ -16,9 +16,8 @@ final class MessageHandler: NSObject, WKScriptMessageHandler {
 }
 
 extension DFPClient {
-    static let live: Self = .init {
-        guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
-        return await withCheckedContinuation { continuation in
+    static let live: Self = .init { publicToken in
+        await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 Task {
                     if let topViewController = UIApplication.shared.topMostViewController {
