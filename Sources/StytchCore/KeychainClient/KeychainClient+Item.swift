@@ -16,6 +16,7 @@ extension KeychainClient {
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrService: name,
                 kSecUseDataProtectionKeychain: true,
+                kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
             ]
         }
 
