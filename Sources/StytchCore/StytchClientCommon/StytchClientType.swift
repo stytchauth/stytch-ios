@@ -98,7 +98,7 @@ extension StytchClientType {
             case let installIdDefaultsKey = "stytch_install_id_defaults_key",
             defaults.string(forKey: installIdDefaultsKey) == nil
         else { return }
-
+        print("[DEBUG] >>> Reseting keychain items on fresh install")
         defaults.set(uuid().uuidString, forKey: installIdDefaultsKey)
         KeychainClient.Item.allItems.forEach { item in
             try? keychainClient.removeItem(item)

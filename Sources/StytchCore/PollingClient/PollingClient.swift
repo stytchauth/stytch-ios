@@ -69,11 +69,14 @@ private extension PollingClient {
 
         func attempt(success: @escaping () -> Void = {}, failure: @escaping (Error) -> Void = { _ in }) {
             let failureWrapper: (Error) -> Void = { [weak self] error in
+                print("[DEBUG] >>> PollingClient Attempt failed 1")
                 if let error = error as? StytchError, error.statusCode == 401 {
+                    print("[DEBUG] >>> PollingClient Attempt failed 2")
                     failure(error)
                     return
                 }
                 guard let self = self, !self.isCancelled, self.currentRetryValue < self.maxRetries else {
+                    print("[DEBUG] >>> PollingClient Attempt failed 3")
                     failure(error)
                     return
                 }
