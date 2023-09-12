@@ -115,7 +115,6 @@ final class SessionStorage {
 
     func reset() {
         print("[DEBUG] >> resetting session")
-        Thread.callStackSymbols.forEach{print($0)}
         session = nil
         memberSession = nil
         sessionToken = nil
