@@ -8,6 +8,7 @@ extension PollingClient {
             case .success:
                 onSuccess()
             case let .failure(error):
+                print("[DEBUG] >>> PollingClient Session refresh failed")
                 onFailure(error)
             }
         }
