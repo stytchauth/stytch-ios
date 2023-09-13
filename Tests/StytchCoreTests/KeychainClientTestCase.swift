@@ -35,7 +35,7 @@ final class KeychainClientTestCase: BaseTestCase {
 
         XCTAssertEqual(
             item.getQuery as CFDictionary,
-            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
+            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna", "pdmn": "ck"] as CFDictionary
         )
         XCTAssertEqual(
             item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
@@ -43,7 +43,7 @@ final class KeychainClientTestCase: BaseTestCase {
         )
         XCTAssertEqual(
             item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
-            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1] as CFDictionary
+            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "pdmn": "ck"] as CFDictionary
         )
     }
 

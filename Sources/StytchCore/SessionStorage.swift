@@ -18,7 +18,6 @@ final class SessionStorage {
             try? keychainClient.get(.sessionToken).map(SessionToken.opaque)
         }
         set {
-            print("[DEBUG] >>> sessionToken setter called with \(newValue)")
             let keychainItem: KeychainClient.Item = .sessionToken
             if let newValue = newValue {
                 try? keychainClient.set(newValue.value, for: keychainItem)
@@ -34,7 +33,6 @@ final class SessionStorage {
             try? keychainClient.get(.sessionJwt).map(SessionToken.jwt)
         }
         set {
-            print("[DEBUG] >>> sessionJwt setter called with \(newValue)")
             let keychainItem: KeychainClient.Item = .sessionJwt
             if let newValue = newValue {
                 try? keychainClient.set(newValue.value, for: keychainItem)
@@ -92,7 +90,7 @@ final class SessionStorage {
                 cookieClient.set(cookie: cookie)
             }
         }
-        print("[DEBUG] >>> trigger onAuthChange")
+
         _onAuthChange.send(())
 
         switch sessionKind {
@@ -106,7 +104,6 @@ final class SessionStorage {
     func updatePersistentStorage(token: SessionToken) {
         switch token.kind {
         case .jwt:
-            print("[DEBUG] >> Setting jwt to : \(token)")
             sessionJwt = token
         case .opaque:
             sessionToken = token
@@ -114,8 +111,6 @@ final class SessionStorage {
     }
 
     func reset() {
-        print("[DEBUG] >> resetting session")
-        Thread.callStackSymbols.forEach { print($0) }
         session = nil
         memberSession = nil
         sessionToken = nil

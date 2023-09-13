@@ -62,17 +62,15 @@ extension NetworkingRouter {
         _ method: NetworkingClient.Method,
         route: Route
     ) async throws -> Response {
-        print("[DEBUG] >>> performRequest getting configuration")
         guard let configuration = getConfiguration() else {
             throw StytchError.clientNotConfigured
         }
-        print("[DEBUG] >>> performRequest for \(route)")
+
         let (data, response) = try await networkingClient.performRequest(
             method,
             url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
         )
         do {
-            print("[DEBUG] >>> response status code = \(response.statusCode)")
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
@@ -99,11 +97,9 @@ extension NetworkingRouter {
             }
             return dataContainer.data
         } catch let error as StytchError where error.statusCode == 401 {
-            print("[DEBUG] >>> stytch error 401, reset session and throw")
             sessionStorage.reset()
             throw error
         } catch {
-            print("[DEBUG] >>> request error, throw")
             throw error
         }
     }
