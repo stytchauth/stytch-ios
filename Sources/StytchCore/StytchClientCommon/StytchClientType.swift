@@ -108,11 +108,9 @@ extension StytchClientType {
     private func runKeychainMigrations() {
         KeychainClient.migrations.forEach { migration in
             let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
-            /* FOR TESTING
-             guard !defaults.bool(forKey: migrationName) else {
+            guard !defaults.bool(forKey: migrationName) else {
                 return
             }
-             */
             do {
                 try migration.run()
                 defaults.set(true, forKey: migrationName)
