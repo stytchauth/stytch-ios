@@ -115,7 +115,7 @@ private extension KeychainClient.Item.AccessPolicy {
             guard
                 let accessControl = SecAccessControlCreateWithFlags(
                     nil,
-                    kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+                    kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
                     flags,
                     &error
                 )
