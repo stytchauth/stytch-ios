@@ -16,6 +16,7 @@ extension KeychainClient {
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrService: name,
                 kSecUseDataProtectionKeychain: true,
+                kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
             ]
         }
 
@@ -114,7 +115,7 @@ private extension KeychainClient.Item.AccessPolicy {
             guard
                 let accessControl = SecAccessControlCreateWithFlags(
                     nil,
-                    kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+                    kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
                     flags,
                     &error
                 )
