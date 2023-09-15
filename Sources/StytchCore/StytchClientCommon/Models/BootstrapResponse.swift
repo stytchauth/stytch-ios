@@ -36,5 +36,5 @@ public struct BootstrapResponseData: Codable, BootstrapResponseDataType {
 
 public struct CaptchaSettings: Codable {
     public let enabled: Bool
-    public let siteKey: String
+    public let siteKey: String?
 }

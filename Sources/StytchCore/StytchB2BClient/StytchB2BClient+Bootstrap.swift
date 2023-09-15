@@ -11,8 +11,8 @@ extension StytchB2BClient {
             guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
             #if os(iOS)
-            if !bootstrapData.wrapped.captchaSettings.siteKey.isEmpty {
-                try await captcha.setCaptchaClient(siteKey: bootstrapData.wrapped.captchaSettings.siteKey)
+            if bootstrapData.wrapped.captchaSettings.siteKey != nil {
+                try await captcha.setCaptchaClient(siteKey: bootstrapData.wrapped.captchaSettings.siteKey!)
             }
             networkingClient.dfpEnabled = bootstrapData.wrapped.dfpProtectedAuthEnabled
             #endif
