@@ -32,9 +32,15 @@ public struct BootstrapResponseData: Codable, BootstrapResponseDataType {
     public let slugPattern: String?
     public let createOrganizationEnabled: Bool
     public let dfpProtectedAuthEnabled: Bool
+    public let dfpProtectedAuthMode: DFPProtectedAuthMode
 }
 
 public struct CaptchaSettings: Codable {
     public let enabled: Bool
     public let siteKey: String?
+}
+
+public enum DFPProtectedAuthMode: String, Codable {
+    case observation = "OBSERVATION"
+    case decisioning = "DECISIONING"
 }
