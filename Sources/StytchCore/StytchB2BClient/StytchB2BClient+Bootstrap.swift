@@ -12,6 +12,7 @@ extension StytchB2BClient {
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
             #if os(iOS)
             networkingClient.dfpEnabled = bootstrapData.wrapped.dfpProtectedAuthEnabled
+            networkingClient.dfpAuthMode = bootstrapData.wrapped.dfpProtectedAuthMode
             guard let siteKey = bootstrapData.wrapped.captchaSettings.siteKey else {
                 return
             }
