@@ -1,26 +1,14 @@
 import Foundation
 
-private var dfpAvailable: Bool {
-    #if os(macOS)
-    false
-    #elseif os(tvOS)
-    false
-    #elseif os(watchOS)
-    false
-    #else
-    true
-    #endif
-}
-
 extension NetworkingClient {
     static let live: NetworkingClient = {
-        #if dfpAvailable
+        #if os(iOS)
         @Dependency(\.dfpClient) var dfpClient
         @Dependency(\.captcha) var captcha
         #endif
         let session: URLSession = .init(configuration: .default)
         return .init { request, dfpEnabled, dfpAuthMode, publicToken in
-            #if dfpAvailable
+            #if os(iOS)
             if !dfpEnabled {
                 return try await handleDFPDisabled(session: session, request: request, captcha: captcha)
             }
@@ -63,7 +51,7 @@ private func makeRequest(session: URLSession, request: URLRequest) async throws 
     }
 }
 
-#if dfpAvailable
+#if os(iOS)
 private func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse) {
     // DISABLED = if captcha client is configured, add a captcha token, else do nothing
     if captcha.recaptchaClient == nil {
