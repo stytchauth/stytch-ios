@@ -17,6 +17,7 @@ public protocol BootstrapResponseDataType {
     var slugPattern: String? { get }
     var createOrganizationEnabled: Bool { get }
     var dfpProtectedAuthEnabled: Bool { get }
+    var dfpProtectedAuthMode: DFPProtectedAuthMode { get }
 }
 
 /// The underlying data for `bootstrap` calls.
