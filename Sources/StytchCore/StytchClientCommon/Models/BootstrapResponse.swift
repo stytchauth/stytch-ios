@@ -17,7 +17,7 @@ public protocol BootstrapResponseDataType {
     var slugPattern: String? { get }
     var createOrganizationEnabled: Bool { get }
     var dfpProtectedAuthEnabled: Bool { get }
-    var dfpProtectedAuthMode: DFPProtectedAuthMode { get }
+    var dfpProtectedAuthMode: DFPProtectedAuthMode? { get }
 }
 
 /// The underlying data for `bootstrap` calls.
@@ -33,7 +33,7 @@ public struct BootstrapResponseData: Codable, BootstrapResponseDataType {
     public let slugPattern: String?
     public let createOrganizationEnabled: Bool
     public let dfpProtectedAuthEnabled: Bool
-    public let dfpProtectedAuthMode: DFPProtectedAuthMode
+    public let dfpProtectedAuthMode: DFPProtectedAuthMode?
 }
 
 public struct CaptchaSettings: Codable {
