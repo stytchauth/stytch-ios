@@ -3,6 +3,7 @@ enum PasswordsRoute: RouteType {
     case resetByEmail(TaskStageRoute)
     case authenticate
     case strengthCheck
+    case resetBySession
 
     var path: Path {
         switch self {
@@ -14,6 +15,8 @@ enum PasswordsRoute: RouteType {
             return "authenticate"
         case .strengthCheck:
             return "strength_check"
+        case .resetBySession:
+            return "session/reset"
         }
     }
 }

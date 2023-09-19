@@ -75,6 +75,14 @@ public extension StytchClient {
         public func strengthCheck(parameters: StrengthCheckParameters) async throws -> StrengthCheckResponse {
             try await router.post(to: .strengthCheck, parameters: parameters)
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// This method resets the user’s password using their existing session. The endpoint will error if the session does not have a password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes.
+        ///
+        /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
+        public func resetBySession(parameters: ResetBySessionParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .resetBySession, parameters: parameters)
+        }
     }
 }
 
@@ -174,6 +182,24 @@ public extension StytchClient.Passwords {
         ///   - sessionDuration: The duration of the requested session.
         public init(token: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.token = token
+            self.password = password
+            self.sessionDuration = sessionDuration
+        }
+    }
+}
+
+public extension StytchClient.Passwords {
+    /// The dedicated parameters type for passwords `resetBySession` calls
+    struct ResetBySessionParameters: Encodable {
+        private enum CodingKeys: String, CodingKey { case password, sessionDuration = "sessionDurationMinutes" }
+
+        public let password: String
+        public let sessionDuration: Minutes
+
+        /// - Parameters:
+        ///   - password: The user's updated password.
+        ///   - sessionDuration: The duration of the requested session.
+        public init(password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.password = password
             self.sessionDuration = sessionDuration
         }

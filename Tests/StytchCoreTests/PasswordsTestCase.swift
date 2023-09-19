@@ -3,6 +3,7 @@ import XCTest
 
 final class PasswordsTestCase: BaseTestCase {
     private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDuration: 26)
+    private let passwordResetBySessionParams: StytchClient.Passwords.ResetBySessionParameters = .init(password: "password123", sessionDuration: 10)
 
     func testCreate() async throws {
         let userId: User.ID = ""
@@ -103,6 +104,21 @@ final class PasswordsTestCase: BaseTestCase {
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "session_duration_minutes": 30,
                 "password": "iAMpasswordHEARmeROAR",
+            ])
+        )
+    }
+
+    func testResetBySession() async throws {
+        networkInterceptor.responses { AuthenticateResponse.mock }
+        Current.timer = { _, _, _ in .init() }
+        _ = try await StytchClient.passwords.resetBySession(parameters: passwordResetBySessionParams)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/passwords/session/reset",
+            method: .post([
+                "session_duration_minutes": 10,
+                "password": "password123",
             ])
         )
     }
