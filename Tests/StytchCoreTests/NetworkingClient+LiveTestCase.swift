@@ -4,23 +4,18 @@ import XCTest
 
 private class NetworkRequestHandlerMock: NetworkRequestHandler {
     private(set) var methodCalled: String? = nil
-
-    func makeRequest(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        methodCalled = "makeRequest"
-        return (Data(), HTTPURLResponse())
-    }
     #if os(iOS)
-    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDfpDisabled"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }
@@ -28,37 +23,40 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
 }
 
 final class NetworkingClientLiveTestCase: XCTestCase {
-    private let handler = NetworkRequestHandlerMock()
-
-    func testCallsAppropriateMethodInNetworkRequestHandler() async throws {
+    func testDFPDisabled() async throws {
+        let handler = NetworkRequestHandlerMock()
         let client = NetworkingClient.live(networkRequestHandler: handler)
-
-        // DFP DISABLED
         client.dfpEnabled = false
         client.dfpAuthMode = DFPProtectedAuthMode.observation
         let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
-        XCTAssert(handler.methodCalled == "makeRequest")
+        XCTAssert(handler.methodCalled == nil)
         #else
         XCTAssert(handler.methodCalled == "handleDfpDisabled")
         #endif
+    }
 
-        // DFP ENABLED + OBSERVATION MODE
+    func testDFPObservation() async throws {
+        let handler = NetworkRequestHandlerMock()
+        let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.observation
         let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
-        XCTAssert(handler.methodCalled == "makeRequest")
+        XCTAssert(handler.methodCalled == nil)
         #else
         XCTAssert(handler.methodCalled == "handleDFPObservationMode")
         #endif
+    }
 
-        // DFP ENABLED + DECISIONING MODE
+    func testDFPDecisioning() async throws {
+        let handler = NetworkRequestHandlerMock()
+        let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.decisioning
         let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
-        XCTAssert(handler.methodCalled == "makeRequest")
+        XCTAssert(handler.methodCalled == nil)
         #else
         XCTAssert(handler.methodCalled == "handleDFPDecisioningMode")
         #endif
