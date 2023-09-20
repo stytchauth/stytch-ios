@@ -54,13 +54,13 @@ private func makeRequest(session: URLSession, request: URLRequest) async throws 
 #if os(iOS)
 private func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse) {
     // DISABLED = if captcha client is configured, add a captcha token, else do nothing
-    if captcha.recaptchaClient == nil {
+    if captcha.isConfigured() == false {
         return try await makeRequest(session: session, request: request)
     }
     var newRequest = request
     let oldBody = newRequest.httpBody ?? Data()
     var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-    newBody["captcha_token"] = try await captcha.executeRecaptcha() as AnyObject
+    newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
     newRequest.httpBody = try JSONSerialization.data(withJSONObject: newBody)
     return try await makeRequest(session: session, request: newRequest)
 }
@@ -71,8 +71,8 @@ private func handleDFPObservationMode(session: URLSession, request: URLRequest, 
     let oldBody = newRequest.httpBody ?? Data()
     var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
     newBody["dfp_telemetry_id"] = try await dfp.getTelemetryId(publicToken) as AnyObject
-    if captcha.recaptchaClient != nil {
-        newBody["captcha_token"] = try await captcha.executeRecaptcha() as AnyObject
+    if captcha.isConfigured() {
+        newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
     }
     newRequest.httpBody = try JSONSerialization.data(withJSONObject: newBody)
     return try await makeRequest(session: session, request: newRequest)
@@ -92,7 +92,7 @@ private func handleDFPDecisioningMode(session: URLSession, request: URLRequest, 
     var secondRequest = request
     var secondRequstBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
     secondRequstBody["dfp_telemetry_id"] = try await dfp.getTelemetryId(publicToken) as AnyObject
-    secondRequstBody["captcha_token"] = try await captcha.executeRecaptcha() as AnyObject
+    secondRequstBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
     secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequstBody)
     return try await makeRequest(session: session, request: secondRequest)
 }
