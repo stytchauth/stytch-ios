@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import XCTest
 @testable import StytchCore
@@ -23,3 +24,4 @@ final class DFPClientTestCase: XCTestCase {
         XCTAssert(telemetryId == "dfp-telemetry-id")
     }
 }
+#endif

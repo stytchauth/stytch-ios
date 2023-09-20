@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import XCTest
 @testable import StytchCore
@@ -40,3 +41,4 @@ final class CAPTCHATestCase: XCTestCase {
         XCTAssert(token == "captcha-token")
     }
 }
+#endif
