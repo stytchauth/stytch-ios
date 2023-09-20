@@ -3,7 +3,7 @@ import Foundation
 import RecaptchaEnterprise
 
 internal protocol RecaptchaProvider {
-    mutating func configure(siteKey: String) async -> Void
+    mutating func configure(siteKey: String) async
 
     func getCaptchaToken() async -> String
 
@@ -13,12 +13,12 @@ internal protocol RecaptchaProvider {
 private struct RecaptchaProviderImplementation: RecaptchaProvider {
     private var recaptchaClient: RecaptchaClient?
 
-    mutating func configure(siteKey: String) async -> Void {
+    mutating func configure(siteKey: String) async {
         do {
             recaptchaClient = try await Recaptcha.getClient(withSiteKey: siteKey)
         } catch let error as RecaptchaError {
             print("RecaptchaClient creation error: \(String(describing: error.errorMessage)).")
-        } catch let error {
+        } catch {
             print("RecaptchaClient creation error: \(String(describing: error))")
         }
     }
@@ -32,7 +32,7 @@ private struct RecaptchaProviderImplementation: RecaptchaProvider {
         } catch let error as RecaptchaError {
             print("RecaptchaClient execute error: \(String(describing: error.errorMessage)).")
             return ""
-        } catch let error {
+        } catch {
             print("RecaptchaClient execute error: \(String(describing: error)).")
             return ""
         }

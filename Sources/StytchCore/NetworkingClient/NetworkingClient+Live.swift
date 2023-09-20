@@ -54,13 +54,15 @@ internal protocol NetworkRequestHandler {
     #if os(iOS)
     func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
 
+    // swiftlint:disable:next function_parameter_count
     func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
 
+    // swiftlint:disable:next function_parameter_count
     func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
     #endif
 }
 
-internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
+internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
     #if os(iOS)
     func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // DISABLED = if captcha client is configured, add a captcha token, else do nothing
@@ -75,6 +77,7 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
         return try await requestHandler(session, newRequest)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // OBSERVATION = Always DFP; CAPTCHA if configured
         var newRequest = request
@@ -88,6 +91,7 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
         return try await requestHandler(session, newRequest)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // DECISIONING = add DFP Id, proceed; if request 403s, add a captcha token
         var firstRequest = request

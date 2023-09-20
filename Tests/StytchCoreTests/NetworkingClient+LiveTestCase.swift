@@ -3,19 +3,21 @@ import XCTest
 @testable import StytchCore
 
 private class NetworkRequestHandlerMock: NetworkRequestHandler {
-    private(set) var methodCalled: String? = nil
+    private(set) var methodCalled: String?
     #if os(iOS)
-    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDisabled(session _: URLSession, request _: URLRequest, captcha _: CAPTCHA, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDfpDisabled"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    // swiftlint:disable:next function_parameter_count
+    func handleDFPObservationMode(session _: URLSession, request _: URLRequest, publicToken _: String, captcha _: CAPTCHA, dfp _: DFPClient, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    // swiftlint:disable:next function_parameter_count
+    func handleDFPDecisioningMode(session _: URLSession, request _: URLRequest, publicToken _: String, captcha _: CAPTCHA, dfp _: DFPClient, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }
@@ -28,7 +30,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = false
         client.dfpAuthMode = DFPProtectedAuthMode.observation
-        let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
+        try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else
@@ -41,7 +43,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.observation
-        let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
+        try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else
@@ -54,7 +56,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.decisioning
-        let _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
+        try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")))
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else

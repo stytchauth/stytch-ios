@@ -2,7 +2,7 @@ import Foundation
 import XCTest
 @testable import StytchCore
 
-private struct DFPProviderMock : DFPProvider {
+private struct DFPProviderMock: DFPProvider {
     func getTelemetryId(publicToken: String) async -> String {
         if publicToken == "bad" {
             return ""
@@ -14,11 +14,11 @@ private struct DFPProviderMock : DFPProvider {
 
 // Test that DFPClient delegates to the provider
 final class DFPClientTestCase: XCTestCase {
-    let dfpClient = DFPClient(dfpProvider: DFPProviderMock())
+    private let dfpClient = DFPClient(dfpProvider: DFPProviderMock())
 
     func testDfpClient() async {
         var telemetryId = await dfpClient.getTelemetryId(publicToken: "bad")
-        XCTAssert(telemetryId == "")
+        XCTAssert(telemetryId.isEmpty)
         telemetryId = await dfpClient.getTelemetryId(publicToken: "public-token-test-123")
         XCTAssert(telemetryId == "dfp-telemetry-id")
     }

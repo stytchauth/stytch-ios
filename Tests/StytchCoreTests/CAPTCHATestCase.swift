@@ -2,10 +2,10 @@ import Foundation
 import XCTest
 @testable import StytchCore
 
-private struct RecaptchaProviderMock : RecaptchaProvider {
+private struct RecaptchaProviderMock: RecaptchaProvider {
     private var didConfigure: Bool = false
 
-    mutating func configure(siteKey: String) async {
+    mutating func configure(siteKey _: String) async {
         didConfigure = true
     }
 
@@ -24,12 +24,12 @@ private struct RecaptchaProviderMock : RecaptchaProvider {
 
 // Test that CAPTCHA delegates to the provider
 final class CAPTCHATestCase: XCTestCase {
-    let captcha = CAPTCHA(recaptchaProvider: RecaptchaProviderMock())
+    private let captcha = CAPTCHA(recaptchaProvider: RecaptchaProviderMock())
 
     func testMethodsWhenNotConfigured() async {
         XCTAssert(captcha.isConfigured() == false)
         let token = await captcha.executeRecaptcha()
-        XCTAssert(token == "")
+        XCTAssert(token.isEmpty)
     }
 
     func testMethodsWhenConfigured() async {
