@@ -51,7 +51,7 @@ struct Environment {
 
     var appleOAuthClient: AppleOAuthClient = .live
 
-    var networkingClient: NetworkingClient = .live
+    var networkingClient: NetworkingClient = .live()
 
     var cryptoClient: CryptoClient = .live
 
