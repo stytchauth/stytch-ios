@@ -11,11 +11,12 @@ private struct RecaptchaProviderMock: RecaptchaProvider {
     }
 
     func getCaptchaToken() async -> String {
-        if didConfigure {
+        let token = if didConfigure {
             "captcha-token"
         } else {
             ""
         }
+        return token
     }
 
     func isConfigured() -> Bool {
