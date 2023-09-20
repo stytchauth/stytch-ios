@@ -96,7 +96,10 @@ struct Environment {
         set { _passkeysClent = newValue }
     }
     #endif
-
+    #if os(iOS)
+    var dfpClient: DFPClient = .live
+    var captcha: CAPTCHA = .init()
+    #endif
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init

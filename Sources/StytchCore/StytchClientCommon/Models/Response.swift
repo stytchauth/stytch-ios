@@ -11,13 +11,13 @@ public struct Response<Wrapped: Decodable>: Decodable {
     /// The id for the request.
     public let requestId: String
     /// The HTTP status code of the request.
-    public let statusCode: UInt
+    public let statusCode: UInt?
     let wrapped: Wrapped
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.requestId = try container.decodeIfPresent(String.self, forKey: .requestId) ?? "unknown_request_id"
-        self.statusCode = try container.decode(key: .statusCode)
+        self.statusCode = try container.decodeIfPresent(UInt.self, forKey: .statusCode)
         self.wrapped = try .init(from: decoder)
     }
 
@@ -36,7 +36,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
 /// Represents the interface for basic responses.
 public protocol BasicResponseType {
     var requestId: String { get }
-    var statusCode: UInt { get }
+    var statusCode: UInt? { get }
 }
 
 /// A concrete response type which provides only the `requestId` and `statusCode`.
