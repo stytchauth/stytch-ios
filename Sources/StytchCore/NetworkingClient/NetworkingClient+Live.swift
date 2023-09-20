@@ -70,7 +70,7 @@ private func handleDFPObservationMode(session: URLSession, request: URLRequest, 
     var newRequest = request
     let oldBody = newRequest.httpBody ?? Data()
     var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-    newBody["dfp_telemetry_id"] = try await dfp.getTelemetryId(publicToken) as AnyObject
+    newBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
     if captcha.isConfigured() {
         newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
     }
@@ -83,7 +83,7 @@ private func handleDFPDecisioningMode(session: URLSession, request: URLRequest, 
     var firstRequest = request
     let oldBody = firstRequest.httpBody ?? Data()
     var firstRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-    firstRequestBody["dfp_telemetry_id"] = try await dfp.getTelemetryId(publicToken) as AnyObject
+    firstRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
     firstRequest.httpBody = try JSONSerialization.data(withJSONObject: firstRequestBody)
     let (data, response) = try await makeRequest(session: session, request: firstRequest)
     if response.statusCode != 403 {
@@ -91,7 +91,7 @@ private func handleDFPDecisioningMode(session: URLSession, request: URLRequest, 
     }
     var secondRequest = request
     var secondRequstBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-    secondRequstBody["dfp_telemetry_id"] = try await dfp.getTelemetryId(publicToken) as AnyObject
+    secondRequstBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
     secondRequstBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
     secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequstBody)
     return try await makeRequest(session: session, request: secondRequest)

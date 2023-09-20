@@ -97,7 +97,7 @@ struct Environment {
     }
     #endif
     #if os(iOS)
-    var dfpClient: DFPClient = .live
+    var dfpClient: DFPClient = .init()
     var captcha: CAPTCHA = .init()
     #endif
     var date: () -> Date = Date.init
