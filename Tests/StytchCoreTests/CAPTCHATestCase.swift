@@ -11,7 +11,7 @@ private struct RecaptchaProviderMock: RecaptchaProvider {
     }
 
     func getCaptchaToken() async -> String {
-        if didConfigure {
+        return if didConfigure {
             "captcha-token"
         } else {
             ""
