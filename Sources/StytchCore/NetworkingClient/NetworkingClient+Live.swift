@@ -68,7 +68,7 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
             return try await requestHandler(session, request)
         }
         var newRequest = request
-        let oldBody = newRequest.httpBody ?? Data()
+        let oldBody = newRequest.httpBody ?? Data("{}".utf8)
         var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         newRequest.httpBody = try JSONSerialization.data(withJSONObject: newBody)
@@ -78,7 +78,7 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
     func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // OBSERVATION = Always DFP; CAPTCHA if configured
         var newRequest = request
-        let oldBody = newRequest.httpBody ?? Data()
+        let oldBody = newRequest.httpBody ?? Data("{}".utf8)
         var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         newBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
         if captcha.isConfigured() {
@@ -91,7 +91,7 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
     func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // DECISIONING = add DFP Id, proceed; if request 403s, add a captcha token
         var firstRequest = request
-        let oldBody = firstRequest.httpBody ?? Data()
+        let oldBody = firstRequest.httpBody ?? Data("{}".utf8)
         var firstRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         firstRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
         firstRequest.httpBody = try JSONSerialization.data(withJSONObject: firstRequestBody)
@@ -100,10 +100,10 @@ internal struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
             return (data, response)
         }
         var secondRequest = request
-        var secondRequstBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        secondRequstBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
-        secondRequstBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
-        secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequstBody)
+        var secondRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
+        secondRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
+        secondRequestBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
+        secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequestBody)
         return try await requestHandler(session, secondRequest)
     }
     #endif
