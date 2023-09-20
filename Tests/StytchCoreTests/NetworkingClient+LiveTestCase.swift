@@ -9,21 +9,22 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
         methodCalled = "makeRequest"
         return (Data(), HTTPURLResponse())
     }
-
-    func handleDFPDisabled(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    #if os(iOS)
+    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDfpDisabled"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }
+    #endif
 }
 
 final class NetworkingClientLiveTestCase: XCTestCase {

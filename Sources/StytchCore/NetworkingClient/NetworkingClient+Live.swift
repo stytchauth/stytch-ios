@@ -2,17 +2,21 @@ import Foundation
 
 extension NetworkingClient {
     static func live(networkRequestHandler: NetworkRequestHandler = NetworkRequestHandlerImplementation()) -> NetworkingClient {
+        #if os(iOS)
+        @Dependency(\.dfpClient) var dfpClient
+        @Dependency(\.captcha) var captcha
+        #endif
         let session: URLSession = .init(configuration: .default)
         return .init { request, dfpEnabled, dfpAuthMode, publicToken in
             #if os(iOS)
             if !dfpEnabled {
-                return try await networkRequestHandler.handleDFPDisabled(session: session, request: request)
+                return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha)
             }
             switch dfpAuthMode {
             case .observation:
-                return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken)
+                return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, captcha: captcha, dfp: dfpClient)
             case .decisioning:
-                return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken)
+                return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, captcha: captcha, dfp: dfpClient)
             }
             #endif
             return try await networkRequestHandler.makeRequest(session: session, request: request)
@@ -24,19 +28,15 @@ internal protocol NetworkRequestHandler {
     func makeRequest(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse)
 
     #if os(iOS)
-    func handleDFPDisabled(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse)
+    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse)
 
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse)
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse)
 
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse)
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse)
     #endif
 }
 
 private struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
-    #if os(iOS)
-    @Dependency(\.dfpClient) var dfpClient
-    @Dependency(\.captcha) var captcha
-    #endif
     func makeRequest(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         if #available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *) {
             let (data, response) = try await session.data(for: request)
@@ -65,7 +65,7 @@ private struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
     }
 
     #if os(iOS)
-    func handleDFPDisabled(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CAPTCHA) async throws -> (Data, HTTPURLResponse) {
         // DISABLED = if captcha client is configured, add a captcha token, else do nothing
         if captcha.isConfigured() == false {
             return try await makeRequest(session: session, request: request)
@@ -78,12 +78,12 @@ private struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
         return try await makeRequest(session: session, request: newRequest)
     }
 
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
         // OBSERVATION = Always DFP; CAPTCHA if configured
         var newRequest = request
         let oldBody = newRequest.httpBody ?? Data()
         var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        newBody["dfp_telemetry_id"] = await dfpClient.getTelemetryId(publicToken: publicToken) as AnyObject
+        newBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
         if captcha.isConfigured() {
             newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         }
@@ -91,12 +91,12 @@ private struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
         return try await makeRequest(session: session, request: newRequest)
     }
 
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CAPTCHA, dfp: DFPClient) async throws -> (Data, HTTPURLResponse) {
         // DECISIONING = add DFP Id, proceed; if request 403s, add a captcha token
         var firstRequest = request
         let oldBody = firstRequest.httpBody ?? Data()
         var firstRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        firstRequestBody["dfp_telemetry_id"] = await dfpClient.getTelemetryId(publicToken: publicToken) as AnyObject
+        firstRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
         firstRequest.httpBody = try JSONSerialization.data(withJSONObject: firstRequestBody)
         let (data, response) = try await makeRequest(session: session, request: firstRequest)
         if response.statusCode != 403 {
@@ -104,7 +104,7 @@ private struct NetworkRequestHandlerImplementation : NetworkRequestHandler {
         }
         var secondRequest = request
         var secondRequstBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        secondRequstBody["dfp_telemetry_id"] = await dfpClient.getTelemetryId(publicToken: publicToken) as AnyObject
+        secondRequstBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
         secondRequstBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequstBody)
         return try await makeRequest(session: session, request: secondRequest)
