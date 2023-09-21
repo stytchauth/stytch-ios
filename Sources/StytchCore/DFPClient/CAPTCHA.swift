@@ -10,7 +10,7 @@ internal protocol CaptchaProvider {
     func isConfigured() -> Bool
 }
 
-final class CaptchaClient : CaptchaProvider {
+final class CaptchaClient: CaptchaProvider {
     private var recaptchaClient: RecaptchaClient?
 
     func isConfigured() -> Bool {
