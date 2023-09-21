@@ -16,7 +16,7 @@ extension StytchB2BClient {
             guard let siteKey = bootstrapData.wrapped.captchaSettings.siteKey else {
                 return
             }
-            try await captcha.setCaptchaClient(siteKey: siteKey)
+            await captcha.setCaptchaClient(siteKey: siteKey)
             #endif
         }
     }
