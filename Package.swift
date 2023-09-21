@@ -11,11 +11,14 @@ let package = Package(
     targets: [
         .target(
             name: "StytchCore",
+            dependencies: [
+                .target(name: "Recaptcha", condition: .when(platforms: [.iOS])),
+            ],
             resources: [
                 .copy("DFPClient/dfp.html"),
             ]
         ),
         .binaryTarget(name: "Recaptcha", path: "libs/recaptcha-xcframework.xcframework.zip"),
-        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore", "Recaptcha"]),
+        .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
