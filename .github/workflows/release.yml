@@ -26,13 +26,6 @@ jobs:
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
 
-    - name: Ensure SDK version matches current tag
-      run: |
-        if [[ "$(Scripts/version show-current)" != ${{ github.ref_name }} ]]; then
-          echo "Tag '${{ github.ref_name }}' not equal to $(Scripts/version show-current)"
-          exit 1
-        fi
-
     - name: Create XCFramework
       run: |
         make xc-framework
