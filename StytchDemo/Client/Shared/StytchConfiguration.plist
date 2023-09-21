@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>StytchHostURL</key>
-	<string>https://example.com</string>
+	<string>http://localhost:3000/authenticate</string>
 	<key>StytchPublicToken</key>
-	<string>public-token-example</string>
+	<string>public-token-test-5110e67c-f7a1-4ed7-9f85-604e0f6447d3</string>
 </dict>
 </plist>

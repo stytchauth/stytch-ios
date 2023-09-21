@@ -7,7 +7,7 @@ internal protocol DFPProvider {
     func getTelemetryId(publicToken: String) async -> String
 }
 
-private struct DFPProviderImplementation: DFPProvider {
+final class DFPClient : DFPProvider {
     func getTelemetryId(publicToken: String) async -> String {
         await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
@@ -33,18 +33,6 @@ private struct DFPProviderImplementation: DFPProvider {
                 }
             }
         }
-    }
-}
-
-final class DFPClient {
-    private var dfpProvider: DFPProvider
-
-    init(dfpProvider: DFPProvider = DFPProviderImplementation()) {
-        self.dfpProvider = dfpProvider
-    }
-
-    func getTelemetryId(publicToken: String) async -> String {
-        await dfpProvider.getTelemetryId(publicToken: publicToken)
     }
 }
 

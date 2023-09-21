@@ -3,10 +3,10 @@ import Foundation
 import XCTest
 @testable import StytchCore
 
-private struct UnconfiguredRecaptchaProviderMock: RecaptchaProvider {
-    mutating func configure(siteKey _: String) async {}
+private struct UnconfiguredRecaptchaProviderMock: CaptchaProvider {
+    func setCaptchaClient(siteKey _: String) async {}
 
-    func getCaptchaToken() async -> String {
+    func executeRecaptcha() async -> String {
         ""
     }
 
@@ -15,10 +15,10 @@ private struct UnconfiguredRecaptchaProviderMock: RecaptchaProvider {
     }
 }
 
-private struct ConfiguredRecaptchaProviderMock: RecaptchaProvider {
-    mutating func configure(siteKey _: String) async {}
+private struct ConfiguredRecaptchaProviderMock: CaptchaProvider {
+    func setCaptchaClient(siteKey _: String) async {}
 
-    func getCaptchaToken() async -> String {
+    func executeRecaptcha() async -> String {
         "captcha-token"
     }
 
@@ -47,11 +47,11 @@ private extension URLRequest {
 // These tests are admittedly a little weird, but basically, I'm just returning either a "good" response or a "bad" response, depending on the test parameters
 final class NetworkRequestHandlerTestCase: XCTestCase {
     private let handler = NetworkRequestHandlerImplementation()
-    private let dfpClient = DFPClient(dfpProvider: DFPProviderMock())
+    private let dfpClient = DFPProviderMock()
 
     func testHandleDFPDisabledNoCaptcha() async throws {
         // do nothing to the request
-        let captcha = CAPTCHA(recaptchaProvider: UnconfiguredRecaptchaProviderMock())
+        let captcha = UnconfiguredRecaptchaProviderMock()
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
 
         func requestHandler(session _: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -66,7 +66,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
 
     func testHandleDFPDisabledWithCaptcha() async throws {
         // add a captcha token to the request
-        let captcha = CAPTCHA(recaptchaProvider: ConfiguredRecaptchaProviderMock())
+        let captcha = ConfiguredRecaptchaProviderMock()
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
 
         func requestHandler(session _: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -81,7 +81,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
 
     func testHandleDFPObservationModeNoCaptcha() async throws {
         // add DFP, no captcha token
-        let captcha = CAPTCHA(recaptchaProvider: UnconfiguredRecaptchaProviderMock())
+        let captcha = UnconfiguredRecaptchaProviderMock()
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
 
         func requestHandler(session _: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -96,7 +96,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
 
     func testHandleDFPObservationModeWithCaptcha() async throws {
         // add dfp and captcha token
-        let captcha = CAPTCHA(recaptchaProvider: ConfiguredRecaptchaProviderMock())
+        let captcha = ConfiguredRecaptchaProviderMock()
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
 
         func requestHandler(session _: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -111,7 +111,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
 
     func testHandleDFPDecisioningMode() async throws {
         // add DFP Id, proceed; if request 403s, add a captcha token
-        let captcha = CAPTCHA(recaptchaProvider: ConfiguredRecaptchaProviderMock())
+        let captcha = ConfiguredRecaptchaProviderMock()
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
         var requestNumber = 0
 
