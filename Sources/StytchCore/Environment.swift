@@ -51,7 +51,7 @@ struct Environment {
 
     var appleOAuthClient: AppleOAuthClient = .live
 
-    var networkingClient: NetworkingClient = .live()
+    var networkingClient: NetworkingClient = .live
 
     var cryptoClient: CryptoClient = .live
 
@@ -96,10 +96,7 @@ struct Environment {
         set { _passkeysClent = newValue }
     }
     #endif
-    #if os(iOS)
-    var dfpClient: DFPProvider = DFPClient()
-    var captcha: CaptchaProvider = CaptchaClient()
-    #endif
+
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init

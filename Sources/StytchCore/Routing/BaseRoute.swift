@@ -9,7 +9,6 @@ extension StytchClient {
         case sessions(SessionsRoute)
         case totp(TOTPRoute)
         case users(UsersRoute)
-        case bootstrap(BootstrapRoute)
 
         var path: Path {
             switch self {
@@ -31,8 +30,6 @@ extension StytchClient {
                 return "totps".appendingPath(route.path)
             case let .users(route):
                 return "users".appendingPath(route.path)
-            case let .bootstrap(route):
-                return "".appendingPath(route.path)
             }
         }
     }

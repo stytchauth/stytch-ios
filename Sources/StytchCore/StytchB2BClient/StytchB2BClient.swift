@@ -14,12 +14,6 @@ public struct StytchB2BClient: StytchClientType {
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
 
     private init() {
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-            // only run this in non-test environments
-            Task {
-                try await Self.bootstrap.fetch()
-            }
-        }
         postInit()
     }
 

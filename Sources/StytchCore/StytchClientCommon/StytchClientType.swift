@@ -18,7 +18,7 @@ extension StytchClientType {
         get { localStorage.configuration }
         set {
             localStorage.configuration = newValue
-            updateNetworkingClient()
+            updateHeaderProvider()
         }
     }
 
@@ -37,10 +37,6 @@ extension StytchClientType {
     private var clientInfo: ClientInfo { Current.clientInfo }
 
     private var uuid: () -> UUID { Current.uuid }
-    #if os(iOS)
-    private var dfpClient: DFPProvider { Current.dfpClient }
-    private var captchaClient: CaptchaProvider { Current.captcha }
-    #endif
 
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
@@ -74,13 +70,13 @@ extension StytchClientType {
             configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
         }
 
-        updateNetworkingClient()
+        updateHeaderProvider()
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
     }
 
     // To be called after configuration
-    private func updateNetworkingClient() {
+    private func updateHeaderProvider() {
         let clientInfoString = try? clientInfo.base64EncodedString(encoder: jsonEncoder)
 
         networkingClient.headerProvider = { [weak localStorage, weak sessionStorage] in
@@ -95,7 +91,6 @@ extension StytchClientType {
                 "X-SDK-Client": clientInfoString ?? "",
             ]
         }
-        networkingClient.publicToken = configuration?.publicToken ?? ""
     }
 
     private func resetKeychainOnFreshInstall() {

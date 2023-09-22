@@ -11,7 +11,7 @@ final class NetworkingClientInterceptor {
         responses = []
     }
 
-    func handleRequest(request: URLRequest, _: Bool, _: DFPProtectedAuthMode, _: String) async throws -> (Data, HTTPURLResponse) {
+    func handleRequest(request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         requests.append(request)
 
         switch responses.removeFirst() {
