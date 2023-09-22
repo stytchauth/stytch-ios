@@ -38,8 +38,8 @@ extension StytchClientType {
 
     private var uuid: () -> UUID { Current.uuid }
     #if os(iOS)
-    private var dfpClient: DFPProvider { Current.dfpClient }
-    private var captchaClient: CaptchaProvider { Current.captcha }
+    private var dfpClient: DFPClient { Current.dfpClient }
+    private var captchaClient: CAPTCHA { Current.captcha }
     #endif
 
     // swiftlint:disable:next identifier_name
