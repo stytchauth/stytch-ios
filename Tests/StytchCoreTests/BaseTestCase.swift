@@ -8,7 +8,7 @@ class BaseTestCase: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest)
+        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest(request:))
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = .mock()

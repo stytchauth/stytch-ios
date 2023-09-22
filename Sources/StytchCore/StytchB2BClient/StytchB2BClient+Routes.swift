@@ -6,7 +6,6 @@ extension StytchB2BClient {
         case passwords(PasswordsRoute)
         case sessions(SessionsRoute)
         case sso(SSORoute)
-        case bootstrap(BootstrapRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -27,8 +26,6 @@ extension StytchB2BClient {
                 return ("sessions", route)
             case let .sso(route):
                 return ("sso", route)
-            case let .bootstrap(route):
-                return ("", route)
             }
         }
     }
@@ -134,17 +131,6 @@ extension StytchB2BClient {
                 return "authenticate"
             case .strengthCheck:
                 return "strength_check"
-            }
-        }
-    }
-
-    enum BootstrapRoute: RouteType {
-        case fetch(Path)
-
-        var path: Path {
-            switch self {
-            case let .fetch(publicToken):
-                return "projects/bootstrap".appendingPath(publicToken)
             }
         }
     }

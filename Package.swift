@@ -8,19 +8,9 @@ let package = Package(
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
     ],
-    dependencies: [
-        .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", from: "18.3.0"),
-    ],
+    dependencies: [],
     targets: [
-        .target(
-            name: "StytchCore",
-            dependencies: [
-                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
-            ],
-            resources: [
-                .copy("DFPClient/dfp.html"),
-            ]
-        ),
+        .target(name: "StytchCore"),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
