@@ -69,7 +69,6 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
     BUILD_PRODUCTS_PATH=".build/Build/Intermediates.noindex/ArchiveIntermediates/$NAME/BuildProductsPath"
     RELEASE_PATH="$BUILD_PRODUCTS_PATH/$RELEASE_FOLDER"
     SWIFT_MODULE_PATH="$RELEASE_PATH/$NAME.swiftmodule"
-    GENERIC_SWIFT_MODULE_PATH="$BUILD_PRODUCTS_PATH/Release/$NAME.swiftmodule"
     RESOURCES_BUNDLE_PATH="$RELEASE_PATH/${NAME}_${NAME}.bundle"
     VARIANT_NAME=${RELEASE_FOLDER/"Release"/""}
     VARIANT_HEADERS_PATH=".build/Build/Intermediates.noindex/ArchiveIntermediates/$NAME/IntermediateBuildFilesPath/GeneratedModuleMaps$VARIANT_NAME"
