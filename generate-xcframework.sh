@@ -18,10 +18,10 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
     RELEASE_FOLDER="Release-iphonesimulator"
     ;;
     "tvOS")
-    RELEASE_FOLDER="Release-tvos"
+    RELEASE_FOLDER="Release-appletvos"
     ;;
     "tvOS Simulator")
-    RELEASE_FOLDER="Release-tvsimulator"
+    RELEASE_FOLDER="Release-appletvsimulator"
     ;;
     "watchOS")
     RELEASE_FOLDER="Release-watchos"
@@ -30,7 +30,7 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
     RELEASE_FOLDER="Release-watchsimulator"
     ;;
     "macOS")
-    RELEASE_FOLDER="Release-macos"
+    RELEASE_FOLDER="Release"
     ;;
     esac
 
@@ -69,9 +69,11 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
     BUILD_PRODUCTS_PATH=".build/Build/Intermediates.noindex/ArchiveIntermediates/$NAME/BuildProductsPath"
     RELEASE_PATH="$BUILD_PRODUCTS_PATH/$RELEASE_FOLDER"
     SWIFT_MODULE_PATH="$RELEASE_PATH/$NAME.swiftmodule"
+    GENERIC_SWIFT_MODULE_PATH="$BUILD_PRODUCTS_PATH/Release/$NAME.swiftmodule"
     RESOURCES_BUNDLE_PATH="$RELEASE_PATH/${NAME}_${NAME}.bundle"
     VARIANT_NAME=${RELEASE_FOLDER/"Release"/""}
-    VARIANT_HEADERS_PATH=".build/Build/Intermediates.noindex/GeneratedModuleMaps$VARIANT_NAME"
+    VARIANT_HEADERS_PATH=".build/Build/Intermediates.noindex/ArchiveIntermediates/$NAME/IntermediateBuildFilesPath/GeneratedModuleMaps$VARIANT_NAME"
+    INCLUDES_PATH="$RELEASE_PATH/include"
 
     # Copy Swift modules
     if [ -d $SWIFT_MODULE_PATH ] 
@@ -80,14 +82,18 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
     else
         # In case there are no modules, assume C/ObjC library and create module map
         echo "module $NAME { export * }" > $MODULES_PATH/module.modulemap
-        # TODO: Copy headers
     fi
 
     # Copy headers
     if [ -d $VARIANT_HEADERS_PATH ]
     then
         cp $VARIANT_HEADERS_PATH/$NAME-Swift.h $HEADERS_PATH/
-        cp $VARIANT_HEADERS_PATH/*.modulemap $MODULES_PATH/
+    fi
+
+    if [ -d $INCLUDES_PATH ]
+    then
+        cp -r $INCLUDES_PATH/RecaptchaEnterprise/module.modulemap $MODULES_PATH/
+        cp -r $INCLUDES_PATH/RecaptchaEnterprise/*.h $HEADERS_PATH/
     fi
 
     # Copy resources bundle, if exists 
@@ -103,14 +109,14 @@ xcodebuild -create-xcframework \
     -debug-symbols ${PWD}/Release-iphoneos.xcarchive/dSYMs/$NAME.framework.dSYM \
     -framework Release-iphonesimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
     -debug-symbols ${PWD}/Release-iphonesimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
-    -framework Release-tvos.xcarchive/Products/usr/local/lib/$NAME.framework \
-    -debug-symbols ${PWD}/Release-tvos.xcarchive/dSYMs/$NAME.framework.dSYM \
-    -framework Release-tvsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
-    -debug-symbols ${PWD}/Release-tvsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-appletvos.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-appletvos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-appletvsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-appletvsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
     -framework Release-watchos.xcarchive/Products/usr/local/lib/$NAME.framework \
     -debug-symbols ${PWD}/Release-watchos.xcarchive/dSYMs/$NAME.framework.dSYM \
     -framework Release-watchsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
     -debug-symbols ${PWD}/Release-watchsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
-    -framework Release-macos.xcarchive/Products/usr/local/lib/$NAME.framework \
-    -debug-symbols ${PWD}/Release-macos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release.xcarchive/dSYMs/$NAME.framework.dSYM \
     -output $NAME.xcframework
