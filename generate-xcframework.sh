@@ -49,23 +49,29 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
             -derivedDataPath ".build" \
             -configuration Release \
             -allowProvisioningUpdates \
+            DEFINES_MODULE=YES \
             CLONE_HEADERS=YES \
             SKIP_INSTALL=NO \
             BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
             SWIFT_INSTALL_OBJC_HEADER=YES \
             OTHER_SWIFT_FLAGS="-no-verify-emitted-module-interface" \
             OTHER_LDFLAGS="-ObjC" \
-            REMOVE_HEADERS_FROM_EMBEDDED_BUNDLES=NO
+            REMOVE_HEADERS_FROM_EMBEDDED_BUNDLES=NO \
+            VALIDATE_PRODUCT=YES
 
 
     FRAMEWORK_PATH="$ARCHIVE_PATH.xcarchive/Products/usr/local/lib/$NAME.framework"
     MODULES_PATH="$FRAMEWORK_PATH/Modules"
+    HEADERS_PATH="$FRAMEWORK_PATH/Headers"
     mkdir -p $MODULES_PATH
+    mkdir -p $HEADERS_PATH
 
     BUILD_PRODUCTS_PATH=".build/Build/Intermediates.noindex/ArchiveIntermediates/$NAME/BuildProductsPath"
     RELEASE_PATH="$BUILD_PRODUCTS_PATH/$RELEASE_FOLDER"
     SWIFT_MODULE_PATH="$RELEASE_PATH/$NAME.swiftmodule"
     RESOURCES_BUNDLE_PATH="$RELEASE_PATH/${NAME}_${NAME}.bundle"
+    VARIANT_NAME=${RELEASE_FOLDER/"Release"/""}
+    VARIANT_HEADERS_PATH=".build/Build/Intermediates.noindex/GeneratedModuleMaps$VARIANT_NAME"
 
     # Copy Swift modules
     if [ -d $SWIFT_MODULE_PATH ] 
@@ -77,6 +83,13 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
         # TODO: Copy headers
     fi
 
+    # Copy headers
+    if [ -d $VARIANT_HEADERS_PATH ]
+    then
+        cp $VARIANT_HEADERS_PATH/$NAME-Swift.h $HEADERS_PATH/
+        cp $VARIANT_HEADERS_PATH/*.modulemap $MODULES_PATH/
+    fi
+
     # Copy resources bundle, if exists 
     if [ -e $RESOURCES_BUNDLE_PATH ] 
     then
@@ -86,18 +99,18 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
 done
 
 xcodebuild -create-xcframework \
--framework Release-iphoneos.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-iphoneos.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-iphonesimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-iphonesimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-tvos.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-tvos.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-tvsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-tvsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-watchos.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-watchos.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-watchsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-watchsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
--framework Release-macos.xcarchive/Products/usr/local/lib/$NAME.framework \
--debug-symbols ${PWD}/Release-macos.xcarchive/dSYMs/$NAME.framework.dSYM \
--output $NAME.xcframework
+    -framework Release-iphoneos.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-iphoneos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-iphonesimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-iphonesimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-tvos.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-tvos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-tvsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-tvsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-watchos.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-watchos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-watchsimulator.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-watchsimulator.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -framework Release-macos.xcarchive/Products/usr/local/lib/$NAME.framework \
+    -debug-symbols ${PWD}/Release-macos.xcarchive/dSYMs/$NAME.framework.dSYM \
+    -output $NAME.xcframework

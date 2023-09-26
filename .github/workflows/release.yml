@@ -26,7 +26,34 @@ jobs:
     - name: Bootstrap
       uses: ./.github/actions/bootstrap
 
+    - name: Ensure SDK version matches current tag
+      run: |
+        if [[ "$(Scripts/version show-current)" != ${{ github.ref_name }} ]]; then
+          echo "Tag '${{ github.ref_name }}' not equal to $(Scripts/version show-current)"
+          exit 1
+        fi
+
     - name: Create XCFramework
       run: |
         make xc-framework
         mv StytchCore.zip StytchCore.xcframework.zip
+
+    - name: Build docs
+      run: |
+        make docs
+        cd .build/Build/Products/Release-iphoneos
+        zip -r ../../../../StytchCore.doccarchive.zip StytchCore.doccarchive
+        cd -
+
+    - name: Publish to GitHub
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        # Release should be edited and published manually to trigger cocoapods/carthage updates. If --draft removed, must change "types: [created]" for Publish workflow
+        gh release create \
+          ${{ github.ref_name }} \
+          StytchCore.xcframework.zip \
+          StytchCore.doccarchive.zip \
+          --draft \
+          --generate-notes
