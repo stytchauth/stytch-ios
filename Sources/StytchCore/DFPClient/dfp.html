@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="https://elements.stytch.com/telemetry.js"></script>
+    </head>
+    <body>
+        <script>
+            function fetchTelemetryId(publicToken) {
+                window.GetTelemetryID(publicToken)
+                    .then((telemetryId) => window.webkit.messageHandlers.StytchDFP.postMessage(telemetryId))
+                    .catch((error) => window.webkit.messageHandlers.StytchDFP.postMessage(error.message));
+            }
+        </script>
+    </body>
+</html>
