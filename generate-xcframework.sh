@@ -91,8 +91,7 @@ for PLATFORM in "iOS" "iOS Simulator" "tvOS" "tvOS Simulator" "watchOS" "watchOS
 
     if [ -d $INCLUDES_PATH ]
     then
-        cp -r $INCLUDES_PATH/RecaptchaEnterprise/module.modulemap $MODULES_PATH/
-        cp -r $INCLUDES_PATH/RecaptchaEnterprise/*.h $HEADERS_PATH/
+        cp -r $INCLUDES_PATH/* $HEADERS_PATH/
     fi
 
     # Copy resources bundle, if exists 

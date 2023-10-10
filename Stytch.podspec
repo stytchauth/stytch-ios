@@ -25,8 +25,13 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'StytchCore'
 
+  s.static_framework = true
   s.subspec 'StytchCore' do |s|
     s.source_files = 'Sources/StytchCore/**/*'
     s.exclude_files = "**/Documentation*/**/*"
+    s.dependency "RecaptchaEnterprise", "~> 18.3.0"
+    s.resource_bundles = {
+    'module' => ['Sources/StytchCore/*/*.{html}']
+  }
   end
 end
