@@ -106,15 +106,17 @@ public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `authenticate` calls.
     struct AuthenticateParameters: Encodable {
         let domain: String
+        let sessionDuration: Minutes
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
-        ///   - requestBehavior: The  desired behavior of the authentication request. Defaults to a value specific for the platform `RequestBehavior.defaultPlatformValue`
         public init(
-            domain: String
+            domain: String,
+            sessionDuration: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
+            self.sessionDuration = sessionDuration
         }
     }
 }
