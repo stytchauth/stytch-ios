@@ -13,7 +13,7 @@ final class DFPClient: DFPProvider {
             DispatchQueue.main.async {
                 Task {
                     if let topViewController = UIApplication.shared.topMostViewController {
-                        guard let dfpFileUrl = Bundle.module.url(forResource: "dfp", withExtension: "html") else {
+                        guard let dfpFileUrl = getResource(myBundle: Bundle(for: Self.self), name: "dfp", ext: "html") else {
                             continuation.resume(returning: "Unable to load DFP file")
                             return
                         }
@@ -77,5 +77,19 @@ private extension UIApplication {
         }
         return nil
     }
+}
+
+private func getResource(myBundle: Bundle, name: String, ext: String) -> URL? {
+    #if SWIFT_PACKAGE
+    return Bundle.module.url(forResource: name, withExtension: ext)
+    #else
+    guard let resourceBundleURL = myBundle.url(forResource: "StytchCore", withExtension: "bundle") else {
+        return nil
+    }
+    guard let resourceBundle = Bundle(url: resourceBundleURL) else {
+        return nil
+    }
+    return resourceBundle.url(forResource: name, withExtension: ext)
+    #endif
 }
 #endif
