@@ -6,7 +6,6 @@
 ![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
-![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
 ![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stytch.svg)
 
 </div>
@@ -134,13 +133,7 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 1. File > Add Packages
 1. Enter https://github.com/stytchauth/stytch-ios
 1. Choose Package Requirements (Up to next minor, up to next major, etc)
-
-### Carthage
-
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch iOS SDK into your Xcode project, add the following to your Cartfile.
-```
-binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json"
-```
+1. In your Build Settings, under `Other Linker Flags`, add `-ObjC`
 
 ### CocoaPods
 [CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch iOS SDK into your Xcode project, add the following to your Podfile.
