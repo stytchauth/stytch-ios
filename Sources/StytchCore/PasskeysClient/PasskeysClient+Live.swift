@@ -28,7 +28,7 @@ extension PasskeysClient {
 
             return credential
         },
-        assertCredential: { domain, challenge, requestBehavior in
+        assertCredential: { domain, challenge in
             let platformProvider: ASAuthorizationPlatformPublicKeyCredentialProvider = .init(relyingPartyIdentifier: domain)
 
             let request = platformProvider.createCredentialAssertionRequest(challenge: challenge)
@@ -39,17 +39,9 @@ extension PasskeysClient {
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
                 delegate.continuation = continuation
-                switch requestBehavior {
                 #if os(iOS)
-                case .autoFill:
-                    controller.performAutoFillAssistedRequests()
-                case let .default(preferLocalCredentials):
-                    controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
-                #else
-                case .default:
-                    controller.performRequests()
+                controller.performRequests()
                 #endif
-                }
             }
 
             guard

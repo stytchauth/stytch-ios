@@ -26,7 +26,7 @@ public extension StytchClient {
             let credential = try await passkeysClient.registerCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
-                username: parameters.username,
+                username: String(), // TODO: get email/phone number
                 userId: startResp.userId
             )
 
@@ -51,13 +51,12 @@ public extension StytchClient {
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: .authenticateStart,
-                parameters: StartParameters(domain: parameters.domain)
+                parameters: parameters
             )
 
             let credential = try await passkeysClient.assertCredential(
                 domain: parameters.domain,
-                challenge: startResp.challenge,
-                requestBehavior: parameters.requestBehavior
+                challenge: startResp.challenge
             )
 
             return try await router.post(
@@ -71,7 +70,7 @@ public extension StytchClient {
                         signature: credential.signature,
                         userHandle: credential.userID
                     )
-                ).wrapped(sessionDuration: parameters.sessionDuration)
+                ).wrapped()
             )
         }
     }
@@ -89,60 +88,35 @@ public extension StytchClient {
 public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable {
+        let userId: User.ID
         let domain: String
-        let username: String
+        let userAgent: String?
 
         /// - Parameters:
+        ///   - userId: The user id associated with your passkey registration.
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - username: The username associated with your user. In the future, it will be required this is a valid email address or phone number.
-        public init(domain: String, username: String) {
+        ///   - userAgent: The user agent associated with your passkey registration.
+        public init(userId: User.ID, domain: String, userAgent: String? = nil) {
+            self.userId = userId
             self.domain = domain
-            self.username = username
+            self.userAgent = userAgent
         }
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
-    struct AuthenticateParameters {
-        // swiftlint:disable duplicate_enum_cases
-        /// A type representing the desired request behavior
-        public enum RequestBehavior {
-            #if os(iOS)
-            /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
-            case `default`(preferLocalCredentials: Bool)
-            /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
-            case autoFill
-            #else
-            /// Uses the default request behavior
-            case `default`
-            #endif
-
-            #if os(iOS)
-            /// The RequestBehavior parameter's default value for this platform — `.default(prefersLocalCredentials: false)`
-            public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
-            #else
-            /// The RequestBehavior parameter's default value for this platform — `.default`
-            public static let defaultPlatformValue: RequestBehavior = .default
-            #endif
-        }
-
-        // swiftlint:enable duplicate_enum_cases
-
+    struct AuthenticateParameters: Encodable {
         let domain: String
         let sessionDuration: Minutes
-        let requestBehavior: RequestBehavior
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
-        ///   - requestBehavior: The  desired behavior of the authentication request. Defaults to a value specific for the platform `RequestBehavior.defaultPlatformValue`
         public init(
             domain: String,
-            sessionDuration: Minutes = .defaultSessionDuration,
-            requestBehavior: RequestBehavior = .defaultPlatformValue
+            sessionDuration: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
             self.sessionDuration = sessionDuration
-            self.requestBehavior = requestBehavior
         }
     }
 }
