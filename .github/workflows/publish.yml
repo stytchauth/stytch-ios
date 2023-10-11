@@ -27,9 +27,3 @@ jobs:
         bundle exec pod trunk push --allow-warnings
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-
-    - name: Publish to Carthage
-      run: bundle exec Scripts/publish-to-carthage $(Scripts/version show-current)
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.PROD_CDN_UPDATER_AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_CDN_UPDATER_AWS_SECRET_ACCESS_KEY_ID }}
