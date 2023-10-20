@@ -58,10 +58,11 @@ public extension StytchClient {
             if !isSupported {
                 throw StytchError.passkeysNotSupported
             }
-            let destination = if sessionStorage.activeSessionExists {
-                PasskeysRoute.authenticateStartSecondary
+            let destination: PasskeysRoute
+            if sessionStorage.activeSessionExists {
+                destination = .authenticateStartSecondary
             } else {
-                PasskeysRoute.authenticateStartPrimary
+                destination = .authenticateStartPrimary
             }
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: destination,
