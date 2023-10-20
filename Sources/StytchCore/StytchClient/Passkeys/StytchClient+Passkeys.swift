@@ -137,6 +137,7 @@ public extension StytchClient.Passkeys {
             public static let defaultPlatformValue: RequestBehavior = .default
             #endif
         }
+
         let domain: String
         let sessionDuration: Minutes
         let returnPasskeyCredentialOptions: Bool = true

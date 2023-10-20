@@ -7,7 +7,7 @@ import XCTest
 final class PasskeysTestCase: BaseTestCase {
     private typealias Base = StytchClient.Passkeys
 
-        func testRegister() async throws {
+    func testRegister() async throws {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
