@@ -15,7 +15,7 @@ public extension StytchClient {
         @Dependency(\.passkeysClient) private var passkeysClient
         @Dependency(\.sessionStorage) private var sessionStorage
 
-        let isSupported : Bool = ProcessInfo.processInfo.isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0))
+        let isSupported: Bool = ProcessInfo.processInfo.isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0))
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
