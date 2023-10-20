@@ -13,11 +13,17 @@ public extension StytchClient {
         let router: NetworkingRouter<PasskeysRoute>
 
         @Dependency(\.passkeysClient) private var passkeysClient
+        @Dependency(\.sessionStorage) private var sessionStorage
+
+        let isSupported : Bool = ProcessInfo.processInfo.isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0))
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
         public func register(parameters: RegisterParameters) async throws -> BasicResponse {
+            if !isSupported {
+                throw StytchError.passkeysNotSupported
+            }
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
                 parameters: parameters
@@ -49,8 +55,16 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            if !isSupported {
+                throw StytchError.passkeysNotSupported
+            }
+            let destination = if sessionStorage.activeSessionExists {
+                PasskeysRoute.authenticateStartSecondary
+            } else {
+                PasskeysRoute.authenticateStartPrimary
+            }
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
-                to: .authenticateStart,
+                to: destination,
                 parameters: parameters
             )
 
@@ -70,7 +84,7 @@ public extension StytchClient {
                         signature: credential.signature,
                         userHandle: credential.userID
                     )
-                ).wrapped()
+                ).wrapped(sessionDuration: parameters.sessionDuration)
             )
         }
     }
@@ -88,18 +102,13 @@ public extension StytchClient {
 public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable {
-        let userId: User.ID
         let domain: String
-        let userAgent: String?
+        let returnPasskeyCredentialOptions: Bool = true
 
         /// - Parameters:
-        ///   - userId: The user id associated with your passkey registration.
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - userAgent: The user agent associated with your passkey registration.
-        public init(userId: User.ID, domain: String, userAgent: String? = nil) {
-            self.userId = userId
+        public init(domain: String) {
             self.domain = domain
-            self.userAgent = userAgent
         }
     }
 
@@ -107,6 +116,7 @@ public extension StytchClient.Passkeys {
     struct AuthenticateParameters: Encodable {
         let domain: String
         let sessionDuration: Minutes
+        let returnPasskeyCredentialOptions: Bool = true
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
@@ -143,7 +153,7 @@ extension StytchClient.Passkeys {
             let challengeString: String = try container.decode(key: .challenge)
 
             guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
-                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not bse64 url encoded")
+                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not base64 url encoded")
             }
 
             self.challenge = challenge

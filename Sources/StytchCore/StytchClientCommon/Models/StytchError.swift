@@ -110,6 +110,10 @@ public extension StytchError {
         errorType: "json_data_not_convertible_to_string",
         errorMessage: "JSON data unable to be converted to String type."
     )
+    static let passkeysNotSupported: Self = .init(
+        errorType: "passkeys_not_supported",
+        errorMessage: "Passkeys are unsupported on this device"
+    )
 }
 
 private extension URL {
