@@ -66,12 +66,13 @@ public extension StytchClient {
             }
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
                 to: destination,
-                parameters: parameters
+                parameters: StartParameters(domain: parameters.domain)
             )
 
             let credential = try await passkeysClient.assertCredential(
                 domain: parameters.domain,
-                challenge: startResp.challenge
+                challenge: startResp.challenge,
+                requestBehavior: parameters.requestBehavior
             )
 
             return try await router.post(
@@ -114,20 +115,44 @@ public extension StytchClient.Passkeys {
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters {
+        // swiftlint:disable duplicate_enum_cases
+        /// A type representing the desired request behavior
+        public enum RequestBehavior {
+            #if os(iOS)
+            /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
+            case `default`(preferLocalCredentials: Bool)
+            /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
+            case autoFill
+            #else
+            /// Uses the default request behavior
+            case `default`
+            #endif
+
+            #if os(iOS)
+            /// The RequestBehavior parameter's default value for this platform — `.default(prefersLocalCredentials: false)`
+            public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
+            #else
+            /// The RequestBehavior parameter's default value for this platform — `.default`
+            public static let defaultPlatformValue: RequestBehavior = .default
+            #endif
+        }
         let domain: String
         let sessionDuration: Minutes
         let returnPasskeyCredentialOptions: Bool = true
+        let requestBehavior: RequestBehavior
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
         public init(
             domain: String,
+            requestBehavior: RequestBehavior = .defaultPlatformValue,
             sessionDuration: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
             self.sessionDuration = sessionDuration
+            self.requestBehavior = requestBehavior
         }
     }
 }
