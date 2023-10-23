@@ -15,15 +15,10 @@ public extension StytchClient {
         @Dependency(\.passkeysClient) private var passkeysClient
         @Dependency(\.sessionStorage) private var sessionStorage
 
-        let isSupported: Bool = ProcessInfo.processInfo.isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0))
-
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
         public func register(parameters: RegisterParameters) async throws -> BasicResponse {
-            if !isSupported {
-                throw StytchError.passkeysNotSupported
-            }
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
                 parameters: parameters
@@ -55,9 +50,6 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            if !isSupported {
-                throw StytchError.passkeysNotSupported
-            }
             let destination: PasskeysRoute
             if sessionStorage.activeSessionExists {
                 destination = .authenticateStartSecondary
