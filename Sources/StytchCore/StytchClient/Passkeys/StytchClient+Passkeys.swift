@@ -13,6 +13,7 @@ public extension StytchClient {
         let router: NetworkingRouter<PasskeysRoute>
 
         @Dependency(\.passkeysClient) private var passkeysClient
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -49,14 +50,21 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            let destination: PasskeysRoute
+            if sessionStorage.activeSessionExists {
+                destination = .authenticateStartSecondary
+            } else {
+                destination = .authenticateStartPrimary
+            }
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
-                to: .authenticateStart,
-                parameters: parameters
+                to: destination,
+                parameters: StartParameters(domain: parameters.domain)
             )
 
             let credential = try await passkeysClient.assertCredential(
                 domain: parameters.domain,
-                challenge: startResp.challenge
+                challenge: startResp.challenge,
+                requestBehavior: parameters.requestBehavior
             )
 
             return try await router.post(
@@ -70,7 +78,7 @@ public extension StytchClient {
                         signature: credential.signature,
                         userHandle: credential.userID
                     )
-                ).wrapped()
+                ).wrapped(sessionDuration: parameters.sessionDuration)
             )
         }
     }
@@ -88,35 +96,56 @@ public extension StytchClient {
 public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable {
-        let userId: User.ID
         let domain: String
-        let userAgent: String?
+        let returnPasskeyCredentialOptions: Bool = true
 
         /// - Parameters:
-        ///   - userId: The user id associated with your passkey registration.
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - userAgent: The user agent associated with your passkey registration.
-        public init(userId: User.ID, domain: String, userAgent: String? = nil) {
-            self.userId = userId
+        public init(domain: String) {
             self.domain = domain
-            self.userAgent = userAgent
         }
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters {
+        // swiftlint:disable duplicate_enum_cases
+        /// A type representing the desired request behavior
+        public enum RequestBehavior {
+            #if os(iOS)
+            /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
+            case `default`(preferLocalCredentials: Bool)
+            /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
+            case autoFill
+            #else
+            /// Uses the default request behavior
+            case `default`
+            #endif
+
+            #if os(iOS)
+            /// The RequestBehavior parameter's default value for this platform — `.default(prefersLocalCredentials: false)`
+            public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
+            #else
+            /// The RequestBehavior parameter's default value for this platform — `.default`
+            public static let defaultPlatformValue: RequestBehavior = .default
+            #endif
+        }
+
         let domain: String
         let sessionDuration: Minutes
+        let returnPasskeyCredentialOptions: Bool = true
+        let requestBehavior: RequestBehavior
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
         public init(
             domain: String,
+            requestBehavior: RequestBehavior = .defaultPlatformValue,
             sessionDuration: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
             self.sessionDuration = sessionDuration
+            self.requestBehavior = requestBehavior
         }
     }
 }
@@ -143,7 +172,7 @@ extension StytchClient.Passkeys {
             let challengeString: String = try container.decode(key: .challenge)
 
             guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
-                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not bse64 url encoded")
+                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not base64 url encoded")
             }
 
             self.challenge = challenge
