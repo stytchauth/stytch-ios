@@ -90,6 +90,38 @@ final class PasskeysTestCase: BaseTestCase {
             ])
         )
     }
+
+    func testUpdate() async throws {
+        let updateResponse: PasskeysUpdateResponseData = .init(
+            webauthnRegistrationId: "webauthn-registration-id"
+        )
+        networkInterceptor.responses {
+            Response(requestId: "", statusCode: 200, wrapped: updateResponse)
+            PasskeysUpdateResponse.mock
+        }
+        let parameters: Base.UpdateParameters = .init(
+            id: "webauthn-registration-id",
+            name: "Cool new name"
+        )
+        _ = try await StytchClient.passkeys.update(parameters: parameters)
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/update/webauthn-registration-id",
+            method: .put(["name": "Cool new name"])
+        )
+    }
+}
+
+extension PasskeysUpdateResponse {
+    static var mock: Self {
+        .init(
+            requestId: "1234",
+            statusCode: 200,
+            wrapped: .init(
+                webauthnRegistrationId: "webauthn-registration-id"
+            )
+        )
+    }
 }
 
 // swiftlint:disable unavailable_function

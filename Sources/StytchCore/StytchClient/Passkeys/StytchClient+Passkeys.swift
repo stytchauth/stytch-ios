@@ -81,6 +81,15 @@ public extension StytchClient {
                 ).wrapped(sessionDuration: parameters.sessionDuration)
             )
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Updates an existing passkey based on its ID
+        public func update(parameters: UpdateParameters) async throws -> PasskeysUpdateResponse {
+            try await router.put(
+                to: .update(id: parameters.id),
+                parameters: PasskeysUpdateRequest(name: parameters.name)
+            )
+        }
     }
 }
 
@@ -146,6 +155,19 @@ public extension StytchClient.Passkeys {
             self.domain = domain
             self.sessionDuration = sessionDuration
             self.requestBehavior = requestBehavior
+        }
+    }
+
+    /// A dedicated parameters type for passkeys `update` calls.
+    struct UpdateParameters: Encodable {
+        let id: User.WebAuthNRegistration.ID
+        let name: String
+        /// - Parameters:
+        ///     - id: The id of the Passkey registration to be updated
+        ///     - name: The name to update the Passkey registration to
+        public init(id: User.WebAuthNRegistration.ID, name: String) {
+            self.id = id
+            self.name = name
         }
     }
 }
@@ -244,6 +266,42 @@ extension StytchClient.Passkeys {
         }
     }
 }
+
+public struct PasskeysUpdateResponseData: Codable {
+    private enum CodingKeys: CodingKey {
+        case webauthnRegistrationId
+    }
+
+    let webauthnRegistrationId: User.WebAuthNRegistration.ID
+
+    init(webauthnRegistrationId: User.WebAuthNRegistration.ID) {
+        self.webauthnRegistrationId = webauthnRegistrationId
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(webauthnRegistrationId, forKey: .webauthnRegistrationId)
+    }
+}
+
+public struct PasskeysUpdateRequest: Codable {
+    private enum CodingKeys: CodingKey {
+        case name
+    }
+
+    let name: String
+
+    init(name: String) {
+        self.name = name
+    }
+}
+
+public typealias PasskeysUpdateResponse = Response<PasskeysUpdateResponseData>
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 private extension StytchClient.Passkeys {
