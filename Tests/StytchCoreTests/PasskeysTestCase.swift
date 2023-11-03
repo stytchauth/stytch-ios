@@ -11,7 +11,7 @@ final class PasskeysTestCase: BaseTestCase {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
-            userName: "cool user name"
+            user: StytchClient.Passkeys.PasskeysUser(displayName: "My Stytch Username")
         )
         networkInterceptor.responses {
             Success {

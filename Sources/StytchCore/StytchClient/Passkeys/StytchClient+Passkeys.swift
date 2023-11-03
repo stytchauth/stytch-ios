@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 
 #if !os(watchOS)
@@ -27,7 +28,7 @@ public extension StytchClient {
             let credential = try await passkeysClient.registerCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
-                username: startResp.userName,
+                username: startResp.user.displayName,
                 userId: startResp.userId
             )
 
@@ -178,6 +179,10 @@ extension StytchClient.Passkeys {
         let domain: String
     }
 
+    struct PasskeysUser: Codable {
+        let displayName: String
+    }
+
     private struct CredentialCreationOptions: Codable {
         enum CodingKeys: CodingKey {
             case challenge
@@ -185,13 +190,9 @@ extension StytchClient.Passkeys {
         }
 
         let challenge: Data
-        let user: User
+        let user: PasskeysUser
 
-        struct User: Decodable {
-            let displayName: String
-        }
-
-        init(challenge: Data, user: User) {
+        init(challenge: Data, user: PasskeysUser) {
             self.challenge = challenge
             self.user = user
         }
@@ -199,7 +200,7 @@ extension StytchClient.Passkeys {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let challengeString: String = try container.decode(key: .challenge)
-            let user: User = try container.decode(key: .user)
+            let user: PasskeysUser = try container.decode(key: .user)
             self.user = user
 
             guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
@@ -212,6 +213,7 @@ extension StytchClient.Passkeys {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(challenge.base64UrlEncoded(), forKey: .challenge)
+            try container.encode(user, forKey: .user)
         }
     }
 
@@ -251,12 +253,12 @@ extension StytchClient.Passkeys {
 
         let userId: User.ID
         let challenge: Data
-        let userName: String
+        let user: PasskeysUser
 
-        init(userId: User.ID, challenge: Data, userName: String) {
+        init(userId: User.ID, challenge: Data, user: PasskeysUser) {
             self.userId = userId
             self.challenge = challenge
-            self.userName = userName
+            self.user = user
         }
 
         init(from decoder: Decoder) throws {
@@ -265,13 +267,13 @@ extension StytchClient.Passkeys {
             let optionsString: String = try container.decode(key: .publicKeyCredentialCreationOptions)
             let options = try JSONDecoder().decode(CredentialCreationOptions.self, from: Data(optionsString.utf8))
             challenge = options.challenge
-            userName = options.user.displayName
+            user = options.user
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(userId, forKey: .userId)
-            let credentialOptions = try JSONEncoder().encode(CredentialOptions(challenge: challenge))
+            let credentialOptions = try JSONEncoder().encode(CredentialCreationOptions(challenge: challenge, user: user))
             try container.encode(String(data: credentialOptions, encoding: .utf8), forKey: .publicKeyCredentialCreationOptions)
         }
     }
