@@ -27,7 +27,7 @@ public extension StytchClient {
             let credential = try await passkeysClient.registerCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
-                username: String(), // TODO: get email/phone number
+                username: startResp.userName,
                 userId: startResp.userId
             )
 
@@ -178,6 +178,43 @@ extension StytchClient.Passkeys {
         let domain: String
     }
 
+    private struct CredentialCreationOptions: Codable {
+        enum CodingKeys: CodingKey {
+            case challenge
+            case user
+        }
+
+        let challenge: Data
+        let user: User
+
+        struct User: Decodable {
+            let displayName: String
+        }
+
+        init(challenge: Data, user: User) {
+            self.challenge = challenge
+            self.user = user
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let challengeString: String = try container.decode(key: .challenge)
+            let user: User = try container.decode(key: .user)
+            self.user = user
+
+            guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
+                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not base64 url encoded")
+            }
+
+            self.challenge = challenge
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(challenge.base64UrlEncoded(), forKey: .challenge)
+        }
+    }
+
     private struct CredentialOptions: Codable {
         enum CodingKeys: CodingKey {
             case challenge
@@ -214,18 +251,21 @@ extension StytchClient.Passkeys {
 
         let userId: User.ID
         let challenge: Data
+        let userName: String
 
-        init(userId: User.ID, challenge: Data) {
+        init(userId: User.ID, challenge: Data, userName: String) {
             self.userId = userId
             self.challenge = challenge
+            self.userName = userName
         }
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             userId = try container.decode(key: .userId)
             let optionsString: String = try container.decode(key: .publicKeyCredentialCreationOptions)
-            let options = try JSONDecoder().decode(CredentialOptions.self, from: Data(optionsString.utf8))
+            let options = try JSONDecoder().decode(CredentialCreationOptions.self, from: Data(optionsString.utf8))
             challenge = options.challenge
+            userName = options.user.displayName
         }
 
         func encode(to encoder: Encoder) throws {

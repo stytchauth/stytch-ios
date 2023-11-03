@@ -10,7 +10,8 @@ final class PasskeysTestCase: BaseTestCase {
     func testRegister() async throws {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
-            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
+            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
+            userName: "cool user name"
         )
         networkInterceptor.responses {
             Success {
