@@ -177,6 +177,7 @@ public extension StytchClient.Passkeys {
 extension StytchClient.Passkeys {
     struct StartParameters: Encodable {
         let domain: String
+        let returnPasskeyCredentialOptions: Bool = true
     }
 
     struct PasskeysUser: Codable {
