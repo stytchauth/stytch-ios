@@ -80,7 +80,7 @@ final class PasskeysTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
-            method: .post(["domain": "something.blah.com"])
+            method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
         try XCTAssertRequest(
             networkInterceptor.requests[1],
