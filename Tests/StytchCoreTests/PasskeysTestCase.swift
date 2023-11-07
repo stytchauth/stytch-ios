@@ -10,7 +10,8 @@ final class PasskeysTestCase: BaseTestCase {
     func testRegister() async throws {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
-            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
+            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
+            user: StytchClient.Passkeys.PasskeysUser(displayName: "My Stytch Username")
         )
         networkInterceptor.responses {
             Success {
@@ -79,7 +80,7 @@ final class PasskeysTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
-            method: .post(["domain": "something.blah.com"])
+            method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
         try XCTAssertRequest(
             networkInterceptor.requests[1],
@@ -88,6 +89,38 @@ final class PasskeysTestCase: BaseTestCase {
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"signature\":\"ZmFrZV9zaWduYXR1cmU\",\"authenticatorData\":\"ZmFrZV9hdXRoX2RhdGE\",\"userHandle\":\"ZmFrZV91c2VyX2lk\"},\"type\":\"public-key\"}",
                 "session_duration_minutes": 30,
             ])
+        )
+    }
+
+    func testUpdate() async throws {
+        let updateResponse: PasskeysUpdateResponseData = .init(
+            webauthnRegistrationId: "webauthn-registration-id"
+        )
+        networkInterceptor.responses {
+            Response(requestId: "", statusCode: 200, wrapped: updateResponse)
+            PasskeysUpdateResponse.mock
+        }
+        let parameters: Base.UpdateParameters = .init(
+            id: "webauthn-registration-id",
+            name: "Cool new name"
+        )
+        _ = try await StytchClient.passkeys.update(parameters: parameters)
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/webauthn/update/webauthn-registration-id",
+            method: .put(["name": "Cool new name"])
+        )
+    }
+}
+
+extension PasskeysUpdateResponse {
+    static var mock: Self {
+        .init(
+            requestId: "1234",
+            statusCode: 200,
+            wrapped: .init(
+                webauthnRegistrationId: "webauthn-registration-id"
+            )
         )
     }
 }
