@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 
 #if !os(watchOS)
@@ -13,6 +14,7 @@ public extension StytchClient {
         let router: NetworkingRouter<PasskeysRoute>
 
         @Dependency(\.passkeysClient) private var passkeysClient
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -26,7 +28,7 @@ public extension StytchClient {
             let credential = try await passkeysClient.registerCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
-                username: parameters.username,
+                username: startResp.user.displayName,
                 userId: startResp.userId
             )
 
@@ -49,8 +51,14 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            let destination: PasskeysRoute
+            if sessionStorage.activeSessionExists {
+                destination = .authenticateStartSecondary
+            } else {
+                destination = .authenticateStartPrimary
+            }
             let startResp: Response<AuthenticateStartResponseData> = try await router.post(
-                to: .authenticateStart,
+                to: destination,
                 parameters: StartParameters(domain: parameters.domain)
             )
 
@@ -74,6 +82,15 @@ public extension StytchClient {
                 ).wrapped(sessionDuration: parameters.sessionDuration)
             )
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Updates an existing passkey based on its ID
+        public func update(parameters: UpdateParameters) async throws -> PasskeysUpdateResponse {
+            try await router.put(
+                to: .update(id: parameters.id),
+                parameters: PasskeysUpdateRequest(name: parameters.name)
+            )
+        }
     }
 }
 
@@ -90,14 +107,12 @@ public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable {
         let domain: String
-        let username: String
+        let returnPasskeyCredentialOptions: Bool = true
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - username: The username associated with your user. In the future, it will be required this is a valid email address or phone number.
-        public init(domain: String, username: String) {
+        public init(domain: String) {
             self.domain = domain
-            self.username = username
         }
     }
 
@@ -125,24 +140,35 @@ public extension StytchClient.Passkeys {
             #endif
         }
 
-        // swiftlint:enable duplicate_enum_cases
-
         let domain: String
         let sessionDuration: Minutes
+        let returnPasskeyCredentialOptions: Bool = true
         let requestBehavior: RequestBehavior
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
         ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
-        ///   - requestBehavior: The  desired behavior of the authentication request. Defaults to a value specific for the platform `RequestBehavior.defaultPlatformValue`
         public init(
             domain: String,
-            sessionDuration: Minutes = .defaultSessionDuration,
-            requestBehavior: RequestBehavior = .defaultPlatformValue
+            requestBehavior: RequestBehavior = .defaultPlatformValue,
+            sessionDuration: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
             self.sessionDuration = sessionDuration
             self.requestBehavior = requestBehavior
+        }
+    }
+
+    /// A dedicated parameters type for passkeys `update` calls.
+    struct UpdateParameters: Encodable {
+        let id: User.WebAuthNRegistration.ID
+        let name: String
+        /// - Parameters:
+        ///     - id: The id of the Passkey registration to be updated
+        ///     - name: The name to update the Passkey registration to
+        public init(id: User.WebAuthNRegistration.ID, name: String) {
+            self.id = id
+            self.name = name
         }
     }
 }
@@ -151,6 +177,45 @@ public extension StytchClient.Passkeys {
 extension StytchClient.Passkeys {
     struct StartParameters: Encodable {
         let domain: String
+        let returnPasskeyCredentialOptions: Bool = true
+    }
+
+    struct PasskeysUser: Codable {
+        let displayName: String
+    }
+
+    private struct CredentialCreationOptions: Codable {
+        enum CodingKeys: CodingKey {
+            case challenge
+            case user
+        }
+
+        let challenge: Data
+        let user: PasskeysUser
+
+        init(challenge: Data, user: PasskeysUser) {
+            self.challenge = challenge
+            self.user = user
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let challengeString: String = try container.decode(key: .challenge)
+            let user: PasskeysUser = try container.decode(key: .user)
+            self.user = user
+
+            guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
+                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not base64 url encoded")
+            }
+
+            self.challenge = challenge
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(challenge.base64UrlEncoded(), forKey: .challenge)
+            try container.encode(user, forKey: .user)
+        }
     }
 
     private struct CredentialOptions: Codable {
@@ -169,7 +234,7 @@ extension StytchClient.Passkeys {
             let challengeString: String = try container.decode(key: .challenge)
 
             guard let challenge: Data = .init(base64UrlEncoded: challengeString) else {
-                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not bse64 url encoded")
+                throw DecodingError.dataCorruptedError(forKey: .challenge, in: container, debugDescription: "challenge not base64 url encoded")
             }
 
             self.challenge = challenge
@@ -189,24 +254,27 @@ extension StytchClient.Passkeys {
 
         let userId: User.ID
         let challenge: Data
+        let user: PasskeysUser
 
-        init(userId: User.ID, challenge: Data) {
+        init(userId: User.ID, challenge: Data, user: PasskeysUser) {
             self.userId = userId
             self.challenge = challenge
+            self.user = user
         }
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             userId = try container.decode(key: .userId)
             let optionsString: String = try container.decode(key: .publicKeyCredentialCreationOptions)
-            let options = try JSONDecoder().decode(CredentialOptions.self, from: Data(optionsString.utf8))
+            let options = try JSONDecoder().decode(CredentialCreationOptions.self, from: Data(optionsString.utf8))
             challenge = options.challenge
+            user = options.user
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(userId, forKey: .userId)
-            let credentialOptions = try JSONEncoder().encode(CredentialOptions(challenge: challenge))
+            let credentialOptions = try JSONEncoder().encode(CredentialCreationOptions(challenge: challenge, user: user))
             try container.encode(String(data: credentialOptions, encoding: .utf8), forKey: .publicKeyCredentialCreationOptions)
         }
     }
@@ -241,6 +309,42 @@ extension StytchClient.Passkeys {
         }
     }
 }
+
+public struct PasskeysUpdateResponseData: Codable {
+    private enum CodingKeys: CodingKey {
+        case webauthnRegistrationId
+    }
+
+    let webauthnRegistrationId: User.WebAuthNRegistration.ID
+
+    init(webauthnRegistrationId: User.WebAuthNRegistration.ID) {
+        self.webauthnRegistrationId = webauthnRegistrationId
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(webauthnRegistrationId, forKey: .webauthnRegistrationId)
+    }
+}
+
+public struct PasskeysUpdateRequest: Codable {
+    private enum CodingKeys: CodingKey {
+        case name
+    }
+
+    let name: String
+
+    init(name: String) {
+        self.name = name
+    }
+}
+
+public typealias PasskeysUpdateResponse = Response<PasskeysUpdateResponseData>
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 private extension StytchClient.Passkeys {
