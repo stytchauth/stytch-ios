@@ -28,7 +28,7 @@ struct AuthenticationOptionsView: View {
             }
             .padding()
 
-            if #available(iOS 16.0, macOS 13.0, *), session != nil {
+            if #available(iOS 16.0, macOS 13.0, *) {
                 NavigationLink("Authenticate with Passkeys") {
                     PasskeysAuthenticationView {
                         onAuth($0)

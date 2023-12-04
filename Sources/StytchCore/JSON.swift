@@ -128,7 +128,6 @@ extension JSON: Codable {
     }
 }
 
-#if DEBUG
 extension JSON: ExpressibleByStringLiteral {
     public init(stringLiteral value: StringLiteralType) {
         self = .string(value)
@@ -164,4 +163,3 @@ extension JSON: ExpressibleByBooleanLiteral {
         self = .boolean(value)
     }
 }
-#endif

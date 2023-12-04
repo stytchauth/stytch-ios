@@ -22,17 +22,10 @@ struct PasskeysAuthenticationView: View {
 
         switch intent {
         case .register:
-            TextField("Username", text: $username)
-                .textContentType(.username)
-            #if os(iOS)
-                .textInputAutocapitalization(.never)
-                .keyboardType(.emailAddress)
-            #endif
             Button("Register") {
                 Task {
                     do {
-                        let components = URLComponents(url: configuration.serverUrl, resolvingAgainstBaseURL: false)!
-                        _ = try await StytchClient.passkeys.register(parameters: .init(domain: components.host!, username: username))
+                        _ = try await StytchClient.passkeys.register(parameters: .init(domain: domain))
                         presentationMode.wrappedValue.dismiss()
                     } catch {
                         print(error)

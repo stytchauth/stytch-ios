@@ -1,10 +1,26 @@
-enum PasskeysRoute: String, RouteType {
+enum PasskeysRoute: RouteType {
     case register
-    case registerStart = "register/start"
+    case registerStart
     case authenticate
-    case authenticateStart = "authenticate/start"
+    case authenticateStartPrimary
+    case authenticateStartSecondary
+    case update(id: User.WebAuthNRegistration.ID)
 
     var path: Path {
-        .init(rawValue: rawValue)
+        let joinedPath: (Path, String) -> Path = { $0.appendingPath(.init(rawValue: $1)) }
+        switch self {
+        case .register:
+            return "register"
+        case .registerStart:
+            return "register/start"
+        case .authenticate:
+            return "authenticate"
+        case .authenticateStartPrimary:
+            return "authenticate/start/primary"
+        case .authenticateStartSecondary:
+            return "authenticate/start/secondary"
+        case let .update(id):
+            return joinedPath("update", id.rawValue)
+        }
     }
 }

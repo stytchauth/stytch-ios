@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>StytchHostURL</key>
-	<string>https://example.com</string>
+	<string>http://example.com</string>
 	<key>StytchPublicToken</key>
 	<string>public-token-example</string>
 </dict>

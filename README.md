@@ -1,13 +1,11 @@
 <div align=center>
 
-![Stytch Swift SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
-![Stytch Swift SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
+![Stytch iOS SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
+![Stytch iOS SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
 
-![Test Status](https://github.com/stytchauth/stytch-swift/actions/workflows/test.yml/badge.svg)
+![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
 ![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS%20%7C%20tvOS-333333.svg)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
-![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg)
-![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Stytch.svg)
 
 </div>
 
@@ -38,7 +36,7 @@
 
 ### Why should I use the Stytch SDK?
 
-Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The Swift SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
+Stytch's SDKs make it simple to seamlessly onboard, authenticate, and engage users. The iOS SDK provides the easiest way for you to use Stytch on Apple platforms. With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
 
 ``` swift
 import StytchCore
@@ -115,11 +113,11 @@ The SDK provides several different mechanisms for handling the asynchronous code
 
 If you are completely new to Stytch, prior to using the SDK you will first need to visit [Stytch's homepage](https://stytch.com), sign up, and create a new project in the [dashboard](https://stytch.com/dashboard/home). You'll then need to adjust your [SDK configuration](https://stytch.com/dashboard/sdk-configuration) — adding your app's bundle id to `Authorized environments` and enabling any `Auth methods` you wish to use.
 
-_To see in-depth examples of basic, intermediate, and advanced usage of the Stytch SDK, check out our [Stytch Tutorials](https://stytchauth.github.io/stytch-swift/main/tutorials/stytch)!_
+_To see in-depth examples of basic, intermediate, and advanced usage of the Stytch SDK, check out our [Stytch Tutorials](https://stytchauth.github.io/stytch-ios/main/tutorials/stytch)!_
 
 ## Requirements
 
-The Stytch Swift SDK is compatible with apps targeting the following Apple platforms:
+The Stytch iOS SDK is compatible with apps targeting the following Apple platforms:
 - iOS 13+
 - macOS 10.15+
 - tvOS 13+
@@ -132,24 +130,9 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 
 1. Open Xcode
 1. File > Add Packages
-1. Enter https://github.com/stytchauth/stytch-swift
+1. Enter https://github.com/stytchauth/stytch-ios
 1. Choose Package Requirements (Up to next minor, up to next major, etc)
-
-### Carthage
-
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager for Cocoa. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Cartfile.
-```
-binary "https://public-assets-stytch-com.s3.amazonaws.com/sdks/swift/carthage/StytchCore.json"
-```
-
-### CocoaPods
-[CocoaPods](https://cocoapods.org) is a centralized dependency manager for Swift and Objective-C Cocoa projects. To integrate the Stytch Swift SDK into your Xcode project, add the following to your Podfile.
-
-```
-pod 'Stytch/StytchCore'
-```
-
-Unlike with the other dependency managers, when using CocoaPods you'll import `Stytch` vs `StytchCore`.
+1. In your Build Settings, under `Other Linker Flags`, add `-ObjC`
 
 ## Usage
 
@@ -244,7 +227,7 @@ final class SMSAuthenticationController {
 
 ## Documentation
 
-Full reference documentation is available [here](https://stytchauth.github.io/stytch-swift/latest/documentation/stytchcore/).
+Full reference documentation is available [here](https://stytchauth.github.io/stytch-ios/latest/documentation/stytchcore/).
 
 ## FAQ
 
@@ -253,7 +236,7 @@ Full reference documentation is available [here](https://stytchauth.github.io/st
 1. What are the some of the default behaviors of the SDK?
     1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are cached in memory by the SDK, though these must first be received by a successful `authenticate` call. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
 1. Are there guides or sample apps available to see this in use?
-    1. Yes! There is a UIKit example consumer app available [here](https://github.com/stytchauth/stytch-ios-uikit-example). Also, there is a [SwiftUI macOS/iOS Consumer app](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo/Client) and a [UIKit iOS B2B app](https://github.com/stytchauth/stytch-swift/tree/main/StytchDemo/B2BWorkbench) included in this repo.
+    1. Yes! There is a UIKit example consumer app available [here](https://github.com/stytchauth/stytch-ios-uikit-example). Also, there is a [SwiftUI macOS/iOS Consumer app](https://github.com/stytchauth/stytch-ios/tree/main/StytchDemo/Client) and a [UIKit iOS B2B app](https://github.com/stytchauth/stytch-ios/tree/main/StytchDemo/B2BWorkbench) included in this repo.
 
 ### Questions?
 
@@ -261,4 +244,4 @@ Feel free to reach out any time at [support@stytch.com](mailto:support@stytch.co
 
 ## License
 
-The Stytch Swift SDK is released under the MIT license. See [LICENSE](LICENSE) for details.
+The Stytch iOS SDK is released under the MIT license. See [LICENSE](LICENSE) for details.

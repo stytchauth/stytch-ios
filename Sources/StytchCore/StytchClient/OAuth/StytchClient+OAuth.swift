@@ -87,6 +87,9 @@ public extension StytchClient.OAuth {
 
     /// The interface for authenticating a user with Twitter.
     var twitter: ThirdParty { .init(provider: .twitter) }
+
+    /// The interface for authenticating a user with Yahoo.
+    var yahoo: ThirdParty { .init(provider: .yahoo) }
 }
 #endif
 

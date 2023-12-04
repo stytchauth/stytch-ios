@@ -1,6 +1,7 @@
 name: Create release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '!*'
@@ -32,11 +33,6 @@ jobs:
           exit 1
         fi
 
-    - name: Create XCFramework
-      run: |
-        make xc-framework
-        mv StytchCore.zip StytchCore.xcframework.zip
-
     - name: Build docs
       run: |
         make docs
@@ -49,10 +45,9 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        # Release should be edited and published manually to trigger cocoapods/carthage updates. If --draft removed, must change "types: [created]" for Publish workflow
+        # Release should be edited and published manually to trigger cocoapods updates. If --draft removed, must change "types: [created]" for Publish workflow
         gh release create \
           ${{ github.ref_name }} \
-          StytchCore.xcframework.zip \
           StytchCore.doccarchive.zip \
           --draft \
           --generate-notes

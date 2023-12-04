@@ -11,6 +11,7 @@ extension StytchClient {
         case users(UsersRoute)
         // swiftlint:disable:next identifier_name
         case ui(UIRoute)
+        case bootstrap(BootstrapRoute)
 
         var path: Path {
             switch self {
@@ -34,6 +35,8 @@ extension StytchClient {
                 return "users".appendingPath(route.path)
             case let .ui(route):
                 return route.path
+            case let .bootstrap(route):
+                return "".appendingPath(route.path)
             }
         }
     }

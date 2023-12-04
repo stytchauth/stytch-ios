@@ -1,5 +1,17 @@
 import Foundation
 
+// FIXME: - move this code to the extracted client file
+#if !os(tvOS) && !os(watchOS)
+import LocalAuthentication
+public extension StytchClient.Biometrics {
+    enum Availability {
+        case systemUnavailable(LAError.Code?)
+        case availableNoRegistration
+        case availableRegistered
+    }
+}
+#endif
+
 public extension StytchClient {
     /// Biometric authentication enables your users to leverage their devices' built-in biometric authenticators such as FaceID and TouchID for quick and seamless login experiences.
     ///
@@ -20,6 +32,22 @@ public extension StytchClient {
         public var registrationAvailable: Bool {
             keychainClient.valueExistsForItem(.privateKeyRegistration)
         }
+
+        #if !os(tvOS) && !os(watchOS)
+        public var availability: Availability {
+            // FIXME: - wrap this in a client of some kind (BiometricsAvailabilityClient) and extract it
+            let context = LAContext()
+            var error: NSError?
+            switch (context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {
+            case (false, _):
+                return .systemUnavailable((error as? LAError)?.code)
+            case (true, false):
+                return .availableNoRegistration
+            case (true, true):
+                return .availableRegistered
+            }
+        }
+        #endif
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Removes the current device's existing biometric registration from both the device itself and from the server.

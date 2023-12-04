@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "InteropForGoogle",
+        "repositoryURL": "https://github.com/google/interop-ios-for-google-sdks.git",
+        "state": {
+          "branch": null,
+          "revision": "2d12673670417654f08f5f90fdd62926dc3a2648",
+          "version": "100.0.0"
+        }
+      },
+      {
         "package": "jwt-kit",
         "repositoryURL": "https://github.com/vapor/jwt-kit.git",
         "state": {
@@ -17,6 +26,15 @@
           "branch": null,
           "revision": "0fd43eb71d215afd0f9453d8e94200c9d6faf28a",
           "version": "3.5.10"
+        }
+      },
+      {
+        "package": "RecaptchaEnterprise",
+        "repositoryURL": "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk",
+        "state": {
+          "branch": null,
+          "revision": "5419bb00a3bc81d727423790692f2c538040d00c",
+          "version": "18.3.0"
         }
       },
       {

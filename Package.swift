@@ -11,6 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: .init(3, 5, 9)),
+        .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", from: "18.3.0"),
     ],
     targets: [
         .target(
@@ -20,7 +21,15 @@ let package = Package(
                 .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
             ]
         ),
-        .target(name: "StytchCore"),
+        .target(
+            name: "StytchCore",
+            dependencies: [
+                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
+            ],
+            resources: [
+                .copy("DFPClient/dfp.html"),
+            ]
+        ),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
     ]
 )
