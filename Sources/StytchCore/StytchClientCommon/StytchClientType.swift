@@ -82,7 +82,10 @@ extension StytchClientType {
         updateNetworkingClient()
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
-        runBootstrapping()
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+            // only run this in non-test environments
+            runBootstrapping()
+        }
     }
 
     private func runBootstrapping() {
