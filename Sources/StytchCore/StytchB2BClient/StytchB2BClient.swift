@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 /**
  The entrypoint for all Stytch B2B-related interaction.
@@ -10,16 +11,10 @@ import Foundation
  */
 public struct StytchB2BClient: StytchClientType {
     static var instance: StytchB2BClient = .init()
-
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
+    public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
 
     private init() {
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-            // only run this in non-test environments
-            Task {
-                try await Self.bootstrap.fetch()
-            }
-        }
         postInit()
     }
 
