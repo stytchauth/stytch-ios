@@ -124,5 +124,5 @@ struct Environment {
     }
     #endif
 
-    var initializationState: InitializationState = InitializationState()
+    var initializationState: InitializationState = .init()
 }

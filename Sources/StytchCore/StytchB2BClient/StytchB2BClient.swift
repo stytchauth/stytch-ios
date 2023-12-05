@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 /**
  The entrypoint for all Stytch B2B-related interaction.

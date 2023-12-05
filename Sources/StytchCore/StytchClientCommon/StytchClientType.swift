@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 protocol StytchClientType {
     associatedtype DeeplinkResponse
@@ -7,9 +7,9 @@ protocol StytchClientType {
 
     static var instance: Self { get set }
 
-    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
-
     static var isInitialized: AnyPublisher<Bool, Never> { get }
+
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 }
 
 extension StytchClientType {
@@ -89,14 +89,14 @@ extension StytchClientType {
         let client = self
         let hasSession = sessionStorage.persistedSessionIdentifiersExist
         Task {
-            if (client is StytchClient) {
+            if client is StytchClient {
                 try? await StytchClient.bootstrap.fetch()
-                if (hasSession) {
+                if hasSession {
                     _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
                 }
             } else {
                 try? await StytchB2BClient.bootstrap.fetch()
-                if (hasSession) {
+                if hasSession {
                     _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
                 }
             }

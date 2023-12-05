@@ -1,6 +1,6 @@
+import Combine
 import StytchCore
 import SwiftUI
-import Combine
 
 struct ContentView: View {
     var sessionUser: (Session, User)?
@@ -98,9 +98,9 @@ struct ContentView: View {
                 } else {
                     AuthenticationOptionsView(session: sessionUser?.0, onAuth: onAuth)
                         .navigationTitle("Stytch Demo")
-                        #if !os(macOS)
+                    #if !os(macOS)
                         .navigationBarTitleDisplayMode(.inline)
-                        #endif
+                    #endif
                 }
             }
         }.task {
