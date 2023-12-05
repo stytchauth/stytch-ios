@@ -165,7 +165,6 @@ struct OTPAuthenticationView: View {
                 )
             )
             do {
-                print("JORDAN >>> CALIING LOGINORCREATE")
                 let response = try await StytchClient.otps.loginOrCreate(parameters: otpParams)
                 methodId = response.methodId
             } catch {
@@ -178,7 +177,7 @@ struct OTPAuthenticationView: View {
     func authenticate() {
         isLoading = true
         Task {
-            let params: StytchClient.OTP.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDuration: 5)
+            let params: StytchClient.OTP.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDuration: 30)
             do {
                 onAuth(try await StytchClient.otps.authenticate(parameters: params))
             } catch {
