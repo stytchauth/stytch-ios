@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 /**
@@ -10,16 +11,10 @@ import Foundation
  */
 public struct StytchClient: StytchClientType {
     static var instance: StytchClient = .init()
-
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
+    public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
 
     private init() {
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-            // only run this in non-test environments
-            Task {
-                try await Self.bootstrap.fetch()
-            }
-        }
         postInit()
     }
 

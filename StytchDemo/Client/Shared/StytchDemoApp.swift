@@ -25,12 +25,7 @@ struct StytchDemoApp: App {
                 .padding()
                 .frame(minHeight: 250)
                 .task {
-                    do {
-                        let response = try await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: 30))
-                        sessionUser = (response.session, response.user)
-                    } catch {
-                        handle(error: error)
-                    }
+                    StytchClient.configure(publicToken: configuration.publicToken)
                 }
                 // Handle web-browsing deeplinks (enables universal links on macOS)
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
@@ -95,6 +90,7 @@ extension StytchDemoApp {
     // For simplicity, we'll mimic StytchClient.Configuration, simply to reuse that value. We'd likely have a different source of truth in a real application.
     struct Configuration: Decodable {
         let serverUrl: URL
+        let publicToken: String
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -107,10 +103,12 @@ extension StytchDemoApp {
                 }
                 serverUrl = url
             }
+            publicToken = try container.decode(String.self, forKey: .publicToken)
         }
 
         private enum CodingKeys: String, CodingKey {
             case serverUrl = "StytchHostURL"
+            case publicToken = "StytchPublicToken"
         }
     }
 }
