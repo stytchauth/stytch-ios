@@ -1,6 +1,6 @@
 import Foundation
 
-/// A type representing an error within the Stytch ecosystem.
+/// Base class representing an error within the Stytch ecosystem.
 public class StytchError: Error, Decodable {
     public let name: String
     public var description: String
@@ -30,6 +30,7 @@ public class StytchError: Error, Decodable {
     }
 }
 
+/// Error class representing an error within the Stytch API.
 public class StytchAPIError: StytchError {
     public let statusCode: Int
     public let requestId: String
@@ -47,23 +48,25 @@ public class StytchAPIError: StytchError {
     }
 }
 
+/// Error class representing when the Stytch SDK cannot reach the Stytch API.
 public class StytchAPIUnreachableError: StytchAPIError {
     
 }
 
+/// Error class representing a schema error within the Stytch API.
 public class StytchAPISchemaError: StytchAPIError {
     
 }
 
+/// Error class representing an error within the Stytch SDK.
 public class StytchSDKError: StytchError {
     
 }
 
+/// Error class representing invalid input within the Stytch SDK.
 public class StytchSDKUsageError: StytchSDKError {
     
 }
-
-
 
 public extension StytchSDKError {
     static let clientNotConfigured = StytchSDKError.init(
