@@ -1,16 +1,10 @@
 import Foundation
 
 /// Base class representing an error within the Stytch ecosystem.
-public class StytchError: Error, Decodable {
-    private enum CodingKeys: CodingKey {
-        case name
-        case description
-        case url
-    }
-    
-    public let name: String
-    public var description: String
-    public let url: URL?
+public class StytchError: Error {
+    var name: String
+    var description: String
+    var url: URL?
     
     init(
         name: String,
@@ -21,21 +15,17 @@ public class StytchError: Error, Decodable {
         self.description = description
         self.url = url
     }
-    
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
-        description = try container.decode(String.self, forKey: .description)
-        url = try? container.decodeIfPresent(URL.self, forKey: .url)
-    }
 }
 
 /// Error class representing an error within the Stytch API.
-public class StytchAPIError: StytchError {
-    public let statusCode: Int
-    public let requestId: String?
+public class StytchAPIError: StytchError, Decodable {
+    let statusCode: Int
+    let requestId: String?
     
     private enum CodingKeys: CodingKey {
+        case name
+        case description
+        case url
         case statusCode
         case requestId
     }
@@ -51,12 +41,17 @@ public class StytchAPIError: StytchError {
         self.requestId = requestId
         super.init(name: name, description: description, url: url)
     }
-    
+        
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try container.decode(Int.self, forKey: .statusCode)
-        requestId = try container.decode(String.self, forKey: .requestId)
-        try super.init(from: decoder)
+        requestId = try? container.decode(String.self, forKey: .requestId)
+        
+        let name = try container.decode(String.self, forKey: .name)
+        let description = try container.decode(String.self, forKey: .description)
+        let url = try? container.decode(URL.self, forKey: .url)
+        
+        super.init(name: name, description: description, url: url)
     }
 }
 
@@ -65,20 +60,12 @@ public class StytchAPIUnreachableError: StytchError {
     init(description: String, url: URL? = nil) {
         super.init(name: "StytchAPIUnreachableError", description: description, url: url)
     }
-    
-    public required init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
-    }
 }
 
 /// Error class representing a schema error within the Stytch API.
 public class StytchAPISchemaError: StytchError {
     init(description: String, url: URL? = nil) {
         super.init(name: "StytchAPISchemaError", description: description, url: url)
-    }
-    
-    public required init(from decoder: Decoder) throws {
-        try super.init(from: decoder)
     }
 }
 
@@ -88,12 +75,20 @@ public class StytchSDKError: StytchError {}
 /// Error class representing invalid input within the Stytch SDK.
 public class StytchSDKUsageError: StytchError {}
 
+public class StytchSDKNotConfiguredError: StytchSDKError {
+    let clientName: String
+    
+    init(clientName: String) {
+        self.clientName = clientName
+        super.init(
+            name: "sdk_not_configured",
+            description: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
+            url: .readmeUrl(withFragment: "configuration")
+        )
+    }
+}
+
 public extension StytchSDKError {
-    static let clientNotConfigured = StytchSDKError(
-        name: "client_not_configured",
-        description: "StytchClient not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `StytchClient.configure(publicToken:hostUrl:)` prior to other StytchClient calls.",
-        url: .readmeUrl(withFragment: "configuration")
-    )
     static let pckeNotAvailable = StytchSDKError(
         name: "pcke_not_available",
         description: "No PKCE code_verifier available. Redirect authentication must begin/end on this device."

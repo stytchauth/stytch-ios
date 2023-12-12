@@ -46,7 +46,7 @@ final class PollingClientTestCase: BaseTestCase {
 
         // Test default RetryClient, executing the task immediately
         Current.asyncAfter = { $2() }
-        error = StytchSDKError.clientNotConfigured
+        error = StytchSDKNotConfiguredError(clientName: "StytchClient")
 
         timer?.fire()
 

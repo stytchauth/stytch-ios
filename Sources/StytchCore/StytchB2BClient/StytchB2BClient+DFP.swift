@@ -6,7 +6,9 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Returns a DFP Telemetry ID
         public func getTelemetryID() async throws -> String {
-            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else { throw StytchSDKError.clientNotConfigured }
+            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
+                throw StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
+            }
             #if os(iOS)
             return await dfpClient.getTelemetryId(publicToken: publicToken)
             #else

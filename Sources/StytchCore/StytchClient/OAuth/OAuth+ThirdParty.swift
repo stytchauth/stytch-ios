@@ -67,7 +67,9 @@ public extension StytchClient.OAuth {
             signupRedirectUrl: URL?,
             customScopes: [String]?
         ) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchSDKError.clientNotConfigured }
+            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+                throw StytchSDKNotConfiguredError(clientName: "StytchClient")
+            }
 
             var queryParameters = [
                 ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
