@@ -72,7 +72,7 @@ public extension StytchClient {
         public func register(parameters: RegisterParameters) async throws -> RegisterCompleteResponse {
             // Early out if not authenticated
             guard activeSessionExists else {
-                throw StytchError.noCurrentSession
+                throw StytchSDKError.noCurrentSession
             }
 
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
@@ -113,7 +113,7 @@ public extension StytchClient {
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             guard let queryResult: KeychainClient.QueryResult = try keychainClient.get(.privateKeyRegistration).first else {
-                throw StytchError.noBiometricRegistrationsAvailable
+                throw StytchSDKError.noBiometricRegistrationsAvailable
             }
 
             let privateKey = queryResult.data

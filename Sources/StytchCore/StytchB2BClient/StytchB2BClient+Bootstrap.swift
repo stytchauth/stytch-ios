@@ -8,7 +8,7 @@ extension StytchB2BClient {
         @Dependency(\.networkingClient) private var networkingClient
 
         public func fetch() async throws {
-            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
+            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else { throw StytchSDKError.clientNotConfigured }
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
             #if os(iOS)
             networkingClient.dfpEnabled = bootstrapData.wrapped.dfpProtectedAuthEnabled

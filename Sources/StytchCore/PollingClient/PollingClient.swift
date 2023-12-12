@@ -69,7 +69,7 @@ private extension PollingClient {
 
         func attempt(success: @escaping () -> Void = {}, failure: @escaping (Error) -> Void = { _ in }) {
             let failureWrapper: (Error) -> Void = { [weak self] error in
-                if let error = error as? StytchError, error.statusCode == 401 {
+                if let error = error as? StytchAPIError, error.statusCode == 401 {
                     failure(error)
                     return
                 }

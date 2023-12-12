@@ -63,7 +63,7 @@ extension NetworkingRouter {
         route: Route
     ) async throws -> Response {
         guard let configuration = getConfiguration() else {
-            throw StytchError.clientNotConfigured
+            throw StytchSDKError.clientNotConfigured
         }
 
         let (data, response) = try await networkingClient.performRequest(
@@ -96,7 +96,7 @@ extension NetworkingRouter {
                 localStorage.organization = sessionResponse.organization
             }
             return dataContainer.data
-        } catch let error as StytchError where error.statusCode == 401 {
+        } catch let error as StytchAPIError where error.statusCode == 401 {
             sessionStorage.reset()
             throw error
         } catch {
@@ -120,7 +120,7 @@ private extension HTTPURLResponse {
         let error: Error
 
         do {
-            error = try jsonDecoder.decode(StytchError.self, from: data)
+            error = try jsonDecoder.decode(StytchAPIError.self, from: data)
         } catch _ {
             var message = (500..<600).contains(statusCode) ?
                 "Server networking error." :
@@ -130,10 +130,10 @@ private extension HTTPURLResponse {
                 message.append(" Debug info: \(debugInfo)")
             }
 
-            error = StytchError(
-                statusCode: statusCode,
-                errorType: "unknown_error",
-                errorMessage: message
+            error = StytchAPIError(
+                name: "unknown_error",
+                description: message,
+                statusCode: statusCode
             )
         }
 

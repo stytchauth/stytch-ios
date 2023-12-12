@@ -31,7 +31,7 @@ public struct StytchB2BClient: StytchClientType {
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
         guard let (type, token) = try _tokenValues(for: url) else { return nil }
-        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchError.unrecognizedDeeplinkTokenType }
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchSDKError.unrecognizedDeeplinkTokenType }
         return (tokenType, token)
     }
 

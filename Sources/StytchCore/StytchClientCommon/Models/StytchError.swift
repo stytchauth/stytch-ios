@@ -33,11 +33,23 @@ public class StytchError: Error, Decodable {
 /// Error class representing an error within the Stytch API.
 public class StytchAPIError: StytchError {
     public let statusCode: Int
-    public let requestId: String
+    public let requestId: String?
     
     private enum CodingKeys: CodingKey {
         case statusCode
         case requestId
+    }
+    
+    init(
+        name: String,
+        description: String,
+        url: URL? = nil,
+        statusCode: Int,
+        requestId: String? = nil
+    ) {
+        self.statusCode = statusCode
+        self.requestId = requestId
+        super.init(name: name, description: description, url: url)
     }
     
     public required init(from decoder: Decoder) throws {

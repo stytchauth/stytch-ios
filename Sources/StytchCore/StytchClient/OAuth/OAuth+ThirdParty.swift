@@ -42,7 +42,7 @@ public extension StytchClient.OAuth {
         /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
         public func start(parameters: WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
             guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
-                throw StytchError.oauthInvalidRedirectScheme
+                throw StytchSDKError.oauthInvalidRedirectScheme
             }
             let url = try generateStartUrl(
                 loginRedirectUrl: parameters.loginRedirectUrl,
@@ -67,7 +67,7 @@ public extension StytchClient.OAuth {
             signupRedirectUrl: URL?,
             customScopes: [String]?
         ) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
+            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchSDKError.clientNotConfigured }
 
             var queryParameters = [
                 ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
@@ -87,7 +87,7 @@ public extension StytchClient.OAuth {
 
             guard
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
-            else { throw StytchError.oauthInvalidStartUrl }
+            else { throw StytchSDKError.oauthInvalidStartUrl }
 
             return url
         }
