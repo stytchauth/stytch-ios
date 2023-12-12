@@ -28,7 +28,7 @@ public extension StytchB2BClient {
         /// verifying that the token is valid and hasn't expired.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
             guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
-                throw StytchSDKError.pckeNotAvailable
+                throw StytchSDKError.missingPKCE
             }
 
             return try await router.post(

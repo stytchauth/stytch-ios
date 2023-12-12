@@ -89,9 +89,9 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
 }
 
 public extension StytchSDKError {
-    static let pckeNotAvailable = StytchSDKError(
-        name: "pcke_not_available",
-        description: "No PKCE code_verifier available. Redirect authentication must begin/end on this device."
+    static let missingPKCE = StytchSDKError(
+        name: "missing_pkce",
+        description: "The PKCE code challenge or code verifier is missing. Make sure this flow is completed on the same device on which it was started."
     )
     static let randomNumberGenerationFailed = StytchSDKError(
         name: "random_number_generation_failed",
