@@ -42,7 +42,7 @@ public extension StytchClient.OAuth {
         /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
         public func start(parameters: WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
             guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
-                throw StytchSDKError.oauthInvalidRedirectScheme
+                throw StytchSDKError.invalidRedirectScheme
             }
             let url = try generateStartUrl(
                 loginRedirectUrl: parameters.loginRedirectUrl,
@@ -89,7 +89,7 @@ public extension StytchClient.OAuth {
 
             guard
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
-            else { throw StytchSDKError.oauthInvalidStartUrl }
+            else { throw StytchSDKError.invalidStartURL }
 
             return url
         }

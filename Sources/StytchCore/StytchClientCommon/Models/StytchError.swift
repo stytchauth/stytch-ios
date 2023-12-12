@@ -129,26 +129,24 @@ public extension StytchSDKError {
         name: "random_number_generation_failed",
         description: "System unable to generate a random data. Typically used for PKCE."
     )
-    // Currently only available on iOS
-    static let oauthInvalidStartUrl = StytchSDKError(
-        name: "oauth_generic_invalid_start_url",
-        description: "The start url was invalid or improperly formatted."
+    static let invalidStartURL = StytchSDKError(
+        name: "invalid_start_url",
+        description: "The start URL was invalid or improperly formatted."
     )
-    static let oauthInvalidRedirectScheme = StytchSDKError(
-        name: "oauth_generic_invalid_redirect_scheme",
+    static let invalidRedirectScheme = StytchSDKError(
+        name: "invalid_redirect_scheme",
         description: "The scheme from the given redirect urls was invalid. Possible reasons include: nil scheme, non-custom scheme (using http or https), or differing schemes for login/signup urls."
     )
-    static let oauthASWebAuthMissingUrl = StytchSDKError(
-        name: "oauth_generic_aswebauth_missing_url",
-        description: "The underlying ASWebAuthenticationSession failed to return a URL"
+    static let missingURL = StytchSDKError(
+        name: "missing_url",
+        description: "The underlying web authentication service failed to return a URL."
     )
-    
-    static let passkeysInvalidPublicKeyCredentialType = StytchSDKError(
-        name: "passkeys_invalid_credential_type",
+    static let invalidPublicKeyCredentialType = StytchSDKError(
+        name: "invalid_credential_type",
         description: "The public key credential type was not of the expected type."
     )
-    static let passkeysMissingAttestationObject = StytchSDKError(
-        name: "passkeys_missing_attestation_object",
+    static let missingAttestationObject = StytchSDKError(
+        name: "missing_attestation_object",
         description: "The public key credential is missing the attestation object."
     )
     static let jsonDataNotConvertibleToString = StytchSDKError(

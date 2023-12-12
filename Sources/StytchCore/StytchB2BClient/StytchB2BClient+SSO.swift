@@ -42,7 +42,7 @@ public extension StytchB2BClient {
         /// Start an SSO authentication flow.
         public func start(parameters: StartParameters) async throws -> (token: String, url: URL) {
             guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
-                throw StytchSDKError.oauthInvalidRedirectScheme
+                throw StytchSDKError.invalidRedirectScheme
             }
             let url = try generateStartUrl(
                 connectionId: parameters.connectionId,
@@ -83,7 +83,7 @@ public extension StytchB2BClient {
 
             guard
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/sso/start")?.appending(queryParameters: queryParameters)
-            else { throw StytchSDKError.oauthInvalidStartUrl }
+            else { throw StytchSDKError.invalidStartURL }
 
             return url
         }

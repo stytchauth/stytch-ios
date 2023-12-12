@@ -24,7 +24,7 @@ extension PasskeysClient {
 
             guard
                 let credential = credential as? ASAuthorizationPublicKeyCredentialRegistration
-            else { throw StytchSDKError.passkeysInvalidPublicKeyCredentialType }
+            else { throw StytchSDKError.invalidPublicKeyCredentialType }
 
             return credential
         },
@@ -54,7 +54,7 @@ extension PasskeysClient {
 
             guard
                 let credential = credential as? ASAuthorizationPublicKeyCredentialAssertion
-            else { throw StytchSDKError.passkeysInvalidPublicKeyCredentialType }
+            else { throw StytchSDKError.invalidPublicKeyCredentialType }
 
             return credential
         }

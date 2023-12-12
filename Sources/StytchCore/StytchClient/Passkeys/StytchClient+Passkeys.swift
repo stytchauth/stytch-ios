@@ -32,7 +32,7 @@ public extension StytchClient {
                 userId: startResp.userId
             )
 
-            guard let attestationObject = credential.rawAttestationObject else { throw StytchSDKError.passkeysMissingAttestationObject }
+            guard let attestationObject = credential.rawAttestationObject else { throw StytchSDKError.missingAttestationObject }
 
             let response: BasicResponse = try await router.post(
                 to: .register,

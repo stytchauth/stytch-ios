@@ -11,7 +11,7 @@ extension WebAuthenticationSessionClient {
                     return
                 }
                 guard let url = url else {
-                    continuation.resume(throwing: StytchSDKError.oauthASWebAuthMissingUrl)
+                    continuation.resume(throwing: StytchSDKError.missingURL)
                     return
                 }
                 do {
