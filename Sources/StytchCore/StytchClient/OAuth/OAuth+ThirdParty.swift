@@ -68,7 +68,7 @@ public extension StytchClient.OAuth {
             customScopes: [String]?
         ) throws -> URL {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
-                throw StytchSDKNotConfiguredError(clientName: "StytchClient")
+                throw StytchSDKError.ConsumerSDKNotConfigured
             }
 
             var queryParameters = [

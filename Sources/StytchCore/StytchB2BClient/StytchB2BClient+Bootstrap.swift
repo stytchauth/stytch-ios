@@ -9,7 +9,7 @@ extension StytchB2BClient {
 
         public func fetch() async throws {
             guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
-                throw StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
+                throw StytchSDKError.B2BSDKNotConfigured
             }
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
             #if os(iOS)

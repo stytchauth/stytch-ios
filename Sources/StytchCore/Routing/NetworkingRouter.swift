@@ -63,7 +63,7 @@ extension NetworkingRouter {
         route: Route
     ) async throws -> Response {
         guard let configuration = getConfiguration() else {
-            throw StytchSDKNotConfiguredError(clientName: "StytchClient")
+            throw StytchSDKError.ConsumerSDKNotConfigured
         }
 
         let (data, response) = try await networkingClient.performRequest(

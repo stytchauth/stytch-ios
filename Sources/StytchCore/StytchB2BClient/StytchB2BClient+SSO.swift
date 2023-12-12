@@ -68,7 +68,7 @@ public extension StytchB2BClient {
             signupRedirectUrl: URL
         ) throws -> URL {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
-                throw StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
+                throw StytchSDKError.B2BSDKNotConfigured
             }
 
             let queryParameters = [

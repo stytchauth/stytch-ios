@@ -88,7 +88,11 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
     }
 }
 
+public class StytchDeeplinkError: StytchSDKError {}
+
 public extension StytchSDKError {
+    static let ConsumerSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchClient")
+    static let B2BSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
     static let missingPKCE = StytchSDKError(
         name: "missing_pkce",
         description: "The PKCE code challenge or code verifier is missing. Make sure this flow is completed on the same device on which it was started."
@@ -97,13 +101,13 @@ public extension StytchSDKError {
         name: "random_number_generation_failed",
         description: "System unable to generate a random data. Typically used for PKCE."
     )
-    static let unrecognizedDeeplinkTokenType = StytchSDKError(
-        name: "unrecognized_deeplink_token_type",
-        description: "Deeplink received with unrecognized `stytch_token_type`. Recognized values are `magic_links`, `oauth`, or `reset_password`"
+    static let deeplinkUnknownTokenType = StytchDeeplinkError(
+        name: "deeplink_unknown_token_type",
+        description: "The deeplink received has an unknown token type."
     )
-    static let missingDeeplinkToken = StytchSDKError(
-        name: "missing_deeplink_token_type",
-        description: "Deeplink received with no underlying `stytch_token` value."
+    static let deeplinkMissingToken = StytchDeeplinkError(
+        name: "deeplink_missing_token",
+        description: "The deeplink received has a missing token value."
     )
     static let noCurrentSession = StytchSDKError(
         name: "no_current_session",
