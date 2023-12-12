@@ -2,9 +2,9 @@ import Foundation
 
 /// Base class representing an error within the Stytch ecosystem.
 public class StytchError: Error {
-    var name: String
-    var description: String
-    var url: URL?
+    public var name: String
+    public var description: String
+    public var url: URL?
     
     init(
         name: String,
@@ -19,8 +19,8 @@ public class StytchError: Error {
 
 /// Error class representing an error within the Stytch API.
 public class StytchAPIError: StytchError, Decodable {
-    let statusCode: Int
-    let requestId: String?
+    public let statusCode: Int
+    public let requestId: String?
     
     private enum CodingKeys: CodingKey {
         case name
@@ -91,15 +91,11 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
 public class StytchDeeplinkError: StytchSDKError {}
 
 public extension StytchSDKError {
-    static let ConsumerSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchClient")
+    static let consumerSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchClient")
     static let B2BSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
     static let missingPKCE = StytchSDKError(
         name: "missing_pkce",
         description: "The PKCE code challenge or code verifier is missing. Make sure this flow is completed on the same device on which it was started."
-    )
-    static let randomNumberGenerationFailed = StytchSDKError(
-        name: "random_number_generation_failed",
-        description: "System unable to generate a random data. Typically used for PKCE."
     )
     static let deeplinkUnknownTokenType = StytchDeeplinkError(
         name: "deeplink_unknown_token_type",
@@ -111,20 +107,29 @@ public extension StytchSDKError {
     )
     static let noCurrentSession = StytchSDKError(
         name: "no_current_session",
-        description: "There is no session currently available. Must authenticate prior to calling this method."
+        description: "There is no session currently available. Make sure the user is authenticated with a valid session."
     )
-    static let noBiometricRegistrationsAvailable = StytchSDKError(
-        name: "no_biometric_registrations",
-        description: "There are no biometric registrations available. Must authenticate with other methods and add a new biometric registration before calling this method."
+    static let noBiometricRegistration = StytchSDKError(
+        name: "no_biometric_registration",
+        description: "There is no biometric registration available. Authenticate with another method and add a new biometric registration first."
     )
-    static let oauthCredentialInvalid = StytchSDKError(
-        name: "oauth_apple_credential_invalid",
-        description: "The Sign In With Apple authorization credential was an invalid type/format."
+    static let invalidAuthorizationCredential = StytchSDKError(
+        name: "invalid_authorization_credential",
+        description: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method."
     )
-    static let oauthCredentialMissingIdToken = StytchSDKError(
-        name: "oauth_apple_missing_id_token",
-        description: "The Sign In With Apple authorization credential was missing an id_token."
+    static let missingAuthorizationCredentialIDToken = StytchSDKError(
+        name: "missing_authorization_credential_id_token",
+        description: "The authorization credential is missing an ID token."
     )
+    static let passkeysUnsupported = StytchSDKError(
+        name: "passkeys_unsupported",
+        description: "Passkeys are unsupported on this device"
+    )
+    static let randomNumberGenerationFailed = StytchSDKError(
+        name: "random_number_generation_failed",
+        description: "System unable to generate a random data. Typically used for PKCE."
+    )
+    // Currently only available on iOS
     static let oauthInvalidStartUrl = StytchSDKError(
         name: "oauth_generic_invalid_start_url",
         description: "The start url was invalid or improperly formatted."
@@ -149,10 +154,6 @@ public extension StytchSDKError {
     static let jsonDataNotConvertibleToString = StytchSDKError(
         name: "json_data_not_convertible_to_string",
         description: "JSON data unable to be converted to String type."
-    )
-    static let passkeysNotSupported = StytchSDKError(
-        name: "passkeys_not_supported",
-        description: "Passkeys are unsupported on this device"
     )
 }
 

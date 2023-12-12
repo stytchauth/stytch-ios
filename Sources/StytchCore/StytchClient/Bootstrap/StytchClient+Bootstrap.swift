@@ -9,7 +9,7 @@ extension StytchClient {
 
         public func fetch() async throws {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
-                throw StytchSDKError.ConsumerSDKNotConfigured
+                throw StytchSDKError.consumerSDKNotConfigured
             }
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
             #if os(iOS)
