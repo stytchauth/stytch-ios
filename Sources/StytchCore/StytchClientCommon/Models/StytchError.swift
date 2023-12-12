@@ -61,16 +61,32 @@ public class StytchAPIError: StytchError {
 }
 
 /// Error class representing when the Stytch SDK cannot reach the Stytch API.
-public class StytchAPIUnreachableError: StytchAPIError {}
+public class StytchAPIUnreachableError: StytchError {
+    init(description: String, url: URL? = nil) {
+        super.init(name: "StytchAPIUnreachableError", description: description, url: url)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+}
 
 /// Error class representing a schema error within the Stytch API.
-public class StytchAPISchemaError: StytchAPIError {}
+public class StytchAPISchemaError: StytchError {
+    init(description: String, url: URL? = nil) {
+        super.init(name: "StytchAPISchemaError", description: description, url: url)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+    }
+}
 
 /// Error class representing an error within the Stytch SDK.
 public class StytchSDKError: StytchError {}
 
 /// Error class representing invalid input within the Stytch SDK.
-public class StytchSDKUsageError: StytchSDKError {}
+public class StytchSDKUsageError: StytchError {}
 
 public extension StytchSDKError {
     static let clientNotConfigured = StytchSDKError(
