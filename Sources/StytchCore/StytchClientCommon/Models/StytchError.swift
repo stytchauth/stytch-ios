@@ -4,76 +4,98 @@ import Foundation
 public class StytchError: Error {
     public var name: String
     public var message: String
-    public var url: URL?
     
     init(
         name: String,
-        message: String,
-        url: URL? = nil
+        message: String
     ) {
         self.name = name
         self.message = message
-        self.url = url
     }
 }
 
 /// Error class representing an error within the Stytch API.
 public class StytchAPIError: StytchError, Decodable {
-    public let statusCode: Int
-    public let requestId: String?
-    
     private enum CodingKeys: CodingKey {
-        case name
-        case message
-        case url
         case statusCode
         case requestId
+        case errorType
+        case errorMessage
+        case errorUrl
     }
-    
+
+    /// The HTTP status code associated with the error.
+    public let statusCode: Int
+    /// The id of the request.
+    public let requestId: String
+    /// The type of the error.
+    public let errorType: String
+    /// The message associated with the error.
+    private let errorMessage: String
+    /// The url at which further information about the error can be found. Nil if no additional information available.
+    public var url: URL? { errorUrl }
+    private let errorUrl: URL?
+
     init(
-        name: String,
-        message: String,
-        url: URL? = nil,
         statusCode: Int,
-        requestId: String? = nil
+        requestId: String,
+        errorType: String,
+        errorMessage: String,
+        errorUrl: URL? = nil
     ) {
         self.statusCode = statusCode
         self.requestId = requestId
-        super.init(name: name, message: message, url: url)
+        self.errorType = errorType
+        self.errorMessage = errorMessage
+        self.errorUrl = errorUrl
+        super.init(name: "StytchAPIError", message: errorMessage)
     }
-        
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try container.decode(Int.self, forKey: .statusCode)
-        requestId = try? container.decode(String.self, forKey: .requestId)
-        
-        let name = try container.decode(String.self, forKey: .name)
-        let message = try container.decode(String.self, forKey: .message)
-        let url = try? container.decode(URL.self, forKey: .url)
-        
-        super.init(name: name, message: message, url: url)
+        requestId = try container.decode(String.self, forKey: .requestId)
+        errorType = try container.decode(String.self, forKey: .errorType)
+        errorMessage = try container.decode(String.self, forKey: .errorMessage)
+        errorUrl = try? container.decodeIfPresent(URL.self, forKey: .errorUrl)
+        super.init(name: "StytchAPIError", message: errorMessage)
     }
 }
 
 /// Error class representing when the Stytch SDK cannot reach the Stytch API.
 public class StytchAPIUnreachableError: StytchError {
     init(message: String, url: URL? = nil) {
-        super.init(name: "StytchAPIUnreachableError", message: message, url: url)
+        super.init(name: "StytchAPIUnreachableError", message: message)
     }
 }
 
 /// Error class representing a schema error within the Stytch API.
 public class StytchAPISchemaError: StytchError {
     init(message: String, url: URL? = nil) {
-        super.init(name: "StytchAPISchemaError", message: message, url: url)
+        super.init(name: "StytchAPISchemaError", message: message)
     }
 }
 
+public struct StytchSDKErrorOptions {
+    let url: URL?
+}
+
 /// Error class representing an error within the Stytch SDK.
-public class StytchSDKError: StytchError {}
+public class StytchSDKError: StytchError {
+    let url: URL?
+    
+    init(name: String, message: String, options: StytchSDKErrorOptions? = nil) {
+        self.url = options?.url
+        super.init(name: "StytchSDKError", message: message)
+    }
+}
 
 /// Error class representing invalid input within the Stytch SDK.
-public class StytchSDKUsageError: StytchError {}
+public class StytchSDKUsageError: StytchError {
+    override init(name: String, message: String) {
+        super.init(name: "StytchSDKUsageError", message: message)
+    }
+}
 
 public class StytchSDKNotConfiguredError: StytchSDKError {
     let clientName: String
@@ -83,7 +105,7 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
         super.init(
             name: "sdk_not_configured",
             message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
-            url: .readmeUrl(withFragment: "configuration")
+            options: .init(url: .readmeUrl(withFragment: "configuration"))
         )
     }
 }
