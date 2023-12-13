@@ -132,7 +132,7 @@ private extension HTTPURLResponse {
 
             error = StytchAPIError(
                 name: "unknown_error",
-                description: message,
+                message: message,
                 statusCode: statusCode
             )
         }

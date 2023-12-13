@@ -73,7 +73,7 @@ struct StytchDemoApp: App {
     private func handle(error: Error) {
         switch error {
         case let error as StytchError:
-            errorMessage = error.description
+            errorMessage = error.message
             errorAlertPresented = true
         default:
             break

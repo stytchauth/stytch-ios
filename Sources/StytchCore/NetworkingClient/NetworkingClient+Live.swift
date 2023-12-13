@@ -12,30 +12,30 @@ extension NetworkingClient {
                 do {
                     let (data, response) = try await session.data(for: request)
                     guard let response = response as? HTTPURLResponse else {
-                        throw StytchAPISchemaError(description: "Request does not match expected schema.")
+                        throw StytchAPISchemaError(message: "Request does not match expected schema.")
                     }
                     return (data, response)
                 } catch {
-                    throw StytchAPIUnreachableError(description: "Invalid or no response from server")
+                    throw StytchAPIUnreachableError(message: "Invalid or no response from server")
                 }
             } else {
                 return try await withCheckedThrowingContinuation { continuation in
                     let task = session.dataTask(with: request) { data, response, error in
                         if error != nil {
                             continuation.resume(with: .failure(
-                                StytchAPIUnreachableError(description: "Invalid or no response from server")
+                                StytchAPIUnreachableError(message: "Invalid or no response from server")
                             ))
                             return
                         }
                         guard let data = data else {
                             continuation.resume(with: .failure(
-                                StytchAPISchemaError(description: "Request does not match expected schema.")
+                                StytchAPISchemaError(message: "Request does not match expected schema.")
                             ))
                             return
                         }
                         guard let response = response as? HTTPURLResponse else {
                             continuation.resume(with: .failure(
-                                StytchAPISchemaError(description: "Request does not match expected schema.")
+                                StytchAPISchemaError(message: "Request does not match expected schema.")
                             ))
                             return
                         }
