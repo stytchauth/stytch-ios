@@ -4,7 +4,6 @@ import Foundation
 public class StytchError: Error {
     public var name: String
     public var message: String
-    
     init(
         name: String,
         message: String
@@ -83,7 +82,6 @@ public struct StytchSDKErrorOptions {
 /// Error class representing an error within the Stytch SDK.
 public class StytchSDKError: StytchError {
     let url: URL?
-    
     init(name: String, message: String, options: StytchSDKErrorOptions? = nil) {
         self.url = options?.url
         super.init(name: "StytchSDKError", message: message)
@@ -99,7 +97,6 @@ public class StytchSDKUsageError: StytchError {
 
 public class StytchSDKNotConfiguredError: StytchSDKError {
     let clientName: String
-    
     init(clientName: String) {
         self.clientName = clientName
         super.init(

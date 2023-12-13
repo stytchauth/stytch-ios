@@ -22,21 +22,11 @@ extension NetworkingClient {
                 return try await withCheckedThrowingContinuation { continuation in
                     let task = session.dataTask(with: request) { data, response, error in
                         if error != nil {
-                            continuation.resume(with: .failure(
-                                StytchAPIUnreachableError(message: "Invalid or no response from server")
-                            ))
+                            continuation.resume(with: .failure(StytchAPIUnreachableError(message: "Invalid or no response from server")))
                             return
                         }
-                        guard let data = data else {
-                            continuation.resume(with: .failure(
-                                StytchAPISchemaError(message: "Request does not match expected schema.")
-                            ))
-                            return
-                        }
-                        guard let response = response as? HTTPURLResponse else {
-                            continuation.resume(with: .failure(
-                                StytchAPISchemaError(message: "Request does not match expected schema.")
-                            ))
+                        guard let data = data, let response = response as? HTTPURLResponse else {
+                            continuation.resume(with: .failure(StytchAPISchemaError(message: "Request does not match expected schema.")))
                             return
                         }
                         continuation.resume(with: .success((data, response)))
