@@ -52,8 +52,8 @@ final class SessionsTestCase: BaseTestCase {
 
     func testSessionRevokeNetworkError() async throws {
         networkInterceptor.responses {
-            StytchError(errorType: "fake_error", errorMessage: "I'm a mock error")
-            StytchError(errorType: "fake_error", errorMessage: "I'm a mock error")
+            StytchError(name: "fake_error", description: "I'm a mock error")
+            StytchError(name: "fake_error", description: "I'm a mock error")
         }
         Current.timer = { _, _, _ in .init() }
 
