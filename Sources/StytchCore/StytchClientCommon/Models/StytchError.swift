@@ -26,7 +26,7 @@ public class StytchAPIError: StytchError, Decodable {
     /// The HTTP status code associated with the error.
     public let statusCode: Int
     /// The id of the request.
-    public let requestId: String
+    public let requestId: String?
     /// The type of the error.
     public let errorType: String
     /// The message associated with the error.
@@ -37,7 +37,7 @@ public class StytchAPIError: StytchError, Decodable {
 
     init(
         statusCode: Int,
-        requestId: String,
+        requestId: String? = nil,
         errorType: String,
         errorMessage: String,
         errorUrl: URL? = nil
@@ -53,7 +53,7 @@ public class StytchAPIError: StytchError, Decodable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try container.decode(Int.self, forKey: .statusCode)
-        requestId = try container.decode(String.self, forKey: .requestId)
+        requestId = try container.decodeIfPresent(String.self, forKey: .requestId)
         errorType = try container.decode(String.self, forKey: .errorType)
         errorMessage = try container.decode(String.self, forKey: .errorMessage)
         errorUrl = try? container.decodeIfPresent(URL.self, forKey: .errorUrl)

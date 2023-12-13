@@ -131,9 +131,9 @@ private extension HTTPURLResponse {
             }
 
             error = StytchAPIError(
-                name: "unknown_error",
-                message: message,
-                statusCode: statusCode
+                statusCode: statusCode,
+                errorType: "unknown_error",
+                errorMessage: message
             )
         }
 
