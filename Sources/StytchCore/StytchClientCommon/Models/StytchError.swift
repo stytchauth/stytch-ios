@@ -85,10 +85,10 @@ public struct StytchSDKErrorOptions {
 public class StytchSDKError: StytchError {
     let errorType: String?
     let url: URL?
-    
+
     init(message: String, options: StytchSDKErrorOptions? = nil) {
-        self.url = options?.url
-        self.errorType = options?.errorType
+        url = options?.url
+        errorType = options?.errorType
         super.init(name: "StytchSDKError", message: message)
     }
 }
