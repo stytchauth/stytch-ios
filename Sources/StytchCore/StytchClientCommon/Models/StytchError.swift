@@ -1,7 +1,7 @@
 import Foundation
 
 /// Base class representing an error within the Stytch ecosystem.
-public class StytchError: Error {
+public class StytchError: Error, Equatable {
     public var name: String
     public var message: String
 
@@ -11,6 +11,10 @@ public class StytchError: Error {
     ) {
         self.name = name
         self.message = message
+    }
+
+    public static func == (lhs: StytchError, rhs: StytchError) -> Bool {
+        lhs.name == rhs.name && lhs.message == rhs.message
     }
 }
 

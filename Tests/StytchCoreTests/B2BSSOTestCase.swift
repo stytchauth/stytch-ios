@@ -20,7 +20,10 @@ final class B2BSSOTestCase: BaseTestCase {
 
         let invalidStartParams = createParams(baseUrl)
 
-        await XCTAssertThrowsErrorAsync(try await StytchB2BClient.sso.start(parameters: invalidStartParams))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchB2BClient.sso.start(parameters: invalidStartParams),
+            StytchSDKError.invalidRedirectScheme
+        )
 
         baseUrl = try XCTUnwrap(URL(string: "custom-scheme://blah"))
 
@@ -35,7 +38,10 @@ final class B2BSSOTestCase: BaseTestCase {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
-        await XCTAssertThrowsErrorAsync(_ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
+            StytchSDKError.missingPKCE
+        )
         _ = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
         _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 

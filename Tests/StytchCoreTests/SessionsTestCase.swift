@@ -66,14 +66,20 @@ final class SessionsTestCase: BaseTestCase {
         XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("opaque_all_day"))
         XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("i'm_jwt"))
 
-        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.sessions.revoke())
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.sessions.revoke(),
+            StytchError(name: "fake_error", message: "I'm a mock error")
+        )
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNotNil(StytchClient.sessions.sessionJwt)
         XCTAssertNotNil(StytchClient.sessions.sessionToken)
 
-        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.sessions.revoke(parameters: .init(forceClear: true)))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.sessions.revoke(parameters: .init(forceClear: true)),
+            StytchError(name: "fake_error", message: "I'm a mock error")
+        )
 
         try XCTAssertRequest(networkInterceptor.requests[1], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 

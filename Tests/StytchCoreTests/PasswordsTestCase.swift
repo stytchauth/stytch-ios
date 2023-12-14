@@ -69,7 +69,10 @@ final class PasswordsTestCase: BaseTestCase {
     }
 
     func testReset() async throws {
-        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")),
+            StytchSDKError.missingPKCE
+        )
 
         networkInterceptor.responses {
             BasicResponse(requestId: "123", statusCode: 200)
