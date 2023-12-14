@@ -64,35 +64,38 @@ public class StytchAPIError: StytchError, Decodable {
 
 /// Error class representing when the Stytch SDK cannot reach the Stytch API.
 public class StytchAPIUnreachableError: StytchError {
-    init(message: String, url: URL? = nil) {
+    init(message: String) {
         super.init(name: "StytchAPIUnreachableError", message: message)
     }
 }
 
 /// Error class representing a schema error within the Stytch API.
 public class StytchAPISchemaError: StytchError {
-    init(message: String, url: URL? = nil) {
+    init(message: String) {
         super.init(name: "StytchAPISchemaError", message: message)
     }
 }
 
 public struct StytchSDKErrorOptions {
-    let url: URL?
+    let errorType: String
+    var url: URL?
 }
 
 /// Error class representing an error within the Stytch SDK.
 public class StytchSDKError: StytchError {
+    let errorType: String?
     let url: URL?
-
-    init(name: String, message: String, options: StytchSDKErrorOptions? = nil) {
+    
+    init(message: String, options: StytchSDKErrorOptions? = nil) {
         self.url = options?.url
+        self.errorType = options?.errorType
         super.init(name: "StytchSDKError", message: message)
     }
 }
 
 /// Error class representing invalid input within the Stytch SDK.
 public class StytchSDKUsageError: StytchError {
-    override init(name: String, message: String) {
+    init(message: String) {
         super.init(name: "StytchSDKUsageError", message: message)
     }
 }
@@ -103,9 +106,11 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
     init(clientName: String) {
         self.clientName = clientName
         super.init(
-            name: "sdk_not_configured",
             message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
-            options: .init(url: .readmeUrl(withFragment: "configuration"))
+            options: .init(
+                errorType: "sdk_not_configured",
+                url: .readmeUrl(withFragment: "configuration")
+            )
         )
     }
 }
@@ -116,64 +121,94 @@ public extension StytchSDKError {
     static let consumerSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchClient")
     static let B2BSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
     static let missingPKCE = StytchSDKError(
-        name: "missing_pkce",
-        message: "The PKCE code challenge or code verifier is missing. Make sure this flow is completed on the same device on which it was started."
+        message: "The PKCE code challenge or code verifier is missing. Make sure this flow is completed on the same device on which it was started.",
+        options: .init(
+            errorType: "missing_pkce"
+        )
     )
     static let deeplinkUnknownTokenType = StytchDeeplinkError(
-        name: "deeplink_unknown_token_type",
-        message: "The deeplink received has an unknown token type."
+        message: "The deeplink received has an unknown token type.",
+        options: .init(
+            errorType: "deeplink_unknown_token_type"
+        )
     )
     static let deeplinkMissingToken = StytchDeeplinkError(
-        name: "deeplink_missing_token",
-        message: "The deeplink received has a missing token value."
+        message: "The deeplink received has a missing token value.",
+        options: .init(
+            errorType: "deeplink_missing_token"
+        )
     )
     static let noCurrentSession = StytchSDKError(
-        name: "no_current_session",
-        message: "There is no session currently available. Make sure the user is authenticated with a valid session."
+        message: "There is no session currently available. Make sure the user is authenticated with a valid session.",
+        options: .init(
+            errorType: "no_current_session"
+        )
     )
     static let noBiometricRegistration = StytchSDKError(
-        name: "no_biometric_registration",
-        message: "There is no biometric registration available. Authenticate with another method and add a new biometric registration first."
+        message: "There is no biometric registration available. Authenticate with another method and add a new biometric registration first.",
+        options: .init(
+            errorType: "no_biometric_registration"
+        )
     )
     static let invalidAuthorizationCredential = StytchSDKError(
-        name: "invalid_authorization_credential",
-        message: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method."
+        message: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method.",
+        options: .init(
+            errorType: "invalid_authorization_credential"
+        )
     )
     static let missingAuthorizationCredentialIDToken = StytchSDKError(
-        name: "missing_authorization_credential_id_token",
-        message: "The authorization credential is missing an ID token."
+        message: "The authorization credential is missing an ID token.",
+        options: .init(
+            errorType: "missing_authorization_credential_id_token"
+        )
     )
     static let passkeysUnsupported = StytchSDKError(
-        name: "passkeys_unsupported",
-        message: "Passkeys are unsupported on this device"
+        message: "Passkeys are unsupported on this device.",
+        options: .init(
+            errorType: "passkeys_unsupported"
+        )
     )
     static let randomNumberGenerationFailed = StytchSDKError(
-        name: "random_number_generation_failed",
-        message: "System unable to generate a random data. Typically used for PKCE."
+        message: "System unable to generate a random data. Typically used for PKCE.",
+        options: .init(
+            errorType: "random_number_generation_failed"
+        )
     )
     static let invalidStartURL = StytchSDKError(
-        name: "invalid_start_url",
-        message: "The start URL was invalid or improperly formatted."
+        message: "The start URL was invalid or improperly formatted.",
+        options: .init(
+            errorType: "invalid_start_url"
+        )
     )
     static let invalidRedirectScheme = StytchSDKError(
-        name: "invalid_redirect_scheme",
-        message: "The scheme from the given redirect urls was invalid. Possible reasons include: nil scheme, non-custom scheme (using http or https), or differing schemes for login/signup urls."
+        message: "The scheme from the given redirect urls was invalid. Possible reasons include: nil scheme, non-custom scheme (using http or https), or differing schemes for login/signup urls.",
+        options: .init(
+            errorType: "invalid_redirect_scheme"
+        )
     )
     static let missingURL = StytchSDKError(
-        name: "missing_url",
-        message: "The underlying web authentication service failed to return a URL."
+        message: "The underlying web authentication service failed to return a URL.",
+        options: .init(
+            errorType: "missing_url"
+        )
     )
-    static let invalidPublicKeyCredentialType = StytchSDKError(
-        name: "invalid_credential_type",
-        message: "The public key credential type was not of the expected type."
+    static let invalidCredentialType = StytchSDKError(
+        message: "The public key credential type was not of the expected type.",
+        options: .init(
+            errorType: "invalid_credential_type"
+        )
     )
     static let missingAttestationObject = StytchSDKError(
-        name: "missing_attestation_object",
-        message: "The public key credential is missing the attestation object."
+        message: "The public key credential is missing the attestation object.",
+        options: .init(
+            errorType: "missing_attestation_object"
+        )
     )
     static let jsonDataNotConvertibleToString = StytchSDKError(
-        name: "json_data_not_convertible_to_string",
-        message: "JSON data unable to be converted to String type."
+        message: "JSON data unable to be converted to String type.",
+        options: .init(
+            errorType: "json_data_not_convertible_to_string"
+        )
     )
 }
 
