@@ -9,7 +9,7 @@ func XCTAssertThrowsErrorAsync<T, R>(
     line: UInt = #line
 ) async where T: Sendable, R: Equatable, R: StytchError {
     do {
-        let _ = try await expression()
+        _ = try await expression()
         XCTFail(message(), file: file, line: line)
     } catch {
         XCTAssertEqual(error as? R, errorThrown())
