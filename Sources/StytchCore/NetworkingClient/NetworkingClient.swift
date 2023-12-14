@@ -91,9 +91,4 @@ extension NetworkingClient {
             }
         }
     }
-
-    enum Error: Swift.Error {
-        case missingData
-        case nonHttpResponse
-    }
 }

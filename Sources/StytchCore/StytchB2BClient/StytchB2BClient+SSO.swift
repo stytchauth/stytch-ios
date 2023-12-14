@@ -28,7 +28,7 @@ public extension StytchB2BClient {
         /// verifying that the token is valid and hasn't expired.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
             guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
-                throw StytchError.pckeNotAvailable
+                throw StytchSDKError.missingPKCE
             }
 
             return try await router.post(
@@ -42,7 +42,7 @@ public extension StytchB2BClient {
         /// Start an SSO authentication flow.
         public func start(parameters: StartParameters) async throws -> (token: String, url: URL) {
             guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
-                throw StytchError.oauthInvalidRedirectScheme
+                throw StytchSDKError.invalidRedirectScheme
             }
             let url = try generateStartUrl(
                 connectionId: parameters.connectionId,
@@ -67,7 +67,9 @@ public extension StytchB2BClient {
             loginRedirectUrl: URL,
             signupRedirectUrl: URL
         ) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else { throw StytchError.clientNotConfigured }
+            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+                throw StytchSDKError.B2BSDKNotConfigured
+            }
 
             let queryParameters = [
                 ("connection_id", connectionId),
@@ -81,7 +83,7 @@ public extension StytchB2BClient {
 
             guard
                 let url = URL(string: "https://\(subDomain).stytch.com/v1/public/sso/start")?.appending(queryParameters: queryParameters)
-            else { throw StytchError.oauthInvalidStartUrl }
+            else { throw StytchSDKError.invalidStartURL }
 
             return url
         }
