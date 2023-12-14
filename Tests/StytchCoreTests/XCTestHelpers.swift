@@ -1,18 +1,18 @@
 import StytchCore
 import XCTest
 
-func XCTAssertThrowsErrorAsync<T: Sendable>(
+func XCTAssertThrowsErrorAsync<T, R>(
     _ expression: @autoclosure () async throws -> T,
-    _ message: @autoclosure () -> String = "",
+    _ errorThrown: @autoclosure () -> R,
+    _ message: @autoclosure () -> String = "This method should fail",
     file: StaticString = #filePath,
-    line: UInt = #line,
-    _ errorHandler: (_ error: Error) -> Void = { _ in }
-) async {
+    line: UInt = #line
+) async where T: Sendable, R: Equatable, R: StytchError {
     do {
-        _ = try await expression()
+        let _ = try await expression()
         XCTFail(message(), file: file, line: line)
     } catch {
-        errorHandler(error)
+        XCTAssertEqual(error as? R, errorThrown())
     }
 }
 

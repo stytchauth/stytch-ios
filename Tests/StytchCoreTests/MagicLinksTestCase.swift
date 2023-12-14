@@ -116,7 +116,10 @@ final class MagicLinksTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
-        await XCTAssertThrowsErrorAsync(try await StytchClient.magicLinks.authenticate(parameters: parameters))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.magicLinks.authenticate(parameters: parameters),
+            StytchSDKError.missingPKCE
+        )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 
