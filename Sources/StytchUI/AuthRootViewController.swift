@@ -321,6 +321,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.twitch
         case .twitter:
             return StytchClient.oauth.twitter
+        case .yahoo:
+            return StytchClient.oauth.yahoo
         }
     }
 }
