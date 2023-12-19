@@ -66,18 +66,7 @@ final class AuthRootViewController: UIViewController {
     }
     
     private func handleAuthenticationSuccess(response: AuthenticateResponse) {
-        //            // Check if the user is new or returning
-        //            let isNewUser = response.userType == .new
-        
-        // Invoke the callback with the authentication response
         onAuthCallback?(response)
-        
-        //            // You can perform additional actions based on whether the user is new or returning
-        //            if isNewUser {
-        //                print("New user authenticated!")
-        //            } else {
-        //                print("Returning user authenticated!")
-        //            }
     }
     
     private func render(bootstrap: Bootstrap) {
