@@ -5,38 +5,40 @@ import UIKit
 
 final class AuthRootViewController: UIViewController {
     private let config: StytchUIClient.Configuration
-
+    
     private var navController: UINavigationController?
-
+    
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
-
-    init(config: StytchUIClient.Configuration) {
+    
+    private var onAuthCallback: AuthCallback?
+    
+    init(config: StytchUIClient.Configuration, onAuthCallback: AuthCallback? = nil) {
         self.config = config
-
+        self.onAuthCallback = onAuthCallback
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .background
-
+        
         StytchClient.configure(publicToken: config.publicToken)
-
+        
         activityIndicator.hidesWhenStopped = true
-
+        
         view.addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
-
+        
         Task { @MainActor in
             defer { activityIndicator.stopAnimating() }
             activityIndicator.startAnimating()
@@ -47,7 +49,7 @@ final class AuthRootViewController: UIViewController {
             }
         }
     }
-
+    
     func handlePasswordReset(token: String, email: String, animated: Bool = true) {
         let controller = PasswordViewController(
             state: .init(
@@ -58,11 +60,26 @@ final class AuthRootViewController: UIViewController {
         ) { .password($0) }
         navController?.pushViewController(controller, animated: animated)
     }
-
+    
     @objc func dismissAuth() {
         presentingViewController?.dismiss(animated: true)
     }
-
+    
+    private func handleAuthenticationSuccess(response: AuthenticateResponse) {
+        //            // Check if the user is new or returning
+        //            let isNewUser = response.userType == .new
+        
+        // Invoke the callback with the authentication response
+        onAuthCallback?(response)
+        
+        //            // You can perform additional actions based on whether the user is new or returning
+        //            if isNewUser {
+        //                print("New user authenticated!")
+        //            } else {
+        //                print("Returning user authenticated!")
+        //            }
+    }
+    
     private func render(bootstrap: Bootstrap) {
         let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config)) { $0 }
         if let closeButton = config.navigation?.closeButtonStyle {
@@ -80,7 +97,7 @@ final class AuthRootViewController: UIViewController {
         navigationController.navigationBar.tintColor = .primaryText
         navigationController.navigationBar.barTintColor = .background
         navigationController.navigationBar.shadowImage = .init()
-
+        
         addChild(navigationController)
         view.addSubview(navigationController.view)
         navigationController.view.frame = view.bounds
@@ -156,10 +173,11 @@ private extension AuthRootViewController {
             present(navigationController, animated: true)
         }
     }
-
+    
     func handle(oauthAction: OAuthVCAction) async throws {
         guard let oauth = config.oauth else { return }
-
+        let response: AuthenticateResponse
+        
         switch oauthAction {
         case let .didTap(provider):
             switch provider {
@@ -169,12 +187,15 @@ private extension AuthRootViewController {
                 let (token, _) = try await provider.client.start(
                     parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
                 )
-                _ = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                handleAuthenticationSuccess(response: response)
             }
         }
     }
-
+    
     func handle(passwordAction: PasswordVCAction) async throws {
+        let response: AuthenticateResponse
+        
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
             guard let magicLink = config.magicLink else { return }
@@ -185,7 +206,8 @@ private extension AuthRootViewController {
             ) { .actionableInfo($0) }
             navController?.pushViewController(controller, animated: true)
         case let .didTapLogin(email, password):
-            _ = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+            response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+            handleAuthenticationSuccess(response: response)
         case let .didTapSignup(email, password):
             _ = try await StytchClient.passwords.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
         case let .didTapSetPassword(token, password):
@@ -201,8 +223,10 @@ private extension AuthRootViewController {
             navController?.pushViewController(controller, animated: true)
         }
     }
-
+    
     func handle(otpAction: OTPVCAction) async throws {
+        let response: AuthenticateResponse
+        
         switch otpAction {
         case let .didTapResendCode(phone, controller):
             let expiry = Date().addingTimeInterval(120)
@@ -215,7 +239,8 @@ private extension AuthRootViewController {
             )
         case let .didEnterCode(code, methodId, controller):
             do {
-                _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+                response = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+                handleAuthenticationSuccess(response: response)
             } catch let error as StytchError where error.errorType == "otp_code_not_found" {
                 controller.showInvalidCode()
             } catch {
@@ -223,7 +248,7 @@ private extension AuthRootViewController {
             }
         }
     }
-
+    
     func handle(aiAction: AIVCAction) async throws {
         switch aiAction {
         case let .didTapCreatePassword(email):
@@ -244,7 +269,7 @@ private extension AuthRootViewController {
     var sessionDuration: Minutes {
         config.session?.sessionDuration ?? .defaultSessionDuration
     }
-
+    
     func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
@@ -255,7 +280,7 @@ private extension AuthRootViewController {
             resetPasswordTemplateId: password.resetPasswordTemplateId
         )
     }
-
+    
     func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
         .init(
             email: email,
@@ -337,7 +362,7 @@ private struct UserSearchResponse: Decodable {
         case password
         case passwordless
     }
-
+    
     let userType: UserType
 }
 
@@ -352,7 +377,7 @@ private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
             return .done
         }
     }
-
+    
     var position: StytchUIClient.Configuration.Navigation.BarButtonPosition {
         switch self {
         case let .cancel(position), let .close(position), let .done(position):
