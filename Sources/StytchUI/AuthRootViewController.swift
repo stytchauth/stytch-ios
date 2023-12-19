@@ -10,9 +10,11 @@ final class AuthRootViewController: UIViewController {
 
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
 
-    init(config: StytchUIClient.Configuration) {
-        self.config = config
+    private var onAuthCallback: AuthCallback?
 
+    init(config: StytchUIClient.Configuration, onAuthCallback: AuthCallback? = nil) {
+        self.config = config
+        self.onAuthCallback = onAuthCallback
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,6 +63,10 @@ final class AuthRootViewController: UIViewController {
 
     @objc func dismissAuth() {
         presentingViewController?.dismiss(animated: true)
+    }
+
+    private func handleAuthenticationSuccess(response: AuthenticateResponse) {
+        onAuthCallback?(response)
     }
 
     private func render(bootstrap: Bootstrap) {
@@ -159,6 +165,7 @@ private extension AuthRootViewController {
 
     func handle(oauthAction: OAuthVCAction) async throws {
         guard let oauth = config.oauth else { return }
+        let response: AuthenticateResponse
 
         switch oauthAction {
         case let .didTap(provider):
@@ -169,12 +176,15 @@ private extension AuthRootViewController {
                 let (token, _) = try await provider.client.start(
                     parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
                 )
-                _ = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                handleAuthenticationSuccess(response: response)
             }
         }
     }
 
     func handle(passwordAction: PasswordVCAction) async throws {
+        let response: AuthenticateResponse
+
         switch passwordAction {
         case let .didTapEmailLoginLink(email):
             guard let magicLink = config.magicLink else { return }
@@ -185,7 +195,8 @@ private extension AuthRootViewController {
             ) { .actionableInfo($0) }
             navController?.pushViewController(controller, animated: true)
         case let .didTapLogin(email, password):
-            _ = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+            response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+            handleAuthenticationSuccess(response: response)
         case let .didTapSignup(email, password):
             _ = try await StytchClient.passwords.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
         case let .didTapSetPassword(token, password):
@@ -203,6 +214,8 @@ private extension AuthRootViewController {
     }
 
     func handle(otpAction: OTPVCAction) async throws {
+        let response: AuthenticateResponse
+
         switch otpAction {
         case let .didTapResendCode(phone, controller):
             let expiry = Date().addingTimeInterval(120)
@@ -215,7 +228,8 @@ private extension AuthRootViewController {
             )
         case let .didEnterCode(code, methodId, controller):
             do {
-                _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+                response = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+                handleAuthenticationSuccess(response: response)
             } catch let error as StytchError where error.errorType == "otp_code_not_found" {
                 controller.showInvalidCode()
             } catch {
@@ -321,6 +335,8 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
             return StytchClient.oauth.twitch
         case .twitter:
             return StytchClient.oauth.twitter
+        case .yahoo:
+            return StytchClient.oauth.yahoo
         }
     }
 }
