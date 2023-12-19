@@ -111,8 +111,9 @@ struct AuthenticationOptionsView: View {
                     ),
                     sms: .init()
                 )
-            )) { response in
-                onAuth(response)
+            )
+        ) { response in
+            onAuth(response)
         }
     }
 }

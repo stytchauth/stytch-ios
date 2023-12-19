@@ -87,8 +87,8 @@ public extension StytchUIClient {
 
         var inputProductsEnabled: Bool {
             password != nil ||
-            magicLink != nil ||
-            sms != nil
+                magicLink != nil ||
+                sms != nil
         }
 
         var oauth: OAuth? { products.oauth }
