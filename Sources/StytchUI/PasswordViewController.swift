@@ -1,7 +1,11 @@
 import StytchCore
 import UIKit
 
-final class PasswordViewController: BaseViewController<PasswordVCState, PasswordVCAction> {
+final class PasswordViewModel: BaseViewModel<PasswordState, PasswordAction> {
+    // TODO: Add view model logic
+}
+
+final class PasswordViewController: BaseViewController<PasswordState, PasswordAction, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel()
@@ -10,7 +14,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapEmailLoginLink(email: email))
+        self?.viewModel.perform(action: .didTapEmailLoginLink(email: email))
     }
 
     private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
@@ -70,7 +74,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapForgotPassword(email: email))
+        self?.viewModel.perform(action: .didTapForgotPassword(email: email))
     }
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
@@ -79,20 +83,20 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapEmailLoginLink(email: email))
+        self?.viewModel.perform(action: .didTapEmailLoginLink(email: email))
     }
 
     private var strengthCheckWorkItem: DispatchWorkItem?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configureView() {
+        super.configureView()
 
         emailInput.textInput.placeholder = nil
         continueButton.isEnabled = false
         forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
-            switch self?.state.intent {
+            switch self?.viewModel.state.intent {
             case .enterNewPassword, .signup:
                 self?.setNeedsStrengthCheck()
             case .none, .login:
@@ -125,7 +129,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         passwordInput.textInput.becomeFirstResponder()
     }
 
-    override func stateDidUpdate(state: State) {
+    override func update(state: State) {
         emailLoginLinkPrimaryButton.isHidden = true
         upperSeparator.isHidden = true
         finishCreatingLabel.isHidden = true
@@ -200,13 +204,13 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     private func submit() {
         guard let email = emailInput.text, let password = passwordInput.text else { return }
 
-        switch state.intent {
+        switch viewModel.state.intent {
         case let .enterNewPassword(token):
-            perform(action: .didTapSetPassword(token: token, password: password))
+            viewModel.perform(action: .didTapSetPassword(token: token, password: password))
         case .login:
-            perform(action: .didTapLogin(email: email, password: password))
+            viewModel.perform(action: .didTapLogin(email: email, password: password))
         case .signup:
-            perform(action: .didTapSignup(email: email, password: password))
+            viewModel.perform(action: .didTapSignup(email: email, password: password))
         }
     }
 
@@ -257,7 +261,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     }
 }
 
-struct PasswordVCState {
+struct PasswordState: BaseState {
     enum Intent {
         case signup
         case login
@@ -269,7 +273,7 @@ struct PasswordVCState {
     let magicLinksEnabled: Bool
 }
 
-enum PasswordVCAction {
+enum PasswordAction: BaseAction {
     case didTapEmailLoginLink(email: String)
     case didTapLogin(email: String, password: String)
     case didTapSignup(email: String, password: String)

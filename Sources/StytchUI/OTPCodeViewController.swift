@@ -1,6 +1,10 @@
 import UIKit
 
-final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
+final class OTPCodeViewModel: BaseViewModel<OTPState, OTPAction> {
+    // TODO: Add view model logic
+}
+
+final class OTPCodeViewController: BaseViewController<OTPState, OTPAction, OTPCodeViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
@@ -35,8 +39,8 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
 
     private var timer: Timer?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configureView() {
+        super.configureView()
 
         stackView.spacing = .spacingLarge
 
@@ -57,17 +61,16 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
         codeInput.onTextChanged = { [weak self] isValid in
             guard let self, let code = self.codeInput.text, isValid else { return }
 
-            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
+            viewModel.perform(action: .didEnterCode(code, methodId: viewModel.state.methodId, controller: self))
         }
 
         codeInput.onReturn = { [weak self] isValid in
             guard let self, let code = self.codeInput.text, isValid else { return }
-
-            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
+            viewModel.perform(action: .didEnterCode(code, methodId: viewModel.state.methodId, controller: self))
         }
     }
 
-    override func stateDidUpdate(state: State) {
+    override func update(state: State) {
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
             string: state.formattedPhoneNumber,
@@ -91,8 +94,8 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     @objc private func updateExiryText() {
         guard
             case let currentDate = Date(),
-            state.codeExpiry > currentDate,
-            let dateString = dateFormatter.string(from: currentDate, to: state.codeExpiry)
+            viewModel.state.codeExpiry > currentDate,
+            let dateString = dateFormatter.string(from: currentDate, to: viewModel.state.codeExpiry)
         else {
             expiryButton.setAttributedTitle(
                 expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
@@ -109,14 +112,14 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     }
 
     private func resendCode() {
-        perform(action: .didTapResendCode(phone: state.phoneNumberE164, controller: self))
+        viewModel.perform(action: .didTapResendCode(phone: viewModel.state.phoneNumberE164, controller: self))
     }
 
     private func presentCodeResetConfirmation() {
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), state.formattedPhoneNumber
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedPhoneNumber
             ),
             preferredStyle: .alert
         )
@@ -136,12 +139,12 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     }
 }
 
-enum OTPVCAction {
+enum OTPAction: BaseAction {
     case didTapResendCode(phone: String, controller: OTPCodeViewController)
     case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
 }
 
-struct OTPVCState {
+struct OTPState: BaseState {
     let phoneNumberE164: String
     let formattedPhoneNumber: String
     let methodId: String

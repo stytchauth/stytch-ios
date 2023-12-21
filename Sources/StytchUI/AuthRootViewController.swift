@@ -118,7 +118,7 @@ extension AuthRootViewController: ActionDelegate {
 }
 
 private extension AuthRootViewController {
-    func handle(inputAction: AuthInputVCAction) async throws {
+    func handle(inputAction: AuthInputAction) async throws {
         switch inputAction {
         case let .didTapContinueEmail(email):
             if config.magicLink != nil, let password = config.password {
@@ -163,7 +163,7 @@ private extension AuthRootViewController {
         }
     }
 
-    func handle(oauthAction: OAuthVCAction) async throws {
+    func handle(oauthAction: OAuthAction) async throws {
         guard let oauth = config.oauth else { return }
         let response: AuthenticateResponse
 
@@ -182,7 +182,7 @@ private extension AuthRootViewController {
         }
     }
 
-    func handle(passwordAction: PasswordVCAction) async throws {
+    func handle(passwordAction: PasswordAction) async throws {
         let response: AuthenticateResponse
 
         switch passwordAction {
@@ -213,7 +213,7 @@ private extension AuthRootViewController {
         }
     }
 
-    func handle(otpAction: OTPVCAction) async throws {
+    func handle(otpAction: OTPAction) async throws {
         let response: AuthenticateResponse
 
         switch otpAction {
@@ -238,7 +238,7 @@ private extension AuthRootViewController {
         }
     }
 
-    func handle(aiAction: AIVCAction) async throws {
+    func handle(aiAction: ActionableInfoAction) async throws {
         switch aiAction {
         case let .didTapCreatePassword(email):
             try await handle(passwordAction: .didTapForgotPassword(email: email))
@@ -284,7 +284,7 @@ private extension AuthRootViewController {
 }
 
 private extension UserSearchResponse.UserType {
-    var passwordIntent: PasswordVCState.Intent? {
+    var passwordIntent: PasswordState.Intent? {
         switch self {
         case .new:
             return .signup

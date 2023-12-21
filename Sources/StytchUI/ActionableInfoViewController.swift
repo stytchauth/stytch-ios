@@ -1,6 +1,10 @@
 import UIKit
 
-final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCAction> {
+final class ActionableInfoViewModel: BaseViewModel<ActionableInfoState, ActionableInfoAction> {
+
+}
+
+final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoAction, ActionableInfoViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
@@ -41,7 +45,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         stackView.addArrangedSubview(infoLabel)
         stackView.addArrangedSubview(retryButton)
 
-        if let secondaryAction = state.secondaryAction {
+        if let secondaryAction = viewModel.state.secondaryAction {
             stackView.addArrangedSubview(separatorView)
             stackView.setCustomSpacing(38, after: separatorView)
             secondaryActionButton.setTitle(secondaryAction.title, for: .normal)
@@ -57,7 +61,7 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         )
     }
 
-    override func stateDidUpdate(state: State) {
+    override func update(state: State) {
         titleLabel.text = state.title
         let (info, action) = attrStrings(state: state)
         infoLabel.attributedText = info
@@ -68,14 +72,14 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), state.email
+                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel.state.email
             ),
             preferredStyle: .alert
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
         controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
             Task { @MainActor in
-                try await self?.state.retryAction()
+                try await self?.viewModel.state.retryAction()
             }
         })
         controller.view.tintColor = .primaryText
@@ -83,11 +87,11 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
     }
 
     @objc private func didTapSecondaryAction(sender _: UIButton) {
-        guard let (_, action) = state.secondaryAction else { return }
-        perform(action: action)
+        guard let (_, action) = viewModel.state.secondaryAction else { return }
+        viewModel.perform(action: action)
     }
 
-    private func attrStrings(state: AIVCState) -> (info: NSAttributedString, action: NSAttributedString) {
+    private func attrStrings(state: ActionableInfoState) -> (info: NSAttributedString, action: NSAttributedString) {
         let transformer: ([AttrStringComponent]) -> NSAttributedString = { components in
             components.reduce(into: NSMutableAttributedString(string: "")) { partial, next in
                 switch next {
@@ -104,21 +108,21 @@ final class ActionableInfoViewController: BaseViewController<AIVCState, AIVCActi
     }
 }
 
-struct AIVCState {
+struct ActionableInfoState: BaseState {
     let email: String
     let title: String
     let infoComponents: [AttrStringComponent]
     let actionComponents: [AttrStringComponent]
-    let secondaryAction: (title: String, action: AIVCAction)?
+    let secondaryAction: (title: String, action: ActionableInfoAction)?
     let retryAction: RetryAction
 }
 
-enum AIVCAction {
+enum ActionableInfoAction: BaseAction {
     case didTapCreatePassword(email: String)
     case didTapLoginWithoutPassword(email: String)
 }
 
-extension AIVCState {
+extension ActionableInfoState {
     typealias RetryAction = () async throws -> Void
     static func forgotPassword(email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
