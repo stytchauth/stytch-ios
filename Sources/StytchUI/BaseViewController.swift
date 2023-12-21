@@ -1,16 +1,23 @@
 import UIKit
 
-class BaseViewController<VCState, VCAction>: UIViewController {
-    typealias State = VCState
-    typealias Action = VCAction
+protocol BaseViewState {}
 
-    private let actionTransformer: (Action) -> AuthHomeAction
+protocol BaseViewAction {}
 
-    var state: State {
-        didSet {
-            stateDidUpdate(state: state)
-        }
-    }
+protocol BaseViewControllerProtocol {
+    associatedtype State
+    associatedtype Action
+    associatedtype ViewModel
+
+    var stackView: UIStackView { get }
+    var viewModel: ViewModel { get }
+
+    func configureView()
+}
+
+class BaseViewController<State: BaseViewState, Action: BaseViewAction, ViewModel: BaseViewModel<State, Action>>: UIViewController, BaseViewControllerProtocol {
+
+    var viewModel: ViewModel
 
     private(set) lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -20,15 +27,6 @@ class BaseViewController<VCState, VCAction>: UIViewController {
         return view
     }()
 
-    init(state: State, actionTransformer: @escaping (Action) -> AuthHomeAction) {
-        self.state = state
-        self.actionTransformer = actionTransformer
-
-        super.init(nibName: nil, bundle: nil)
-
-        stateDidUpdate(state: state)
-    }
-
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -36,7 +34,10 @@ class BaseViewController<VCState, VCAction>: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureView()
+    }
 
+    func configureView() {
         view.backgroundColor = .background
         view.layoutMargins = .default
     }
@@ -61,33 +62,5 @@ class BaseViewController<VCState, VCAction>: UIViewController {
                 stackView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
             ])
         }
-    }
-
-    final func perform(action: Action) {
-        willPerform(action: action)
-        actionDelegate?.handle(action: actionTransformer(action))
-    }
-
-    func willPerform(action _: Action) {}
-
-    func stateDidUpdate(state _: State) {}
-}
-
-protocol ActionDelegate: AnyObject {
-    func handle(action: AuthHomeAction)
-}
-
-extension UIResponder {
-    var actionDelegate: ActionDelegate? {
-        if let delegate = next as? ActionDelegate {
-            return delegate
-        }
-        return next?.actionDelegate
-    }
-}
-
-extension BaseViewController where State == Empty {
-    convenience init(_ state: State = .init(), actionTransformer: @escaping (Action) -> AuthHomeAction) {
-        self.init(state: state, actionTransformer: actionTransformer)
     }
 }
