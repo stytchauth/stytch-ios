@@ -28,7 +28,8 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     }
     
     func enterCode(code: String, methodId: String) async throws {
-        _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+        let response = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+        StytchUIClient.onAuthCallback?(response)
     }
 }
 

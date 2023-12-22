@@ -64,10 +64,6 @@ final class AuthRootViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
     }
 
-    private func handleAuthenticationSuccess(response: AuthenticateResponse) {
-        onAuthCallback?(response)
-    }
-
     private func render(bootstrap: Bootstrap) {
         let homeController = AuthHomeViewController(
             state: .init(bootstrap: bootstrap, config: config)

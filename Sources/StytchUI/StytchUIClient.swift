@@ -15,6 +15,8 @@ public enum StytchUIClient {
 
     fileprivate static var config: Configuration?
 
+    static var onAuthCallback: AuthCallback?
+
     private static var cancellable: AnyCancellable?
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
@@ -24,14 +26,15 @@ public enum StytchUIClient {
         onAuthCallback: AuthCallback? = nil
     ) {
         Self.config = config
-        let rootController = AuthRootViewController(config: config, onAuthCallback: onAuthCallback)
+        Self.onAuthCallback = onAuthCallback
+        let rootController = AuthRootViewController(config: config)
         currentController = rootController
         setUpSessionChangeListener()
         controller.present(rootController, animated: true)
     }
 
     /// Use this function to handle incoming deeplinks for password resets. If presenting from SwiftUI, ensure the sheet is presented before calling this handler. You can use `StytchClient.canHandle(url:)` to determine if you should present the SwiftUI sheet before calling this handler.
-    public static func handle(url: URL, from controller: UIViewController? = nil, onAuthCallback: AuthCallback? = nil) -> Bool {
+    public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         Task { @MainActor in
             switch try await StytchClient.handle(url: url) {
             case .handled, .notHandled:
@@ -41,7 +44,7 @@ public enum StytchUIClient {
                 if let currentController {
                     currentController.handlePasswordReset(token: token, email: email)
                 } else if let config {
-                    let rootController = AuthRootViewController(config: config, onAuthCallback: onAuthCallback)
+                    let rootController = AuthRootViewController(config: config)
                     currentController = rootController
                     setUpSessionChangeListener()
                     controller?.present(rootController, animated: true)
@@ -72,7 +75,8 @@ public extension View {
     ) -> some View {
         sheet(isPresented: isPresented) {
             StytchUIClient.config = config
-            return AuthenticationView(config: config, onAuthCallback: onAuthCallback)
+            StytchUIClient.onAuthCallback = onAuthCallback
+            return AuthenticationView(config: config)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }
@@ -238,10 +242,9 @@ struct AuthenticationView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
 
     let config: StytchUIClient.Configuration
-    let onAuthCallback: AuthCallback?
 
     func makeUIViewController(context _: Context) -> UIViewController {
-        let controller = AuthRootViewController(config: config, onAuthCallback: onAuthCallback)
+        let controller = AuthRootViewController(config: config)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
         return controller

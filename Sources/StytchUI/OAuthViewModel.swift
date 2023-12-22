@@ -16,12 +16,14 @@ extension OAuthViewModel: OAuthViewModelProtocol {
     func startOAuth(provider: StytchUIClient.Configuration.OAuth.Provider) async throws {
         switch provider {
         case .apple:
-            _ = try await StytchClient.oauth.apple.start(parameters: .init(sessionDuration: sessionDuration))
+            let response = try await StytchClient.oauth.apple.start(parameters: .init(sessionDuration: sessionDuration))
+            StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
             let (token, _) = try await provider.client.start(
                 parameters: .init(loginRedirectUrl: state.config.oauth!.loginRedirectUrl, signupRedirectUrl: state.config.oauth!.signupRedirectUrl)
             )
-            _ = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+            let response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+            StytchUIClient.onAuthCallback?(response)
         }
     }
 }

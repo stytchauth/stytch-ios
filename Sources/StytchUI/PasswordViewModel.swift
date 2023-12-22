@@ -24,7 +24,8 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
     
     func setPassword(token: String, password: String) async throws {
-        _ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
+        let response = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
+        StytchUIClient.onAuthCallback?(response)
     }
     
     func signup(email: String, password: String) async throws {
@@ -32,7 +33,8 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
     
     func login(email: String, password: String) async throws {
-        _ = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        StytchUIClient.onAuthCallback?(response)
     }
     
     func loginWithEmail(email: String) async throws {
