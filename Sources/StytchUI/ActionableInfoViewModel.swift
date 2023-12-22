@@ -163,14 +163,6 @@ private extension ActionableInfoViewModel {
     }
 }
 
-private extension String {
-    static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
-    static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
-    static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
-    static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
-    static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
-}
-
 extension [AttrStringComponent] {
     static var didntGetItResendEmail: Self {
         [
@@ -178,4 +170,12 @@ extension [AttrStringComponent] {
             .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
         ]
     }
+}
+
+private extension String {
+    static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
+    static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
+    static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
+    static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
+    static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
 }
