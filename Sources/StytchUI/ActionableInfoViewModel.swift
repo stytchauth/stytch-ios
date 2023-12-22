@@ -13,10 +13,13 @@ protocol ActionableInfoViewModelProtocol {
 
 final class ActionableInfoViewModel {
     let state: ActionableInfoState
-    let delegate: ActionableInfoViewModelDelegate
+    var delegate: ActionableInfoViewModelDelegate?
 
-    init(state: ActionableInfoState, delegate: ActionableInfoViewModelDelegate) {
+    init(state: ActionableInfoState) {
         self.state = state
+    }
+
+    func setDelegate(delegate: ActionableInfoViewModelDelegate) {
         self.delegate = delegate
     }
 }
@@ -27,7 +30,7 @@ extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
         let params = params(email: email, magicLink: magicLink)
         _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
         DispatchQueue.main.async {
-            self.delegate.launchCheckYourEmail(email: email)
+            self.delegate?.launchCheckYourEmail(email: email)
         }
     }
     
@@ -37,7 +40,7 @@ extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
         let params = params(email: email, password: password)
         _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
         DispatchQueue.main.async {
-            self.delegate.launchForgotPassword(email: email)
+            self.delegate?.launchForgotPassword(email: email)
         }
     }
 }

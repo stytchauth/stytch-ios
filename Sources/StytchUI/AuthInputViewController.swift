@@ -54,9 +54,10 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         }
     }
 
-    init(state: AuthInputState, navController: UINavigationController?) {
-        super.init(navController: navController)
-        self.viewModel = AuthInputViewModel(state: state, delegate: self)
+    init(state: AuthInputState) {
+        let viewModel = AuthInputViewModel(state: state)
+        super.init(viewModel: viewModel)
+        viewModel.setDelegate(delegate: self)
     }
 
     override func configureView() {
@@ -64,11 +65,11 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
         view.layoutMargins = .zero
 
-        if viewModel!.state.config.sms != nil, viewModel!.state.config.magicLink == nil, viewModel!.state.config.password == nil {
+        if viewModel.state.config.sms != nil, viewModel.state.config.magicLink == nil, viewModel.state.config.password == nil {
             stackView.addArrangedSubview(phoneNumberInput)
             activeInput = .phone
         } else {
-            if viewModel!.state.config.sms != nil {
+            if viewModel.state.config.sms != nil {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
                 stackView.addArrangedSubview(segmentedControl)
 
@@ -146,13 +147,13 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         case .email:
             Task {
                 do {
-                    try await viewModel!.continueWithEmail(email: emailInput.text ?? "")
+                    try await viewModel.continueWithEmail(email: emailInput.text ?? "")
                 } catch {}
             }
         case .phone:
             Task {
                 do {
-                    try await viewModel!.continueWithPhone(
+                    try await viewModel.continueWithPhone(
                         phone: phoneNumberInput.phoneNumberE164 ?? "",
                         formattedPhone: phoneNumberInput.formattedPhoneNumber ?? ""
                     )
@@ -165,43 +166,39 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 extension AuthInputViewController: AuthInputViewModelDelegate {
     func launchCheckYourEmailResetReturning(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmailResetReturning(config: viewModel!.state.config, email: email, retryAction: {
+            state: .checkYourEmailResetReturning(config: viewModel.state.config, email: email, retryAction: {
 
-            }),
-            navController: navController
+            })
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool) {
         let controller = PasswordViewController(
-            state: .init(config: viewModel!.state.config, intent: intent, email: email, magicLinksEnabled: magicLinksEnabled),
-            navController: navController
+            state: .init(config: viewModel.state.config, intent: intent, email: email, magicLinksEnabled: magicLinksEnabled)
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {
+            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {
 
-            }),
-            navController: navController
+            })
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date) {
         let controller = OTPCodeViewController(
             state: .init(
-                config: viewModel!.state.config,
+                config: viewModel.state.config,
                 phoneNumberE164: phone,
                 formattedPhoneNumber: formattedPhone,
                 methodId: result.methodId,
                 codeExpiry: expiry
-            ),
-            navController: navController
+            )
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }

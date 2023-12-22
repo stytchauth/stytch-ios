@@ -38,8 +38,7 @@ struct StytchUI_Previews: PreviewProvider {
                 ),
                 email: "dan@stytch.com",
                 retryAction: {}
-            ),
-            navController: UINavigationController()
+            )
         )
             .inNavigationController()
             .toControllerView()
@@ -63,8 +62,7 @@ struct StytchUI_Previews: PreviewProvider {
                 intent: .enterNewPassword(token: ""),
                 email: "dan.loman@gmail.com",
                 magicLinksEnabled: false
-            ),
-            navController: UINavigationController()
+            )
         )
             .inNavigationController()
             .toControllerView()
@@ -89,8 +87,7 @@ struct StytchUI_Previews: PreviewProvider {
                 formattedPhoneNumber: "(888) 888-8888",
                 methodId: "",
                 codeExpiry: .init().advanced(by: 120)
-            ),
-            navController: UINavigationController()
+            )
         )
             .inNavigationController()
             .toControllerView()

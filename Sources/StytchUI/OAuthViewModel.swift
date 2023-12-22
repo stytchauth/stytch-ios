@@ -7,11 +7,14 @@ protocol OAuthViewModelProtocol {
 }
 
 final class OAuthViewModel {
-    var state: OAuthState
-    let delegate: OAuthViewModelDelegate
+    let state: OAuthState
+    var delegate: OAuthViewModelDelegate?
 
-    init(state: OAuthState, delegate: OAuthViewModelDelegate) {
+    init(state: OAuthState) {
         self.state = state
+    }
+
+    func setDelegate(delegate: OAuthViewModelDelegate) {
         self.delegate = delegate
     }
 }

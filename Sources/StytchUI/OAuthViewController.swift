@@ -4,9 +4,10 @@ import UIKit
 
 final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> {
 
-    init(state: OAuthState, navController: UINavigationController?) {
-        super.init(navController: navController)
-        self.viewModel = OAuthViewModel(state: state, delegate: self)
+    init(state: OAuthState) {
+        let viewModel = OAuthViewModel(state: state)
+        super.init(viewModel: viewModel)
+        viewModel.setDelegate(delegate: self)
     }
 
     override func configureView() {
@@ -14,7 +15,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
 
         view.layoutMargins = .zero
 
-        viewModel!.state.config.oauth?.providers.enumerated().forEach { index, provider in
+        viewModel.state.config.oauth?.providers.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -29,10 +30,10 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = viewModel!.state.config.oauth?.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        guard let (_, provider) = viewModel.state.config.oauth?.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         Task {
             do {
-                try await viewModel!.startOAuth(provider: provider)
+                try await viewModel.startOAuth(provider: provider)
             } catch {}
         }
     }

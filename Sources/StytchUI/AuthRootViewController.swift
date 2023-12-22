@@ -6,8 +6,6 @@ import UIKit
 final class AuthRootViewController: UIViewController {
     private let config: StytchUIClient.Configuration
 
-    private var navController: UINavigationController?
-
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
 
     private var onAuthCallback: AuthCallback?
@@ -57,10 +55,9 @@ final class AuthRootViewController: UIViewController {
                 intent: .enterNewPassword(token: token),
                 email: email,
                 magicLinksEnabled: false
-            ),
-            navController: navController
+            )
         )
-        navController?.pushViewController(controller, animated: animated)
+        navigationController?.pushViewController(controller, animated: animated)
     }
 
     @objc func dismissAuth() {
@@ -73,8 +70,7 @@ final class AuthRootViewController: UIViewController {
 
     private func render(bootstrap: Bootstrap) {
         let homeController = AuthHomeViewController(
-            state: .init(bootstrap: bootstrap, config: config),
-            navController: navController
+            state: .init(bootstrap: bootstrap, config: config)
         )
         if let closeButton = config.navigation?.closeButtonStyle {
             let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
@@ -87,7 +83,6 @@ final class AuthRootViewController: UIViewController {
             homeController[keyPath: keyPath] = .init(barButtonSystemItem: closeButton.barButtonSystemItem, target: self, action: #selector(dismissAuth))
         }
         let navigationController = UINavigationController(rootViewController: homeController)
-        navController = navigationController
         navigationController.navigationBar.tintColor = .primaryText
         navigationController.navigationBar.barTintColor = .background
         navigationController.navigationBar.shadowImage = .init()

@@ -15,10 +15,13 @@ protocol AuthInputViewModelProtocol {
 
 final class AuthInputViewModel {
     let state: AuthInputState
-    let delegate: AuthInputViewModelDelegate
+    var delegate: AuthInputViewModelDelegate?
 
-    init(state: AuthInputState, delegate: AuthInputViewModelDelegate) {
+    init(state: AuthInputState) {
         self.state = state
+    }
+
+    func setDelegate(delegate: AuthInputViewModelDelegate) {
         self.delegate = delegate
     }
 }
@@ -30,17 +33,19 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
             guard let intent = userSearch.userType.passwordIntent else {
                 let params = params(email: email, password: password)
                 _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
-                delegate.launchCheckYourEmailResetReturning(email: email)
+                DispatchQueue.main.async {
+                    self.delegate?.launchCheckYourEmailResetReturning(email: email)
+                }
                 return
             }
             DispatchQueue.main.async {
-                self.delegate.launchPassword(intent: intent, email: email, magicLinksEnabled: self.state.config.magicLink != nil)
+                self.delegate?.launchPassword(intent: intent, email: email, magicLinksEnabled: self.state.config.magicLink != nil)
             }
         } else if let magicLink = state.config.magicLink {
             let parameters = params(email: email, magicLink: magicLink)
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
             DispatchQueue.main.async {
-                self.delegate.launchCheckYourEmail(email: email)
+                self.delegate?.launchCheckYourEmail(email: email)
             }
         }
     }
@@ -49,7 +54,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
         let expiry = Date().addingTimeInterval(120)
         let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
         DispatchQueue.main.async {
-            self.delegate.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
+            self.delegate?.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
         }
     }
 }

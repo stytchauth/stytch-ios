@@ -5,15 +5,13 @@ protocol BaseViewControllerProtocol {
 
     var stackView: UIStackView { get }
     var viewModel: ViewModel { get }
-    var navController: UINavigationController? { get }
 
     func configureView()
 }
 
 class BaseViewController<State, ViewModel>: UIViewController, BaseViewControllerProtocol {
 
-    var navController: UINavigationController?
-    var viewModel: ViewModel?
+    var viewModel: ViewModel
 
     private(set) lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -23,8 +21,8 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         return view
     }()
 
-    init(navController: UINavigationController?) {
-        self.navController = navController
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 

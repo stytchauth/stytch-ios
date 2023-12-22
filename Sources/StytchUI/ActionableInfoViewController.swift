@@ -29,9 +29,10 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         return button
     }()
 
-    init(state: ActionableInfoState, navController: UINavigationController?) {
-        super.init(navController: navController)
-        self.viewModel = ActionableInfoViewModel(state: state, delegate: self)
+    init(state: ActionableInfoState) {
+        let viewModel = ActionableInfoViewModel(state: state)
+        super.init(viewModel: viewModel)
+        viewModel.setDelegate(delegate: self)
     }
 
     override func configureView() {
@@ -46,7 +47,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         stackView.addArrangedSubview(infoLabel)
         stackView.addArrangedSubview(retryButton)
 
-        if let secondaryAction = viewModel!.state.secondaryAction {
+        if let secondaryAction = viewModel.state.secondaryAction {
             stackView.addArrangedSubview(separatorView)
             stackView.setCustomSpacing(38, after: separatorView)
             secondaryActionButton.setTitle(secondaryAction.title, for: .normal)
@@ -61,8 +62,8 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        titleLabel.text = viewModel!.state.title
-        let (info, action) = attrStrings(state: viewModel!.state)
+        titleLabel.text = viewModel.state.title
+        let (info, action) = attrStrings(state: viewModel.state)
         infoLabel.attributedText = info
         retryButton.setAttributedTitle(action, for: .normal)
     }
@@ -71,14 +72,14 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel!.state.email
+                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel.state.email
             ),
             preferredStyle: .alert
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
         controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
             Task { @MainActor in
-                try await self?.viewModel!.state.retryAction()
+                try await self?.viewModel.state.retryAction()
             }
         })
         controller.view.tintColor = .primaryText
@@ -86,18 +87,18 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 
     @objc private func didTapSecondaryAction(sender _: UIButton) {
-        guard let (_, action) = viewModel!.state.secondaryAction else { return }
+        guard let (_, action) = viewModel.state.secondaryAction else { return }
         switch action {
         case .didTapCreatePassword(email: let email):
             Task {
                 do {
-                    try await self.viewModel!.forgotPassword(email: email)
+                    try await self.viewModel.forgotPassword(email: email)
                 } catch {}
             }
         case .didTapLoginWithoutPassword(email: let email):
             Task {
                 do {
-                    try await self.viewModel!.loginWithoutPassword(email: email)
+                    try await self.viewModel.loginWithoutPassword(email: email)
                 } catch {}
             }
         }
@@ -123,30 +124,28 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
 extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {
+            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {
                 Task {
                     do {
-                        try await self.viewModel!.loginWithoutPassword(email: email)
+                        try await self.viewModel.loginWithoutPassword(email: email)
                     } catch {}
                 }
-            }),
-            navController: navController
+            })
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel!.state.config, email: email, retryAction: {
+            state: .forgotPassword(config: viewModel.state.config, email: email, retryAction: {
                 Task {
                     do {
-                        try await self.viewModel!.forgotPassword(email: email)
+                        try await self.viewModel.forgotPassword(email: email)
                     } catch {}
                 }
-            }),
-            navController: navController
+            })
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

@@ -17,10 +17,13 @@ protocol PasswordViewModelProtocol {
 
 final class PasswordViewModel {
     let state: PasswordState
-    let delegate: PasswordViewModelDelegate
+    var delegate: PasswordViewModelDelegate?
 
-    init(state: PasswordState, delegate: PasswordViewModelDelegate) {
+    init(state: PasswordState) {
         self.state = state
+    }
+
+    func setDelegate(delegate: PasswordViewModelDelegate) {
         self.delegate = delegate
     }
 }
@@ -47,7 +50,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
         let params = params(email: email, magicLink: magicLink)
         _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
         DispatchQueue.main.async {
-            self.delegate.launchCheckYourEmail(email: email)
+            self.delegate?.launchCheckYourEmail(email: email)
         }
     }
 
@@ -57,7 +60,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
         let params = params(email: email, password: password)
         _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
         DispatchQueue.main.async {
-            self.delegate.launchForgotPassword(email: email)
+            self.delegate?.launchForgotPassword(email: email)
         }
     }
 }

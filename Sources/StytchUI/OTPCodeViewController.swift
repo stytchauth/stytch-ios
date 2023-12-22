@@ -35,9 +35,10 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
     private var timer: Timer?
 
-    init(state: OTPCodeState, navController: UINavigationController?) {
-        super.init(navController: navController)
-        self.viewModel = OTPCodeViewModel(state: state, delegate: self)
+    init(state: OTPCodeState) {
+        let viewModel = OTPCodeViewModel(state: state)
+        super.init(viewModel: viewModel)
+        viewModel.setDelegate(delegate: self)
     }
 
     override func configureView() {
@@ -63,7 +64,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             guard let self, let code = self.codeInput.text, isValid else { return }
             Task {
                 do {
-                    try await self.viewModel!.enterCode(code: code, methodId: self.viewModel!.state.methodId)
+                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
                 } catch {}
             }
         }
@@ -72,14 +73,14 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             guard let self, let code = self.codeInput.text, isValid else { return }
             Task {
                 do {
-                    try await self.viewModel!.enterCode(code: code, methodId: self.viewModel!.state.methodId)
+                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
                 } catch {}
             }
         }
 
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
-            string: viewModel!.state.formattedPhoneNumber,
+            string: viewModel.state.formattedPhoneNumber,
             attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
         )
         attributedText.append(attributedPhone)
@@ -92,8 +93,8 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     @objc private func updateExiryText() {
         guard
             case let currentDate = Date(),
-            viewModel!.state.codeExpiry > currentDate,
-            let dateString = dateFormatter.string(from: currentDate, to: viewModel!.state.codeExpiry)
+            viewModel.state.codeExpiry > currentDate,
+            let dateString = dateFormatter.string(from: currentDate, to: viewModel.state.codeExpiry)
         else {
             expiryButton.setAttributedTitle(
                 expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
@@ -112,7 +113,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     private func resendCode() {
         Task {
             do {
-                try await viewModel!.resendCode(phone: viewModel!.state.phoneNumberE164)
+                try await viewModel.resendCode(phone: viewModel.state.phoneNumberE164)
             } catch {}
         }
     }
@@ -121,7 +122,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel!.state.formattedPhoneNumber
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedPhoneNumber
             ),
             preferredStyle: .alert
         )

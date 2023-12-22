@@ -11,7 +11,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         guard let email = self?.emailInput.text else { return }
         Task {
             do {
-                try await self?.viewModel!.loginWithEmail(email: email)
+                try await self?.viewModel.loginWithEmail(email: email)
             } catch {}
         }
     }
@@ -75,7 +75,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         guard let email = self?.emailInput.text else { return }
         Task {
             do {
-                try await self?.viewModel!.forgotPassword(email: email)
+                try await self?.viewModel.forgotPassword(email: email)
             } catch {}
         }
     }
@@ -88,16 +88,17 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         guard let email = self?.emailInput.text else { return }
         Task {
             do {
-                try await self?.viewModel!.loginWithEmail(email: email)
+                try await self?.viewModel.loginWithEmail(email: email)
             } catch {}
         }
     }
 
     private var strengthCheckWorkItem: DispatchWorkItem?
 
-    init(state: PasswordState, navController: UINavigationController?) {
-        super.init(navController: navController)
-        self.viewModel = PasswordViewModel(state: state, delegate: self)
+    init(state: PasswordState) {
+        let viewModel = PasswordViewModel(state: state)
+        super.init(viewModel: viewModel)
+        viewModel.setDelegate(delegate: self)
     }
 
     override func configureView() {
@@ -108,7 +109,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
-            switch self?.viewModel!.state.intent {
+            switch self?.viewModel.state.intent {
             case .enterNewPassword, .signup:
                 self?.setNeedsStrengthCheck()
             case .none, .login:
@@ -149,13 +150,13 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         emailLoginLinkPrimaryButton.isHidden = true
         passwordInput.progressBar.isHidden = true
 
-        emailInput.textInput.text = viewModel!.state.email
+        emailInput.textInput.text = viewModel.state.email
         emailInput.isEnabled = true
         passwordInput.textInput.textContentType = .newPassword
 
-        switch viewModel!.state.intent {
+        switch viewModel.state.intent {
         case .signup:
-            if viewModel!.state.magicLinksEnabled {
+            if viewModel.state.magicLinksEnabled {
                 titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
                 emailLoginLinkPrimaryButton.isHidden = false
                 upperSeparator.isHidden = false
@@ -173,7 +174,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false
-            if viewModel!.state.magicLinksEnabled {
+            if viewModel.state.magicLinksEnabled {
                 lowerSeparator.isHidden = false
                 emailLoginLinkTertiaryButton.isHidden = false
             }
@@ -214,23 +215,23 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     private func submit() {
         guard let email = emailInput.text, let password = passwordInput.text else { return }
 
-        switch viewModel!.state.intent {
+        switch viewModel.state.intent {
         case let .enterNewPassword(token):
             Task {
                 do {
-                    try await viewModel!.setPassword(token: token, password: password)
+                    try await viewModel.setPassword(token: token, password: password)
                 } catch {}
             }
         case .login:
             Task {
                 do {
-                    try await viewModel!.login(email: email, password: password)
+                    try await viewModel.login(email: email, password: password)
                 } catch {}
             }
         case .signup:
             Task {
                 do {
-                    try await viewModel!.signup(email: email, password: password)
+                    try await viewModel.signup(email: email, password: password)
                 } catch {}
             }
         }
@@ -267,7 +268,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         Task { @MainActor in
             do {
                 let email = emailInput.text == .redactedEmail ? nil : emailInput.text
-                let response = try await viewModel!.checkStrength(email: email, password: password)
+                let response = try await viewModel.checkStrength(email: email, password: password)
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {
@@ -286,18 +287,16 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
 extension PasswordViewController: PasswordViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {}),
-            navController: navController
+            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {})
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel!.state.config, email: email, retryAction: {}),
-            navController: navController
+            state: .forgotPassword(config: viewModel.state.config, email: email, retryAction: {})
         )
-        navController?.pushViewController(controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
