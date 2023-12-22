@@ -2,17 +2,13 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class OAuthViewModel: BaseViewModel<OAuthState, OAuthAction> {
-    // TODO: Add view model logic
-}
-
-final class OAuthViewController: BaseViewController<OAuthState, OAuthAction, OAuthViewModel> {
+final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModelDelegate, OAuthViewModel> {
     override func configureView() {
         super.configureView()
 
         view.layoutMargins = .zero
 
-        viewModel.state.oauth.providers.enumerated().forEach { index, provider in
+        viewModel.state.config.oauth.providers.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -27,7 +23,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthAction, OAu
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = viewModel.state.oauth.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        guard let (_, provider) = viewModel.state.config.oauth.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         viewModel.perform(action: .didTap(provider: provider))
     }
 }
@@ -67,10 +63,10 @@ private extension OAuthViewController {
 }
 
 struct OAuthState: BaseState {
-    let oauth: StytchUIClient.Configuration.OAuth
+    var config: StytchUIClient.Configuration
 }
 
-enum OAuthAction: BaseAction {
+enum OAuthAction {
     case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
 }
 

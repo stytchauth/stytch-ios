@@ -1,10 +1,6 @@
 import UIKit
 
-final class OTPCodeViewModel: BaseViewModel<OTPState, OTPAction> {
-    // TODO: Add view model logic
-}
-
-final class OTPCodeViewController: BaseViewController<OTPState, OTPAction, OTPCodeViewModel> {
+final class OTPCodeViewController: BaseViewController<OTPState, OTPCodeViewModelDelegate, OTPCodeViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
@@ -139,12 +135,14 @@ final class OTPCodeViewController: BaseViewController<OTPState, OTPAction, OTPCo
     }
 }
 
-enum OTPAction: BaseAction {
+enum OTPAction {
     case didTapResendCode(phone: String, controller: OTPCodeViewController)
     case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
 }
 
 struct OTPState: BaseState {
+    var config: StytchUIClient.Configuration
+    
     let phoneNumberE164: String
     let formattedPhoneNumber: String
     let methodId: String

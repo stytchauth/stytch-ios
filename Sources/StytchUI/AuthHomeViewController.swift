@@ -1,10 +1,6 @@
 import UIKit
 
-final class AuthHomeViewModel: BaseViewModel<AuthHomeState, AuthHomeAction> {
-    // TODO: Add view model logic
-}
-
-final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAction, AuthHomeViewModel> {
+final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeViewModelDelegate, AuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(

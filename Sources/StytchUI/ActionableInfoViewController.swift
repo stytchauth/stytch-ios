@@ -1,10 +1,6 @@
 import UIKit
 
-final class ActionableInfoViewModel: BaseViewModel<ActionableInfoState, ActionableInfoAction> {
-
-}
-
-final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoAction, ActionableInfoViewModel> {
+final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoViewModelDelegate, ActionableInfoViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
@@ -109,6 +105,8 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
 }
 
 struct ActionableInfoState: BaseState {
+    var config: StytchUIClient.Configuration
+    
     let email: String
     let title: String
     let infoComponents: [AttrStringComponent]
@@ -117,7 +115,7 @@ struct ActionableInfoState: BaseState {
     let retryAction: RetryAction
 }
 
-enum ActionableInfoAction: BaseAction {
+enum ActionableInfoAction {
     case didTapCreatePassword(email: String)
     case didTapLoginWithoutPassword(email: String)
 }

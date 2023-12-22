@@ -1,54 +1,15 @@
 import UIKit
 
-protocol BaseState {}
-
-protocol BaseAction {}
-
-protocol BaseViewModelProtocol {
-    associatedtype State
-    associatedtype Action
-
-    var state: State { get }
-
-    init(state: State)
-
-    func update(state: State)
-
-    func perform(action: Action) async throws
-}
-
-class BaseViewModel<State: BaseState, Action: BaseAction>: BaseViewModelProtocol {
-    var state: State {
-        didSet {
-            update(state: state)
-        }
-    }
-
-    required init(state: State) {
-        self.state = state
-    }
-
-    func update(state: State) {}
-
-    func perform(action: Action) async throws {}
-}
-
 protocol BaseViewControllerProtocol {
-    associatedtype State
-    associatedtype Action
     associatedtype ViewModel
 
     var stackView: UIStackView { get }
     var viewModel: ViewModel { get }
 
-    init(state: State)
-
     func configureView()
-
-    func update(state: State)
 }
 
-class BaseViewController<State: BaseState, Action: BaseAction, ViewModel: BaseViewModel<State, Action>>: UIViewController, BaseViewControllerProtocol {
+class BaseViewController<State: BaseState, Delegate: BaseViewModelDelegate, ViewModel: BaseViewModel<State, Delegate>>: UIViewController, BaseViewControllerProtocol {
 
     var viewModel: ViewModel
 
@@ -79,8 +40,6 @@ class BaseViewController<State: BaseState, Action: BaseAction, ViewModel: BaseVi
         view.backgroundColor = .background
         view.layoutMargins = .default
     }
-
-    func update(state: State) {}
 
     final func attachStackView(within superview: UIView, usingLayoutMarginsGuide: Bool = true) {
         stackView.translatesAutoresizingMaskIntoConstraints = false

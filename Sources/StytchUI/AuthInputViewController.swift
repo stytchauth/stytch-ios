@@ -1,10 +1,6 @@
 import UIKit
 
-final class AuthInputViewModel: BaseViewModel<AuthInputState, AuthInputAction> {
-    // TODO: Add view model logic
-}
-
-final class AuthInputViewController: BaseViewController<AuthInputState, AuthInputAction, AuthInputViewModel> {
+final class AuthInputViewController: BaseViewController<AuthInputState, AuthInputViewModelDelegate, AuthInputViewModel> {
     private enum Input {
         case email
         case phone
@@ -154,7 +150,7 @@ struct AuthInputState: BaseState {
     let config: StytchUIClient.Configuration
 }
 
-enum AuthInputAction: BaseAction {
+enum AuthInputAction {
     case didTapCountryCode(input: PhoneNumberInput)
     case didTapContinueEmail(email: String)
     case didTapContinuePhone(phone: String, formattedPhone: String)

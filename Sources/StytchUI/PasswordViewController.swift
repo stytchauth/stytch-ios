@@ -1,11 +1,6 @@
-import StytchCore
 import UIKit
 
-final class PasswordViewModel: BaseViewModel<PasswordState, PasswordAction> {
-    // TODO: Add view model logic
-}
-
-final class PasswordViewController: BaseViewController<PasswordState, PasswordAction, PasswordViewModel> {
+final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModelDelegate, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel()
@@ -262,6 +257,8 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordAc
 }
 
 struct PasswordState: BaseState {
+    var config: StytchUIClient.Configuration
+
     enum Intent {
         case signup
         case login
@@ -273,13 +270,13 @@ struct PasswordState: BaseState {
     let magicLinksEnabled: Bool
 }
 
-enum PasswordAction: BaseAction {
-    case didTapEmailLoginLink(email: String)
-    case didTapLogin(email: String, password: String)
-    case didTapSignup(email: String, password: String)
-    case didTapSetPassword(token: String, password: String)
-    case didTapForgotPassword(email: String)
-}
+//enum PasswordAction: BaseAction {
+//    case didTapEmailLoginLink(email: String)
+//    case didTapLogin(email: String, password: String)
+//    case didTapSignup(email: String, password: String)
+//    case didTapSetPassword(token: String, password: String)
+//    case didTapForgotPassword(email: String)
+//}
 
 private extension String {
     static let emailLoginLink: String = NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
