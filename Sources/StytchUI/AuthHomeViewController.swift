@@ -24,6 +24,20 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         super.init(viewModel: AuthHomeViewModel(state: state))
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
     override func configureView() {
         super.configureView()
 
@@ -66,22 +80,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         NSLayoutConstraint.activate(constraints)
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
-        }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        navigationController?.setNavigationBarHidden(false, animated: animated)
-    }
 }
 
-protocol AuthHomeViewModelDelegate {}
+protocol AuthHomeViewModelDelegate: AnyObject {}
 
 extension AuthHomeViewController: AuthHomeViewModelDelegate {}

@@ -179,14 +179,13 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             self.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
                         }
                     }
-
                 } catch {}
             }
         }
     }
 }
 
-protocol AuthInputViewModelDelegate {
+protocol AuthInputViewModelDelegate: AnyObject {
     func launchCheckYourEmailResetReturning(email: String)
     func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool)
     func launchCheckYourEmail(email: String)
@@ -196,9 +195,7 @@ protocol AuthInputViewModelDelegate {
 extension AuthInputViewController: AuthInputViewModelDelegate {
     func launchCheckYourEmailResetReturning(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmailResetReturning(config: viewModel.state.config, email: email, retryAction: {
-
-            })
+            state: .checkYourEmailResetReturning(config: viewModel.state.config, email: email) {}
         )
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -212,9 +209,7 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
 
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {
-
-            })
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {}
         )
         navigationController?.pushViewController(controller, animated: true)
     }

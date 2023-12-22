@@ -23,20 +23,20 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
         }
     }
-    
+
     func resetPassword(email: String) async throws {
         if let password = state.config.password {
             let params = params(email: email, password: password)
             _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
         }
     }
-    
+
     func getUserIntent(email: String) async throws -> PasswordState.Intent? {
         let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
         return userSearch.userType.passwordIntent
     }
 
-    func continueWithPhone(phone: String, formattedPhone: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
+    func continueWithPhone(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
         let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
         return (result, expiry)

@@ -20,7 +20,7 @@ extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
         let params = params(email: email, magicLink: magicLink)
         _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
     }
-    
+
     func forgotPassword(email: String) async throws {
         guard let password = state.config.password else { return }
         StytchUIClient.pendingResetEmail = email
@@ -169,4 +169,13 @@ private extension String {
     static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
     static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
     static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
+}
+
+extension [AttrStringComponent] {
+    static var didntGetItResendEmail: Self {
+        [
+            .string(NSLocalizedString("stytch.aiDidntGetIt", value: "Didn't get it? ", comment: "")),
+            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
+        ]
+    }
 }

@@ -20,23 +20,23 @@ final class PasswordViewModel {
 
 extension PasswordViewModel: PasswordViewModelProtocol {
     func checkStrength(email: String?, password: String) async throws -> StytchClient.Passwords.StrengthCheckResponse {
-        return try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
+        try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
     }
-    
+
     func setPassword(token: String, password: String) async throws {
         let response = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
         StytchUIClient.onAuthCallback?(response)
     }
-    
+
     func signup(email: String, password: String) async throws {
         _ = try await StytchClient.passwords.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
     }
-    
+
     func login(email: String, password: String) async throws {
         let response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
         StytchUIClient.onAuthCallback?(response)
     }
-    
+
     func loginWithEmail(email: String) async throws {
         guard let magicLink = state.config.magicLink else { return }
         let params = params(email: email, magicLink: magicLink)
@@ -52,14 +52,13 @@ extension PasswordViewModel: PasswordViewModelProtocol {
 }
 
 struct PasswordState {
-    let config: StytchUIClient.Configuration
-
     enum Intent {
         case signup
         case login
         case enterNewPassword(token: String)
     }
 
+    let config: StytchUIClient.Configuration
     let intent: Intent
     let email: String
     let magicLinksEnabled: Bool

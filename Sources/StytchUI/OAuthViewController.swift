@@ -3,7 +3,6 @@ import StytchCore
 import UIKit
 
 final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> {
-
     init(state: OAuthState) {
         super.init(viewModel: OAuthViewModel(state: state))
     }
@@ -37,7 +36,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     }
 }
 
-protocol OAuthViewModelDelegate {}
+protocol OAuthViewModelDelegate: AnyObject {}
 
 extension OAuthViewController: OAuthViewModelDelegate {}
 

@@ -36,13 +36,12 @@ struct StytchUI_Previews: PreviewProvider {
                     ),
                     session: .init()
                 ),
-                email: "dan@stytch.com",
-                retryAction: {}
-            )
+                email: "dan@stytch.com"
+            ) {}
         )
-            .inNavigationController()
-            .toControllerView()
-            .previewDisplayName("AIVC")
+        .inNavigationController()
+        .toControllerView()
+        .previewDisplayName("AIVC")
 
         PasswordViewController(
             state: .init(
@@ -64,9 +63,9 @@ struct StytchUI_Previews: PreviewProvider {
                 magicLinksEnabled: false
             )
         )
-            .inNavigationController()
-            .toControllerView()
-            .previewDisplayName("PW")
+        .inNavigationController()
+        .toControllerView()
+        .previewDisplayName("PW")
 
         OTPCodeViewController(
             state: .init(
@@ -89,9 +88,9 @@ struct StytchUI_Previews: PreviewProvider {
                 codeExpiry: .init().advanced(by: 120)
             )
         )
-            .inNavigationController()
-            .toControllerView()
-            .previewDisplayName("OTP")
+        .inNavigationController()
+        .toControllerView()
+        .previewDisplayName("OTP")
     }
 }
 

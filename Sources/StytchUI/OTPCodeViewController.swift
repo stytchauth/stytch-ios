@@ -149,7 +149,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }
 }
 
-protocol OTPCodeViewModelDelegate {
+protocol OTPCodeViewModelDelegate: AnyObject {
     func showInvalidCode()
 }
 

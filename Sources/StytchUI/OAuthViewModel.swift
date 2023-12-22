@@ -19,11 +19,13 @@ extension OAuthViewModel: OAuthViewModelProtocol {
             let response = try await StytchClient.oauth.apple.start(parameters: .init(sessionDuration: sessionDuration))
             StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
-            let (token, _) = try await provider.client.start(
-                parameters: .init(loginRedirectUrl: state.config.oauth!.loginRedirectUrl, signupRedirectUrl: state.config.oauth!.signupRedirectUrl)
-            )
-            let response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
-            StytchUIClient.onAuthCallback?(response)
+            if let oauth = state.config.oauth {
+                let (token, _) = try await provider.client.start(
+                    parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
+                )
+                let response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                StytchUIClient.onAuthCallback?(response)
+            }
         }
     }
 }

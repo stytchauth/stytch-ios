@@ -87,7 +87,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     @objc private func didTapSecondaryAction(sender _: UIButton) {
         guard let (_, action) = viewModel.state.secondaryAction else { return }
         switch action {
-        case .didTapCreatePassword(email: let email):
+        case let .didTapCreatePassword(email: email):
             Task {
                 do {
                     try await self.viewModel.forgotPassword(email: email)
@@ -96,7 +96,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                     }
                 } catch {}
             }
-        case .didTapLoginWithoutPassword(email: let email):
+        case let .didTapLoginWithoutPassword(email: email):
             Task {
                 do {
                     try await self.viewModel.loginWithoutPassword(email: email)
@@ -125,7 +125,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 }
 
-protocol ActionableInfoViewModelDelegate {
+protocol ActionableInfoViewModelDelegate: AnyObject {
     func launchCheckYourEmail(email: String)
     func launchForgotPassword(email: String)
 }
@@ -133,7 +133,7 @@ protocol ActionableInfoViewModelDelegate {
 extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {
                 Task {
                     do {
                         try await self.viewModel.loginWithoutPassword(email: email)
@@ -142,14 +142,14 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
                         }
                     } catch {}
                 }
-            })
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
     }
-    
+
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel.state.config, email: email, retryAction: {
+            state: .forgotPassword(config: viewModel.state.config, email: email) {
                 Task {
                     do {
                         try await self.viewModel.forgotPassword(email: email)
@@ -158,17 +158,8 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
                         }
                     } catch {}
                 }
-            })
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
-    }
-}
-
-extension [AttrStringComponent] {
-    static var didntGetItResendEmail: Self {
-        [
-            .string(NSLocalizedString("stytch.aiDidntGetIt", value: "Didn't get it? ", comment: "")),
-            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
-        ]
     }
 }

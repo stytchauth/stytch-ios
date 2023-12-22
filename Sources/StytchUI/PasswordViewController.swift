@@ -1,5 +1,6 @@
 import UIKit
 
+// swiftlint:disable type_body_length
 final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
@@ -130,21 +131,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             self?.submit()
         }
 
-        view.addSubview(scrollView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.clipsToBounds = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-        ])
-
-        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
-
-        setUpStackView()
+        setupStackView()
 
         passwordInput.textInput.becomeFirstResponder()
 
@@ -161,7 +148,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         emailInput.isEnabled = true
         passwordInput.textInput.textContentType = .newPassword
 
-        switch viewModel.state.intent {
+        handleIntent(intent: viewModel.state.intent)
+    }
+
+    private func handleIntent(intent: PasswordState.Intent) {
+        switch intent {
         case .signup:
             if viewModel.state.magicLinksEnabled {
                 titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
@@ -188,7 +179,23 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         }
     }
 
-    private func setUpStackView() {
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
+    }
+
+    private func setupStackView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
         stackView.addArrangedSubview(upperSeparator)
@@ -291,7 +298,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     }
 }
 
-protocol PasswordViewModelDelegate {
+protocol PasswordViewModelDelegate: AnyObject {
     func launchCheckYourEmail(email: String)
     func launchForgotPassword(email: String)
 }
@@ -299,14 +306,14 @@ protocol PasswordViewModelDelegate {
 extension PasswordViewController: PasswordViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel.state.config, email: email, retryAction: {})
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {}
         )
         navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel.state.config, email: email, retryAction: {})
+            state: .forgotPassword(config: viewModel.state.config, email: email) {}
         )
         navigationController?.pushViewController(controller, animated: true)
     }

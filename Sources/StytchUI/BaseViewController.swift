@@ -10,7 +10,6 @@ protocol BaseViewControllerProtocol {
 }
 
 class BaseViewController<State, ViewModel>: UIViewController, BaseViewControllerProtocol {
-
     var viewModel: ViewModel
 
     private(set) lazy var stackView: UIStackView = {
