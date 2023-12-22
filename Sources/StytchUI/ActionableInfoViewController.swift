@@ -33,8 +33,8 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         return button
     }()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configureView() {
+        super.configureView()
 
         retryButton.addTarget(self, action: #selector(didTapRetry(sender:)), for: .touchUpInside)
         secondaryActionButton.addTarget(self, action: #selector(didTapSecondaryAction(sender:)), for: .touchUpInside)

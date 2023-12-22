@@ -44,7 +44,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
         if let config = viewModel.state.config.oauth, !config.providers.isEmpty {
-            let oauthController = OAuthViewController(state: config) { .oauth($0) }
+            let oauthController = OAuthViewController(state: .init(oauth: config))
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
@@ -54,7 +54,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
         if viewModel.state.config.inputProductsEnabled {
-            let inputController = AuthInputViewController(state: state.config) { .input($0) }
+            let inputController = AuthInputViewController(state: .init(config: viewModel.state.config))
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))

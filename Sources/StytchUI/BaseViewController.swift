@@ -14,7 +14,7 @@ protocol BaseViewModelProtocol {
 
     func update(state: State)
 
-    func perform(action: Action)
+    func perform(action: Action) async throws
 }
 
 class BaseViewModel<State: BaseState, Action: BaseAction>: BaseViewModelProtocol {
@@ -30,7 +30,7 @@ class BaseViewModel<State: BaseState, Action: BaseAction>: BaseViewModelProtocol
 
     func update(state: State) {}
 
-    func perform(action: Action) {}
+    func perform(action: Action) async throws {}
 }
 
 protocol BaseViewControllerProtocol {
@@ -40,6 +40,8 @@ protocol BaseViewControllerProtocol {
 
     var stackView: UIStackView { get }
     var viewModel: ViewModel { get }
+
+    init(state: State)
 
     func configureView()
 
@@ -57,6 +59,11 @@ class BaseViewController<State: BaseState, Action: BaseAction, ViewModel: BaseVi
         view.spacing = .spacingRegular
         return view
     }()
+
+    required init(state: State) {
+        viewModel = ViewModel(state: state)
+        super.init(nibName: nil, bundle: nil)
+    }
 
     @available(*, unavailable)
     required init?(coder _: NSCoder) {

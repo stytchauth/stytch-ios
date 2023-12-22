@@ -57,7 +57,7 @@ final class AuthRootViewController: UIViewController {
                 email: email,
                 magicLinksEnabled: false
             )
-        ) { .password($0) }
+        )
         navController?.pushViewController(controller, animated: animated)
     }
 
@@ -70,7 +70,7 @@ final class AuthRootViewController: UIViewController {
     }
 
     private func render(bootstrap: Bootstrap) {
-        let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config)) { $0 }
+        let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config))
         if let closeButton = config.navigation?.closeButtonStyle {
             let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
             switch closeButton.position {
@@ -128,19 +128,20 @@ private extension AuthRootViewController {
                     _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
                     let controller = ActionableInfoViewController(
                         state: .checkYourEmailResetReturning(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
-                    ) { .actionableInfo($0) }
+                    )
                     navController?.pushViewController(controller, animated: true)
                     return
                 }
                 let controller = PasswordViewController(
-                    state: .init(intent: intent, email: email, magicLinksEnabled: config.magicLink != nil)) { .password($0) }
+                    state: .init(intent: intent, email: email, magicLinksEnabled: config.magicLink != nil)
+                )
                 navController?.pushViewController(controller, animated: true)
             } else if let magicLink = config.magicLink {
                 let parameters = params(email: email, magicLink: magicLink)
                 _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
                 let controller = ActionableInfoViewController(
                     state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters) }
-                ) { .actionableInfo($0) }
+                )
                 navController?.pushViewController(controller, animated: true)
             }
         case let .didTapContinuePhone(phone, formattedPhone):
@@ -153,7 +154,7 @@ private extension AuthRootViewController {
                     methodId: result.methodId,
                     codeExpiry: expiry
                 )
-            ) { .otp($0) }
+            )
             navController?.pushViewController(controller, animated: true)
         case let .didTapCountryCode(input):
             let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit)
@@ -192,7 +193,7 @@ private extension AuthRootViewController {
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
             let controller = ActionableInfoViewController(
                 state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
-            ) { .actionableInfo($0) }
+            )
             navController?.pushViewController(controller, animated: true)
         case let .didTapLogin(email, password):
             response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
@@ -208,7 +209,7 @@ private extension AuthRootViewController {
             _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
             let controller = ActionableInfoViewController(
                 state: .forgotPassword(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
-            ) { .actionableInfo($0) }
+            )
             navController?.pushViewController(controller, animated: true)
         }
     }
@@ -248,7 +249,7 @@ private extension AuthRootViewController {
             _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
             let controller = ActionableInfoViewController(
                 state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
-            ) { .actionableInfo($0) }
+            )
             navController?.pushViewController(controller, animated: true)
         }
     }

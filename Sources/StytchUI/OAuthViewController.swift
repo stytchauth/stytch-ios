@@ -7,8 +7,8 @@ final class OAuthViewModel: BaseViewModel<OAuthState, OAuthAction> {
 }
 
 final class OAuthViewController: BaseViewController<OAuthState, OAuthAction, OAuthViewModel> {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configureView() {
+        super.configureView()
 
         view.layoutMargins = .zero
 
