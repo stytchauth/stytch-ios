@@ -1,3 +1,4 @@
+import StytchCore
 import UIKit
 
 final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel> {
@@ -36,9 +37,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     private var timer: Timer?
 
     init(state: OTPCodeState) {
-        let viewModel = OTPCodeViewModel(state: state)
-        super.init(viewModel: viewModel)
-        viewModel.setDelegate(delegate: self)
+        super.init(viewModel: OTPCodeViewModel(state: state))
     }
 
     override func configureView() {
@@ -65,6 +64,10 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             Task {
                 do {
                     try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                    DispatchQueue.main.async {
+                        self.showInvalidCode()
+                    }
                 } catch {}
             }
         }
@@ -74,6 +77,10 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             Task {
                 do {
                     try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                    DispatchQueue.main.async {
+                        self.showInvalidCode()
+                    }
                 } catch {}
             }
         }
@@ -86,11 +93,11 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         attributedText.append(attributedPhone)
         attributedText.append(.init(string: "."))
         phoneLabel.attributedText = attributedText
-        updateExiryText()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExiryText), userInfo: nil, repeats: true)
+        updateExpiryText()
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
     }
 
-    @objc private func updateExiryText() {
+    @objc private func updateExpiryText() {
         guard
             case let currentDate = Date(),
             viewModel.state.codeExpiry > currentDate,

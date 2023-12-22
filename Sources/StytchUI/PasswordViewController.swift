@@ -12,6 +12,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         Task {
             do {
                 try await self?.viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self?.launchCheckYourEmail(email: email)
+                }
             } catch {}
         }
     }
@@ -76,6 +79,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         Task {
             do {
                 try await self?.viewModel.forgotPassword(email: email)
+                DispatchQueue.main.async {
+                    self?.launchForgotPassword(email: email)
+                }
             } catch {}
         }
     }
@@ -89,6 +95,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         Task {
             do {
                 try await self?.viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self?.launchCheckYourEmail(email: email)
+                }
             } catch {}
         }
     }
@@ -96,9 +105,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     private var strengthCheckWorkItem: DispatchWorkItem?
 
     init(state: PasswordState) {
-        let viewModel = PasswordViewModel(state: state)
-        super.init(viewModel: viewModel)
-        viewModel.setDelegate(delegate: self)
+        super.init(viewModel: PasswordViewModel(state: state))
     }
 
     override func configureView() {

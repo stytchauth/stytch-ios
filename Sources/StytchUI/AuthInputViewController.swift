@@ -55,9 +55,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 
     init(state: AuthInputState) {
-        let viewModel = AuthInputViewModel(state: state)
-        super.init(viewModel: viewModel)
-        viewModel.setDelegate(delegate: self)
+        super.init(viewModel: AuthInputViewModel(state: state))
     }
 
     override func configureView() {
@@ -147,16 +145,41 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         case .email:
             Task {
                 do {
-                    try await viewModel.continueWithEmail(email: emailInput.text ?? "")
+                    if let email = self.emailInput.text {
+                        if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
+                            let intent = try await viewModel.getUserIntent(email: email)
+                            if let intent = intent {
+                                DispatchQueue.main.async {
+                                    self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
+                                }
+                            } else {
+                                try await viewModel.resetPassword(email: email)
+                                DispatchQueue.main.async {
+                                    self.launchCheckYourEmailResetReturning(email: email)
+                                }
+                            }
+                        } else if let magicLink = viewModel.state.config.magicLink {
+                            try await viewModel.sendMagicLink(email: email)
+                            DispatchQueue.main.async {
+                                self.launchCheckYourEmail(email: email)
+                            }
+                        }
+                    }
                 } catch {}
             }
         case .phone:
             Task {
                 do {
-                    try await viewModel.continueWithPhone(
-                        phone: phoneNumberInput.phoneNumberE164 ?? "",
-                        formattedPhone: phoneNumberInput.formattedPhoneNumber ?? ""
-                    )
+                    if let phone = phoneNumberInput.phoneNumberE164, let formattedPhone = phoneNumberInput.formattedPhoneNumber {
+                        let (result, expiry) = try await viewModel.continueWithPhone(
+                            phone: phone,
+                            formattedPhone: formattedPhone
+                        )
+                        DispatchQueue.main.async {
+                            self.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
+                        }
+                    }
+
                 } catch {}
             }
         }

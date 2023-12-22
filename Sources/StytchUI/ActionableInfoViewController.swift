@@ -30,9 +30,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }()
 
     init(state: ActionableInfoState) {
-        let viewModel = ActionableInfoViewModel(state: state)
-        super.init(viewModel: viewModel)
-        viewModel.setDelegate(delegate: self)
+        super.init(viewModel: ActionableInfoViewModel(state: state))
     }
 
     override func configureView() {
@@ -93,12 +91,18 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
             Task {
                 do {
                     try await self.viewModel.forgotPassword(email: email)
+                    DispatchQueue.main.async {
+                        self.launchForgotPassword(email: email)
+                    }
                 } catch {}
             }
         case .didTapLoginWithoutPassword(email: let email):
             Task {
                 do {
                     try await self.viewModel.loginWithoutPassword(email: email)
+                    DispatchQueue.main.async {
+                        self.launchCheckYourEmail(email: email)
+                    }
                 } catch {}
             }
         }
@@ -128,6 +132,9 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
                 Task {
                     do {
                         try await self.viewModel.loginWithoutPassword(email: email)
+                        DispatchQueue.main.async {
+                            self.launchCheckYourEmail(email: email)
+                        }
                     } catch {}
                 }
             })
@@ -141,6 +148,9 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
                 Task {
                     do {
                         try await self.viewModel.forgotPassword(email: email)
+                        DispatchQueue.main.async {
+                            self.launchForgotPassword(email: email)
+                        }
                     } catch {}
                 }
             })

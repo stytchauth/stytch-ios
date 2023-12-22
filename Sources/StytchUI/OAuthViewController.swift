@@ -5,9 +5,7 @@ import UIKit
 final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> {
 
     init(state: OAuthState) {
-        let viewModel = OAuthViewModel(state: state)
-        super.init(viewModel: viewModel)
-        viewModel.setDelegate(delegate: self)
+        super.init(viewModel: OAuthViewModel(state: state))
     }
 
     override func configureView() {

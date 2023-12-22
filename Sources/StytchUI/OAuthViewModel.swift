@@ -8,14 +8,9 @@ protocol OAuthViewModelProtocol {
 
 final class OAuthViewModel {
     let state: OAuthState
-    var delegate: OAuthViewModelDelegate?
 
     init(state: OAuthState) {
         self.state = state
-    }
-
-    func setDelegate(delegate: OAuthViewModelDelegate) {
-        self.delegate = delegate
     }
 }
 

@@ -9,53 +9,44 @@ protocol AuthInputViewModelDelegate {
 }
 
 protocol AuthInputViewModelProtocol {
-    func continueWithEmail(email: String) async throws
-    func continueWithPhone(phone: String, formattedPhone: String) async throws
+    func getUserIntent(email: String) async throws -> PasswordState.Intent?
+    func resetPassword(email: String) async throws
+    func sendMagicLink(email: String) async throws
+    func continueWithPhone(phone: String, formattedPhone: String) async throws -> (StytchClient.OTP.OTPResponse, Date)
 }
 
 final class AuthInputViewModel {
     let state: AuthInputState
-    var delegate: AuthInputViewModelDelegate?
 
     init(state: AuthInputState) {
         self.state = state
     }
-
-    func setDelegate(delegate: AuthInputViewModelDelegate) {
-        self.delegate = delegate
-    }
 }
 
 extension AuthInputViewModel: AuthInputViewModelProtocol {
-    func continueWithEmail(email: String) async throws {
-        if state.config.magicLink != nil, let password = state.config.password {
-            let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
-            guard let intent = userSearch.userType.passwordIntent else {
-                let params = params(email: email, password: password)
-                _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
-                DispatchQueue.main.async {
-                    self.delegate?.launchCheckYourEmailResetReturning(email: email)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.delegate?.launchPassword(intent: intent, email: email, magicLinksEnabled: self.state.config.magicLink != nil)
-            }
-        } else if let magicLink = state.config.magicLink {
-            let parameters = params(email: email, magicLink: magicLink)
-            _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
-            DispatchQueue.main.async {
-                self.delegate?.launchCheckYourEmail(email: email)
-            }
+    func sendMagicLink(email: String) async throws {
+        if let magicLink = state.config.magicLink {
+            let params = params(email: email, magicLink: magicLink)
+            _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
         }
     }
+    
+    func resetPassword(email: String) async throws {
+        if let password = state.config.password {
+            let params = params(email: email, password: password)
+            _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
+        }
+    }
+    
+    func getUserIntent(email: String) async throws -> PasswordState.Intent? {
+        let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
+        return userSearch.userType.passwordIntent
+    }
 
-    func continueWithPhone(phone: String, formattedPhone: String) async throws {
+    func continueWithPhone(phone: String, formattedPhone: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
         let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
-        DispatchQueue.main.async {
-            self.delegate?.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
-        }
+        return (result, expiry)
     }
 }
 

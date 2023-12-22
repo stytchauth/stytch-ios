@@ -21,8 +21,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     }
 
     init(state: AuthHomeState) {
-        let viewModel = AuthHomeViewModel(state: state)
-        super.init(viewModel: viewModel)
+        super.init(viewModel: AuthHomeViewModel(state: state))
     }
 
     override func configureView() {

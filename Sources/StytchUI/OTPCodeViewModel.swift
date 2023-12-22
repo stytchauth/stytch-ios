@@ -12,14 +12,9 @@ protocol OTPCodeViewModelProtocol {
 
 final class OTPCodeViewModel {
     var state: OTPCodeState
-    var delegate: OTPCodeViewModelDelegate?
 
     init(state: OTPCodeState) {
         self.state = state
-    }
-
-    func setDelegate(delegate: OTPCodeViewModelDelegate) {
-        self.delegate = delegate
     }
 }
 
@@ -37,15 +32,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     }
     
     func enterCode(code: String, methodId: String) async throws {
-        do {
-            _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
-        } catch let error as StytchError where error.errorType == "otp_code_not_found" {
-            DispatchQueue.main.async {
-                self.delegate?.showInvalidCode()
-            }
-        } catch {
-            throw error
-        }
+        _ = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
     }
 }
 
