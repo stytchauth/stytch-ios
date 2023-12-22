@@ -37,6 +37,8 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     }
 }
 
+protocol OAuthViewModelDelegate {}
+
 extension OAuthViewController: OAuthViewModelDelegate {}
 
 private extension OAuthViewController {

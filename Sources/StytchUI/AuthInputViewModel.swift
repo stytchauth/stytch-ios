@@ -1,13 +1,6 @@
 import Foundation
 import StytchCore
 
-protocol AuthInputViewModelDelegate {
-    func launchCheckYourEmailResetReturning(email: String)
-    func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool)
-    func launchCheckYourEmail(email: String)
-    func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date)
-}
-
 protocol AuthInputViewModelProtocol {
     func getUserIntent(email: String) async throws -> PasswordState.Intent?
     func resetPassword(email: String) async throws

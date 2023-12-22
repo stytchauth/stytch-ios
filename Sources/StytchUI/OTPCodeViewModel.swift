@@ -1,10 +1,6 @@
 import Foundation
 import StytchCore
 
-protocol OTPCodeViewModelDelegate {
-    func showInvalidCode()
-}
-
 protocol OTPCodeViewModelProtocol {
     func resendCode(phone: String) async throws
     func enterCode(code: String, methodId: String) async throws

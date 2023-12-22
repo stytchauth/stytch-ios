@@ -125,6 +125,11 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 }
 
+protocol ActionableInfoViewModelDelegate {
+    func launchCheckYourEmail(email: String)
+    func launchForgotPassword(email: String)
+}
+
 extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(

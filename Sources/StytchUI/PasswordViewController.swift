@@ -291,6 +291,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     }
 }
 
+protocol PasswordViewModelDelegate {
+    func launchCheckYourEmail(email: String)
+    func launchForgotPassword(email: String)
+}
+
 extension PasswordViewController: PasswordViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(

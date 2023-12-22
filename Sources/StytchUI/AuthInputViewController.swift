@@ -186,6 +186,13 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 }
 
+protocol AuthInputViewModelDelegate {
+    func launchCheckYourEmailResetReturning(email: String)
+    func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool)
+    func launchCheckYourEmail(email: String)
+    func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date)
+}
+
 extension AuthInputViewController: AuthInputViewModelDelegate {
     func launchCheckYourEmailResetReturning(email: String) {
         let controller = ActionableInfoViewController(

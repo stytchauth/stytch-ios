@@ -1,7 +1,5 @@
 import StytchCore
 
-protocol OAuthViewModelDelegate {}
-
 protocol OAuthViewModelProtocol {
     func startOAuth(provider: StytchUIClient.Configuration.OAuth.Provider) async throws
 }

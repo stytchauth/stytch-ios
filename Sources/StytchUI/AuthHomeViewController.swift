@@ -82,4 +82,6 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     }
 }
 
+protocol AuthHomeViewModelDelegate {}
+
 extension AuthHomeViewController: AuthHomeViewModelDelegate {}

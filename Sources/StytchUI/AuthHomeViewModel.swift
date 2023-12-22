@@ -1,5 +1,3 @@
-protocol AuthHomeViewModelDelegate {}
-
 protocol AuthHomeViewModelProtocol {}
 
 final class AuthHomeViewModel {

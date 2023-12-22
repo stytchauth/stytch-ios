@@ -1,11 +1,6 @@
 import Foundation
 import StytchCore
 
-protocol ActionableInfoViewModelDelegate {
-    func launchCheckYourEmail(email: String)
-    func launchForgotPassword(email: String)
-}
-
 protocol ActionableInfoViewModelProtocol {
     func forgotPassword(email: String) async throws
     func loginWithoutPassword(email: String) async throws

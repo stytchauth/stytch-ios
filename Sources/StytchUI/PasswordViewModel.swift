@@ -1,11 +1,6 @@
 import Foundation
 import StytchCore
 
-protocol PasswordViewModelDelegate {
-    func launchCheckYourEmail(email: String)
-    func launchForgotPassword(email: String)
-}
-
 protocol PasswordViewModelProtocol {
     func loginWithEmail(email: String) async throws
     func forgotPassword(email: String) async throws
