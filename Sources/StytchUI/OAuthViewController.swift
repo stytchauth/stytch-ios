@@ -2,13 +2,19 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModelDelegate, OAuthViewModel> {
+final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> {
+
+    init(state: OAuthState, navController: UINavigationController?) {
+        super.init(navController: navController)
+        self.viewModel = OAuthViewModel(state: state, delegate: self)
+    }
+
     override func configureView() {
         super.configureView()
 
         view.layoutMargins = .zero
 
-        viewModel.state.config.oauth.providers.enumerated().forEach { index, provider in
+        viewModel!.state.config.oauth?.providers.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -23,10 +29,16 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModelDe
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = viewModel.state.config.oauth.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
-        viewModel.perform(action: .didTap(provider: provider))
+        guard let (_, provider) = viewModel!.state.config.oauth?.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        Task {
+            do {
+                try await viewModel!.startOAuth(provider: provider)
+            } catch {}
+        }
     }
 }
+
+extension OAuthViewController: OAuthViewModelDelegate {}
 
 private extension OAuthViewController {
     static func makeOauthButton(provider: StytchUIClient.Configuration.OAuth.Provider) -> UIControl {
@@ -60,14 +72,6 @@ private extension OAuthViewController {
         button.removeTarget(nil, action: nil, for: .touchUpInside)
         return button
     }
-}
-
-struct OAuthState: BaseState {
-    var config: StytchUIClient.Configuration
-}
-
-enum OAuthAction {
-    case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
 }
 
 private extension StytchClient.OAuth.ThirdParty.Provider {

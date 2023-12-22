@@ -1,6 +1,6 @@
 import UIKit
 
-final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoViewModelDelegate, ActionableInfoViewModel> {
+final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
@@ -29,6 +29,11 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         return button
     }()
 
+    init(state: ActionableInfoState, navController: UINavigationController?) {
+        super.init(navController: navController)
+        self.viewModel = ActionableInfoViewModel(state: state, delegate: self)
+    }
+
     override func configureView() {
         super.configureView()
 
@@ -41,7 +46,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         stackView.addArrangedSubview(infoLabel)
         stackView.addArrangedSubview(retryButton)
 
-        if let secondaryAction = viewModel.state.secondaryAction {
+        if let secondaryAction = viewModel!.state.secondaryAction {
             stackView.addArrangedSubview(separatorView)
             stackView.setCustomSpacing(38, after: separatorView)
             secondaryActionButton.setTitle(secondaryAction.title, for: .normal)
@@ -55,11 +60,9 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
-    }
 
-    override func update(state: State) {
-        titleLabel.text = state.title
-        let (info, action) = attrStrings(state: state)
+        titleLabel.text = viewModel!.state.title
+        let (info, action) = attrStrings(state: viewModel!.state)
         infoLabel.attributedText = info
         retryButton.setAttributedTitle(action, for: .normal)
     }
@@ -68,14 +71,14 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel.state.email
+                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel!.state.email
             ),
             preferredStyle: .alert
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
         controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
             Task { @MainActor in
-                try await self?.viewModel.state.retryAction()
+                try await self?.viewModel!.state.retryAction()
             }
         })
         controller.view.tintColor = .primaryText
@@ -83,8 +86,21 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 
     @objc private func didTapSecondaryAction(sender _: UIButton) {
-        guard let (_, action) = viewModel.state.secondaryAction else { return }
-        viewModel.perform(action: action)
+        guard let (_, action) = viewModel!.state.secondaryAction else { return }
+        switch action {
+        case .didTapCreatePassword(email: let email):
+            Task {
+                do {
+                    try await self.viewModel!.forgotPassword(email: email)
+                } catch {}
+            }
+        case .didTapLoginWithoutPassword(email: let email):
+            Task {
+                do {
+                    try await self.viewModel!.loginWithoutPassword(email: email)
+                } catch {}
+            }
+        }
     }
 
     private func attrStrings(state: ActionableInfoState) -> (info: NSAttributedString, action: NSAttributedString) {
@@ -104,103 +120,33 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 }
 
-struct ActionableInfoState: BaseState {
-    var config: StytchUIClient.Configuration
+extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
+    func launchCheckYourEmail(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {
+                Task {
+                    do {
+                        try await self.viewModel!.loginWithoutPassword(email: email)
+                    } catch {}
+                }
+            }),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
     
-    let email: String
-    let title: String
-    let infoComponents: [AttrStringComponent]
-    let actionComponents: [AttrStringComponent]
-    let secondaryAction: (title: String, action: ActionableInfoAction)?
-    let retryAction: RetryAction
-}
-
-enum ActionableInfoAction {
-    case didTapCreatePassword(email: String)
-    case didTapLoginWithoutPassword(email: String)
-}
-
-extension ActionableInfoState {
-    typealias RetryAction = () async throws -> Void
-    static func forgotPassword(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: NSLocalizedString("stytch.aiForgotPW", value: "Forgot password?", comment: ""),
-            infoComponents: [
-                .string(NSLocalizedString("stytch.linkToResetPWSent", value: "A link to reset your password was sent to you at ", comment: "")),
-                .bold(.string(email)),
-            ],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil,
-            retryAction: retryAction
+    func launchForgotPassword(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .forgotPassword(config: viewModel!.state.config, email: email, retryAction: {
+                Task {
+                    do {
+                        try await self.viewModel!.forgotPassword(email: email)
+                    } catch {}
+                }
+            }),
+            navController: navController
         )
-    }
-
-    static func checkYourEmail(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: .checkEmail,
-            infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil,
-            retryAction: retryAction
-        )
-    }
-
-    static func checkYourEmailCreatePWInstead(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: .checkEmail,
-            infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword(email: email)),
-            retryAction: retryAction
-        )
-    }
-
-    static func checkYourEmailReset(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: .checkEmailForNewPW,
-            infoComponents: [
-                .string(.loginLinkSentToYou),
-                .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: "")),
-            ],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: nil,
-            retryAction: retryAction
-        )
-    }
-
-    static func checkYourEmailResetReturning(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: .checkEmailForNewPW,
-            infoComponents: [
-                .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in. A login link was sent to you at ", comment: "")),
-                .bold(.string(email)),
-                .string(.period),
-            ],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
-            retryAction: retryAction
-        )
-    }
-
-    static func checkYourEmailResetBreached(email: String, retryAction: @escaping RetryAction) -> Self {
-        .init(
-            email: email,
-            title: .checkEmailForNewPW,
-            infoComponents: [
-                .string(NSLocalizedString("stytch.aiPWBreach", value: "A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", comment: "")),
-                .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: "")),
-            ],
-            actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
-            retryAction: retryAction
-        )
+        navController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -211,12 +157,4 @@ extension [AttrStringComponent] {
             .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
         ]
     }
-}
-
-private extension String {
-    static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
-    static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
-    static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
-    static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
-    static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
 }

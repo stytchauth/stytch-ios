@@ -22,31 +22,76 @@ struct StytchUI_Previews: PreviewProvider {
         .previewDisplayName("Root")
 
         ActionableInfoViewController(
-            state: .forgotPassword(email: "dan@stytch.com") {}
-        ) { .actionableInfo($0) }
+            state: .forgotPassword(
+                config: .init(
+                    publicToken: "",
+                    products: .init(
+                        oauth: .init(
+                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                        ),
+                        magicLink: .init(),
+                        sms: .init()
+                    ),
+                    session: .init()
+                ),
+                email: "dan@stytch.com",
+                retryAction: {}
+            ),
+            navController: UINavigationController()
+        )
             .inNavigationController()
             .toControllerView()
             .previewDisplayName("AIVC")
 
         PasswordViewController(
             state: .init(
+                config: .init(
+                    publicToken: "",
+                    products: .init(
+                        oauth: .init(
+                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                        ),
+                        magicLink: .init(),
+                        sms: .init()
+                    ),
+                    session: .init()
+                ),
                 intent: .enterNewPassword(token: ""),
                 email: "dan.loman@gmail.com",
                 magicLinksEnabled: false
-            )
-        ) { .password($0) }
+            ),
+            navController: UINavigationController()
+        )
             .inNavigationController()
             .toControllerView()
             .previewDisplayName("PW")
 
         OTPCodeViewController(
             state: .init(
+                config: .init(
+                    publicToken: "",
+                    products: .init(
+                        oauth: .init(
+                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                        ),
+                        magicLink: .init(),
+                        sms: .init()
+                    ),
+                    session: .init()
+                ),
                 phoneNumberE164: "888-888-8888",
                 formattedPhoneNumber: "(888) 888-8888",
                 methodId: "",
                 codeExpiry: .init().advanced(by: 120)
-            )
-        ) { .otp($0) }
+            ),
+            navController: UINavigationController()
+        )
             .inNavigationController()
             .toControllerView()
             .previewDisplayName("OTP")

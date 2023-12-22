@@ -1,6 +1,8 @@
+import PhoneNumberKit
+import StytchCore
 import UIKit
 
-final class AuthInputViewController: BaseViewController<AuthInputState, AuthInputViewModelDelegate, AuthInputViewModel> {
+final class AuthInputViewController: BaseViewController<AuthInputState, AuthInputViewModel> {
     private enum Input {
         case email
         case phone
@@ -52,16 +54,21 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         }
     }
 
+    init(state: AuthInputState, navController: UINavigationController?) {
+        super.init(navController: navController)
+        self.viewModel = AuthInputViewModel(state: state, delegate: self)
+    }
+
     override func configureView() {
         super.configureView()
 
         view.layoutMargins = .zero
 
-        if viewModel.state.config.sms != nil, viewModel.state.config.magicLink == nil, viewModel.state.config.password == nil {
+        if viewModel!.state.config.sms != nil, viewModel!.state.config.magicLink == nil, viewModel!.state.config.password == nil {
             stackView.addArrangedSubview(phoneNumberInput)
             activeInput = .phone
         } else {
-            if viewModel.state.config.sms != nil {
+            if viewModel!.state.config.sms != nil {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
                 stackView.addArrangedSubview(segmentedControl)
 
@@ -84,7 +91,10 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     private func setupInputs() {
         phoneNumberInput.onButtonPressed = { [weak self] _ in
             guard let self else { return }
-            viewModel.performAction(.didTapCountryCode(input: self.phoneNumberInput))
+            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: phoneNumberInput.phoneNumberKit)
+            countryPickerViewController.delegate = self.phoneNumberInput
+            let navigationController = UINavigationController(rootViewController: countryPickerViewController)
+            present(navigationController, animated: true)
         }
 
         phoneNumberInput.onTextChanged = { [weak self] isValid in
@@ -134,24 +144,64 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     @objc private func didTapContinue() {
         switch activeInput {
         case .email:
-            viewModel.perform(action: .didTapContinueEmail(email: emailInput.text ?? ""))
+            Task {
+                do {
+                    try await viewModel!.continueWithEmail(email: emailInput.text ?? "")
+                } catch {}
+            }
         case .phone:
-            viewModel.perform(
-                action: .didTapContinuePhone(
-                    phone: phoneNumberInput.phoneNumberE164 ?? "",
-                    formattedPhone: phoneNumberInput.formattedPhoneNumber ?? ""
-                )
-            )
+            Task {
+                do {
+                    try await viewModel!.continueWithPhone(
+                        phone: phoneNumberInput.phoneNumberE164 ?? "",
+                        formattedPhone: phoneNumberInput.formattedPhoneNumber ?? ""
+                    )
+                } catch {}
+            }
         }
     }
 }
 
-struct AuthInputState: BaseState {
-    let config: StytchUIClient.Configuration
-}
+extension AuthInputViewController: AuthInputViewModelDelegate {
+    func launchCheckYourEmailResetReturning(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .checkYourEmailResetReturning(config: viewModel!.state.config, email: email, retryAction: {
 
-enum AuthInputAction {
-    case didTapCountryCode(input: PhoneNumberInput)
-    case didTapContinueEmail(email: String)
-    case didTapContinuePhone(phone: String, formattedPhone: String)
+            }),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
+
+    func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool) {
+        let controller = PasswordViewController(
+            state: .init(config: viewModel!.state.config, intent: intent, email: email, magicLinksEnabled: magicLinksEnabled),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
+
+    func launchCheckYourEmail(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {
+
+            }),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
+
+    func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date) {
+        let controller = OTPCodeViewController(
+            state: .init(
+                config: viewModel!.state.config,
+                phoneNumberE164: phone,
+                formattedPhoneNumber: formattedPhone,
+                methodId: result.methodId,
+                codeExpiry: expiry
+            ),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
 }

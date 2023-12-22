@@ -1,6 +1,6 @@
 import UIKit
 
-final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeViewModelDelegate, AuthHomeViewModel> {
+final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
@@ -16,8 +16,13 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     }()
 
     private var showOrSeparator: Bool {
-        guard let oauth = viewModel.state.config.oauth, !oauth.providers.isEmpty else { return false }
-        return viewModel.state.config.inputProductsEnabled
+        guard let oauth = viewModel!.state.config.oauth, !oauth.providers.isEmpty else { return false }
+        return viewModel!.state.config.inputProductsEnabled
+    }
+
+    init(state: AuthHomeState, navController: UINavigationController?) {
+        super.init(navController: navController)
+        self.viewModel = AuthHomeViewModel(state: state, delegate: self)
     }
 
     override func configureView() {
@@ -39,8 +44,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let config = viewModel.state.config.oauth, !config.providers.isEmpty {
-            let oauthController = OAuthViewController(state: .init(oauth: config))
+        if let config = viewModel!.state.config.oauth, !config.providers.isEmpty {
+            let oauthController = OAuthViewController(state: .init(config: viewModel!.state.config), navController: navController)
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
@@ -49,13 +54,13 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
             stackView.addArrangedSubview(separatorView)
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if viewModel.state.config.inputProductsEnabled {
-            let inputController = AuthInputViewController(state: .init(config: viewModel.state.config))
+        if viewModel!.state.config.inputProductsEnabled {
+            let inputController = AuthInputViewController(state: .init(config: viewModel!.state.config), navController: navController)
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if !viewModel.state.bootstrap.disableSdkWatermark {
+        if !viewModel!.state.bootstrap.disableSdkWatermark {
             stackView.addArrangedSubview(poweredByStytch)
         }
         stackView.addArrangedSubview(SpacerView())
@@ -78,15 +83,4 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     }
 }
 
-struct AuthHomeState: BaseState {
-    let bootstrap: Bootstrap
-    let config: StytchUIClient.Configuration
-}
-
-enum AuthHomeAction: BaseAction {
-    case actionableInfo(ActionableInfoAction)
-    case input(AuthInputAction)
-    case oauth(OAuthAction)
-    case otp(OTPAction)
-    case password(PasswordAction)
-}
+extension AuthHomeViewController: AuthHomeViewModelDelegate {}

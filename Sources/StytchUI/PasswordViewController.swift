@@ -1,6 +1,6 @@
 import UIKit
 
-final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModelDelegate, PasswordViewModel> {
+final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel()
@@ -9,7 +9,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.viewModel.perform(action: .didTapEmailLoginLink(email: email))
+        Task {
+            do {
+                try await self?.viewModel!.loginWithEmail(email: email)
+            } catch {}
+        }
     }
 
     private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
@@ -69,7 +73,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.viewModel.perform(action: .didTapForgotPassword(email: email))
+        Task {
+            do {
+                try await self?.viewModel!.forgotPassword(email: email)
+            } catch {}
+        }
     }
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
@@ -78,10 +86,19 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.viewModel.perform(action: .didTapEmailLoginLink(email: email))
+        Task {
+            do {
+                try await self?.viewModel!.loginWithEmail(email: email)
+            } catch {}
+        }
     }
 
     private var strengthCheckWorkItem: DispatchWorkItem?
+
+    init(state: PasswordState, navController: UINavigationController?) {
+        super.init(navController: navController)
+        self.viewModel = PasswordViewModel(state: state, delegate: self)
+    }
 
     override func configureView() {
         super.configureView()
@@ -91,7 +108,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
-            switch self?.viewModel.state.intent {
+            switch self?.viewModel!.state.intent {
             case .enterNewPassword, .signup:
                 self?.setNeedsStrengthCheck()
             case .none, .login:
@@ -122,9 +139,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         setUpStackView()
 
         passwordInput.textInput.becomeFirstResponder()
-    }
 
-    override func update(state: State) {
         emailLoginLinkPrimaryButton.isHidden = true
         upperSeparator.isHidden = true
         finishCreatingLabel.isHidden = true
@@ -134,13 +149,13 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         emailLoginLinkPrimaryButton.isHidden = true
         passwordInput.progressBar.isHidden = true
 
-        emailInput.textInput.text = state.email
+        emailInput.textInput.text = viewModel!.state.email
         emailInput.isEnabled = true
         passwordInput.textInput.textContentType = .newPassword
 
-        switch state.intent {
+        switch viewModel!.state.intent {
         case .signup:
-            if state.magicLinksEnabled {
+            if viewModel!.state.magicLinksEnabled {
                 titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
                 emailLoginLinkPrimaryButton.isHidden = false
                 upperSeparator.isHidden = false
@@ -158,7 +173,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false
-            if state.magicLinksEnabled {
+            if viewModel!.state.magicLinksEnabled {
                 lowerSeparator.isHidden = false
                 emailLoginLinkTertiaryButton.isHidden = false
             }
@@ -199,13 +214,25 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     private func submit() {
         guard let email = emailInput.text, let password = passwordInput.text else { return }
 
-        switch viewModel.state.intent {
+        switch viewModel!.state.intent {
         case let .enterNewPassword(token):
-            viewModel.perform(action: .didTapSetPassword(token: token, password: password))
+            Task {
+                do {
+                    try await viewModel!.setPassword(token: token, password: password)
+                } catch {}
+            }
         case .login:
-            viewModel.perform(action: .didTapLogin(email: email, password: password))
+            Task {
+                do {
+                    try await viewModel!.login(email: email, password: password)
+                } catch {}
+            }
         case .signup:
-            viewModel.perform(action: .didTapSignup(email: email, password: password))
+            Task {
+                do {
+                    try await viewModel!.signup(email: email, password: password)
+                } catch {}
+            }
         }
     }
 
@@ -240,7 +267,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         Task { @MainActor in
             do {
                 let email = emailInput.text == .redactedEmail ? nil : emailInput.text
-                let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
+                let response = try await viewModel!.checkStrength(email: email, password: password)
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {
@@ -256,27 +283,23 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     }
 }
 
-struct PasswordState: BaseState {
-    var config: StytchUIClient.Configuration
-
-    enum Intent {
-        case signup
-        case login
-        case enterNewPassword(token: String)
+extension PasswordViewController: PasswordViewModelDelegate {
+    func launchCheckYourEmail(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .checkYourEmail(config: viewModel!.state.config, email: email, retryAction: {}),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
     }
 
-    let intent: Intent
-    let email: String
-    let magicLinksEnabled: Bool
+    func launchForgotPassword(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .forgotPassword(config: viewModel!.state.config, email: email, retryAction: {}),
+            navController: navController
+        )
+        navController?.pushViewController(controller, animated: true)
+    }
 }
-
-//enum PasswordAction: BaseAction {
-//    case didTapEmailLoginLink(email: String)
-//    case didTapLogin(email: String, password: String)
-//    case didTapSignup(email: String, password: String)
-//    case didTapSetPassword(token: String, password: String)
-//    case didTapForgotPassword(email: String)
-//}
 
 private extension String {
     static let emailLoginLink: String = NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")

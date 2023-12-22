@@ -53,10 +53,12 @@ final class AuthRootViewController: UIViewController {
     func handlePasswordReset(token: String, email: String, animated: Bool = true) {
         let controller = PasswordViewController(
             state: .init(
+                config: config,
                 intent: .enterNewPassword(token: token),
                 email: email,
                 magicLinksEnabled: false
-            )
+            ),
+            navController: navController
         )
         navController?.pushViewController(controller, animated: animated)
     }
@@ -70,7 +72,10 @@ final class AuthRootViewController: UIViewController {
     }
 
     private func render(bootstrap: Bootstrap) {
-        let homeController = AuthHomeViewController(state: .init(bootstrap: bootstrap, config: config))
+        let homeController = AuthHomeViewController(
+            state: .init(bootstrap: bootstrap, config: config),
+            navController: navController
+        )
         if let closeButton = config.navigation?.closeButtonStyle {
             let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
             switch closeButton.position {
@@ -93,267 +98,8 @@ final class AuthRootViewController: UIViewController {
     }
 }
 
-extension AuthRootViewController: ActionDelegate {
-    func handle(action: AuthHomeAction) {
-        Task { @MainActor in
-            do {
-                switch action {
-                case let .actionableInfo(action):
-                    try await handle(aiAction: action)
-                case let .input(action):
-                    try await handle(inputAction: action)
-                case let .oauth(action):
-                    try await handle(oauthAction: action)
-                case let .otp(action):
-                    try await handle(otpAction: action)
-                case let .password(action):
-                    try await handle(passwordAction: action)
-                }
-            } catch ASAuthorizationError.canceled, ASWebAuthenticationSessionError.canceledLogin {
-            } catch {
-                presentAlert(error: error)
-            }
-        }
-    }
-}
-
-private extension AuthRootViewController {
-    func handle(inputAction: AuthInputAction) async throws {
-        switch inputAction {
-        case let .didTapContinueEmail(email):
-            if config.magicLink != nil, let password = config.password {
-                let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
-                guard let intent = userSearch.userType.passwordIntent else {
-                    let params = params(email: email, password: password)
-                    _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
-                    let controller = ActionableInfoViewController(
-                        state: .checkYourEmailResetReturning(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
-                    )
-                    navController?.pushViewController(controller, animated: true)
-                    return
-                }
-                let controller = PasswordViewController(
-                    state: .init(intent: intent, email: email, magicLinksEnabled: config.magicLink != nil)
-                )
-                navController?.pushViewController(controller, animated: true)
-            } else if let magicLink = config.magicLink {
-                let parameters = params(email: email, magicLink: magicLink)
-                _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
-                let controller = ActionableInfoViewController(
-                    state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters) }
-                )
-                navController?.pushViewController(controller, animated: true)
-            }
-        case let .didTapContinuePhone(phone, formattedPhone):
-            let expiry = Date().addingTimeInterval(120)
-            let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: config.sms?.expiration))
-            let controller = OTPCodeViewController(
-                state: .init(
-                    phoneNumberE164: phone,
-                    formattedPhoneNumber: formattedPhone,
-                    methodId: result.methodId,
-                    codeExpiry: expiry
-                )
-            )
-            navController?.pushViewController(controller, animated: true)
-        case let .didTapCountryCode(input):
-            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit)
-            countryPickerViewController.delegate = input
-            let navigationController = UINavigationController(rootViewController: countryPickerViewController)
-            present(navigationController, animated: true)
-        }
-    }
-
-    func handle(oauthAction: OAuthAction) async throws {
-        guard let oauth = config.oauth else { return }
-        let response: AuthenticateResponse
-
-        switch oauthAction {
-        case let .didTap(provider):
-            switch provider {
-            case .apple:
-                _ = try await StytchClient.oauth.apple.start(parameters: .init(sessionDuration: sessionDuration))
-            case let .thirdParty(provider):
-                let (token, _) = try await provider.client.start(
-                    parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
-                )
-                response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
-                handleAuthenticationSuccess(response: response)
-            }
-        }
-    }
-
-    func handle(passwordAction: PasswordAction) async throws {
-        let response: AuthenticateResponse
-
-        switch passwordAction {
-        case let .didTapEmailLoginLink(email):
-            guard let magicLink = config.magicLink else { return }
-            let params = params(email: email, magicLink: magicLink)
-            _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
-            let controller = ActionableInfoViewController(
-                state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
-            )
-            navController?.pushViewController(controller, animated: true)
-        case let .didTapLogin(email, password):
-            response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
-            handleAuthenticationSuccess(response: response)
-        case let .didTapSignup(email, password):
-            _ = try await StytchClient.passwords.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
-        case let .didTapSetPassword(token, password):
-            _ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
-        case let .didTapForgotPassword(email):
-            guard let password = config.password else { return }
-            StytchUIClient.pendingResetEmail = email
-            let params = params(email: email, password: password)
-            _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
-            let controller = ActionableInfoViewController(
-                state: .forgotPassword(email: email) { _ = try await StytchClient.passwords.resetByEmailStart(parameters: params) }
-            )
-            navController?.pushViewController(controller, animated: true)
-        }
-    }
-
-    func handle(otpAction: OTPAction) async throws {
-        let response: AuthenticateResponse
-
-        switch otpAction {
-        case let .didTapResendCode(phone, controller):
-            let expiry = Date().addingTimeInterval(120)
-            let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
-            controller.state = .init(
-                phoneNumberE164: phone,
-                formattedPhoneNumber: controller.state.formattedPhoneNumber,
-                methodId: result.methodId,
-                codeExpiry: expiry
-            )
-        case let .didEnterCode(code, methodId, controller):
-            do {
-                response = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
-                handleAuthenticationSuccess(response: response)
-            } catch let error as StytchError where error.errorType == "otp_code_not_found" {
-                controller.showInvalidCode()
-            } catch {
-                throw error
-            }
-        }
-    }
-
-    func handle(aiAction: ActionableInfoAction) async throws {
-        switch aiAction {
-        case let .didTapCreatePassword(email):
-            try await handle(passwordAction: .didTapForgotPassword(email: email))
-        case let .didTapLoginWithoutPassword(email):
-            guard let magicLink = config.magicLink else { return }
-            let params = params(email: email, magicLink: magicLink)
-            _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
-            let controller = ActionableInfoViewController(
-                state: .checkYourEmail(email: email) { _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params) }
-            )
-            navController?.pushViewController(controller, animated: true)
-        }
-    }
-}
-
-private extension AuthRootViewController {
-    var sessionDuration: Minutes {
-        config.session?.sessionDuration ?? .defaultSessionDuration
-    }
-
-    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
-        .init(
-            email: email,
-            loginUrl: password.loginURL,
-            loginExpiration: password.loginExpiration,
-            resetPasswordUrl: password.resetPasswordURL,
-            resetPasswordExpiration: password.resetPasswordExpiration,
-            resetPasswordTemplateId: password.resetPasswordTemplateId
-        )
-    }
-
-    func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
-        .init(
-            email: email,
-            loginMagicLinkUrl: magicLink.loginMagicLinkUrl,
-            loginExpiration: magicLink.loginExpiration,
-            loginTemplateId: magicLink.loginTemplateId,
-            signupMagicLinkUrl: magicLink.signupMagicLinkUrl,
-            signupExpiration: magicLink.signupExpiration,
-            signupTemplateId: magicLink.signupTemplateId
-        )
-    }
-}
-
-private extension UserSearchResponse.UserType {
-    var passwordIntent: PasswordState.Intent? {
-        switch self {
-        case .new:
-            return .signup
-        case .password:
-            return .login
-        case .passwordless:
-            return nil
-        }
-    }
-}
-
-private extension StytchClient.OAuth.ThirdParty.Provider {
-    var client: StytchClient.OAuth.ThirdParty {
-        switch self {
-        case .amazon:
-            return StytchClient.oauth.amazon
-        case .bitbucket:
-            return StytchClient.oauth.bitbucket
-        case .coinbase:
-            return StytchClient.oauth.coinbase
-        case .discord:
-            return StytchClient.oauth.discord
-        case .facebook:
-            return StytchClient.oauth.facebook
-        case .figma:
-            return StytchClient.oauth.figma
-        case .github:
-            return StytchClient.oauth.github
-        case .gitlab:
-            return StytchClient.oauth.gitlab
-        case .google:
-            return StytchClient.oauth.google
-        case .linkedin:
-            return StytchClient.oauth.linkedin
-        case .microsoft:
-            return StytchClient.oauth.microsoft
-        case .salesforce:
-            return StytchClient.oauth.salesforce
-        case .slack:
-            return StytchClient.oauth.slack
-        case .snapchat:
-            return StytchClient.oauth.snapchat
-        case .spotify:
-            return StytchClient.oauth.spotify
-        case .tiktok:
-            return StytchClient.oauth.tiktok
-        case .twitch:
-            return StytchClient.oauth.twitch
-        case .twitter:
-            return StytchClient.oauth.twitter
-        case .yahoo:
-            return StytchClient.oauth.yahoo
-        }
-    }
-}
-
 struct Bootstrap: Decodable {
     let disableSdkWatermark: Bool
-}
-
-private struct UserSearchResponse: Decodable {
-    enum UserType: String, Decodable {
-        case new
-        case password
-        case passwordless
-    }
-
-    let userType: UserType
 }
 
 private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
