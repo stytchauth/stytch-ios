@@ -138,6 +138,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         }
 
         setupStackView()
+        setupScrollView()
 
         passwordInput.textInput.becomeFirstResponder()
 

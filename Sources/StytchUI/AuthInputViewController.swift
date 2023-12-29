@@ -170,6 +170,17 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                         } catch {
                             presentAlert(error: error)
                         }
+                    } else {
+                        do {
+                            let intent = try await viewModel.getUserIntent(email: email)
+                            if let intent = intent {
+                                DispatchQueue.main.async {
+                                    self.launchPassword(intent: intent, email: email, magicLinksEnabled: false)
+                                }
+                            }
+                        } catch {
+                            presentAlert(error: error)
+                        }
                     }
                 }
             }
