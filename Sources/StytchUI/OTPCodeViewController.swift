@@ -68,7 +68,9 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                     DispatchQueue.main.async {
                         self.showInvalidCode()
                     }
-                } catch {}
+                } catch {
+                    self.presentAlert(error: error)
+                }
             }
         }
 
@@ -81,7 +83,9 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                     DispatchQueue.main.async {
                         self.showInvalidCode()
                     }
-                } catch {}
+                } catch {
+                    self.presentAlert(error: error)
+                }
             }
         }
 
@@ -121,7 +125,9 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         Task {
             do {
                 try await viewModel.resendCode(phone: viewModel.state.phoneNumberE164)
-            } catch {}
+            } catch {
+                presentAlert(error: error)
+            }
         }
     }
 

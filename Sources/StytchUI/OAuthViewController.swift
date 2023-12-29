@@ -31,7 +31,9 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
         Task {
             do {
                 try await viewModel.startOAuth(provider: provider)
-            } catch {}
+            } catch {
+                presentAlert(error: error)
+            }
         }
     }
 }
