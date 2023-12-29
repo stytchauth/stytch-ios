@@ -144,40 +144,34 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         switch activeInput {
         case .email:
             Task {
-//                do {
-                    if let email = self.emailInput.text {
-                        if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
-                            do {
-                                let intent = try await viewModel.getUserIntent(email: email)
-                                if let intent = intent {
-                                    DispatchQueue.main.async {
-                                        self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
-                                    }
-                                } else {
-                                    try await viewModel.resetPassword(email: email)
-                                    DispatchQueue.main.async {
-                                        self.launchCheckYourEmailResetReturning(email: email)
-                                    }
-                                }
-                            } catch {
-                                presentAlert(error: error)
-                            }
-                        } else if viewModel.state.config.magicLink != nil {
-                            do {
-                                try await viewModel.sendMagicLink(email: email)
+                if let email = self.emailInput.text {
+                    if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
+                        do {
+                            let intent = try await viewModel.getUserIntent(email: email)
+                            if let intent = intent {
                                 DispatchQueue.main.async {
-                                    self.launchCheckYourEmail(email: email)
+                                    self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
                                 }
-                            } catch {
-                                presentAlert(error: error)
+                            } else {
+                                try await viewModel.resetPassword(email: email)
+                                DispatchQueue.main.async {
+                                    self.launchCheckYourEmailResetReturning(email: email)
+                                }
                             }
-                        } else {
-
+                        } catch {
+                            presentAlert(error: error)
+                        }
+                    } else if viewModel.state.config.magicLink != nil {
+                        do {
+                            try await viewModel.sendMagicLink(email: email)
+                            DispatchQueue.main.async {
+                                self.launchCheckYourEmail(email: email)
+                            }
+                        } catch {
+                            presentAlert(error: error)
                         }
                     }
-//                } catch {
-//                    presentAlert(error: error)
-//                }
+                }
             }
         case .phone:
             Task {
