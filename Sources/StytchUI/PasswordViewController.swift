@@ -16,7 +16,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 DispatchQueue.main.async {
                     self?.launchCheckYourEmail(email: email)
                 }
-            } catch {}
+            } catch {
+                self?.presentAlert(error: error)
+            }
         }
     }
 
@@ -83,7 +85,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 DispatchQueue.main.async {
                     self?.launchForgotPassword(email: email)
                 }
-            } catch {}
+            } catch {
+                self?.presentAlert(error: error)
+            }
         }
     }
 
@@ -99,7 +103,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 DispatchQueue.main.async {
                     self?.launchCheckYourEmail(email: email)
                 }
-            } catch {}
+            } catch {
+                self?.presentAlert(error: error)
+            }
         }
     }
 
@@ -132,6 +138,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         }
 
         setupStackView()
+        setupScrollView()
 
         passwordInput.textInput.becomeFirstResponder()
 
@@ -234,19 +241,25 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             Task {
                 do {
                     try await viewModel.setPassword(token: token, password: password)
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         case .login:
             Task {
                 do {
                     try await viewModel.login(email: email, password: password)
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         case .signup:
             Task {
                 do {
                     try await viewModel.signup(email: email, password: password)
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         }
     }
@@ -306,14 +319,18 @@ protocol PasswordViewModelDelegate: AnyObject {
 extension PasswordViewController: PasswordViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel.state.config, email: email) {}
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {
+                try await self.viewModel.loginWithEmail(email: email)
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
     }
 
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel.state.config, email: email) {}
+            state: .forgotPassword(config: viewModel.state.config, email: email) {
+                try await self.viewModel.forgotPassword(email: email)
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
     }

@@ -140,32 +140,53 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         continueButton.isEnabled = isCurrentInputValid
     }
 
+    private func launchMagicLinkPassword(email: String) async throws {
+        let intent = try await viewModel.getUserIntent(email: email)
+        if let intent = intent {
+            DispatchQueue.main.async {
+                self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
+            }
+        } else {
+            try await viewModel.resetPassword(email: email)
+            DispatchQueue.main.async {
+                self.launchCheckYourEmailResetReturning(email: email)
+            }
+        }
+    }
+
+    private func launchMagicLinkOnly(email: String) async throws {
+        try await viewModel.sendMagicLink(email: email)
+        DispatchQueue.main.async {
+            self.launchCheckYourEmail(email: email)
+        }
+    }
+
+    private func launchPasswordOnly(email: String) async throws {
+        let intent = try await viewModel.getUserIntent(email: email)
+        if let intent = intent {
+            DispatchQueue.main.async {
+                self.launchPassword(intent: intent, email: email, magicLinksEnabled: false)
+            }
+        }
+    }
+
     @objc private func didTapContinue() {
         switch activeInput {
         case .email:
             Task {
-                do {
-                    if let email = self.emailInput.text {
+                if let email = self.emailInput.text {
+                    do {
                         if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
-                            let intent = try await viewModel.getUserIntent(email: email)
-                            if let intent = intent {
-                                DispatchQueue.main.async {
-                                    self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
-                                }
-                            } else {
-                                try await viewModel.resetPassword(email: email)
-                                DispatchQueue.main.async {
-                                    self.launchCheckYourEmailResetReturning(email: email)
-                                }
-                            }
-                        } else if let magicLink = viewModel.state.config.magicLink {
-                            try await viewModel.sendMagicLink(email: email)
-                            DispatchQueue.main.async {
-                                self.launchCheckYourEmail(email: email)
-                            }
+                            try await launchMagicLinkPassword(email: email)
+                        } else if viewModel.state.config.magicLink != nil {
+                            try await launchMagicLinkOnly(email: email)
+                        } else {
+                            try await launchPasswordOnly(email: email)
                         }
+                    } catch {
+                        presentAlert(error: error)
                     }
-                } catch {}
+                }
             }
         case .phone:
             Task {
@@ -179,7 +200,9 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             self.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
                         }
                     }
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         }
     }
@@ -195,7 +218,9 @@ protocol AuthInputViewModelDelegate: AnyObject {
 extension AuthInputViewController: AuthInputViewModelDelegate {
     func launchCheckYourEmailResetReturning(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmailResetReturning(config: viewModel.state.config, email: email) {}
+            state: .checkYourEmailResetReturning(config: viewModel.state.config, email: email) {
+                try await self.viewModel.sendMagicLink(email: email)
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -209,7 +234,9 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
 
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
-            state: .checkYourEmail(config: viewModel.state.config, email: email) {}
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {
+                try await self.viewModel.sendMagicLink(email: email)
+            }
         )
         navigationController?.pushViewController(controller, animated: true)
     }

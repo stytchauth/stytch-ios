@@ -94,7 +94,9 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                     DispatchQueue.main.async {
                         self.launchForgotPassword(email: email)
                     }
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         case let .didTapLoginWithoutPassword(email: email):
             Task {
@@ -103,7 +105,9 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                     DispatchQueue.main.async {
                         self.launchCheckYourEmail(email: email)
                     }
-                } catch {}
+                } catch {
+                    presentAlert(error: error)
+                }
             }
         }
     }
@@ -134,14 +138,7 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     func launchCheckYourEmail(email: String) {
         let controller = ActionableInfoViewController(
             state: .checkYourEmail(config: viewModel.state.config, email: email) {
-                Task {
-                    do {
-                        try await self.viewModel.loginWithoutPassword(email: email)
-                        DispatchQueue.main.async {
-                            self.launchCheckYourEmail(email: email)
-                        }
-                    } catch {}
-                }
+                try await self.viewModel.loginWithoutPassword(email: email)
             }
         )
         navigationController?.pushViewController(controller, animated: true)
@@ -150,14 +147,7 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     func launchForgotPassword(email: String) {
         let controller = ActionableInfoViewController(
             state: .forgotPassword(config: viewModel.state.config, email: email) {
-                Task {
-                    do {
-                        try await self.viewModel.forgotPassword(email: email)
-                        DispatchQueue.main.async {
-                            self.launchForgotPassword(email: email)
-                        }
-                    } catch {}
-                }
+                try await self.viewModel.forgotPassword(email: email)
             }
         )
         navigationController?.pushViewController(controller, animated: true)
