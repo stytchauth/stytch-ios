@@ -13,7 +13,7 @@ public enum StytchUIClient {
     // swiftformat:disable modifierOrder
     fileprivate static weak var currentController: AuthRootViewController?
 
-    fileprivate static var config: Configuration?
+    static var config: Configuration?
 
     static var onAuthCallback: AuthCallback?
 
@@ -88,6 +88,7 @@ public extension StytchUIClient {
         let navigation: Navigation?
         let products: Products
         let session: Session?
+        let theme: StytchTheme
 
         var inputProductsEnabled: Bool {
             password != nil ||
@@ -107,12 +108,14 @@ public extension StytchUIClient {
             publicToken: String,
             navigation: Navigation? = nil,
             products: Products,
-            session: Session? = nil
+            session: Session? = nil,
+            theme: StytchTheme = StytchTheme()
         ) {
             self.publicToken = publicToken
             self.navigation = navigation
             self.products = products
             self.session = session
+            self.theme = theme
         }
 
         public struct Products {
