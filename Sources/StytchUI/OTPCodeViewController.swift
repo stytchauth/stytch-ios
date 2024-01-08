@@ -1,6 +1,7 @@
+import StytchCore
 import UIKit
 
-final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
+final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
@@ -35,8 +36,12 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
 
     private var timer: Timer?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init(state: OTPCodeState) {
+        super.init(viewModel: OTPCodeViewModel(state: state))
+    }
+
+    override func configureView() {
+        super.configureView()
 
         stackView.spacing = .spacingLarge
 
@@ -56,43 +61,51 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
 
         codeInput.onTextChanged = { [weak self] isValid in
             guard let self, let code = self.codeInput.text, isValid else { return }
-
-            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
+            Task {
+                do {
+                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                    DispatchQueue.main.async {
+                        self.showInvalidCode()
+                    }
+                } catch {
+                    self.presentAlert(error: error)
+                }
+            }
         }
 
         codeInput.onReturn = { [weak self] isValid in
             guard let self, let code = self.codeInput.text, isValid else { return }
-
-            self.perform(action: .didEnterCode(code, methodId: state.methodId, controller: self))
+            Task {
+                do {
+                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                    DispatchQueue.main.async {
+                        self.showInvalidCode()
+                    }
+                } catch {
+                    self.presentAlert(error: error)
+                }
+            }
         }
-    }
 
-    override func stateDidUpdate(state: State) {
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
-            string: state.formattedPhoneNumber,
+            string: viewModel.state.formattedPhoneNumber,
             attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
         )
         attributedText.append(attributedPhone)
         attributedText.append(.init(string: "."))
         phoneLabel.attributedText = attributedText
-        updateExiryText()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExiryText), userInfo: nil, repeats: true)
+        updateExpiryText()
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
     }
 
-    func showInvalidCode() {
-        codeInput.setFeedback(
-            .error(
-                NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
-            )
-        )
-    }
-
-    @objc private func updateExiryText() {
+    @objc private func updateExpiryText() {
         guard
             case let currentDate = Date(),
-            state.codeExpiry > currentDate,
-            let dateString = dateFormatter.string(from: currentDate, to: state.codeExpiry)
+            viewModel.state.codeExpiry > currentDate,
+            let dateString = dateFormatter.string(from: currentDate, to: viewModel.state.codeExpiry)
         else {
             expiryButton.setAttributedTitle(
                 expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
@@ -109,14 +122,20 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     }
 
     private func resendCode() {
-        perform(action: .didTapResendCode(phone: state.phoneNumberE164, controller: self))
+        Task {
+            do {
+                try await viewModel.resendCode(phone: viewModel.state.phoneNumberE164)
+            } catch {
+                presentAlert(error: error)
+            }
+        }
     }
 
     private func presentCodeResetConfirmation() {
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), state.formattedPhoneNumber
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedPhoneNumber
             ),
             preferredStyle: .alert
         )
@@ -136,14 +155,16 @@ final class OTPCodeViewController: BaseViewController<OTPVCState, OTPVCAction> {
     }
 }
 
-enum OTPVCAction {
-    case didTapResendCode(phone: String, controller: OTPCodeViewController)
-    case didEnterCode(_ code: String, methodId: String, controller: OTPCodeViewController)
+protocol OTPCodeViewModelDelegate: AnyObject {
+    func showInvalidCode()
 }
 
-struct OTPVCState {
-    let phoneNumberE164: String
-    let formattedPhoneNumber: String
-    let methodId: String
-    let codeExpiry: Date
+extension OTPCodeViewController: OTPCodeViewModelDelegate {
+    func showInvalidCode() {
+        codeInput.setFeedback(
+            .error(
+                NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
+            )
+        )
+    }
 }

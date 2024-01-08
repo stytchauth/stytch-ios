@@ -1,6 +1,6 @@
 import UIKit
 
-final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAction> {
+final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
@@ -16,12 +16,30 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
     }()
 
     private var showOrSeparator: Bool {
-        guard let oauth = state.config.oauth, !oauth.providers.isEmpty else { return false }
-        return state.config.inputProductsEnabled
+        guard let oauth = viewModel.state.config.oauth, !oauth.providers.isEmpty else { return false }
+        return viewModel.state.config.inputProductsEnabled
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init(state: AuthHomeState) {
+        super.init(viewModel: AuthHomeViewModel(state: state))
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
+    override func configureView() {
+        super.configureView()
 
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
@@ -39,8 +57,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let config = state.config.oauth, !config.providers.isEmpty {
-            let oauthController = OAuthViewController(state: config) { .oauth($0) }
+        if let config = viewModel.state.config.oauth, !config.providers.isEmpty {
+            let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)
             constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
@@ -49,44 +67,21 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeAc
             stackView.addArrangedSubview(separatorView)
             constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if state.config.inputProductsEnabled {
-            let inputController = AuthInputViewController(state: state.config) { .input($0) }
+        if viewModel.state.config.inputProductsEnabled {
+            let inputController = AuthInputViewController(state: .init(config: viewModel.state.config))
             addChild(inputController)
             stackView.addArrangedSubview(inputController.view)
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if !state.bootstrap.disableSdkWatermark {
+        if !viewModel.state.bootstrap.disableSdkWatermark {
             stackView.addArrangedSubview(poweredByStytch)
         }
         stackView.addArrangedSubview(SpacerView())
 
         NSLayoutConstraint.activate(constraints)
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
-        }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        navigationController?.setNavigationBarHidden(false, animated: animated)
-    }
 }
 
-struct AuthHomeState {
-    let bootstrap: Bootstrap
-    let config: StytchUIClient.Configuration
-}
+protocol AuthHomeViewModelDelegate: AnyObject {}
 
-enum AuthHomeAction {
-    case actionableInfo(AIVCAction)
-    case input(AuthInputVCAction)
-    case oauth(OAuthVCAction)
-    case otp(OTPVCAction)
-    case password(PasswordVCAction)
-}
+extension AuthHomeViewController: AuthHomeViewModelDelegate {}

@@ -1,7 +1,7 @@
-import StytchCore
 import UIKit
 
-final class PasswordViewController: BaseViewController<PasswordVCState, PasswordVCAction> {
+// swiftlint:disable type_body_length
+final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel()
@@ -10,7 +10,16 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapEmailLoginLink(email: email))
+        Task {
+            do {
+                try await self?.viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self?.launchCheckYourEmail(email: email)
+                }
+            } catch {
+                self?.presentAlert(error: error)
+            }
+        }
     }
 
     private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
@@ -70,7 +79,16 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapForgotPassword(email: email))
+        Task {
+            do {
+                try await self?.viewModel.forgotPassword(email: email)
+                DispatchQueue.main.async {
+                    self?.launchForgotPassword(email: email)
+                }
+            } catch {
+                self?.presentAlert(error: error)
+            }
+        }
     }
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
@@ -79,20 +97,33 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         title: .emailLoginLink
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
-        self?.perform(action: .didTapEmailLoginLink(email: email))
+        Task {
+            do {
+                try await self?.viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self?.launchCheckYourEmail(email: email)
+                }
+            } catch {
+                self?.presentAlert(error: error)
+            }
+        }
     }
 
     private var strengthCheckWorkItem: DispatchWorkItem?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    init(state: PasswordState) {
+        super.init(viewModel: PasswordViewModel(state: state))
+    }
+
+    override func configureView() {
+        super.configureView()
 
         emailInput.textInput.placeholder = nil
         continueButton.isEnabled = false
         forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
 
         passwordInput.onTextChanged = { [weak self] isValid in
-            switch self?.state.intent {
+            switch self?.viewModel.state.intent {
             case .enterNewPassword, .signup:
                 self?.setNeedsStrengthCheck()
             case .none, .login:
@@ -106,26 +137,11 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             self?.submit()
         }
 
-        view.addSubview(scrollView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.clipsToBounds = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-        ])
-
-        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
-
-        setUpStackView()
+        setupStackView()
+        setupScrollView()
 
         passwordInput.textInput.becomeFirstResponder()
-    }
 
-    override func stateDidUpdate(state: State) {
         emailLoginLinkPrimaryButton.isHidden = true
         upperSeparator.isHidden = true
         finishCreatingLabel.isHidden = true
@@ -135,13 +151,17 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         emailLoginLinkPrimaryButton.isHidden = true
         passwordInput.progressBar.isHidden = true
 
-        emailInput.textInput.text = state.email
+        emailInput.textInput.text = viewModel.state.email
         emailInput.isEnabled = true
         passwordInput.textInput.textContentType = .newPassword
 
-        switch state.intent {
+        handleIntent(intent: viewModel.state.intent)
+    }
+
+    private func handleIntent(intent: PasswordState.Intent) {
+        switch intent {
         case .signup:
-            if state.magicLinksEnabled {
+            if viewModel.state.magicLinksEnabled {
                 titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
                 emailLoginLinkPrimaryButton.isHidden = false
                 upperSeparator.isHidden = false
@@ -159,14 +179,30 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false
-            if state.magicLinksEnabled {
+            if viewModel.state.magicLinksEnabled {
                 lowerSeparator.isHidden = false
                 emailLoginLinkTertiaryButton.isHidden = false
             }
         }
     }
 
-    private func setUpStackView() {
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
+    }
+
+    private func setupStackView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
         stackView.addArrangedSubview(upperSeparator)
@@ -200,13 +236,31 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     private func submit() {
         guard let email = emailInput.text, let password = passwordInput.text else { return }
 
-        switch state.intent {
+        switch viewModel.state.intent {
         case let .enterNewPassword(token):
-            perform(action: .didTapSetPassword(token: token, password: password))
+            Task {
+                do {
+                    try await viewModel.setPassword(token: token, password: password)
+                } catch {
+                    presentAlert(error: error)
+                }
+            }
         case .login:
-            perform(action: .didTapLogin(email: email, password: password))
+            Task {
+                do {
+                    try await viewModel.login(email: email, password: password)
+                } catch {
+                    presentAlert(error: error)
+                }
+            }
         case .signup:
-            perform(action: .didTapSignup(email: email, password: password))
+            Task {
+                do {
+                    try await viewModel.signup(email: email, password: password)
+                } catch {
+                    presentAlert(error: error)
+                }
+            }
         }
     }
 
@@ -241,7 +295,7 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
         Task { @MainActor in
             do {
                 let email = emailInput.text == .redactedEmail ? nil : emailInput.text
-                let response = try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
+                let response = try await viewModel.checkStrength(email: email, password: password)
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))
                 } else if let feedback = response.feedback?.suggestions.first {
@@ -257,24 +311,29 @@ final class PasswordViewController: BaseViewController<PasswordVCState, Password
     }
 }
 
-struct PasswordVCState {
-    enum Intent {
-        case signup
-        case login
-        case enterNewPassword(token: String)
-    }
-
-    let intent: Intent
-    let email: String
-    let magicLinksEnabled: Bool
+protocol PasswordViewModelDelegate: AnyObject {
+    func launchCheckYourEmail(email: String)
+    func launchForgotPassword(email: String)
 }
 
-enum PasswordVCAction {
-    case didTapEmailLoginLink(email: String)
-    case didTapLogin(email: String, password: String)
-    case didTapSignup(email: String, password: String)
-    case didTapSetPassword(token: String, password: String)
-    case didTapForgotPassword(email: String)
+extension PasswordViewController: PasswordViewModelDelegate {
+    func launchCheckYourEmail(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .checkYourEmail(config: viewModel.state.config, email: email) {
+                try await self.viewModel.loginWithEmail(email: email)
+            }
+        )
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
+    func launchForgotPassword(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .forgotPassword(config: viewModel.state.config, email: email) {
+                try await self.viewModel.forgotPassword(email: email)
+            }
+        )
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 private extension String {

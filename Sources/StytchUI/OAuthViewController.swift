@@ -2,13 +2,17 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class OAuthViewController: BaseViewController<StytchUIClient.Configuration.OAuth, OAuthVCAction> {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> {
+    init(state: OAuthState) {
+        super.init(viewModel: OAuthViewModel(state: state))
+    }
+
+    override func configureView() {
+        super.configureView()
 
         view.layoutMargins = .zero
 
-        state.providers.enumerated().forEach { index, provider in
+        viewModel.state.config.oauth?.providers.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -23,13 +27,23 @@ final class OAuthViewController: BaseViewController<StytchUIClient.Configuration
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = state.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
-        perform(action: .didTap(provider: provider))
+        guard let (_, provider) = viewModel.state.config.oauth?.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        Task {
+            do {
+                try await viewModel.startOAuth(provider: provider)
+            } catch {
+                presentAlert(error: error)
+            }
+        }
     }
 }
 
+protocol OAuthViewModelDelegate: AnyObject {}
+
+extension OAuthViewController: OAuthViewModelDelegate {}
+
 private extension OAuthViewController {
-    static func makeOauthButton(provider: State.Provider) -> UIControl {
+    static func makeOauthButton(provider: StytchUIClient.Configuration.OAuth.Provider) -> UIControl {
         switch provider {
         case .apple:
             return makeAppleButton()
@@ -60,10 +74,6 @@ private extension OAuthViewController {
         button.removeTarget(nil, action: nil, for: .touchUpInside)
         return button
     }
-}
-
-enum OAuthVCAction {
-    case didTap(provider: StytchUIClient.Configuration.OAuth.Provider)
 }
 
 private extension StytchClient.OAuth.ThirdParty.Provider {
