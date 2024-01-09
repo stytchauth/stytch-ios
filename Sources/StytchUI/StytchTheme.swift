@@ -10,7 +10,7 @@ public class UIColorPair {
     }
 
     public func get(style: UIUserInterfaceStyle) -> UIColor {
-        return if style == .dark {
+        if style == .dark {
             dark
         } else {
             light

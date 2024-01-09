@@ -25,6 +25,7 @@ public extension UIColor {
     static let fog: UIColor = .init(red: 0.90, green: 0.91, blue: 0.92, alpha: 1.00)
 }
 
+// swiftlint:disable force_unwrapping
 extension UIColor {
     static let background: UIColor = .init { StytchUIClient.config!.theme.background.get(style: $0.userInterfaceStyle) }
 
