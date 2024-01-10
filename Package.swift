@@ -31,5 +31,6 @@ let package = Package(
             ]
         ),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
+        .testTarget(name: "StytchUIUnitTests", dependencies: ["StytchCore", "StytchUI"]),
     ]
 )
