@@ -104,3 +104,13 @@ extension StytchClient.Passwords.StrengthCheckResponse {
         )
     }
 }
+
+extension StytchClient.OTP.OTPResponse {
+    static var mock: Self {
+        return .init(
+            requestId: "i-am-a-request-id",
+            statusCode: 200,
+            wrapped: .init(methodId: "otp-method-id")
+        )
+    }
+}
