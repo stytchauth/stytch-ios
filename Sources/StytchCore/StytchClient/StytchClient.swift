@@ -61,9 +61,9 @@ public struct StytchClient: StytchClientType {
 
         switch tokenType {
         case .magicLinks:
-            return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .oauth:
-            return try await .handled(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .passwordReset:
             return .manualHandlingRequired(tokenType, token: token)
         }

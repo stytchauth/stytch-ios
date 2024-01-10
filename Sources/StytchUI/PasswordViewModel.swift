@@ -37,7 +37,8 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
 
     func signup(email: String, password: String) async throws {
-        _ = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        StytchUIClient.onAuthCallback?(response)
     }
 
     func login(email: String, password: String) async throws {

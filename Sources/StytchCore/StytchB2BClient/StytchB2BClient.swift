@@ -55,14 +55,14 @@ public struct StytchB2BClient: StytchClientType {
 
         switch tokenType {
         case .discovery:
-            return try await .handled(.discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
+            return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
         case .multiTenantMagicLinks:
-            return try await .handled(.auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
             return .manualHandlingRequired(.multiTenantPasswords, token: token)
         #if !os(watchOS)
         case .sso:
-            return try await .handled(.auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         #endif
         }
     }
