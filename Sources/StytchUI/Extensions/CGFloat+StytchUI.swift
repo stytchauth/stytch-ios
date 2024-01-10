@@ -1,12 +1,12 @@
 import CoreGraphics
-
+// swiftlint:disable force_unwrapping
 extension CGFloat {
-    static let cornerRadius: CGFloat = 4
-    static let verticalMargin: CGFloat = 64
-    static let horizontalMargin: CGFloat = 32
-    static let buttonHeight: CGFloat = 45
-    static let spacingTiny: CGFloat = 4
-    static let spacingRegular: CGFloat = 12
-    static let spacingLarge: CGFloat = 24
-    static let spacingHuge: CGFloat = 32
+    static var cornerRadius: CGFloat { StytchUIClient.config!.theme.cornerRadius }
+    static var verticalMargin: CGFloat { StytchUIClient.config!.theme.verticalMargin }
+    static var horizontalMargin: CGFloat { StytchUIClient.config!.theme.horizontalMargin }
+    static var buttonHeight: CGFloat { StytchUIClient.config!.theme.buttonHeight }
+    static var spacingTiny: CGFloat { StytchUIClient.config!.theme.spacingTiny }
+    static var spacingRegular: CGFloat { StytchUIClient.config!.theme.spacingRegular }
+    static var spacingLarge: CGFloat { StytchUIClient.config!.theme.spacingLarge }
+    static var spacingHuge: CGFloat { StytchUIClient.config!.theme.spacingHuge }
 }
