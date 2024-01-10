@@ -37,7 +37,9 @@ public enum StytchUIClient {
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         Task { @MainActor in
             switch try await StytchClient.handle(url: url) {
-            case .handled, .notHandled:
+            case let .handled(response):
+                self.onAuthCallback?(response)
+            case .notHandled:
                 break
             case let .manualHandlingRequired(_, token):
                 let email = pendingResetEmail ?? .redactedEmail
@@ -47,7 +49,7 @@ public enum StytchUIClient {
                     let rootController = AuthRootViewController(config: config)
                     currentController = rootController
                     setUpSessionChangeListener()
-                    controller?.present(rootController, animated: true)
+                    controller?.present(UINavigationController(rootViewController: rootController), animated: true)
                     rootController.handlePasswordReset(token: token, email: email, animated: false)
                 }
             }
@@ -247,7 +249,7 @@ struct AuthenticationView: UIViewControllerRepresentable {
         let controller = AuthRootViewController(config: config)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
-        return controller
+        return UINavigationController(rootViewController: controller)
     }
 
     func updateUIViewController(_: UIViewController, context _: Context) {}

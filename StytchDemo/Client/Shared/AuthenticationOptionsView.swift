@@ -101,13 +101,13 @@ struct AuthenticationOptionsView: View {
                         signupRedirectUrl: .init(string: "stytch-auth://signup")!
                     ),
                     password: .init(
-                        loginURL: redirectUrl,
-                        resetPasswordURL: redirectUrl,
+                        loginURL: .init(string: "stytch-auth://login")!,
+                        resetPasswordURL: .init(string: "stytch-auth://reset")!,
                         resetPasswordExpiration: 120
                     ),
                     magicLink: .init(
-                        loginMagicLinkUrl: redirectUrl,
-                        signupMagicLinkUrl: redirectUrl
+                        loginMagicLinkUrl: .init(string: "stytch-auth://login")!,
+                        signupMagicLinkUrl: .init(string: "stytch-auth://signup")!
                     ),
                     sms: .init()
                 )
