@@ -30,7 +30,10 @@ final class OAuthTestCase: BaseTestCase {
         networkInterceptor.responses { AuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
-        await XCTAssertThrowsErrorAsync(_ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
+            StytchSDKError.missingPKCE
+        )
         _ = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
@@ -88,7 +91,10 @@ extension OAuthTestCase {
         let invalidStartParams = createParams(baseUrl)
 
         try await StytchClient.OAuth.ThirdParty.Provider.allCases.asyncForEach { provider in
-            await XCTAssertThrowsErrorAsync(try await provider.interface.start(parameters: invalidStartParams))
+            await XCTAssertThrowsErrorAsync(
+                try await provider.interface.start(parameters: invalidStartParams),
+                StytchSDKError.invalidRedirectScheme
+            )
         }
 
         baseUrl = try XCTUnwrap(URL(string: "custom-scheme://blah"))

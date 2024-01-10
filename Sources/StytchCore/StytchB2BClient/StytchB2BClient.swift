@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 /**
@@ -10,16 +11,10 @@ import Foundation
  */
 public struct StytchB2BClient: StytchClientType {
     static var instance: StytchB2BClient = .init()
-
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
+    public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
 
     private init() {
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-            // only run this in non-test environments
-            Task {
-                try await Self.bootstrap.fetch()
-            }
-        }
         postInit()
     }
 
@@ -36,7 +31,7 @@ public struct StytchB2BClient: StytchClientType {
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
         guard let (type, token) = try _tokenValues(for: url) else { return nil }
-        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchError.unrecognizedDeeplinkTokenType }
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchSDKError.deeplinkUnknownTokenType }
         return (tokenType, token)
     }
 

@@ -78,7 +78,10 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
-        await XCTAssertThrowsErrorAsync(try await StytchB2BClient.magicLinks.authenticate(parameters: parameters))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchB2BClient.magicLinks.authenticate(parameters: parameters),
+            StytchSDKError.missingPKCE
+        )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 
@@ -106,7 +109,10 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         let parameters: StytchB2BClient.MagicLinks.DiscoveryAuthenticateParameters = .init(token: "12345")
 
-        await XCTAssertThrowsErrorAsync(try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters),
+            StytchSDKError.missingPKCE
+        )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 

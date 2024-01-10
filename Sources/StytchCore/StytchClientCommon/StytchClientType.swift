@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 protocol StytchClientType {
@@ -5,6 +6,8 @@ protocol StytchClientType {
     associatedtype DeeplinkTokenType
 
     static var instance: Self { get set }
+
+    static var isInitialized: AnyPublisher<Bool, Never> { get }
 
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 }
@@ -42,6 +45,8 @@ extension StytchClientType {
     private var captchaClient: CaptchaProvider { Current.captcha }
     #endif
 
+    public var initializationState: InitializationState { Current.initializationState }
+
     // swiftlint:disable:next identifier_name
     static func _configure(publicToken: String, hostUrl: URL? = nil) {
         instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl)
@@ -77,6 +82,29 @@ extension StytchClientType {
         updateNetworkingClient()
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+            // only run this in non-test environments
+            runBootstrapping()
+        }
+    }
+
+    private func runBootstrapping() {
+        let client = self
+        let hasSession = sessionStorage.persistedSessionIdentifiersExist
+        Task {
+            if client is StytchClient {
+                try? await StytchClient.bootstrap.fetch()
+                if hasSession {
+                    _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
+                }
+            } else {
+                try? await StytchB2BClient.bootstrap.fetch()
+                if hasSession {
+                    _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
+                }
+            }
+            initializationState.setInitializationState(state: true)
+        }
     }
 
     // To be called after configuration
@@ -85,7 +113,6 @@ extension StytchClientType {
 
         networkingClient.headerProvider = { [weak localStorage, weak sessionStorage] in
             guard let configuration = localStorage?.configuration else { return [:] }
-
             let sessionToken = sessionStorage?.sessionToken?.value ?? configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
 
