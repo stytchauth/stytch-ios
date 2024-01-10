@@ -12,12 +12,12 @@ protocol PasswordViewModelProtocol {
 
 final class PasswordViewModel {
     let state: PasswordState
-    let passwordClient: StytchClient.Passwords
+    let passwordClient: PasswordsProtocol
     let magicLinksClient: StytchClient.MagicLinks
 
     init(
         state: PasswordState,
-        passwordClient: StytchClient.Passwords = StytchClient.passwords,
+        passwordClient: PasswordsProtocol = StytchClient.passwords,
         magicLinksClient: StytchClient.MagicLinks = StytchClient.magicLinks
     ) {
         self.state = state
