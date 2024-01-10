@@ -9,6 +9,8 @@ enum CalledMethod {
     case resetByEmail
     case strengthCheck
     case resetBySession
+    case magicLinksLoginOrCreate
+    case magicLinksSend
 }
 
 class PasswordsSpy: PasswordsProtocol {
@@ -47,11 +49,33 @@ class PasswordsSpy: PasswordsProtocol {
         callback(.resetBySession)
         return AuthenticateResponse.mock
     }
+}
+
+class MagicLinksSpy: MagicLinksEmailProtocol {
+    let callback: (CalledMethod) -> Void
+
+    init(callback: @escaping (CalledMethod) -> Void) {
+        self.callback = callback
+    }
+
+    func loginOrCreate(parameters: StytchCore.StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
+        callback(.magicLinksLoginOrCreate)
+        return BasicResponse.mock
+    }
     
-    
+    func send(parameters: StytchCore.StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
+        callback(.magicLinksSend)
+        return BasicResponse.mock
+    }
 }
 
 final class PasswordViewModelTests: BaseTestCase {
+    override func setUp() async throws {
+        calledMethod = nil
+        StytchUIClient.onAuthCallback = nil
+        StytchUIClient.pendingResetEmail = nil
+    }
+
     func testSessionDurationMinutesReadsFromConfig() {
         let state = PasswordState(
             config: .init(
@@ -145,7 +169,7 @@ final class PasswordViewModelTests: BaseTestCase {
 
     
     var calledMethod: CalledMethod? = nil
-    func callback(method: CalledMethod) {
+    func calledMethodCallback(method: CalledMethod) {
         calledMethod = method
     }
 
@@ -159,9 +183,142 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let spy: PasswordsProtocol = PasswordsSpy(callback: callback)
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
         _ = try await vm.checkStrength(email: "test@stytch.com", password: "password")
         XCTAssert(calledMethod == CalledMethod.strengthCheck)
+    }
+
+    func testSetPasswordCallsResetByEmailAndReportsToOnAuthCallback() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init()
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        var didCallUICallback = false
+        StytchUIClient.onAuthCallback = { _ in
+            didCallUICallback = true
+        }
+        _ = try await vm.setPassword(token: "", password: "")
+        XCTAssert(calledMethod == CalledMethod.resetByEmail)
+        XCTAssert(didCallUICallback)
+    }
+
+    func testSignupCallsCreateAndReportsToOnAuthCallback() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init()
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        var didCallUICallback = false
+        StytchUIClient.onAuthCallback = { _ in
+            didCallUICallback = true
+        }
+        _ = try await vm.signup(email: "", password: "")
+        XCTAssert(calledMethod == CalledMethod.create)
+        XCTAssert(didCallUICallback)
+    }
+
+    func testLoginCallsAuthenticateAndReportsToOnAuthCallback() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init()
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        var didCallUICallback = false
+        StytchUIClient.onAuthCallback = { _ in
+            didCallUICallback = true
+        }
+        _ = try await vm.login(email: "", password: "")
+        XCTAssert(calledMethod == CalledMethod.authenticate)
+        XCTAssert(didCallUICallback)
+    }
+
+    func testLoginWithEmailExitsEarlyWhenEMLProductIsNotConfigured() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init()
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: MagicLinksEmailProtocol = MagicLinksSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, magicLinksClient: spy)
+        _ = try await vm.loginWithEmail(email: "")
+        XCTAssert(calledMethod == nil)
+    }
+
+    func testLoginWithEmailCallsLoginOrCreateWhenEMLProductIsConfigured() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init(
+                    magicLink: .init()
+                )
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: MagicLinksEmailProtocol = MagicLinksSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, magicLinksClient: spy)
+        _ = try await vm.loginWithEmail(email: "")
+        XCTAssert(calledMethod == CalledMethod.magicLinksLoginOrCreate)
+    }
+
+    func testForgotPasswordExitsEarlyWhenPasswordProductIsNotConfigured() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init()
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        _ = try await vm.forgotPassword(email: "test@stytch.com")
+        XCTAssert(calledMethod == nil)
+        XCTAssert(StytchUIClient.pendingResetEmail == nil)
+    }
+
+    func testForgotPasswordCallsResetByEmailStartAndSetsPendingResetEmailWhenPasswordProductIsConfigured() async throws {
+        let state = PasswordState(
+            config: .init(
+                publicToken: "",
+                products: .init(
+                    password: .init()
+                )
+            ),
+            intent: PasswordState.Intent.login,
+            email: "",
+            magicLinksEnabled: true
+        )
+        let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
+        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        _ = try await vm.forgotPassword(email: "test@stytch.com")
+        XCTAssert(calledMethod == CalledMethod.resetByEmailStart)
+        XCTAssert(StytchUIClient.pendingResetEmail == "test@stytch.com")
     }
 }

@@ -1,8 +1,13 @@
 import Foundation
 
+public protocol MagicLinksEmailProtocol {
+    func loginOrCreate(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse
+    func send(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse
+}
+
 public extension StytchClient.MagicLinks {
     /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
-    struct Email {
+    struct Email: MagicLinksEmailProtocol {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
         @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists

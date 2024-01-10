@@ -13,12 +13,12 @@ protocol PasswordViewModelProtocol {
 final class PasswordViewModel {
     let state: PasswordState
     let passwordClient: PasswordsProtocol
-    let magicLinksClient: StytchClient.MagicLinks
+    let magicLinksClient: MagicLinksEmailProtocol
 
     init(
         state: PasswordState,
         passwordClient: PasswordsProtocol = StytchClient.passwords,
-        magicLinksClient: StytchClient.MagicLinks = StytchClient.magicLinks
+        magicLinksClient: MagicLinksEmailProtocol = StytchClient.magicLinks.email
     ) {
         self.state = state
         self.passwordClient = passwordClient
@@ -49,7 +49,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     func loginWithEmail(email: String) async throws {
         guard let magicLink = state.config.magicLink else { return }
         let params = params(email: email, magicLink: magicLink)
-        _ = try await magicLinksClient.email.loginOrCreate(parameters: params)
+        _ = try await magicLinksClient.loginOrCreate(parameters: params)
     }
 
     func forgotPassword(email: String) async throws {

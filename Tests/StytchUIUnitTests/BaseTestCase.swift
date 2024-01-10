@@ -84,7 +84,7 @@ extension StytchClient.Passwords.CreateResponse {
             requestId: "i-am-a-request-id",
             statusCode: 200,
             wrapped: .init(
-                emailId: mockUser.emails[0].emailId,
+                emailId: "test@stytch.com",
                 userId: mockUser.id,
                 user: mockUser,
                 sessionToken: "mock-session-token",
