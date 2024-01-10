@@ -1,9 +1,18 @@
 import Foundation
 
+public protocol PasswordsProtocol {
+    func create(parameters: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse
+    func authenticate(parameters: StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse
+    func resetByEmailStart(parameters: StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse
+    func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse
+    func strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse
+    func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse
+}
+
 public extension StytchClient {
     /// Stytch supports creating, storing, and authenticating password based users, as well as support for account recovery (password reset) and account deduplication with passwordless login methods.
     /// Our implementation of passwords has built-in breach detection powered by [HaveIBeenPwned](https://haveibeenpwned.com/) on both sign-up and login, to prevent the use of compromised credentials and uses Dropbox’s [zxcvbn](https://github.com/dropbox/zxcvbn) strength requirements to guide users towards creating passwords that are easy for humans to remember but difficult for computers to crack.
-    struct Passwords {
+    struct Passwords: PasswordsProtocol {
         let router: NetworkingRouter<PasswordsRoute>
 
         @Dependency(\.keychainClient) private var keychainClient
