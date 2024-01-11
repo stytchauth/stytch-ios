@@ -1,11 +1,12 @@
 import AuthenticationServices
 import Foundation
 
+#if !os(watchOS)
 public protocol ThirdPartyOAuthProviderProtocol {
+    @available(tvOS 16.0, *)
     func start(parameters: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters) async throws -> (token: String, url: URL)
 }
 
-#if !os(watchOS)
 public extension StytchClient.OAuth {
     /// The SDK provides the ability to integrate with third-party identity providers for OAuth experiences beyond the natively-supported Sign In With Apple flow.
     // sourcery: ExcludeWatchOS
