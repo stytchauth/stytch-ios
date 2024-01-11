@@ -7,6 +7,7 @@ ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
 TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
+UI_UNIT_TESTS=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchUIUnitTests -sdk
 HOSTING_BASE_PATH=$(shell echo stytch-ios/$$REF | sed 's:/$$::')
 
 .PHONY: coverage
@@ -56,18 +57,22 @@ test-all: codegen
 .PHONY: test tests test-macos
 test tests test-macos: codegen
 	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
+	$(UI_UNIT_TESTS) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
 	$(TEST) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
 	$(TEST) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
 	$(TEST) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:
