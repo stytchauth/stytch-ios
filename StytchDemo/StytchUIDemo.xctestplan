@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "604B09E9-96A9-421F-B5FE-CE4EB19AEE97",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:StytchDemo.xcodeproj",
+      "identifier" : "53E128212B50092E00976CAC",
+      "name" : "StytchUIDemo"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:StytchDemo.xcodeproj",
+        "identifier" : "53E1283A2B50092F00976CAC",
+        "name" : "StytchUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
