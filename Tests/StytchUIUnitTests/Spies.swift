@@ -1,5 +1,5 @@
-import StytchCore
 import Foundation
+import StytchCore
 
 enum CalledMethod {
     case magicLinksLoginOrCreate
@@ -28,32 +28,32 @@ class PasswordsSpy: PasswordsProtocol {
         self.callback = callback
     }
 
-    func create(parameters: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse {
+    func create(parameters _: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse {
         callback(.passwordsCreate)
         return StytchClient.Passwords.CreateResponse.mock
     }
 
-    func authenticate(parameters: StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse {
+    func authenticate(parameters _: StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse {
         callback(.passwordsAuthenticate)
         return AuthenticateResponse.mock
     }
 
-    func resetByEmailStart(parameters: StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse {
+    func resetByEmailStart(parameters _: StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse {
         callback(.passwordsResetByEmailStart)
         return BasicResponse.mock
     }
 
-    func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse {
+    func resetByEmail(parameters _: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse {
         callback(.passwordsResetByEmail)
         return AuthenticateResponse.mock
     }
 
-    func strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse {
+    func strengthCheck(parameters _: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse {
         callback(.passwordsStrengthCheck)
         return StytchClient.Passwords.StrengthCheckResponse.successMock
     }
 
-    func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse {
+    func resetBySession(parameters _: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse {
         callback(.passwordsResetBySession)
         return AuthenticateResponse.mock
     }
@@ -66,37 +66,37 @@ class MagicLinksSpy: MagicLinksEmailProtocol {
         self.callback = callback
     }
 
-    func loginOrCreate(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
+    func loginOrCreate(parameters _: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
         callback(.magicLinksLoginOrCreate)
         return BasicResponse.mock
     }
 
-    func send(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
+    func send(parameters _: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
         callback(.magicLinksSend)
         return BasicResponse.mock
     }
 }
 
 class OTPSpy: OTPProtocol {
-    func loginOrCreate(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse {
-        callback(.otpLoginOrCreate)
-        return StytchClient.OTP.OTPResponse.mock
-    }
-
-    func send(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse {
-        callback(.otpSend)
-        return StytchClient.OTP.OTPResponse.mock
-    }
-
-    func authenticate(parameters: StytchClient.OTP.AuthenticateParameters) async throws -> AuthenticateResponse {
-        callback(.otpAuthenticate)
-        return AuthenticateResponse.mock
-    }
-
     let callback: (CalledMethod) -> Void
 
     init(callback: @escaping (CalledMethod) -> Void) {
         self.callback = callback
+    }
+
+    func loginOrCreate(parameters _: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse {
+        callback(.otpLoginOrCreate)
+        return StytchClient.OTP.OTPResponse.mock
+    }
+
+    func send(parameters _: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse {
+        callback(.otpSend)
+        return StytchClient.OTP.OTPResponse.mock
+    }
+
+    func authenticate(parameters _: StytchClient.OTP.AuthenticateParameters) async throws -> AuthenticateResponse {
+        callback(.otpAuthenticate)
+        return AuthenticateResponse.mock
     }
 }
 
@@ -107,7 +107,7 @@ class AppleSpy: AppleOAuthProviderProtocol {
         self.callback = callback
     }
 
-    func start(parameters: StytchClient.OAuth.Apple.StartParameters) async throws -> StytchClient.OAuth.Apple.AuthenticateResponse {
+    func start(parameters _: StytchClient.OAuth.Apple.StartParameters) async throws -> StytchClient.OAuth.Apple.AuthenticateResponse {
         callback(.oauthAppleStart)
         return .mock
     }
@@ -120,7 +120,7 @@ class OAuthSpy: OAuthProviderProtocol {
         self.callback = callback
     }
 
-    func authenticate(parameters: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse {
+    func authenticate(parameters _: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse {
         callback(.oauthAuthenticate)
         return .mock
     }
@@ -133,8 +133,9 @@ class ThirdPartyOAuthSpy: ThirdPartyOAuthProviderProtocol {
         self.callback = callback
     }
 
-    func start(parameters: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
+    func start(parameters _: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
         callback(.oauthThirdPartyStart)
+        // swiftlint:disable:next force_unwrapping
         return ("", .init(string: "oauth-url")!)
     }
 }

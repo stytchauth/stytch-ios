@@ -4,11 +4,13 @@ import XCTest
 
 final class OAuthViewModelTests: BaseTestCase {
     var calledMethods: [CalledMethod?] = []
+
     func calledMethodCallback(method: CalledMethod) {
         calledMethods.append(method)
     }
 
     override func setUp() async throws {
+        try await super.setUp()
         calledMethods = []
         StytchUIClient.onAuthCallback = nil
     }
@@ -21,8 +23,8 @@ final class OAuthViewModelTests: BaseTestCase {
                 session: .init(sessionDuration: 123)
             )
         )
-        let vm: OAuthViewModel = OAuthViewModel.init(state: state)
-        XCTAssert(vm.sessionDuration.rawValue == 123)
+        let viewModel = OAuthViewModel(state: state)
+        XCTAssert(viewModel.sessionDuration.rawValue == 123)
     }
 
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
@@ -32,8 +34,8 @@ final class OAuthViewModelTests: BaseTestCase {
                 products: .init()
             )
         )
-        let vm: OAuthViewModel = OAuthViewModel.init(state: state)
-        XCTAssert(vm.sessionDuration == Minutes.defaultSessionDuration)
+        let viewModel = OAuthViewModel(state: state)
+        XCTAssert(viewModel.sessionDuration == Minutes.defaultSessionDuration)
     }
 
     func testStartOAuthCallsAppleProviderAndCallsAuthCallbackWhenProviderIsApple() async throws {
@@ -44,12 +46,12 @@ final class OAuthViewModelTests: BaseTestCase {
             )
         )
         let appleSpy = AppleSpy(callback: calledMethodCallback)
-        let vm: OAuthViewModel = OAuthViewModel.init(state: state, appleOAuthProvider: appleSpy)
+        let viewModel = OAuthViewModel(state: state, appleOAuthProvider: appleSpy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        try await vm.startOAuth(provider: .apple)
+        try await viewModel.startOAuth(provider: .apple)
         XCTAssert(calledMethods.count == 1)
         XCTAssert(calledMethods.contains(.oauthAppleStart))
         XCTAssert(didCallUICallback)
@@ -65,13 +67,13 @@ final class OAuthViewModelTests: BaseTestCase {
         let appleSpy = AppleSpy(callback: calledMethodCallback)
         let oAuthSpy = OAuthSpy(callback: calledMethodCallback)
         let thirdPartySpy = ThirdPartyOAuthSpy(callback: calledMethodCallback)
-        let vm: OAuthViewModel = OAuthViewModel.init(state: state, appleOAuthProvider: appleSpy, oAuthProvider: oAuthSpy)
+        let viewModel = OAuthViewModel(state: state, appleOAuthProvider: appleSpy, oAuthProvider: oAuthSpy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        try await vm.startOAuth(provider: .thirdParty(.amazon), thirdPartyClientForTesting: thirdPartySpy)
-        XCTAssert(calledMethods.count == 0)
+        try await viewModel.startOAuth(provider: .thirdParty(.amazon), thirdPartyClientForTesting: thirdPartySpy)
+        XCTAssert(calledMethods.isEmpty)
         XCTAssert(!didCallUICallback)
     }
 
@@ -82,7 +84,9 @@ final class OAuthViewModelTests: BaseTestCase {
                 products: .init(
                     oauth: .init(
                         providers: [.thirdParty(.amazon)],
+                        // swiftlint:disable:next force_unwrapping
                         loginRedirectUrl: .init(string: "oauth://login")!,
+                        // swiftlint:disable:next force_unwrapping
                         signupRedirectUrl: .init(string: "oauth://signup")!
                     )
                 )
@@ -91,12 +95,12 @@ final class OAuthViewModelTests: BaseTestCase {
         let appleSpy = AppleSpy(callback: calledMethodCallback)
         let oAuthSpy = OAuthSpy(callback: calledMethodCallback)
         let thirdPartySpy = ThirdPartyOAuthSpy(callback: calledMethodCallback)
-        let vm: OAuthViewModel = OAuthViewModel.init(state: state, appleOAuthProvider: appleSpy, oAuthProvider: oAuthSpy)
+        let viewModel = OAuthViewModel(state: state, appleOAuthProvider: appleSpy, oAuthProvider: oAuthSpy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        try await vm.startOAuth(provider: .thirdParty(.amazon), thirdPartyClientForTesting: thirdPartySpy)
+        try await viewModel.startOAuth(provider: .thirdParty(.amazon), thirdPartyClientForTesting: thirdPartySpy)
         XCTAssert(calledMethods.count == 2)
         XCTAssert(calledMethods.contains(.oauthThirdPartyStart))
         XCTAssert(calledMethods.contains(.oauthAuthenticate))

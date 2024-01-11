@@ -3,15 +3,7 @@ import XCTest
 @testable import StytchUI
 
 final class AuthInputViewModelTests: BaseTestCase {
-    var calledMethod: CalledMethod? = nil
-    func calledMethodCallback(method: CalledMethod) {
-        calledMethod = method
-    }
-
-    override func setUp() async throws {
-        calledMethod = nil
-        StytchUIClient.onAuthCallback = nil
-    }
+    var calledMethod: CalledMethod?
 
     let magicLinkConfig: StytchUIClient.Configuration.MagicLink = .init(
         loginMagicLinkUrl: .init(string: "myapp://test-login"),
@@ -30,6 +22,16 @@ final class AuthInputViewModelTests: BaseTestCase {
         resetPasswordTemplateId: "reset-password-template-id"
     )
 
+    func calledMethodCallback(method: CalledMethod) {
+        calledMethod = method
+    }
+
+    override func setUp() async throws {
+        try await super.setUp()
+        calledMethod = nil
+        StytchUIClient.onAuthCallback = nil
+    }
+
     func testCreatesCorrectResetByEmailStartParams() {
         let state = AuthInputState(
             config: .init(
@@ -37,7 +39,7 @@ final class AuthInputViewModelTests: BaseTestCase {
                 products: .init()
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(state: state)
+        let viewModel = AuthInputViewModel(state: state)
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
             loginUrl: passwordConfig.loginURL,
@@ -46,7 +48,7 @@ final class AuthInputViewModelTests: BaseTestCase {
             resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
             resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
         )
-        let result = vm.params(email: "test@stytch.com", password: passwordConfig)
+        let result = viewModel.params(email: "test@stytch.com", password: passwordConfig)
         XCTAssert(result == expected)
     }
 
@@ -57,7 +59,7 @@ final class AuthInputViewModelTests: BaseTestCase {
                 products: .init()
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(state: state)
+        let viewModel = AuthInputViewModel(state: state)
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
             loginMagicLinkUrl: magicLinkConfig.loginMagicLinkUrl,
@@ -67,7 +69,7 @@ final class AuthInputViewModelTests: BaseTestCase {
             signupExpiration: magicLinkConfig.signupExpiration,
             signupTemplateId: magicLinkConfig.signupTemplateId
         )
-        let result = vm.params(email: "test@stytch.com", magicLink: magicLinkConfig)
+        let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkConfig)
         XCTAssert(result == expected)
     }
 
@@ -79,11 +81,11 @@ final class AuthInputViewModelTests: BaseTestCase {
             )
         )
         let magicLinksSpy = MagicLinksSpy(callback: calledMethodCallback)
-        let vm: AuthInputViewModel = AuthInputViewModel.init(
+        let viewModel = AuthInputViewModel(
             state: state,
             magicLinksClient: magicLinksSpy
         )
-        try await vm.sendMagicLink(email: "test@stytch.com")
+        try await viewModel.sendMagicLink(email: "test@stytch.com")
         XCTAssert(calledMethod == nil)
     }
 
@@ -96,11 +98,11 @@ final class AuthInputViewModelTests: BaseTestCase {
                 )
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(
+        let viewModel = AuthInputViewModel(
             state: state,
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
         )
-        try await vm.sendMagicLink(email: "test@stytch.com")
+        try await viewModel.sendMagicLink(email: "test@stytch.com")
         XCTAssert(calledMethod == .magicLinksLoginOrCreate)
     }
 
@@ -111,11 +113,11 @@ final class AuthInputViewModelTests: BaseTestCase {
                 products: .init()
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(
+        let viewModel = AuthInputViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback)
         )
-        try await vm.resetPassword(email: "test@stytch.com")
+        try await viewModel.resetPassword(email: "test@stytch.com")
         XCTAssert(calledMethod == nil)
     }
 
@@ -128,11 +130,11 @@ final class AuthInputViewModelTests: BaseTestCase {
                 )
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(
+        let viewModel = AuthInputViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback)
         )
-        try await vm.resetPassword(email: "test@stytch.com")
+        try await viewModel.resetPassword(email: "test@stytch.com")
         XCTAssert(calledMethod == .passwordsResetByEmailStart)
     }
 
@@ -143,11 +145,11 @@ final class AuthInputViewModelTests: BaseTestCase {
                 products: .init()
             )
         )
-        let vm: AuthInputViewModel = AuthInputViewModel.init(
+        let viewModel = AuthInputViewModel(
             state: state,
             otpClient: OTPSpy(callback: calledMethodCallback)
         )
-        _ = try await vm.continueWithPhone(phone: "", formattedPhone: "")
+        _ = try await viewModel.continueWithPhone(phone: "", formattedPhone: "")
         XCTAssert(calledMethod == .otpLoginOrCreate)
     }
 

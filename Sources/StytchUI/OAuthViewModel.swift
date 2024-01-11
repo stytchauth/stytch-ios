@@ -3,8 +3,7 @@ import StytchCore
 protocol OAuthViewModelProtocol {
     func startOAuth(
         provider: StytchUIClient.Configuration.OAuth.Provider,
-        /// This param is used for testing ONLY
-        thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol?
+        thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol? // this param is only used for testing
     ) async throws
 }
 
@@ -19,7 +18,7 @@ final class OAuthViewModel {
         oAuthProvider: OAuthProviderProtocol = StytchClient.oauth
     ) {
         self.state = state
-        self.appleOauthProvider = appleOAuthProvider
+        appleOauthProvider = appleOAuthProvider
         self.oAuthProvider = oAuthProvider
     }
 }
@@ -35,7 +34,7 @@ extension OAuthViewModel: OAuthViewModelProtocol {
             StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
             if let oauth = state.config.oauth {
-                let (token, _) = try await provider.getClient(testingClient: thirdPartyClientForTesting).start(
+                let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
                     parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
                 )
                 let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
@@ -56,10 +55,7 @@ extension OAuthViewModel {
 }
 
 extension StytchClient.OAuth.ThirdParty.Provider {
-    func getClient(testingClient: ThirdPartyOAuthProviderProtocol? = nil) -> ThirdPartyOAuthProviderProtocol {
-        if let client = testingClient {
-            return client
-        }
+    var client: ThirdPartyOAuthProviderProtocol {
         switch self {
         case .amazon:
             return StytchClient.oauth.amazon

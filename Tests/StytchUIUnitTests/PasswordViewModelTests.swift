@@ -3,12 +3,14 @@ import XCTest
 @testable import StytchUI
 
 final class PasswordViewModelTests: BaseTestCase {
-    var calledMethod: CalledMethod? = nil
+    var calledMethod: CalledMethod?
+
     func calledMethodCallback(method: CalledMethod) {
         calledMethod = method
     }
 
     override func setUp() async throws {
+        try await super.setUp()
         calledMethod = nil
         StytchUIClient.onAuthCallback = nil
         StytchUIClient.pendingResetEmail = nil
@@ -25,8 +27,8 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state)
-        XCTAssert(vm.sessionDuration.rawValue == 123)
+        let viewModel = PasswordViewModel(state: state)
+        XCTAssert(viewModel.sessionDuration.rawValue == 123)
     }
 
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
@@ -39,8 +41,8 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state)
-        XCTAssert(vm.sessionDuration == Minutes.defaultSessionDuration)
+        let viewModel = PasswordViewModel(state: state)
+        XCTAssert(viewModel.sessionDuration == Minutes.defaultSessionDuration)
     }
 
     func testCreatesCorrectResetByEmailStartParams() {
@@ -60,7 +62,7 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state)
+        let viewModel = PasswordViewModel(state: state)
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
             loginUrl: passwordConfig.loginURL,
@@ -69,10 +71,10 @@ final class PasswordViewModelTests: BaseTestCase {
             resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
             resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
         )
-        let result = vm.params(email: "test@stytch.com", password: passwordConfig)
+        let result = viewModel.params(email: "test@stytch.com", password: passwordConfig)
         XCTAssert(result == expected)
     }
-    
+
     func testCreatesCorrectMagicLinkParams() {
         let magicLinkConfig: StytchUIClient.Configuration.MagicLink = .init(
             loginMagicLinkUrl: .init(string: "myapp://test-login"),
@@ -91,7 +93,7 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state)
+        let viewModel = PasswordViewModel(state: state)
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
             loginMagicLinkUrl: magicLinkConfig.loginMagicLinkUrl,
@@ -101,7 +103,7 @@ final class PasswordViewModelTests: BaseTestCase {
             signupExpiration: magicLinkConfig.signupExpiration,
             signupTemplateId: magicLinkConfig.signupTemplateId
         )
-        let result = vm.params(email: "test@stytch.com", magicLink: magicLinkConfig)
+        let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkConfig)
         XCTAssert(result == expected)
     }
 
@@ -116,8 +118,8 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
-        _ = try await vm.checkStrength(email: "test@stytch.com", password: "password")
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
+        _ = try await viewModel.checkStrength(email: "test@stytch.com", password: "password")
         XCTAssert(calledMethod == .passwordsStrengthCheck)
     }
 
@@ -132,12 +134,12 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        _ = try await vm.setPassword(token: "", password: "")
+        _ = try await viewModel.setPassword(token: "", password: "")
         XCTAssert(calledMethod == .passwordsResetByEmail)
         XCTAssert(didCallUICallback)
     }
@@ -153,12 +155,12 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        _ = try await vm.signup(email: "", password: "")
+        _ = try await viewModel.signup(email: "", password: "")
         XCTAssert(calledMethod == .passwordsCreate)
         XCTAssert(didCallUICallback)
     }
@@ -174,12 +176,12 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
         var didCallUICallback = false
         StytchUIClient.onAuthCallback = { _ in
             didCallUICallback = true
         }
-        _ = try await vm.login(email: "", password: "")
+        _ = try await viewModel.login(email: "", password: "")
         XCTAssert(calledMethod == .passwordsAuthenticate)
         XCTAssert(didCallUICallback)
     }
@@ -195,8 +197,8 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: MagicLinksEmailProtocol = MagicLinksSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, magicLinksClient: spy)
-        _ = try await vm.loginWithEmail(email: "")
+        let viewModel = PasswordViewModel(state: state, magicLinksClient: spy)
+        _ = try await viewModel.loginWithEmail(email: "")
         XCTAssert(calledMethod == nil)
     }
 
@@ -213,8 +215,8 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: MagicLinksEmailProtocol = MagicLinksSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, magicLinksClient: spy)
-        _ = try await vm.loginWithEmail(email: "")
+        let viewModel = PasswordViewModel(state: state, magicLinksClient: spy)
+        _ = try await viewModel.loginWithEmail(email: "")
         XCTAssert(calledMethod == .magicLinksLoginOrCreate)
     }
 
@@ -229,8 +231,8 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
-        _ = try await vm.forgotPassword(email: "test@stytch.com")
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
+        _ = try await viewModel.forgotPassword(email: "test@stytch.com")
         XCTAssert(calledMethod == nil)
         XCTAssert(StytchUIClient.pendingResetEmail == nil)
     }
@@ -248,8 +250,8 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
-        let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
-        _ = try await vm.forgotPassword(email: "test@stytch.com")
+        let viewModel = PasswordViewModel(state: state, passwordClient: spy)
+        _ = try await viewModel.forgotPassword(email: "test@stytch.com")
         XCTAssert(calledMethod == .passwordsResetByEmailStart)
         XCTAssert(StytchUIClient.pendingResetEmail == "test@stytch.com")
     }

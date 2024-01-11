@@ -137,19 +137,18 @@ public extension StytchClient.Passwords {
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
     struct ResetByEmailStartParameters: Encodable, Equatable {
-        public static func ==(
+        public static func == (
             lhs: ResetByEmailStartParameters,
             rhs: ResetByEmailStartParameters
         ) -> Bool {
-            return lhs.email == rhs.email &&
-            lhs.loginUrl == rhs.loginUrl &&
-            lhs.loginExpiration?.rawValue == rhs.loginExpiration?.rawValue &&
-            lhs.resetPasswordUrl == rhs.resetPasswordUrl &&
-            lhs.resetPasswordExpiration?.rawValue == rhs.resetPasswordExpiration?.rawValue &&
-            lhs.resetPasswordTemplateId == rhs.resetPasswordTemplateId
-            
+            lhs.email == rhs.email &&
+                lhs.loginUrl == rhs.loginUrl &&
+                lhs.loginExpiration?.rawValue == rhs.loginExpiration?.rawValue &&
+                lhs.resetPasswordUrl == rhs.resetPasswordUrl &&
+                lhs.resetPasswordExpiration?.rawValue == rhs.resetPasswordExpiration?.rawValue &&
+                lhs.resetPasswordTemplateId == rhs.resetPasswordTemplateId
         }
-        
+
         private enum CodingKeys: String, CodingKey {
             case email
             case loginUrl = "loginRedirectUrl"

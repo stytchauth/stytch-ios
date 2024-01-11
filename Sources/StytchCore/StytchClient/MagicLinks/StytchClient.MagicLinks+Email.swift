@@ -93,15 +93,13 @@ public extension StytchClient.MagicLinks.Email {
             self.signupTemplateId = signupTemplateId
         }
 
-        
-        
-        public static func ==(lhs: Parameters, rhs: Parameters) -> Bool {
-            return lhs.loginMagicLinkUrl == rhs.loginMagicLinkUrl &&
-            lhs.loginExpiration == rhs.loginExpiration &&
-            lhs.loginTemplateId == rhs.loginTemplateId &&
-            lhs.signupMagicLinkUrl == rhs.signupMagicLinkUrl &&
-            lhs.signupExpiration == rhs.signupExpiration &&
-            lhs.signupTemplateId == rhs.signupTemplateId
+        public static func == (lhs: Parameters, rhs: Parameters) -> Bool {
+            lhs.loginMagicLinkUrl == rhs.loginMagicLinkUrl &&
+                lhs.loginExpiration == rhs.loginExpiration &&
+                lhs.loginTemplateId == rhs.loginTemplateId &&
+                lhs.signupMagicLinkUrl == rhs.signupMagicLinkUrl &&
+                lhs.signupExpiration == rhs.signupExpiration &&
+                lhs.signupTemplateId == rhs.signupTemplateId
         }
     }
 }

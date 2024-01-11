@@ -72,7 +72,7 @@ extension AuthenticateResponse {
 
 extension BasicResponse {
     static var mock: Self {
-        return .init(requestId: "i-am-a-request-id", statusCode: 200)
+        .init(requestId: "i-am-a-request-id", statusCode: 200)
     }
 }
 
@@ -97,7 +97,7 @@ extension StytchClient.Passwords.CreateResponse {
 
 extension StytchClient.Passwords.StrengthCheckResponse {
     static var successMock: Self {
-        return .init(
+        .init(
             requestId: "i-am-a-request-id",
             statusCode: 200,
             wrapped: .init(validPassword: true, score: 1.0, breachedPassword: false, feedback: nil)
@@ -107,7 +107,7 @@ extension StytchClient.Passwords.StrengthCheckResponse {
 
 extension StytchClient.OTP.OTPResponse {
     static var mock: Self {
-        return .init(
+        .init(
             requestId: "i-am-a-request-id",
             statusCode: 200,
             wrapped: .init(methodId: "otp-method-id")
