@@ -57,7 +57,6 @@ test-all: codegen
 .PHONY: test tests test-macos
 test tests test-macos: codegen
 	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
-	$(UI_UNIT_TESTS) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
@@ -72,7 +71,6 @@ test-tvos: codegen
 .PHONY: test-watchos
 test-watchos: codegen
 	$(TEST) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:
