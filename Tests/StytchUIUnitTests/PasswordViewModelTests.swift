@@ -107,7 +107,7 @@ final class PasswordViewModelTests: BaseTestCase {
             magicLinksEnabled: true
         )
         let vm: PasswordViewModel = PasswordViewModel.init(state: state)
-        XCTAssert(vm.sessionDuration.rawValue == Minutes.defaultSessionDuration.rawValue)
+        XCTAssert(vm.sessionDuration == Minutes.defaultSessionDuration)
     }
 
     func testCreatesCorrectResetByEmailStartParams() {

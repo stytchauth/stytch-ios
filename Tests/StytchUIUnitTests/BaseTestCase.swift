@@ -114,3 +114,21 @@ extension StytchClient.OTP.OTPResponse {
         )
     }
 }
+
+extension StytchClient.OAuth.Apple.AuthenticateResponse {
+    static var mock: Self {
+        let mockUser = User.mock(userId: "im_a_user_id")
+        let mockSession = Session.mock(userId: "im_a_user_id")
+        return .init(
+            requestId: "i-am-a-request-id",
+            statusCode: 200,
+            wrapped: .init(
+                user: mockUser,
+                sessionToken: "session-token",
+                sessionJwt: "session-jwt",
+                session: mockSession,
+                userCreated: true
+            )
+        )
+    }
+}

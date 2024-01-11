@@ -1,8 +1,12 @@
 import AuthenticationServices
 
+public protocol AppleOAuthProviderProtocol {
+    func start(parameters: StytchClient.OAuth.Apple.StartParameters) async throws -> StytchClient.OAuth.Apple.AuthenticateResponse
+}
+
 public extension StytchClient.OAuth {
     /// The SDK provides the ability to integrate with the natively-supported Sign In With Apple flow.
-    struct Apple {
+    struct Apple: AppleOAuthProviderProtocol {
         let router: NetworkingRouter<OAuthRoute.AppleRoute>
 
         @Dependency(\.cryptoClient) private var cryptoClient
