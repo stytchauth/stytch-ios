@@ -2,54 +2,9 @@ import XCTest
 @testable import StytchCore
 @testable import StytchUI
 
-enum OAuthViewModelCalledMethod {
-    case appleStart
-    case thirdPartyStart
-    case authenticate
-}
-
-class AppleSpy: AppleOAuthProviderProtocol {
-    let callback: (OAuthViewModelCalledMethod) -> Void
-
-    init(callback: @escaping (OAuthViewModelCalledMethod) -> Void) {
-        self.callback = callback
-    }
-
-    func start(parameters: StytchClient.OAuth.Apple.StartParameters) async throws -> StytchClient.OAuth.Apple.AuthenticateResponse {
-        callback(.appleStart)
-        return .mock
-    }
-}
-
-class OAuthSpy: OAuthProviderProtocol {
-    let callback: (OAuthViewModelCalledMethod) -> Void
-
-    init(callback: @escaping (OAuthViewModelCalledMethod) -> Void) {
-        self.callback = callback
-    }
-
-    func authenticate(parameters: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse {
-        callback(.authenticate)
-        return .mock
-    }
-}
-
-class ThirdPartyOAuthSpy: ThirdPartyOAuthProviderProtocol {
-    let callback: (OAuthViewModelCalledMethod) -> Void
-
-    init(callback: @escaping (OAuthViewModelCalledMethod) -> Void) {
-        self.callback = callback
-    }
-
-    func start(parameters: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
-        callback(.thirdPartyStart)
-        return ("", .init(string: "oauth-url")!)
-    }
-}
-
 final class OAuthViewModelTests: BaseTestCase {
-    var calledMethods: [OAuthViewModelCalledMethod?] = []
-    func calledMethodCallback(method: OAuthViewModelCalledMethod) {
+    var calledMethods: [CalledMethod?] = []
+    func calledMethodCallback(method: CalledMethod) {
         calledMethods.append(method)
     }
 
@@ -96,7 +51,7 @@ final class OAuthViewModelTests: BaseTestCase {
         }
         try await vm.startOAuth(provider: .apple)
         XCTAssert(calledMethods.count == 1)
-        XCTAssert(calledMethods.contains(.appleStart))
+        XCTAssert(calledMethods.contains(.oauthAppleStart))
         XCTAssert(didCallUICallback)
     }
 
@@ -143,8 +98,8 @@ final class OAuthViewModelTests: BaseTestCase {
         }
         try await vm.startOAuth(provider: .thirdParty(.amazon), thirdPartyClientForTesting: thirdPartySpy)
         XCTAssert(calledMethods.count == 2)
-        XCTAssert(calledMethods.contains(.thirdPartyStart))
-        XCTAssert(calledMethods.contains(.authenticate))
+        XCTAssert(calledMethods.contains(.oauthThirdPartyStart))
+        XCTAssert(calledMethods.contains(.oauthAuthenticate))
         XCTAssert(didCallUICallback)
     }
 }

@@ -61,7 +61,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
 }
 
 struct PasswordState {
-    enum Intent {
+    enum Intent: Equatable {
         case signup
         case login
         case enterNewPassword(token: String)

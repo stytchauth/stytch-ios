@@ -10,9 +10,20 @@ protocol AuthInputViewModelProtocol {
 
 final class AuthInputViewModel {
     let state: AuthInputState
+    let passwordClient: PasswordsProtocol
+    let magicLinksClient: MagicLinksEmailProtocol
+    let otpClient: OTPProtocol
 
-    init(state: AuthInputState) {
+    init(
+        state: AuthInputState,
+        passwordClient: PasswordsProtocol = StytchClient.passwords,
+        magicLinksClient: MagicLinksEmailProtocol = StytchClient.magicLinks.email,
+        otpClient: OTPProtocol = StytchClient.otps
+    ) {
         self.state = state
+        self.passwordClient = passwordClient
+        self.magicLinksClient = magicLinksClient
+        self.otpClient = otpClient
     }
 }
 
@@ -20,14 +31,14 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
     func sendMagicLink(email: String) async throws {
         if let magicLink = state.config.magicLink {
             let params = params(email: email, magicLink: magicLink)
-            _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
+            _ = try await magicLinksClient.loginOrCreate(parameters: params)
         }
     }
 
     func resetPassword(email: String) async throws {
         if let password = state.config.password {
             let params = params(email: email, password: password)
-            _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
+            _ = try await passwordClient.resetByEmailStart(parameters: params)
         }
     }
 
@@ -38,12 +49,12 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
 
     func continueWithPhone(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
         return (result, expiry)
     }
 }
 
-private extension AuthInputViewModel {
+extension AuthInputViewModel {
     func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
@@ -72,7 +83,7 @@ struct AuthInputState {
     let config: StytchUIClient.Configuration
 }
 
-private struct UserSearchResponse: Decodable {
+internal struct UserSearchResponse: Decodable {
     enum UserType: String, Decodable {
         case new
         case password
@@ -82,7 +93,7 @@ private struct UserSearchResponse: Decodable {
     let userType: UserType
 }
 
-private extension UserSearchResponse.UserType {
+internal extension UserSearchResponse.UserType {
     var passwordIntent: PasswordState.Intent? {
         switch self {
         case .new:

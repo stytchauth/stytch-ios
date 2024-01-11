@@ -2,76 +2,9 @@ import XCTest
 @testable import StytchCore
 @testable import StytchUI
 
-enum PasswordViewModelCalledMethod {
-    case create
-    case authenticate
-    case resetByEmailStart
-    case resetByEmail
-    case strengthCheck
-    case resetBySession
-    case magicLinksLoginOrCreate
-    case magicLinksSend
-}
-
-class PasswordsSpy: PasswordsProtocol {
-    let callback: (PasswordViewModelCalledMethod) -> Void
-
-    init(callback: @escaping (PasswordViewModelCalledMethod) -> Void) {
-        self.callback = callback
-    }
-
-    func create(parameters: StytchCore.StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse {
-        callback(.create)
-        return StytchClient.Passwords.CreateResponse.mock
-    }
-    
-    func authenticate(parameters: StytchCore.StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse {
-        callback(.authenticate)
-        return AuthenticateResponse.mock
-    }
-    
-    func resetByEmailStart(parameters: StytchCore.StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse {
-        callback(.resetByEmailStart)
-        return BasicResponse.mock
-    }
-    
-    func resetByEmail(parameters: StytchCore.StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse {
-        callback(.resetByEmail)
-        return AuthenticateResponse.mock
-    }
-    
-    func strengthCheck(parameters: StytchCore.StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse {
-        callback(.strengthCheck)
-        return StytchClient.Passwords.StrengthCheckResponse.successMock
-    }
-    
-    func resetBySession(parameters: StytchCore.StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse {
-        callback(.resetBySession)
-        return AuthenticateResponse.mock
-    }
-}
-
-class MagicLinksSpy: MagicLinksEmailProtocol {
-    let callback: (PasswordViewModelCalledMethod) -> Void
-
-    init(callback: @escaping (PasswordViewModelCalledMethod) -> Void) {
-        self.callback = callback
-    }
-
-    func loginOrCreate(parameters: StytchCore.StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
-        callback(.magicLinksLoginOrCreate)
-        return BasicResponse.mock
-    }
-    
-    func send(parameters: StytchCore.StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse {
-        callback(.magicLinksSend)
-        return BasicResponse.mock
-    }
-}
-
 final class PasswordViewModelTests: BaseTestCase {
-    var calledMethod: PasswordViewModelCalledMethod? = nil
-    func calledMethodCallback(method: PasswordViewModelCalledMethod) {
+    var calledMethod: CalledMethod? = nil
+    func calledMethodCallback(method: CalledMethod) {
         calledMethod = method
     }
 
@@ -185,7 +118,7 @@ final class PasswordViewModelTests: BaseTestCase {
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
         _ = try await vm.checkStrength(email: "test@stytch.com", password: "password")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.strengthCheck)
+        XCTAssert(calledMethod == .passwordsStrengthCheck)
     }
 
     func testSetPasswordCallsResetByEmailAndReportsToOnAuthCallback() async throws {
@@ -205,7 +138,7 @@ final class PasswordViewModelTests: BaseTestCase {
             didCallUICallback = true
         }
         _ = try await vm.setPassword(token: "", password: "")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.resetByEmail)
+        XCTAssert(calledMethod == .passwordsResetByEmail)
         XCTAssert(didCallUICallback)
     }
 
@@ -226,7 +159,7 @@ final class PasswordViewModelTests: BaseTestCase {
             didCallUICallback = true
         }
         _ = try await vm.signup(email: "", password: "")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.create)
+        XCTAssert(calledMethod == .passwordsCreate)
         XCTAssert(didCallUICallback)
     }
 
@@ -247,7 +180,7 @@ final class PasswordViewModelTests: BaseTestCase {
             didCallUICallback = true
         }
         _ = try await vm.login(email: "", password: "")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.authenticate)
+        XCTAssert(calledMethod == .passwordsAuthenticate)
         XCTAssert(didCallUICallback)
     }
 
@@ -282,7 +215,7 @@ final class PasswordViewModelTests: BaseTestCase {
         let spy: MagicLinksEmailProtocol = MagicLinksSpy(callback: calledMethodCallback)
         let vm: PasswordViewModel = PasswordViewModel.init(state: state, magicLinksClient: spy)
         _ = try await vm.loginWithEmail(email: "")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.magicLinksLoginOrCreate)
+        XCTAssert(calledMethod == .magicLinksLoginOrCreate)
     }
 
     func testForgotPasswordExitsEarlyWhenPasswordProductIsNotConfigured() async throws {
@@ -317,7 +250,7 @@ final class PasswordViewModelTests: BaseTestCase {
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let vm: PasswordViewModel = PasswordViewModel.init(state: state, passwordClient: spy)
         _ = try await vm.forgotPassword(email: "test@stytch.com")
-        XCTAssert(calledMethod == PasswordViewModelCalledMethod.resetByEmailStart)
+        XCTAssert(calledMethod == .passwordsResetByEmailStart)
         XCTAssert(StytchUIClient.pendingResetEmail == "test@stytch.com")
     }
 }
