@@ -64,7 +64,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             Task {
                 do {
                     try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
-                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
                     DispatchQueue.main.async {
                         self.showInvalidCode()
                     }
@@ -79,7 +79,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             Task {
                 do {
                     try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
-                } catch let error as StytchError where error.errorType == "otp_code_not_found" {
+                } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
                     DispatchQueue.main.async {
                         self.showInvalidCode()
                     }

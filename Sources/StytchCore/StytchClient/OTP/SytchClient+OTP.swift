@@ -1,9 +1,15 @@
+public protocol OTPProtocol {
+    func loginOrCreate(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse
+    func send(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse
+    func authenticate(parameters: StytchClient.OTP.AuthenticateParameters) async throws -> AuthenticateResponse
+}
+
 public extension StytchClient {
     /// One-time passcodes can be sent via email, phone number, or WhatsApp. One-time passcodes allow for a quick and seamless login experience on their own, or can layer on top of another login product like Email magic links to provide extra security as a multi-factor authentication (MFA) method.
-    struct OTP {
+    struct OTP: OTPProtocol {
         let router: NetworkingRouter<OTPRoute>
 
-        @Dependency(\.sessionStorage.activeSessionExists) private var activeSessionExists
+        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.

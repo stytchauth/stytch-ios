@@ -52,7 +52,7 @@ final class MagicLinksTestCase: BaseTestCase {
             loginTemplateId: "hello"
         )
 
-        XCTAssertFalse(Current.sessionStorage.activeSessionExists)
+        XCTAssertFalse(Current.sessionStorage.persistedSessionIdentifiersExist)
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
@@ -86,7 +86,7 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try Current.keychainClient.set("123", for: .sessionToken)
 
-        XCTAssertTrue(Current.sessionStorage.activeSessionExists)
+        XCTAssertTrue(Current.sessionStorage.persistedSessionIdentifiersExist)
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
@@ -116,7 +116,10 @@ final class MagicLinksTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
-        await XCTAssertThrowsErrorAsync(try await StytchClient.magicLinks.authenticate(parameters: parameters))
+        await XCTAssertThrowsErrorAsync(
+            try await StytchClient.magicLinks.authenticate(parameters: parameters),
+            StytchSDKError.missingPKCE
+        )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 

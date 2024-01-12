@@ -7,6 +7,7 @@ ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
 TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
+UI_UNIT_TESTS=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchUIUnitTests -sdk
 HOSTING_BASE_PATH=$(shell echo stytch-ios/$$REF | sed 's:/$$::')
 
 .PHONY: coverage
@@ -60,6 +61,7 @@ test tests test-macos: codegen
 .PHONY: test-ios
 test-ios: codegen
 	$(TEST) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen

@@ -1,4 +1,4 @@
-enum AttrStringComponent {
+enum AttrStringComponent: Equatable {
     indirect case bold(AttrStringComponent)
     case string(String)
 }

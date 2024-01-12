@@ -12,48 +12,56 @@ protocol PasswordViewModelProtocol {
 
 final class PasswordViewModel {
     let state: PasswordState
+    let passwordClient: PasswordsProtocol
+    let magicLinksClient: MagicLinksEmailProtocol
 
-    init(state: PasswordState) {
+    init(
+        state: PasswordState,
+        passwordClient: PasswordsProtocol = StytchClient.passwords,
+        magicLinksClient: MagicLinksEmailProtocol = StytchClient.magicLinks.email
+    ) {
         self.state = state
+        self.passwordClient = passwordClient
+        self.magicLinksClient = magicLinksClient
     }
 }
 
 extension PasswordViewModel: PasswordViewModelProtocol {
     func checkStrength(email: String?, password: String) async throws -> StytchClient.Passwords.StrengthCheckResponse {
-        try await StytchClient.passwords.strengthCheck(parameters: .init(email: email, password: password))
+        try await passwordClient.strengthCheck(parameters: .init(email: email, password: password))
     }
 
     func setPassword(token: String, password: String) async throws {
-        let response = try await StytchClient.passwords.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
         StytchUIClient.onAuthCallback?(response)
     }
 
     func signup(email: String, password: String) async throws {
-        let response = try await StytchClient.passwords.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
         StytchUIClient.onAuthCallback?(response)
     }
 
     func login(email: String, password: String) async throws {
-        let response = try await StytchClient.passwords.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
         StytchUIClient.onAuthCallback?(response)
     }
 
     func loginWithEmail(email: String) async throws {
         guard let magicLink = state.config.magicLink else { return }
         let params = params(email: email, magicLink: magicLink)
-        _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
+        _ = try await magicLinksClient.loginOrCreate(parameters: params)
     }
 
     func forgotPassword(email: String) async throws {
         guard let password = state.config.password else { return }
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
-        _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
+        _ = try await passwordClient.resetByEmailStart(parameters: params)
     }
 }
 
 struct PasswordState {
-    enum Intent {
+    enum Intent: Equatable {
         case signup
         case login
         case enterNewPassword(token: String)
@@ -65,7 +73,7 @@ struct PasswordState {
     let magicLinksEnabled: Bool
 }
 
-private extension PasswordViewModel {
+extension PasswordViewModel {
     var sessionDuration: Minutes {
         state.config.session?.sessionDuration ?? .defaultSessionDuration
     }

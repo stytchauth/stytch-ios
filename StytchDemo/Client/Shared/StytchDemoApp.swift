@@ -25,6 +25,9 @@ struct StytchDemoApp: App {
             } onAuth: { sessionUser = ($0.session, $0.user) }
                 .padding()
                 .frame(minHeight: 250)
+                .task {
+                    StytchClient.configure(publicToken: configuration.publicToken)
+                }
                 // Handle web-browsing deeplinks (enables universal links on macOS)
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
                     guard let url = userActivity.webpageURL else { return }

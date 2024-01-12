@@ -8,9 +8,17 @@ protocol ActionableInfoViewModelProtocol {
 
 final class ActionableInfoViewModel {
     let state: ActionableInfoState
+    let passwordClient: PasswordsProtocol
+    let magicLinksClient: MagicLinksEmailProtocol
 
-    init(state: ActionableInfoState) {
+    init(
+        state: ActionableInfoState,
+        passwordClient: PasswordsProtocol = StytchClient.passwords,
+        magicLinksClient: MagicLinksEmailProtocol = StytchClient.magicLinks.email
+    ) {
         self.state = state
+        self.passwordClient = passwordClient
+        self.magicLinksClient = magicLinksClient
     }
 }
 
@@ -18,14 +26,14 @@ extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
     func loginWithoutPassword(email: String) async throws {
         guard let magicLink = state.config.magicLink else { return }
         let params = params(email: email, magicLink: magicLink)
-        _ = try await StytchClient.magicLinks.email.loginOrCreate(parameters: params)
+        _ = try await magicLinksClient.loginOrCreate(parameters: params)
     }
 
     func forgotPassword(email: String) async throws {
         guard let password = state.config.password else { return }
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
-        _ = try await StytchClient.passwords.resetByEmailStart(parameters: params)
+        _ = try await passwordClient.resetByEmailStart(parameters: params)
     }
 }
 
@@ -129,12 +137,12 @@ extension ActionableInfoState {
     }
 }
 
-enum ActionableInfoAction {
+enum ActionableInfoAction: Equatable {
     case didTapCreatePassword(email: String)
     case didTapLoginWithoutPassword(email: String)
 }
 
-private extension ActionableInfoViewModel {
+internal extension ActionableInfoViewModel {
     var sessionDuration: Minutes {
         state.config.session?.sessionDuration ?? .defaultSessionDuration
     }
@@ -172,7 +180,7 @@ extension [AttrStringComponent] {
     }
 }
 
-private extension String {
+internal extension String {
     static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
     static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
     static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")

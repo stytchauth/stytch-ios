@@ -1,9 +1,18 @@
 import Foundation
 
+public protocol PasswordsProtocol {
+    func create(parameters: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse
+    func authenticate(parameters: StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse
+    func resetByEmailStart(parameters: StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse
+    func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse
+    func strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse
+    func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse
+}
+
 public extension StytchClient {
     /// Stytch supports creating, storing, and authenticating password based users, as well as support for account recovery (password reset) and account deduplication with passwordless login methods.
     /// Our implementation of passwords has built-in breach detection powered by [HaveIBeenPwned](https://haveibeenpwned.com/) on both sign-up and login, to prevent the use of compromised credentials and uses Dropbox’s [zxcvbn](https://github.com/dropbox/zxcvbn) strength requirements to guide users towards creating passwords that are easy for humans to remember but difficult for computers to crack.
-    struct Passwords {
+    struct Passwords: PasswordsProtocol {
         let router: NetworkingRouter<PasswordsRoute>
 
         @Dependency(\.keychainClient) private var keychainClient
@@ -49,7 +58,7 @@ public extension StytchClient {
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
             guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else {
-                throw StytchError.pckeNotAvailable
+                throw StytchSDKError.missingPKCE
             }
 
             let response: AuthenticateResponse = try await router.post(
@@ -127,7 +136,19 @@ public extension StytchClient.Passwords {
 
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
-    struct ResetByEmailStartParameters: Encodable {
+    struct ResetByEmailStartParameters: Encodable, Equatable {
+        public static func == (
+            lhs: ResetByEmailStartParameters,
+            rhs: ResetByEmailStartParameters
+        ) -> Bool {
+            lhs.email == rhs.email &&
+                lhs.loginUrl == rhs.loginUrl &&
+                lhs.loginExpiration?.rawValue == rhs.loginExpiration?.rawValue &&
+                lhs.resetPasswordUrl == rhs.resetPasswordUrl &&
+                lhs.resetPasswordExpiration?.rawValue == rhs.resetPasswordExpiration?.rawValue &&
+                lhs.resetPasswordTemplateId == rhs.resetPasswordTemplateId
+        }
+
         private enum CodingKeys: String, CodingKey {
             case email
             case loginUrl = "loginRedirectUrl"

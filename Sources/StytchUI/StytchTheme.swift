@@ -11,9 +11,9 @@ public class UIColorPair {
 
     public func get(style: UIUserInterfaceStyle) -> UIColor {
         if style == .dark {
-            dark
+            return dark
         } else {
-            light
+            return light
         }
     }
 }

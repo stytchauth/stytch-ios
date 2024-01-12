@@ -8,7 +8,7 @@ extension CryptoClient {
         var buffer = [UInt8](repeating: 0, count: Int(byteCount))
 
         guard SecRandomCopyBytes(kSecRandomDefault, buffer.count, &buffer) == errSecSuccess else {
-            throw StytchError.randomNumberGenerationFailed
+            throw StytchSDKError.randomNumberGenerationFailed
         }
 
         return .init(buffer)

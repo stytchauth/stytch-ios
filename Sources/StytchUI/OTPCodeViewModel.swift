@@ -8,16 +8,18 @@ protocol OTPCodeViewModelProtocol {
 
 final class OTPCodeViewModel {
     var state: OTPCodeState
+    var otpClient: OTPProtocol
 
-    init(state: OTPCodeState) {
+    init(state: OTPCodeState, otpClient: OTPProtocol = StytchClient.otps) {
         self.state = state
+        self.otpClient = otpClient
     }
 }
 
 extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     func resendCode(phone: String) async throws {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone)))
         state = .init(
             config: state.config,
             phoneNumberE164: phone,
@@ -28,7 +30,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     }
 
     func enterCode(code: String, methodId: String) async throws {
-        let response = try await StytchClient.otps.authenticate(parameters: .init(code: code, methodId: methodId))
+        let response = try await otpClient.authenticate(parameters: .init(code: code, methodId: methodId))
         StytchUIClient.onAuthCallback?(response)
     }
 }

@@ -19,7 +19,7 @@ extension Encodable {
 
     func asJson(encoder: JSONEncoder) throws -> String {
         guard let jsonString = String(data: try encoder.encode(self), encoding: .utf8) else {
-            throw StytchError.jsonDataNotConvertibleToString
+            throw StytchSDKError.jsonDataNotConvertibleToString
         }
         return jsonString
     }

@@ -1,8 +1,12 @@
 import Foundation
 
+public protocol OAuthProviderProtocol {
+    func authenticate(parameters: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse
+}
+
 public extension StytchClient {
     /// OAuth allows you to leverage outside identity providers, for which your users may already have an account, to verify their identity. This is a low-friction method your users will be familiar with.
-    struct OAuth {
+    struct OAuth: OAuthProviderProtocol {
         let router: NetworkingRouter<OAuthRoute>
 
         @Dependency(\.keychainClient) private var keychainClient
@@ -11,7 +15,7 @@ public extension StytchClient {
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
-                throw StytchError.pckeNotAvailable
+                throw StytchSDKError.missingPKCE
             }
 
             return try await router.post(

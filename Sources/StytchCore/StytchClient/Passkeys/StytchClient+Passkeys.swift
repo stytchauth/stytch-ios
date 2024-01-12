@@ -32,7 +32,7 @@ public extension StytchClient {
                 userId: startResp.userId
             )
 
-            guard let attestationObject = credential.rawAttestationObject else { throw StytchError.passkeysMissingAttestationObject }
+            guard let attestationObject = credential.rawAttestationObject else { throw StytchSDKError.missingAttestationObject }
 
             let response: BasicResponse = try await router.post(
                 to: .register,
@@ -52,7 +52,7 @@ public extension StytchClient {
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             let destination: PasskeysRoute
-            if sessionStorage.activeSessionExists {
+            if sessionStorage.persistedSessionIdentifiersExist {
                 destination = .authenticateStartSecondary
             } else {
                 destination = .authenticateStartPrimary

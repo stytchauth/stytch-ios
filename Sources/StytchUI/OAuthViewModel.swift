@@ -1,29 +1,43 @@
 import StytchCore
 
 protocol OAuthViewModelProtocol {
-    func startOAuth(provider: StytchUIClient.Configuration.OAuth.Provider) async throws
+    func startOAuth(
+        provider: StytchUIClient.Configuration.OAuth.Provider,
+        thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol? // this param is only used for testing
+    ) async throws
 }
 
 final class OAuthViewModel {
     let state: OAuthState
+    let appleOauthProvider: AppleOAuthProviderProtocol
+    let oAuthProvider: OAuthProviderProtocol
 
-    init(state: OAuthState) {
+    init(
+        state: OAuthState,
+        appleOAuthProvider: AppleOAuthProviderProtocol = StytchClient.oauth.apple,
+        oAuthProvider: OAuthProviderProtocol = StytchClient.oauth
+    ) {
         self.state = state
+        appleOauthProvider = appleOAuthProvider
+        self.oAuthProvider = oAuthProvider
     }
 }
 
 extension OAuthViewModel: OAuthViewModelProtocol {
-    func startOAuth(provider: StytchUIClient.Configuration.OAuth.Provider) async throws {
+    func startOAuth(
+        provider: StytchUIClient.Configuration.OAuth.Provider,
+        thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol? = nil
+    ) async throws {
         switch provider {
         case .apple:
-            let response = try await StytchClient.oauth.apple.start(parameters: .init(sessionDuration: sessionDuration))
+            let response = try await appleOauthProvider.start(parameters: .init(sessionDuration: sessionDuration))
             StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
             if let oauth = state.config.oauth {
-                let (token, _) = try await provider.client.start(
+                let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
                     parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
                 )
-                let response = try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+                let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
                 StytchUIClient.onAuthCallback?(response)
             }
         }
@@ -34,14 +48,14 @@ struct OAuthState {
     let config: StytchUIClient.Configuration
 }
 
-private extension OAuthViewModel {
+extension OAuthViewModel {
     var sessionDuration: Minutes {
         state.config.session?.sessionDuration ?? .defaultSessionDuration
     }
 }
 
-private extension StytchClient.OAuth.ThirdParty.Provider {
-    var client: StytchClient.OAuth.ThirdParty {
+extension StytchClient.OAuth.ThirdParty.Provider {
+    var client: ThirdPartyOAuthProviderProtocol {
         switch self {
         case .amazon:
             return StytchClient.oauth.amazon

@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 final class SessionStorage {
-    var activeSessionExists: Bool {
+    var persistedSessionIdentifiersExist: Bool {
         (sessionJwt ?? sessionToken) != nil
     }
 

@@ -22,8 +22,6 @@ struct Configuration {
         }
         return url
     }
-
-    var bootstrapData: BootstrapResponseData?
 }
 
 extension Configuration: Decodable {

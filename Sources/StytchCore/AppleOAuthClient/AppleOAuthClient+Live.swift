@@ -25,11 +25,11 @@ extension AppleOAuthClient {
 
         func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
             guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential else {
-                continuation?.resume(throwing: StytchError.oauthCredentialInvalid)
+                continuation?.resume(throwing: StytchSDKError.invalidAuthorizationCredential)
                 return
             }
             guard let idToken = credential.identityToken, let token = String(data: idToken, encoding: .utf8) else {
-                continuation?.resume(throwing: StytchError.oauthCredentialMissingIdToken)
+                continuation?.resume(throwing: StytchSDKError.missingAuthorizationCredentialIDToken)
                 return
             }
 
