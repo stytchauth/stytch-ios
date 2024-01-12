@@ -2,6 +2,12 @@ import XCTest
 
 final class StytchUITests: XCTestCase {
 
+    let app = XCUIApplication()
+
+    lazy var titleLabel = app.staticTexts.element(matching: .any, identifier: "authTitle")
+    lazy var separatorView = app.otherElements.element(matching: .any, identifier: "orSeparator")
+    lazy var poweredByStytch = app.images.element(matching: .any, identifier: "poweredByStytch")
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -13,14 +19,29 @@ final class StytchUITests: XCTestCase {
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        app.terminate()
     }
 
-    func testExample() throws {
+    func testDefaultUIRendersAsExpected() throws {
         // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        app.launchEnvironment["config"] = "default"
         app.launch()
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCTAssert(titleLabel.exists)
+        XCTAssert(!separatorView.exists)
+        XCTAssert(poweredByStytch.exists)
+    }
+
+    func testRealisticUIRendersAsExpected() throws {
+        // UI tests must launch the application that they test.
+        app.launchEnvironment["config"] = "realistic"
+        app.launch()
+
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        XCTAssert(titleLabel.exists)
+        XCTAssert(separatorView.exists)
+        XCTAssert(poweredByStytch.exists)
     }
 
     func testLaunchPerformance() throws {

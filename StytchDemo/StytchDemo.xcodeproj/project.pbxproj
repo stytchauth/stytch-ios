@@ -75,6 +75,8 @@
 		22BE9A1228481EFE00E29245 /* ServerRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE9A1128481EFE00E29245 /* ServerRunner.swift */; };
 		22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
 		22E2E06228ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */; };
+		5354B59E2B507DC900B3081C /* StytchUIConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5354B59D2B507DC900B3081C /* StytchUIConfiguration.plist */; };
+		5354B5A02B507F1500B3081C /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5354B59F2B507F1500B3081C /* StytchUI */; };
 		53E128252B50092E00976CAC /* StytchUIDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128242B50092E00976CAC /* StytchUIDemoApp.swift */; };
 		53E128272B50092E00976CAC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128262B50092E00976CAC /* ContentView.swift */; };
 		53E128292B50092F00976CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E128282B50092F00976CAC /* Assets.xcassets */; };
@@ -150,6 +152,7 @@
 		22E2E06028ECF6AD00327719 /* OAuthAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthAuthenticationView.swift; sourceTree = "<group>"; };
 		22E4346A280A133900FB45F0 /* StytchPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = StytchPlayground.playground; path = ../StytchPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
+		5354B59D2B507DC900B3081C /* StytchUIConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchUIConfiguration.plist; sourceTree = "<group>"; };
 		53E128222B50092E00976CAC /* StytchUIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchUIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E128242B50092E00976CAC /* StytchUIDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUIDemoApp.swift; sourceTree = "<group>"; };
 		53E128262B50092E00976CAC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5354B5A02B507F1500B3081C /* StytchUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +397,7 @@
 				53E128262B50092E00976CAC /* ContentView.swift */,
 				53E128282B50092F00976CAC /* Assets.xcassets */,
 				53E1282A2B50092F00976CAC /* Preview Content */,
+				5354B59D2B507DC900B3081C /* StytchUIConfiguration.plist */,
 			);
 			path = StytchUIDemo;
 			sourceTree = "<group>";
@@ -512,6 +517,9 @@
 			dependencies = (
 			);
 			name = StytchUIDemo;
+			packageProductDependencies = (
+				5354B59F2B507F1500B3081C /* StytchUI */,
+			);
 			productName = StytchUIDemo;
 			productReference = 53E128222B50092E00976CAC /* StytchUIDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -630,6 +638,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5354B59E2B507DC900B3081C /* StytchUIConfiguration.plist in Resources */,
 				53E1282C2B50092F00976CAC /* Preview Assets.xcassets in Resources */,
 				53E128292B50092F00976CAC /* Assets.xcassets in Resources */,
 			);
@@ -1394,6 +1403,10 @@
 		22E434612809EF2F00FB45F0 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
+		};
+		5354B59F2B507F1500B3081C /* StytchUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

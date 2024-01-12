@@ -4,7 +4,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
+        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: ""),
+        accessibilityLabel: "authTitle"
     )
 
     private let separatorView: LabelSeparatorView = .orSeparator()
@@ -12,6 +13,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     private lazy var poweredByStytch: UIImageView = {
         let view = UIImageView()
         view.image = ImageAsset.poweredByStytch.image
+        view.accessibilityLabel = "poweredByStytch"
         return view
     }()
 
