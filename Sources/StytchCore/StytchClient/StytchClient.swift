@@ -13,7 +13,6 @@ public struct StytchClient: StytchClientType {
     static var instance: StytchClient = .init()
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
     public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
-
     // swiftlint:disable:next identifier_name
     public static var _uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
 

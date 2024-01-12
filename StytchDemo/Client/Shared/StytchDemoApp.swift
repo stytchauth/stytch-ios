@@ -95,6 +95,7 @@ extension StytchDemoApp {
     struct Configuration: Decodable {
         let publicToken: String
         let serverUrl: URL
+        let publicToken: String
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -108,6 +109,7 @@ extension StytchDemoApp {
                 }
                 serverUrl = url
             }
+            publicToken = try container.decode(String.self, forKey: .publicToken)
         }
 
         private enum CodingKeys: String, CodingKey {
