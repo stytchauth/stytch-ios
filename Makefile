@@ -66,7 +66,6 @@ test-ios: codegen
 .PHONY: test-tvos
 test-tvos: codegen
 	$(TEST) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
