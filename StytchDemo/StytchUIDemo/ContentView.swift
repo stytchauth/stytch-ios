@@ -1,5 +1,5 @@
-import SwiftUI
 import StytchUI
+import SwiftUI
 
 struct ContentView: View {
     @State private var authPresented = true

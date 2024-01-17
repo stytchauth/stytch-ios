@@ -1,5 +1,5 @@
-import SwiftUI
 import StytchUI
+import SwiftUI
 
 let configuration: StytchUIDemoApp.Configuration = {
     guard let data = Bundle.main.url(forResource: "StytchUIConfiguration", withExtension: "plist").flatMap({ try? Data(contentsOf: $0) })

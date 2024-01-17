@@ -1,7 +1,6 @@
 import XCTest
 
 final class StytchUITests: XCTestCase {
-
     let app = XCUIApplication()
 
     lazy var titleLabel = app.staticTexts.element(matching: .any, identifier: "authTitle")
@@ -54,7 +53,7 @@ final class StytchUITests: XCTestCase {
         XCTAssert(!phoneNumberInput.exists)
 
         // Switch to phone input and enter number
-        app.otherElements/*@START_MENU_TOKEN@*/.buttons["Text"]/*[[".segmentedControls[\"emailTextSegmentedControl\"].buttons[\"Text\"]",".buttons[\"Text\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.otherElements.segmentedControls["emailTextSegmentedControl"].buttons["Text"].tap()
         XCTAssert(phoneNumberInput.exists)
         let phoneInput = phoneNumberInput.descendants(matching: .textField).element
         phoneInput.tap()
@@ -81,4 +80,3 @@ final class StytchUITests: XCTestCase {
         }
     }
 }
-
