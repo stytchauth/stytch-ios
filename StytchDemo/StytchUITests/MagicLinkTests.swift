@@ -1,11 +1,15 @@
 import XCTest
 
 final class MagicLinkTests: XCTestCase {
-
     private let app = XCUIApplication()
     private lazy var emailField = app.otherElements["emailInput"]
     private lazy var continueButton = app.buttons["continueButton"]
     private lazy var feedbackLabel = app.staticTexts["feedbackLabel"]
+    private lazy var actionableInfoTitle = app.staticTexts["actionableInfoTitle"]
+    private lazy var actionableInfoLabel = app.staticTexts["actionableInfoLabel"]
+    private lazy var retryButton = app.buttons["retryButton"]
+    private lazy var orSeparator = app.otherElements["orSeparator"]
+    private lazy var secondaryButton = app.buttons["secondaryButton"]
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -41,10 +45,25 @@ final class MagicLinkTests: XCTestCase {
 
     func testValidEmail() {
         emailField.tap()
-        emailField.typeText("validemail@example.com")
+        emailField.typeText("test@stytch.com")
 
         XCTAssertTrue(continueButton.isEnabled)
 
         continueButton.tap()
+
+        XCTAssertTrue(actionableInfoTitle.exists)
+        XCTAssertTrue(actionableInfoLabel.exists)
+        XCTAssertTrue(retryButton.exists)
+        XCTAssertTrue(!orSeparator.exists)
+        XCTAssertTrue(!secondaryButton.exists)
+    }
+
+    func testResendEmail() {
+        emailField.tap()
+        emailField.typeText("test@stytch.com")
+        continueButton.tap()
+
+        retryButton.tap()
+        app.alerts["Resend link"].scrollViews.otherElements.buttons["Cancel"].tap()
     }
 }
