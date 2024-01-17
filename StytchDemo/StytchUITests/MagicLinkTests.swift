@@ -43,13 +43,17 @@ final class MagicLinkTests: XCTestCase {
         XCTAssertTrue(feedbackLabel.exists)
     }
 
-    func testValidEmail() {
+    @MainActor func testValidEmail() {
         emailField.tap()
-        emailField.typeText("test@stytch.com")
+        emailField.typeText("test+validemail@stytch.com")
 
         XCTAssertTrue(continueButton.isEnabled)
 
         continueButton.tap()
+
+        expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: actionableInfoTitle)
+
+        waitForExpectations(timeout: 3)
 
         XCTAssertTrue(actionableInfoTitle.exists)
         XCTAssertTrue(actionableInfoLabel.exists)
@@ -60,10 +64,19 @@ final class MagicLinkTests: XCTestCase {
 
     func testResendEmail() {
         emailField.tap()
-        emailField.typeText("test@stytch.com")
+        emailField.typeText("test+resendemail@stytch.com")
         continueButton.tap()
 
         retryButton.tap()
         app.alerts["Resend link"].scrollViews.otherElements.buttons["Cancel"].tap()
+
+        retryButton.tap()
+        app.alerts["Resend link"].scrollViews.otherElements.buttons["Send link"].tap()
+
+        XCTAssertTrue(actionableInfoTitle.exists)
+        XCTAssertTrue(actionableInfoLabel.exists)
+        XCTAssertTrue(retryButton.exists)
+        XCTAssertTrue(!orSeparator.exists)
+        XCTAssertTrue(!secondaryButton.exists)
     }
 }
