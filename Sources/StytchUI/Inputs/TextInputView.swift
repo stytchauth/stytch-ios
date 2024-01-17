@@ -57,6 +57,7 @@ class TextInputView<TextInput: TextInputType>: UIView {
         label.numberOfLines = 0
         label.textColor = .dangerText
         label.isHidden = true
+        label.accessibilityLabel = "feedbackLabel"
         return label
     }()
 

@@ -35,6 +35,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             self?.didTapContinue()
         }
         button.isEnabled = false
+        button.accessibilityLabel = "continueButton"
         return button
     }()
 
