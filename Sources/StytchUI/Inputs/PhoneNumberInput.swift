@@ -70,6 +70,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
         let view = UIStackView()
         view.axis = .horizontal
         view.spacing = 8
+        view.accessibilityLabel = "phoneNumberEntry"
         return view
     }()
 

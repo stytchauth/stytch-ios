@@ -44,6 +44,34 @@ final class StytchUITests: XCTestCase {
         XCTAssert(poweredByStytch.exists)
     }
 
+    func testOTPScreen() throws {
+        // UI tests must launch the application that they test.
+        app.launchEnvironment["config"] = "realistic"
+        app.launch()
+        let phoneNumberInput = app.otherElements.element(matching: .any, identifier: "phoneNumberEntry")
+
+        // Default
+        XCTAssert(!phoneNumberInput.exists)
+
+        // Switch to phone input and enter number
+        app.otherElements/*@START_MENU_TOKEN@*/.buttons["Text"]/*[[".segmentedControls[\"emailTextSegmentedControl\"].buttons[\"Text\"]",".buttons[\"Text\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        XCTAssert(phoneNumberInput.exists)
+        let phoneInput = phoneNumberInput.descendants(matching: .textField).element
+        phoneInput.tap()
+        phoneInput.typeText("5005550006")
+        app.otherElements.buttons["continueButton"].tap()
+        // Wait to navigate to OTP screen
+        let otpPageTitle = app.staticTexts.element(matching: .any, identifier: "otpConfirmationTitle")
+        let otpPhoneLabel = app.staticTexts.element(matching: .any, identifier: "phoneLabel")
+        let otpEntry = app.textFields.element(matching: .any, identifier: "otpEntry")
+        let expiryButton = app.buttons.element(matching: .any, identifier: "expiryButton")
+        let _ = otpPageTitle.waitForExistence(timeout: 10)
+        XCTAssert(otpPageTitle.exists)
+        XCTAssert(otpPhoneLabel.exists)
+        XCTAssert(otpEntry.exists)
+        XCTAssert(expiryButton.exists)
+    }
+
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
@@ -53,3 +81,4 @@ final class StytchUITests: XCTestCase {
         }
     }
 }
+
