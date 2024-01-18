@@ -2,14 +2,15 @@ import XCTest
 
 final class MagicLinkTests: XCTestCase {
     private let app = XCUIApplication()
-    private lazy var emailField = app.otherElements["emailInput"]
-    private lazy var continueButton = app.buttons["continueButton"]
-    private lazy var feedbackLabel = app.staticTexts["feedbackLabel"]
-    private lazy var actionableInfoTitle = app.staticTexts["actionableInfoTitle"]
-    private lazy var actionableInfoLabel = app.staticTexts["actionableInfoLabel"]
-    private lazy var retryButton = app.buttons["retryButton"]
-    private lazy var orSeparator = app.otherElements["orSeparator"]
-    private lazy var secondaryButton = app.buttons["secondaryButton"]
+    private let email = generateNewEmail()
+    private lazy var emailField = app.scrollViews.otherElements.textFields["example@company.com"]
+    private lazy var continueButton = app.scrollViews.otherElements.buttons["Continue"]
+    private lazy var errorLabel = app.scrollViews.otherElements.staticTexts["Invalid email address, please try again."]
+    private lazy var magicLinkTitleLabel = app.staticTexts["Check your email"]
+    private lazy var magicLinkDescriptionLabel = app.staticTexts["A login link was sent to you at \(email)."]
+    private lazy var magicLinkResendLabel = app.staticTexts["Didn't get it? Resend email"]
+    private lazy var magicLinkResendCancelButton = app.alerts["Resend link"].scrollViews.otherElements.buttons["Cancel"]
+    private lazy var magicLinkResendButton = app.alerts["Resend link"].scrollViews.otherElements.buttons["Resend"]
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -35,48 +36,38 @@ final class MagicLinkTests: XCTestCase {
     }
 
     func testInvalidEmailError() {
-        XCTAssertTrue(!feedbackLabel.exists)
+        XCTAssertTrue(!errorLabel.exists)
 
         emailField.tap()
         emailField.typeText("invalidemail@example.com1")
 
-        XCTAssertTrue(feedbackLabel.exists)
+        XCTAssertTrue(errorLabel.exists)
     }
 
     @MainActor func testValidEmail() {
         emailField.tap()
-        emailField.typeText("test+validemail@stytch.com")
+        emailField.typeText(email)
 
         XCTAssertTrue(continueButton.isEnabled)
 
         continueButton.tap()
 
-        expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: actionableInfoTitle)
+        expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: magicLinkTitleLabel)
 
         waitForExpectations(timeout: 3)
 
-        XCTAssertTrue(actionableInfoTitle.exists)
-        XCTAssertTrue(actionableInfoLabel.exists)
-        XCTAssertTrue(retryButton.exists)
-        XCTAssertTrue(!orSeparator.exists)
-        XCTAssertTrue(!secondaryButton.exists)
-    }
+        XCTAssertTrue(magicLinkTitleLabel.exists)
+        XCTAssertTrue(magicLinkDescriptionLabel.exists)
+        XCTAssertTrue(magicLinkResendLabel.exists)
 
-    func testResendEmail() {
-        emailField.tap()
-        emailField.typeText("test+resendemail@stytch.com")
-        continueButton.tap()
-
-        retryButton.tap()
+        magicLinkResendLabel.tap()
         app.alerts["Resend link"].scrollViews.otherElements.buttons["Cancel"].tap()
 
-        retryButton.tap()
+        magicLinkResendLabel.tap()
         app.alerts["Resend link"].scrollViews.otherElements.buttons["Send link"].tap()
 
-        XCTAssertTrue(actionableInfoTitle.exists)
-        XCTAssertTrue(actionableInfoLabel.exists)
-        XCTAssertTrue(retryButton.exists)
-        XCTAssertTrue(!orSeparator.exists)
-        XCTAssertTrue(!secondaryButton.exists)
+        XCTAssertTrue(magicLinkTitleLabel.exists)
+        XCTAssertTrue(magicLinkDescriptionLabel.exists)
+        XCTAssertTrue(magicLinkResendLabel.exists)
     }
 }

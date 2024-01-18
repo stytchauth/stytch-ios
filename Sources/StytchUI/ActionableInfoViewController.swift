@@ -1,16 +1,13 @@
 import UIKit
 
 final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoViewModel> {
-    private let titleLabel: UILabel = .makeTitleLabel(
-        accessibilityLabel: "actionableInfoTitle"
-    )
+    private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
         label.textColor = .primaryText
-        label.accessibilityLabel = "actionableInfoLabel"
         return label
     }()
 
@@ -19,7 +16,6 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         button.setTitleColor(.secondaryText, for: .normal)
         button.contentHorizontalAlignment = .leading
         button.titleLabel?.numberOfLines = 0
-        button.accessibilityLabel = "retryButton"
         return button
     }()
 
@@ -30,7 +26,6 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
         button.titleLabel?.numberOfLines = 0
-        button.accessibilityLabel = "secondaryButton"
         return button
     }()
 

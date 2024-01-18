@@ -29,7 +29,7 @@ struct StytchUIDemoApp: App {
             }
             return
         }
-        uiConfig = .realisticStytchUIConfig
+        uiConfig = .magicLinkStytchUIConfig
     }
 }
 

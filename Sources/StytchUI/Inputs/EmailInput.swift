@@ -12,11 +12,6 @@ final class EmailInput: TextInputView<EmailTextField> {
 
     var text: String? { textInput.text }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.accessibilityLabel = "emailInput"
-    }
-
     // swiftlint:disable:next overridden_super_call
     override func setUp() {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
