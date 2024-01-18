@@ -47,10 +47,10 @@ final class StytchUITests: XCTestCase {
         let phoneInput = phoneNumberInput.descendants(matching: .textField).element
         phoneInput.tap()
         phoneInput.typeText("5005550006")
-        app.otherElements.buttons["continueButton"].tap()
-        // Wait to navigate to OTP screen
-        let otpPageTitle = app.staticTexts.element(matching: .any, identifier: "otpConfirmationTitle")
-        let otpPhoneLabel = app.staticTexts.element(matching: .any, identifier: "phoneLabel")
+        app.scrollViews.otherElements.buttons["Continue"].tap()
+        // Wait to navigate to OTP screen Fc
+        let otpPageTitle = app.staticTexts["Enter passcode"]
+        let otpPhoneLabel = app.staticTexts["phoneLabel"]
         let otpEntry = app.textFields.element(matching: .any, identifier: "otpEntry")
         let expiryButton = app.buttons.element(matching: .any, identifier: "expiryButton")
         let _ = otpPageTitle.waitForExistence(timeout: 10)

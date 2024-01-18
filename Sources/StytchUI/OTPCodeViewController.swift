@@ -3,8 +3,7 @@ import UIKit
 
 final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: ""),
-        accessibilityLabel: "otpConfirmationTitle"
+        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
 
     private let phoneLabel: UILabel = {
