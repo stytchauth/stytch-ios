@@ -21,6 +21,9 @@ final class MagicLinkPasswordTests: XCTestCase {
     private lazy var magicLinkResendLabel = app.staticTexts["Didn't get it? Resend email"]
     private lazy var magicLinkResendCancelButton = app.alerts["Resend link"].scrollViews.otherElements.buttons["Cancel"]
     private lazy var magicLinkResendButton = app.alerts["Resend link"].scrollViews.otherElements.buttons["Resend"]
+    private lazy var logInTitle = app.scrollViews.otherElements.staticTexts["Log in"]
+    private lazy var emailPasswordInput = app.scrollViews.otherElements.textFields[emailPassword]
+    private lazy var forgotPasswordButton = app.scrollViews.otherElements.buttons["Forgot password?"]
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -32,7 +35,7 @@ final class MagicLinkPasswordTests: XCTestCase {
         app.terminate()
     }
 
-    @MainActor func testNewUserMagicLink() {
+    @MainActor func testMagicLink() {
         emailField.tap()
         emailField.typeText(emailMagicLink)
         continueButton.tap()
@@ -66,7 +69,8 @@ final class MagicLinkPasswordTests: XCTestCase {
         app.alerts["Resend link"].scrollViews.otherElements.buttons["Send link"].tap()
     }
 
-    @MainActor func testNewUserPassword() {
+    @MainActor func testPassword() throws {
+        // test new user
         emailField.tap()
         emailField.typeText(emailPassword)
         continueButton.tap()
@@ -80,5 +84,29 @@ final class MagicLinkPasswordTests: XCTestCase {
         XCTAssertTrue(continueButton.isEnabled)
 
         continueButton.tap()
+
+        try tearDownWithError()
+        try setUpWithError()
+
+        // test existing user
+        emailField.tap()
+        emailField.typeText(emailPassword)
+        continueButton.tap()
+
+        expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: magicLinkButton)
+
+        waitForExpectations(timeout: 5)
+
+        XCTAssertTrue(logInTitle.exists)
+        XCTAssertTrue(emailInputLabel.exists)
+        XCTAssertTrue(emailPasswordInput.exists)
+        XCTAssertTrue(passwordInputLabel.exists)
+        XCTAssertTrue(secureTextInput.exists)
+        XCTAssertTrue(secureEntryToggleButton.exists)
+        XCTAssertTrue(forgotPasswordButton.exists)
+        XCTAssertTrue(orSeparator.exists)
+        XCTAssertTrue(magicLinkButton.exists)
+
+        magicLinkButton.tap()
     }
 }

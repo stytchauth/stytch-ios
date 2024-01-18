@@ -25,7 +25,7 @@ final class PasswordTests: XCTestCase {
         app.terminate()
     }
 
-    @MainActor func testPasswordOnly() throws {
+    @MainActor func testPassword() throws {
         // test new user
         emailField.tap()
         emailField.typeText(email)
