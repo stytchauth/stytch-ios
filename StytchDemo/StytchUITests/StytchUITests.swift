@@ -71,6 +71,50 @@ final class StytchUITests: XCTestCase {
         XCTAssert(expiryButton.exists)
     }
 
+    func testOAuthGoogle() throws {
+        app.launchEnvironment["config"] = "realistic"
+        app.launch()
+        let googleButton = app.staticTexts["Continue with Google"]
+        XCTAssert(googleButton.exists)
+        var didDismissPopup = false
+        addUIInterruptionMonitor(withDescription: "Continue with Google popup") { alert in
+            let title = alert.staticTexts["“StytchUIDemo” Wants to Use “stytch.com” to Sign In"]
+            XCTAssert(title.exists)
+            alert.scrollViews.otherElements.buttons["Cancel"].tap()
+            didDismissPopup = true
+            return true
+        }
+        googleButton.tap()
+        // these two lines are the magic that make the interruption handler work
+        sleep(2)
+        app.swipeUp()
+        XCTAssert(didDismissPopup)
+        // Dismiss the expected error alert from canceling Google signin
+        app.alerts["Error"].scrollViews.otherElements.buttons["OK"].tap()
+    }
+
+    func testOAuthApple() throws {
+        app.launchEnvironment["config"] = "realistic"
+        app.launch()
+        let appleButton = app.buttons["Continue with Apple"]
+        XCTAssert(appleButton.exists)
+        var didDismissPopup = false
+        addUIInterruptionMonitor(withDescription: "Continue with Apple popup") { alert in
+            let title = alert.scrollViews.staticTexts["Sign in with your Apple ID"]
+            XCTAssert(title.exists)
+            alert.scrollViews.otherElements.buttons["Close"].tap()
+            didDismissPopup = true
+            return true
+        }
+        appleButton.tap()
+        // these two lines are the magic that make the interruption handler work
+        sleep(2)
+        app.swipeUp()
+        XCTAssert(didDismissPopup)
+        // Dismiss the expected error alert from canceling Apple signin
+        app.alerts["Error"].scrollViews.otherElements.buttons["OK"].tap()
+    }
+
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
