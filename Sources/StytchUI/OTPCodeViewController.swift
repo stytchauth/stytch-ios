@@ -3,7 +3,8 @@ import UIKit
 
 final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
+        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: ""),
+        accessibilityLabel: "otpConfirmationTitle"
     )
 
     private let phoneLabel: UILabel = {
@@ -11,6 +12,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
         label.textColor = .primaryText
+        label.accessibilityLabel = "phoneLabel"
         return label
     }()
 
@@ -25,6 +27,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         button.setTitleColor(.secondaryText, for: .normal)
         button.contentHorizontalAlignment = .leading
         button.titleLabel?.numberOfLines = 0
+        button.accessibilityLabel = "expiryButton"
         return button
     }()
 
