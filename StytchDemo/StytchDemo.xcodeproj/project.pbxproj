@@ -78,8 +78,9 @@
 		5354B59E2B507DC900B3081C /* StytchUIConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5354B59D2B507DC900B3081C /* StytchUIConfiguration.plist */; };
 		5354B5A02B507F1500B3081C /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5354B59F2B507F1500B3081C /* StytchUI */; };
 		5354B5A22B572D3900B3081C /* MagicLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5354B5A12B572D3900B3081C /* MagicLinkTests.swift */; };
-		5354B5A82B597BFB00B3081C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5354B5A72B597BFB00B3081C /* Util.swift */; };
 		5354B5A62B58801400B3081C /* PasswordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5354B5A52B58801400B3081C /* PasswordTests.swift */; };
+		5354B5A82B597BFB00B3081C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5354B5A72B597BFB00B3081C /* Util.swift */; };
+		5354B5AC2B59961E00B3081C /* MagicLinkPasswordTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5354B5AB2B59961E00B3081C /* MagicLinkPasswordTests.swift */; };
 		53E128252B50092E00976CAC /* StytchUIDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128242B50092E00976CAC /* StytchUIDemoApp.swift */; };
 		53E128272B50092E00976CAC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128262B50092E00976CAC /* ContentView.swift */; };
 		53E128292B50092F00976CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E128282B50092F00976CAC /* Assets.xcassets */; };
@@ -157,8 +158,9 @@
 		22E4346D280A174100FB45F0 /* Stytch */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Stytch; path = ..; sourceTree = "<group>"; };
 		5354B59D2B507DC900B3081C /* StytchUIConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchUIConfiguration.plist; sourceTree = "<group>"; };
 		5354B5A12B572D3900B3081C /* MagicLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkTests.swift; sourceTree = "<group>"; };
-		5354B5A72B597BFB00B3081C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		5354B5A52B58801400B3081C /* PasswordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordTests.swift; sourceTree = "<group>"; };
+		5354B5A72B597BFB00B3081C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		5354B5AB2B59961E00B3081C /* MagicLinkPasswordTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinkPasswordTests.swift; sourceTree = "<group>"; };
 		53E128222B50092E00976CAC /* StytchUIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchUIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E128242B50092E00976CAC /* StytchUIDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUIDemoApp.swift; sourceTree = "<group>"; };
 		53E128262B50092E00976CAC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				5354B5A12B572D3900B3081C /* MagicLinkTests.swift */,
 				5354B5A72B597BFB00B3081C /* Util.swift */,
 				5354B5A52B58801400B3081C /* PasswordTests.swift */,
+				5354B5AB2B59961E00B3081C /* MagicLinkPasswordTests.swift */,
 			);
 			path = StytchUITests;
 			sourceTree = "<group>";
@@ -763,6 +766,7 @@
 				5354B5A22B572D3900B3081C /* MagicLinkTests.swift in Sources */,
 				53E128422B50092F00976CAC /* StytchUILaunchTests.swift in Sources */,
 				53E128402B50092F00976CAC /* StytchUITests.swift in Sources */,
+				5354B5AC2B59961E00B3081C /* MagicLinkPasswordTests.swift in Sources */,
 				5354B5A82B597BFB00B3081C /* Util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

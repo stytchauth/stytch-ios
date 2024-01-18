@@ -26,6 +26,8 @@ struct StytchUIDemoApp: App {
                 uiConfig = .magicLinkStytchUIConfig
             case "password":
                 uiConfig = .passwordStytchUIConfig
+            case "magiclinkpassword":
+                uiConfig = .magicLinkPasswordStytchUIConfig
             default:
                 uiConfig = .defaultStytchUIConfig
             }
@@ -66,6 +68,13 @@ extension StytchUIClient.Configuration {
         publicToken: configuration.publicToken,
         products: .init(
             password: .init()
+        )
+    )
+    static let magicLinkPasswordStytchUIConfig: StytchUIClient.Configuration = .init(
+        publicToken: configuration.publicToken,
+        products: .init(
+            password: .init(),
+            magicLink: .init()
         )
     )
     static let realisticStytchUIConfig: StytchUIClient.Configuration = .init(
