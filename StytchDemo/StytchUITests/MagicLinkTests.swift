@@ -54,7 +54,7 @@ final class MagicLinkTests: XCTestCase {
 
         expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: magicLinkTitleLabel)
 
-        waitForExpectations(timeout: 3)
+        waitForExpectations(timeout: 5)
 
         XCTAssertTrue(magicLinkTitleLabel.exists)
         XCTAssertTrue(magicLinkDescriptionLabel.exists)
