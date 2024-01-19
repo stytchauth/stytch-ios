@@ -21,6 +21,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             animated: false
         )
         segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.accessibilityLabel = "emailTextSegmentedControl"
         return segmentedControl
     }()
 

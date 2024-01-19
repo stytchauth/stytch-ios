@@ -12,6 +12,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     private lazy var poweredByStytch: UIImageView = {
         let view = UIImageView()
         view.image = ImageAsset.poweredByStytch.image
+        view.accessibilityLabel = "poweredByStytch"
         return view
     }()
 

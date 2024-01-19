@@ -13,6 +13,7 @@ final class CodeInput: TextInputView<CodeField> {
         }
         textInput.textContentType = .oneTimeCode
         textInput.delegate = self
+        textInput.accessibilityLabel = "otpEntry"
     }
 }
 
