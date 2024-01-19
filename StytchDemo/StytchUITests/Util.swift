@@ -7,5 +7,5 @@ func generateNewEmail() -> String {
 
 func generatePassword() -> String {
     let randomCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    return String((0..<14).map{ _ in randomCharacters.randomElement()! })
+    return String((0..<14).map { _ in randomCharacters.randomElement()! })
 }
