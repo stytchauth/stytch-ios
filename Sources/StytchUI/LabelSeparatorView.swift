@@ -58,7 +58,6 @@ extension LabelSeparatorView {
     static func orSeparator() -> Self {
         let view = Self()
         view.text = NSLocalizedString("stytch.orSeparator", value: "or", comment: "")
-        view.accessibilityLabel = "orSeparator"
         return view
     }
 }
