@@ -1,19 +1,42 @@
-extension StytchClient {
-    struct Events {
+import Foundation
+public protocol EventsProtocol {
+    func logEvent(parameters: StytchClient.Events.Parameters) async throws
+}
+
+public extension StytchClient {
+    struct Events: EventsProtocol {
         let router: NetworkingRouter<EventsRoute>
 
-        public func logEvent(parameters: Parameters) async throws -> NoResponse {
-            try await router.post(to: .logEvents, parameters: [parameters])
+        @Dependency(\.clientInfo) private var clientInfo
+        @Dependency(\.date) private var date
+        @Dependency(\.networkingClient) private var networkingClient
+        @Dependency(\.uuid) private var uuid
+        @Dependency(\.jsonEncoder) private var jsonEncoder
+
+        public func logEvent(parameters: Parameters) async throws {
+            let params = Params(
+                telemetry: .init(
+                    eventId: "event-id-\(uuid().uuidString)",
+                    appSessionId: "app-id-\(uuid().uuidString)",
+                    persistentId: "persistent-id-\(uuid().uuidString)",
+                    clientSentAt: date(),
+                    timezone: TimeZone.current.identifier,
+                    app: clientInfo.app,
+                    os: clientInfo.os,
+                    sdk: clientInfo.sdk,
+                    device: clientInfo.device
+                ),
+                event: .init(
+                    publicToken: networkingClient.publicToken,
+                    eventName: parameters.eventName,
+                    details: parameters.details
+                )
+            )
+            try await router.post(to: .logEvents, parameters: [params])
         }
     }
-}
 
-internal extension StytchClient {
-    static var events: Events { .init(router: router.scopedRouter { $0.events }) }
-}
-
-extension StytchClient.Events {
-    struct Parameters: Encodable {
+    private struct Params: Encodable {
         let telemetry: Telemetry
         let event: Event
 
@@ -21,23 +44,25 @@ extension StytchClient.Events {
             let eventId: String
             let appSessionId: String
             let persistentId: String
-            let clientSentAt: String
+            let clientSentAt: Date
             let timezone: String
-            let app: VersionIdentifier
-            let os: VersionIdentifier
-            let sdk: VersionIdentifier
-            let device: DeviceIdentifier
+            let app: ClientInfo.App
+            // swiftlint:disable:next identifier_name
+            let os: ClientInfo.OperatingSystem
+            let sdk: ClientInfo.SDK
+            let device: ClientInfo.Device
 
             public init(
                 eventId: String,
                 appSessionId: String,
                 persistentId: String,
-                clientSentAt: String, 
+                clientSentAt: Date,
                 timezone: String,
-                app: VersionIdentifier,
-                os: VersionIdentifier,
-                sdk: VersionIdentifier,
-                device: DeviceIdentifier
+                app: ClientInfo.App,
+                // swiftlint:disable:next identifier_name
+                os: ClientInfo.OperatingSystem,
+                sdk: ClientInfo.SDK,
+                device: ClientInfo.Device
             ) {
                 self.eventId = eventId
                 self.appSessionId = appSessionId
@@ -74,9 +99,9 @@ extension StytchClient.Events {
         struct Event: Encodable {
             let publicToken: String
             let eventName: String
-            let details: Dictionary<String, String>?
+            let details: [String: String]?
 
-            public init(publicToken: String, eventName: String, details: Dictionary<String, String>? = nil) {
+            public init(publicToken: String, eventName: String, details: [String: String]? = nil) {
                 self.publicToken = publicToken
                 self.eventName = eventName
                 self.details = details
@@ -90,8 +115,18 @@ extension StytchClient.Events {
     }
 }
 
-extension StytchClient.Events {
-    typealias NoResponse = Response<NoResponseData>
+public extension StytchClient {
+    static var events: Events { .init(router: router.scopedRouter { $0.events }) }
+}
 
-    struct NoResponseData: Codable {}
+public extension StytchClient.Events {
+    struct Parameters {
+        let eventName: String
+        let details: [String: String]?
+
+        public init(eventName: String, details: [String: String]? = nil) {
+            self.eventName = eventName
+            self.details = details
+        }
+    }
 }

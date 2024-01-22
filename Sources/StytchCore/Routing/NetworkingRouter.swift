@@ -43,6 +43,13 @@ public extension NetworkingRouter {
         try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
     }
 
+    func post<Parameters: Encodable>(
+        to route: Route,
+        parameters: Parameters
+    ) async throws {
+        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
+    }
+
     func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
@@ -56,6 +63,28 @@ public extension NetworkingRouter {
 
     func delete<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.delete, route: route)
+    }
+
+    private func performRequest(
+        _ method: NetworkingClient.Method,
+        route: Route
+    ) async throws {
+        guard let configuration = getConfiguration() else {
+            throw StytchSDKError.consumerSDKNotConfigured
+        }
+
+        let (data, response) = try await networkingClient.performRequest(
+            method,
+            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+        )
+        do {
+            try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
+        } catch let error as StytchAPIError where error.statusCode == 401 {
+            sessionStorage.reset()
+            throw error
+        } catch {
+            throw error
+        }
     }
 
     private func performRequest<Response: Decodable>(
