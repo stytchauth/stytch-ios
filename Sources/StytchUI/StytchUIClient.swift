@@ -85,7 +85,7 @@ public extension View {
 }
 
 public extension StytchUIClient {
-    struct Configuration {
+    struct Configuration: Codable {
         let publicToken: String
         let navigation: Navigation?
         let products: Products
@@ -120,7 +120,7 @@ public extension StytchUIClient {
             self.theme = theme
         }
 
-        public struct Products {
+        public struct Products: Codable {
             let oauth: OAuth?
             let password: Password?
             let magicLink: MagicLink?
@@ -139,7 +139,7 @@ public extension StytchUIClient {
             }
         }
 
-        public struct OAuth {
+        public struct OAuth: Codable {
             let providers: [Provider]
             let loginRedirectUrl: URL
             let signupRedirectUrl: URL
@@ -150,13 +150,13 @@ public extension StytchUIClient {
                 self.signupRedirectUrl = signupRedirectUrl
             }
 
-            public enum Provider {
+            public enum Provider: Codable {
                 case apple
                 case thirdParty(StytchClient.OAuth.ThirdParty.Provider)
             }
         }
 
-        public struct MagicLink {
+        public struct MagicLink: Codable {
             let loginMagicLinkUrl: URL?
             let loginExpiration: Minutes?
             let loginTemplateId: String?
@@ -181,7 +181,7 @@ public extension StytchUIClient {
             }
         }
 
-        public struct Password {
+        public struct Password: Codable {
             let loginURL: URL?
             let loginExpiration: Minutes?
             let resetPasswordURL: URL?
@@ -203,7 +203,7 @@ public extension StytchUIClient {
             }
         }
 
-        public struct OTP {
+        public struct OTP: Codable {
             let expiration: Minutes?
 
             public init(
@@ -213,7 +213,7 @@ public extension StytchUIClient {
             }
         }
 
-        public struct Session {
+        public struct Session: Codable {
             let sessionDuration: Minutes?
 
             public init(sessionDuration: Minutes? = nil) {
@@ -221,7 +221,7 @@ public extension StytchUIClient {
             }
         }
 
-        public struct Navigation {
+        public struct Navigation: Codable {
             let closeButtonStyle: CloseButtonStyle?
 
             /// - Parameter closeButtonStyle: Determines the type of close button used on the root view as well as its position.
@@ -229,13 +229,13 @@ public extension StytchUIClient {
                 self.closeButtonStyle = closeButtonStyle
             }
 
-            public enum CloseButtonStyle {
+            public enum CloseButtonStyle: Codable {
                 case cancel(BarButtonPosition = .right)
                 case close(BarButtonPosition = .right)
                 case done(BarButtonPosition = .right)
             }
 
-            public enum BarButtonPosition {
+            public enum BarButtonPosition: Codable {
                 case left
                 case right
             }

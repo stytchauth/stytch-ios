@@ -1,7 +1,8 @@
 import StytchCore
+import Foundation
 
 protocol AuthHomeViewModelProtocol {
-    func logEvent(name: String) async throws
+    func logRenderScreen() async throws
 }
 
 final class AuthHomeViewModel {
@@ -18,12 +19,11 @@ final class AuthHomeViewModel {
 }
 
 extension AuthHomeViewModel: AuthHomeViewModelProtocol {
-    func logEvent(
-        name: String
-    ) async throws {
+    func logRenderScreen() async throws {
         try await eventsClient.logEvent(
             parameters: .init(
-                eventName: name
+                eventName: "render-login-screen",
+                details: ["options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? ""]
             )
         )
     }

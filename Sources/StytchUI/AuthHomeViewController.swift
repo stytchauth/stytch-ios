@@ -82,7 +82,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         NSLayoutConstraint.activate(constraints)
 
         Task {
-            try await viewModel.logEvent(name: "render-login-screen")
+            try await viewModel.logRenderScreen()
         }
     }
 }
