@@ -16,6 +16,8 @@ public struct StytchClient: StytchClientType {
     // swiftlint:disable:next identifier_name
     public static var _uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
 
+    static let appSessionId: String = UUID().uuidString
+
     private init() {
         postInit()
     }

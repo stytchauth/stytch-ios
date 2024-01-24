@@ -13,11 +13,18 @@ public extension StytchClient {
         @Dependency(\.uuid) private var uuid
         @Dependency(\.jsonEncoder) private var jsonEncoder
 
+        private let appSessionId: String // Captured value
+
+        init(router: NetworkingRouter<EventsRoute>, appSessionId: String) {
+            self.router = router
+            self.appSessionId = appSessionId
+        }
+
         public func logEvent(parameters: Parameters) async throws {
             let params = Params(
                 telemetry: .init(
                     eventId: "event-id-\(uuid().uuidString)",
-                    appSessionId: "app-id-\(uuid().uuidString)",
+                    appSessionId: appSessionId,
                     persistentId: "persistent-id-\(uuid().uuidString)",
                     clientSentAt: date(),
                     timezone: TimeZone.current.identifier,
@@ -116,7 +123,7 @@ public extension StytchClient {
 }
 
 public extension StytchClient {
-    static var events: Events { .init(router: router.scopedRouter { $0.events }) }
+    static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: self.appSessionId) }
 }
 
 public extension StytchClient.Events {
