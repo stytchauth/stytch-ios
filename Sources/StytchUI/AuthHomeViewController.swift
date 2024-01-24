@@ -80,6 +80,10 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         stackView.addArrangedSubview(SpacerView())
 
         NSLayoutConstraint.activate(constraints)
+
+        Task {
+            try await viewModel.logRenderScreen()
+        }
     }
 }
 

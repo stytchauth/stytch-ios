@@ -1,6 +1,7 @@
 extension StytchClient {
     enum BaseRoute: BaseRouteType {
         case biometrics(BiometricsRoute)
+        case events(EventsRoute)
         case magicLinks(MagicLinksRoute)
         case oauth(OAuthRoute)
         case otps(OTPRoute)
@@ -17,6 +18,8 @@ extension StytchClient {
             switch self {
             case let .biometrics(route):
                 return "biometrics".appendingPath(route.path)
+            case let .events(route):
+                return "".appendingPath(route.path)
             case let .magicLinks(route):
                 return "magic_links".appendingPath(route.path)
             case let .oauth(route):

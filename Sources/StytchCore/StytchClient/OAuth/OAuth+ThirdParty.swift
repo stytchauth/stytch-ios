@@ -166,7 +166,7 @@ public extension StytchClient.OAuth {
 }
 
 public extension StytchClient.OAuth.ThirdParty {
-    enum Provider: String, CaseIterable {
+    enum Provider: String, CaseIterable, Codable {
         case amazon
         case bitbucket
         case coinbase
