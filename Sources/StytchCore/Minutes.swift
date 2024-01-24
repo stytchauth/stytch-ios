@@ -1,5 +1,5 @@
 /// A dedicated type which represents the minutes unit of time.
-public struct Minutes: Codable {
+public struct Minutes: Codable, Equatable {
     let rawValue: UInt
 
     public init(rawValue: UInt) {
@@ -26,4 +26,8 @@ extension Minutes: ExpressibleByIntegerLiteral {
 public extension Minutes {
     /// 30
     static let defaultSessionDuration: Self = 30
+
+    static func == (lhs: Minutes, rhs: Minutes) -> Bool {
+        lhs.rawValue == rhs.rawValue
+    }
 }
