@@ -1,38 +1,27 @@
 import UIKit
 
 public class UIColorPair: Codable {
-    let dark: UIColor
-    let light: UIColor
-
     enum CodingKeys: String, CodingKey {
         case dark
         case light
     }
 
+    let dark: UIColor
+    let light: UIColor
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
         let darkData = try container.decode(Data.self, forKey: .dark)
         let lightData = try container.decode(Data.self, forKey: .light)
 
-        if let darkColor = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [UIColor.self], from: darkData) as? UIColor,
-           let lightColor = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [UIColor.self], from: lightData) as? UIColor {
-            self.dark = darkColor
-            self.light = lightColor
-        } else {
+        guard let darkColor = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [UIColor.self], from: darkData) as? UIColor, let lightColor = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [UIColor.self], from: lightData) as? UIColor
+        else {
             throw DecodingError.dataCorruptedError(forKey: .dark, in: container, debugDescription: "Invalid color data")
         }
-    }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        if let darkData = try? NSKeyedArchiver.archivedData(withRootObject: dark, requiringSecureCoding: false),
-           let lightData = try? NSKeyedArchiver.archivedData(withRootObject: light, requiringSecureCoding: false) {
-            try container.encode(darkData, forKey: .dark)
-            try container.encode(lightData, forKey: .light)
-        } else {
-            throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: container.codingPath, debugDescription: "Invalid color data"))
-        }
+        dark = darkColor
+        light = lightColor
     }
 
     public init(dark: UIColor, light: UIColor) {
@@ -46,6 +35,18 @@ public class UIColorPair: Codable {
         } else {
             return light
         }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        guard let darkData = try? NSKeyedArchiver.archivedData(withRootObject: dark, requiringSecureCoding: false), let lightData = try? NSKeyedArchiver.archivedData(withRootObject: light, requiringSecureCoding: false)
+        else {
+            throw EncodingError.invalidValue(self, EncodingError.Context(codingPath: container.codingPath, debugDescription: "Invalid color data"))
+        }
+
+        try container.encode(darkData, forKey: .dark)
+        try container.encode(lightData, forKey: .light)
     }
 }
 

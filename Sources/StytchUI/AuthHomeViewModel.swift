@@ -1,5 +1,5 @@
-import StytchCore
 import Foundation
+import StytchCore
 
 protocol AuthHomeViewModelProtocol {
     func logRenderScreen() async throws

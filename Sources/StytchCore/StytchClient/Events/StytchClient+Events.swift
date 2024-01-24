@@ -123,7 +123,7 @@ public extension StytchClient {
 }
 
 public extension StytchClient {
-    static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: self.appSessionId) }
+    static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: appSessionId) }
 }
 
 public extension StytchClient.Events {
