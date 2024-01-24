@@ -1,13 +1,22 @@
 import StytchCore
+import StytchUI
 import SwiftUI
 
 struct AuthenticationOptionsView: View {
     let session: Session?
     let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
+    @State private var authPresented = false
+
+    var redirectUrl: URL { configuration.serverUrl }
 
     var body: some View {
         VStack {
+            Button("Authenticate with UI") {
+                authPresented = true
+            }
+            .padding()
+
             NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
                 .padding()
 
@@ -79,6 +88,32 @@ struct AuthenticationOptionsView: View {
                 }
             }
             .padding()
+        }
+        .authenticationSheet(
+            isPresented: $authPresented,
+            config: .init(
+                publicToken: configuration.publicToken,
+                navigation: .init(),
+                products: .init(
+                    oauth: .init(
+                        providers: [.apple, .thirdParty(.google)],
+                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
+                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
+                    ),
+                    password: .init(
+                        loginURL: .init(string: "stytch-auth://login")!,
+                        resetPasswordURL: .init(string: "stytch-auth://reset")!,
+                        resetPasswordExpiration: 120
+                    ),
+                    magicLink: .init(
+                        loginMagicLinkUrl: .init(string: "stytch-auth://login")!,
+                        signupMagicLinkUrl: .init(string: "stytch-auth://signup")!
+                    ),
+                    sms: .init()
+                )
+            )
+        ) { response in
+            onAuth(response)
         }
     }
 }

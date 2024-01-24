@@ -20,8 +20,8 @@ final class PasswordModel: ObservableObject {
                 await MainActor.run {
                     self.strength = resp.score / 4
                     self.isValid = resp.validPassword
-                    self.warning = resp.feedback.warning
-                    self.feedback = resp.feedback.suggestions.first ?? ""
+                    self.warning = resp.feedback?.warning ?? ""
+                    self.feedback = resp.feedback?.suggestions.first ?? ""
                 }
             } catch {
                 print(error)

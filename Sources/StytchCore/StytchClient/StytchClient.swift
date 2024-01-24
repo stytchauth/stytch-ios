@@ -13,6 +13,10 @@ public struct StytchClient: StytchClientType {
     static var instance: StytchClient = .init()
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
     public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
+    // swiftlint:disable:next identifier_name
+    public static var _uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
+
+    static let appSessionId: String = UUID().uuidString
 
     private init() {
         postInit()
@@ -58,9 +62,9 @@ public struct StytchClient: StytchClientType {
 
         switch tokenType {
         case .magicLinks:
-            return try await .handled(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .oauth:
-            return try await .handled(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .passwordReset:
             return .manualHandlingRequired(tokenType, token: token)
         }

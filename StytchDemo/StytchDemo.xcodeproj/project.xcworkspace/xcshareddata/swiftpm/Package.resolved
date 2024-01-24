@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "PhoneNumberKit",
+        "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
+        "state": {
+          "branch": null,
+          "revision": "0fd43eb71d215afd0f9453d8e94200c9d6faf28a",
+          "version": "3.5.10"
+        }
+      },
+      {
         "package": "RecaptchaEnterprise",
         "repositoryURL": "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk",
         "state": {

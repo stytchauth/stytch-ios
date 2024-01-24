@@ -1,10 +1,10 @@
 import Foundation
 
-protocol RouteType {
+public protocol RouteType {
     var path: Path { get }
 }
 
-struct NetworkingRouter<Route: RouteType> {
+public struct NetworkingRouter<Route: RouteType> {
     private let getConfiguration: () -> Configuration?
 
     private let pathForRoute: (Route) -> Path
@@ -35,11 +35,18 @@ struct NetworkingRouter<Route: RouteType> {
     }
 }
 
-extension NetworkingRouter {
+public extension NetworkingRouter {
     func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
     ) async throws -> Response {
+        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
+    }
+
+    func post<Parameters: Encodable>(
+        to route: Route,
+        parameters: Parameters
+    ) async throws {
         try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
     }
 
@@ -56,6 +63,28 @@ extension NetworkingRouter {
 
     func delete<Response: Decodable>(route: Route) async throws -> Response {
         try await performRequest(.delete, route: route)
+    }
+
+    private func performRequest(
+        _ method: NetworkingClient.Method,
+        route: Route
+    ) async throws {
+        guard let configuration = getConfiguration() else {
+            throw StytchSDKError.consumerSDKNotConfigured
+        }
+
+        let (data, response) = try await networkingClient.performRequest(
+            method,
+            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+        )
+        do {
+            try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
+        } catch let error as StytchAPIError where error.statusCode == 401 {
+            sessionStorage.reset()
+            throw error
+        } catch {
+            throw error
+        }
     }
 
     private func performRequest<Response: Decodable>(

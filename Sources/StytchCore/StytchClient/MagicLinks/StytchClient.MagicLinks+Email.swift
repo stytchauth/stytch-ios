@@ -1,8 +1,13 @@
 import Foundation
 
+public protocol MagicLinksEmailProtocol {
+    func loginOrCreate(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse
+    func send(parameters: StytchClient.MagicLinks.Email.Parameters) async throws -> BasicResponse
+}
+
 public extension StytchClient.MagicLinks {
     /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
-    struct Email {
+    struct Email: MagicLinksEmailProtocol {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
         @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
@@ -40,7 +45,7 @@ public extension StytchClient.MagicLinks {
 
 public extension StytchClient.MagicLinks.Email {
     /// The dedicated parameters type for ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5`` and ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1`` calls.
-    struct Parameters: Encodable {
+    struct Parameters: Encodable, Equatable {
         private enum CodingKeys: String, CodingKey {
             case email
             case loginMagicLinkUrl
@@ -86,6 +91,15 @@ public extension StytchClient.MagicLinks.Email {
             self.signupMagicLinkUrl = signupMagicLinkUrl
             self.signupExpiration = signupExpiration
             self.signupTemplateId = signupTemplateId
+        }
+
+        public static func == (lhs: Parameters, rhs: Parameters) -> Bool {
+            lhs.loginMagicLinkUrl == rhs.loginMagicLinkUrl &&
+                lhs.loginExpiration == rhs.loginExpiration &&
+                lhs.loginTemplateId == rhs.loginTemplateId &&
+                lhs.signupMagicLinkUrl == rhs.signupMagicLinkUrl &&
+                lhs.signupExpiration == rhs.signupExpiration &&
+                lhs.signupTemplateId == rhs.signupTemplateId
         }
     }
 }
