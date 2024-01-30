@@ -12,6 +12,9 @@ final class NetworkingClientInterceptor {
     }
 
     func handleRequest(request: URLRequest, _: Bool, _: DFPProtectedAuthMode, _: String) async throws -> (Data, HTTPURLResponse) {
+        if request.url?.absoluteString.contains("/v1/events") != nil {
+            responses.append(.success(try Current.jsonEncoder.encode(AuthenticateResponse.mock)).map { $0.surroundInDataJSONContainer() })
+        }
         requests.append(request)
 
         switch responses.removeFirst() {

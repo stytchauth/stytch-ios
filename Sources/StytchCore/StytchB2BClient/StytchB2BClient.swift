@@ -52,47 +52,32 @@ public struct StytchB2BClient: StytchClientType {
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     public static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
-            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                // only run this in non-test environments
-                Task {
-                    try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
-                }
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
             }
             return .notHandled
         }
 
         switch tokenType {
         case .discovery:
-            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                // only run this in non-test environments
-                Task {
-                    try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-                }
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
         case .multiTenantMagicLinks:
-            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                // only run this in non-test environments
-                Task {
-                    try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-                }
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
-            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                // only run this in non-test environments
-                Task {
-                    try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-                }
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return .manualHandlingRequired(.multiTenantPasswords, token: token)
         #if !os(watchOS)
         case .sso:
-            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-                // only run this in non-test environments
-                Task {
-                    try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-                }
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         #endif
