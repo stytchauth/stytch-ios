@@ -14,6 +14,8 @@ public struct StytchB2BClient: StytchClientType {
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
     public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
 
+    static let appSessionId: String = UUID().uuidString
+
     private init() {
         postInit()
     }
@@ -50,18 +52,33 @@ public struct StytchB2BClient: StytchClientType {
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
     public static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
+            Task {
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type" : "UNKNOWN"]))
+            }
             return .notHandled
         }
 
         switch tokenType {
         case .discovery:
+            Task {
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+            }
             return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
         case .multiTenantMagicLinks:
+            Task {
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+            }
             return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
+            Task {
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+            }
             return .manualHandlingRequired(.multiTenantPasswords, token: token)
         #if !os(watchOS)
         case .sso:
+            Task {
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+            }
             return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         #endif
         }

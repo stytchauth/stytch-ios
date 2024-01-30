@@ -15,13 +15,20 @@ public extension StytchClient {
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
+                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
-
-            return try await router.post(
-                to: .authenticate,
-                parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
-            ) as AuthenticateResponse
+            do {
+                let result = try await router.post(
+                    to: .authenticate,
+                    parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
+                ) as AuthenticateResponse
+                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
+                return result
+            } catch let error {
+                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
+                throw error
+            }
         }
     }
 }

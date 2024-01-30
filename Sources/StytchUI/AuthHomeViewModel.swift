@@ -7,11 +7,11 @@ protocol AuthHomeViewModelProtocol {
 
 final class AuthHomeViewModel {
     let state: AuthHomeState
-    let eventsClient: EventsProtocol
+    let eventsClient: StytchClientEventsProtocol
 
     init(
         state: AuthHomeState,
-        eventsClient: EventsProtocol = StytchClient.events
+        eventsClient: StytchClientEventsProtocol = StytchClient.events
     ) {
         self.state = state
         self.eventsClient = eventsClient

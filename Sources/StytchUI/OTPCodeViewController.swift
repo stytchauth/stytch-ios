@@ -71,6 +71,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                         self.showInvalidCode()
                     }
                 } catch {
+                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                     self.presentAlert(error: error)
                 }
             }

@@ -1,4 +1,5 @@
 import UIKit
+import StytchCore
 
 // swiftlint:disable type_body_length
 final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
@@ -242,6 +243,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 do {
                     try await viewModel.setPassword(token: token, password: password)
                 } catch {
+                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                     presentAlert(error: error)
                 }
             }
@@ -250,6 +252,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 do {
                     try await viewModel.login(email: email, password: password)
                 } catch {
+                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                     presentAlert(error: error)
                 }
             }
@@ -258,6 +261,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 do {
                     try await viewModel.signup(email: email, password: password)
                 } catch {
+                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                     presentAlert(error: error)
                 }
             }
