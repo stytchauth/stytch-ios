@@ -22,7 +22,7 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
     func logRenderScreen() async throws {
         try await eventsClient.logEvent(
             parameters: .init(
-                eventName: "render-login-screen",
+                eventName: "render_login_screen",
                 details: ["options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? ""]
             )
         )
