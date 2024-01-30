@@ -38,7 +38,7 @@ final class OAuthTestCase: BaseTestCase {
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
-            networkInterceptor.requests[0],
+            networkInterceptor.requests[1],
             urlString: "https://web.stytch.com/sdk/v1/oauth/authenticate",
             method: .post([
                 "session_duration_minutes": 12,
