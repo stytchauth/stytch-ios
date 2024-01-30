@@ -1,5 +1,5 @@
-import UIKit
 import StytchCore
+import UIKit
 
 // swiftlint:disable type_body_length
 final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {

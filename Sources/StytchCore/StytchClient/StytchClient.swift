@@ -58,7 +58,7 @@ public struct StytchClient: StytchClientType {
     ) async throws -> DeeplinkHandledStatus<AuthenticateResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type" : "UNKNOWN"]))
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
             }
             return .notHandled
         }
@@ -66,17 +66,17 @@ public struct StytchClient: StytchClientType {
         switch tokenType {
         case .magicLinks:
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .oauth:
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
         case .passwordReset:
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type" : tokenType.rawValue]))
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return .manualHandlingRequired(tokenType, token: token)
         }

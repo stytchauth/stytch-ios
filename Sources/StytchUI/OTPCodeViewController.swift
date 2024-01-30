@@ -42,6 +42,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         super.init(viewModel: OTPCodeViewModel(state: state))
     }
 
+    // swiftlint:disable:next function_body_length
     override func configureView() {
         super.configureView()
 

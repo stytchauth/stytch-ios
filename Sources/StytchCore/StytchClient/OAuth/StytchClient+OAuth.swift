@@ -25,7 +25,7 @@ public extension StytchClient {
                 ) as AuthenticateResponse
                 try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result
-            } catch let error {
+            } catch {
                 try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
                 throw error
             }

@@ -114,7 +114,7 @@ public extension StytchClient {
                 self.publicToken = publicToken
                 self.eventName = eventName
                 self.details = details
-                self.errorDescription = error?.localizedDescription
+                errorDescription = error?.localizedDescription
             }
         }
 
