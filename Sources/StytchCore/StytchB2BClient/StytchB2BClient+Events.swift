@@ -1,10 +1,10 @@
 import Foundation
-public protocol StytchClientEventsProtocol {
-    func logEvent(parameters: StytchClient.Events.Parameters) async throws
+public protocol StytchB2BClientEventsProtocol {
+    func logEvent(parameters: StytchB2BClient.Events.Parameters) async throws
 }
 
-public extension StytchClient {
-    struct Events: StytchClientEventsProtocol {
+public extension StytchB2BClient {
+    struct Events: StytchB2BClientEventsProtocol {
         let router: NetworkingRouter<EventsRoute>
 
         @Dependency(\.clientInfo) private var clientInfo
@@ -36,8 +36,7 @@ public extension StytchClient {
                 event: .init(
                     publicToken: networkingClient.publicToken,
                     eventName: parameters.eventName,
-                    details: parameters.details,
-                    error: parameters.error
+                    details: parameters.details
                 )
             )
             try await router.post(to: .logEvents, parameters: [params])
@@ -108,13 +107,11 @@ public extension StytchClient {
             let publicToken: String
             let eventName: String
             let details: [String: String]?
-            let errorDescription: String?
 
-            public init(publicToken: String, eventName: String, details: [String: String]? = nil, error: Error? = nil) {
+            public init(publicToken: String, eventName: String, details: [String: String]? = nil) {
                 self.publicToken = publicToken
                 self.eventName = eventName
                 self.details = details
-                errorDescription = error?.localizedDescription
             }
         }
 
@@ -125,20 +122,18 @@ public extension StytchClient {
     }
 }
 
-public extension StytchClient {
+public extension StytchB2BClient {
     static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: appSessionId) }
 }
 
-public extension StytchClient.Events {
+public extension StytchB2BClient.Events {
     struct Parameters {
         let eventName: String
         let details: [String: String]?
-        let error: Error?
 
-        public init(eventName: String, details: [String: String]? = nil, error: Error? = nil) {
+        public init(eventName: String, details: [String: String]? = nil) {
             self.eventName = eventName
             self.details = details
-            self.error = error
         }
     }
 }
