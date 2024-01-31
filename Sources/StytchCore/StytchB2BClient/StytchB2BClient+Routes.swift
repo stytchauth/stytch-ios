@@ -6,6 +6,7 @@ extension StytchB2BClient {
         case passwords(PasswordsRoute)
         case sessions(SessionsRoute)
         case sso(SSORoute)
+        case events(EventsRoute)
         case bootstrap(BootstrapRoute)
 
         var path: Path {
@@ -28,6 +29,8 @@ extension StytchB2BClient {
             case let .sso(route):
                 return ("sso", route)
             case let .bootstrap(route):
+                return ("", route)
+            case let .events(route):
                 return ("", route)
             }
         }

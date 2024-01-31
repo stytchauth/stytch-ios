@@ -26,7 +26,12 @@ public enum StytchUIClient {
         onAuthCallback: AuthCallback? = nil
     ) {
         Self.config = config
-        Self.onAuthCallback = onAuthCallback
+        Self.onAuthCallback = { response in
+            Task {
+                try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+            }
+            onAuthCallback?(response)
+        }
         let rootController = AuthRootViewController(config: config)
         currentController = rootController
         setUpSessionChangeListener()
@@ -77,7 +82,12 @@ public extension View {
     ) -> some View {
         sheet(isPresented: isPresented) {
             StytchUIClient.config = config
-            StytchUIClient.onAuthCallback = onAuthCallback
+            StytchUIClient.onAuthCallback = { response in
+                Task {
+                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                }
+                onAuthCallback?(response)
+            }
             return AuthenticationView(config: config)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }

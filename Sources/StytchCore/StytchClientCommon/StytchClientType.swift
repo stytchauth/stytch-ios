@@ -97,11 +97,13 @@ extension StytchClientType {
                 if hasSession {
                     _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
                 }
+                try? await StytchClient.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
             } else {
                 try? await StytchB2BClient.bootstrap.fetch()
                 if hasSession {
                     _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
                 }
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
             }
             initializationState.setInitializationState(state: true)
         }

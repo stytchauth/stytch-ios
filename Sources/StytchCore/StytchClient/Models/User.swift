@@ -110,6 +110,8 @@ public extension User {
         public let providerSubject: String
         /// The type of the provider.
         public let providerType: String
+        /// The profile picture set for the provider
+        public let profilePictureUrl: String?
     }
 
     struct PhoneNumber: Codable {
