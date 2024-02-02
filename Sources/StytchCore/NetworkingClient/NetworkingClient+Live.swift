@@ -37,6 +37,9 @@ extension NetworkingClient {
         }
         return .init { request, dfpEnabled, dfpAuthMode, publicToken in
             #if os(iOS)
+            if request.url?.path.contains("/events") == true {
+                return try await defaultRequestHandler(session: session, request: request)
+            }
             if !dfpEnabled {
                 return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
             }
