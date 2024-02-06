@@ -13,7 +13,7 @@ struct StytchUI_Previews: PreviewProvider {
                         signupRedirectUrl: .init(string: "stytch-auth://signup")!
                     ),
                     magicLink: .init(),
-                    sms: .init()
+                    otp: .init(methods: [.sms, .email, .whatsapp])
                 ),
                 session: .init()
             )
@@ -32,7 +32,7 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
@@ -54,7 +54,7 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
@@ -78,7 +78,7 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
