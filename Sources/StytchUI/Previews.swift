@@ -82,8 +82,9 @@ struct StytchUI_Previews: PreviewProvider {
                     ),
                     session: .init()
                 ),
-                phoneNumberE164: "888-888-8888",
-                formattedPhoneNumber: "(888) 888-8888",
+                otpMethod: .sms,
+                input: "888-888-8888",
+                formattedInput: "(888) 888-8888",
                 methodId: "",
                 codeExpiry: .init().advanced(by: 120)
             )

@@ -183,15 +183,15 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             Task {
                 if let email = self.emailInput.text {
                     do {
-                        if viewModel.state.config.otp != nil {
-                            let (result, expiry) = try await viewModel.continueWithEmail(email: email)
-                            DispatchQueue.main.async {
-                                self.launchOTP(phone: email, formattedPhone: email, result: result, expiry: expiry)
-                            }
-                        } else if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
+                        if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
                             try await launchMagicLinkPassword(email: email)
                         } else if viewModel.state.config.magicLink != nil {
                             try await launchMagicLinkOnly(email: email)
+                        } else if viewModel.state.config.otp != nil {
+                            let (result, expiry) = try await viewModel.continueWithEmail(email: email)
+                            DispatchQueue.main.async {
+                                self.launchOTP(input: email, formattedInput: email, otpMethod: .email, result: result, expiry: expiry)
+                            }
                         } else {
                             try await launchPasswordOnly(email: email)
                         }
@@ -209,7 +209,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             formattedPhone: formattedPhone
                         )
                         DispatchQueue.main.async {
-                            self.launchOTP(phone: phone, formattedPhone: formattedPhone, result: result, expiry: expiry)
+                            self.launchOTP(input: phone, formattedInput: formattedPhone, otpMethod: .sms, result: result, expiry: expiry)
                         }
                     }
                 } catch {
@@ -224,7 +224,7 @@ protocol AuthInputViewModelDelegate: AnyObject {
     func launchCheckYourEmailResetReturning(email: String)
     func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool)
     func launchCheckYourEmail(email: String)
-    func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date)
+    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.Configuration.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date)
 }
 
 extension AuthInputViewController: AuthInputViewModelDelegate {
@@ -253,12 +253,13 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    func launchOTP(phone: String, formattedPhone: String, result: StytchClient.OTP.OTPResponse, expiry: Date) {
+    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.Configuration.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date) {
         let controller = OTPCodeViewController(
             state: .init(
                 config: viewModel.state.config,
-                phoneNumberE164: phone,
-                formattedPhoneNumber: formattedPhone,
+                otpMethod: otpMethod,
+                input: input,
+                formattedInput: formattedInput,
                 methodId: result.methodId,
                 codeExpiry: expiry
             )

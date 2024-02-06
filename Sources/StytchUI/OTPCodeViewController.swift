@@ -6,12 +6,12 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
 
-    private let phoneLabel: UILabel = {
+    private let inputLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18)
         label.textColor = .primaryText
-        label.accessibilityLabel = "phoneLabel"
+        label.accessibilityLabel = "inputLabel"
         return label
     }()
 
@@ -49,7 +49,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         stackView.spacing = .spacingLarge
 
         stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(phoneLabel)
+        stackView.addArrangedSubview(inputLabel)
         stackView.addArrangedSubview(codeInput)
         stackView.addArrangedSubview(expiryButton)
         stackView.addArrangedSubview(SpacerView())
@@ -95,12 +95,12 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
-            string: viewModel.state.formattedPhoneNumber,
+            string: viewModel.state.formattedInput,
             attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
         )
         attributedText.append(attributedPhone)
         attributedText.append(.init(string: "."))
-        phoneLabel.attributedText = attributedText
+        inputLabel.attributedText = attributedText
         updateExpiryText()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
     }
@@ -128,7 +128,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     private func resendCode() {
         Task {
             do {
-                try await viewModel.resendCode(phone: viewModel.state.phoneNumberE164)
+                try await viewModel.resendCode(input: viewModel.state.input)
             } catch {
                 presentAlert(error: error)
             }
@@ -139,7 +139,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         let controller = UIAlertController(
             title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
             message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedPhoneNumber
+                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedInput
             ),
             preferredStyle: .alert
         )
