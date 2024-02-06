@@ -64,11 +64,17 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
         view.layoutMargins = .zero
 
-        if viewModel.state.config.sms != nil, viewModel.state.config.magicLink == nil, viewModel.state.config.password == nil {
-            stackView.addArrangedSubview(phoneNumberInput)
-            activeInput = .phone
+        if let otp = viewModel.state.config.otp, otp.methods.count == 1, viewModel.state.config.magicLink == nil, viewModel.state.config.password == nil {
+            if otp.methods.contains(.email) {
+                stackView.addArrangedSubview(emailInput)
+                activeInput = .email
+            }
+            if otp.methods.contains(.sms) {
+                stackView.addArrangedSubview(phoneNumberInput)
+                activeInput = .phone
+            }
         } else {
-            if viewModel.state.config.sms != nil {
+            if viewModel.state.config.otp != nil {
                 segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
                 stackView.addArrangedSubview(segmentedControl)
 
@@ -177,7 +183,12 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             Task {
                 if let email = self.emailInput.text {
                     do {
-                        if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
+                        if viewModel.state.config.otp != nil {
+                            let (result, expiry) = try await viewModel.continueWithEmail(email: email)
+                            DispatchQueue.main.async {
+                                self.launchOTP(phone: email, formattedPhone: email, result: result, expiry: expiry)
+                            }
+                        } else if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
                             try await launchMagicLinkPassword(email: email)
                         } else if viewModel.state.config.magicLink != nil {
                             try await launchMagicLinkOnly(email: email)
