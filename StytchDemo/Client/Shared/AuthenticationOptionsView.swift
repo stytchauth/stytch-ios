@@ -109,7 +109,7 @@ struct AuthenticationOptionsView: View {
                         loginMagicLinkUrl: .init(string: "stytch-auth://login")!,
                         signupMagicLinkUrl: .init(string: "stytch-auth://signup")!
                     ),
-                    sms: .init()
+                    otp: .init(methods: [.sms, .whatsapp, .email])
                 )
             )
         ) { response in
