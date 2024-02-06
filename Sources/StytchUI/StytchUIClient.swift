@@ -216,13 +216,19 @@ public extension StytchUIClient {
         public struct OTP: Codable {
             let methods: Set<OTPMethod>
             let expiration: Minutes?
+            let loginTemplateId: String?
+            let signupTemplateId: String?
 
             public init(
                 methods: Set<OTPMethod>,
-                expiration: Minutes? = nil
+                expiration: Minutes? = nil,
+                loginTemplateId: String? = nil,
+                signupTemplateId: String? = nil
             ) {
                 self.methods = methods
                 self.expiration = expiration
+                self.loginTemplateId = loginTemplateId
+                self.signupTemplateId = signupTemplateId
             }
         }
 
