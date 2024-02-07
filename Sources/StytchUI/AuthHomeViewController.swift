@@ -42,6 +42,13 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     override func configureView() {
         super.configureView()
 
+        do {
+            try viewModel.checkValidConfig()
+        } catch {
+            presentAlert(error: error)
+            return
+        }
+
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
         scrollView.clipsToBounds = false
