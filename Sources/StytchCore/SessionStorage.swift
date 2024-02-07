@@ -53,6 +53,13 @@ final class SessionStorage {
         set { localStorage.memberSession = newValue }
     }
 
+    private(set) lazy var onUserChange = _onUserChange
+        .map { [weak self] in self?.session == nil }
+        .removeDuplicates()
+        .map { [weak self] _ in self?.session?.userId }
+
+    private let _onUserChange = PassthroughSubject<Void, Never>()
+
     @Dependency(\.localStorage) private var localStorage
 
     @Dependency(\.cookieClient) private var cookieClient

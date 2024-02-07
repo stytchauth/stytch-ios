@@ -1,3 +1,5 @@
+import Combine
+
 public extension StytchClient {
     /// The SDK allows you to manage the current user's information, such as fetching the user, viewing the most recent cached version of the user, or deleting existing authentication factors associated with this user.
     struct UserManagement {
@@ -5,10 +7,15 @@ public extension StytchClient {
 
         @Dependency(\.localStorage) private var localStorage
 
+        @Dependency(\.sessionStorage) private var sessionStorage
+
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
         public func getSync() -> User? {
             localStorage.user
         }
+
+        /// A publisher which emits following a change in user status and returns either the user ID or nil. You can use this as an indicator to set up or tear down your UI accordingly.
+        public var onChange: AnyPublisher<User.ID?, Never> { sessionStorage.onUserChange.eraseToAnyPublisher() }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current user.
