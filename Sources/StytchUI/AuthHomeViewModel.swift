@@ -28,6 +28,7 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
             )
         )
     }
+
     func checkValidConfig() throws {
         if state.config.magicLink == nil, state.config.password == nil, let otp = state.config.otp, !otp.methods.contains(.email) {
             throw StytchSDKError.uiNoAuthFactor

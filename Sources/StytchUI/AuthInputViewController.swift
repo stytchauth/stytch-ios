@@ -46,7 +46,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             inputs.append(.email)
         }
         if let otpMethods = viewModel.state.config.otp?.methods {
-            if otpMethods.contains(.email) && !inputs.contains(.email) {
+            if otpMethods.contains(.email), !inputs.contains(.email) {
                 inputs.append(.email)
             }
             if otpMethods.contains(.sms) {
@@ -84,16 +84,10 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         }
         self.hideInputs(for: input)
         return input
-    }(){
+    }() {
         didSet {
             self.hideInputs(for: activeInput)
         }
-    }
-
-    private func hideInputs(for input: Input) {
-        phoneNumberInput.isHidden = input == .email || input == .whatsapp
-        emailInput.isHidden = input == .phone || input == .whatsapp
-        whatsAppInput.isHidden = input == .email || input == .phone
     }
 
     private var isCurrentInputValid: Bool {
@@ -138,30 +132,38 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        setupInputs()
+        setupPhoneNumberInput(input: phoneNumberInput)
+        setupPhoneNumberInput(input: whatsAppInput)
+        setupEmailInput(input: emailInput)
 
         hideInputs(for: activeInput)
     }
 
-    private func setupInputs() {
-        phoneNumberInput.onButtonPressed = { [weak self] _ in
+    private func hideInputs(for input: Input) {
+        phoneNumberInput.isHidden = input == .email || input == .whatsapp
+        emailInput.isHidden = input == .phone || input == .whatsapp
+        whatsAppInput.isHidden = input == .email || input == .phone
+    }
+
+    private func setupPhoneNumberInput(input: PhoneNumberInput) {
+        input.onButtonPressed = { [weak self] _ in
             guard let self else { return }
-            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: phoneNumberInput.phoneNumberKit)
-            countryPickerViewController.delegate = self.phoneNumberInput
+            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit)
+            countryPickerViewController.delegate = input
             let navigationController = UINavigationController(rootViewController: countryPickerViewController)
             present(navigationController, animated: true)
         }
 
-        phoneNumberInput.onTextChanged = { [weak self] isValid in
+        input.onTextChanged = { [weak self] isValid in
             guard let self else { return }
 
             self.continueButton.isEnabled = isValid
 
-            switch (self.phoneNumberInput.hasBeenValid, isValid) {
+            switch (input.hasBeenValid, isValid) {
             case (_, true):
-                self.phoneNumberInput.setFeedback(nil)
+                input.setFeedback(nil)
             case (true, false):
-                self.phoneNumberInput.setFeedback(
+                input.setFeedback(
                     .error(
                         NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
                     )
@@ -170,44 +172,19 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                 break
             }
         }
+    }
 
-        whatsAppInput.onButtonPressed = { [weak self] _ in
-            guard let self else { return }
-            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: whatsAppInput.phoneNumberKit)
-            countryPickerViewController.delegate = self.whatsAppInput
-            let navigationController = UINavigationController(rootViewController: countryPickerViewController)
-            present(navigationController, animated: true)
-        }
-
-        whatsAppInput.onTextChanged = { [weak self] isValid in
+    private func setupEmailInput(input: EmailInput) {
+        input.onTextChanged = { [weak self] isValid in
             guard let self else { return }
 
             self.continueButton.isEnabled = isValid
 
-            switch (self.whatsAppInput.hasBeenValid, isValid) {
+            switch (input.hasBeenValid, isValid) {
             case (_, true):
-                self.whatsAppInput.setFeedback(nil)
+                input.setFeedback(nil)
             case (true, false):
-                self.whatsAppInput.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
-                    )
-                )
-            case (false, false):
-                break
-            }
-        }
-
-        emailInput.onTextChanged = { [weak self] isValid in
-            guard let self else { return }
-
-            self.continueButton.isEnabled = isValid
-
-            switch (self.emailInput.hasBeenValid, isValid) {
-            case (_, true):
-                self.emailInput.setFeedback(nil)
-            case (true, false):
-                self.emailInput.setFeedback(
+                input.setFeedback(
                     .error(
                         NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
                     )
@@ -254,11 +231,11 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 
     @objc private func didTapContinue() {
-        switch activeInput {
-        case .email:
-            Task {
-                if let email = self.emailInput.text {
-                    do {
+        Task {
+            do {
+                switch activeInput {
+                case .email:
+                    if let email = self.emailInput.text {
                         if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
                             try await launchMagicLinkPassword(email: email)
                         } else if viewModel.state.config.magicLink != nil {
@@ -271,14 +248,8 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                         } else {
                             try await launchPasswordOnly(email: email)
                         }
-                    } catch {
-                        presentAlert(error: error)
                     }
-                }
-            }
-        case .phone:
-            Task {
-                do {
+                case .phone:
                     if let phone = phoneNumberInput.phoneNumberE164, let formattedPhone = phoneNumberInput.formattedPhoneNumber {
                         let (result, expiry) = try await viewModel.continueWithPhone(
                             phone: phone,
@@ -288,13 +259,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             self.launchOTP(input: phone, formattedInput: formattedPhone, otpMethod: .sms, result: result, expiry: expiry)
                         }
                     }
-                } catch {
-                    presentAlert(error: error)
-                }
-            }
-        case .whatsapp:
-            Task {
-                do {
+                case .whatsapp:
                     if let phone = whatsAppInput.phoneNumberE164, let formattedPhone = whatsAppInput.formattedPhoneNumber {
                         let (result, expiry) = try await viewModel.continueWithWhatsApp(
                             phone: phone,
@@ -304,9 +269,9 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             self.launchOTP(input: phone, formattedInput: formattedPhone, otpMethod: .whatsapp, result: result, expiry: expiry)
                         }
                     }
-                } catch {
-                    presentAlert(error: error)
                 }
+            } catch {
+                presentAlert(error: error)
             }
         }
     }

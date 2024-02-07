@@ -56,15 +56,6 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         }
     }
 
-    private func launchPassword(email: String) {
-        let controller = ActionableInfoViewController(
-            state: .forgotPassword(config: viewModel.state.config, email: email) {
-                try await self.viewModel.forgotPassword(email: email)
-            }
-        )
-        navigationController?.pushViewController(controller, animated: true)
-    }
-
     init(state: OTPCodeState) {
         super.init(viewModel: OTPCodeViewModel(state: state))
     }
@@ -155,6 +146,15 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             expiryAttributedText(initialSegment: .localizedStringWithFormat(NSLocalizedString("stytch.otpCodeExpiresIn", value: "Your code expires in %@.", comment: ""), dateString)),
             for: .normal
         )
+    }
+
+    private func launchPassword(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .forgotPassword(config: viewModel.state.config, email: email) {
+                try await self.viewModel.forgotPassword(email: email)
+            }
+        )
+        navigationController?.pushViewController(controller, animated: true)
     }
 
     private func resendCode() {
