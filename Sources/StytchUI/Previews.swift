@@ -13,7 +13,7 @@ struct StytchUI_Previews: PreviewProvider {
                         signupRedirectUrl: .init(string: "stytch-auth://signup")!
                     ),
                     magicLink: .init(),
-                    sms: .init()
+                    otp: .init(methods: [.sms, .email, .whatsapp])
                 ),
                 session: .init()
             )
@@ -32,7 +32,7 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
@@ -54,7 +54,7 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
@@ -78,14 +78,16 @@ struct StytchUI_Previews: PreviewProvider {
                             signupRedirectUrl: .init(string: "stytch-auth://signup")!
                         ),
                         magicLink: .init(),
-                        sms: .init()
+                        otp: .init(methods: [.sms, .email, .whatsapp])
                     ),
                     session: .init()
                 ),
-                phoneNumberE164: "888-888-8888",
-                formattedPhoneNumber: "(888) 888-8888",
+                otpMethod: .sms,
+                input: "888-888-8888",
+                formattedInput: "(888) 888-8888",
                 methodId: "",
-                codeExpiry: .init().advanced(by: 120)
+                codeExpiry: .init().advanced(by: 120),
+                passwordsEnabled: true
             )
         )
         .inNavigationController()

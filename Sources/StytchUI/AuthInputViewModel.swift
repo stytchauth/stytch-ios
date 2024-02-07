@@ -5,7 +5,9 @@ protocol AuthInputViewModelProtocol {
     func getUserIntent(email: String) async throws -> PasswordState.Intent?
     func resetPassword(email: String) async throws
     func sendMagicLink(email: String) async throws
+    func continueWithEmail(email: String) async throws -> (StytchClient.OTP.OTPResponse, Date)
     func continueWithPhone(phone: String, formattedPhone: String) async throws -> (StytchClient.OTP.OTPResponse, Date)
+    func continueWithWhatsApp(phone: String, formattedPhone: String) async throws -> (StytchClient.OTP.OTPResponse, Date)
 }
 
 final class AuthInputViewModel {
@@ -47,9 +49,21 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
         return userSearch.userType.passwordIntent
     }
 
+    func continueWithEmail(email: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
+        let expiry = Date().addingTimeInterval(120)
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: email, loginTemplateId: state.config.otp?.loginTemplateId, signupTemplateId: state.config.otp?.signupTemplateId), expiration: state.config.otp?.expiration))
+        return (result, expiry)
+    }
+
     func continueWithPhone(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.sms?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.otp?.expiration))
+        return (result, expiry)
+    }
+
+    func continueWithWhatsApp(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
+        let expiry = Date().addingTimeInterval(120)
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: phone), expiration: state.config.otp?.expiration))
         return (result, expiry)
     }
 }
