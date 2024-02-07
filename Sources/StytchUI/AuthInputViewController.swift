@@ -263,13 +263,13 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                             try await launchMagicLinkPassword(email: email)
                         } else if viewModel.state.config.magicLink != nil {
                             try await launchMagicLinkOnly(email: email)
-                        } else if viewModel.state.config.password != nil {
-                            try await launchPasswordOnly(email: email)
                         } else if viewModel.state.config.otp != nil {
                             let (result, expiry) = try await viewModel.continueWithEmail(email: email)
                             DispatchQueue.main.async {
                                 self.launchOTP(input: email, formattedInput: email, otpMethod: .email, result: result, expiry: expiry)
                             }
+                        } else {
+                            try await launchPasswordOnly(email: email)
                         }
                     } catch {
                         presentAlert(error: error)
@@ -353,7 +353,8 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
                 input: input,
                 formattedInput: formattedInput,
                 methodId: result.methodId,
-                codeExpiry: expiry
+                codeExpiry: expiry,
+                passwordsEnabled: viewModel.state.config.password != nil
             )
         )
         navigationController?.pushViewController(controller, animated: true)

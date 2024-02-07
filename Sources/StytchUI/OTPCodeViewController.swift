@@ -38,6 +38,33 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
     private var timer: Timer?
 
+    private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
+
+    private lazy var passwordTertiaryButton: Button = .tertiary(
+        title: .createPasswordInstead
+    ) { [weak self] in
+        guard let email = self?.viewModel.state.input else { return }
+        Task {
+            do {
+                try await self?.viewModel.forgotPassword(email: email)
+                DispatchQueue.main.async {
+                    self?.launchPassword(email: email)
+                }
+            } catch {
+                self?.presentAlert(error: error)
+            }
+        }
+    }
+
+    private func launchPassword(email: String) {
+        let controller = ActionableInfoViewController(
+            state: .forgotPassword(config: viewModel.state.config, email: email) {
+                try await self.viewModel.forgotPassword(email: email)
+            }
+        )
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
     init(state: OTPCodeState) {
         super.init(viewModel: OTPCodeViewModel(state: state))
     }
@@ -52,6 +79,8 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         stackView.addArrangedSubview(inputLabel)
         stackView.addArrangedSubview(codeInput)
         stackView.addArrangedSubview(expiryButton)
+        stackView.addArrangedSubview(lowerSeparator)
+        stackView.addArrangedSubview(passwordTertiaryButton)
         stackView.addArrangedSubview(SpacerView())
 
         stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
@@ -103,6 +132,9 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         inputLabel.attributedText = attributedText
         updateExpiryText()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
+
+        lowerSeparator.isHidden = !viewModel.state.passwordsEnabled
+        passwordTertiaryButton.isHidden = !viewModel.state.passwordsEnabled
     }
 
     @objc private func updateExpiryText() {
@@ -171,4 +203,8 @@ extension OTPCodeViewController: OTPCodeViewModelDelegate {
             )
         )
     }
+}
+
+private extension String {
+    static let createPasswordInstead: String = NSLocalizedString("stytch.createPasswordInstead", value: "Create a password instead", comment: "")
 }

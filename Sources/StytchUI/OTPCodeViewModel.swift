@@ -2,21 +2,31 @@ import Foundation
 import StytchCore
 
 protocol OTPCodeViewModelProtocol {
+    func forgotPassword(email: String) async throws
     func resendCode(input: String) async throws
     func enterCode(code: String, methodId: String) async throws
 }
 
 final class OTPCodeViewModel {
     var state: OTPCodeState
-    var otpClient: OTPProtocol
+    let otpClient: OTPProtocol
+    let passwordClient: PasswordsProtocol
 
-    init(state: OTPCodeState, otpClient: OTPProtocol = StytchClient.otps) {
+    init(state: OTPCodeState, otpClient: OTPProtocol = StytchClient.otps, passwordClient: PasswordsProtocol = StytchClient.passwords) {
         self.state = state
         self.otpClient = otpClient
+        self.passwordClient = passwordClient
     }
 }
 
 extension OTPCodeViewModel: OTPCodeViewModelProtocol {
+    func forgotPassword(email: String) async throws {
+        guard let password = state.config.password else { return }
+        StytchUIClient.pendingResetEmail = email
+        let params = params(email: email, password: password)
+        _ = try await passwordClient.resetByEmailStart(parameters: params)
+    }
+
     func resendCode(input: String) async throws {
         let expiry = Date().addingTimeInterval(120)
         let result: StytchClient.OTP.OTPResponse
@@ -34,7 +44,8 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
             input: input,
             formattedInput: state.formattedInput,
             methodId: result.methodId,
-            codeExpiry: expiry
+            codeExpiry: expiry,
+            passwordsEnabled: state.passwordsEnabled
         )
     }
 
@@ -51,4 +62,22 @@ struct OTPCodeState {
     let formattedInput: String
     let methodId: String
     let codeExpiry: Date
+    let passwordsEnabled: Bool
+}
+
+extension OTPCodeViewModel {
+    var sessionDuration: Minutes {
+        state.config.session?.sessionDuration ?? .defaultSessionDuration
+    }
+
+    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+        .init(
+            email: email,
+            loginUrl: password.loginURL,
+            loginExpiration: password.loginExpiration,
+            resetPasswordUrl: password.resetPasswordURL,
+            resetPasswordExpiration: password.resetPasswordExpiration,
+            resetPasswordTemplateId: password.resetPasswordTemplateId
+        )
+    }
 }

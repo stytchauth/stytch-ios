@@ -86,7 +86,8 @@ struct StytchUI_Previews: PreviewProvider {
                 input: "888-888-8888",
                 formattedInput: "(888) 888-8888",
                 methodId: "",
-                codeExpiry: .init().advanced(by: 120)
+                codeExpiry: .init().advanced(by: 120),
+                passwordsEnabled: true
             )
         )
         .inNavigationController()
