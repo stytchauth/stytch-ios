@@ -106,12 +106,16 @@ public extension User {
     }
 
     struct Provider: Codable {
+        public typealias ID = Identifier<Self, String>
         /// The subject of the provider.
         public let providerSubject: String
         /// The type of the provider.
         public let providerType: String
         /// The profile picture set for the provider
         public let profilePictureUrl: String?
+        /// The id of the registration.
+        public var id: ID { oauthUserRegistrationId }
+        let oauthUserRegistrationId: ID
     }
 
     struct PhoneNumber: Codable {

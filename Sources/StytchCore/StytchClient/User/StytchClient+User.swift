@@ -42,6 +42,8 @@ public extension StytchClient {
                     return try await router.delete(route: .factors(.webAuthNRegistrations(id: id)))
                 case let .totp(id):
                     return try await router.delete(route: .factors(.totp(id: id)))
+                case let .oauth(id):
+                    return try await router.delete(route: .factors(.oauth(id: id)))
                 }
             }
         }
@@ -71,6 +73,7 @@ public extension StytchClient.UserManagement {
         case phoneNumber(id: User.PhoneNumber.ID)
         case webAuthnRegistration(id: User.WebAuthNRegistration.ID)
         case totp(id: User.TOTP.ID)
+        case oauth(id: User.Provider.ID)
     }
 
     struct UpdateParameters: Encodable {
