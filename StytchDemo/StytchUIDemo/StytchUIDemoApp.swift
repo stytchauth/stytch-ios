@@ -28,6 +28,8 @@ struct StytchUIDemoApp: App {
                 uiConfig = .passwordStytchUIConfig
             case "magiclinkpassword":
                 uiConfig = .magicLinkPasswordStytchUIConfig
+            case "invalidemail":
+                uiConfig = .invalidEmailStytchUIConfig
             default:
                 uiConfig = .defaultStytchUIConfig
             }
@@ -87,7 +89,14 @@ extension StytchUIClient.Configuration {
             ),
             password: .init(),
             magicLink: .init(),
-            sms: .init()
+            otp: .init(methods: [.sms])
+        )
+    )
+    static let invalidEmailStytchUIConfig: StytchUIClient.Configuration = .init(
+        publicToken: configuration.publicToken,
+        products: .init(
+            magicLink: .init(),
+            otp: .init(methods: [.email])
         )
     )
 }
