@@ -3,6 +3,7 @@ import StytchCore
 
 protocol AuthHomeViewModelProtocol {
     func logRenderScreen() async throws
+    func checkValidConfig() throws
 }
 
 final class AuthHomeViewModel {
@@ -26,6 +27,18 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
                 details: ["options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? ""]
             )
         )
+    }
+
+    func checkValidConfig() throws {
+        if state.config.magicLink == nil, state.config.password == nil, let otp = state.config.otp, !otp.methods.contains(.email) {
+            throw StytchSDKError.uiNoAuthFactor
+        }
+        if state.config.magicLink == nil, state.config.password == nil, state.config.otp == nil {
+            throw StytchSDKError.uiNoAuthFactor
+        }
+        if state.config.magicLink != nil, let otp = state.config.otp, otp.methods.contains(.email) {
+            throw StytchSDKError.uiEmlAndOtpInvalid
+        }
     }
 }
 

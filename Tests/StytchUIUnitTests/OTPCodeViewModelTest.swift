@@ -21,16 +21,18 @@ final class OTPCodeViewModelTest: BaseTestCase {
                 publicToken: "",
                 products: .init()
             ),
-            phoneNumberE164: "",
-            formattedPhoneNumber: "",
+            otpMethod: .sms,
+            input: "",
+            formattedInput: "",
             methodId: "",
-            codeExpiry: Date()
+            codeExpiry: Date(),
+            passwordsEnabled: false
         )
         let spy = OTPSpy(callback: calledMethodCallback)
         let viewModel: OTPCodeViewModel = .init(state: state, otpClient: spy)
-        _ = try await viewModel.resendCode(phone: "1234567890")
+        _ = try await viewModel.resendCode(input: "1234567890")
         XCTAssert(calledMethod == .otpLoginOrCreate)
-        XCTAssert(viewModel.state.phoneNumberE164 == "1234567890")
+        XCTAssert(viewModel.state.input == "1234567890")
         XCTAssert(viewModel.state.methodId == "otp-method-id")
     }
 
@@ -40,10 +42,12 @@ final class OTPCodeViewModelTest: BaseTestCase {
                 publicToken: "",
                 products: .init()
             ),
-            phoneNumberE164: "",
-            formattedPhoneNumber: "",
+            otpMethod: .sms,
+            input: "",
+            formattedInput: "",
             methodId: "",
-            codeExpiry: Date()
+            codeExpiry: Date(),
+            passwordsEnabled: false
         )
         let spy = OTPSpy(callback: calledMethodCallback)
         let viewModel: OTPCodeViewModel = .init(state: state, otpClient: spy)

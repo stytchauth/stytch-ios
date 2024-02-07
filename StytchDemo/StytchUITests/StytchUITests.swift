@@ -6,6 +6,8 @@ final class StytchUITests: XCTestCase {
     lazy var titleLabel = app.scrollViews.otherElements.staticTexts["Sign up or log in"]
     lazy var separatorView = app.scrollViews.otherElements.staticTexts["or"]
     lazy var poweredByStytch = app.images.element(matching: .any, identifier: "poweredByStytch")
+    lazy var noAuthError = app.alerts["Error"].scrollViews.otherElements.staticTexts["You must have at least one primary authentication factor (Passwords, EML, or Email OTP) enabled."]
+    lazy var invalidEmailError = app.alerts["Error"].scrollViews.otherElements.staticTexts["You cannot have both Email Magic Links and Email OTP configured at the same time."]
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -15,12 +17,18 @@ final class StytchUITests: XCTestCase {
         app.terminate()
     }
 
-    func testDefaultUIRendersAsExpected() throws {
+    func testDefaultUIPresentsAlert() throws {
         app.launchEnvironment["config"] = "default"
         app.launch()
 
-        XCTAssert(titleLabel.exists)
-        XCTAssert(!separatorView.exists)
+        XCTAssert(noAuthError.exists)
+    }
+
+    func testInvalidEmailUIPresentsAlert() throws {
+        app.launchEnvironment["config"] = "invalidemail"
+        app.launch()
+
+        XCTAssert(invalidEmailError.exists)
     }
 
     func testRealisticUIRendersAsExpected() throws {

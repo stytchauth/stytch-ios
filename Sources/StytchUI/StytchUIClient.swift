@@ -105,7 +105,7 @@ public extension StytchUIClient {
         var inputProductsEnabled: Bool {
             password != nil ||
                 magicLink != nil ||
-                sms != nil
+                otp != nil
         }
 
         var oauth: OAuth? { products.oauth }
@@ -114,7 +114,7 @@ public extension StytchUIClient {
 
         var magicLink: MagicLink? { products.magicLink }
 
-        var sms: OTP? { products.sms }
+        var otp: OTP? { products.otp }
 
         public init(
             publicToken: String,
@@ -134,18 +134,18 @@ public extension StytchUIClient {
             let oauth: OAuth?
             let password: Password?
             let magicLink: MagicLink?
-            let sms: OTP?
+            let otp: OTP?
 
             public init(
                 oauth: OAuth? = nil,
                 password: Password? = nil,
                 magicLink: MagicLink? = nil,
-                sms: OTP? = nil
+                otp: OTP? = nil
             ) {
                 self.oauth = oauth
                 self.password = password
                 self.magicLink = magicLink
-                self.sms = sms
+                self.otp = otp
             }
         }
 
@@ -214,13 +214,28 @@ public extension StytchUIClient {
         }
 
         public struct OTP: Codable {
+            let methods: Set<OTPMethod>
             let expiration: Minutes?
+            let loginTemplateId: String?
+            let signupTemplateId: String?
 
             public init(
-                expiration: Minutes? = nil
+                methods: Set<OTPMethod>,
+                expiration: Minutes? = nil,
+                loginTemplateId: String? = nil,
+                signupTemplateId: String? = nil
             ) {
+                self.methods = methods
                 self.expiration = expiration
+                self.loginTemplateId = loginTemplateId
+                self.signupTemplateId = signupTemplateId
             }
+        }
+
+        public enum OTPMethod: Codable {
+            case sms
+            case email
+            case whatsapp
         }
 
         public struct Session: Codable {
