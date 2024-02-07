@@ -140,9 +140,9 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 
     private func hideInputs(for input: Input) {
-        phoneNumberInput.isHidden = input == .email || input == .whatsapp
-        emailInput.isHidden = input == .phone || input == .whatsapp
-        whatsAppInput.isHidden = input == .email || input == .phone
+        phoneNumberInput.isHidden = input != .phone
+        emailInput.isHidden = input != .email
+        whatsAppInput.isHidden = input != .whatsapp
     }
 
     private func setupPhoneNumberInput(input: PhoneNumberInput) {
