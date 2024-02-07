@@ -19,6 +19,7 @@ extension UsersRoute {
         case emails(id: User.Email.ID)
         case phoneNumbers(id: User.PhoneNumber.ID)
         case webAuthNRegistrations(id: User.WebAuthNRegistration.ID)
+        case totp(id: User.TOTP.ID)
 
         var path: Path {
             let joinedPath: (Path, String) -> Path = { $0.appendingPath(.init(rawValue: $1)) }
@@ -33,6 +34,8 @@ extension UsersRoute {
                 return joinedPath("phone_numbers", id.rawValue)
             case let .webAuthNRegistrations(id):
                 return joinedPath("webauthn_registrations", id.rawValue)
+            case let .totp(id):
+                return joinedPath("totps", id.rawValue)
             }
         }
     }
