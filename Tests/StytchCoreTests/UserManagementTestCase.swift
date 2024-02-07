@@ -49,7 +49,7 @@ final class UserManagementTestCase: BaseTestCase {
             (.phoneNumber(id: .init(rawValue: "phone_123983")), "phone_numbers", "phone_123983"),
             (.webAuthnRegistration(id: .init(rawValue: "web_123983")), "webauthn_registrations", "web_123983"),
             (.totp(id: .init(rawValue: "totp_123983")), "totps", "totp_123983"),
-            (.oauth(id: .init(rawValue: "oauth_123983")), "oauth", "oauth_123983")
+            (.oauth(id: .init(rawValue: "oauth_123983")), "oauth", "oauth_123983"),
         ]
 
         try await factors.enumerated().asyncForEach { index, values in
