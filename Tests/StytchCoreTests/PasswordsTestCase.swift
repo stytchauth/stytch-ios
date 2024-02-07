@@ -4,6 +4,7 @@ import XCTest
 final class PasswordsTestCase: BaseTestCase {
     private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDuration: 26)
     private let passwordResetBySessionParams: StytchClient.Passwords.ResetBySessionParameters = .init(password: "password123", sessionDuration: 10)
+    private let passwordResetByExistingPasswordParams: StytchClient.Passwords.ResetByExistingPasswordParameters = .init(email: "user@stytch.com", existingPassword: "password123", newPassword: "password234")
 
     func testCreate() async throws {
         let userId: User.ID = ""
@@ -122,6 +123,24 @@ final class PasswordsTestCase: BaseTestCase {
             method: .post([
                 "session_duration_minutes": 10,
                 "password": "password123",
+            ])
+        )
+    }
+
+    func testResetByExistingPassword() async throws {
+        networkInterceptor.responses { AuthenticateResponse.mock }
+        Current.timer = { _, _, _ in .init() }
+
+        _ = try await StytchClient.passwords.resetByExistingPassword(parameters: passwordResetByExistingPasswordParams)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/passwords/existing_password/reset",
+            method: .post([
+                "email_address": "user@stytch.com",
+                "existing_password": "password123",
+                "new_password": "password234",
+                "session_duration_minutes": 30,
             ])
         )
     }
