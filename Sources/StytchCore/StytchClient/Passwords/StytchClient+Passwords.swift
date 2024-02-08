@@ -7,6 +7,7 @@ public protocol PasswordsProtocol {
     func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse
     func strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse
     func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse
+    func resetByExistingPassword(parameters: StytchClient.Passwords.ResetByExistingPasswordParameters) async throws -> AuthenticateResponse
 }
 
 public extension StytchClient {
@@ -91,6 +92,14 @@ public extension StytchClient {
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetBySession(parameters: ResetBySessionParameters) async throws -> AuthenticateResponse {
             try await router.post(to: .resetBySession, parameters: parameters)
+        }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// This method resets the user’s password using their existing password. This endpoint checks that the existing password matches the stored value.
+        ///
+        /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the user is authenticated.
+        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> AuthenticateResponse {
+            try await router.post(to: .resetByExistingPassword, parameters: parameters)
         }
     }
 }
@@ -222,6 +231,40 @@ public extension StytchClient.Passwords {
         ///   - sessionDuration: The duration of the requested session.
         public init(password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.password = password
+            self.sessionDuration = sessionDuration
+        }
+    }
+}
+
+public extension StytchClient.Passwords {
+    /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
+    struct ResetByExistingPasswordParameters: Encodable {
+        private enum CodingKeys: String, CodingKey {
+            case email = "emailAddress"
+            case existingPassword
+            case newPassword
+            case sessionDuration = "sessionDurationMinutes"
+        }
+
+        public let email: String
+        public let existingPassword: String
+        public let newPassword: String
+        public let sessionDuration: Minutes
+
+        /// - Parameters:
+        ///   - email: The user's email address.
+        ///   - existingPassword: The user's existing password.
+        ///   - newPassword: The user's new password.
+        ///   - sessionDuration: The duration of the requested session.
+        public init(
+            email: String,
+            existingPassword: String,
+            newPassword: String,
+            sessionDuration: Minutes = .defaultSessionDuration
+        ) {
+            self.email = email
+            self.existingPassword = existingPassword
+            self.newPassword = newPassword
             self.sessionDuration = sessionDuration
         }
     }

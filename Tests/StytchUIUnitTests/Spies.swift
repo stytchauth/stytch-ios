@@ -11,6 +11,7 @@ enum CalledMethod {
     case passwordsResetByEmail
     case passwordsStrengthCheck
     case passwordsResetBySession
+    case passwordsResetByExistingPassword
 
     case otpLoginOrCreate
     case otpSend
@@ -55,6 +56,11 @@ class PasswordsSpy: PasswordsProtocol {
 
     func resetBySession(parameters _: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse {
         callback(.passwordsResetBySession)
+        return AuthenticateResponse.mock
+    }
+
+    func resetByExistingPassword(parameters _: StytchClient.Passwords.ResetByExistingPasswordParameters) async throws -> AuthenticateResponse {
+        callback(.passwordsResetByExistingPassword)
         return AuthenticateResponse.mock
     }
 }
