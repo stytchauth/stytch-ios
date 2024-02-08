@@ -9,13 +9,15 @@ public extension StytchClient {
 
         @Dependency(\.sessionStorage) private var sessionStorage
 
+        @Dependency(\.userStorage) private var userStorage
+
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
         public func getSync() -> User? {
-            localStorage.user
+            userStorage.user
         }
 
-        /// A publisher which emits following a change in user status and returns either the user ID or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onChange: AnyPublisher<User.ID?, Never> { sessionStorage.onUserChange.eraseToAnyPublisher() }
+        /// A publisher which emits following a change in user status and returns either the user object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
+        public var onChange: AnyPublisher<User?, Never> { userStorage.onUserChange.eraseToAnyPublisher() }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current user.
@@ -57,7 +59,7 @@ public extension StytchClient {
 
         private func updatingCachedUser(_ performRequest: () async throws -> UserResponse) async rethrows -> UserResponse {
             let response = try await performRequest()
-            localStorage.user = response.wrapped
+            userStorage.updateUser(response.wrapped)
             return response
         }
     }
