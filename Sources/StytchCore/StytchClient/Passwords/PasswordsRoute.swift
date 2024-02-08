@@ -4,6 +4,7 @@ enum PasswordsRoute: RouteType {
     case authenticate
     case strengthCheck
     case resetBySession
+    case resetByExistingPassword
 
     var path: Path {
         switch self {
@@ -17,6 +18,8 @@ enum PasswordsRoute: RouteType {
             return "strength_check"
         case .resetBySession:
             return "session/reset"
+        case .resetByExistingPassword:
+            return "existing_password/reset"
         }
     }
 }
