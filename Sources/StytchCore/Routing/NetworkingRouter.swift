@@ -17,6 +17,8 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.sessionStorage) private var sessionStorage
 
+    @Dependency(\.userStorage) private var userStorage
+
     @Dependency(\.localStorage) private var localStorage
 
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
@@ -111,7 +113,7 @@ public extension NetworkingRouter {
                     ],
                     hostUrl: configuration.hostUrl
                 )
-                localStorage.user = sessionResponse.user
+                userStorage.updateUser(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionStorage.updateSession(
                     .member(sessionResponse.memberSession),

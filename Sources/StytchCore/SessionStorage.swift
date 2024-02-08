@@ -53,6 +53,8 @@ final class SessionStorage {
         set { localStorage.memberSession = newValue }
     }
 
+    @Dependency(\.userStorage) private var userStorage
+
     @Dependency(\.localStorage) private var localStorage
 
     @Dependency(\.cookieClient) private var cookieClient
@@ -116,7 +118,7 @@ final class SessionStorage {
         sessionToken = nil
         sessionJwt = nil
 
-        localStorage.user = nil
+        userStorage.reset()
         localStorage.organization = nil
         localStorage.member = nil
 
