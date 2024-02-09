@@ -5,7 +5,7 @@ enum CryptoWalletsRoute: RouteType {
     var path: Path {
         switch self {
         case .authenticateStart:
-            return "authenticateStart"
+            return "authenticate/start/primary"
         case .authenticate:
             return "authenticate"
         }

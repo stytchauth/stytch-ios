@@ -26,7 +26,7 @@ public extension StytchClient {
 
 public extension StytchClient.CryptoWallets {
     /// The type of crypto wallet. Currently `ethereum` and `solana` are supported. Wallets for any EVM-compatible chains (such as Polygon or BSC) are also supported and are grouped under the `ethereum` type.
-    enum WalletType: Encodable {
+    enum WalletType: String, Codable {
         case ethereum
         case solana
     }
@@ -79,12 +79,16 @@ public extension StytchClient.CryptoWallets {
     typealias AuthenticateStartResponse = Response<CryptoWalletsAuthenticateResponseData>
 
     /// The underlying data for crypto wallets `authenticateStart` calls.
-    struct CryptoWalletsAuthenticateResponseData: Decodable {
+    struct CryptoWalletsAuthenticateResponseData: Codable {
         private enum CodingKeys: String, CodingKey {
             case challenge
         }
         /// A challenge string to be signed by the wallet in order to prove ownership.
         public let challenge: String
+
+        public init(challenge: String) {
+            self.challenge = challenge
+        }
     }
 }
 
