@@ -86,6 +86,7 @@ public extension StytchClient.CryptoWallets {
         private enum CodingKeys: String, CodingKey {
             case challenge
         }
+
         /// A challenge string to be signed by the wallet in order to prove ownership.
         public let challenge: String
 
