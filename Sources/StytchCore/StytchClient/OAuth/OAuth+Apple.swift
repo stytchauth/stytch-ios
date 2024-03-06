@@ -8,6 +8,7 @@ public extension StytchClient.OAuth {
     /// The SDK provides the ability to integrate with the natively-supported Sign In With Apple flow.
     struct Apple: AppleOAuthProviderProtocol {
         let router: NetworkingRouter<OAuthRoute.AppleRoute>
+        let userRouter: NetworkingRouter<UsersRoute>
 
         @Dependency(\.cryptoClient) private var cryptoClient
 
@@ -25,15 +26,23 @@ public extension StytchClient.OAuth {
                 },
                 nonce: cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
             )
-            return try await router.post(
+            let authenticateResponse: AuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: AuthenticateParameters(
                     idToken: authenticateResult.idToken,
                     nonce: rawNonce,
-                    sessionDurationMinutes: parameters.sessionDuration,
-                    name: authenticateResult.name
+                    sessionDurationMinutes: parameters.sessionDuration
                 )
             )
+            if authenticateResult.name != nil {
+                let _: UserResponse = try await userRouter.put(
+                    to: .index,
+                    parameters: StytchClient.UserManagement.UpdateParameters(
+                        name: authenticateResult.name
+                    )
+                )
+            }
+            return authenticateResponse
         }
     }
 }
@@ -89,7 +98,6 @@ extension StytchClient.OAuth.Apple {
         let idToken: String
         let nonce: String
         let sessionDurationMinutes: Minutes
-        let name: Name
     }
 
     struct Name: Codable {

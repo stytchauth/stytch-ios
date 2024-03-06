@@ -32,8 +32,11 @@ extension AppleOAuthClient {
                 continuation?.resume(throwing: StytchSDKError.missingAuthorizationCredentialIDToken)
                 return
             }
-
-            continuation?.resume(returning: .init(idToken: token, name: .init(credential.fullName)))
+            var name: User.Name?
+            if credential.fullName?.givenName != nil || credential.fullName?.familyName != nil {
+                name = .init(firstName: credential.fullName?.givenName, lastName: credential.fullName?.givenName)
+            }
+            continuation?.resume(returning: .init(idToken: token, name: name))
         }
 
         func authorizationController(controller _: ASAuthorizationController, didCompleteWithError error: Error) {
