@@ -9,6 +9,7 @@ final class OAuthTestCase: BaseTestCase {
                 statusCode: 200,
                 wrapped: .init(user: .mock(userId: ""), sessionToken: "", sessionJwt: "", session: .mock(userId: ""), userCreated: false)
             )
+            UserResponse(requestId: "", statusCode: 200, wrapped: .mock(userId: ""))
         }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
         Current.timer = { _, _, _ in .init() }
@@ -21,6 +22,13 @@ final class OAuthTestCase: BaseTestCase {
                 "session_duration_minutes": 30,
                 "nonce": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "id_token": "id_token_123",
+            ])
+        )
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[1],
+            urlString: "https://web.stytch.com/sdk/v1/users/me",
+            method: .put([
                 "name": ["first_name": "user"],
             ])
         )
