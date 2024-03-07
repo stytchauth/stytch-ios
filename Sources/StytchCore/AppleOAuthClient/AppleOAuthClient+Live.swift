@@ -34,7 +34,7 @@ extension AppleOAuthClient {
             }
             var name: User.Name?
             if credential.fullName?.givenName != nil || credential.fullName?.familyName != nil {
-                name = .init(firstName: credential.fullName?.givenName, lastName: credential.fullName?.givenName)
+                name = .init(firstName: credential.fullName?.givenName, lastName: credential.fullName?.familyName)
             }
             continuation?.resume(returning: .init(idToken: token, name: name))
         }
