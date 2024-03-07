@@ -18,6 +18,6 @@ struct AppleOAuthClient {
 extension AppleOAuthClient {
     struct Result {
         let idToken: String
-        let name: StytchClient.OAuth.Apple.Name
+        let name: User.Name?
     }
 }

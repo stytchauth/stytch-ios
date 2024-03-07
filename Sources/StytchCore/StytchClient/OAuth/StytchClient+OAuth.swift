@@ -8,6 +8,7 @@ public extension StytchClient {
     /// OAuth allows you to leverage outside identity providers, for which your users may already have an account, to verify their identity. This is a low-friction method your users will be familiar with.
     struct OAuth: OAuthProviderProtocol {
         let router: NetworkingRouter<OAuthRoute>
+        let userRouter: NetworkingRouter<UsersRoute>
 
         @Dependency(\.keychainClient) private var keychainClient
 
@@ -35,12 +36,12 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// The interface for interacting with OAuth products.
-    static var oauth: OAuth { .init(router: router.scopedRouter { $0.oauth }) }
+    static var oauth: OAuth { .init(router: router.scopedRouter { $0.oauth }, userRouter: router.scopedRouter { $0.users }) }
 }
 
 public extension StytchClient.OAuth {
     /// The interface for authenticating a user with Apple.
-    var apple: Apple { .init(router: router.scopedRouter { $0.apple }) }
+    var apple: Apple { .init(router: router.scopedRouter { $0.apple }, userRouter: userRouter) }
 }
 
 #if !os(watchOS)
