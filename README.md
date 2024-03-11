@@ -18,6 +18,7 @@
     * [Async Options](#async-options)
   * [How do I start using Stytch?](#how-do-i-start-using-stytch)
 * [Requirements](#requirements)
+  * [Passkeys](#passkeys)
 * [Installation](#installation)
 * [Usage](#usage)
     * [Consumer apps](#consumer-apps)
@@ -74,6 +75,8 @@ There are a number of authentication products currently supported by the SDK, wi
 - Sessions
     - Authenticate/refresh an existing session
     - Revoke a session (Sign out)
+- Passkeys
+    - Register/Authenticate with Passkeys
 - User Management
     - Get or fetch the current user object (sync/cached or async options available)
     - Delete factors by id from the current user
@@ -121,6 +124,9 @@ The Stytch iOS SDK is compatible with apps targeting the following Apple platfor
 - iOS 13+
 - macOS 10.15+
 - tvOS 13+
+
+### Passkeys
+To enable passkey support for your iOS app, associate your app with a website that your app owns. You can declare this association by following the instructions [here](https://developer.apple.com/documentation/xcode/supporting-associated-domains), specifically as they relate to the `webcredentials` configuration.
 
 ## Installation
 
