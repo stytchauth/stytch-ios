@@ -35,7 +35,7 @@ public extension StytchClient.OAuth {
                 )
             )
             if authenticateResult.name != nil {
-                let _: UserResponse = try await userRouter.put(
+                let _: BasicResponse = try await userRouter.put(
                     to: .index,
                     parameters: StytchClient.UserManagement.UpdateParameters(
                         name: authenticateResult.name
