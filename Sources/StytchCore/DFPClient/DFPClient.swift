@@ -7,29 +7,27 @@ internal protocol DFPProvider {
     func getTelemetryId(publicToken: String) async -> String
 }
 
-final class DFPClient: DFPProvider {
+final actor DFPClient: DFPProvider {
     func getTelemetryId(publicToken: String) async -> String {
-        await withCheckedContinuation { continuation in
+        guard let dfpFileUrl = getResource(myBundle: Bundle(for: Self.self), name: "dfp", ext: "html") else {
+            return "Unable to load DFP file"
+        }
+        return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                Task {
-                    if let topViewController = UIApplication.shared.topMostViewController {
-                        guard let dfpFileUrl = getResource(myBundle: Bundle(for: Self.self), name: "dfp", ext: "html") else {
-                            continuation.resume(returning: "Unable to load DFP file")
-                            return
-                        }
-                        let messageHandler = MessageHandler(continuation: continuation)
-                        let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)')", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-                        let userContentController = WKUserContentController()
-                        userContentController.addUserScript(userScript)
-                        userContentController.add(messageHandler, name: "StytchDFP")
-                        let configuration = WKWebViewConfiguration()
-                        configuration.userContentController = userContentController
-                        let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
-                        topViewController.view.addSubview(webView)
-                        webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
-                    } else {
-                        continuation.resume(returning: "unable to inject telemetry webview")
-                    }
+                if let topViewController = UIApplication.shared.topMostViewController {
+                    let messageHandler = MessageHandler()
+                    messageHandler.addContinuation(continuation)
+                    let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)')", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+                    let userContentController = WKUserContentController()
+                    userContentController.addUserScript(userScript)
+                    userContentController.add(messageHandler, name: "StytchDFP")
+                    let configuration = WKWebViewConfiguration()
+                    configuration.userContentController = userContentController
+                    let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
+                    topViewController.view.addSubview(webView)
+                    webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
+                } else {
+                    continuation.resume(returning: "unable to inject telemetry webview")
                 }
             }
         }
@@ -37,14 +35,15 @@ final class DFPClient: DFPProvider {
 }
 
 private final class MessageHandler: NSObject, WKScriptMessageHandler {
-    var continuation: CheckedContinuation<String, Never>
+    var continuations: [CheckedContinuation<String, Never>] = []
 
-    init(continuation: CheckedContinuation<String, Never>) {
-        self.continuation = continuation
+    func addContinuation(_ continuation: CheckedContinuation<String, Never>) {
+        continuations.append(continuation)
     }
 
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
-        continuation.resume(returning: message.body as? String ?? "")
+        continuations.forEach { $0.resume(returning: message.body as? String ?? "") }
+        continuations.removeAll()
     }
 }
 
