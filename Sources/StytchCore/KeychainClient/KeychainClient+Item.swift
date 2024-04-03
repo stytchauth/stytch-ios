@@ -31,7 +31,7 @@ extension KeychainClient {
         }
 
         func insertQuery(value: Value) -> CFDictionary {
-            baseQuery.merging(updateQuerySegment(for: value))
+            baseQuery.accessibilityAwareMerging(updateQuerySegment(for: value))
         }
 
         func updateQuerySegment(for value: Value) -> [CFString: Any] {
