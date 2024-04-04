@@ -16,7 +16,6 @@ extension KeychainClient {
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrService: name,
                 kSecUseDataProtectionKeychain: true,
-                kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
             ]
         }
 
@@ -31,7 +30,7 @@ extension KeychainClient {
         }
 
         func insertQuery(value: Value) -> CFDictionary {
-            baseQuery.accessibilityAwareMerging(updateQuerySegment(for: value))
+            baseQuery.merging(updateQuerySegment(for: value))
         }
 
         func updateQuerySegment(for value: Value) -> [CFString: Any] {
@@ -49,6 +48,9 @@ extension KeychainClient {
             }
             if let accessControl = try? value.accessPolicy?.accessControl {
                 querySegment[kSecAttrAccessControl] = accessControl
+            }
+            if kind == .token {
+                querySegment[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
             }
             return querySegment
         }
@@ -115,7 +117,7 @@ private extension KeychainClient.Item.AccessPolicy {
             guard
                 let accessControl = SecAccessControlCreateWithFlags(
                     nil,
-                    kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+                    kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
                     flags,
                     &error
                 )

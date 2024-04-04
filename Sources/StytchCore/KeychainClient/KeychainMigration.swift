@@ -7,5 +7,6 @@ extension KeychainClient {
     static let migrations: [KeychainMigration.Type] = [
         Migration1.self,
         Migration2.self,
+        Migration3.self,
     ]
 }
