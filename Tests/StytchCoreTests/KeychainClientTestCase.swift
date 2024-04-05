@@ -46,12 +46,12 @@ final class KeychainClientTestCase: BaseTestCase {
             ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "pdmn": "ck"] as CFDictionary
         )
     }
-    
+
     func testKeychainPrivateKeyItem() {
         let item: KeychainClient.Item = .init(kind: .privateKey, name: "item")
 
         let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
-                .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: .deviceOwnerAuthenticationWithBiometrics)
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: .deviceOwnerAuthenticationWithBiometrics)
         }
         let expectedAccessControl = SecAccessControlCreateWithFlags(
             nil,
