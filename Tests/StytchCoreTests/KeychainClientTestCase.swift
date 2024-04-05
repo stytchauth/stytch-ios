@@ -26,7 +26,7 @@ final class KeychainClientTestCase: BaseTestCase {
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
     }
 
-    func testKeychainItem() {
+    func testKeychainTokenItem() {
         let item: KeychainClient.Item = .init(kind: .token, name: "item")
 
         let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
@@ -35,15 +35,42 @@ final class KeychainClientTestCase: BaseTestCase {
 
         XCTAssertEqual(
             item.getQuery as CFDictionary,
-            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna", "pdmn": "ck"] as CFDictionary
+            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
         )
         XCTAssertEqual(
             item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
-            ["v_Data": Data("value".utf8)] as CFDictionary
+            ["v_Data": Data("value".utf8), "pdmn": "ck"] as CFDictionary
         )
         XCTAssertEqual(
             item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
             ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "pdmn": "ck"] as CFDictionary
+        )
+    }
+
+    func testKeychainPrivateKeyItem() {
+        let item: KeychainClient.Item = .init(kind: .privateKey, name: "item")
+
+        let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
+            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: .deviceOwnerAuthenticationWithBiometrics)
+        }
+        let expectedAccessControl = SecAccessControlCreateWithFlags(
+            nil,
+            kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+            [.biometryCurrentSet],
+            nil
+        )
+
+        XCTAssertEqual(
+            item.getQuery as CFDictionary,
+            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
+            ["v_Data": Data("value".utf8), "accc": expectedAccessControl] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
+            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "accc": expectedAccessControl] as CFDictionary
         )
     }
 
