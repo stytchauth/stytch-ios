@@ -70,10 +70,12 @@ public extension StytchClient {
     /// The interface for interacting with user-management products.
     static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
+
 public struct UserResponseData: Codable {
     /// The current user object.
     public let user: User
 }
+
 /// The response type for user-management calls.
 public typealias UserResponse = Response<User>
 
