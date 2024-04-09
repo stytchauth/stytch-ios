@@ -45,8 +45,37 @@ extension KeychainClient {
             #if !os(tvOS)
             _ = updateQueryWithLAContext(&query)
             #endif
+            var status: OSStatus?
+            if item.kind == .privateKey {
+                // recursively check each potential type of access control flag
+                var potentialFlags: [SecAccessControlCreateFlags] = [
+                    [.userPresence],
+                    [.biometryCurrentSet],
+                ]
+                #if os(macOS)
+                potentialFlags.append([.biometryCurrentSet, .or, .watch])
+                #endif
+                for flags in potentialFlags {
+                    var error: Unmanaged<CFError>?
+                    defer { error?.release() }
+                    let accessControl = SecAccessControlCreateWithFlags(
+                        nil,
+                        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+                        flags,
+                        &error
+                    )
+                    var newQuery = query
+                    newQuery[kSecAttrAccessControl] = accessControl
+                    status = SecItemCopyMatching(newQuery as CFDictionary, &result)
+                    if status == errSecSuccess {
+                        break
+                    }
+                }
+            } else {
+                status = SecItemCopyMatching(query as CFDictionary, &result)
+            }
 
-            guard case errSecSuccess = SecItemCopyMatching(query as CFDictionary, &result) else {
+            guard case errSecSuccess = status else {
                 return []
             }
             guard let results = result as? [[CFString: Any]] else {
@@ -93,10 +122,39 @@ extension KeychainClient {
                 throw KeychainError.unhandledError(status: status)
             }
         } removeItem: { item in
-            let status = SecItemDelete(item.baseQuery.merging([kSecAttrSynchronizable: kSecAttrSynchronizableAny]) as CFDictionary)
+            let tryRemovingItem: (CFDictionary) throws -> Void = { query in
+                let status = SecItemDelete(query)
+                guard [errSecSuccess, errSecItemNotFound].contains(status) else {
+                    throw KeychainError.unhandledError(status: status)
+                }
+            }
 
-            guard [errSecSuccess, errSecItemNotFound].contains(status) else {
-                throw KeychainError.unhandledError(status: status)
+            var parameters: [CFString: AnyObject] = [kSecAttrSynchronizable: kSecAttrSynchronizableAny]
+            if item.kind == .token {
+                parameters[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
+                try tryRemovingItem(item.baseQuery.merging(parameters))
+            } else {
+                // recursively check each potential type of access control flag
+                var potentialFlags: [SecAccessControlCreateFlags] = [
+                    [.userPresence],
+                    [.biometryCurrentSet],
+                ]
+                #if os(macOS)
+                potentialFlags.append([.biometryCurrentSet, .or, .watch])
+                #endif
+                try potentialFlags.forEach { flags in
+                    var newParameters = parameters
+                    var error: Unmanaged<CFError>?
+                    defer { error?.release() }
+                    let accessControl = SecAccessControlCreateWithFlags(
+                        nil,
+                        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+                        flags,
+                        &error
+                    )
+                    newParameters[kSecAttrAccessControl] = accessControl
+                    try tryRemovingItem(item.baseQuery.merging(newParameters))
+                }
             }
         }
     }()

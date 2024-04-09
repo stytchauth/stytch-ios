@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchClient.UserManagement {
     /// Deletes, by id, an existing authentication factor associated with the current user.
-    func deleteFactor(_ factor: AuthenticationFactor, completion: @escaping Completion<UserResponse>) {
+    func deleteFactor(_ factor: AuthenticationFactor, completion: @escaping Completion<NestedUserResponse>) {
         Task {
             do {
                 completion(.success(try await deleteFactor(factor)))
@@ -16,7 +16,7 @@ public extension StytchClient.UserManagement {
     }
 
     /// Deletes, by id, an existing authentication factor associated with the current user.
-    func deleteFactor(_ factor: AuthenticationFactor) -> AnyPublisher<UserResponse, Error> {
+    func deleteFactor(_ factor: AuthenticationFactor) -> AnyPublisher<NestedUserResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

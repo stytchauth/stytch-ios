@@ -31,7 +31,7 @@ final class UserManagementTestCase: BaseTestCase {
     }
 
     func testDeleteFactor() async throws {
-        let response: UserResponse = .init(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123"))
+        let response: UserResponseData = .init(user: .mock(userId: "mock-user-id-123"))
         networkInterceptor.responses {
             response
             response

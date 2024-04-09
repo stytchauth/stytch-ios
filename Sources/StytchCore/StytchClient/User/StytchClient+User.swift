@@ -36,25 +36,26 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants
         /// Deletes, by id, an existing authentication factor associated with the current user.
-        public func deleteFactor(_ factor: AuthenticationFactor) async throws -> UserResponse {
-            try await updatingCachedUser {
-                switch factor {
-                case let .biometricRegistration(id):
-                    return try await router.delete(route: .factors(.biometricRegistrations(id: id)))
-                case let .cryptoWallet(id):
-                    return try await router.delete(route: .factors(.cryptoWallets(id: id)))
-                case let .email(id):
-                    return try await router.delete(route: .factors(.emails(id: id)))
-                case let .phoneNumber(id):
-                    return try await router.delete(route: .factors(.phoneNumbers(id: id)))
-                case let .webAuthnRegistration(id):
-                    return try await router.delete(route: .factors(.webAuthNRegistrations(id: id)))
-                case let .totp(id):
-                    return try await router.delete(route: .factors(.totp(id: id)))
-                case let .oauth(id):
-                    return try await router.delete(route: .factors(.oauth(id: id)))
-                }
+        public func deleteFactor(_ factor: AuthenticationFactor) async throws -> NestedUserResponse {
+            let response: NestedUserResponse
+            switch factor {
+            case let .biometricRegistration(id):
+                response = try await router.delete(route: .factors(.biometricRegistrations(id: id)))
+            case let .cryptoWallet(id):
+                response = try await router.delete(route: .factors(.cryptoWallets(id: id)))
+            case let .email(id):
+                response = try await router.delete(route: .factors(.emails(id: id)))
+            case let .phoneNumber(id):
+                response = try await router.delete(route: .factors(.phoneNumbers(id: id)))
+            case let .webAuthnRegistration(id):
+                response = try await router.delete(route: .factors(.webAuthNRegistrations(id: id)))
+            case let .totp(id):
+                response = try await router.delete(route: .factors(.totp(id: id)))
+            case let .oauth(id):
+                response = try await router.delete(route: .factors(.oauth(id: id)))
             }
+            userStorage.updateUser(response.wrapped.user)
+            return response
         }
 
         private func updatingCachedUser(_ performRequest: () async throws -> UserResponse) async rethrows -> UserResponse {
@@ -70,8 +71,15 @@ public extension StytchClient {
     static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
 
+public struct UserResponseData: Codable {
+    /// The current user object.
+    public let user: User
+}
+
 /// The response type for user-management calls.
 public typealias UserResponse = Response<User>
+
+public typealias NestedUserResponse = Response<UserResponseData>
 
 public extension StytchClient.UserManagement {
     /// The authentication factors which are able to be managed via user-management calls.
