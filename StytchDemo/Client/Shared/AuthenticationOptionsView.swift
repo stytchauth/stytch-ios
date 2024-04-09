@@ -67,6 +67,16 @@ struct AuthenticationOptionsView: View {
                     }
                 }
                 .padding()
+                Button("Remove Biometrics") {
+                    Task {
+                        do {
+                            _ = try await StytchClient.biometrics.removeRegistration()
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+                .padding()
             } else if session != nil {
                 Button("Register Biometrics") {
                     Task {
