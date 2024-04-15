@@ -17,6 +17,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<SSORoute>
 
         @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.localStorage) private var localStorage
 
         @available(tvOS 16.0, *)
         private var webAuthSessionClient: WebAuthenticationSessionClient {
@@ -79,10 +80,11 @@ public extension StytchB2BClient {
                 ("signup_redirect_url", signupRedirectUrl.absoluteString),
             ]
 
-            let subDomain = publicToken.hasPrefix("public-token-test") ? "test" : "api"
+            let cnameDomain = localStorage.bootstrapData?.cnameDomain
+            let stytchDomain = publicToken.hasPrefix("public-token-test") ? "test.stytch.com" : "api.stytch.com"
 
             guard
-                let url = URL(string: "https://\(subDomain).stytch.com/v1/public/sso/start")?.appending(queryParameters: queryParameters)
+                let url = URL(string: "https://\(cnameDomain ?? stytchDomain)/v1/public/sso/start")?.appending(queryParameters: queryParameters)
             else { throw StytchSDKError.invalidStartURL }
 
             return url

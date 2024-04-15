@@ -14,6 +14,7 @@ public extension StytchClient.OAuth {
         let provider: Provider
 
         @Dependency(\.openUrl) private var openUrl
+        @Dependency(\.localStorage) private var localStorage
 
         @available(tvOS 16.0, *)
         private var webAuthSessionClient: WebAuthenticationSessionClient {
@@ -89,11 +90,11 @@ public extension StytchClient.OAuth {
                 guard let value = value else { return }
                 queryParameters.append((name, value))
             }
-
-            let subDomain = publicToken.hasPrefix("public-token-test") ? "test" : "api"
+            let cnameDomain = localStorage.bootstrapData?.cnameDomain
+            let stytchDomain = publicToken.hasPrefix("public-token-test") ? "test.stytch.com" : "api.stytch.com"
 
             guard
-                let url = URL(string: "https://\(subDomain).stytch.com/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
+                let url = URL(string: "https://\(cnameDomain ?? stytchDomain)/v1/public/oauth/\(provider.rawValue)/start")?.appending(queryParameters: queryParameters)
             else { throw StytchSDKError.invalidStartURL }
 
             return url
