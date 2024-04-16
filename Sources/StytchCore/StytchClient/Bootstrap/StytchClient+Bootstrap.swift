@@ -6,12 +6,14 @@ extension StytchClient {
         @Dependency(\.captcha) private var captcha
         #endif
         @Dependency(\.networkingClient) private var networkingClient
+        @Dependency(\.localStorage) private var localStorage
 
         public func fetch() async throws {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
             let bootstrapData = try await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse
+            localStorage.bootstrapData = bootstrapData.wrapped
             #if os(iOS)
             networkingClient.dfpEnabled = bootstrapData.wrapped.dfpProtectedAuthEnabled
             networkingClient.dfpAuthMode = bootstrapData.wrapped.dfpProtectedAuthMode ?? DFPProtectedAuthMode.observation
