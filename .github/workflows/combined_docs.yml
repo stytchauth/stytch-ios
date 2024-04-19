@@ -1,4 +1,0 @@
-name: Publish Combined Documentation
-
-on:
-    workflow_dispatch:
