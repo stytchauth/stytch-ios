@@ -34,8 +34,8 @@ docs: codegen
 docs-site: docs
 	mkdir -p .build/docs/StytchCore
 	mkdir -p .build/docs/StytchUI
-	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs/StytchCore --hosting-base-path $(HOSTING_BASE_PATH)
-	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchUI.doccarchive --output-path .build/docs/StytchUI --hosting-base-path $(HOSTING_BASE_PATH)
+	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs/StytchCore --hosting-base-path $(HOSTING_BASE_PATH)/StytchCore/
+	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchUI.doccarchive --output-path .build/docs/StytchUI --hosting-base-path $(HOSTING_BASE_PATH)/StytchUI/
 
 .PHONY: format
 format:

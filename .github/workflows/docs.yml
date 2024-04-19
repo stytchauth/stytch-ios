@@ -1,26 +1,117 @@
-name: Publish Documentation
-
+name: Docs
 on:
-    workflow_dispatch:
-    push:
-      branches:
-        - main
-      tags:
-        - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
-permissions:
-  contents: write
+env:
+  DEVELOPER_DIR: /Applications/Xcode_14.3.app/Contents/Developer
 
 concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
+  cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull') }}
 
 jobs:
-  generate-and-publish-docs:
-    uses: ./.github/workflows/swift-generate-and-publish-docs.yml
-    with:
-      os: macOS
-      swift-version: '5.10'
-      organisation: ${{ github.repository_owner }}
-      repository: ${{ github.event.repository.name }}
-      pages-branch: docs
+  set-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix-values: ${{ steps.set-matrix.outputs.matrix-values }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: git fetch --tags origin
+
+      - uses: actions/checkout@v3
+        with:
+          ref: docs/live
+          path: docs-live
+
+      - id: set-matrix
+        run: |
+          rm -rf docs-live/docs/SDK-1547-ui-documentation
+          matrix_values='{"ref":"main","ref_label":"main", "ref":"jordan/SDK-1547-ui-documentation", "ref_label":"SDK-1547-ui-documentation"}'
+          latest_ref=$(git tag --list | sort -V | tail -1)
+          if [[ ${{ github.ref_name }} == "$latest_ref" ]]; then
+            matrix_values+=",{\"ref\":\"$latest_ref\",\"ref_label\":\"latest\"}"
+          fi
+
+          for ref in $(git tag --list); do
+            docs_path="docs-live/docs/$ref"
+            mkdir -p $docs_path
+            if [[ $(find $docs_path -type d -empty) ]]; then
+              matrix_values+=",{\"ref\":\"$ref\",\"ref_label\":\"$ref\"}"
+            fi
+          done
+
+          echo "matrix-values=[${matrix_values}]" >> $GITHUB_OUTPUT
+          echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
+
+  generate-docs:
+    runs-on: macos-13
+
+    needs: set-matrix
+
+    strategy:
+      matrix: ${{ fromJSON(needs.set-matrix.outputs.matrix) }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ matrix.ref }}
+
+    - name: Bootstrap
+      uses: ./.github/actions/bootstrap
+
+    - name: Generate docs
+      run: REF=${{ matrix.ref_label }} make docs-site
+
+    - name: Zip docs site
+      run: |
+        cd .build/docs
+        zip -r ../../DocsSite.zip .
+        cd -
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.ref_label }}
+        path: DocsSite.zip
+
+  publish-docs:
+    runs-on: ubuntu-latest
+
+    needs: [set-matrix, generate-docs]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: docs/live
+        path: docs-live
+
+    - uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+
+    - name: Publish docs
+      run: |
+        mkdir unzipped-docs
+        for ref in $(echo ${{ toJSON(needs.set-matrix.outputs.matrix-values) }} | jq -r '.[].ref_label'); do
+          unzipped_path="unzipped-docs/$ref"
+          mkdir -p "$unzipped_path"
+          unzip "artifacts/$ref/DocsSite.zip" -d "$unzipped_path"
+          rsync -a "$unzipped_path" docs-live/docs
+        done
+
+        cd docs-live
+
+        git config user.email "ci@stytch.com"
+        git config user.name "CI"
+
+        git add docs
+        git commit --author="CI <ci@stytch.com>" -m ${{ github.sha }}
+        git push
