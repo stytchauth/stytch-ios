@@ -95,6 +95,7 @@ public extension View {
 }
 
 public extension StytchUIClient {
+    /// Configures the Stytch UI client
     struct Configuration: Codable {
         let publicToken: String
         let navigation: Navigation?
@@ -130,6 +131,7 @@ public extension StytchUIClient {
             self.theme = theme
         }
 
+        /// A struct representing the configuration options for all supported and enabled products. To enable a product, provide it's configuration options. To disable a product, leave it's configuration `nil`
         public struct Products: Codable {
             let oauth: OAuth?
             let password: Password?
@@ -149,6 +151,7 @@ public extension StytchUIClient {
             }
         }
 
+        /// A struct defining the configuration of the OAuth product. It accepts a list of Providers as well as signup and login redirect URLs
         public struct OAuth: Codable {
             let providers: [Provider]
             let loginRedirectUrl: URL
@@ -166,6 +169,13 @@ public extension StytchUIClient {
             }
         }
 
+        /// A struct defining the configuration of the Email Magic Links product. If you do not provide a value for a property in this configuration, it will use the defaults that are configured in your Stytch Dashboard
+        /// `loginMagicLinkUrl` is the URL served to returning users logging in
+        /// `loginExpiration` is the number of minutes that a login link is valid for
+        /// `loginTemplateId` is the ID of the custom login template you have created in your Stytch Dashboard
+        /// `signupMagicLinkUrl` is the URL served to new users signing up
+        /// `signupExpiration` is the number of minutes that a signup link is valid for
+        /// `signupTemplateId` is the ID of the custom signup template you have created in your Stytch Dashboard
         public struct MagicLink: Codable {
             let loginMagicLinkUrl: URL?
             let loginExpiration: Minutes?
@@ -191,6 +201,12 @@ public extension StytchUIClient {
             }
         }
 
+        /// A struct defining the configuration of the Passwords product. If you do not provide a value for a property in this configuration, it will use the defaults that are configured in your Stytch Dashboard
+        /// `loginUrl` is the URL served to returning users who are logging in
+        /// `loginExpiration` is the number of minutes that a login link is valid for
+        /// `resetPasswordURL` is the URL served to users who must reset their password
+        /// `resetPasswordExpiration` is the number of minutes that a reset password link is valid for
+        /// `resetPasswordTemplateId` is the ID of the custom password reset template you have created in your Stytch Dashboard
         public struct Password: Codable {
             let loginURL: URL?
             let loginExpiration: Minutes?
@@ -213,6 +229,11 @@ public extension StytchUIClient {
             }
         }
 
+        /// A struct defining the configuration of the One Time Passcode (OTP) product. Leaving the optional fields `nil` will use the defaults from your Stytch Dashboard
+        /// `methods` specifies the OTP methods that should be enabled
+        /// `expiration` is the number of minutes that an OTP code is valid for
+        /// `loginTemplateId` is the ID of the custom login template you have created in your Stytch Dashboard. This is only used for Email OTP.
+        /// `signupTemplateId` is the ID of the custom signup template you have created in your Stytch Dashboard. This is only used for Email OTP.
         public struct OTP: Codable {
             let methods: Set<OTPMethod>
             let expiration: Minutes?
@@ -232,12 +253,15 @@ public extension StytchUIClient {
             }
         }
 
+        /// The OTP methods that are available
         public enum OTPMethod: Codable {
             case sms
             case email
             case whatsapp
         }
 
+        /// A struct defining the configuration of our sessions product. This configuration is used for all authentication flows.
+        /// `sessionDuration` The length of time a new session should be valid for. This must be less than or equal to the maximum time allowed in your Stytch Dashboard
         public struct Session: Codable {
             let sessionDuration: Minutes?
 
