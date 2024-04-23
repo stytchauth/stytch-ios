@@ -34,8 +34,7 @@ jobs:
 
       - id: set-matrix
         run: |
-          rm -rf docs-live/docs/SDK-1547-ui-documentation
-          matrix_values='{"ref":"main","ref_label":"main", "ref":"jordan/SDK-1547-ui-documentation", "ref_label":"SDK-1547-ui-documentation"}'
+          matrix_values='{"ref":"main","ref_label":"main"}'
           latest_ref=$(git tag --list | sort -V | tail -1)
           if [[ ${{ github.ref_name }} == "$latest_ref" ]]; then
             matrix_values+=",{\"ref\":\"$latest_ref\",\"ref_label\":\"latest\"}"
