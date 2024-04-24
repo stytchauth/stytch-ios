@@ -233,7 +233,7 @@ final class SMSAuthenticationController {
 
 ## Documentation
 
-Full reference documentation is available [here](https://stytchauth.github.io/stytch-ios/latest/documentation/stytchcore/).
+Full reference documentation is available for [StytchCore](https://stytchauth.github.io/stytch-ios/main/StytchCore/documentation/stytchcore/) and [StytchUI](https://stytchauth.github.io/stytch-ios/main/StytchUI/documentation/stytchui/).
 
 ## FAQ
 
