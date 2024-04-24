@@ -28,10 +28,14 @@ demo:
 .PHONY: docs
 docs: codegen
 	$(ARCH) xcodebuild clean docbuild -scheme StytchCore -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
+	$(ARCH) xcodebuild clean docbuild -scheme StytchUI -configuration Release -sdk iphoneos$(IOS_VERSION) -destination generic/platform=iOS -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: docs-site
 docs-site: docs
-	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs --hosting-base-path $(HOSTING_BASE_PATH)
+	mkdir -p .build/docs/StytchCore
+	mkdir -p .build/docs/StytchUI
+	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchCore.doccarchive --output-path .build/docs/StytchCore --hosting-base-path $(HOSTING_BASE_PATH)/StytchCore/
+	$(ARCH) $$(xcrun --find docc) process-archive transform-for-static-hosting .build/Build/Products/Release-iphoneos/StytchUI.doccarchive --output-path .build/docs/StytchUI --hosting-base-path $(HOSTING_BASE_PATH)/StytchUI/
 
 .PHONY: format
 format:

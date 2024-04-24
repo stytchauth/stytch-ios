@@ -1,5 +1,6 @@
 import UIKit
 
+/// A class defining a color pair, used for displaying the Stytch UI in both light and dark modes. Initialize a color pair with your own `dark` and `light` colors and pass them to the `StytchTheme` to use.
 public class UIColorPair: Codable {
     enum CodingKeys: String, CodingKey {
         case dark
@@ -50,33 +51,61 @@ public class UIColorPair: Codable {
     }
 }
 
+/// A class defining the theme of your UI. If no custom properties are supplied, it will default to the default Stytch theme
 public class StytchTheme: Codable {
+    /// The `UIColorPair` describing the background color
     let background: UIColorPair
+    /// The `UIColorPair` describing the primary text color
     let primaryText: UIColorPair
+    /// The `UIColorPair` describing the placeholder test color
     let placeholderText: UIColorPair
+    /// The `UIColorPair` describing the disabled text color
     let disabledText: UIColorPair
+    /// The `UIColorPair` describing the secondary text color
     let secondaryText: UIColorPair
+    /// The `UIColorPair` describing the danger test color
     let dangerText: UIColorPair
+    /// The `UIColorPair` describing the active border color
     let borderActive: UIColorPair
+    /// The `UIColorPair` describing the primary button background color
     let primaryButton: UIColorPair
+    /// The `UIColorPair` describing the primary button text color
     let primaryButtonText: UIColorPair
+    /// The `UIColorPair` describing the primary button disabled background color
     let primaryButtonDisabled: UIColorPair
+    /// The `UIColorPair` describing the primary button disabled text color
     let primaryButtonTextDisabled: UIColorPair
+    /// The `UIColorPair` describing the secondary button background color
     let secondaryButton: UIColorPair
+    /// The `UIColorPair` describing the secondary button text color
     let secondaryButtonText: UIColorPair
+    /// The `UIColorPair` describing the tertiary button background color
     let tertiaryButton: UIColorPair
+    /// The `UIColorPair` describing the disabled textfield background color
     let textfieldDisabled: UIColorPair
+    /// The `UIColorPair` describing the disabled textfield border color
     let textfieldDisabledBorder: UIColorPair
+    /// The `UIColorPair` describing the default background color of the ZXCVBN password strength indicator bar
     let progressDefault: UIColorPair
+    /// The `UIColorPair` describing the successful background color of the ZXCVBN password strength indicator bar
     let progressSuccess: UIColorPair
+    /// The `UIColorPair` describing the error background color of the ZXCVBN password strength indicator bar
     let progressDanger: UIColorPair
+    /// A `CGFloat` describing the radius of corners where applied. Defaults to 4
     let cornerRadius: CGFloat
+    /// A `CGFloat` describing the vertical margins where applied. Defaults to 64
     let verticalMargin: CGFloat
+    /// A `CGFloat` describing the horizontal margins where applied. Defaults to 32
     let horizontalMargin: CGFloat
+    /// A `CGFloat` describing the height of buttons. Defaults to 45
     let buttonHeight: CGFloat
+    /// A `CGFloat` describing the tiny spacing unit. Defaults to 4
     let spacingTiny: CGFloat
+    /// A `CGFloat` describing the regular spacing unit. Defaults to 12
     let spacingRegular: CGFloat
+    /// A `CGFloat` describing the large spacing unit. Defaults to 24
     let spacingLarge: CGFloat
+    /// A `CGFloat` describing the huge spacing unit. Defaults to 32
     let spacingHuge: CGFloat
 
     public init(
