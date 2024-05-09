@@ -14,7 +14,7 @@ final actor DFPClient: DFPProvider {
         }
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                if let topViewController = UIApplication.shared.topMostViewController {
+                if let rootViewController = UIApplication.shared.rootViewController {
                     let messageHandler = MessageHandler()
                     messageHandler.addContinuation(continuation)
                     let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)')", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
@@ -24,7 +24,8 @@ final actor DFPClient: DFPProvider {
                     let configuration = WKWebViewConfiguration()
                     configuration.userContentController = userContentController
                     let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
-                    topViewController.view.addSubview(webView)
+                    messageHandler.addWebView(webView)
+                    rootViewController.view.addSubview(webView)
                     webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
                 } else {
                     continuation.resume(returning: "unable to inject telemetry webview")
@@ -36,45 +37,27 @@ final actor DFPClient: DFPProvider {
 
 private final class MessageHandler: NSObject, WKScriptMessageHandler {
     var continuations: [CheckedContinuation<String, Never>] = []
+    var webviews: [WKWebView] = []
 
     func addContinuation(_ continuation: CheckedContinuation<String, Never>) {
         continuations.append(continuation)
     }
 
+    func addWebView(_ webview: WKWebView) {
+        webviews.append(webview)
+    }
+
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
         continuations.forEach { $0.resume(returning: message.body as? String ?? "") }
         continuations.removeAll()
-    }
-}
-
-private extension UIViewController {
-    var topMostViewController: UIViewController {
-        if let presented = presentedViewController {
-            return presented.topMostViewController
-        }
-
-        if let navigation = self as? UINavigationController {
-            return navigation.visibleViewController?.topMostViewController ?? navigation
-        }
-
-        if let tab = self as? UITabBarController {
-            return tab.selectedViewController?.topMostViewController ?? tab
-        }
-
-        return self
+        webviews.forEach { $0.removeFromSuperview() }
+        webviews.removeAll()
     }
 }
 
 private extension UIApplication {
-    var topMostViewController: UIViewController? {
-        let keyWindow = UIApplication.shared.windows.first { $0.isKeyWindow }
-        if var topController = keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            return topController
-        }
-        return nil
+    var rootViewController: UIViewController? {
+        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController
     }
 }
 
