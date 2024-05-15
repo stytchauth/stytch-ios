@@ -1,7 +1,7 @@
 import StytchCore
 import SwiftUI
 
-struct OTPAuthenticationView: View {
+struct OTPAuthenticationView: View, Sendable {
     let session: Session?
     let onAuth: (AuthenticateResponseType) -> Void
 
@@ -168,7 +168,11 @@ struct OTPAuthenticationView: View {
                 let response = try await StytchClient.otps.loginOrCreate(parameters: otpParams)
                 methodId = response.methodId
             } catch {
-                print(error)
+                if let error = error as? StytchAPIError {
+                    print(error.message)
+                } else {
+                    print(error)
+                }
             }
             isLoading = false
         }
@@ -181,7 +185,11 @@ struct OTPAuthenticationView: View {
             do {
                 onAuth(try await StytchClient.otps.authenticate(parameters: params))
             } catch {
-                print(error)
+                if let error = error as? StytchAPIError {
+                    print(error.message)
+                } else {
+                    print(error)
+                }
             }
             isLoading = false
         }

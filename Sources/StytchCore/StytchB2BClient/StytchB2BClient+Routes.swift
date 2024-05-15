@@ -83,13 +83,16 @@ extension StytchB2BClient {
         enum EmailRoute: RouteType {
             case discoverySend
             case loginOrSignup
-
+            case invite
+            
             var path: Path {
                 switch self {
                 case .discoverySend:
                     return "discovery/send"
                 case .loginOrSignup:
                     return "login_or_signup"
+                case .invite:
+                    return "invite"
                 }
             }
         }

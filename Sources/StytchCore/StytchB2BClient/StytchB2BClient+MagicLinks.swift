@@ -1,6 +1,16 @@
 import Foundation
 
 public extension StytchB2BClient {
+    /// The interface for interacting with magic-links products.
+    static var magicLinks: MagicLinks { .init(router: router.scopedRouter { $0.magicLinks }) }
+}
+
+public extension StytchB2BClient.MagicLinks {
+    /// The interface for interacting with email magic links.
+    var email: Email { .init(router: router.scopedRouter { $0.email }) }
+}
+
+public extension StytchB2BClient {
     /// Magic links can be sent via email and allow for a quick and seamless login experience.
     struct MagicLinks {
         let router: NetworkingRouter<MagicLinksRoute>
@@ -31,14 +41,42 @@ public extension StytchB2BClient {
     }
 }
 
-public extension StytchB2BClient {
-    /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init(router: router.scopedRouter { $0.magicLinks }) }
-}
-
 public extension StytchB2BClient.MagicLinks {
-    /// The interface for interacting with email magic links.
-    var email: Email { .init(router: router.scopedRouter { $0.email }) }
+    /// A dedicated parameters type for magic links `authenticate` calls.
+    struct AuthenticateParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case sessionDuration = "sessionDurationMinutes"
+            case token = "magicLinksToken"
+        }
+
+        let token: String
+        let sessionDuration: Minutes
+
+        /**
+         Initializes the parameters struct
+         - Parameters:
+           - token: The token extracted from the magic link.
+           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+         */
+        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
+            self.token = token
+            self.sessionDuration = sessionDuration
+        }
+    }
+
+    /// A dedicated parameters type for Discovery `authenticate` calls.
+    struct DiscoveryAuthenticateParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case token = "discoveryMagicLinksToken"
+        }
+
+        let token: String
+
+        /// - Parameter token: The Discovery Email Magic Link token to authenticate.
+        public init(token: String) {
+            self.token = token
+        }
+    }
 }
 
 public extension StytchB2BClient.MagicLinks {
@@ -77,41 +115,21 @@ public extension StytchB2BClient.MagicLinks {
                 )
             )
         }
-    }
+        
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// The Send Invite Email method wraps the [send invite email](https://test.stytch.com/v1/b2b/magic_links/email/invite) API endpoint.
+        public func inviteSend(parameters: InviteParameters) async throws -> BasicResponse {
+            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
 
-    /// A dedicated parameters type for magic links `authenticate` calls.
-    struct AuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case sessionDuration = "sessionDurationMinutes"
-            case token = "magicLinksToken"
-        }
-
-        let token: String
-        let sessionDuration: Minutes
-
-        /**
-         Initializes the parameters struct
-         - Parameters:
-           - token: The token extracted from the magic link.
-           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
-         */
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
-            self.token = token
-            self.sessionDuration = sessionDuration
-        }
-    }
-
-    /// A dedicated parameters type for Discovery `authenticate` calls.
-    struct DiscoveryAuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case token = "discoveryMagicLinksToken"
-        }
-
-        let token: String
-
-        /// - Parameter token: The Discovery Email Magic Link token to authenticate.
-        public init(token: String) {
-            self.token = token
+            return try await router.post(
+                to: .invite,
+                parameters: CodeChallengedParameters(
+                    codingPrefix: .pkce,
+                    codeChallenge: codeChallenge,
+                    codeChallengeMethod: codeChallengeMethod,
+                    wrapped: parameters
+                )
+            )
         }
     }
 }
@@ -191,6 +209,49 @@ public extension StytchB2BClient.MagicLinks.Email {
             self.redirectUrl = redirectUrl
             self.loginTemplateId = loginTemplateId
             self.locale = locale
+        }
+    }
+    
+    /// The dedicated parameters type for invite magic links send calls.
+    struct InviteParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case email = "emailAddress"
+            case inviteRedirectUrl
+            case inviteTemplateId
+            case name
+            case locale
+            case roles
+        }
+        
+        let email: String
+        let inviteRedirectUrl: URL?
+        let inviteTemplateId: String?
+        let name: String?
+        //let untrustedMetadata???
+        let locale: String?
+        let roles: [String]?
+        
+        /// - Parameters:
+        ///   - email: abc
+        ///   - inviteRedirectUrl: abc
+        ///   - inviteTemplateId: abc
+        ///   - name: abc
+        ///   - locale: abc
+        ///   - roles: abc
+        public init(
+            email: String,
+            inviteRedirectUrl: URL? = nil,
+            inviteTemplateId: String? = nil,
+            name: String? = nil,
+            locale: String? = nil,
+            roles: [String]? = nil
+        ) {
+            self.email = email
+            self.inviteRedirectUrl = inviteRedirectUrl
+            self.inviteTemplateId = inviteTemplateId
+            self.name = name
+            self.locale = locale
+            self.roles = roles
         }
     }
 }
