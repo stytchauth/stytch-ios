@@ -57,6 +57,14 @@ final class MagicLinksViewController: UIViewController {
             self?.submitDiscovery()
         })
     }()
+    
+    private lazy var inviteSendButton: UIButton = {
+        var configuration: UIButton.Configuration = .borderedProminent()
+        configuration.title = "Invite Send"
+        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
+            self?.submitInvite()
+        })
+    }()
 
     private let defaults: UserDefaults = .standard
 
@@ -80,6 +88,7 @@ final class MagicLinksViewController: UIViewController {
         stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(sendButton)
         stackView.addArrangedSubview(discoverySendButton)
+        stackView.addArrangedSubview(inviteSendButton)
 
         emailTextField.text = defaults.string(forKey: Constants.emailDefaultsKey)
         orgIdTextField.text = defaults.string(forKey: Constants.orgIdDefaultsKey)
@@ -108,12 +117,14 @@ final class MagicLinksViewController: UIViewController {
                 )
                 message = "Check your email!"
             } catch {
-                message = error.localizedDescription
+                if let error = error as? StytchAPIError {
+                    message = error.message
+                } else {
+                    message = error.localizedDescription
+                }
             }
 
-            let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alertController.addAction(.init(title: "OK", style: .default))
-            present(alertController, animated: true)
+            showAlertWithMessage(message: message)
         }
     }
 
@@ -137,12 +148,51 @@ final class MagicLinksViewController: UIViewController {
                 )
                 message = "Check your email!"
             } catch {
-                message = error.localizedDescription
+                if let error = error as? StytchAPIError {
+                    message = error.message
+                } else {
+                    message = error.localizedDescription
+                }
             }
 
-            let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alertController.addAction(.init(title: "OK", style: .default))
-            present(alertController, animated: true)
+            showAlertWithMessage(message: message)
         }
+    }
+    
+    func submitInvite() {
+        guard let email = emailTextField.text, !email.isEmpty else { return }
+        guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
+        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
+
+        defaults.set(email, forKey: Constants.emailDefaultsKey)
+        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        
+        Task {
+            let message: String
+            do {
+                _ = try await StytchB2BClient.magicLinks.email.inviteSend(
+                    parameters: .init(
+                        email: email,
+                        inviteRedirectUrl: redirectUrl
+                    )
+                )
+                message = "Check your email!"
+            } catch {
+                if let error = error as? StytchAPIError {
+                    message = error.message
+                } else {
+                    message = error.localizedDescription
+                }
+            }
+
+            showAlertWithMessage(message: message)
+        }
+    }
+    
+    func showAlertWithMessage(message: String) {
+        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertController.addAction(.init(title: "OK", style: .default))
+        present(alertController, animated: true)
     }
 }
