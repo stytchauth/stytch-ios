@@ -96,11 +96,9 @@ public extension NetworkingRouter {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
-
-        let (data, response) = try await networkingClient.performRequest(
-            method,
-            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
-        )
+        let url = configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+        let (data, response) = try await networkingClient.performRequest(method, url: url)
+        
         do {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
