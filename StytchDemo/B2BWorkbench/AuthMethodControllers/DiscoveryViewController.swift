@@ -99,7 +99,7 @@ final class DiscoveryViewController: UIViewController {
                 )
                 print(response)
             } catch {
-                print(error)
+                print("listOrganizations error: \(error.errorInfo)")
             }
         }
     }
@@ -115,7 +115,7 @@ final class DiscoveryViewController: UIViewController {
                 )
                 print(response)
             } catch {
-                print(error)
+                print("exchangeSession error: \(error.errorInfo)")
             }
         }
     }
@@ -131,7 +131,7 @@ final class DiscoveryViewController: UIViewController {
                 )
                 print(response)
             } catch {
-                print(error)
+                print("createOrg error: \(error.errorInfo)")
             }
         }
     }

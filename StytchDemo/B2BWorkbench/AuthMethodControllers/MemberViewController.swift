@@ -29,7 +29,7 @@ final class MemberViewController: UIViewController {
                 let resp = try await StytchB2BClient.member.get()
                 print(resp)
             } catch {
-                print(error)
+                print("get member error: \(error.errorInfo)")
             }
         }
     }

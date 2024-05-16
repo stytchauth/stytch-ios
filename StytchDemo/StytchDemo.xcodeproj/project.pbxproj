@@ -91,6 +91,9 @@
 		7478F7DB2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
 		7478F7DC2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
 		7478F7DD2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
+		7478F7DF2BF6937300BCB233 /* Error+StytchAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DE2BF6819400BCB233 /* Error+StytchAPIError.swift */; };
+		7478F7E02BF6937600BCB233 /* Error+StytchAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DE2BF6819400BCB233 /* Error+StytchAPIError.swift */; };
+		7478F7E12BF6937D00BCB233 /* Error+StytchAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DE2BF6819400BCB233 /* Error+StytchAPIError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,6 +179,7 @@
 		53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StytchUIDemo.xctestplan; sourceTree = "<group>"; };
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+StytchAlerts.swift"; sourceTree = "<group>"; };
+		7478F7DE2BF6819400BCB233 /* Error+StytchAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+StytchAPIError.swift"; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
 		77AC9C632AA0FF4A004059CF /* StytchDemo (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StytchDemo (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -348,6 +352,7 @@
 				53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */,
 				22D4F3CF2857DE26001FA1EC /* README.md */,
 				7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */,
+				7478F7DE2BF6819400BCB233 /* Error+StytchAPIError.swift */,
 				22E4346D280A174100FB45F0 /* Stytch */,
 				22BE99F82847FDC800E29245 /* Client */,
 				22E4346A280A133900FB45F0 /* StytchPlayground.playground */,
@@ -695,6 +700,7 @@
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,
 				2254779029A05C0C003DF229 /* AppViewController.swift in Sources */,
 				2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */,
+				7478F7E02BF6937600BCB233 /* Error+StytchAPIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,6 +719,7 @@
 				224F7D4A280CEDD0000230FA /* EmailAuthenticationView.swift in Sources */,
 				22B523B4296CDF09009FFC18 /* TOTPAuthenticationView.swift in Sources */,
 				22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
+				7478F7DF2BF6937300BCB233 /* Error+StytchAPIError.swift in Sources */,
 				223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
 				7478F7DB2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */,
@@ -767,6 +774,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53E128272B50092E00976CAC /* ContentView.swift in Sources */,
+				7478F7E12BF6937D00BCB233 /* Error+StytchAPIError.swift in Sources */,
 				7478F7DD2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */,
 				53E128252B50092E00976CAC /* StytchUIDemoApp.swift in Sources */,
 			);

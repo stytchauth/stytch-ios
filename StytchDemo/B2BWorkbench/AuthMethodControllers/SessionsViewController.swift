@@ -29,7 +29,7 @@ final class SessionsViewController: UIViewController {
                 let resp = try await StytchB2BClient.sessions.authenticate(parameters: .init())
                 print(resp)
             } catch {
-                print(error)
+                print("authenticateAction error: \(error.errorInfo)")
             }
         }
     }
@@ -40,7 +40,7 @@ final class SessionsViewController: UIViewController {
                 let resp = try await StytchB2BClient.sessions.revoke()
                 print(resp)
             } catch {
-                print(error)
+                print("revokeAction error: \(error.errorInfo)")
             }
         }
     }

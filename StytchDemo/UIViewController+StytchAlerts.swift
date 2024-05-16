@@ -37,10 +37,6 @@ extension UIViewController {
     }
     
     func presentErrorWithDescription(error: Error, description: String) {
-        if let error = error as? StytchAPIError {
-            presentAlertWithTitle(alertTitle: "\(description) - \(error.name) - \(error.message)")
-        } else {
-            presentAlertWithTitle(alertTitle: "Error \(description) - \(error) - \(error.localizedDescription)")
-        }
+        presentAlertWithTitle(alertTitle: "\(description) - \(error.errorInfo)")
     }
 }

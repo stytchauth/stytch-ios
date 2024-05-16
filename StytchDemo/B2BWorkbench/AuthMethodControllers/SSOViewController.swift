@@ -76,7 +76,7 @@ final class SSOViewController: UIViewController {
                 let response = try await StytchB2BClient.sso.authenticate(parameters: .init(token: token))
                 print(response)
             } catch {
-                print(error)
+                print("sso error: \(error.errorInfo)")
             }
         }
     }
