@@ -158,8 +158,7 @@ final class MagicLinksViewController: UIViewController {
             do {
                 _ = try await StytchB2BClient.magicLinks.email.inviteSend(
                     parameters: .init(
-                        email: email,
-                        inviteRedirectUrl: redirectUrl
+                        email: email
                     )
                 )
                 presentAlertWithTitle(alertTitle: "Check your email!")

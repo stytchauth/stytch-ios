@@ -119,16 +119,9 @@ public extension StytchB2BClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Send Invite Email method wraps the [send invite email](https://test.stytch.com/v1/b2b/magic_links/email/invite) API endpoint.
         public func inviteSend(parameters: InviteParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
-
             return try await router.post(
                 to: .invite,
-                parameters: CodeChallengedParameters(
-                    codingPrefix: .pkce,
-                    codeChallenge: codeChallenge,
-                    codeChallengeMethod: codeChallengeMethod,
-                    wrapped: parameters
-                )
+                parameters: parameters
             )
         }
     }
