@@ -105,7 +105,6 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
-            let message: String
             do {
                 _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(
                     parameters: .init(
@@ -115,16 +114,10 @@ final class MagicLinksViewController: UIViewController {
                         signupRedirectUrl: redirectUrl
                     )
                 )
-                message = "Check your email!"
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                if let error = error as? StytchAPIError {
-                    message = error.message
-                } else {
-                    message = error.localizedDescription
-                }
+                presentErrorWithDescription(error: error, description: "loginOrSignup")
             }
-
-            showAlertWithMessage(message: message)
         }
     }
 
@@ -138,7 +131,6 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
-            let message: String
             do {
                 _ = try await StytchB2BClient.magicLinks.email.discoverySend(
                     parameters: .init(
@@ -146,16 +138,10 @@ final class MagicLinksViewController: UIViewController {
                         redirectUrl: redirectUrl
                     )
                 )
-                message = "Check your email!"
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                if let error = error as? StytchAPIError {
-                    message = error.message
-                } else {
-                    message = error.localizedDescription
-                }
+                presentErrorWithDescription(error: error, description: "discoverySend")
             }
-
-            showAlertWithMessage(message: message)
         }
     }
     
@@ -169,7 +155,6 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
         
         Task {
-            let message: String
             do {
                 _ = try await StytchB2BClient.magicLinks.email.inviteSend(
                     parameters: .init(
@@ -177,22 +162,10 @@ final class MagicLinksViewController: UIViewController {
                         inviteRedirectUrl: redirectUrl
                     )
                 )
-                message = "Check your email!"
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                if let error = error as? StytchAPIError {
-                    message = error.message
-                } else {
-                    message = error.localizedDescription
-                }
+                presentErrorWithDescription(error: error, description: "inviteSend")
             }
-
-            showAlertWithMessage(message: message)
         }
-    }
-    
-    func showAlertWithMessage(message: String) {
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertController.addAction(.init(title: "OK", style: .default))
-        present(alertController, animated: true)
     }
 }

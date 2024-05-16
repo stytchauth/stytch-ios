@@ -88,6 +88,9 @@
 		53E128402B50092F00976CAC /* StytchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E1283F2B50092F00976CAC /* StytchUITests.swift */; };
 		53E128422B50092F00976CAC /* StytchUILaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128412B50092F00976CAC /* StytchUILaunchTests.swift */; };
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
+		7478F7DB2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
+		7478F7DC2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
+		7478F7DD2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +175,7 @@
 		53E128412B50092F00976CAC /* StytchUILaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUILaunchTests.swift; sourceTree = "<group>"; };
 		53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StytchUIDemo.xctestplan; sourceTree = "<group>"; };
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+StytchAlerts.swift"; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
 		77AC9C632AA0FF4A004059CF /* StytchDemo (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StytchDemo (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -343,6 +347,7 @@
 			children = (
 				53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */,
 				22D4F3CF2857DE26001FA1EC /* README.md */,
+				7478F7DA2BF6467900BCB233 /* UIViewController+StytchAlerts.swift */,
 				22E4346D280A174100FB45F0 /* Stytch */,
 				22BE99F82847FDC800E29245 /* Client */,
 				22E4346A280A133900FB45F0 /* StytchPlayground.playground */,
@@ -681,6 +686,7 @@
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
+				7478F7DC2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */,
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
 				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
 				22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */,
@@ -709,6 +715,7 @@
 				22E2E06128ECF6AD00327719 /* OAuthAuthenticationView.swift in Sources */,
 				223F88C02894D0D500CE2B0C /* PasswordView.swift in Sources */,
 				224F7D41280CC5F6000230FA /* StytchDemoApp.swift in Sources */,
+				7478F7DB2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */,
 				223F88B92894D05000CE2B0C /* ResetPasswordView.swift in Sources */,
 				2290907C284D9F7000ADD3C4 /* AuthenticationOptionsView.swift in Sources */,
 				224F7D4D280CEDF5000230FA /* SessionView.swift in Sources */,
@@ -760,6 +767,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				53E128272B50092E00976CAC /* ContentView.swift in Sources */,
+				7478F7DD2BF6467900BCB233 /* UIViewController+StytchAlerts.swift in Sources */,
 				53E128252B50092E00976CAC /* StytchUIDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
