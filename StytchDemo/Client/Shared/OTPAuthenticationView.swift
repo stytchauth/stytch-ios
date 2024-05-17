@@ -168,11 +168,7 @@ struct OTPAuthenticationView: View, Sendable {
                 let response = try await StytchClient.otps.loginOrCreate(parameters: otpParams)
                 methodId = response.methodId
             } catch {
-                if let error = error as? StytchAPIError {
-                    print(error.message)
-                } else {
-                    print(error)
-                }
+                print(error.errorInfo)
             }
             isLoading = false
         }
@@ -185,11 +181,7 @@ struct OTPAuthenticationView: View, Sendable {
             do {
                 onAuth(try await StytchClient.otps.authenticate(parameters: params))
             } catch {
-                if let error = error as? StytchAPIError {
-                    print(error.message)
-                } else {
-                    print(error)
-                }
+                print(error.errorInfo)
             }
             isLoading = false
         }

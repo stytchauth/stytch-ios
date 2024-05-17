@@ -228,7 +228,6 @@ public extension StytchB2BClient.MagicLinks.Email {
             email: String,
             inviteRedirectUrl: URL? = nil,
             inviteTemplateId: String? = nil,
-            name: String? = nil,
             locale: String? = nil
         ) {
             self.email = email

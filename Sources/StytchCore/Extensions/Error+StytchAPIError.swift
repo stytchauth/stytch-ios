@@ -1,7 +1,6 @@
 import Foundation
-import StytchCore
 
-extension Error {
+public extension Error {
     var stytchAPIError: StytchAPIError? {
         self as? StytchAPIError
     }
