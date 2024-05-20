@@ -17,21 +17,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wordmark-light-mode.png" translatesAutoresizingMaskIntoConstraints="NO" id="47Q-Qs-gXw">
-                                <rect key="frame" x="76.666666666666686" y="690" width="240" height="128"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="b2b-Wordmark-light-mode" translatesAutoresizingMaskIntoConstraints="NO" id="47Q-Qs-gXw">
+                                <rect key="frame" x="76.666666666666686" y="159" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="70u-s2-ora"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="eit-M4-4VC"/>
                                     <constraint firstAttribute="width" constant="240" id="pSw-Fk-GZL"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="srA-1B-N8T"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B2B Workbench" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCe-DR-3EE">
+                                <rect key="frame" x="16" y="287" width="361" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="o0j-X9-TDm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="TN8-1z-oHs"/>
-                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="avo-bh-jae"/>
+                            <constraint firstItem="XCe-DR-3EE" firstAttribute="top" secondItem="47Q-Qs-gXw" secondAttribute="bottom" id="LJ8-Xq-MGL"/>
+                            <constraint firstItem="XCe-DR-3EE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="RUe-Xg-hLK"/>
+                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="UvN-vE-ccl"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XCe-DR-3EE" secondAttribute="trailing" constant="16" id="W4s-V4-YAJ"/>
+                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="pLH-JB-H01"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -41,7 +51,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Wordmark-light-mode.png" width="425" height="80"/>
+        <image name="b2b-Wordmark-light-mode" width="850" height="160"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
