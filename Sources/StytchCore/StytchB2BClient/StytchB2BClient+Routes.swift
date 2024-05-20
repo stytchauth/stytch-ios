@@ -84,7 +84,7 @@ extension StytchB2BClient {
             case discoverySend
             case loginOrSignup
             case invite
-            
+
             var path: Path {
                 switch self {
                 case .discoverySend:

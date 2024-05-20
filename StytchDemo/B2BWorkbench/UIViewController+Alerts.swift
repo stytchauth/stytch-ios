@@ -1,12 +1,12 @@
 import Foundation
-import UIKit
 import StytchCore
+import UIKit
 
 extension UIViewController {
     func presentAlertWithTitle(
         alertTitle: String,
         buttonTitle: String = "OK",
-        completion: (() -> ())? = nil
+        completion: (() -> Void)? = nil
     ) {
         let alertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
         let okAction = UIAlertAction(title: buttonTitle, style: .cancel) { _ in
@@ -15,7 +15,7 @@ extension UIViewController {
         alertController.addAction(okAction)
         present(alertController, animated: true)
     }
-    
+
     func presentErrorWithDescription(error: Error, description: String) {
         presentAlertWithTitle(alertTitle: "\(description) - \(error.errorInfo)")
     }

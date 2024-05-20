@@ -69,7 +69,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             ])
         )
     }
-    
+
     func testEmailInviteSend() async throws {
         networkInterceptor.responses {
             BasicResponse(requestId: "1234", statusCode: 200)
@@ -81,9 +81,9 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             inviteTemplateId: "g'day",
             locale: "en"
         )
-        
+
         _ = try await StytchB2BClient.magicLinks.email.inviteSend(parameters: parameters)
-        
+
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/invite",

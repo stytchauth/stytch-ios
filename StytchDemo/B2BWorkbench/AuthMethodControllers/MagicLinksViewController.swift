@@ -57,7 +57,7 @@ final class MagicLinksViewController: UIViewController {
             self?.submitDiscovery()
         })
     }()
-    
+
     private lazy var inviteSendButton: UIButton = {
         var configuration: UIButton.Configuration = .borderedProminent()
         configuration.title = "Invite Send"
@@ -144,7 +144,7 @@ final class MagicLinksViewController: UIViewController {
             }
         }
     }
-    
+
     func submitInvite() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
@@ -153,7 +153,7 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(email, forKey: Constants.emailDefaultsKey)
         defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
-        
+
         Task {
             do {
                 _ = try await StytchB2BClient.magicLinks.email.inviteSend(

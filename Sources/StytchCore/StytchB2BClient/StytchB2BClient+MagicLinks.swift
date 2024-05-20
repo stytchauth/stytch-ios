@@ -115,11 +115,11 @@ public extension StytchB2BClient.MagicLinks {
                 )
             )
         }
-        
+
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Send Invite Email method wraps the [send invite email](https://test.stytch.com/v1/b2b/magic_links/email/invite) API endpoint.
         public func inviteSend(parameters: InviteParameters) async throws -> BasicResponse {
-            return try await router.post(
+            try await router.post(
                 to: .invite,
                 parameters: parameters
             )
@@ -204,7 +204,7 @@ public extension StytchB2BClient.MagicLinks.Email {
             self.locale = locale
         }
     }
-    
+
     /// The dedicated parameters type for invite magic links send calls.
     struct InviteParameters: Codable {
         private enum CodingKeys: String, CodingKey {
@@ -213,12 +213,12 @@ public extension StytchB2BClient.MagicLinks.Email {
             case inviteTemplateId
             case locale
         }
-        
+
         let email: String
         let inviteRedirectUrl: URL?
         let inviteTemplateId: String?
         let locale: String?
-        
+
         /// - Parameters:
         ///   - email: The email of the member to send the invite magic link to.
         ///   - inviteRedirectUrl: The URL that the Member clicks from the invite Email Magic Link. This URL should be an endpoint in the backend server that verifies the request by querying Stytch's authenticate endpoint and finishes the invite flow. If this value is not passed, the default invite_redirect_url that you set in your Dashboard is used. If you have not set a default invite_redirect_url, an error is returned.
