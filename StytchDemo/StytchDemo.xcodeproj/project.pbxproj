@@ -176,6 +176,7 @@
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* UIViewController+Alerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerts.swift"; sourceTree = "<group>"; };
 		749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B2BWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
 		77AC9C632AA0FF4A004059CF /* StytchDemo (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StytchDemo (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -248,6 +249,7 @@
 				22315323299EE16E00BA9126 /* Assets.xcassets */,
 				22315325299EE16E00BA9126 /* LaunchScreen.storyboard */,
 				22315328299EE16E00BA9126 /* Info.plist */,
+				74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */,
 			);
 			path = B2BWorkbench;
 			sourceTree = "<group>";
@@ -846,6 +848,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "B2BWorkbench-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -880,6 +883,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "B2BWorkbench-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
