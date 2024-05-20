@@ -70,6 +70,32 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
     }
 
+    func testEmailInviteSend() async throws {
+        networkInterceptor.responses {
+            BasicResponse(requestId: "1234", statusCode: 200)
+        }
+        let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
+        let parameters: StytchB2BClient.MagicLinks.Email.InviteParameters = .init(
+            email: "asdf@stytch.com",
+            inviteRedirectUrl: baseUrl.appendingPathComponent("login"),
+            inviteTemplateId: "g'day",
+            locale: "en"
+        )
+
+        _ = try await StytchB2BClient.magicLinks.email.inviteSend(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/invite",
+            method: .post([
+                "email_address": "asdf@stytch.com",
+                "invite_redirect_url": "https://myapp.com/login",
+                "invite_template_id": "g'day",
+                "locale": "en",
+            ])
+        )
+    }
+
     func testAuthenticate() async throws {
         let authResponse: B2BAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }

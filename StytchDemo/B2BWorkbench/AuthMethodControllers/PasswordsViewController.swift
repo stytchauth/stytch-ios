@@ -159,8 +159,9 @@ final class PasswordsViewController: UIViewController {
                         password: values.password
                     )
                 )
+                print("authenticated!")
             } catch {
-                print(error)
+                print("authenticate error: \(error.errorInfo)")
             }
         }
     }
@@ -175,9 +176,9 @@ final class PasswordsViewController: UIViewController {
         Task {
             do {
                 let response = try await passwordClient.strengthCheck(parameters: .init(email: emailTextField.text, password: password))
-                presentAlert(message: try encodeToJson(response))
+                presentAlertWithTitle(alertTitle: try encodeToJson(response))
             } catch {
-                print(error)
+                print("checkStrength error: \(error.errorInfo)")
             }
         }
     }
@@ -187,9 +188,9 @@ final class PasswordsViewController: UIViewController {
         Task {
             do {
                 _ = try await self.passwordClient.resetByEmailStart(parameters: .init(organizationId: values.orgId, email: values.email, resetPasswordUrl: values.redirectUrl))
-                presentAlert(message: "Check your email!")
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                print(error)
+                print("resetByEmailStart error: \(error.errorInfo)")
             }
         }
     }
@@ -201,7 +202,7 @@ final class PasswordsViewController: UIViewController {
             do {
                 _ = try await passwordClient.resetBySession(parameters: .init(organizationId: values.orgId, password: values.password))
             } catch {
-                print(error)
+                print("resetBySession error: \(error.errorInfo)")
             }
         }
     }
@@ -228,16 +229,8 @@ final class PasswordsViewController: UIViewController {
             do {
                 _ = try await passwordClient.resetByEmail(parameters: .init(token: token, password: newPassword))
             } catch {
-                print(error)
+                print("resetPassword error: \(error.errorInfo)")
             }
-        }
-    }
-
-    private func presentAlert(message: String) {
-        DispatchQueue.main.async {
-            let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            controller.addAction(.init(title: "OK", style: .default))
-            self.present(controller, animated: true)
         }
     }
 

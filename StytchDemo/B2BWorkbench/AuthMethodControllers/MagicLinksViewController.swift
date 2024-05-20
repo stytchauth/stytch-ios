@@ -58,6 +58,14 @@ final class MagicLinksViewController: UIViewController {
         })
     }()
 
+    private lazy var inviteSendButton: UIButton = {
+        var configuration: UIButton.Configuration = .borderedProminent()
+        configuration.title = "Invite Send"
+        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
+            self?.submitInvite()
+        })
+    }()
+
     private let defaults: UserDefaults = .standard
 
     override func viewDidLoad() {
@@ -80,6 +88,7 @@ final class MagicLinksViewController: UIViewController {
         stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(sendButton)
         stackView.addArrangedSubview(discoverySendButton)
+        stackView.addArrangedSubview(inviteSendButton)
 
         emailTextField.text = defaults.string(forKey: Constants.emailDefaultsKey)
         orgIdTextField.text = defaults.string(forKey: Constants.orgIdDefaultsKey)
@@ -96,7 +105,6 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
-            let message: String
             do {
                 _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(
                     parameters: .init(
@@ -106,14 +114,10 @@ final class MagicLinksViewController: UIViewController {
                         signupRedirectUrl: redirectUrl
                     )
                 )
-                message = "Check your email!"
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                message = error.localizedDescription
+                presentErrorWithDescription(error: error, description: "loginOrSignup")
             }
-
-            let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alertController.addAction(.init(title: "OK", style: .default))
-            present(alertController, animated: true)
         }
     }
 
@@ -127,7 +131,6 @@ final class MagicLinksViewController: UIViewController {
         defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
-            let message: String
             do {
                 _ = try await StytchB2BClient.magicLinks.email.discoverySend(
                     parameters: .init(
@@ -135,14 +138,33 @@ final class MagicLinksViewController: UIViewController {
                         redirectUrl: redirectUrl
                     )
                 )
-                message = "Check your email!"
+                presentAlertWithTitle(alertTitle: "Check your email!")
             } catch {
-                message = error.localizedDescription
+                presentErrorWithDescription(error: error, description: "discoverySend")
             }
+        }
+    }
 
-            let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-            alertController.addAction(.init(title: "OK", style: .default))
-            present(alertController, animated: true)
+    func submitInvite() {
+        guard let email = emailTextField.text, !email.isEmpty else { return }
+        guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
+        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
+
+        defaults.set(email, forKey: Constants.emailDefaultsKey)
+        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+
+        Task {
+            do {
+                _ = try await StytchB2BClient.magicLinks.email.inviteSend(
+                    parameters: .init(
+                        email: email
+                    )
+                )
+                presentAlertWithTitle(alertTitle: "Check your email!")
+            } catch {
+                presentErrorWithDescription(error: error, description: "inviteSend")
+            }
         }
     }
 }

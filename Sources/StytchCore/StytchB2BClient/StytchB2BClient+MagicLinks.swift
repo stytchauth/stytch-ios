@@ -1,6 +1,16 @@
 import Foundation
 
 public extension StytchB2BClient {
+    /// The interface for interacting with magic-links products.
+    static var magicLinks: MagicLinks { .init(router: router.scopedRouter { $0.magicLinks }) }
+}
+
+public extension StytchB2BClient.MagicLinks {
+    /// The interface for interacting with email magic links.
+    var email: Email { .init(router: router.scopedRouter { $0.email }) }
+}
+
+public extension StytchB2BClient {
     /// Magic links can be sent via email and allow for a quick and seamless login experience.
     struct MagicLinks {
         let router: NetworkingRouter<MagicLinksRoute>
@@ -31,14 +41,42 @@ public extension StytchB2BClient {
     }
 }
 
-public extension StytchB2BClient {
-    /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init(router: router.scopedRouter { $0.magicLinks }) }
-}
-
 public extension StytchB2BClient.MagicLinks {
-    /// The interface for interacting with email magic links.
-    var email: Email { .init(router: router.scopedRouter { $0.email }) }
+    /// A dedicated parameters type for magic links `authenticate` calls.
+    struct AuthenticateParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case sessionDuration = "sessionDurationMinutes"
+            case token = "magicLinksToken"
+        }
+
+        let token: String
+        let sessionDuration: Minutes
+
+        /**
+         Initializes the parameters struct
+         - Parameters:
+           - token: The token extracted from the magic link.
+           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+         */
+        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
+            self.token = token
+            self.sessionDuration = sessionDuration
+        }
+    }
+
+    /// A dedicated parameters type for Discovery `authenticate` calls.
+    struct DiscoveryAuthenticateParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case token = "discoveryMagicLinksToken"
+        }
+
+        let token: String
+
+        /// - Parameter token: The Discovery Email Magic Link token to authenticate.
+        public init(token: String) {
+            self.token = token
+        }
+    }
 }
 
 public extension StytchB2BClient.MagicLinks {
@@ -77,41 +115,14 @@ public extension StytchB2BClient.MagicLinks {
                 )
             )
         }
-    }
 
-    /// A dedicated parameters type for magic links `authenticate` calls.
-    struct AuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case sessionDuration = "sessionDurationMinutes"
-            case token = "magicLinksToken"
-        }
-
-        let token: String
-        let sessionDuration: Minutes
-
-        /**
-         Initializes the parameters struct
-         - Parameters:
-           - token: The token extracted from the magic link.
-           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
-         */
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
-            self.token = token
-            self.sessionDuration = sessionDuration
-        }
-    }
-
-    /// A dedicated parameters type for Discovery `authenticate` calls.
-    struct DiscoveryAuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case token = "discoveryMagicLinksToken"
-        }
-
-        let token: String
-
-        /// - Parameter token: The Discovery Email Magic Link token to authenticate.
-        public init(token: String) {
-            self.token = token
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// The Send Invite Email method wraps the [send invite email](https://test.stytch.com/v1/b2b/magic_links/email/invite) API endpoint.
+        public func inviteSend(parameters: InviteParameters) async throws -> BasicResponse {
+            try await router.post(
+                to: .invite,
+                parameters: parameters
+            )
         }
     }
 }
@@ -191,6 +202,53 @@ public extension StytchB2BClient.MagicLinks.Email {
             self.redirectUrl = redirectUrl
             self.loginTemplateId = loginTemplateId
             self.locale = locale
+        }
+    }
+
+    /// The dedicated parameters type for invite magic links send calls.
+    struct InviteParameters: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case email = "emailAddress"
+            case inviteRedirectUrl
+            case inviteTemplateId
+            case name
+            case untrustedMetadata
+            case locale
+            case roles
+        }
+
+        let email: String
+        let inviteRedirectUrl: URL?
+        let inviteTemplateId: String?
+        let name: String?
+        let untrustedMetadata: JSON?
+        let locale: String?
+        let roles: [String]?
+
+        /// - Parameters:
+        ///   - email: The email of the member to send the invite magic link to.
+        ///   - inviteRedirectUrl: The URL that the Member clicks from the invite Email Magic Link. This URL should be an endpoint in the backend server that verifies the request by querying Stytch's authenticate endpoint and finishes the invite flow. If this value is not passed, the default invite_redirect_url that you set in your Dashboard is used. If you have not set a default invite_redirect_url, an error is returned.
+        ///   - inviteTemplateId: Use a custom template for invite emails. By default, it will use your default email template. The template must be a template using our built-in customizations or a custom HTML email for Magic Links - Invite.
+        ///   - name: The name of the Member.
+        ///   - untrustedMetadata: An arbitrary JSON object of application-specific data. These fields can be edited directly by the frontend SDK, and should not be used to store critical information.
+        ///   - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
+        ///   - roles: Roles to explicitly assign to this Member.
+        public init(
+            email: String,
+            inviteRedirectUrl: URL? = nil,
+            inviteTemplateId: String? = nil,
+            name: String? = nil,
+            untrustedMetadata: JSON? = nil,
+            locale: String? = nil,
+            roles: [String]? = nil
+        ) {
+            self.email = email
+            self.inviteRedirectUrl = inviteRedirectUrl
+            self.inviteTemplateId = inviteTemplateId
+            self.name = name
+            self.untrustedMetadata = untrustedMetadata
+            self.locale = locale
+            self.roles = roles
         }
     }
 }

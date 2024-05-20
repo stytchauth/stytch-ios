@@ -29,7 +29,7 @@ final class OrganizationViewController: UIViewController {
                 let resp = try await StytchB2BClient.organization.get()
                 print(resp)
             } catch {
-                print(error)
+                print("get organization action error: \(error.errorInfo)")
             }
         }
     }
