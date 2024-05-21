@@ -8,11 +8,14 @@ public struct Response<Wrapped: Decodable>: Decodable {
         case requestId, statusCode
     }
 
+    /// The underlying wrapped value. It can be accessed directly or via the subscript.
+    public let wrapped: Wrapped
+
     /// The id for the request.
     public let requestId: String
+
     /// The HTTP status code of the request.
     public let statusCode: UInt?
-    let wrapped: Wrapped
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -28,6 +31,7 @@ public struct Response<Wrapped: Decodable>: Decodable {
     }
 
     /// Enables dynamic member access to the wrapped type.
+    /// Example usage: response[dynamicMember: \Type.property]
     public subscript<T>(dynamicMember member: KeyPath<Wrapped, T>) -> T {
         wrapped[keyPath: member]
     }
