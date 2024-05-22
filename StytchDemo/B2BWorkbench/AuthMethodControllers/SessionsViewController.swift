@@ -7,6 +7,7 @@ final class SessionsViewController: UIViewController {
         view.layoutMargins = Constants.insets
         view.isLayoutMarginsRelativeArrangement = true
         view.axis = .vertical
+        view.distribution = .fillEqually
         view.spacing = 8
         return view
     }()
@@ -23,11 +24,26 @@ final class SessionsViewController: UIViewController {
         return .init(configuration: configuration, primaryAction: revokeAction)
     }()
 
+    private lazy var exchangeSessionButton: UIButton = {
+        var configuration: UIButton.Configuration = .borderedProminent()
+        configuration.title = "Exchange"
+        return .init(configuration: configuration, primaryAction: exchangeSessionsAction)
+    }()
+
+    private lazy var orgIdTextField: UITextField = {
+        let textField: UITextField = .init(frame: .zero, primaryAction: exchangeSessionsAction)
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "Organization ID To Exchange Session With"
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
+        return textField
+    }()
+
     private lazy var authenticateAction: UIAction = .init { _ in
         Task {
             do {
-                let resp = try await StytchB2BClient.sessions.authenticate(parameters: .init())
-                print(resp)
+                let response = try await StytchB2BClient.sessions.authenticate(parameters: .init())
+                print("authenticateAction response: \(response)")
             } catch {
                 print("authenticateAction error: \(error.errorInfo)")
             }
@@ -37,10 +53,32 @@ final class SessionsViewController: UIViewController {
     private lazy var revokeAction: UIAction = .init { _ in
         Task {
             do {
-                let resp = try await StytchB2BClient.sessions.revoke()
-                print(resp)
+                let response = try await StytchB2BClient.sessions.revoke()
+                print("revokeAction response: \(response)")
             } catch {
                 print("revokeAction error: \(error.errorInfo)")
+            }
+        }
+    }
+
+    private lazy var exchangeSessionsAction: UIAction = .init { _ in
+        self.exchangeSession()
+    }
+
+    func exchangeSession() {
+        guard let organizationID = orgIdTextField.text else {
+            return
+        }
+        Task {
+            do {
+                let parameters = Sessions<B2BAuthenticateResponse>.ExchangeParameters(organizationID: organizationID)
+                let response = try await StytchB2BClient.sessions.exchange(parameters: parameters)
+                UserDefaults.standard.set(organizationID, forKey: Constants.orgIdDefaultsKey)
+                orgIdTextField.text = ""
+                presentAlertWithTitle(alertTitle: "Session Exchanged to org with id: \(organizationID)")
+                print("exchangeAction response: \(response)")
+            } catch {
+                print("exchangeAction error: \(error.errorInfo)")
             }
         }
     }
@@ -62,5 +100,8 @@ final class SessionsViewController: UIViewController {
 
         stackView.addArrangedSubview(authenticateButton)
         stackView.addArrangedSubview(revokeButton)
+        stackView.addArrangedSubview(UIView())
+        stackView.addArrangedSubview(exchangeSessionButton)
+        stackView.addArrangedSubview(orgIdTextField)
     }
 }

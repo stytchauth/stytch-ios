@@ -64,8 +64,6 @@ final class DiscoveryViewController: UIViewController {
         })
     }()
 
-    private let defaults: UserDefaults = .standard
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -35,8 +35,6 @@ final class RootViewController: UIViewController {
         return view
     }()
 
-    private let defaults: UserDefaults = .standard
-
     private var authChangeCancellable: AnyCancellable?
 
     override func viewDidLoad() {
@@ -59,24 +57,21 @@ final class RootViewController: UIViewController {
         memberIdLabel.preferredMaxLayoutWidth = view.bounds.width - 2 * Constants.padding
         memberIdLabel.isHidden = true
 
-        publicTokenTextField.text = defaults.string(forKey: Constants.publicTokenDefaultsKey)
+        publicTokenTextField.text = UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey)
 
         authChangeCancellable = StytchB2BClient.sessions.onAuthChange
             .map { _ in StytchB2BClient.member.getSync() }
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] member in
-                guard let self else { return }
-
-                self.memberIdLabel.isHidden = member == nil
-                self.memberIdLabel.text = member.map { "Welcome, \($0.id.rawValue)!" } ?? "Logged out"
-                self.navigationController?.popToRootViewController(animated: true)
+                self?.memberIdLabel.isHidden = member == nil
+                self?.memberIdLabel.text = member.map { "Welcome, \($0.id.rawValue)!" } ?? "Logged out"
             })
     }
 
     private func submit(token: String?) {
         guard let token = token, !token.isEmpty else { return }
 
-        defaults.set(token, forKey: Constants.publicTokenDefaultsKey)
+        UserDefaults.standard.set(token, forKey: Constants.publicTokenDefaultsKey)
         StytchB2BClient.configure(publicToken: token)
 
         navigationController?.pushViewController(AuthHomeViewController(), animated: true)
