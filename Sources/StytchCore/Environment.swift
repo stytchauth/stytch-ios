@@ -63,6 +63,8 @@ struct Environment {
 
     let userStorage: UserStorage = .init()
 
+    let memberStorage: MemberStorage = .init()
+
     var localStorage: LocalStorage = .init()
 
     var cookieClient: CookieClient = .live

@@ -179,6 +179,7 @@ extension Member {
         ssoRegistrations: [],
         trustedMetadata: [:],
         untrustedMetadata: [:],
+        memberPasswordId: "",
         memberId: "member_1234"
     )
 }

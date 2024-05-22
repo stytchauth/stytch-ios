@@ -111,12 +111,27 @@ extension StytchB2BClient {
             }
         }
 
-        enum MembersRoute: String, RouteType {
+        enum MembersRoute: RouteType {
             // swiftlint:disable:next identifier_name
             case me
+            case update
+            case deletePhoneNumber
+            case deleteTOTP
+            case deletePassword(passwordId: String)
 
             var path: Path {
-                .init(rawValue: rawValue)
+                switch self {
+                case .me:
+                    return Path(rawValue: "me")
+                case .update:
+                    return Path(rawValue: "update")
+                case .deletePhoneNumber:
+                    return Path(rawValue: "deletePhoneNumber")
+                case .deleteTOTP:
+                    return Path(rawValue: "deleteTOTP")
+                case let .deletePassword(passwordId):
+                    return Path(rawValue: "passwords/\(passwordId)")
+                }
             }
         }
     }
