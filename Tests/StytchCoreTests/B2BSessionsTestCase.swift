@@ -59,4 +59,25 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("token"))
         XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("jwt"))
     }
+
+    func testSessionExchange() async throws {
+        networkInterceptor.responses {
+            B2BAuthenticateResponse.mock
+        }
+
+        Current.timer = { _, _, _ in .init() }
+
+        let organizationID = "org_123"
+        let parameters = Sessions<B2BAuthenticateResponse>.ExchangeParameters(organizationID: organizationID)
+        _ = try await StytchB2BClient.sessions.exchange(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/sessions/exchange",
+            method: .post([
+                "organization_id": JSON(stringLiteral: organizationID),
+                "session_duration_minutes": 30,
+            ])
+        )
+    }
 }

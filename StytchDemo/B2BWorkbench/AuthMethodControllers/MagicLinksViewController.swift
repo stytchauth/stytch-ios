@@ -66,8 +66,6 @@ final class MagicLinksViewController: UIViewController {
         })
     }()
 
-    private let defaults: UserDefaults = .standard
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -90,9 +88,9 @@ final class MagicLinksViewController: UIViewController {
         stackView.addArrangedSubview(discoverySendButton)
         stackView.addArrangedSubview(inviteSendButton)
 
-        emailTextField.text = defaults.string(forKey: Constants.emailDefaultsKey)
-        orgIdTextField.text = defaults.string(forKey: Constants.orgIdDefaultsKey)
-        redirectUrlTextField.text = defaults.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
+        orgIdTextField.text = UserDefaults.standard.string(forKey: Constants.orgIdDefaultsKey)
+        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
     }
 
     func submit() {
@@ -100,9 +98,9 @@ final class MagicLinksViewController: UIViewController {
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
 
-        defaults.set(email, forKey: Constants.emailDefaultsKey)
-        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
-        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
+        UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
             do {
@@ -126,9 +124,9 @@ final class MagicLinksViewController: UIViewController {
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
 
-        defaults.set(email, forKey: Constants.emailDefaultsKey)
-        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
-        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
+        UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
             do {
@@ -150,9 +148,9 @@ final class MagicLinksViewController: UIViewController {
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
 
-        defaults.set(email, forKey: Constants.emailDefaultsKey)
-        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
-        defaults.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
+        UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
             do {

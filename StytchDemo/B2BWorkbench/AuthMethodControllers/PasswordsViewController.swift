@@ -93,8 +93,6 @@ final class PasswordsViewController: UIViewController {
         })
     }()
 
-    private let defaults: UserDefaults = .standard
-
     private let passwordClient = StytchB2BClient.passwords
 
     override func viewDidLoad() {
@@ -127,9 +125,9 @@ final class PasswordsViewController: UIViewController {
         stackView.addArrangedSubview(resetByEmailStartButton)
         stackView.addArrangedSubview(resetBySessionButton)
 
-        emailTextField.text = defaults.string(forKey: Constants.emailDefaultsKey)
-        orgIdTextField.text = defaults.string(forKey: Constants.orgIdDefaultsKey)
-        redirectUrlTextField.text = defaults.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
+        orgIdTextField.text = UserDefaults.standard.string(forKey: Constants.orgIdDefaultsKey)
+        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
 
         if StytchB2BClient.sessions.memberSession == nil {
             resetBySessionButton.isHidden = true
@@ -159,7 +157,7 @@ final class PasswordsViewController: UIViewController {
                         password: values.password
                     )
                 )
-                print("authenticated!")
+                presentAlertWithTitle(alertTitle: "Authenticated!")
             } catch {
                 print("authenticate error: \(error.errorInfo)")
             }
@@ -170,7 +168,7 @@ final class PasswordsViewController: UIViewController {
         guard let password = passwordTextField.text, !password.isEmpty else { return }
 
         if let email = emailTextField.text, !email.isEmpty {
-            defaults.set(email, forKey: Constants.emailDefaultsKey)
+            UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         }
 
         Task {
@@ -247,17 +245,17 @@ final class PasswordsViewController: UIViewController {
         let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:))
 
         if let redirectUrl {
-            defaults.set(redirectUrl.absoluteString, forKey: Constants.redirectUrlDefaultsKey)
+            UserDefaults.standard.set(redirectUrl.absoluteString, forKey: Constants.redirectUrlDefaultsKey)
         }
 
         if let email = emailTextField.text, !email.isEmpty {
-            defaults.set(email, forKey: Constants.emailDefaultsKey)
+            UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         }
         if let orgId = orgIdTextField.text, !orgId.isEmpty {
-            defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
+            UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
         }
 
-        defaults.set(orgId, forKey: Constants.orgIdDefaultsKey)
+        UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
 
         return (.init(rawValue: orgId), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl)
     }

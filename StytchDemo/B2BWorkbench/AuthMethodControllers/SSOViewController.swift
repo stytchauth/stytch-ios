@@ -40,8 +40,6 @@ final class SSOViewController: UIViewController {
         return .init(configuration: configuration, primaryAction: startAction)
     }()
 
-    private let defaults: UserDefaults = .standard
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -61,14 +59,14 @@ final class SSOViewController: UIViewController {
         stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(startButton)
 
-        redirectUrlTextField.text = defaults.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
     }
 
     private func start() {
         guard let connectionId = connectionIdTextField.text, !connectionId.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:)) else { return }
 
-        defaults.set(redirectUrl.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(redirectUrl.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
 
         Task {
             do {
