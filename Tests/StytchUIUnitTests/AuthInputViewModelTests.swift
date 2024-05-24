@@ -35,7 +35,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testCreatesCorrectResetByEmailStartParams() {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -55,7 +54,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testCreatesCorrectMagicLinkParams() {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -76,7 +74,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -92,7 +89,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init(
                     magicLink: .init()
                 )
@@ -109,7 +105,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -124,7 +119,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordCallsPasswordsResetByEmailStartIfPasswordsAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init(
                     password: .init()
                 )
@@ -141,7 +135,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testContinueWithPhoneCallsOTPLoginOrCreate() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )

@@ -1,7 +1,10 @@
 import Foundation
 
 struct Configuration {
-    private enum CodingKeys: String, CodingKey { case hostUrl = "StytchHostURL", publicToken = "StytchPublicToken" }
+    private enum CodingKeys: String, CodingKey {
+        case hostUrl = "StytchHostURL"
+        case publicToken = "StytchPublicToken"
+    }
 
     let publicToken: String
 

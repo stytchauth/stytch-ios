@@ -18,7 +18,6 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = OAuthState(
             config: .init(
-                publicToken: "",
                 products: .init(),
                 session: .init(sessionDuration: 123)
             )
@@ -30,7 +29,6 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state = OAuthState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -41,7 +39,6 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsAppleProviderAndCallsAuthCallbackWhenProviderIsApple() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -60,7 +57,6 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthDoesNothingIfOAuthIsNotConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "",
                 products: .init()
             )
         )
@@ -80,7 +76,6 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsThirdPartyStartAndAuthenticateFlowAndReportsToUIIfOAuthIsConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "",
                 products: .init(
                     oauth: .init(
                         providers: [.thirdParty(.amazon)],
