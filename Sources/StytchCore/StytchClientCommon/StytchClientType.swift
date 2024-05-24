@@ -10,6 +10,8 @@ protocol StytchClientType {
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
+
+    func runBootstrapping()
 }
 
 extension StytchClientType {
@@ -25,9 +27,9 @@ extension StytchClientType {
         }
     }
 
-    private var sessionStorage: SessionStorage { Current.sessionStorage }
+    var sessionStorage: SessionStorage { Current.sessionStorage }
 
-    private var localStorage: LocalStorage { Current.localStorage }
+    var localStorage: LocalStorage { Current.localStorage }
 
     private var keychainClient: KeychainClient { Current.keychainClient }
 
@@ -85,27 +87,6 @@ extension StytchClientType {
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
             // only run this in non-test environments
             runBootstrapping()
-        }
-    }
-
-    private func runBootstrapping() {
-        let client = self
-        let hasSession = sessionStorage.persistedSessionIdentifiersExist
-        Task {
-            if client is StytchClient {
-                try? await StytchClient.bootstrap.fetch()
-                if hasSession {
-                    _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
-                }
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
-            } else {
-                try? await StytchB2BClient.bootstrap.fetch()
-                if hasSession {
-                    _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDuration: nil))
-                }
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
-            }
-            initializationState.setInitializationState(state: true)
         }
     }
 
