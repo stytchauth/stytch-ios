@@ -35,7 +35,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init(),
                 session: .init(sessionDuration: 123)
             ),
@@ -56,7 +55,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init()
             ),
             email: "test@stytch.com",
@@ -76,7 +74,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testCreatesCorrectResetByEmailStartParams() {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init()
             ),
             email: "test@stytch.com",
@@ -105,7 +102,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testCreatesCorrectMagicLinkParams() {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init()
             ),
             email: "test@stytch.com",
@@ -135,7 +131,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testLoginWithoutPasswordDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init()
             ),
             email: "test@stytch.com",
@@ -156,7 +151,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testLoginWithoutPasswordCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init(
                     magicLink: .init()
                 )
@@ -179,7 +173,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testForgotPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init()
             ),
             email: "test@stytch.com",
@@ -200,7 +193,6 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     func testForgotPasswordCallsPasswordResetByEmailStartAndSetsPendingEmailIfPasswordsAreConfigured() async throws {
         let state: ActionableInfoState = .init(
             config: .init(
-                publicToken: "",
                 products: .init(
                     password: .init()
                 )

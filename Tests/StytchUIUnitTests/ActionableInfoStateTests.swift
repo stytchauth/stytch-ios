@@ -4,7 +4,6 @@ import XCTest
 
 final class ActionableInfoStateTests: BaseTestCase {
     let config: StytchUIClient.Configuration = .init(
-        publicToken: "",
         products: .init()
     )
 

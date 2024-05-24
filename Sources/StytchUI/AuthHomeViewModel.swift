@@ -43,6 +43,5 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
 }
 
 struct AuthHomeState {
-    let bootstrap: Bootstrap
     let config: StytchUIClient.Configuration
 }

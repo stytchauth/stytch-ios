@@ -97,7 +97,6 @@ public extension View {
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        let publicToken: String
         let navigation: Navigation?
         let products: Products
         let session: Session?
@@ -118,13 +117,11 @@ public extension StytchUIClient {
         var otp: OTP? { products.otp }
 
         public init(
-            publicToken: String,
             navigation: Navigation? = nil,
             products: Products,
             session: Session? = nil,
             theme: StytchTheme = StytchTheme()
         ) {
-            self.publicToken = publicToken
             self.navigation = navigation
             self.products = products
             self.session = session

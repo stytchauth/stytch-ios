@@ -83,6 +83,21 @@ public struct StytchB2BClient: StytchClientType {
         #endif
         }
     }
+
+    func runBootstrapping() {
+        Task {
+            do {
+                try await Self.bootstrap.fetch()
+                if sessionStorage.persistedSessionIdentifiersExist {
+                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDuration: nil))
+                }
+                initializationState.setInitializationState(state: true)
+                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
+            } catch {
+                throw error
+            }
+        }
+    }
 }
 
 public extension StytchB2BClient {

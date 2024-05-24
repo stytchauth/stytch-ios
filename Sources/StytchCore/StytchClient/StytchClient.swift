@@ -18,6 +18,10 @@ public struct StytchClient: StytchClientType {
 
     static let appSessionId: String = UUID().uuidString
 
+    public static var bootStrapData: BootstrapResponseData? {
+        Self.instance.localStorage.bootstrapData
+    }
+
     private init() {
         postInit()
     }
@@ -79,6 +83,21 @@ public struct StytchClient: StytchClientType {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return .manualHandlingRequired(tokenType, token: token)
+        }
+    }
+
+    func runBootstrapping() {
+        Task {
+            do {
+                try await Self.bootstrap.fetch()
+                if sessionStorage.persistedSessionIdentifiersExist {
+                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDuration: nil))
+                }
+                initializationState.setInitializationState(state: true)
+                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
+            } catch {
+                throw error
+            }
         }
     }
 }
