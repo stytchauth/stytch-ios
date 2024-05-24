@@ -36,10 +36,12 @@ final class PollingClient {
     }
 
     func stop() {
-        timer?.invalidate()
-        timer = nil
-        retryClient?.cancel()
-        retryClient = nil
+        DispatchQueue.main.async { [weak self] in
+            self?.timer?.invalidate()
+            self?.timer = nil
+            self?.retryClient?.cancel()
+            self?.retryClient = nil
+        }
     }
 }
 
