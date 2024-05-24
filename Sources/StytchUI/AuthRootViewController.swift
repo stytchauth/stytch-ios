@@ -26,8 +26,6 @@ final class AuthRootViewController: UIViewController {
 
         view.backgroundColor = .background
 
-        StytchClient.configure(publicToken: config.publicToken)
-
         activityIndicator.hidesWhenStopped = true
 
         view.addSubview(activityIndicator)
@@ -37,15 +35,7 @@ final class AuthRootViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        Task { @MainActor in
-            defer { activityIndicator.stopAnimating() }
-            activityIndicator.startAnimating()
-            do {
-                render(bootstrap: try await StytchClient._uiRouter.get(route: .bootstrap(publicToken: config.publicToken)))
-            } catch {
-                presentAlert(error: error)
-            }
-        }
+        render()
     }
 
     func handlePasswordReset(token: String, email: String, animated: Bool = true) {
@@ -64,9 +54,9 @@ final class AuthRootViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
     }
 
-    private func render(bootstrap: Bootstrap) {
+    private func render() {
         let homeController = AuthHomeViewController(
-            state: .init(bootstrap: bootstrap, config: config)
+            state: .init(config: config)
         )
         if let closeButton = config.navigation?.closeButtonStyle {
             let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
@@ -87,10 +77,6 @@ final class AuthRootViewController: UIViewController {
         view.addSubview(navigationController.view)
         navigationController.view.frame = view.bounds
     }
-}
-
-struct Bootstrap: Decodable {
-    let disableSdkWatermark: Bool
 }
 
 private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {

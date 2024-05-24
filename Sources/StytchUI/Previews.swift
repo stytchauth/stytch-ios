@@ -5,7 +5,6 @@ struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
-                publicToken: "",
                 products: .init(
                     oauth: .init(
                         providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
@@ -24,7 +23,6 @@ struct StytchUI_Previews: PreviewProvider {
         ActionableInfoViewController(
             state: .forgotPassword(
                 config: .init(
-                    publicToken: "",
                     products: .init(
                         oauth: .init(
                             providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
@@ -46,7 +44,6 @@ struct StytchUI_Previews: PreviewProvider {
         PasswordViewController(
             state: .init(
                 config: .init(
-                    publicToken: "",
                     products: .init(
                         oauth: .init(
                             providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
@@ -70,7 +67,6 @@ struct StytchUI_Previews: PreviewProvider {
         OTPCodeViewController(
             state: .init(
                 config: .init(
-                    publicToken: "",
                     products: .init(
                         oauth: .init(
                             providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
