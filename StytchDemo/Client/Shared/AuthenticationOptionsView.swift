@@ -102,7 +102,6 @@ struct AuthenticationOptionsView: View {
         .authenticationSheet(
             isPresented: $authPresented,
             config: .init(
-                publicToken: configuration.publicToken,
                 navigation: .init(),
                 products: .init(
                     oauth: .init(
