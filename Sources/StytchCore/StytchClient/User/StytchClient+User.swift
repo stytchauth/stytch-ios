@@ -5,19 +5,19 @@ public extension StytchClient {
     struct UserManagement {
         let router: NetworkingRouter<UsersRoute>
 
-        @Dependency(\.localStorage) private var localStorage
-
         @Dependency(\.sessionStorage) private var sessionStorage
 
         @Dependency(\.userStorage) private var userStorage
 
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
         public func getSync() -> User? {
-            userStorage.user
+            userStorage.object
         }
 
         /// A publisher which emits following a change in user status and returns either the user object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onChange: AnyPublisher<User?, Never> { userStorage.onUserChange.eraseToAnyPublisher() }
+        public var onChange: AnyPublisher<User?, Never> {
+            userStorage.onChange.eraseToAnyPublisher()
+        }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current user.
@@ -54,13 +54,13 @@ public extension StytchClient {
             case let .oauth(id):
                 response = try await router.delete(route: .factors(.oauth(id: id)))
             }
-            userStorage.updateUser(response.wrapped.user)
+            userStorage.update(response.wrapped.user)
             return response
         }
 
         private func updatingCachedUser(_ performRequest: () async throws -> UserResponse) async rethrows -> UserResponse {
             let response = try await performRequest()
-            userStorage.updateUser(response.wrapped)
+            userStorage.update(response.wrapped)
             return response
         }
     }

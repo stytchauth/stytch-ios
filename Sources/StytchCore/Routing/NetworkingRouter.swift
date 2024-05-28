@@ -111,7 +111,7 @@ public extension NetworkingRouter {
                     ],
                     hostUrl: configuration.hostUrl
                 )
-                userStorage.updateUser(sessionResponse.user)
+                userStorage.update(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionStorage.updateSession(
                     .member(sessionResponse.memberSession),

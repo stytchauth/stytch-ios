@@ -2,7 +2,7 @@ import Combine
 
 public extension StytchB2BClient {
     /// The interface for interacting with member products.
-    static var member: Members { .init(router: organization.router.scopedRouter { $0.members }) }
+    static var member: Members { .init(router: organizations.router.scopedRouter { $0.members }) }
 }
 
 public extension StytchB2BClient {
@@ -10,25 +10,24 @@ public extension StytchB2BClient {
     struct Members {
         let router: NetworkingRouter<StytchB2BClient.OrganizationsRoute.MembersRoute>
 
-        @Dependency(\.localStorage) private var localStorage
         @Dependency(\.memberStorage) private var memberStorage
 
         /// A publisher which emits following a change in member status and returns either the member object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
         public var onMemberChange: AnyPublisher<Member?, Never> {
-            memberStorage.onMemberChange.eraseToAnyPublisher()
+            memberStorage.onChange.eraseToAnyPublisher()
         }
 
         /// Returns the most-recent cached copy of the member object, if it has already been fetched via another method, else nil.
         public func getSync() -> Member? {
-            localStorage.member
+            memberStorage.object
         }
 
         // sourcery: AsyncVariants
         /// Fetches the most up-to-date version of the current member.
         public func get() async throws -> MemberResponse {
-            let response: MemberResponse = try await router.get(route: .me)
-            localStorage.member = response.member
-            return response
+            try await updatingCachedMember {
+                try await router.get(route: .me)
+            }
         }
 
         // sourcery: AsyncVariants
@@ -51,13 +50,13 @@ public extension StytchB2BClient {
             case let .password(passwordId):
                 response = try await router.delete(route: .deletePassword(passwordId: passwordId))
             }
-            memberStorage.updateMember(response.member)
+            memberStorage.update(response.member)
             return response
         }
 
         private func updatingCachedMember(_ performRequest: () async throws -> MemberResponse) async rethrows -> MemberResponse {
             let response = try await performRequest()
-            memberStorage.updateMember(response.wrapped.member)
+            memberStorage.update(response.wrapped.member)
             return response
         }
     }
