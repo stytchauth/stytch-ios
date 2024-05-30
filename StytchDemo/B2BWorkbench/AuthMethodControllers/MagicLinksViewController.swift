@@ -2,75 +2,31 @@ import StytchCore
 import UIKit
 
 final class MagicLinksViewController: UIViewController {
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        view.axis = .vertical
-        view.spacing = 8
-        return view
-    }()
+    let stackView = UIStackView.stytchB2BStackView()
 
-    private lazy var emailTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Email"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        textField.keyboardType = .emailAddress
-        return textField
-    }()
+    lazy var emailTextField: UITextField = .init(title: "Email", primaryAction: submitAction, keyboardType: .emailAddress)
 
-    private lazy var submitAction: UIAction = .init { [weak self] _ in
+    lazy var orgIdTextField: UITextField = .init(title: "Organization ID", primaryAction: submitAction)
+
+    lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: submitAction, keyboardType: .URL)
+
+    lazy var sendButton: UIButton = .init(title: "Submit", primaryAction: submitAction)
+
+    lazy var discoverySendButton: UIButton = .init(title: "Discover Send", primaryAction: .init { [weak self] _ in
+        self?.submitDiscovery()
+    })
+
+    lazy var inviteSendButton: UIButton = .init(title: "Invite Send", primaryAction: .init { [weak self] _ in
+        self?.submitInvite()
+    })
+
+    lazy var submitAction: UIAction = .init { [weak self] _ in
         self?.submit()
     }
 
-    private lazy var orgIdTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Organization ID"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        return textField
-    }()
-
-    private lazy var redirectUrlTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Redirect URL"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        textField.keyboardType = .URL
-        return textField
-    }()
-
-    private lazy var sendButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Submit"
-        return .init(configuration: configuration, primaryAction: submitAction)
-    }()
-
-    private lazy var discoverySendButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Discover Send"
-        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
-            self?.submitDiscovery()
-        })
-    }()
-
-    private lazy var inviteSendButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Invite Send"
-        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
-            self?.submitInvite()
-        })
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "Email Magic Links"
-
         view.backgroundColor = .systemBackground
 
         view.addSubview(stackView)
@@ -104,7 +60,7 @@ final class MagicLinksViewController: UIViewController {
 
         Task {
             do {
-                _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(
+                let response = try await StytchB2BClient.magicLinks.email.loginOrSignup(
                     parameters: .init(
                         organizationId: .init(rawValue: orgId),
                         email: email,
@@ -112,9 +68,9 @@ final class MagicLinksViewController: UIViewController {
                         signupRedirectUrl: redirectUrl
                     )
                 )
-                presentAlertWithTitle(alertTitle: "Check your email!")
+                presentAlertAndLogMessage(description: "login or signup success - check your email!", object: response)
             } catch {
-                presentErrorWithDescription(error: error, description: "loginOrSignup")
+                presentAlertAndLogMessage(description: "login or signup error", object: error)
             }
         }
     }
@@ -130,15 +86,15 @@ final class MagicLinksViewController: UIViewController {
 
         Task {
             do {
-                _ = try await StytchB2BClient.magicLinks.email.discoverySend(
+                let response = try await StytchB2BClient.magicLinks.email.discoverySend(
                     parameters: .init(
                         email: email,
                         redirectUrl: redirectUrl
                     )
                 )
-                presentAlertWithTitle(alertTitle: "Check your email!")
+                presentAlertAndLogMessage(description: "discovery send success - check your email!", object: response)
             } catch {
-                presentErrorWithDescription(error: error, description: "discoverySend")
+                presentAlertAndLogMessage(description: "discovery send error", object: error)
             }
         }
     }
@@ -154,14 +110,14 @@ final class MagicLinksViewController: UIViewController {
 
         Task {
             do {
-                _ = try await StytchB2BClient.magicLinks.email.inviteSend(
+                let response = try await StytchB2BClient.magicLinks.email.inviteSend(
                     parameters: .init(
                         email: email
                     )
                 )
-                presentAlertWithTitle(alertTitle: "Check your email!")
+                presentAlertAndLogMessage(description: "invite send success - check your email!", object: response)
             } catch {
-                presentErrorWithDescription(error: error, description: "inviteSend")
+                presentAlertAndLogMessage(description: "invite send error", object: error)
             }
         }
     }
