@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class OrganizationViewController: UIViewController {
-    private let stackView: UIStackView = {
+    let stackView: UIStackView = {
         let view = UIStackView()
         view.layoutMargins = Constants.insets
         view.isLayoutMarginsRelativeArrangement = true
@@ -11,19 +11,19 @@ final class OrganizationViewController: UIViewController {
         return view
     }()
 
-    private lazy var getButton: UIButton = {
+    lazy var getButton: UIButton = {
         var configuration: UIButton.Configuration = .borderedProminent()
         configuration.title = "Get"
         return .init(configuration: configuration, primaryAction: getAction)
     }()
 
-    private lazy var getSyncButton: UIButton = {
+    lazy var getSyncButton: UIButton = {
         var configuration: UIButton.Configuration = .borderedProminent()
         configuration.title = "Get Sync"
         return .init(configuration: configuration, primaryAction: getSyncAction)
     }()
 
-    private lazy var getAction: UIAction = .init { _ in
+    lazy var getAction: UIAction = .init { _ in
         Task {
             do {
                 let resp = try await StytchB2BClient.organization.get()
@@ -34,7 +34,7 @@ final class OrganizationViewController: UIViewController {
         }
     }
 
-    private lazy var getSyncAction: UIAction = .init { _ in
+    lazy var getSyncAction: UIAction = .init { _ in
         print(StytchB2BClient.organization.getSync())
     }
 

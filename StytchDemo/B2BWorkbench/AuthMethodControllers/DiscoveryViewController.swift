@@ -2,73 +2,31 @@ import StytchCore
 import UIKit
 
 final class DiscoveryViewController: UIViewController {
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        view.axis = .vertical
-        view.spacing = 8
-        return view
-    }()
+    let stackView = UIStackView.stytchB2BStackView()
 
-    private lazy var intermediateSessionTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Intermediate Session Token"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        return textField
-    }()
+    lazy var intermediateSessionTextField: UITextField = .init(title: "Intermediate Session Token", primaryAction: submitAction)
 
-    private lazy var orgIdTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Org Id"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        return textField
-    }()
+    lazy var orgIdTextField: UITextField = .init(title: "Org Id", primaryAction: submitAction)
 
-    private lazy var orgNameTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Org Name"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        return textField
-    }()
+    lazy var orgNameTextField: UITextField = .init(title: "Org Name", primaryAction: submitAction)
 
-    private lazy var submitAction: UIAction = .init { [weak self] _ in
+    lazy var discoverButton: UIButton = .init(title: "Discover", primaryAction: submitAction)
+
+    lazy var submitAction: UIAction = .init { [weak self] _ in
         self?.discover()
     }
 
-    private lazy var discoverButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Discover"
-        return .init(configuration: configuration, primaryAction: submitAction)
-    }()
+    lazy var exchangeSessionButton: UIButton = .init(title: "Exchange Session", primaryAction: .init { [weak self] _ in
+        self?.exchangeSession()
+    })
 
-    private lazy var exchangeSessionButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Exchange Session"
-        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
-            self?.exchangeSession()
-        })
-    }()
-
-    private lazy var createOrgButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Create Org"
-        return .init(configuration: configuration, primaryAction: .init { [weak self] _ in
-            self?.createOrg()
-        })
-    }()
+    lazy var createOrgButton: UIButton = .init(title: "Create Org", primaryAction: .init { [weak self] _ in
+        self?.createOrg()
+    })
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "Discovery"
-
         view.backgroundColor = .systemBackground
 
         view.addSubview(stackView)
@@ -87,7 +45,7 @@ final class DiscoveryViewController: UIViewController {
         stackView.addArrangedSubview(createOrgButton)
     }
 
-    private func discover() {
+    func discover() {
         guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
 
         Task {
@@ -95,14 +53,14 @@ final class DiscoveryViewController: UIViewController {
                 let response = try await StytchB2BClient.discovery.listOrganizations(
                     parameters: .init(intermediateSessionToken: token)
                 )
-                print(response)
+                presentAlertAndLogMessage(description: "list organizations success!", object: response)
             } catch {
-                print("listOrganizations error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "list organizations error", object: error)
             }
         }
     }
 
-    private func exchangeSession() {
+    func exchangeSession() {
         guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
         guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
 
@@ -111,14 +69,14 @@ final class DiscoveryViewController: UIViewController {
                 let response = try await StytchB2BClient.discovery.exchangeIntermediateSession(
                     parameters: .init(intermediateSessionToken: token, organizationId: .init(rawValue: orgId))
                 )
-                print(response)
+                presentAlertAndLogMessage(description: "exchange session success!", object: response)
             } catch {
-                print("exchangeSession error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "exchange session error", object: error)
             }
         }
     }
 
-    private func createOrg() {
+    func createOrg() {
         guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
         guard let orgName = orgNameTextField.text, !orgName.isEmpty else { return }
 
@@ -127,9 +85,9 @@ final class DiscoveryViewController: UIViewController {
                 let response = try await StytchB2BClient.discovery.createOrganization(
                     parameters: .init(intermediateSessionToken: token, organizationName: orgName)
                 )
-                print(response)
+                presentAlertAndLogMessage(description: "create organization success!", object: response)
             } catch {
-                print("createOrg error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "create organization error", object: error)
             }
         }
     }

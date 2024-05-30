@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         handle(url: url)
     }
 
-    private func handle(url: URL) {
+    func handle(url: URL) {
         Task {
             do {
                 switch try await StytchB2BClient.handle(url: url, sessionDuration: 60) {

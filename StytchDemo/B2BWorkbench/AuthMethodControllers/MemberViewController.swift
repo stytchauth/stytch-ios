@@ -3,140 +3,40 @@ import StytchCore
 import UIKit
 
 final class MemberViewController: UIViewController {
-    private var cancellable: AnyCancellable?
+    let stackView = UIStackView.stytchB2BStackView()
+    var cancellable: AnyCancellable?
 
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        view.axis = .vertical
-        view.spacing = 8
-        return view
-    }()
+    lazy var getButton: UIButton = .init(title: "Get", primaryAction: .init { [weak self] _ in
+        self?.get()
+    })
 
-    private lazy var getButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Get"
-        return .init(configuration: configuration, primaryAction: getAction)
-    }()
+    lazy var getSyncButton: UIButton = .init(title: "Get Sync", primaryAction: .init { [weak self] _ in
+        self?.getSync()
+    })
 
-    private lazy var getSyncButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Get Sync"
-        return .init(configuration: configuration, primaryAction: getSyncAction)
-    }()
+    lazy var nameTextField: UITextField = .init(title: "Name", primaryAction: .init { [weak self] _ in
+        self?.update()
+    })
 
-    private lazy var nameTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: updateAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Name"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        textField.keyboardType = .default
-        return textField
-    }()
+    lazy var updateButton: UIButton = .init(title: "Update", primaryAction: .init { [weak self] _ in
+        self?.update()
+    })
 
-    private lazy var updateButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Update"
-        return .init(configuration: configuration, primaryAction: updateAction)
-    }()
+    lazy var deletePasswordButton: UIButton = .init(title: "Delete Password", primaryAction: .init { [weak self] _ in
+        self?.deletePassword()
+    })
 
-    private lazy var deletePasswordButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Delete Password"
-        return .init(configuration: configuration, primaryAction: deletePasswordAction)
-    }()
+    lazy var deletePhoneNumberButton: UIButton = .init(title: "Delete Phone Number", primaryAction: .init { [weak self] _ in
+        self?.deletePhoneNumber()
+    })
 
-    private lazy var deletePhoneNumberButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Delete Phone Number"
-        return .init(configuration: configuration, primaryAction: deletePhoneNumberAction)
-    }()
-
-    private lazy var deleteTOTPButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Delete TOTP"
-        return .init(configuration: configuration, primaryAction: deleteTOTPAction)
-    }()
-
-    private lazy var getAction: UIAction = .init { _ in
-        Task {
-            do {
-                let resp = try await StytchB2BClient.member.get()
-                print(resp)
-            } catch {
-                print("get member error: \(error.errorInfo)")
-            }
-        }
-    }
-
-    private lazy var getSyncAction: UIAction = .init { _ in
-        if let member = StytchB2BClient.member.getSync() {
-            print("getSync member: \(member.name)")
-        } else {
-            print("getSync member is nil")
-        }
-    }
-
-    private lazy var updateAction: UIAction = .init { _ in
-        self.update()
-    }
-
-    private lazy var deletePasswordAction: UIAction = .init { _ in
-
-        guard let passwordId = StytchB2BClient.member.getSync()?.memberPasswordId else {
-            return
-        }
-
-        Task {
-            do {
-                let response = try await StytchB2BClient.member.deleteFactor(.password(passwordId: passwordId))
-            } catch {
-                print("delete password error \(error.errorInfo)")
-            }
-        }
-    }
-
-    private lazy var deletePhoneNumberAction: UIAction = .init { _ in
-        Task {
-            do {
-                let response = try await StytchB2BClient.member.deleteFactor(.phoneNumber)
-            } catch {
-                print("delete phone number error \(error.errorInfo)")
-            }
-        }
-    }
-
-    private lazy var deleteTOTPAction: UIAction = .init { _ in
-        Task {
-            do {
-                let response = try await StytchB2BClient.member.deleteFactor(.totp)
-            } catch {
-                print("delete totp error \(error.errorInfo)")
-            }
-        }
-    }
-
-    private func update() {
-        guard let name = nameTextField.text, !name.isEmpty else { return }
-
-        Task {
-            do {
-                let parameters = StytchB2BClient.Members.UpdateParameters(name: name)
-                let response = try await StytchB2BClient.member.update(parameters: parameters)
-                presentAlertWithTitle(alertTitle: "Member Updated!")
-            } catch {
-                presentErrorWithDescription(error: error, description: "update member")
-            }
-        }
-    }
+    lazy var deleteTOTPButton: UIButton = .init(title: "Delete TOTP", primaryAction: .init { [weak self] _ in
+        self?.deleteTOTP()
+    })
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "Member"
-
         view.backgroundColor = .systemBackground
 
         view.addSubview(stackView)
@@ -165,5 +65,83 @@ final class MemberViewController: UIViewController {
             .sink { member in
                 print("MemberChangeListener Updated Member: \(member.name)")
             }
+    }
+
+    func getSync() {
+        if let member = StytchB2BClient.member.getSync() {
+            print("getSync member: \(member.name)")
+        } else {
+            print("getSync member is nil")
+        }
+    }
+
+    func get() {
+        Task {
+            do {
+                let response = try await StytchB2BClient.member.get()
+                presentAlertAndLogMessage(description: "get member success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "get member error", object: error)
+            }
+        }
+    }
+
+    func update() {
+        guard let name = nameTextField.text, !name.isEmpty else {
+            return
+        }
+
+        Task {
+            do {
+                let parameters = StytchB2BClient.Members.UpdateParameters(
+                    name: name,
+                    untrustedMetadata: nil,
+                    mfaEnrolled: nil,
+                    mfaPhoneNumber: nil,
+                    defaultMfaMethod: nil
+                )
+                let response = try await StytchB2BClient.member.update(parameters: parameters)
+                presentAlertAndLogMessage(description: "update member success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "update member error", object: error)
+            }
+        }
+    }
+
+    func deletePassword() {
+        guard let passwordId = StytchB2BClient.member.getSync()?.memberPasswordId else {
+            return
+        }
+
+        Task {
+            do {
+                let response = try await StytchB2BClient.member.deleteFactor(.password(passwordId: passwordId))
+                presentAlertAndLogMessage(description: "delete password success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "delete password error", object: error)
+            }
+        }
+    }
+
+    func deletePhoneNumber() {
+        Task {
+            do {
+                let response = try await StytchB2BClient.member.deleteFactor(.phoneNumber)
+                presentAlertAndLogMessage(description: "delete phone number success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "delete phone number error", object: error)
+            }
+        }
+    }
+
+    func deleteTOTP() {
+        Task {
+            do {
+                let response = try await StytchB2BClient.member.deleteFactor(.totp)
+                presentAlertAndLogMessage(description: "delete totp success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "delete totp error", object: error)
+            }
+        }
     }
 }

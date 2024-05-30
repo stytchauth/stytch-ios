@@ -3,39 +3,22 @@ import StytchCore
 import UIKit
 
 final class RootViewController: UIViewController {
-    private lazy var publicTokenTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: submitAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Stytch Public Token"
-        return textField
-    }()
+    let stackView = UIStackView.stytchB2BStackView()
+    var authChangeCancellable: AnyCancellable?
 
-    private lazy var submitButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Proceed to Auth Options"
-        return .init(configuration: configuration, primaryAction: submitAction)
-    }()
+    lazy var publicTokenTextField: UITextField = .init(title: "Stytch Public Token", primaryAction: submitAction)
 
-    private lazy var submitAction: UIAction = .init { [weak self] _ in
-        self?.submit(token: self?.publicTokenTextField.text)
-    }
+    lazy var submitButton: UIButton = .init(title: "Proceed to Auth Options", primaryAction: submitAction)
 
-    private lazy var memberIdLabel = {
+    lazy var memberIdLabel = {
         let label = UILabel()
         label.numberOfLines = 0
         return label
     }()
 
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = 8
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        return view
-    }()
-
-    private var authChangeCancellable: AnyCancellable?
+    lazy var submitAction: UIAction = .init { [weak self] _ in
+        self?.submit(token: self?.publicTokenTextField.text)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +51,7 @@ final class RootViewController: UIViewController {
             })
     }
 
-    private func submit(token: String?) {
+    func submit(token: String?) {
         guard let token = token, !token.isEmpty else { return }
 
         UserDefaults.standard.set(token, forKey: Constants.publicTokenDefaultsKey)

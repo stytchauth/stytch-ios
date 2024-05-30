@@ -2,49 +2,21 @@ import StytchCore
 import UIKit
 
 final class SSOViewController: UIViewController {
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        view.axis = .vertical
-        view.spacing = 8
-        return view
-    }()
+    let stackView = UIStackView.stytchB2BStackView()
 
-    private lazy var connectionIdTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: startAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Connection Id"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        return textField
-    }()
+    lazy var connectionIdTextField: UITextField = .init(title: "Connection Id", primaryAction: startAction)
 
-    private lazy var redirectUrlTextField: UITextField = {
-        let textField: UITextField = .init(frame: .zero, primaryAction: startAction)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "Redirect URL"
-        textField.autocorrectionType = .no
-        textField.autocapitalizationType = .none
-        textField.keyboardType = .URL
-        return textField
-    }()
+    lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: startAction, keyboardType: .URL)
 
-    private lazy var startAction: UIAction = .init { [weak self] _ in
+    lazy var startButton: UIButton = .init(title: "Start", primaryAction: startAction)
+
+    lazy var startAction: UIAction = .init { [weak self] _ in
         self?.start()
     }
 
-    private lazy var startButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Start"
-        return .init(configuration: configuration, primaryAction: startAction)
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "SSO"
-
         view.backgroundColor = .systemBackground
 
         view.addSubview(stackView)
@@ -62,7 +34,7 @@ final class SSOViewController: UIViewController {
         redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
     }
 
-    private func start() {
+    func start() {
         guard let connectionId = connectionIdTextField.text, !connectionId.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:)) else { return }
 
@@ -70,11 +42,19 @@ final class SSOViewController: UIViewController {
 
         Task {
             do {
-                let (token, _) = try await StytchB2BClient.sso.start(parameters: .init(connectionId: connectionId, loginRedirectUrl: redirectUrl, signupRedirectUrl: redirectUrl))
-                let response = try await StytchB2BClient.sso.authenticate(parameters: .init(token: token))
-                print(response)
+                let (token, _) = try await StytchB2BClient.sso.start(
+                    parameters: .init(
+                        connectionId: connectionId,
+                        loginRedirectUrl: redirectUrl,
+                        signupRedirectUrl: redirectUrl
+                    )
+                )
+                let response = try await StytchB2BClient.sso.authenticate(
+                    parameters: .init(token: token)
+                )
+                presentAlertAndLogMessage(description: "sso start-authenticate success!", object: response)
             } catch {
-                print("sso error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "sso start-authenticate error", object: error)
             }
         }
     }
