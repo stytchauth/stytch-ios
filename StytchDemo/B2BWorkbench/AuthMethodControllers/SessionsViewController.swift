@@ -68,7 +68,7 @@ final class SessionsViewController: UIViewController {
         }
         Task {
             do {
-                let parameters = Sessions<B2BAuthenticateResponse>.ExchangeParameters(organizationID: organizationID)
+                let parameters = StytchB2BClientSessions.ExchangeParameters(organizationID: organizationID)
                 let response = try await StytchB2BClient.sessions.exchange(parameters: parameters)
                 UserDefaults.standard.set(organizationID, forKey: Constants.orgIdDefaultsKey)
                 orgIdTextField.text = ""

@@ -4,7 +4,7 @@ extension StytchB2BClient {
         case magicLinks(MagicLinksRoute)
         case organizations(OrganizationsRoute)
         case passwords(PasswordsRoute)
-        case sessions(SessionsRoute)
+        case sessions(B2BSessionsRoute)
         case sso(SSORoute)
         case events(EventsRoute)
         case bootstrap(BootstrapRoute)
@@ -167,6 +167,16 @@ extension StytchB2BClient {
             case let .fetch(publicToken):
                 return "projects/bootstrap".appendingPath(publicToken)
             }
+        }
+    }
+
+    enum B2BSessionsRoute: String, RouteType {
+        case authenticate
+        case revoke
+        case exchange
+
+        var path: Path {
+            .init(rawValue: rawValue)
         }
     }
 }
