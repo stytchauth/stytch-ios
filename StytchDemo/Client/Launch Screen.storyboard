@@ -23,7 +23,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ui-wordmark-light-mode" translatesAutoresizingMaskIntoConstraints="NO" id="lRe-LF-bCU">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="client-wordmark-light-mode" translatesAutoresizingMaskIntoConstraints="NO" id="lRe-LF-bCU">
                                 <rect key="frame" x="76.666666666666686" y="159" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="sLL-XL-DPg"/>
@@ -57,6 +57,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ui-wordmark-light-mode" width="850" height="160"/>
+        <image name="client-wordmark-light-mode" width="850" height="160"/>
     </resources>
 </document>

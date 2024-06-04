@@ -61,9 +61,11 @@ struct Environment {
 
     let sessionStorage: SessionStorage = .init()
 
-    let userStorage: UserStorage = .init()
+    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
 
-    let memberStorage: MemberStorage = .init()
+    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
+
+    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
 
     var localStorage: LocalStorage = .init()
 
