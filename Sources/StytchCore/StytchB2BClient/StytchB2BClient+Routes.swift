@@ -100,13 +100,19 @@ extension StytchB2BClient {
 
     enum OrganizationsRoute: RouteType {
         case base
+        case searchMembers
         case members(MembersRoute)
+        case organizationMembers(OrganizationMembersRoute)
 
         var path: Path {
             switch self {
             case .base:
                 return "me"
+            case .searchMembers:
+                return Path(rawValue: "me/members/search")
             case let .members(route):
+                return "members".appendingPath(route.path)
+            case let .organizationMembers(route):
                 return "members".appendingPath(route.path)
             }
         }
@@ -129,6 +135,35 @@ extension StytchB2BClient {
                     return Path(rawValue: "deletePhoneNumber")
                 case .deleteTOTP:
                     return Path(rawValue: "deleteTOTP")
+                case let .deletePassword(passwordId):
+                    return Path(rawValue: "passwords/\(passwordId)")
+                }
+            }
+        }
+
+        enum OrganizationMembersRoute: RouteType {
+            case create
+            case update(memberId: String)
+            case delete(memberId: String)
+            case reactivate(memberId: String)
+            case deletePhoneNumber(memberId: String)
+            case deleteTOTP(memberId: String)
+            case deletePassword(passwordId: String)
+
+            var path: Path {
+                switch self {
+                case .create:
+                    return Path(rawValue: "")
+                case let .update(memberId):
+                    return Path(rawValue: "update/\(memberId)")
+                case let .delete(memberId):
+                    return Path(rawValue: "\(memberId)")
+                case let .reactivate(memberId):
+                    return Path(rawValue: "\(memberId)/reactivate")
+                case let .deletePhoneNumber(memberId):
+                    return Path(rawValue: "deletePhoneNumber/\(memberId)")
+                case let .deleteTOTP(memberId):
+                    return Path(rawValue: "deleteTOTP/\(memberId)")
                 case let .deletePassword(passwordId):
                     return Path(rawValue: "passwords/\(passwordId)")
                 }

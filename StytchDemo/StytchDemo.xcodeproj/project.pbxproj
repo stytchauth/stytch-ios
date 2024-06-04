@@ -90,6 +90,7 @@
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
 		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
+		74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +178,7 @@
 		7478F7DA2BF6467900BCB233 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B2BWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
+		74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationMemberViewController.swift; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
 		77AC9C632AA0FF4A004059CF /* StytchDemo (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StytchDemo (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -243,6 +245,7 @@
 				2231531E299EE16D00BA9126 /* RootViewController.swift */,
 				2254779129A05C3E003DF229 /* AuthHomeViewController.swift */,
 				7478F7DA2BF6467900BCB233 /* Extensions.swift */,
+				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
 				2254779529A05C93003DF229 /* Constants.swift */,
 				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
 				22315320299EE16D00BA9126 /* Main.storyboard */,
@@ -320,6 +323,7 @@
 				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
 				2254779729A05D08003DF229 /* MemberViewController.swift */,
 				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
+				74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */,
 				22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */,
 				22ABFABA29F7690100927518 /* SSOViewController.swift */,
 			);
@@ -689,6 +693,7 @@
 				224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */,
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
+				74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
 				7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */,
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,

@@ -63,4 +63,54 @@ final class B2BOrganizationsTestCase: BaseTestCase {
             method: .delete
         )
     }
+
+    func testSearchMembers() async throws {
+        networkInterceptor.responses {
+            StytchB2BClient.Organizations.SearchMembersResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .mock
+            )
+        }
+
+        let query = StytchB2BClient.Organizations.SearchParameters.SearchQuery(
+            searchOperator: .AND,
+            searchOperands: []
+        )
+
+        let parameters = StytchB2BClient.Organizations.SearchParameters(
+            query: query,
+            cursor: nil,
+            limit: nil
+        )
+
+        _ = try await StytchB2BClient.organizations.searchMembers(parameters: parameters)
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/me/members/search",
+            method: .post([
+                "query": StytchCore.JSON.object(
+                    [
+                        "operator": StytchCore.JSON.string("AND"),
+                        "operands": StytchCore.JSON.array([]),
+                    ]
+                ),
+            ])
+        )
+    }
+}
+
+extension StytchB2BClient.Organizations.SearchResponseData {
+    static let mock: Self = .init(
+        members: [.mock],
+        resultsMetadata: .mock,
+        organizations: ["org123": .mock]
+    )
+}
+
+extension StytchB2BClient.Organizations.SearchResponseResultsMetadata {
+    static let mock: Self = .init(
+        total: 10,
+        nextCursor: nil
+    )
 }

@@ -46,6 +46,14 @@ public extension StytchB2BClient {
             try await router.delete(route: .base)
         }
 
+        // sourcery: AsyncVariants
+        /// Search for Members from the caller's organization. Submitting an empty query returns all non-deleted Members.
+        /// All fuzzy search filters require a minimum of three characters.
+        /// The caller must have permission to call this endpoint via the project's RBAC policy & their role assignments.
+        public func searchMembers(parameters: SearchParameters) async throws -> SearchMembersResponse {
+            try await router.post(to: .searchMembers, parameters: parameters)
+        }
+
         private func updatingCachedOrganization(_ performRequest: () async throws -> OrganizationResponse) async rethrows -> OrganizationResponse {
             let response = try await performRequest()
             organizationStorage.update(response.wrapped.organization)

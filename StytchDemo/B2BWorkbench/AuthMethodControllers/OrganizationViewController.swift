@@ -3,66 +3,84 @@ import StytchCore
 import UIKit
 
 final class OrganizationViewController: UIViewController {
-    private var cancellable: AnyCancellable?
+    let stackView = UIStackView.stytchB2BStackView()
+    var cancellable: AnyCancellable?
 
-    private let stackView: UIStackView = {
-        let view = UIStackView()
-        view.layoutMargins = Constants.insets
-        view.isLayoutMarginsRelativeArrangement = true
-        view.axis = .vertical
-        view.spacing = 8
-        return view
-    }()
-
-    private lazy var getButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Get"
-        return .init(configuration: configuration, primaryAction: getAction)
-    }()
-
-    private lazy var getSyncButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Get Sync"
-        return .init(configuration: configuration, primaryAction: getSyncAction)
-    }()
-
-    private lazy var deleteButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Delete"
-        return .init(configuration: configuration, primaryAction: deleteAction)
-    }()
-
-    private lazy var updateButton: UIButton = {
-        var configuration: UIButton.Configuration = .borderedProminent()
-        configuration.title = "Update"
-        return .init(configuration: configuration, primaryAction: updateAction)
-    }()
-
-    private lazy var getAction: UIAction = .init { [weak self] _ in
+    lazy var getButton: UIButton = .init(title: "Get", primaryAction: .init { [weak self] _ in
         self?.get()
+    })
+
+    lazy var getSyncButton: UIButton = .init(title: "Get Sync", primaryAction: .init { [weak self] _ in
+        self?.getSync()
+    })
+
+    lazy var deleteButton: UIButton = .init(title: "Delete", primaryAction: .init { [weak self] _ in
+        self?.delete()
+    })
+
+    lazy var updateButton: UIButton = .init(title: "Update", primaryAction: .init { [weak self] _ in
+        self?.update()
+    })
+
+    lazy var membersButton: UIButton = .init(title: "Members", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(OrganizationMemberViewController(), animated: true)
+    })
+
+    lazy var searchButton: UIButton = .init(title: "Search Members", primaryAction: .init { [weak self] _ in
+        self?.search()
+    })
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        title = "Organization"
+
+        view.backgroundColor = .systemBackground
+
+        view.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+
+        stackView.addArrangedSubview(getButton)
+        stackView.addArrangedSubview(getSyncButton)
+        stackView.addArrangedSubview(deleteButton)
+        stackView.addArrangedSubview(updateButton)
+        stackView.addArrangedSubview(membersButton)
+        stackView.addArrangedSubview(searchButton)
+
+        setUpOrganizationChangeListener()
+    }
+
+    func setUpOrganizationChangeListener() {
+        cancellable = StytchB2BClient.organizations.onOrganizationChange
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { organization in
+                print("OrganizationChangeListener Updated Organization: \(organization.name)")
+            }
     }
 
     func get() {
         Task {
             do {
                 let response = try await StytchB2BClient.organizations.get()
-                presentAlertWithTitle(alertTitle: "get organization response: \(response)")
+                presentAlertAndLogMessage(description: "get organization success!", object: response)
             } catch {
-                presentAlertWithTitle(alertTitle: "get organization error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "get organization error", object: error)
             }
         }
     }
 
-    private lazy var getSyncAction: UIAction = .init { [weak self] _ in
+    func getSync() {
         if let organization = StytchB2BClient.organizations.getSync() {
-            self?.presentAlertWithTitle(alertTitle: "getSyncAction organization: \(organization)")
+            presentAlertAndLogMessage(description: "getSyncAction organization", object: organization)
         } else {
-            self?.presentAlertWithTitle(alertTitle: "getSyncAction organization nil")
+            presentAlertWithTitle(alertTitle: "getSyncAction organization nil must get org from remote first")
         }
-    }
-
-    private lazy var deleteAction: UIAction = .init { [weak self] _ in
-        self?.delete()
     }
 
     func delete() {
@@ -70,15 +88,11 @@ final class OrganizationViewController: UIViewController {
             do {
                 let response = try await StytchB2BClient.organizations.delete()
                 UserDefaults.standard.set(nil, forKey: Constants.orgIdDefaultsKey)
-                presentAlertWithTitle(alertTitle: "delete organization response: \(response)")
+                presentAlertAndLogMessage(description: "delete organization success!", object: response)
             } catch {
-                presentAlertWithTitle(alertTitle: "delete organization error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "delete organization error", object: error)
             }
         }
-    }
-
-    private lazy var updateAction: UIAction = .init { [weak self] _ in
-        self?.update()
     }
 
     func update() {
@@ -102,42 +116,40 @@ final class OrganizationViewController: UIViewController {
                     rbacEmailImplicitRoleAssignments: nil
                 )
                 let response = try await StytchB2BClient.organizations.update(updateParameters: parameters)
-                presentAlertWithTitle(alertTitle: "update organization success")
+                presentAlertAndLogMessage(description: "update organization success", object: response)
             } catch {
-                presentAlertWithTitle(alertTitle: "update organization error: \(error.errorInfo)")
+                presentAlertAndLogMessage(description: "update organization error", object: error)
             }
         }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    func search() {
+        Task {
+            do {
+                var operands = [any SearchQueryOperand]()
+                if let operand = StytchB2BClient.Organizations.SearchParameters.searchQueryOperand(
+                    filterName: .memberEmails,
+                    filterValue: ["foo@stytch.com"]
+                ) {
+                    operands.append(operand)
+                }
 
-        title = "Organization"
+                let query = StytchB2BClient.Organizations.SearchParameters.SearchQuery(
+                    searchOperator: .AND,
+                    searchOperands: operands
+                )
 
-        view.backgroundColor = .systemBackground
+                let parameters = StytchB2BClient.Organizations.SearchParameters(
+                    query: query,
+                    cursor: nil,
+                    limit: nil
+                )
 
-        view.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-
-        stackView.addArrangedSubview(getButton)
-        stackView.addArrangedSubview(getSyncButton)
-        stackView.addArrangedSubview(deleteButton)
-        stackView.addArrangedSubview(updateButton)
-
-        setUpOrganizationChangeListener()
-    }
-
-    func setUpOrganizationChangeListener() {
-        cancellable = StytchB2BClient.organizations.onOrganizationChange
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { organization in
-                print("OrganizationChangeListener Updated Organization: \(organization.name)")
+                let response = try await StytchB2BClient.organizations.searchMembers(parameters: parameters)
+                presentAlertAndLogMessage(description: "search organization member success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "search organization members error", object: error)
             }
+        }
     }
 }
