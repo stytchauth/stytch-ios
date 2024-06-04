@@ -26,9 +26,9 @@ public struct StytchClient: StytchClientType {
     private init() {
         postInit()
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-          Task {
-            try await StytchClient.sessions.authenticate(parameters: .init())
-          }
+            Task {
+                try await Self.sessions.authenticate(parameters: .init())
+            }
         }
     }
 

@@ -20,9 +20,9 @@ public struct StytchB2BClient: StytchClientType {
     private init() {
         postInit()
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-          Task {
-            try await StytchB2BClient.sessions.authenticate(parameters: .init())
-          }
+            Task {
+                try await Self.sessions.authenticate(parameters: .init())
+            }
         }
     }
 
