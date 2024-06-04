@@ -1,5 +1,8 @@
 import Combine
 import Foundation
+#if os(iOS)
+import UIKit
+#endif
 
 /**
  The entrypoint for all Stytch-related interaction.
@@ -24,6 +27,13 @@ public struct StytchClient: StytchClientType {
 
     private init() {
         postInit()
+        #if os(iOS)
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
+            Task {
+                try await Self.sessions.authenticate(parameters: .init())
+            }
+        }
+        #endif
     }
 
     /**
