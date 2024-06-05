@@ -19,6 +19,9 @@ let package = Package(
             dependencies: [
                 .target(name: "StytchCore"),
                 .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
+            ],
+            resources: [
+                .process("PrivacyInfo.xcprivacy"),
             ]
         ),
         .target(
@@ -28,6 +31,7 @@ let package = Package(
             ],
             resources: [
                 .copy("DFPClient/dfp.html"),
+                .process("PrivacyInfo.xcprivacy"),
             ]
         ),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
