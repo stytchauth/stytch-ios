@@ -38,6 +38,8 @@ final class SessionsViewController: UIViewController {
         stackView.addArrangedSubview(UIView())
         stackView.addArrangedSubview(exchangeSessionButton)
         stackView.addArrangedSubview(orgIdTextField)
+
+        orgIdTextField.delegate = self
     }
 
     func authenticate() {
@@ -77,5 +79,12 @@ final class SessionsViewController: UIViewController {
                 presentAlertAndLogMessage(description: "exchange session error", object: error)
             }
         }
+    }
+}
+
+extension SessionsViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

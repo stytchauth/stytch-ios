@@ -38,11 +38,57 @@ extension StytchB2BClient {
 
     enum SSORoute: RouteType {
         case authenticate
+        case getConnections
+        case deleteConnection(connectionId: String)
+        case saml(SAMLRoute)
+        case oidc(OIDCRoute)
 
         var path: Path {
             switch self {
             case .authenticate:
                 return "authenticate"
+            case .getConnections:
+                return ""
+            case let .deleteConnection(connectionId):
+                return Path(rawValue: "\(connectionId)")
+            case let .saml(route):
+                return "saml".appendingPath(route.path)
+            case let .oidc(route):
+                return "oidc".appendingPath(route.path)
+            }
+        }
+
+        enum SAMLRoute: RouteType {
+            case createConnection
+            case updateConnection(connectionId: String)
+            case updateConnectionByURL(connectionId: String)
+            case deleteVerificationCertificate(connectionId: String, certificateId: String)
+
+            var path: Path {
+                switch self {
+                case .createConnection:
+                    return ""
+                case let .updateConnection(connectionId):
+                    return Path(rawValue: "\(connectionId)")
+                case let .updateConnectionByURL(connectionId):
+                    return Path(rawValue: "\(connectionId)/url")
+                case let .deleteVerificationCertificate(connectionId, certificateId):
+                    return Path(rawValue: "\(connectionId)/verification_certificates/\(certificateId)")
+                }
+            }
+        }
+
+        enum OIDCRoute: RouteType {
+            case createConnection
+            case updateConnection(connectionId: String)
+
+            var path: Path {
+                switch self {
+                case .createConnection:
+                    return ""
+                case let .updateConnection(connectionId):
+                    return Path(rawValue: "\(connectionId)")
+                }
             }
         }
     }

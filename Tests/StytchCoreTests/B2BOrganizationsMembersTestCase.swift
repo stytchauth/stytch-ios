@@ -102,6 +102,13 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
                 )
             )
         }
+
+        _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .totp(memberId: memberId))
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deleteTOTP/\(memberId)",
+            method: .delete
+        )
     }
 
     func testDeleteFactorPhoneNumber() async throws {
@@ -117,10 +124,17 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
                 )
             )
         }
+        _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .phoneNumber(memberId: memberId))
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deletePhoneNumber/\(memberId)",
+            method: .delete
+        )
     }
 
     func testDeleteFactorPassword() async throws {
         let memberId = "member_1234"
+        let passwordId = "password_1234"
         networkInterceptor.responses {
             StytchB2BClient.Organizations.Members.OrganizationMemberResponse(
                 requestId: "123",
@@ -132,5 +146,11 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
                 )
             )
         }
+        _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .password(passwordId: passwordId))
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/passwords/\(passwordId)",
+            method: .delete
+        )
     }
 }

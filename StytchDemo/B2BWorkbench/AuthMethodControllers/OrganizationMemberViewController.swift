@@ -59,6 +59,8 @@ class OrganizationMemberViewController: UIViewController {
         stackView.addArrangedSubview(deleteFactorTotpButton)
         stackView.addArrangedSubview(deleteFactorPhoneNumberButton)
         stackView.addArrangedSubview(deleteFactorPasswordButton)
+
+        memberIdTextField.delegate = self
     }
 
     func create() {
@@ -199,5 +201,12 @@ class OrganizationMemberViewController: UIViewController {
                 presentAlertAndLogMessage(description: "delete factor password from organization member error", object: error)
             }
         }
+    }
+}
+
+extension OrganizationMemberViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
