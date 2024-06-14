@@ -7,6 +7,10 @@ enum TextFieldAlertError: Error {
 }
 
 extension UIViewController {
+    var organizationId: String? {
+        UserDefaults.standard.string(forKey: Constants.orgIdDefaultsKey)
+    }
+
     func presentAlertWithTitle(
         alertTitle: String,
         buttonTitle: String = "OK",

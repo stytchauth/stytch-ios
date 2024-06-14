@@ -2,7 +2,7 @@ import Foundation
 
 #if !os(watchOS)
 public extension StytchB2BClient.SSO {
-    /// The interface for XYZ
+    /// The interface for interacting with SAML SSO.
     var saml: SAML {
         .init(router: router.scopedRouter { $0.saml })
     }

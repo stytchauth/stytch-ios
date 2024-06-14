@@ -6,8 +6,6 @@ final class PasswordsViewController: UIViewController {
 
     lazy var emailTextField: UITextField = .init(title: "Email", primaryAction: submitAction, keyboardType: .emailAddress)
 
-    lazy var orgIdTextField: UITextField = .init(title: "Organization ID", primaryAction: submitAction)
-
     lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: submitAction, keyboardType: .URL)
 
     lazy var passwordTextField: UITextField = .init(title: "Password", primaryAction: submitAction, password: true)
@@ -57,7 +55,6 @@ final class PasswordsViewController: UIViewController {
         toggleStackView.spacing = 8
 
         stackView.addArrangedSubview(emailTextField)
-        stackView.addArrangedSubview(orgIdTextField)
         stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(toggleStackView)
@@ -67,7 +64,6 @@ final class PasswordsViewController: UIViewController {
         stackView.addArrangedSubview(resetBySessionButton)
 
         emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
-        orgIdTextField.text = UserDefaults.standard.string(forKey: Constants.orgIdDefaultsKey)
         redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
 
         if StytchB2BClient.sessions.memberSession == nil {
@@ -75,7 +71,6 @@ final class PasswordsViewController: UIViewController {
         }
 
         emailTextField.delegate = self
-        orgIdTextField.delegate = self
         redirectUrlTextField.delegate = self
         passwordTextField.delegate = self
     }
@@ -223,7 +218,10 @@ final class PasswordsViewController: UIViewController {
     }
 
     func checkAndStoreTextFieldValues() -> (orgId: Organization.ID, password: String, email: String, redirectUrl: URL?)? {
-        guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return nil }
+        var orgizationID = ""
+        if let orgID = organizationId {
+            orgizationID = orgID
+        }
 
         let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:))
 
@@ -234,13 +232,8 @@ final class PasswordsViewController: UIViewController {
         if let email = emailTextField.text, !email.isEmpty {
             UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         }
-        if let orgId = orgIdTextField.text, !orgId.isEmpty {
-            UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
-        }
 
-        UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
-
-        return (.init(rawValue: orgId), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl)
+        return (.init(rawValue: orgizationID), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl)
     }
 }
 
