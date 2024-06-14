@@ -56,6 +56,8 @@ final class MemberViewController: UIViewController {
         stackView.addArrangedSubview(deleteTOTPButton)
 
         setUpMemberChangeListener()
+
+        nameTextField.delegate = self
     }
 
     func setUpMemberChangeListener() {
@@ -143,5 +145,12 @@ final class MemberViewController: UIViewController {
                 presentAlertAndLogMessage(description: "delete totp error", object: error)
             }
         }
+    }
+}
+
+extension MemberViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

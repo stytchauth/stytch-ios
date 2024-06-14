@@ -2,6 +2,10 @@ import Foundation
 import StytchCore
 import UIKit
 
+enum TextFieldAlertError: Error {
+    case emptyString
+}
+
 extension UIViewController {
     func presentAlertWithTitle(
         alertTitle: String,
@@ -33,6 +37,25 @@ extension UIViewController {
         present(alertController, animated: true)
     }
 
+    @MainActor
+    func presentTextFieldAlertWithTitle(alertTitle: String, buttonTitle: String = "Submit") async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            let alertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+            alertController.addTextField()
+
+            let submitAction = UIAlertAction(title: buttonTitle, style: .default) { [unowned alertController] _ in
+                if let text = alertController.textFields?[0].text, text.isEmpty == false {
+                    continuation.resume(returning: text)
+                } else {
+                    continuation.resume(returning: nil)
+                }
+            }
+
+            alertController.addAction(submitAction)
+            present(alertController, animated: true)
+        }
+    }
+
     func presentErrorWithDescription(error: Error, description: String) {
         presentAlertWithTitle(alertTitle: "\(description) - \(error.errorInfo)")
     }
@@ -40,7 +63,7 @@ extension UIViewController {
     func presentAlertAndLogMessage(description: String, object: Any) {
         if let error = object as? Error {
             presentAlertWithTitle(alertTitle: "\(description)\n\ncheck logs for more info")
-            print("\(description)\n\(error.errorInfo)\n")
+            print("\(description)\n\(error.errorInfo)\n\(error)\n")
         } else {
             presentAlertWithTitle(alertTitle: "\(description)\n\ncheck logs for more info")
             print("\(description)\n\(object)\n")

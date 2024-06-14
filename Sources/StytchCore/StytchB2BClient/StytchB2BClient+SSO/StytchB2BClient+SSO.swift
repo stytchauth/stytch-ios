@@ -3,6 +3,13 @@ import Foundation
 
 #if !os(watchOS)
 public extension StytchB2BClient {
+    /// The interface for interacting with SSO.
+    static var sso: SSO {
+        .init(router: router.scopedRouter { $0.sso })
+    }
+}
+
+public extension StytchB2BClient {
     /**
      * Single-Sign On (SSO) refers to the ability for a user to use a single identity to authenticate and gain access to
      * multiple apps and service. In the case of B2B, it generally refers for the ability to use a workplace identity
@@ -36,6 +43,16 @@ public extension StytchB2BClient {
                 to: .authenticate,
                 parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters)
             )
+        }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        public func getConnections() async throws -> GetConnectionsResponse {
+            try await router.get(route: .getConnections)
+        }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        public func deleteConnection(connectionId: String) async throws -> DeleteConnectionResponse {
+            try await router.delete(route: .deleteConnection(connectionId: connectionId))
         }
 
         @available(tvOS 16.0, *) // Comments must be below attributes
@@ -90,11 +107,6 @@ public extension StytchB2BClient {
             return url
         }
     }
-}
-
-public extension StytchB2BClient {
-    /// The interface for interacting with SSO.
-    static var sso: SSO { .init(router: router.scopedRouter { $0.sso }) }
 }
 
 public extension StytchB2BClient.SSO {
@@ -156,6 +168,23 @@ public extension StytchB2BClient.SSO {
             self.signupRedirectUrl = signupRedirectUrl
         }
         #endif
+    }
+}
+
+public extension StytchB2BClient.SSO {
+    typealias GetConnectionsResponse = Response<GetConnectionsResponseData>
+
+    struct GetConnectionsResponseData: Codable {
+        public let samlConnections: [SAML.SAMLConnection]
+        public let oidcConnections: [OIDC.OIDCConnection]
+    }
+}
+
+public extension StytchB2BClient.SSO {
+    typealias DeleteConnectionResponse = Response<DeleteConnectionResponseData>
+
+    struct DeleteConnectionResponseData: Codable {
+        public let connectionId: String
     }
 }
 #endif

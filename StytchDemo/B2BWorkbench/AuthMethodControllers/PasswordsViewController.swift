@@ -73,6 +73,11 @@ final class PasswordsViewController: UIViewController {
         if StytchB2BClient.sessions.memberSession == nil {
             resetBySessionButton.isHidden = true
         }
+
+        emailTextField.delegate = self
+        orgIdTextField.delegate = self
+        redirectUrlTextField.delegate = self
+        passwordTextField.delegate = self
     }
 
     func initiatePasswordReset(token: String) {
@@ -236,5 +241,12 @@ final class PasswordsViewController: UIViewController {
         UserDefaults.standard.set(orgId, forKey: Constants.orgIdDefaultsKey)
 
         return (.init(rawValue: orgId), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl)
+    }
+}
+
+extension PasswordsViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

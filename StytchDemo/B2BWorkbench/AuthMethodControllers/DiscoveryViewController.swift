@@ -43,6 +43,10 @@ final class DiscoveryViewController: UIViewController {
         stackView.addArrangedSubview(discoverButton)
         stackView.addArrangedSubview(exchangeSessionButton)
         stackView.addArrangedSubview(createOrgButton)
+
+        intermediateSessionTextField.delegate = self
+        orgIdTextField.delegate = self
+        orgNameTextField.delegate = self
     }
 
     func discover() {
@@ -90,5 +94,12 @@ final class DiscoveryViewController: UIViewController {
                 presentAlertAndLogMessage(description: "create organization error", object: error)
             }
         }
+    }
+}
+
+extension DiscoveryViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

@@ -245,7 +245,6 @@
 				2231531E299EE16D00BA9126 /* RootViewController.swift */,
 				2254779129A05C3E003DF229 /* AuthHomeViewController.swift */,
 				7478F7DA2BF6467900BCB233 /* Extensions.swift */,
-				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
 				2254779529A05C93003DF229 /* Constants.swift */,
 				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
 				22315320299EE16D00BA9126 /* Main.storyboard */,
@@ -838,6 +837,7 @@
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = B2B;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -873,6 +873,7 @@
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = B2B;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

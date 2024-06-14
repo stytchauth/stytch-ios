@@ -44,7 +44,7 @@ public extension StytchB2BClient.Organizations {
             case let .totp(memberId):
                 response = try await router.delete(route: .deleteTOTP(memberId: memberId))
             case let .phoneNumber(memberId):
-                response = try await router.delete(route: .deleteTOTP(memberId: memberId))
+                response = try await router.delete(route: .deletePhoneNumber(memberId: memberId))
             case let .password(passwordId):
                 response = try await router.delete(route: .deletePassword(passwordId: passwordId))
             }
