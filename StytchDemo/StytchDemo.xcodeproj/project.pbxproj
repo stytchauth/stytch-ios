@@ -93,6 +93,7 @@
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
 		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
+		74A2D1912C21FDF8007F8F20 /* OTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */; };
 		74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -182,6 +183,7 @@
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPViewController.swift; sourceTree = "<group>"; };
 		74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B2BWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
 		74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationMemberViewController.swift; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 				22ABFABA29F7690100927518 /* SSOViewController.swift */,
 				74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */,
 				74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */,
+				74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -710,6 +713,7 @@
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
 				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
 				22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */,
+				74A2D1912C21FDF8007F8F20 /* OTPViewController.swift in Sources */,
 				22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */,
 				2254779829A05D08003DF229 /* MemberViewController.swift in Sources */,
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,

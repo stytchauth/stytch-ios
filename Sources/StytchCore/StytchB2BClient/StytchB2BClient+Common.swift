@@ -48,6 +48,11 @@ public extension StytchB2BClient {
         case OPTIONAL
     }
 
+    enum MFAEnrollment: String, Codable {
+        case enroll
+        case unenroll
+    }
+
     struct RBACEmailImplicitRoleAssignments: Codable {
         let roleId: String
         let domain: String

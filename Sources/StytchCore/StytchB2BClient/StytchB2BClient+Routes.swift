@@ -10,6 +10,7 @@ extension StytchB2BClient {
         case bootstrap(BootstrapRoute)
         case searchManager(SearchManagerRoute)
         case totp(TOTPRoute)
+        case otp(OTPRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -38,6 +39,8 @@ extension StytchB2BClient {
                 return ("", route)
             case let .totp(route):
                 return ("totp", route)
+            case let .otp(route):
+                return ("otps", route)
             }
         }
     }
@@ -281,6 +284,20 @@ extension StytchB2BClient {
                 return ""
             case .authenticate:
                 return "authenticate"
+            }
+        }
+    }
+
+    enum OTPRoute: RouteType {
+        case send
+        case authenticate
+
+        var path: Path {
+            switch self {
+            case .send:
+                return "sms/send"
+            case .authenticate:
+                return "sms/authenticate"
             }
         }
     }
