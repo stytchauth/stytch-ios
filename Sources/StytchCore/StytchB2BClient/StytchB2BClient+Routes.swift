@@ -9,6 +9,7 @@ extension StytchB2BClient {
         case events(EventsRoute)
         case bootstrap(BootstrapRoute)
         case searchManager(SearchManagerRoute)
+        case totp(TOTPRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -35,6 +36,8 @@ extension StytchB2BClient {
                 return ("", route)
             case let .searchManager(route):
                 return ("", route)
+            case let .totp(route):
+                return ("totp", route)
             }
         }
     }
@@ -264,6 +267,20 @@ extension StytchB2BClient {
                 return "organizations/members/search"
             case .searchOrganization:
                 return "organizations/search"
+            }
+        }
+    }
+
+    enum TOTPRoute: RouteType {
+        case create
+        case authenticate
+
+        var path: Path {
+            switch self {
+            case .create:
+                return ""
+            case .authenticate:
+                return "authenticate"
             }
         }
     }

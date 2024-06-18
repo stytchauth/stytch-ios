@@ -34,10 +34,6 @@ class OrganizationMemberViewController: UIViewController {
         self?.deleteFactorPassword()
     })
 
-    var memberId: String? {
-        memberIdTextField.text
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Organization Member"
@@ -124,7 +120,7 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func reactivate() {
-        guard let memberId = memberId else {
+        guard let memberId = memberIdTextField.text else {
             presentAlertWithTitle(alertTitle: "Fill out member id text field")
             return
         }
@@ -140,7 +136,7 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func delete() {
-        guard let memberId = memberId else {
+        guard let memberId = memberIdTextField.text else {
             presentAlertWithTitle(alertTitle: "Fill out member id text field")
             return
         }
@@ -156,7 +152,7 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func deleteFactorTotp() {
-        guard let memberId = memberId else {
+        guard let memberId = memberIdTextField.text else {
             presentAlertWithTitle(alertTitle: "Fill out member id text field")
             return
         }
@@ -172,7 +168,7 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func deleteFactorPhoneNumber() {
-        guard let memberId = memberId else {
+        guard let memberId = memberIdTextField.text else {
             presentAlertWithTitle(alertTitle: "Fill out member id text field")
             return
         }
