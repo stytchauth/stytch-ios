@@ -11,6 +11,10 @@ extension UIViewController {
         UserDefaults.standard.string(forKey: Constants.orgIdDefaultsKey)
     }
 
+    var memberId: String? {
+        StytchB2BClient.member.getSync()?.id.rawValue
+    }
+
     func presentAlertWithTitle(
         alertTitle: String,
         buttonTitle: String = "OK",

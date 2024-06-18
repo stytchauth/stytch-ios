@@ -39,6 +39,10 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(SearchManagerViewController(), animated: true)
     })
 
+    lazy var totpButton: UIButton = .init(title: "TOTP", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(TOTPViewController(), animated: true)
+    })
+
     func saveOrgID() {
         UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
     }
@@ -67,6 +71,7 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(memberButton)
         stackView.addArrangedSubview(organizationButton)
         stackView.addArrangedSubview(searchManagerButton)
+        stackView.addArrangedSubview(totpButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {
