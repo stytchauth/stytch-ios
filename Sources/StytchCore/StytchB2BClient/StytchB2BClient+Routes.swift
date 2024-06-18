@@ -8,6 +8,7 @@ extension StytchB2BClient {
         case sso(SSORoute)
         case events(EventsRoute)
         case bootstrap(BootstrapRoute)
+        case searchManager(SearchManagerRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -31,6 +32,8 @@ extension StytchB2BClient {
             case let .bootstrap(route):
                 return ("", route)
             case let .events(route):
+                return ("", route)
+            case let .searchManager(route):
                 return ("", route)
             }
         }
@@ -247,6 +250,20 @@ extension StytchB2BClient {
             switch self {
             case let .fetch(publicToken):
                 return "projects/bootstrap".appendingPath(publicToken)
+            }
+        }
+    }
+
+    enum SearchManagerRoute: RouteType {
+        case searchMember
+        case searchOrganization
+
+        var path: Path {
+            switch self {
+            case .searchMember:
+                return "organizations/members/search"
+            case .searchOrganization:
+                return "organizations/search"
             }
         }
     }

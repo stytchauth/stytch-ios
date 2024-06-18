@@ -1,7 +1,5 @@
 import Foundation
 
-// swiftlint:disable identifier_name
-
 public extension StytchB2BClient.Organizations {
     /// The dedicated parameters type for the update organization call.
     struct UpdateParameters: Codable {
@@ -9,17 +7,17 @@ public extension StytchB2BClient.Organizations {
         let organizationSlug: String?
         let organizationLogoUrl: String?
         let ssoDefaultConnectionId: String?
-        let ssoJitProvisioning: SsoJitProvisioning?
+        let ssoJitProvisioning: StytchB2BClient.SsoJitProvisioning?
         let ssoJitProvisioningAllowedConnections: [String]?
         let emailAllowedDomains: [String]?
-        var emailJitProvisioning: EmailJitProvisioning?
-        var emailInvites: EmailInvites?
-        var authMethods: AuthMethods?
-        var allowedAuthMethods: [AllowedAuthMethods]?
-        var mfaMethods: MfaMethods?
-        var allowedMfaMethods: [MfaMethod]?
-        var mfaPolicy: MfaPolicy?
-        var rbacEmailImplicitRoleAssignments: [RBACEmailImplicitRoleAssignments]?
+        var emailJitProvisioning: StytchB2BClient.EmailJitProvisioning?
+        var emailInvites: StytchB2BClient.EmailInvites?
+        var authMethods: StytchB2BClient.AuthMethods?
+        var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
+        var mfaMethods: StytchB2BClient.MfaMethods?
+        var allowedMfaMethods: [StytchB2BClient.MfaMethod]?
+        var mfaPolicy: StytchB2BClient.MfaPolicy?
+        var rbacEmailImplicitRoleAssignments: [StytchB2BClient.RBACEmailImplicitRoleAssignments]?
 
         /// The dedicated parameters type for the update organization call.
         /// - Parameters:
@@ -43,17 +41,17 @@ public extension StytchB2BClient.Organizations {
             organizationSlug: String? = nil,
             organizationLogoUrl: String? = nil,
             ssoDefaultConnectionId: String? = nil,
-            ssoJitProvisioning: StytchB2BClient.Organizations.SsoJitProvisioning? = nil,
+            ssoJitProvisioning: StytchB2BClient.SsoJitProvisioning? = nil,
             ssoJitProvisioningAllowedConnections: [String]? = nil,
             emailAllowedDomains: [String]? = nil,
-            emailJitProvisioning: StytchB2BClient.Organizations.EmailJitProvisioning? = nil,
-            emailInvites: StytchB2BClient.Organizations.EmailInvites? = nil,
-            authMethods: StytchB2BClient.Organizations.AuthMethods? = nil,
-            allowedAuthMethods: [StytchB2BClient.Organizations.AllowedAuthMethods]? = nil,
-            mfaMethods: StytchB2BClient.Organizations.MfaMethods? = nil,
-            allowedMfaMethods: [StytchB2BClient.Organizations.MfaMethod]? = nil,
-            mfaPolicy: StytchB2BClient.Organizations.MfaPolicy? = nil,
-            rbacEmailImplicitRoleAssignments: [RBACEmailImplicitRoleAssignments]? = nil
+            emailJitProvisioning: StytchB2BClient.EmailJitProvisioning? = nil,
+            emailInvites: StytchB2BClient.EmailInvites? = nil,
+            authMethods: StytchB2BClient.AuthMethods? = nil,
+            allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]? = nil,
+            mfaMethods: StytchB2BClient.MfaMethods? = nil,
+            allowedMfaMethods: [StytchB2BClient.MfaMethod]? = nil,
+            mfaPolicy: StytchB2BClient.MfaPolicy? = nil,
+            rbacEmailImplicitRoleAssignments: [StytchB2BClient.RBACEmailImplicitRoleAssignments]? = nil
         ) {
             self.organizationName = organizationName
             self.organizationSlug = organizationSlug
@@ -70,61 +68,6 @@ public extension StytchB2BClient.Organizations {
             self.allowedMfaMethods = allowedMfaMethods
             self.mfaPolicy = mfaPolicy
             self.rbacEmailImplicitRoleAssignments = rbacEmailImplicitRoleAssignments
-        }
-    }
-
-    enum SsoJitProvisioning: String, Codable {
-        case ALL_ALLOWED
-        case RESTRICTED
-        case NOT_ALLOWED
-    }
-
-    enum EmailJitProvisioning: String, Codable {
-        case RESTRICTED
-        case NOT_ALLOWED
-    }
-
-    enum EmailInvites: String, Codable {
-        case ALL_ALLOWED
-        case RESTRICTED
-        case NOT_ALLOWED
-    }
-
-    enum AuthMethods: String, Codable {
-        case ALL_ALLOWED
-        case RESTRICTED
-    }
-
-    enum AllowedAuthMethods: String, Codable {
-        case SSO = "sso"
-        case MAGIC_LINK = "magic_link"
-        case PASSWORD = "password"
-        case GOOGLE_OAUTH = "google_oauth"
-        case MICROSOFT_OAUTH = "microsoft_oauth"
-    }
-
-    enum MfaMethods: String, Codable {
-        case ALL_ALLOWED
-        case RESTRICTED
-    }
-
-    enum MfaMethod: String, Codable {
-        case SMS = "sms_otp"
-        case TOTP = "totp"
-    }
-
-    enum MfaPolicy: String, Codable {
-        case REQUIRED_FOR_ALL
-        case OPTIONAL
-    }
-
-    struct RBACEmailImplicitRoleAssignments: Codable {
-        var roleId: String
-        var domain: String
-
-        public init(roleId: String, domain: String) {
-            self.roleId = roleId
-            self.domain = domain
         }
     }
 }

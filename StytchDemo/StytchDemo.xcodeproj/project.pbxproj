@@ -87,6 +87,7 @@
 		53E1282C2B50092F00976CAC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E1282B2B50092F00976CAC /* Preview Assets.xcassets */; };
 		53E128402B50092F00976CAC /* StytchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E1283F2B50092F00976CAC /* StytchUITests.swift */; };
 		53E128422B50092F00976CAC /* StytchUILaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128412B50092F00976CAC /* StytchUILaunchTests.swift */; };
+		74234D4C2C21E1240001DA69 /* SearchManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */; };
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
 		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
@@ -174,6 +175,7 @@
 		53E1283F2B50092F00976CAC /* StytchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUITests.swift; sourceTree = "<group>"; };
 		53E128412B50092F00976CAC /* StytchUILaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUILaunchTests.swift; sourceTree = "<group>"; };
 		53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StytchUIDemo.xctestplan; sourceTree = "<group>"; };
+		74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManagerViewController.swift; sourceTree = "<group>"; };
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */,
 				22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */,
 				22ABFABA29F7690100927518 /* SSOViewController.swift */,
+				74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -692,6 +695,7 @@
 				224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */,
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
+				74234D4C2C21E1240001DA69 /* SearchManagerViewController.swift in Sources */,
 				74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
 				7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */,

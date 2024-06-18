@@ -3,6 +3,10 @@ import UIKit
 final class AuthHomeViewController: UIViewController {
     let stackView = UIStackView.stytchB2BStackView()
 
+    lazy var orgIdTextField: UITextField = .init(title: "Organization ID", primaryAction: .init { [weak self] _ in
+        self?.saveOrgID()
+    })
+
     lazy var emlButton: UIButton = .init(title: "Email Magic Links", primaryAction: .init { [weak self] _ in
         self?.navigationController?.pushViewController(MagicLinksViewController(), animated: true)
     })
@@ -31,6 +35,14 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(OrganizationViewController(), animated: true)
     })
 
+    lazy var searchManagerButton: UIButton = .init(title: "Search Manager", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(SearchManagerViewController(), animated: true)
+    })
+
+    func saveOrgID() {
+        UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,6 +58,7 @@ final class AuthHomeViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
+        stackView.addArrangedSubview(orgIdTextField)
         stackView.addArrangedSubview(emlButton)
         stackView.addArrangedSubview(passwordsButton)
         stackView.addArrangedSubview(discoveryButton)
@@ -53,5 +66,23 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(sessionsButton)
         stackView.addArrangedSubview(memberButton)
         stackView.addArrangedSubview(organizationButton)
+        stackView.addArrangedSubview(searchManagerButton)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        orgIdTextField.text = organizationId
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        saveOrgID()
+    }
+}
+
+extension AuthHomeViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

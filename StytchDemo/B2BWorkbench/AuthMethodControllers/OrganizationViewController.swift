@@ -26,8 +26,8 @@ final class OrganizationViewController: UIViewController {
         self?.navigationController?.pushViewController(OrganizationMemberViewController(), animated: true)
     })
 
-    lazy var searchButton: UIButton = .init(title: "Search Members", primaryAction: .init { [weak self] _ in
-        self?.search()
+    lazy var searchMembersButton: UIButton = .init(title: "Search Members", primaryAction: .init { [weak self] _ in
+        self?.searchMembers()
     })
 
     override func viewDidLoad() {
@@ -50,7 +50,7 @@ final class OrganizationViewController: UIViewController {
         stackView.addArrangedSubview(deleteButton)
         stackView.addArrangedSubview(updateButton)
         stackView.addArrangedSubview(membersButton)
-        stackView.addArrangedSubview(searchButton)
+        stackView.addArrangedSubview(searchMembersButton)
 
         setUpOrganizationChangeListener()
     }
@@ -123,7 +123,7 @@ final class OrganizationViewController: UIViewController {
         }
     }
 
-    func search() {
+    func searchMembers() {
         Task {
             do {
                 var operands = [any SearchQueryOperand]()

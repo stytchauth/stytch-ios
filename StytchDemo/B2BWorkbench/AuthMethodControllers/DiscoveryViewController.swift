@@ -6,8 +6,6 @@ final class DiscoveryViewController: UIViewController {
 
     lazy var intermediateSessionTextField: UITextField = .init(title: "Intermediate Session Token", primaryAction: submitAction)
 
-    lazy var orgIdTextField: UITextField = .init(title: "Org Id", primaryAction: submitAction)
-
     lazy var orgNameTextField: UITextField = .init(title: "Org Name", primaryAction: submitAction)
 
     lazy var discoverButton: UIButton = .init(title: "Discover", primaryAction: submitAction)
@@ -38,14 +36,12 @@ final class DiscoveryViewController: UIViewController {
         ])
 
         stackView.addArrangedSubview(intermediateSessionTextField)
-        stackView.addArrangedSubview(orgIdTextField)
         stackView.addArrangedSubview(orgNameTextField)
         stackView.addArrangedSubview(discoverButton)
         stackView.addArrangedSubview(exchangeSessionButton)
         stackView.addArrangedSubview(createOrgButton)
 
         intermediateSessionTextField.delegate = self
-        orgIdTextField.delegate = self
         orgNameTextField.delegate = self
     }
 
@@ -66,7 +62,7 @@ final class DiscoveryViewController: UIViewController {
 
     func exchangeSession() {
         guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
-        guard let orgId = orgIdTextField.text, !orgId.isEmpty else { return }
+        guard let orgId = organizationId else { return }
 
         Task {
             do {
