@@ -60,14 +60,12 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func create() {
-        presentTextFieldAlertWithTitle(alertTitle: "Enter email of new member!", buttonTitle: "Create Member") { [weak self] memberEmail in
-            self?.createMember(memberEmail: memberEmail)
-        }
-    }
-
-    func createMember(memberEmail: String) {
         Task {
             do {
+                guard let memberEmail = try await presentTextFieldAlertWithTitle(alertTitle: "Enter email of new member!", buttonTitle: "Create Member") else {
+                    throw TextFieldAlertError.emptyString
+                }
+
                 let parameters = StytchB2BClient.Organizations.Members.CreateParameters(
                     emailAddress: memberEmail,
                     name: nil,
@@ -87,18 +85,16 @@ class OrganizationMemberViewController: UIViewController {
     }
 
     func update() {
-        presentTextFieldAlertWithTitle(alertTitle: "Enter new name for member!", buttonTitle: "Update Member") { [weak self] memberName in
-            self?.update(memberName: memberName)
-        }
-    }
-
-    func update(memberName: String) {
         guard let memberId = StytchB2BClient.member.getSync()?.id.rawValue else {
             return
         }
 
         Task {
             do {
+                guard let memberName = try await presentTextFieldAlertWithTitle(alertTitle: "Enter new name for member!", buttonTitle: "Update Member") else {
+                    throw TextFieldAlertError.emptyString
+                }
+
                 let parameters = StytchB2BClient.Organizations.Members.UpdateParameters(
                     memberId: memberId,
                     name: memberName,

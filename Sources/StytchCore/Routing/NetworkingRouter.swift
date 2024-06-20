@@ -38,6 +38,12 @@ public struct NetworkingRouter<Route: RouteType> {
 }
 
 public extension NetworkingRouter {
+    func post<Response: Decodable>(
+        to route: Route
+    ) async throws -> Response {
+        try await performRequest(.post(nil), route: route)
+    }
+
     func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters

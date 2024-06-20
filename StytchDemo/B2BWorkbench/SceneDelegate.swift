@@ -34,10 +34,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         print("discovery authResponse: \(authResponse)")
                     }
                 case let .manualHandlingRequired(_, token):
-                    let appViewController = window?.rootViewController as? AppViewController
-                    if let passwordsViewController = appViewController?.viewControllers.last as? PasswordsViewController {
-                        passwordsViewController.initiatePasswordReset(token: token)
+                    if let navigationController = window?.rootViewController as? UINavigationController,
+                       let passwordsViewController = navigationController.viewControllers.last as? PasswordsViewController
+                    {
+                        passwordsViewController.resetPassword(token: token)
                     }
+
                 case .notHandled:
                     break
                 }

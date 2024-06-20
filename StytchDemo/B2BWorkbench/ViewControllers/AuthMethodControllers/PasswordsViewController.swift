@@ -28,6 +28,10 @@ final class PasswordsViewController: UIViewController {
         self?.resetBySession()
     })
 
+    lazy var resetByExistingPasswordButton: UIButton = .init(title: "Reset by Existing Password", primaryAction: .init { [weak self] _ in
+        self?.resetByExistingPassword()
+    })
+
     lazy var secureToggle: UISwitch = {
         let toggle = UISwitch(frame: .zero, primaryAction: .init { [weak self] _ in
             guard let self else { return }
@@ -62,6 +66,7 @@ final class PasswordsViewController: UIViewController {
         stackView.addArrangedSubview(checkStrengthButton)
         stackView.addArrangedSubview(resetByEmailStartButton)
         stackView.addArrangedSubview(resetBySessionButton)
+        stackView.addArrangedSubview(resetByExistingPasswordButton)
 
         emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
         redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
@@ -75,19 +80,12 @@ final class PasswordsViewController: UIViewController {
         passwordTextField.delegate = self
     }
 
-    func initiatePasswordReset(token: String) {
-        let controller = UIAlertController(title: "Reset Password", message: nil, preferredStyle: .alert)
-        controller.addTextField { $0.placeholder = "New password" }
-        controller.addAction(.init(title: "Submit", style: .default) { [weak self, unowned controller] _ in
-            guard let newPassword = controller.textFields?.first?.text, !newPassword.isEmpty else { return }
-            self?.resetPassword(token: token, newPassword: newPassword)
-        })
-        controller.addAction(.init(title: "Cancel", style: .cancel))
-        present(controller, animated: true)
-    }
-
     func authenticate() {
-        guard let values = checkAndStoreTextFieldValues() else {
+        guard let values = checkAndStoreTextFieldValues(),
+              values.password.isEmpty == false,
+              values.email.isEmpty == false
+        else {
+            presentAlertWithTitle(alertTitle: "Missing email, password or redirect url. Check missing fields and try again.")
             return
         }
 
@@ -132,15 +130,18 @@ final class PasswordsViewController: UIViewController {
     }
 
     func resetByEmailStart() {
-        guard let values = checkAndStoreTextFieldValues() else { return }
+        guard let values = checkAndStoreTextFieldValues() else {
+            presentAlertWithTitle(alertTitle: "Missing email, password or redirect url. Check missing fields and try again.")
+            return
+        }
+
         Task {
             do {
                 let response = try await StytchB2BClient.passwords.resetByEmailStart(
                     parameters: .init(
                         organizationId: values.orgId,
                         email: values.email,
-                        resetPasswordUrl:
-                        values.redirectUrl
+                        resetPasswordUrl: values.redirectUrl
                     )
                 )
                 presentAlertAndLogMessage(description: "reset by email success - check your email!", object: response)
@@ -152,6 +153,7 @@ final class PasswordsViewController: UIViewController {
 
     func resetBySession() {
         guard let values = checkAndStoreTextFieldValues() else {
+            presentAlertWithTitle(alertTitle: "Missing email, password or redirect url. Check missing fields and try again.")
             return
         }
 
@@ -172,38 +174,38 @@ final class PasswordsViewController: UIViewController {
 
     func resetByExistingPassword() {
         guard let values = checkAndStoreTextFieldValues() else {
+            presentAlertWithTitle(alertTitle: "Missing email, password or redirect url. Check missing fields and try again.")
             return
         }
 
-        let resetPasswordWithNewPassword: (String) -> Void = { [weak self] newPassword in
-            Task {
-                do {
-                    let response = try await StytchB2BClient.passwords.resetByExistingPassword(
-                        parameters: .init(
-                            organizationId: values.orgId,
-                            email: values.email,
-                            existingPassword: values.password,
-                            newPassword: newPassword
-                        )
-                    )
-                    self?.presentAlertAndLogMessage(description: "reset by existing password success!", object: response)
-                } catch {
-                    self?.presentAlertAndLogMessage(description: "reset by existing password error", object: error)
-                }
-            }
-        }
-
-        let controller = UIAlertController(title: "Enter New Password", message: nil, preferredStyle: .alert)
-        controller.addTextField { $0.placeholder = "New password" }
-        controller.addAction(.init(title: "Cancel", style: .cancel))
-        controller.addAction(.init(title: "OK", style: .default) { [unowned controller] _ in
-            resetPasswordWithNewPassword(controller.textFields![0].text ?? "")
-        })
-    }
-
-    func resetPassword(token: String, newPassword: String) {
         Task {
             do {
+                guard let newPassword = try await presentTextFieldAlertWithTitle(alertTitle: "Enter New Password") else {
+                    throw TextFieldAlertError.emptyString
+                }
+
+                let response = try await StytchB2BClient.passwords.resetByExistingPassword(
+                    parameters: .init(
+                        organizationId: values.orgId,
+                        email: values.email,
+                        existingPassword: values.password,
+                        newPassword: newPassword
+                    )
+                )
+                presentAlertAndLogMessage(description: "reset by existing password success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "reset by existing password error", object: error)
+            }
+        }
+    }
+
+    func resetPassword(token: String) {
+        Task {
+            do {
+                guard let newPassword = try await presentTextFieldAlertWithTitle(alertTitle: "Reset Password") else {
+                    throw TextFieldAlertError.emptyString
+                }
+
                 let response = try await StytchB2BClient.passwords.resetByEmail(
                     parameters: .init(
                         token: token,

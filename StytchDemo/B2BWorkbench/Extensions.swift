@@ -31,7 +31,8 @@ extension UIViewController {
     func presentTextFieldAlertWithTitle(
         alertTitle: String,
         buttonTitle: String = "Submit",
-        completion: ((String) -> Void)? = nil
+        cancelButtonTitle: String = "Cancel",
+        completion: ((String?) -> Void)? = nil
     ) {
         let alertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
         alertController.addTextField()
@@ -41,12 +42,20 @@ extension UIViewController {
                 completion?(text)
             }
         }
+        alertController.addAction(.init(title: cancelButtonTitle, style: .cancel, handler: { _ in
+            completion?(nil)
+        }))
+
         alertController.addAction(submitAction)
         present(alertController, animated: true)
     }
 
     @MainActor
-    func presentTextFieldAlertWithTitle(alertTitle: String, buttonTitle: String = "Submit") async throws -> String? {
+    func presentTextFieldAlertWithTitle(
+        alertTitle: String,
+        buttonTitle: String = "Submit",
+        cancelButtonTitle: String = "Cancel"
+    ) async throws -> String? {
         try await withCheckedThrowingContinuation { continuation in
             let alertController = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
             alertController.addTextField()
@@ -60,6 +69,11 @@ extension UIViewController {
             }
 
             alertController.addAction(submitAction)
+
+            alertController.addAction(.init(title: cancelButtonTitle, style: .cancel, handler: { _ in
+                continuation.resume(returning: nil)
+            }))
+
             present(alertController, animated: true)
         }
     }
