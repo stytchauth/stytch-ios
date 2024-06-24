@@ -11,6 +11,7 @@ extension StytchB2BClient {
         case searchManager(SearchManagerRoute)
         case totp(TOTPRoute)
         case otp(OTPRoute)
+        case recoveryCodes(RecoveryCodesRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -41,6 +42,8 @@ extension StytchB2BClient {
                 return ("totp", route)
             case let .otp(route):
                 return ("otps", route)
+            case let .recoveryCodes(route):
+                return ("recovery_codes", route)
             }
         }
     }
@@ -298,6 +301,23 @@ extension StytchB2BClient {
                 return "sms/send"
             case .authenticate:
                 return "sms/authenticate"
+            }
+        }
+    }
+
+    enum RecoveryCodesRoute: RouteType {
+        case get
+        case rotate
+        case recover
+
+        var path: Path {
+            switch self {
+            case .get:
+                return ""
+            case .rotate:
+                return "rotate"
+            case .recover:
+                return "recover"
             }
         }
     }

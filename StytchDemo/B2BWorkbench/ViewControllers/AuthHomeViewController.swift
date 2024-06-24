@@ -47,6 +47,10 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(OTPViewController(), animated: true)
     })
 
+    lazy var recoveryCodesButton: UIButton = .init(title: "Recovery Codes", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(RecoveryCodesViewController(), animated: true)
+    })
+
     func saveOrgID() {
         UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
     }
@@ -77,6 +81,7 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(searchManagerButton)
         stackView.addArrangedSubview(totpButton)
         stackView.addArrangedSubview(otpButton)
+        stackView.addArrangedSubview(recoveryCodesButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {

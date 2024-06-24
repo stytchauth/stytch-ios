@@ -39,7 +39,7 @@ func XCTAssertRequest(
 enum XCTHTTPMethod {
     case get
     case delete
-    case post(JSON)
+    case post(JSON?)
     case put(JSON)
 
     var stringValue: String {
@@ -57,7 +57,9 @@ enum XCTHTTPMethod {
 
     var body: JSON? {
         switch self {
-        case let .post(body), let .put(body):
+        case let .put(body):
+            return body
+        case let .post(body):
             return body
         case .get, .delete:
             return nil
