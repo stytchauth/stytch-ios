@@ -31,7 +31,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case .auth:
                         print("auth response: \(response)")
                     case let .discovery(authResponse):
-                        print("discovery authResponse: \(authResponse)")
+                        print("discovery auth response: \(authResponse)")
+                    case let .discoveryOauth(authResponse):
+                        print("discovery oauth response: \(authResponse)")
                     }
                 case let .manualHandlingRequired(_, token):
                     if let navigationController = window?.rootViewController as? UINavigationController,

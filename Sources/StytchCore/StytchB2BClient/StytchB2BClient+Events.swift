@@ -130,10 +130,12 @@ public extension StytchB2BClient.Events {
     struct Parameters {
         let eventName: String
         let details: [String: String]?
+        let error: Error?
 
-        public init(eventName: String, details: [String: String]? = nil) {
+        public init(eventName: String, details: [String: String]? = nil, error: Error? = nil) {
             self.eventName = eventName
             self.details = details
+            self.error = error
         }
     }
 }

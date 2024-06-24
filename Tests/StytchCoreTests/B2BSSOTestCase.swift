@@ -5,12 +5,12 @@ import XCTest
 final class B2BSSOTestCase: BaseTestCase {
     @available(tvOS 16.0, *)
     func testStart() async throws {
-        Current.webAuthSessionClient = .init { params in
+        Current.webAuthenticationSessionClient = .init { params in
             ("random-token", try XCTUnwrap(URL(string: "\(params.callbackUrlScheme)://something")))
         }
         var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
 
-        let createParams: (URL) -> StytchB2BClient.SSO.StartParameters = { url in
+        let createConfiguration: (URL) -> StytchB2BClient.SSO.WebAuthenticationConfiguration = { url in
             .init(
                 connectionId: "connection-id:123",
                 loginRedirectUrl: url.appendingPathComponent("/login"),
@@ -18,18 +18,18 @@ final class B2BSSOTestCase: BaseTestCase {
             )
         }
 
-        let invalidStartParams = createParams(baseUrl)
+        let invalidStartParams = createConfiguration(baseUrl)
 
         await XCTAssertThrowsErrorAsync(
-            try await StytchB2BClient.sso.start(parameters: invalidStartParams),
+            try await StytchB2BClient.sso.start(configuration: invalidStartParams),
             StytchSDKError.invalidRedirectScheme
         )
 
         baseUrl = try XCTUnwrap(URL(string: "custom-scheme://blah"))
 
-        let validStartParams = createParams(baseUrl)
+        let validStartParams = createConfiguration(baseUrl)
 
-        let (token, url) = try await StytchB2BClient.sso.start(parameters: validStartParams)
+        let (token, url) = try await StytchB2BClient.sso.start(configuration: validStartParams)
         XCTAssertEqual(token, "random-token")
         XCTAssertEqual(url.absoluteString, "custom-scheme://something")
     }

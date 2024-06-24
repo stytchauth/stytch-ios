@@ -1,7 +1,7 @@
 import StytchCore
 import XCTest
 
-func XCTAssertThrowsErrorAsync<T, R>(
+func XCTAssertThrowsErrorAsync<T, R: Error>(
     _ expression: @autoclosure () async throws -> T,
     _ errorThrown: @autoclosure () -> R,
     _ message: @autoclosure () -> String = "This method should fail",

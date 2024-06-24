@@ -4,15 +4,15 @@ import Combine
 import Foundation
 
 #if !os(watchOS)
-public extension StytchClient.OAuth.ThirdParty {
+public extension StytchB2BClient.OAuth.ThirdParty.Discovery {
     /// Initiates the OAuth flow by using the included parameters to generate a URL and start an `ASWebAuthenticationSession`.
     /// **NOTE:** The user will be prompted for permission to use "stytch.com" to sign in — you may want to inform your users of this expectation.
     /// The user will see an in-app browser—with shared sessions from their default browser—which will dismiss after completing the authentication challenge with the identity provider.
     /// 
     /// **Usage:**
     /// ``` swift
-    /// let (token, url) = try await StytchClient.oauth.google.start(parameters: parameters)
-    /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
+    /// let (token, url) = try await StytchB2BClient.oauth.discovery.google.start(parameters: parameters)
+    /// let authResponse = try await StytchB2BClient.oauth.discovery.authenticate(parameters: .init(token: token))
     /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
     /// ```
     /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
@@ -33,8 +33,8 @@ public extension StytchClient.OAuth.ThirdParty {
     /// 
     /// **Usage:**
     /// ``` swift
-    /// let (token, url) = try await StytchClient.oauth.google.start(parameters: parameters)
-    /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
+    /// let (token, url) = try await StytchB2BClient.oauth.discovery.google.start(parameters: parameters)
+    /// let authResponse = try await StytchB2BClient.oauth.discovery.authenticate(parameters: .init(token: token))
     /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
     /// ```
     /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.

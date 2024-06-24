@@ -74,7 +74,7 @@ struct Environment {
     var keychainClient: KeychainClient = .live
 
     #if !os(watchOS)
-    private var _webAuthSessionClient: Any? = {
+    private var _webAuthenticationSessionClient: Any? = {
         if #available(tvOS 16.0, *) {
             return WebAuthenticationSessionClient.live
         }
@@ -82,10 +82,10 @@ struct Environment {
     }()
 
     @available(tvOS 16.0, *)
-    var webAuthSessionClient: WebAuthenticationSessionClient {
+    var webAuthenticationSessionClient: WebAuthenticationSessionClient {
         // swiftlint:disable:next force_cast
-        get { _webAuthSessionClient as! WebAuthenticationSessionClient }
-        set { _webAuthSessionClient = newValue }
+        get { _webAuthenticationSessionClient as! WebAuthenticationSessionClient }
+        set { _webAuthenticationSessionClient = newValue }
     }
 
     private var _passkeysClent: Any? = {
@@ -117,18 +117,6 @@ struct Environment {
         runloop.add(timer, forMode: .common)
         return timer
     }
-
-    #if !os(watchOS)
-    var openUrl: (URL) -> Void = { url in
-        DispatchQueue.main.async {
-            #if os(macOS)
-            NSWorkspace.shared.open(url)
-            #else
-            UIApplication.shared.open(url)
-            #endif
-        }
-    }
-    #endif
 
     var initializationState: InitializationState = .init()
 }

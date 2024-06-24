@@ -139,7 +139,7 @@ class ThirdPartyOAuthSpy: ThirdPartyOAuthProviderProtocol {
         self.callback = callback
     }
 
-    func start(parameters _: StytchClient.OAuth.ThirdParty.WebAuthSessionStartParameters) async throws -> (token: String, url: URL) {
+    func start(configuration _: StytchClient.OAuth.ThirdParty.WebAuthenticationConfiguration) async throws -> (token: String, url: URL) {
         callback(.oauthThirdPartyStart)
         // swiftlint:disable:next force_unwrapping
         return ("", .init(string: "oauth-url")!)
