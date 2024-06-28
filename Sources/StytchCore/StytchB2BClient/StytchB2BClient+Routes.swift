@@ -12,6 +12,7 @@ extension StytchB2BClient {
         case totp(TOTPRoute)
         case otp(OTPRoute)
         case recoveryCodes(RecoveryCodesRoute)
+        case oauthRoute(OAuthRoute)
 
         var path: Path {
             let (base, next) = routeComponents
@@ -44,6 +45,8 @@ extension StytchB2BClient {
                 return ("otps", route)
             case let .recoveryCodes(route):
                 return ("recovery_codes", route)
+            case let .oauthRoute(route):
+                return ("oauth", route)
             }
         }
     }
@@ -329,6 +332,31 @@ extension StytchB2BClient {
 
         var path: Path {
             .init(rawValue: rawValue)
+        }
+    }
+
+    enum OAuthRoute: RouteType {
+        case authenticate
+        case discoveryRoute(DiscoveryRoute)
+
+        var path: Path {
+            switch self {
+            case .authenticate:
+                return "authenticate"
+            case let .discoveryRoute(route):
+                return "discovery".appendingPath(route.path)
+            }
+        }
+
+        enum DiscoveryRoute: RouteType {
+            case authenticate
+
+            var path: Path {
+                switch self {
+                case .authenticate:
+                    return "authenticate"
+                }
+            }
         }
     }
 }

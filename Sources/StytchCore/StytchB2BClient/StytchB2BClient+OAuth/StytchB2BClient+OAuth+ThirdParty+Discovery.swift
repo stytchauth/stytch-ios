@@ -2,15 +2,16 @@ import AuthenticationServices
 import Foundation
 
 #if !os(watchOS)
-public protocol ThirdPartyOAuthProviderProtocol {
-    @available(tvOS 16.0, *)
-    func start(configuration: StytchClient.OAuth.ThirdParty.WebAuthenticationConfiguration) async throws -> (token: String, url: URL)
+public extension StytchB2BClient.OAuth.ThirdParty {
+    /// The interface for interacting with OAuth products.
+    var discovery: Discovery {
+        .init(provider: provider)
+    }
 }
 
-public extension StytchClient.OAuth {
+public extension StytchB2BClient.OAuth.ThirdParty {
     // sourcery: ExcludeWatchOS
-    struct ThirdParty: ThirdPartyOAuthProviderProtocol {
-        /// The SDK provides the ability to integrate with third-party identity providers for OAuth experiences beyond the natively-supported Sign In With Apple flow.
+    struct Discovery {
         let provider: Provider
 
         @available(tvOS 16.0, *) // Comments must be below attributes
@@ -21,8 +22,8 @@ public extension StytchClient.OAuth {
         ///
         /// **Usage:**
         /// ``` swift
-        /// let (token, url) = try await StytchClient.oauth.google.start(parameters: parameters)
-        /// let authResponse = try await StytchClient.oauth.authenticate(parameters: .init(token: token))
+        /// let (token, url) = try await StytchB2BClient.oauth.discovery.google.start(parameters: parameters)
+        /// let authResponse = try await StytchB2BClient.oauth.discovery.authenticate(parameters: .init(token: token))
         /// // You can parse the returned `url` value to understand whether this authentication was a login or a signup.
         /// ```
         /// - Returns: A tuple containing an authentication token, for use in the ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd`` method as well as the redirect url to inform whether this authentication was a login or signup.
@@ -33,12 +34,12 @@ public extension StytchClient.OAuth {
     }
 }
 
-public extension StytchClient.OAuth.ThirdParty {
+public extension StytchB2BClient.OAuth.ThirdParty.Discovery {
     struct WebAuthenticationConfiguration: WebAuthenticationSessionClientConfiguration {
-        let loginRedirectUrl: URL?
-        let signupRedirectUrl: URL?
+        let discoveryRedirectUrl: URL?
         let customScopes: [String]?
-        public let clientType: ClientType = .consumer
+        let providerParams: [String: String]?
+        public let clientType: ClientType = .b2b
 
         #if !os(tvOS)
         /// You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
@@ -46,34 +47,38 @@ public extension StytchClient.OAuth.ThirdParty {
         #endif
 
         /// - Parameters:
-        ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
-        ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+        ///   - discoveryRedirectUrl: The URL that Stytch redirects to after the OAuth flow is completed for the
+        ///     member to perform discovery actions. This URL should be an endpoint in the backend server that verifies the
+        ///     request by querying Stytch's /oauth/discovery/authenticate endpoint and finishes the login. The URL should be
+        ///     configured as a Discovery URL in the Stytch Dashboard's Redirect URL page. If the field is not specified,
+        ///     the default in the Dashboard is used.
         ///   - customScopes: Any additional scopes to be requested from the identity provider.
+        ///   - providerParams: An optional mapping of provider specific values to pass through to the OAuth provider
         public init(
-            loginRedirectUrl: URL? = nil,
-            signupRedirectUrl: URL? = nil,
-            customScopes: [String]? = nil
+            discoveryRedirectUrl: URL? = nil,
+            customScopes: [String]? = nil,
+            providerParams: [String: String]? = nil
         ) {
-            self.loginRedirectUrl = loginRedirectUrl
-            self.signupRedirectUrl = signupRedirectUrl
+            self.discoveryRedirectUrl = discoveryRedirectUrl
             self.customScopes = customScopes
+            self.providerParams = providerParams
         }
 
         public func startUrl(_ providerName: String) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
 
             let queryParameters: [(String, String?)] = [
-                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
+                ("pkce_code_challenge", try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
                 ("public_token", publicToken),
-                ("login_redirect_url", loginRedirectUrl?.absoluteString),
-                ("signup_redirect_url", signupRedirectUrl?.absoluteString),
                 ("custom_scopes", customScopes?.joined(separator: " ")),
+                ("provider_params", providerParams?.toURLParameters()),
+                ("discovery_redirect_url", discoveryRedirectUrl?.absoluteString),
             ]
 
             let domain = Current.localStorage.stytchDomain(publicToken)
-            guard let url = URL(string: "https://\(domain)/v1/public/oauth/\(providerName)/start")?.appending(queryParameters: queryParameters) else {
+            guard let url = URL(string: "https://\(domain)/v1/b2b/public/oauth/\(providerName)/discovery/start")?.appending(queryParameters: queryParameters) else {
                 throw StytchSDKError.invalidStartURL
             }
 
@@ -81,35 +86,11 @@ public extension StytchClient.OAuth.ThirdParty {
         }
 
         public func callbackUrlScheme() throws -> String {
-            guard let callbackScheme = loginRedirectUrl?.scheme, callbackScheme == signupRedirectUrl?.scheme, !callbackScheme.hasPrefix("http") else {
+            guard let callbackScheme = discoveryRedirectUrl?.scheme, !callbackScheme.hasPrefix("http") else {
                 throw StytchSDKError.invalidRedirectScheme
             }
             return callbackScheme
         }
-    }
-}
-
-public extension StytchClient.OAuth.ThirdParty {
-    enum Provider: String, CaseIterable, Codable {
-        case amazon
-        case bitbucket
-        case coinbase
-        case discord
-        case facebook
-        case figma
-        case github
-        case gitlab
-        case google
-        case linkedin
-        case microsoft
-        case salesforce
-        case slack
-        case snapchat
-        case spotify
-        case tiktok
-        case twitch
-        case twitter
-        case yahoo
     }
 }
 #endif

@@ -51,6 +51,10 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(RecoveryCodesViewController(), animated: true)
     })
 
+    lazy var oauthButton: UIButton = .init(title: "OAuth", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(OAuthViewController(), animated: true)
+    })
+
     func saveOrgID() {
         UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
     }
@@ -82,6 +86,7 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(totpButton)
         stackView.addArrangedSubview(otpButton)
         stackView.addArrangedSubview(recoveryCodesButton)
+        stackView.addArrangedSubview(oauthButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {

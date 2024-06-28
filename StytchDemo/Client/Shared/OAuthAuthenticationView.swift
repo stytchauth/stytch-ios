@@ -43,7 +43,7 @@ struct OAuthAuthenticationView: View {
             Task {
                 do {
                     let (token, _) = try await provider.interface.start(
-                        parameters: .init(
+                        configuration: .init(
                             loginRedirectUrl: URL(string: "stytch-authentication://login")!,
                             signupRedirectUrl: URL(string: "stytch-authentication://signup")!
                         )

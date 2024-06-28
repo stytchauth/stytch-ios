@@ -92,7 +92,7 @@ final class SSOViewController: UIViewController {
         Task {
             do {
                 let (token, _) = try await StytchB2BClient.sso.start(
-                    parameters: .init(
+                    configuration: .init(
                         connectionId: connectionId,
                         loginRedirectUrl: redirectUrl,
                         signupRedirectUrl: redirectUrl

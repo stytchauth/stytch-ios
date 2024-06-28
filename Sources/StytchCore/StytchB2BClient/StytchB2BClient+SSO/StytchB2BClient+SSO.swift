@@ -24,12 +24,6 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<SSORoute>
 
         @Dependency(\.keychainClient) private var keychainClient
-        @Dependency(\.localStorage) private var localStorage
-
-        @available(tvOS 16.0, *)
-        private var webAuthSessionClient: WebAuthenticationSessionClient {
-            Current.webAuthSessionClient
-        }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
@@ -58,53 +52,65 @@ public extension StytchB2BClient {
         @available(tvOS 16.0, *) // Comments must be below attributes
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Start an SSO authentication flow.
-        public func start(parameters: StartParameters) async throws -> (token: String, url: URL) {
-            guard let callbackScheme = parameters.loginRedirectUrl.scheme, callbackScheme == parameters.signupRedirectUrl.scheme, !callbackScheme.hasPrefix("http") else {
-                throw StytchSDKError.invalidRedirectScheme
-            }
-            let url = try generateStartUrl(
-                connectionId: parameters.connectionId,
-                loginRedirectUrl: parameters.loginRedirectUrl,
-                signupRedirectUrl: parameters.signupRedirectUrl
-            )
-            #if !os(tvOS)
-            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(
-                url: url,
-                callbackUrlScheme: callbackScheme,
-                presentationContextProvider: parameters.presentationContextProvider ?? WebAuthenticationSessionClient.DefaultPresentationProvider(),
-                clientType: ClientType.b2b
-            )
-            #else
-            let webClientParams: WebAuthenticationSessionClient.Parameters = .init(url: url, callbackUrlScheme: callbackScheme, clientType: ClientType.b2b)
-            #endif
-            return try await webAuthSessionClient.initiate(parameters: webClientParams)
+        public func start(configuration: WebAuthenticationConfiguration) async throws -> (token: String, url: URL) {
+            let parameters = try configuration.webAuthenticationSessionClientParameters(providerName: "")
+            return try await Current.webAuthenticationSessionClient.initiate(parameters: parameters)
+        }
+    }
+}
+
+public extension StytchB2BClient.SSO {
+    struct WebAuthenticationConfiguration: WebAuthenticationSessionClientConfiguration {
+        let connectionId: String?
+        let loginRedirectUrl: URL?
+        let signupRedirectUrl: URL?
+        public let clientType: ClientType = .b2b
+
+        #if !os(tvOS)
+        /// You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
+        public var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
+        #endif
+
+        /// - Parameters:
+        ///   - connectionId: The ID of the SSO connection to use for the login flow.
+        ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+        ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+        public init(
+            connectionId: String? = nil,
+            loginRedirectUrl: URL? = nil,
+            signupRedirectUrl: URL? = nil
+        ) {
+            self.connectionId = connectionId
+            self.loginRedirectUrl = loginRedirectUrl
+            self.signupRedirectUrl = signupRedirectUrl
         }
 
-        private func generateStartUrl(
-            connectionId: String,
-            loginRedirectUrl: URL,
-            signupRedirectUrl: URL
-        ) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+        public func startUrl(_: String) throws -> URL {
+            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.B2BSDKNotConfigured
             }
 
-            let queryParameters = [
-                ("connection_id", connectionId),
-                ("pkce_code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
+            let queryParameters: [(String, String?)] = [
+                ("pkce_code_challenge", try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
                 ("public_token", publicToken),
-                ("login_redirect_url", loginRedirectUrl.absoluteString),
-                ("signup_redirect_url", signupRedirectUrl.absoluteString),
+                ("connection_id", connectionId),
+                ("login_redirect_url", loginRedirectUrl?.absoluteString),
+                ("signup_redirect_url", signupRedirectUrl?.absoluteString),
             ]
 
-            let cnameDomain = localStorage.bootstrapData?.cnameDomain
-            let stytchDomain = publicToken.hasPrefix("public-token-test") ? "test.stytch.com" : "api.stytch.com"
-
-            guard
-                let url = URL(string: "https://\(cnameDomain ?? stytchDomain)/v1/public/sso/start")?.appending(queryParameters: queryParameters)
-            else { throw StytchSDKError.invalidStartURL }
+            let domain = Current.localStorage.stytchDomain(publicToken)
+            guard let url = URL(string: "https://\(domain)/v1/public/sso/start")?.appending(queryParameters: queryParameters) else {
+                throw StytchSDKError.invalidStartURL
+            }
 
             return url
+        }
+
+        public func callbackUrlScheme() throws -> String {
+            guard let callbackScheme = loginRedirectUrl?.scheme, callbackScheme == signupRedirectUrl?.scheme, !callbackScheme.hasPrefix("http") else {
+                throw StytchSDKError.invalidRedirectScheme
+            }
+            return callbackScheme
         }
     }
 }
@@ -127,47 +133,6 @@ public extension StytchB2BClient.SSO {
             self.token = token
             self.sessionDuration = sessionDuration
         }
-    }
-
-    /// A dedicated parameters type for SSO `start` calls.
-    struct StartParameters {
-        let connectionId: String
-        let loginRedirectUrl: URL
-        let signupRedirectUrl: URL
-        #if !os(tvOS)
-        let presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
-
-        /// - Parameters:
-        ///   - connectionId: The ID of the SSO connection to use for the login flow.
-        ///   - loginRedirectUrl: The url an existing member is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
-        ///   - signupRedirectUrl: The url a new member is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
-        ///   - presentationContextProvider: You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
-        public init(
-            connectionId: String,
-            loginRedirectUrl: URL,
-            signupRedirectUrl: URL,
-            presentationContextProvider: ASWebAuthenticationPresentationContextProviding? = nil
-        ) {
-            self.connectionId = connectionId
-            self.loginRedirectUrl = loginRedirectUrl
-            self.signupRedirectUrl = signupRedirectUrl
-            self.presentationContextProvider = presentationContextProvider
-        }
-        #else
-        /// - Parameters:
-        ///   - connectionId: The ID of the SSO connection to use for the login flow.
-        ///   - loginRedirectUrl: The url an existing member is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
-        ///   - signupRedirectUrl: The url a new member is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
-        public init(
-            connectionId: String,
-            loginRedirectUrl: URL,
-            signupRedirectUrl: URL
-        ) {
-            self.connectionId = connectionId
-            self.loginRedirectUrl = loginRedirectUrl
-            self.signupRedirectUrl = signupRedirectUrl
-        }
-        #endif
     }
 }
 
