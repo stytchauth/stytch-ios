@@ -45,9 +45,9 @@ public struct StytchB2BClientSessions {
 
     /// If your app has cookies disabled or simply receives updated session tokens from your backend via means other than
     /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
-    /// and persistent storage are kept up-to-date. You should include both the opaque token and the jwt.
-    public func update(sessionTokens tokens: [SessionToken]) {
-        tokens.forEach(sessionStorage.updatePersistentStorage)
+    /// and persistent storage are kept up-to-date. You are required to include both the opaque token and the jwt.
+    public func update(sessionTokens: SessionTokens) {
+        sessionTokens.updatePersistentStorage(sessionStorage: sessionStorage)
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

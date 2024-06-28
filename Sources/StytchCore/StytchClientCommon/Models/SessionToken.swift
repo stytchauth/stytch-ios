@@ -43,3 +43,23 @@ public struct SessionToken: Equatable {
         .init(kind: .opaque, value: value)
     }
 }
+
+/// A public interface to require the caller to explicitly pass one of each type of non nil token in order to update a session.
+public struct SessionTokens {
+    let jwt: SessionToken
+    let opaque: SessionToken
+
+    init?(jwt: SessionToken, opaque: SessionToken) {
+        if jwt.kind != .jwt, opaque.kind != .opaque {
+            return nil
+        }
+
+        self.jwt = jwt
+        self.opaque = opaque
+    }
+
+    func updatePersistentStorage(sessionStorage: SessionStorage) {
+        sessionStorage.updatePersistentStorage(token: jwt)
+        sessionStorage.updatePersistentStorage(token: opaque)
+    }
+}
