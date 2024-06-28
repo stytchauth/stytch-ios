@@ -91,9 +91,12 @@ final class SessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
-        StytchClient.sessions.update(sessionTokens: [.opaque("token"), .jwt("jwt")])
-
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("token"))
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
+        if let tokens = SessionTokens(jwt: .jwt("jwt"), opaque: .opaque("token")) {
+            StytchClient.sessions.update(sessionTokens: tokens)
+            XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("token"))
+            XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
+        } else {
+            XCTFail("SessionTokens should not be nil")
+        }
     }
 }
