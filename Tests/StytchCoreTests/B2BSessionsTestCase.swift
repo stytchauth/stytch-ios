@@ -54,9 +54,12 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
         XCTAssertNil(StytchB2BClient.sessions.sessionJwt)
 
-        StytchB2BClient.sessions.update(sessionTokens: [.opaque("token"), .jwt("jwt")])
-
-        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("token"))
-        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("jwt"))
+        if let tokens = SessionTokens(jwt: .jwt("jwt"), opaque: .opaque("token")) {
+            StytchB2BClient.sessions.update(sessionTokens: tokens)
+            XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("token"))
+            XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("jwt"))
+        } else {
+            XCTFail("SessionTokens should not be nil")
+        }
     }
 }
