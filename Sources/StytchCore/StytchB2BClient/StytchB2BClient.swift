@@ -89,6 +89,16 @@ public struct StytchB2BClient: StytchClientType {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        case .oauth:
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .auth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
+        case .discoveryOauth:
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .discoveryOauth(oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: token))))
         #endif
         }
     }
@@ -117,6 +127,8 @@ public extension StytchB2BClient {
         case multiTenantPasswords = "multi_tenant_passwords"
         #if !os(watchOS)
         case sso
+        case oauth
+        case discoveryOauth = "discovery_oauth"
         #endif
     }
 
@@ -124,5 +136,8 @@ public extension StytchB2BClient {
     enum DeeplinkResponse {
         case auth(B2BAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
+        #if !os(watchOS)
+        case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
+        #endif
     }
 }

@@ -12,6 +12,7 @@ public struct Member: Codable {
     public let ssoRegistrations: [SSORegistration]
     public let trustedMetadata: JSON
     public let untrustedMetadata: JSON
+    public let memberPasswordId: String
 
     let memberId: ID
 }
@@ -28,6 +29,13 @@ public extension Member {
             let rawValue = try container.decode(String.self)
             self = .init(rawValue: rawValue) ?? .unknown
         }
+    }
+
+    /// The authentication factors which are able to be managed via member-management calls.
+    enum AuthenticationFactor {
+        case totp
+        case phoneNumber
+        case password(passwordId: String)
     }
 }
 

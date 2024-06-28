@@ -1,6 +1,6 @@
 import Foundation
 
-internal enum ClientType {
+public enum ClientType {
     case consumer
     case b2b
 }

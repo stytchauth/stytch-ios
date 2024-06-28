@@ -38,6 +38,12 @@ public struct NetworkingRouter<Route: RouteType> {
 }
 
 public extension NetworkingRouter {
+    func post<Response: Decodable>(
+        to route: Route
+    ) async throws -> Response {
+        try await performRequest(.post(nil), route: route)
+    }
+
     func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
         parameters: Parameters
@@ -96,11 +102,9 @@ public extension NetworkingRouter {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
+        let url = configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+        let (data, response) = try await networkingClient.performRequest(method, url: url)
 
-        let (data, response) = try await networkingClient.performRequest(
-            method,
-            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
-        )
         do {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
@@ -113,7 +117,7 @@ public extension NetworkingRouter {
                     ],
                     hostUrl: configuration.hostUrl
                 )
-                userStorage.updateUser(sessionResponse.user)
+                userStorage.update(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionStorage.updateSession(
                     .member(sessionResponse.memberSession),

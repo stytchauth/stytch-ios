@@ -35,7 +35,7 @@ extension OAuthViewModel: OAuthViewModelProtocol {
         case let .thirdParty(provider):
             if let oauth = state.config.oauth {
                 let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
-                    parameters: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
+                    configuration: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
                 )
                 let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
                 StytchUIClient.onAuthCallback?(response)
