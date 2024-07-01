@@ -1,0 +1,144 @@
+{
+    "data": {
+        "disable_sdk_watermark": false,
+        "email_domains": [
+            "test.stytch.com"
+        ],
+        "cname_domain": null,
+        "captcha_settings": {
+            "enabled": false
+        },
+        "pkce_required_for_email_magic_links": false,
+        "pkce_required_for_oauth": false,
+        "pkce_required_for_password_resets": false,
+        "pkce_required_for_sso": false,
+        "slug_pattern": null,
+        "create_organization_enabled": false,
+        "password_config": null,
+        "dfp_protected_auth_enabled": false,
+        "dfp_protected_auth_mode": null,
+        "rbac_policy": {
+            "roles": [
+                {
+                    "role_id": "stytch_member",
+                    "description": "Granted to all Members upon creation; grants permissions already implicitly granted to logged in Members via the SDK. Cannot be deleted.",
+                    "permissions": [
+                        {
+                            "resource_id": "stytch.self",
+                            "actions": [
+                                "*"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "role_id": "stytch_admin",
+                    "description": "Granted to Members who create an organization through the Stytch discovery flow. Admins will also have the stytch_member role. Cannot be deleted.",
+                    "permissions": [
+                        {
+                            "resource_id": "stytch.organization",
+                            "actions": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "resource_id": "stytch.member",
+                            "actions": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "resource_id": "stytch.sso",
+                            "actions": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "resource_id": "stytch.scim",
+                            "actions": [
+                                "*"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "resources": [
+                {
+                    "resource_id": "stytch.organization",
+                    "description": "Builtin resource for Stytch organization objects",
+                    "actions": [
+                        "update.info.name",
+                        "update.info.slug",
+                        "update.info.logo-url",
+                        "update.settings.allowed-auth-methods",
+                        "update.settings.allowed-mfa-methods",
+                        "update.settings.email-jit-provisioning",
+                        "update.settings.email-invites",
+                        "update.settings.allowed-domains",
+                        "update.settings.default-sso-connection",
+                        "update.settings.sso-jit-provisioning",
+                        "update.settings.mfa-policy",
+                        "update.settings.implicit-roles",
+                        "delete"
+                    ]
+                },
+                {
+                    "resource_id": "stytch.member",
+                    "description": "Builtin resource for Stytch member objects",
+                    "actions": [
+                        "create",
+                        "update.info.name",
+                        "update.info.untrusted-metadata",
+                        "update.info.mfa-phone",
+                        "update.info.delete.mfa-phone",
+                        "update.info.delete.mfa-totp",
+                        "update.info.delete.password",
+                        "update.info.unlink.retired-email",
+                        "update.settings.is-breakglass",
+                        "update.settings.mfa-enrolled",
+                        "update.settings.default-mfa-method",
+                        "update.settings.roles",
+                        "search",
+                        "delete"
+                    ]
+                },
+                {
+                    "resource_id": "stytch.sso",
+                    "description": "Builtin resource for Stytch SSO Connection objects",
+                    "actions": [
+                        "create",
+                        "get",
+                        "update",
+                        "delete"
+                    ]
+                },
+                {
+                    "resource_id": "stytch.self",
+                    "description": "Builtin resource for the logged-in Stytch member object",
+                    "actions": [
+                        "update.info.name",
+                        "update.info.untrusted-metadata",
+                        "update.info.mfa-phone",
+                        "update.info.delete.mfa-phone",
+                        "update.info.delete.password",
+                        "update.info.unlink.retired-email",
+                        "update.info.delete.mfa-totp",
+                        "update.settings.mfa-enrolled",
+                        "update.settings.default-mfa-method",
+                        "delete"
+                    ]
+                },
+                {
+                    "resource_id": "stytch.scim",
+                    "description": "Builtin resource for Stytch SCIM Connection objects",
+                    "actions": [
+                        "create",
+                        "get",
+                        "update",
+                        "delete"
+                    ]
+                }
+            ]
+        }
+    }
+}

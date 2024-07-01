@@ -18,6 +18,7 @@ public protocol BootstrapResponseDataType {
     var createOrganizationEnabled: Bool { get }
     var dfpProtectedAuthEnabled: Bool { get }
     var dfpProtectedAuthMode: DFPProtectedAuthMode? { get }
+    var rbacPolicy: RBACPolicy? { get }
 }
 
 /// The underlying data for `bootstrap` calls.
@@ -34,6 +35,7 @@ public struct BootstrapResponseData: Codable, BootstrapResponseDataType {
     public let createOrganizationEnabled: Bool
     public let dfpProtectedAuthEnabled: Bool
     public let dfpProtectedAuthMode: DFPProtectedAuthMode?
+    public let rbacPolicy: RBACPolicy?
 }
 
 public struct CaptchaSettings: Codable {
