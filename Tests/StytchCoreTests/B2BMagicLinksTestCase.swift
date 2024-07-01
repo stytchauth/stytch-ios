@@ -195,6 +195,22 @@ extension MemberSession {
             expiresAt: refDate.advanced(by: 60 * 60 * 24),
             authenticationFactors: [],
             customClaims: nil,
+            roles: ["reader"],
+            memberSessionId: "mem_session_123"
+        )
+    }()
+
+    static let mockWithAdminRole: Self = {
+        let refDate = Date()
+        return .init(
+            organizationId: Organization.mock.id,
+            memberId: Member.mock.id,
+            startedAt: refDate,
+            lastAccessedAt: refDate,
+            expiresAt: refDate.advanced(by: 60 * 60 * 24),
+            authenticationFactors: [],
+            customClaims: nil,
+            roles: ["organization_admin"],
             memberSessionId: "mem_session_123"
         )
     }()
