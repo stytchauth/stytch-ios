@@ -15,8 +15,14 @@ extension StytchB2BClient {
         case oauthRoute(OAuthRoute)
 
         var path: Path {
-            let (base, next) = routeComponents
-            return "b2b".appendingPath(base).appendingPath(next.path)
+            switch self {
+            case let .bootstrap(route):
+                let (base, next) = routeComponents
+                return base.appendingPath(next.path)
+            default:
+                let (base, next) = routeComponents
+                return "b2b".appendingPath(base).appendingPath(next.path)
+            }
         }
 
         private var routeComponents: (base: Path, next: RouteType) {

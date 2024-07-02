@@ -40,6 +40,27 @@ class BaseTestCase: XCTestCase {
 
         networkInterceptor.reset()
     }
+    
+    func loadData(_ fileName: String, extensionType: String) -> Data? {
+        /*
+        guard let url = Bundle(for: type(of: self)).url(forResource: fileName, withExtension: extensionType) else {
+            return nil
+        }
+
+        return try? Data(contentsOf: url)
+        */
+            
+        /*
+        var returnData: Data? = nil
+        for bundle in Bundle.allBundles {
+            if let url = bundle.url(forResource: fileName, withExtension: extensionType), let data = try? Data(contentsOf: url) {
+                returnData = data
+                break
+            }
+        }
+        return returnData
+         */
+    }
 }
 
 extension Sequence {

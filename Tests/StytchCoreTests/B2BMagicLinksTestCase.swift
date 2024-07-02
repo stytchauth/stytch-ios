@@ -195,6 +195,7 @@ extension MemberSession {
             expiresAt: refDate.advanced(by: 60 * 60 * 24),
             authenticationFactors: [],
             customClaims: nil,
+            roles: [],
             memberSessionId: "mem_session_123"
         )
     }()
