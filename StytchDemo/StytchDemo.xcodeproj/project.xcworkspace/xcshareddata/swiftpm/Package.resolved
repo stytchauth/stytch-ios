@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor/jwt-kit.git",
         "state": {
           "branch": null,
-          "revision": "87ce13a1df913ba4d51cf00606df7ef24d455571",
-          "version": "4.7.0"
+          "revision": "c2595b9ad7f512d7f334830b4df1fed6e917946a",
+          "version": "4.13.4"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
         "state": {
           "branch": null,
-          "revision": "0fd43eb71d215afd0f9453d8e94200c9d6faf28a",
-          "version": "3.5.10"
+          "revision": "6edd6e38a30aec087cb97f7377edf876c29a427e",
+          "version": "3.5.9"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "92a04c10fc5ce0504f8396aac7392126033e547c",
-          "version": "2.2.2"
+          "revision": "46072478ca365fe48370993833cb22de9b41567f",
+          "version": "3.5.2"
         }
       },
       {
