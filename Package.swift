@@ -10,8 +10,8 @@ let package = Package(
         .library(name: "StytchUI", targets: ["StytchUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMinor(from: "3.5.9")),
-        .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", from: "18.4.0"),
+        .package(url: "https://github.com/marmelroy/PhoneNumberKit", .exact("3.5.9")),
+        .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", .exact("18.4.0")),
     ],
     targets: [
         .target(
