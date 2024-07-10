@@ -23,11 +23,11 @@ protocol StytchClientType {
 
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
+    static var utils: Utils { get }
+
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 
     func runBootstrapping()
-
-    static var utils: Utils { get }
 }
 
 extension StytchClientType {
