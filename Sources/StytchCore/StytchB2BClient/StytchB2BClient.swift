@@ -140,4 +140,6 @@ public extension StytchB2BClient {
         case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
         #endif
     }
+
+    static var utils: Utils { Current.utils }
 }

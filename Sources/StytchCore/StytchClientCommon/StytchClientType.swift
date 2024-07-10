@@ -1,6 +1,20 @@
 import Combine
 import Foundation
 
+public struct PKCEPair {
+    let codeChallenge: String?
+    let codeVerifier: String?
+
+    init(codeChallenge: String?, codeVerifier: String?) {
+        self.codeChallenge = codeChallenge
+        self.codeVerifier = codeVerifier
+    }
+}
+
+public protocol Utils {
+    func getPKCEPair() -> PKCEPair
+}
+
 protocol StytchClientType {
     associatedtype DeeplinkResponse
     associatedtype DeeplinkTokenType
@@ -12,6 +26,8 @@ protocol StytchClientType {
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 
     func runBootstrapping()
+
+    static var utils: Utils { get }
 }
 
 extension StytchClientType {
@@ -70,10 +86,10 @@ extension StytchClientType {
     // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
     static func generateAndStorePKCE(keychainItem: KeychainClient.Item) throws -> (challenge: String, method: String) {
         let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-
+        let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
         try keychainClient.set(codeVerifier, for: keychainItem)
-
-        return (cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
+        try keychainClient.set(codeChallenge, for: .codeChallengePKCE)
+        return (codeVerifier, "S256")
     }
 
     mutating func postInit() {

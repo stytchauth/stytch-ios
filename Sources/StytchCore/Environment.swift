@@ -106,6 +106,8 @@ struct Environment {
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
     #endif
+    var utils: Utils = UtilsImpl(keychainClient: .live)
+
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init

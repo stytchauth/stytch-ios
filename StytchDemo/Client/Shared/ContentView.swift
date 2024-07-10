@@ -29,6 +29,9 @@ struct ContentView: View {
                         Button("View session info") {
                             presentationOption = .sessionInfo
                         }
+                        Button("View PKCE info") {
+                            presentationOption = .pkce
+                        }
                         Spacer()
                     }
                     .navigationTitle("Stytch Demo")
@@ -89,6 +92,10 @@ struct ContentView: View {
                                         }
                                     }
                                 #endif
+                            case .pkce:
+                                VStack {
+                                    Text("Current saved PKCE pair: \(StytchClient.utils.getPKCEPair())")
+                                }
                             }
                         }
                     }
@@ -116,5 +123,6 @@ struct ContentView: View {
         case sessionInfo
         case authOptions
         case hobbies
+        case pkce
     }
 }

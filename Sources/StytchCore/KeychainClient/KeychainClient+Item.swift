@@ -62,6 +62,7 @@ extension KeychainClient.Item {
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)
     static let codeVerifierPKCE: Self = .init(kind: .token, name: "stytch_code_verifier_pkce")
+    static let codeChallengePKCE: Self = .init(kind: .token, name: "stytch_code_challenge_pkce")
 }
 
 extension KeychainClient.Item {

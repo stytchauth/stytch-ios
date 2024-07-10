@@ -119,4 +119,6 @@ public extension StytchClient {
         case oauth
         case passwordReset = "reset_password"
     }
+
+    static var utils: Utils { Current.utils }
 }
