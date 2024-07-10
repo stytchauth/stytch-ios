@@ -77,7 +77,7 @@ public struct StytchB2BClient: StytchClientType {
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .mfauth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
@@ -139,6 +139,7 @@ public extension StytchB2BClient {
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
     enum DeeplinkResponse {
         case auth(B2BAuthenticateResponse)
+        case mfauth(B2BMFAAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
         case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)

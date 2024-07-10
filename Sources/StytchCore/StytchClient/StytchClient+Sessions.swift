@@ -57,7 +57,7 @@ public struct StytchClientSessions {
     /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
     /// and persistent storage are kept up-to-date. You are required to include both the opaque token and the jwt.
     public func update(sessionTokens: SessionTokens) {
-        sessionTokens.updatePersistentStorage(sessionStorage: sessionStorage)
+        sessionStorage.updatePersistentStorage(tokens: sessionTokens)
     }
 
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

@@ -110,23 +110,31 @@ public extension NetworkingRouter {
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
                 sessionStorage.updateSession(
-                    .user(sessionResponse.session),
-                    tokens: [
-                        .jwt(sessionResponse.sessionJwt),
-                        .opaque(sessionResponse.sessionToken),
-                    ],
+                    sessionType: .user(sessionResponse.session),
+                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
                 userStorage.update(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionStorage.updateSession(
-                    .member(sessionResponse.memberSession),
-                    tokens: [
-                        .jwt(sessionResponse.sessionJwt),
-                        .opaque(sessionResponse.sessionToken),
-                    ],
+                    sessionType: .member(sessionResponse.memberSession),
+                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
+                localStorage.member = sessionResponse.member
+                localStorage.organization = sessionResponse.organization
+            } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponse {
+                if let memberSession = sessionResponse.memberSession {
+                    sessionStorage.updateSession(
+                        sessionType: .member(memberSession),
+                        tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
+                        hostUrl: configuration.hostUrl
+                    )
+                } else {
+                    sessionStorage.updateSession(
+                        intermediateSessionToken: sessionResponse.intermediateSessionToken
+                    )
+                }
                 localStorage.member = sessionResponse.member
                 localStorage.organization = sessionResponse.organization
             }

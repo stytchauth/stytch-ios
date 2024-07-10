@@ -11,7 +11,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             password: "password123",
             sessionDuration: 26
         )
-        networkInterceptor.responses { B2BAuthenticateResponse.mock }
+        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
         _ = try await client.authenticate(parameters: authParams)
 
@@ -51,7 +51,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         networkInterceptor.responses {
             BasicResponse(requestId: "123", statusCode: 200)
-            B2BAuthenticateResponse.mock
+            B2BMFAAuthenticateResponse.mock
         }
         _ = try await client.resetByEmailStart(
             parameters: .init(organizationId: "org123", email: "user@stytch.com", loginUrl: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15, resetPasswordTemplateId: "one-two-buckle-my-shoe")

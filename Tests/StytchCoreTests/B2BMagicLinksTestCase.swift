@@ -97,7 +97,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        let authResponse: B2BAuthenticateResponse = .mock
+        let authResponse: B2BMFAAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
@@ -117,7 +117,11 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.member.id, authResponse.member.id)
         XCTAssertEqual(response.sessionToken, "xyzasdf")
         XCTAssertEqual(response.sessionJwt, "i'mvalidjson")
-        XCTAssertTrue(Calendar.current.isDate(response.memberSession.expiresAt, equalTo: authResponse.memberSession.expiresAt, toGranularity: .second))
+        if let responseMemberSessionExpiresAt = response.memberSession?.expiresAt, let authResponseMemberSessionExpiresAt = authResponse.memberSession?.expiresAt {
+            XCTAssertTrue(Calendar.current.isDate(responseMemberSessionExpiresAt, equalTo: authResponseMemberSessionExpiresAt, toGranularity: .second))
+        } else {
+            XCTFail("Something went wrong, one of the member sessions in nil and should not be")
+        }
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -163,6 +167,21 @@ extension B2BAuthenticateResponse {
             organization: .mock,
             sessionToken: "xyzasdf",
             sessionJwt: "i'mvalidjson"
+        )
+    )
+}
+
+extension B2BMFAAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            memberSession: .mock,
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke"
         )
     )
 }
