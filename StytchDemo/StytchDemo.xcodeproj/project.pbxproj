@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
 		2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
-		2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
-		2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
 		2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531A299EE16D00BA9126 /* AppDelegate.swift */; };
 		2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531C299EE16D00BA9126 /* SceneDelegate.swift */; };
 		2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531E299EE16D00BA9126 /* RootViewController.swift */; };
@@ -110,7 +108,6 @@
 
 /* Begin PBXFileReference section */
 		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
-		2222D1432835C341008CEBD7 /* StytchConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchConfiguration.plist; sourceTree = "<group>"; };
 		22315318299EE16D00BA9126 /* B2BWorkbench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = B2BWorkbench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2231531A299EE16D00BA9126 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2231531C299EE16D00BA9126 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -279,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				224F7D50280CF500000230FA /* Info.plist */,
-				2222D1432835C341008CEBD7 /* StytchConfiguration.plist */,
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
 				22909078284D9F4600ADD3C4 /* Extensions.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
@@ -673,7 +669,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */,
-				2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */,
 				224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -682,7 +677,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */,
 				224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

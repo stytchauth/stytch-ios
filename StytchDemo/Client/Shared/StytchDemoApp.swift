@@ -2,11 +2,12 @@ import StytchCore
 import StytchUI
 import SwiftUI
 
-let configuration: StytchDemoApp.Configuration = {
-    guard let data = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist").flatMap({ try? Data(contentsOf: $0) })
-    else { fatalError("StytchConfiguration.plist should be included in the Demo App") }
-    return try! PropertyListDecoder().decode(StytchDemoApp.Configuration.self, from: data)
-}()
+struct Configuration {
+    let publicToken = "public-token-example"
+    let serverUrl = URL(string: "http://example.com")!
+}
+
+let configuration = Configuration()
 
 @main
 struct StytchDemoApp: App {
@@ -87,32 +88,5 @@ struct StytchDemoApp: App {
     struct ResetPasswordToken: Identifiable {
         let id: UUID = .init()
         let token: String
-    }
-}
-
-extension StytchDemoApp {
-    // For simplicity, we'll mimic StytchClient.Configuration, simply to reuse that value. We'd likely have a different source of truth in a real application.
-    struct Configuration: Decodable {
-        let publicToken: String
-        let serverUrl: URL
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            publicToken = try container.decode(String.self, forKey: .publicToken)
-            do {
-                serverUrl = try container.decode(URL.self, forKey: .serverUrl)
-            } catch {
-                let urlString = try container.decode(String.self, forKey: .serverUrl)
-                guard let url = URL(string: urlString) else {
-                    throw DecodingError.dataCorruptedError(forKey: .serverUrl, in: container, debugDescription: "Not a valid URL")
-                }
-                serverUrl = url
-            }
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case serverUrl = "StytchHostURL"
-            case publicToken = "StytchPublicToken"
-        }
     }
 }
