@@ -89,7 +89,7 @@ extension StytchClientType {
         let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
         try keychainClient.set(codeVerifier, for: keychainItem)
         try keychainClient.set(codeChallenge, for: .codeChallengePKCE)
-        return (codeVerifier, "S256")
+        return (codeChallenge, "S256")
     }
 
     mutating func postInit() {
