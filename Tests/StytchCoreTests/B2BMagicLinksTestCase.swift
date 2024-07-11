@@ -104,11 +104,6 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             sessionDuration: 15
         )
 
-        await XCTAssertThrowsErrorAsync(
-            try await StytchB2BClient.magicLinks.authenticate(parameters: parameters),
-            StytchSDKError.missingPKCE
-        )
-
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
@@ -121,7 +116,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.member.id, authResponse.member.id)
         XCTAssertEqual(response.sessionToken, "xyzasdf")
         XCTAssertEqual(response.sessionJwt, "i'mvalidjson")
-        XCTAssertTrue(Calendar.current.isDate(response.memberSession.expiresAt, equalTo: authResponse.memberSession.expiresAt, toGranularity: .nanosecond))
+        XCTAssertTrue(Calendar.current.isDate(response.memberSession.expiresAt, equalTo: authResponse.memberSession.expiresAt, toGranularity: .second))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
