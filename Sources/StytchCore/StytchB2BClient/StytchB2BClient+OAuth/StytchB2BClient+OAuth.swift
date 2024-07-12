@@ -13,7 +13,6 @@ public extension StytchB2BClient {
     struct OAuth {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants

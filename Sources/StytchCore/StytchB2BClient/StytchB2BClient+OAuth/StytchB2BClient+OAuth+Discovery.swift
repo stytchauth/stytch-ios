@@ -13,7 +13,6 @@ public extension StytchB2BClient.OAuth {
     struct Discovery {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute.DiscoveryRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants

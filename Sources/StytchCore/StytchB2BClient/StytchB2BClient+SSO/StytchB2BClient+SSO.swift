@@ -23,7 +23,6 @@ public extension StytchB2BClient {
     struct SSO {
         let router: NetworkingRouter<SSORoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
