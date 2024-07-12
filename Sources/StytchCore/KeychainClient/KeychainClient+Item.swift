@@ -73,7 +73,7 @@ extension KeychainClient.Item {
             .sessionToken,
             .sessionJwt,
             .codeVerifierPKCE,
-            .codeChallengePKCE
+            .codeChallengePKCE,
         ]
     }
 }
