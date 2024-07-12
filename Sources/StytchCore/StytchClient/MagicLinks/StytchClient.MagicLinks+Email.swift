@@ -11,17 +11,18 @@ public extension StytchClient.MagicLinks {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
         @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email) endpoint. Requests an email magic link for a user to log in or create an account depending on the presence and/or status of an existing account.
         public func loginOrCreate(parameters: Parameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+            let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
 
             return try await router.post(
                 to: .loginOrCreate,
                 parameters: CodeChallengedParameters(
-                    codeChallenge: codeChallenge,
-                    codeChallengeMethod: codeChallengeMethod,
+                    codeChallenge: pkcePair.codeChallenge,
+                    codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
                 )
             )
@@ -30,11 +31,11 @@ public extension StytchClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [send](https://stytch.com/docs/api/send-by-email) endpoint. Requests an email magic link for an existing user to log in or attach the included email factor to their current account.
         public func send(parameters: Parameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+            let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
 
             return try await router.post(
                 to: activeSessionExists ? .sendSecondary : .sendPrimary,
-                parameters: CodeChallengedParameters(codeChallenge: codeChallenge, codeChallengeMethod: codeChallengeMethod, wrapped: parameters)
+                parameters: CodeChallengedParameters(codeChallenge: pkcePair.codeChallenge, codeChallengeMethod: pkcePair.method, wrapped: parameters)
             )
         }
     }

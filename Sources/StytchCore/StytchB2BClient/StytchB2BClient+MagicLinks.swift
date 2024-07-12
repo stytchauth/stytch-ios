@@ -16,11 +16,12 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<MagicLinksRoute>
 
         @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else { throw StytchSDKError.missingPKCE }
+            guard let codeVerifier: String = pkcePairManager.getPKCECodePair()?.codeVerifier else { throw StytchSDKError.missingPKCE }
 
             return try await router.post(
                 to: .authenticate,
@@ -31,7 +32,7 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Authenticate Discovery Magic Link method wraps the [authenticate](https://stytch.com/docs/b2b/api/send-discovery-email) discovery magic link API endpoint, which validates the discovery magic link token passed in.
         public func discoveryAuthenticate(parameters: DiscoveryAuthenticateParameters) async throws -> DiscoveryAuthenticateResponse {
-            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else { throw StytchSDKError.missingPKCE }
+            guard let codeVerifier: String = pkcePairManager.getPKCECodePair()?.codeVerifier else { throw StytchSDKError.missingPKCE }
 
             return try await router.post(
                 to: .discoveryAuthenticate,
@@ -83,18 +84,19 @@ public extension StytchB2BClient.MagicLinks {
     /// The SDK provides methods to send and authenticate magic links that you can connect to your own UI.
     struct Email {
         let router: NetworkingRouter<StytchB2BClient.MagicLinksRoute.EmailRoute>
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's email magic link [login_or_signup](https://stytch.com/docs/b2b/api/send-login-signup-email) endpoint. Requests an email magic link for a member to log in or signup depending on the presence and/or status of an existing account.
         public func loginOrSignup(parameters: Parameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+            let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
 
             return try await router.post(
                 to: .loginOrSignup,
                 parameters: CodeChallengedParameters(
                     codingPrefix: .pkce,
-                    codeChallenge: codeChallenge,
-                    codeChallengeMethod: codeChallengeMethod,
+                    codeChallenge: pkcePair.codeChallenge,
+                    codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
                 )
             )
@@ -103,14 +105,14 @@ public extension StytchB2BClient.MagicLinks {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Send Discovery Email method wraps the [send discovery email](https://stytch.com/docs/b2b/api/send-discovery-email) API endpoint.
         public func discoverySend(parameters: DiscoveryParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+            let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
 
             return try await router.post(
                 to: .discoverySend,
                 parameters: CodeChallengedParameters(
                     codingPrefix: .pkce,
-                    codeChallenge: codeChallenge,
-                    codeChallengeMethod: codeChallengeMethod,
+                    codeChallenge: pkcePair.codeChallenge,
+                    codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
                 )
             )

@@ -1,20 +1,6 @@
 import Combine
 import Foundation
 
-public struct PKCEPair {
-    let codeChallenge: String?
-    let codeVerifier: String?
-
-    init(codeChallenge: String?, codeVerifier: String?) {
-        self.codeChallenge = codeChallenge
-        self.codeVerifier = codeVerifier
-    }
-}
-
-public protocol Utils {
-    func getPKCEPair() -> PKCEPair
-}
-
 protocol StytchClientType {
     associatedtype DeeplinkResponse
     associatedtype DeeplinkTokenType
@@ -23,8 +9,6 @@ protocol StytchClientType {
 
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
-    static var utils: Utils { get }
-
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 
     func runBootstrapping()
@@ -32,8 +16,6 @@ protocol StytchClientType {
 
 extension StytchClientType {
     private static var keychainClient: KeychainClient { Current.keychainClient }
-
-    private static var cryptoClient: CryptoClient { Current.cryptoClient }
 
     var configuration: Configuration? {
         get { localStorage.configuration }
@@ -63,6 +45,8 @@ extension StytchClientType {
     private var captchaClient: CaptchaProvider { Current.captcha }
     #endif
 
+    var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
+
     public var initializationState: InitializationState { Current.initializationState }
 
     // swiftlint:disable:next identifier_name
@@ -81,15 +65,6 @@ extension StytchClientType {
             return nil
         }
         return (tokenType: type, token)
-    }
-
-    // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
-    static func generateAndStorePKCE(keychainItem: KeychainClient.Item) throws -> (challenge: String, method: String) {
-        let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-        let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
-        try keychainClient.set(codeVerifier, for: keychainItem)
-        try keychainClient.set(codeChallenge, for: .codeChallengePKCE)
-        return (codeChallenge, "S256")
     }
 
     mutating func postInit() {

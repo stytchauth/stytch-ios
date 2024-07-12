@@ -117,6 +117,10 @@ public struct StytchB2BClient: StytchClientType {
             }
         }
     }
+    
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
+    }
 }
 
 public extension StytchB2BClient {
@@ -140,6 +144,4 @@ public extension StytchB2BClient {
         case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
         #endif
     }
-
-    static var utils: Utils { Current.utils }
 }

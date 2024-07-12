@@ -39,6 +39,7 @@ public extension StytchClient.OAuth.ThirdParty {
         let signupRedirectUrl: URL?
         let customScopes: [String]?
         public let clientType: ClientType = .consumer
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         #if !os(tvOS)
         /// You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
@@ -65,7 +66,7 @@ public extension StytchClient.OAuth.ThirdParty {
             }
 
             let queryParameters: [(String, String?)] = [
-                ("code_challenge", try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
+                ("code_challenge", try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge),
                 ("public_token", publicToken),
                 ("login_redirect_url", loginRedirectUrl?.absoluteString),
                 ("signup_redirect_url", signupRedirectUrl?.absoluteString),

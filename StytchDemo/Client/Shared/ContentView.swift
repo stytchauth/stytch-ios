@@ -94,7 +94,7 @@ struct ContentView: View {
                                 #endif
                             case .pkce:
                                 VStack {
-                                    Text("Current saved PKCE pair: \(StytchClient.utils.getPKCEPair())")
+                                    Text("Current saved PKCE pair: \(StytchClient.getPKCECodePair())")
                                 }
                             }
                         }

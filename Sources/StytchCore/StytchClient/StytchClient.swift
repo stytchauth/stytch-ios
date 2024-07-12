@@ -110,6 +110,10 @@ public struct StytchClient: StytchClientType {
             }
         }
     }
+
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
+    }
 }
 
 public extension StytchClient {
@@ -119,6 +123,4 @@ public extension StytchClient {
         case oauth
         case passwordReset = "reset_password"
     }
-
-    static var utils: Utils { Current.utils }
 }

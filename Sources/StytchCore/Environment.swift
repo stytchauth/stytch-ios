@@ -106,7 +106,7 @@ struct Environment {
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
     #endif
-    var utils: Utils = UtilsImpl(keychainClient: .live)
+    var pkcePairManager: PKCEPairManager { PKCEPairManagerImpl(keychainClient: keychainClient, cryptoClient: cryptoClient) }
 
     var date: () -> Date = Date.init
 
