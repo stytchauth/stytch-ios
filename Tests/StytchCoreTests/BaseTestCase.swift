@@ -52,6 +52,7 @@ extension Sequence {
 
 extension String {
     static let mockPKCECodeVerifier: String = "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"
+    static let mockPKCECodeChallenge: String = "some code challenge"
 }
 
 extension Array where Element == UInt8 {

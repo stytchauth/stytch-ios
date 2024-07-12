@@ -110,6 +110,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
@@ -141,6 +142,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 

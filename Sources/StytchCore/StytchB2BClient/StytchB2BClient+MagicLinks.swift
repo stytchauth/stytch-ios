@@ -15,7 +15,6 @@ public extension StytchB2BClient {
     struct MagicLinks {
         let router: NetworkingRouter<MagicLinksRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

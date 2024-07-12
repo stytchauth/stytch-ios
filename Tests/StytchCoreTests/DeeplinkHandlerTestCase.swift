@@ -22,6 +22,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         Current.timer = { _, _, _ in .init() }
 
