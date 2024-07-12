@@ -13,19 +13,19 @@ public extension StytchB2BClient {
     struct OAuth {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
+            guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
             do {
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters)
+                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as B2BAuthenticateResponse
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result

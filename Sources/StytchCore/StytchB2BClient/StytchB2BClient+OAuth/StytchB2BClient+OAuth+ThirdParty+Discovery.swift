@@ -40,6 +40,7 @@ public extension StytchB2BClient.OAuth.ThirdParty.Discovery {
         let customScopes: [String]?
         let providerParams: [String: String]?
         public let clientType: ClientType = .b2b
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         #if !os(tvOS)
         /// You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
@@ -70,7 +71,7 @@ public extension StytchB2BClient.OAuth.ThirdParty.Discovery {
             }
 
             let queryParameters: [(String, String?)] = [
-                ("pkce_code_challenge", try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
+                ("pkce_code_challenge", try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge),
                 ("public_token", publicToken),
                 ("custom_scopes", customScopes?.joined(separator: " ")),
                 ("provider_params", providerParams?.toURLParameters()),

@@ -42,7 +42,7 @@ final class OAuthTestCase: BaseTestCase {
             try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
             StytchSDKError.missingPKCE
         )
-        _ = try StytchClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+        _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(

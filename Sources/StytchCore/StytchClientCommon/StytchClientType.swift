@@ -17,8 +17,6 @@ protocol StytchClientType {
 extension StytchClientType {
     private static var keychainClient: KeychainClient { Current.keychainClient }
 
-    private static var cryptoClient: CryptoClient { Current.cryptoClient }
-
     var configuration: Configuration? {
         get { localStorage.configuration }
         set {
@@ -47,6 +45,8 @@ extension StytchClientType {
     private var captchaClient: CaptchaProvider { Current.captcha }
     #endif
 
+    var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
+
     public var initializationState: InitializationState { Current.initializationState }
 
     // swiftlint:disable:next identifier_name
@@ -65,15 +65,6 @@ extension StytchClientType {
             return nil
         }
         return (tokenType: type, token)
-    }
-
-    // Generates a new code_verifier and stores the value in the keychain. Returns a hashed version of the code_verifier value along with a string representing the hash method (currently S256.)
-    static func generateAndStorePKCE(keychainItem: KeychainClient.Item) throws -> (challenge: String, method: String) {
-        let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-
-        try keychainClient.set(codeVerifier, for: keychainItem)
-
-        return (cryptoClient.sha256(codeVerifier).base64UrlEncoded(), "S256")
     }
 
     mutating func postInit() {

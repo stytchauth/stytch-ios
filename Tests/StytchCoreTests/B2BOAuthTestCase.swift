@@ -10,7 +10,7 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        _ = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+        _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: "i-am-token", sessionDurationMinutes: 12))
 
         try XCTAssertRequest(
@@ -43,7 +43,7 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        _ = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+        _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchB2BClient.oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: "i-am-token"))
 
         try XCTAssertRequest(

@@ -10,19 +10,19 @@ public extension StytchClient {
         let router: NetworkingRouter<OAuthRoute>
         let userRouter: NetworkingRouter<UsersRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
+            guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
             do {
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
+                    parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as AuthenticateResponse
                 try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result

@@ -122,6 +122,7 @@ final class MagicLinksTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 

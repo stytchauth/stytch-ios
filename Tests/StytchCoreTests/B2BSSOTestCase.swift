@@ -42,7 +42,7 @@ final class B2BSSOTestCase: BaseTestCase {
             try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
             StytchSDKError.missingPKCE
         )
-        _ = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+        _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(

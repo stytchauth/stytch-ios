@@ -23,19 +23,19 @@ public extension StytchB2BClient {
     struct SSO {
         let router: NetworkingRouter<SSORoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
         /// verifying that the token is valid and hasn't expired.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try keychainClient.get(.codeVerifierPKCE) else {
+            guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 throw StytchSDKError.missingPKCE
             }
 
             return try await router.post(
                 to: .authenticate,
-                parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters)
+                parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
             )
         }
 
@@ -65,6 +65,7 @@ public extension StytchB2BClient.SSO {
         let loginRedirectUrl: URL?
         let signupRedirectUrl: URL?
         public let clientType: ClientType = .b2b
+        @Dependency(\.pkcePairManager) private var pkcePairManager
 
         #if !os(tvOS)
         /// You may need to pass in your own context provider to give the `ASWebAuthenticationSession` the proper window to present from.
@@ -91,7 +92,7 @@ public extension StytchB2BClient.SSO {
             }
 
             let queryParameters: [(String, String?)] = [
-                ("pkce_code_challenge", try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE).challenge),
+                ("pkce_code_challenge", try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge),
                 ("public_token", publicToken),
                 ("connection_id", connectionId),
                 ("login_redirect_url", loginRedirectUrl?.absoluteString),

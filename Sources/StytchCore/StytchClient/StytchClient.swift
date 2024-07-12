@@ -96,6 +96,10 @@ public struct StytchClient: StytchClientType {
         }
     }
 
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
+    }
+
     func runBootstrapping() {
         Task {
             do {
