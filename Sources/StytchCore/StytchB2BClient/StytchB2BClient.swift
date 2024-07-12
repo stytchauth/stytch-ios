@@ -103,6 +103,10 @@ public struct StytchB2BClient: StytchClientType {
         }
     }
 
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
+    }
+
     func runBootstrapping() {
         Task {
             do {
@@ -116,10 +120,6 @@ public struct StytchB2BClient: StytchClientType {
                 throw error
             }
         }
-    }
-    
-    public static func getPKCECodePair() -> PKCECodePair? {
-        Self.instance.pkcePairManager.getPKCECodePair()
     }
 }
 

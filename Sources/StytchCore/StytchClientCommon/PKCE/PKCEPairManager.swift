@@ -22,12 +22,12 @@ protocol PKCEPairManager {
 internal class PKCEPairManagerImpl: PKCEPairManager {
     let keychainClient: KeychainClient
     let cryptoClient: CryptoClient
-    
+
     init(keychainClient: KeychainClient, cryptoClient: CryptoClient) {
         self.keychainClient = keychainClient
         self.cryptoClient = cryptoClient
     }
-    
+
     func generateAndReturnPKCECodePair() throws -> PKCECodePair {
         let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
         let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
