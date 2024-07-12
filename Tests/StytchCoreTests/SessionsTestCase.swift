@@ -11,8 +11,8 @@ final class SessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.session)
 
         Current.sessionStorage.updateSession(
-            .user(.mock(userId: "i_am_user")),
-            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 
@@ -34,8 +34,8 @@ final class SessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
-            .user(.mock(userId: "i_am_user")),
-            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 
@@ -58,8 +58,8 @@ final class SessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
-            .user(.mock(userId: "i_am_user")),
-            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 
@@ -98,5 +98,31 @@ final class SessionsTestCase: BaseTestCase {
         } else {
             XCTFail("SessionTokens should not be nil")
         }
+    }
+
+    func testIntermediateSessionToken() {
+        Current.timer = { _, _, _ in .init() }
+
+        // Given we call update session with valid member session and tokens
+        Current.sessionStorage.updateSession(
+            sessionType: .member(.mock),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: URL(string: "https://url.com")
+        )
+
+        // And it correctly applies the values
+        XCTAssertNotNil(Current.sessionStorage.sessionToken)
+        XCTAssertNotNil(Current.sessionStorage.sessionJwt)
+        XCTAssertNotNil(Current.sessionStorage.memberSession)
+        XCTAssertNil(Current.sessionStorage.intermediateSessionToken)
+
+        // When we call update session with a IST value
+        Current.sessionStorage.updateSession(intermediateSessionToken: "ist")
+
+        // Then our IST is not nil but the other values are
+        XCTAssertNil(Current.sessionStorage.sessionToken)
+        XCTAssertNil(Current.sessionStorage.sessionJwt)
+        XCTAssertNil(Current.sessionStorage.memberSession)
+        XCTAssertNotNil(Current.sessionStorage.intermediateSessionToken)
     }
 }

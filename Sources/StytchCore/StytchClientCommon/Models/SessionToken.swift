@@ -42,24 +42,45 @@ public struct SessionToken: Equatable {
     public static func opaque(_ value: String) -> Self {
         .init(kind: .opaque, value: value)
     }
+
+    internal func cookie(expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
+        guard let hostUrl = hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else {
+            return nil
+        }
+
+        var properties: [HTTPCookiePropertyKey: Any] = [
+            .name: name,
+            .value: value,
+            .path: "/",
+            .domain: hostUrl.host ?? hostUrl.absoluteString,
+            .expires: expiresAt,
+            .sameSitePolicy: HTTPCookieStringPolicy.sameSiteLax,
+        ]
+        if !urlComponents.isLocalHost {
+            properties[.secure] = true
+        }
+
+        return HTTPCookie(properties: properties)
+    }
+
+    internal func updateCookie(cookieClient: CookieClient, expiresAt: Date, hostUrl: URL?) {
+        if let cookie = cookie(expiresAt: expiresAt, hostUrl: hostUrl) {
+            cookieClient.set(cookie: cookie)
+        }
+    }
 }
 
 /// A public interface to require the caller to explicitly pass one of each type of non nil token in order to update a session.
 public struct SessionTokens {
-    let jwt: SessionToken
-    let opaque: SessionToken
+    internal let jwt: SessionToken
+    internal let opaque: SessionToken
 
-    init?(jwt: SessionToken, opaque: SessionToken) {
+    public init?(jwt: SessionToken, opaque: SessionToken) {
         if jwt.kind != .jwt, opaque.kind != .opaque {
             return nil
         }
 
         self.jwt = jwt
         self.opaque = opaque
-    }
-
-    func updatePersistentStorage(sessionStorage: SessionStorage) {
-        sessionStorage.updatePersistentStorage(token: jwt)
-        sessionStorage.updatePersistentStorage(token: opaque)
     }
 }

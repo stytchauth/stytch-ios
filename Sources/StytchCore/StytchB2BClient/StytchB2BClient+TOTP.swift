@@ -13,6 +13,8 @@ public extension StytchB2BClient {
     struct TOTP {
         let router: NetworkingRouter<StytchB2BClient.TOTPRoute>
 
+        @Dependency(\.sessionStorage) private var sessionStorage
+
         // sourcery: AsyncVariants
         /// Create a TOTP for a member
         public func create(parameters: CreateParameters) async throws -> CreateResponse {
@@ -22,7 +24,17 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Authenticate a TOTP for a member
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            if let intermediateSessionToken = sessionStorage.intermediateSessionToken {
+                return try await router.post(
+                    to: .authenticate,
+                    parameters: IntermediateSessionTokenParameters(
+                        intermediateSessionToken: intermediateSessionToken,
+                        wrapped: parameters
+                    )
+                )
+            } else {
+                return try await router.post(to: .authenticate, parameters: parameters)
+            }
         }
     }
 }

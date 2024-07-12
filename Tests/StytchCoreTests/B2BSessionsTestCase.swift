@@ -11,8 +11,8 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchB2BClient.sessions.memberSession)
 
         Current.sessionStorage.updateSession(
-            .user(.mock(userId: "i_am_user")),
-            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 
@@ -34,8 +34,8 @@ final class B2BSessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionStorage.updateSession(
-            .user(.mock(userId: "i_am_user")),
-            tokens: [.jwt("i'm_jwt"), .opaque("opaque_all_day")],
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
 

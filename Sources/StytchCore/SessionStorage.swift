@@ -43,6 +43,21 @@ final class SessionStorage {
         }
     }
 
+    private(set) var intermediateSessionToken: String? {
+        get {
+            try? keychainClient.get(.intermediateSessionToken)
+        }
+        set {
+            let keychainItem: KeychainClient.Item = .intermediateSessionToken
+            if let newValue = newValue {
+                try? keychainClient.set(newValue, for: keychainItem)
+            } else {
+                try? keychainClient.removeItem(keychainItem)
+                cookieClient.deleteCookie(named: keychainItem.name)
+            }
+        }
+    }
+
     private(set) var session: Session? {
         get { localStorage.session }
         set { localStorage.session = newValue }
@@ -77,25 +92,40 @@ final class SessionStorage {
             )
     }
 
-    func updateSession(_ sessionKind: SessionKind, tokens: [SessionToken], hostUrl: URL?) {
-        switch sessionKind {
+    internal func updateSession(
+        sessionType: SessionType? = nil,
+        tokens: SessionTokens? = nil,
+        intermediateSessionToken: String? = nil,
+        hostUrl: URL? = nil
+    ) {
+        self.intermediateSessionToken = intermediateSessionToken
+
+        guard let sessionType else {
+            localStorage.session = nil
+            localStorage.memberSession = nil
+            clearTokens()
+            return
+        }
+
+        // If there is a valid sessionType then we should clear the IST because we are fully authenticated
+        self.intermediateSessionToken = nil
+
+        switch sessionType {
         case let .member(session):
             memberSession = session
         case let .user(session):
             self.session = session
         }
 
-        tokens.forEach { token in
-            updatePersistentStorage(token: token)
-
-            if let cookie = cookieFor(token: token, expiresAt: sessionKind.expiresAt, hostUrl: hostUrl) {
-                cookieClient.set(cookie: cookie)
-            }
+        if let tokens = tokens {
+            updatePersistentStorage(tokens: tokens)
+            tokens.jwt.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
+            tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
         }
 
         _onAuthChange.send(())
 
-        switch sessionKind {
+        switch sessionType {
         case .member:
             memberSessionsPollingClient.start()
         case .user:
@@ -103,82 +133,50 @@ final class SessionStorage {
         }
     }
 
-    func updatePersistentStorage(token: SessionToken) {
-        switch token.kind {
-        case .jwt:
-            sessionJwt = token
-        case .opaque:
-            sessionToken = token
-        }
+    func updatePersistentStorage(tokens: SessionTokens) {
+        sessionToken = tokens.opaque
+        sessionJwt = tokens.jwt
     }
 
     func reset() {
         session = nil
         memberSession = nil
-        sessionToken = nil
-        sessionJwt = nil
 
         userStorage.reset()
         localStorage.organization = nil
         localStorage.member = nil
 
-        SessionToken.Kind.allCases
-            .map(\.name)
-            .forEach(cookieClient.deleteCookie(named:))
         _onAuthChange.send(())
         sessionsPollingClient.stop()
         memberSessionsPollingClient.stop()
+        clearTokens()
+    }
+
+    func clearTokens() {
+        sessionToken = nil
+        sessionJwt = nil
+        cookieClient.deleteCookie(named: SessionToken.Kind.jwt.name)
+        cookieClient.deleteCookie(named: SessionToken.Kind.opaque.name)
     }
 
     @objc
     func cookiesDidUpdate(notification: Notification) {
-        let storage = notification.object as? HTTPCookieStorage ?? .shared
+        let storage = (notification.object as? HTTPCookieStorage) ?? .shared
 
-        guard let cookies = storage.cookies else { return }
-
-        cookies
-            .filter { SessionToken.Kind.allCases.map(\.name).contains($0.name) }
-            .compactMap { cookie in
-                // If the cookie is expired, discard the cookie/value
-                if let expiresAt = cookie.expiresDate, expiresAt <= date() {
-                    return nil
-                }
-
-                switch cookie.name {
-                case SessionToken.Kind.jwt.name:
-                    return .jwt(cookie.value)
-                case SessionToken.Kind.opaque.name:
-                    return .opaque(cookie.value)
-                default:
-                    return nil
-                }
-            }
-            .forEach(updatePersistentStorage(token:))
-
-        _onAuthChange.send(())
-    }
-
-    private func cookieFor(token: SessionToken, expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
-        guard let hostUrl = hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else { return nil }
-
-        var properties: [HTTPCookiePropertyKey: Any] = [
-            .name: token.name,
-            .value: token.value,
-            .path: "/",
-            .domain: hostUrl.host ?? hostUrl.absoluteString,
-            .expires: expiresAt,
-            .sameSitePolicy: HTTPCookieStringPolicy.sameSiteLax,
-        ]
-        if !urlComponents.isLocalHost {
-            properties[.secure] = true
+        if let jwtCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.jwt.name, date: date()) {
+            sessionJwt = .jwt(jwtCookieValue)
         }
 
-        return HTTPCookie(properties: properties)
+        if let opaqueCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.opaque.name, date: date()) {
+            sessionToken = .opaque(opaqueCookieValue)
+        }
+
+        _onAuthChange.send(())
     }
 }
 
 extension SessionStorage {
-    enum SessionKind {
+    enum SessionType {
         case member(MemberSession)
         case user(Session)
 
@@ -190,5 +188,24 @@ extension SessionStorage {
                 return session.expiresAt
             }
         }
+    }
+}
+
+extension HTTPCookieStorage {
+    func cookieValue(cookieName: String, date: Date) -> String? {
+        let cookie = cookies?.first { cookieName == $0.name }
+
+        var cookieValue: String?
+
+        // If we have an expiresDate we should attempt to use, if not just return the cookie value
+        if let expiresAt = cookie?.expiresDate {
+            if expiresAt > date {
+                cookieValue = cookie?.value
+            }
+        } else {
+            cookieValue = cookie?.value
+        }
+
+        return cookieValue
     }
 }
