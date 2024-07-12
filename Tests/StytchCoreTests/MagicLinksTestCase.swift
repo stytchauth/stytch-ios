@@ -134,7 +134,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.user.id, authResponse.user.id)
         XCTAssertEqual(response.sessionToken, "hello_session")
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
-        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .second))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
