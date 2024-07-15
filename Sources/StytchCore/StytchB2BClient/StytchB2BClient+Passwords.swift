@@ -7,6 +7,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<PasswordsRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member with their email address and password. This method verifies that the member has a password currently set, and that the entered password is correct.
@@ -17,7 +18,13 @@ public extension StytchB2BClient {
         /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(
+                to: .authenticate,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -44,9 +51,17 @@ public extension StytchB2BClient {
                 throw StytchSDKError.missingPKCE
             }
 
+            let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                wrapped: CodeVerifierParameters(
+                    codeVerifier: pkcePair.codeVerifier,
+                    wrapped: parameters
+                )
+            )
+
             let response: B2BMFAAuthenticateResponse = try await router.post(
                 to: .resetByEmail(.complete),
-                parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
+                parameters: intermediateSessionTokenParameters
             )
 
             try? pkcePairManager.clearPKCECodePair()
@@ -58,8 +73,14 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the existing password matches the stored value.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BAuthenticateResponse {
-            try await router.post(to: .resetByExistingPassword, parameters: parameters)
+        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BMFAAuthenticateResponse {
+            try await router.post(
+                to: .resetByExistingPassword,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

@@ -88,12 +88,12 @@ public struct StytchB2BClient: StytchClientType {
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .mfauth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .oauth:
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
+            return try await .handled(response: .mfauth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
         case .discoveryOauth:
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))

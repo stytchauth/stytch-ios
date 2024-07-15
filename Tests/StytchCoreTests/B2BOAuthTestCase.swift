@@ -5,7 +5,7 @@ final class B2BOAuthTestCase: BaseTestCase {
     @available(tvOS 16.0, *)
     func testAuthenticate() async throws {
         networkInterceptor.responses {
-            B2BAuthenticateResponse.mock
+            B2BMFAAuthenticateResponse.mock
         }
 
         Current.timer = { _, _, _ in .init() }

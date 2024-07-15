@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchB2BClient.OAuth {
     /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BAuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BMFAAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.OAuth {
     }
 
     /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BAuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BMFAAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
