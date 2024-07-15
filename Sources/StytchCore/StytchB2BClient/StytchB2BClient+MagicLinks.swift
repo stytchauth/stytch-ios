@@ -16,23 +16,35 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<MagicLinksRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
         /// If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
             // For authenticating if loginOrSignup was called
-            if let codeVerifier: String = pkcePairManager.getPKCECodePair()?.codeVerifier {
+            if let codeVerifier = pkcePairManager.getPKCECodePair()?.codeVerifier {
+                let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: CodeVerifierParameters(
+                        codingPrefix: .pkce,
+                        codeVerifier: codeVerifier,
+                        wrapped: parameters
+                    )
+                )
                 return try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters)
+                    parameters: intermediateSessionTokenParameters
                 )
             }
             // For authenticating if inviteSend was called, in which case we will not have a PKCE challenge code
             else {
                 return try await router.post(
                     to: .authenticate,
-                    parameters: parameters
+                    parameters: IntermediateSessionTokenParameters(
+                        intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                        wrapped: parameters
+                    )
                 )
             }
         }
@@ -278,7 +290,7 @@ public extension StytchB2BClient.MagicLinks {
         /// The discovered organizations.
         public let discoveredOrganizations: [StytchB2BClient.Discovery.DiscoveredOrganization]
         /// The intermediate session token.
-        public let intermediateSessionToken: String
+        public let intermediateSessionToken: String // TODO: IST
         /// The member's email address.
         public let email: String
     }

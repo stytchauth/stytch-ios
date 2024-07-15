@@ -18,23 +18,25 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Create a TOTP for a member
         public func create(parameters: CreateParameters) async throws -> CreateResponse {
-            try await router.post(to: .create, parameters: parameters)
+            try await router.post(
+                to: .create,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants
         /// Authenticate a TOTP for a member
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            if let intermediateSessionToken = sessionStorage.intermediateSessionToken {
-                return try await router.post(
-                    to: .authenticate,
-                    parameters: IntermediateSessionTokenParameters(
-                        intermediateSessionToken: intermediateSessionToken,
-                        wrapped: parameters
-                    )
+            try await router.post(
+                to: .authenticate,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
                 )
-            } else {
-                return try await router.post(to: .authenticate, parameters: parameters)
-            }
+            )
         }
     }
 }

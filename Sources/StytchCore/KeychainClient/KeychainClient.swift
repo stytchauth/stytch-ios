@@ -24,12 +24,18 @@ struct KeychainClient {
     }
 }
 
+extension KeychainClient {
+    func getQueryResult(_ item: Item) throws -> QueryResult? {
+        try get(item).first
+    }
+}
+
 // String convenience methods
 extension KeychainClient {
     func get(_ item: Item) throws -> String? {
         try get(item)
             .first
-            .flatMap { String(data: $0.data, encoding: .utf8) }
+            .flatMap(\.stringValue)
     }
 
     func set(_ value: String, for item: Item) throws {
@@ -68,6 +74,10 @@ extension KeychainClient {
         let label: String?
         let account: String?
         let generic: Data?
+
+        var stringValue: String? {
+            String(data: data, encoding: .utf8)
+        }
     }
 
     struct KeyRegistration: Codable {

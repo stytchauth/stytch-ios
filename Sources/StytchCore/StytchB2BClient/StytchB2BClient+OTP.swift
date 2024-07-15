@@ -18,33 +18,25 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Send a one-time passcode (OTP) to a user using their phone number via SMS.
         public func send(parameters: SendParameters) async throws -> BasicResponse {
-            if let intermediateSessionToken = sessionStorage.intermediateSessionToken {
-                return try await router.post(
-                    to: .send,
-                    parameters: IntermediateSessionTokenParameters(
-                        intermediateSessionToken: intermediateSessionToken,
-                        wrapped: parameters
-                    )
+            try await router.post(
+                to: .send,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
                 )
-            } else {
-                return try await router.post(to: .send, parameters: parameters)
-            }
+            )
         }
 
         // sourcery: AsyncVariants
         /// Authenticate a one-time passcode (OTP) sent to a user via SMS.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            if let intermediateSessionToken = sessionStorage.intermediateSessionToken {
-                return try await router.post(
-                    to: .authenticate,
-                    parameters: IntermediateSessionTokenParameters(
-                        intermediateSessionToken: intermediateSessionToken,
-                        wrapped: parameters
-                    )
+            try await router.post(
+                to: .authenticate,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
                 )
-            } else {
-                return try await router.post(to: .authenticate, parameters: parameters)
-            }
+            )
         }
     }
 }

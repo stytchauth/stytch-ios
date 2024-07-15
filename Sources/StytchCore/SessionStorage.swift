@@ -45,7 +45,24 @@ final class SessionStorage {
 
     private(set) var intermediateSessionToken: String? {
         get {
-            try? keychainClient.get(.intermediateSessionToken)
+            let tenMinutes = 600.0
+            let keychainItem: KeychainClient.Item = .intermediateSessionToken
+
+            // If we have a valid IST stored in the keychain
+            // Check to see if it is less than 10 minutes old
+            // If it is less than 10 minutes, then return it
+            // If it is more than 10 minutes old then remove it from the keychain and cookie storage
+            if let intermediateSessionTokenQueryResult = try? keychainClient.getQueryResult(keychainItem) {
+                if abs(intermediateSessionTokenQueryResult.createdAt.timeIntervalSinceNow) < tenMinutes {
+                    return intermediateSessionTokenQueryResult.stringValue
+                } else {
+                    try? keychainClient.removeItem(keychainItem)
+                    cookieClient.deleteCookie(named: keychainItem.name)
+                    return nil
+                }
+            } else {
+                return nil
+            }
         }
         set {
             let keychainItem: KeychainClient.Item = .intermediateSessionToken

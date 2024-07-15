@@ -53,7 +53,7 @@ public extension StytchB2BClient.OAuth.Discovery {
     typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
 
     struct DiscoveryAuthenticateResponseData: Codable {
-        public let intermediateSessionToken: String
+        public let intermediateSessionToken: String // TODO: IST
         public let emailAddress: String
         public let discoveredOrganizations: [DiscoveredOrganization]
     }

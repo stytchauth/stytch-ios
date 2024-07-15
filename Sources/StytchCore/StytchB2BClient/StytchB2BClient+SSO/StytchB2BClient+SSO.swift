@@ -24,18 +24,28 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<SSORoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
         /// verifying that the token is valid and hasn't expired.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 throw StytchSDKError.missingPKCE
             }
 
+            let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                wrapped: CodeVerifierParameters(
+                    codingPrefix: .pkce,
+                    codeVerifier: pkcePair.codeVerifier,
+                    wrapped: parameters
+                )
+            )
+
             return try await router.post(
                 to: .authenticate,
-                parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
+                parameters: intermediateSessionTokenParameters
             )
         }
 

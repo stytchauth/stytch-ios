@@ -14,19 +14,29 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
             do {
+                let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: CodeVerifierParameters(
+                        codingPrefix: .pkce,
+                        codeVerifier: pkcePair.codeVerifier,
+                        wrapped: parameters
+                    )
+                )
+
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
-                ) as B2BAuthenticateResponse
+                    parameters: intermediateSessionTokenParameters
+                ) as B2BMFAAuthenticateResponse
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result
             } catch {
