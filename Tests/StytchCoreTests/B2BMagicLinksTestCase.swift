@@ -111,6 +111,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         let response = try await StytchB2BClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "req_123")
@@ -126,7 +128,11 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/authenticate",
-            method: .post(["magic_links_token": "12345", "session_duration_minutes": 15, "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
+            method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "magic_links_token": "12345", "session_duration_minutes": 15,
+                "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+            ])
         )
     }
 

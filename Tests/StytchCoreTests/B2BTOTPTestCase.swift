@@ -19,12 +19,16 @@ final class B2BTOTPTestCase: BaseTestCase {
             memberId: memberId,
             expirationMinutes: .defaultSessionDuration
         )
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try await StytchB2BClient.totp.create(parameters: parameters)
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/totp",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "expiration_minutes": JSON.number(30),
                 "organization_id": JSON.string(organizationId),
                 "member_id": JSON.string(memberId),
@@ -49,12 +53,16 @@ final class B2BTOTPTestCase: BaseTestCase {
             memberId: memberId,
             code: code
         )
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try await StytchB2BClient.totp.authenticate(parameters: parameters)
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/totp/authenticate",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": JSON.number(30),
                 "organization_id": JSON.string(organizationId),
                 "member_id": JSON.string(memberId),

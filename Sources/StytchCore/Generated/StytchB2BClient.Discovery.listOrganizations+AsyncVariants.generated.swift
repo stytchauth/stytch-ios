@@ -5,10 +5,10 @@ import Foundation
 
 public extension StytchB2BClient.Discovery {
     /// Wraps Stytch's [list discovered Organizations](https://stytch.com/docs/b2b/api/list-discovered-organizations) endpoint. If the `intermediate_session_token` is not passed in and there is a current Member Session, the SDK will call the endpoint with the session token.
-    func listOrganizations(parameters: ListOrganizationsParameters, completion: @escaping Completion<ListOrganizationsResponse>) {
+    func listOrganizations(completion: @escaping Completion<ListOrganizationsResponse>) {
         Task {
             do {
-                completion(.success(try await listOrganizations(parameters: parameters)))
+                completion(.success(try await listOrganizations()))
             } catch {
                 completion(.failure(error))
             }
@@ -16,12 +16,12 @@ public extension StytchB2BClient.Discovery {
     }
 
     /// Wraps Stytch's [list discovered Organizations](https://stytch.com/docs/b2b/api/list-discovered-organizations) endpoint. If the `intermediate_session_token` is not passed in and there is a current Member Session, the SDK will call the endpoint with the session token.
-    func listOrganizations(parameters: ListOrganizationsParameters) -> AnyPublisher<ListOrganizationsResponse, Error> {
+    func listOrganizations() -> AnyPublisher<ListOrganizationsResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await listOrganizations(parameters: parameters)))
+                        promise(.success(try await listOrganizations()))
                     } catch {
                         promise(.failure(error))
                     }

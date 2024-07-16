@@ -10,6 +10,8 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: "i-am-token", sessionDurationMinutes: 12))
 
@@ -17,6 +19,7 @@ final class B2BOAuthTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/oauth/authenticate",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "oauth_token": "i-am-token",

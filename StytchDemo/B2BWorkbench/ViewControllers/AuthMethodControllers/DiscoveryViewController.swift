@@ -4,8 +4,6 @@ import UIKit
 final class DiscoveryViewController: UIViewController {
     let stackView = UIStackView.stytchB2BStackView()
 
-    lazy var intermediateSessionTextField: UITextField = .init(title: "Intermediate Session Token", primaryAction: submitAction)
-
     lazy var orgNameTextField: UITextField = .init(title: "Org Name", primaryAction: submitAction)
 
     lazy var discoverButton: UIButton = .init(title: "Discover", primaryAction: submitAction)
@@ -35,24 +33,18 @@ final class DiscoveryViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
-        stackView.addArrangedSubview(intermediateSessionTextField)
         stackView.addArrangedSubview(orgNameTextField)
         stackView.addArrangedSubview(discoverButton)
         stackView.addArrangedSubview(exchangeSessionButton)
         stackView.addArrangedSubview(createOrgButton)
 
-        intermediateSessionTextField.delegate = self
         orgNameTextField.delegate = self
     }
 
     func discover() {
-        guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
-
         Task {
             do {
-                let response = try await StytchB2BClient.discovery.listOrganizations(
-                    parameters: .init(intermediateSessionToken: token)
-                )
+                let response = try await StytchB2BClient.discovery.listOrganizations()
                 presentAlertAndLogMessage(description: "list organizations success!", object: response)
             } catch {
                 presentAlertAndLogMessage(description: "list organizations error", object: error)
@@ -61,13 +53,12 @@ final class DiscoveryViewController: UIViewController {
     }
 
     func exchangeSession() {
-        guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
         guard let orgId = organizationId else { return }
 
         Task {
             do {
                 let response = try await StytchB2BClient.discovery.exchangeIntermediateSession(
-                    parameters: .init(intermediateSessionToken: token, organizationId: .init(rawValue: orgId))
+                    parameters: .init(organizationId: .init(rawValue: orgId))
                 )
                 presentAlertAndLogMessage(description: "exchange session success!", object: response)
             } catch {
@@ -77,13 +68,12 @@ final class DiscoveryViewController: UIViewController {
     }
 
     func createOrg() {
-        guard let token = intermediateSessionTextField.text, !token.isEmpty else { return }
         guard let orgName = orgNameTextField.text, !orgName.isEmpty else { return }
 
         Task {
             do {
                 let response = try await StytchB2BClient.discovery.createOrganization(
-                    parameters: .init(intermediateSessionToken: token, organizationName: orgName)
+                    parameters: .init(organizationName: orgName)
                 )
                 presentAlertAndLogMessage(description: "create organization success!", object: response)
             } catch {

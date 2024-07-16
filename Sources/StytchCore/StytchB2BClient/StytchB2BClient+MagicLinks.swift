@@ -280,7 +280,7 @@ public extension StytchB2BClient.MagicLinks {
     typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
 
     /// The underlying data for the DiscoveryAuthenticateResponse type.
-    struct DiscoveryAuthenticateResponseData: Codable {
+    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable {
         private enum CodingKeys: String, CodingKey {
             case discoveredOrganizations
             case email = "emailAddress"
@@ -290,7 +290,7 @@ public extension StytchB2BClient.MagicLinks {
         /// The discovered organizations.
         public let discoveredOrganizations: [StytchB2BClient.Discovery.DiscoveredOrganization]
         /// The intermediate session token.
-        public let intermediateSessionToken: String // TODO: IST
+        public let intermediateSessionToken: String
         /// The member's email address.
         public let email: String
     }

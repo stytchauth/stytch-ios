@@ -1,9 +1,12 @@
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable test_case_accessibility
+
 class BaseTestCase: XCTestCase {
-    // swiftlint:disable:next test_case_accessibility
     var networkInterceptor: NetworkingClientInterceptor = .init()
+
+    let intermediateSessionToken = "intermediateSessionToken_asdfg"
 
     override func setUpWithError() throws {
         try super.setUpWithError()
