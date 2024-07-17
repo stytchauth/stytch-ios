@@ -72,4 +72,30 @@ public extension StytchB2BClient {
             self.displayName = displayName
         }
     }
+
+    /// A discovered organization.
+    struct DiscoveredOrganization: Codable {
+        /// The organization.
+        public let organization: Organization
+        /// The membership and associated details.
+        public let membership: Membership
+        /// A boolean describing the member's authentication status.
+        public let memberAuthenticated: Bool
+    }
+
+    /// A struct describing a membership and its details.
+    struct Membership: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case kind = "type"
+            case details
+            case member
+        }
+
+        /// The kind of membership.
+        public let kind: String
+        /// The details of the membership.
+        public let details: JSON?
+        /// The member.
+        public let member: Member
+    }
 }

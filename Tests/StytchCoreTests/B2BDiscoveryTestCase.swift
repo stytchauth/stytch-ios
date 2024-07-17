@@ -68,12 +68,12 @@ final class B2BDiscoveryTestCase: BaseTestCase {
                 organizationName: "hello",
                 organizationSlug: "goodbye",
                 organizationLogoUrl: XCTUnwrap(.init(string: "file://123")),
-                ssoJitProvisioning: .allAllowed,
+                ssoJitProvisioning: .ALL_ALLOWED,
                 emailAllowedDomains: ["something.com"],
-                emailJitProvisioning: .notAllowed,
-                emailInvites: .restricted,
-                authMethods: .allAllowed,
-                allowedAuthMethods: [.magicLink, .password]
+                emailJitProvisioning: .NOT_ALLOWED,
+                emailInvites: .RESTRICTED,
+                authMethods: .ALL_ALLOWED,
+                allowedAuthMethods: [.MAGIC_LINK, .PASSWORD]
             )
         )
 

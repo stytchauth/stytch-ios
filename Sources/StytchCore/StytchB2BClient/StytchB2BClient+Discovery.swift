@@ -71,7 +71,7 @@ public extension StytchB2BClient.Discovery {
         /// The member's email address.
         public let email: String
         /// A list of discovered organizations.
-        public let discoveredOrganizations: [DiscoveredOrganization]
+        public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
     }
 }
 
@@ -158,12 +158,12 @@ public extension StytchB2BClient.Discovery {
         let organizationName: String?
         let organizationSlug: String?
         let organizationLogoUrl: URL?
-        let ssoJitProvisioning: SsoJitProvisioning?
+        let ssoJitProvisioning: StytchB2BClient.SsoJitProvisioning?
         let emailAllowedDomains: [String]?
-        let emailJitProvisioning: EmailJitProvisioning?
-        let emailInvites: EmailInvites?
-        let authMethods: AuthMethods?
-        let allowedAuthMethods: [AllowedAuthMethods]?
+        let emailJitProvisioning: StytchB2BClient.EmailJitProvisioning?
+        let emailInvites: StytchB2BClient.EmailInvites?
+        let authMethods: StytchB2BClient.AuthMethods?
+        let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
 
         /// - Parameters:
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
@@ -181,12 +181,12 @@ public extension StytchB2BClient.Discovery {
             organizationName: String? = nil,
             organizationSlug: String? = nil,
             organizationLogoUrl: URL? = nil,
-            ssoJitProvisioning: SsoJitProvisioning? = nil,
+            ssoJitProvisioning: StytchB2BClient.SsoJitProvisioning? = nil,
             emailAllowedDomains: [String]? = nil,
-            emailJitProvisioning: EmailJitProvisioning? = nil,
-            emailInvites: EmailInvites? = nil,
-            authMethods: AuthMethods? = nil,
-            allowedAuthMethods: [AllowedAuthMethods]? = nil
+            emailJitProvisioning: StytchB2BClient.EmailJitProvisioning? = nil,
+            emailInvites: StytchB2BClient.EmailInvites? = nil,
+            authMethods: StytchB2BClient.AuthMethods? = nil,
+            allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]? = nil
         ) {
             self.sessionDuration = sessionDuration
             self.organizationName = organizationName
@@ -199,66 +199,5 @@ public extension StytchB2BClient.Discovery {
             self.authMethods = authMethods
             self.allowedAuthMethods = allowedAuthMethods
         }
-
-        /// The allowed values for `CreateOrganizationParameters.ssoJitProvisioning`.
-        public enum SsoJitProvisioning: String, Codable {
-            case allAllowed = "ALL_ALLOWED"
-            case restricted = "RESTRICTED"
-            case notAllowed = "NOT_ALLOWED"
-        }
-
-        /// The allowed values for `CreateOrganizationParameters.emailJitProvisioning`.
-        public enum EmailJitProvisioning: String, Codable {
-            case restricted = "RESTRICTED"
-            case notAllowed = "NOT_ALLOWED"
-        }
-
-        /// The allowed values for `CreateOrganizationParameters.emailInvites`.
-        public enum EmailInvites: String, Codable {
-            case allAllowed = "ALL_ALLOWED"
-            case restricted = "RESTRICTED"
-            case notAllowed = "NOT_ALLOWED"
-        }
-
-        /// The allowed values for `CreateOrganizationParameters.authMethods`.
-        public enum AuthMethods: String, Codable {
-            case allAllowed = "ALL_ALLOWED"
-            case restricted = "RESTRICTED"
-        }
-
-        /// The allowed values for `CreateOrganizationParameters.allowedAuthMethods`.
-        public enum AllowedAuthMethods: String, Codable {
-            case sso
-            case magicLink = "magic_link"
-            case password
-        }
-    }
-}
-
-public extension StytchB2BClient.Discovery {
-    /// A discovered organization.
-    struct DiscoveredOrganization: Codable {
-        /// The organization.
-        public let organization: Organization
-        /// The membership and associated details.
-        public let membership: Membership
-        /// A boolean describing the member's authentication status.
-        public let memberAuthenticated: Bool
-    }
-
-    /// A struct describing a membership and its details.
-    struct Membership: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case kind = "type"
-            case details
-            case member
-        }
-
-        /// The kind of membership.
-        public let kind: String
-        /// The details of the membership.
-        public let details: JSON?
-        /// The member.
-        public let member: Member
     }
 }

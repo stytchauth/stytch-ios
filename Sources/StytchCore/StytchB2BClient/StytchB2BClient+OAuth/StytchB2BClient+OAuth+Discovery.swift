@@ -55,22 +55,6 @@ public extension StytchB2BClient.OAuth.Discovery {
     struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable {
         public let intermediateSessionToken: String
         public let emailAddress: String
-        public let discoveredOrganizations: [DiscoveredOrganization]
-    }
-
-    struct DiscoveredOrganization: Codable {
-        public let organization: Organization
-        public let membership: Membership
-        public let memberAuthenticated: Bool
-    }
-
-    struct Membership: Codable {
-        public let type: String
-        public let details: MembershipDetails?
-        public let member: Member?
-    }
-
-    struct MembershipDetails: Codable {
-        public let domain: String
+        public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
     }
 }
