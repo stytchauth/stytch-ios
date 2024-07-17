@@ -19,7 +19,7 @@ public extension StytchB2BClient.OAuth {
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: DiscoveryAuthenticateParameters) async throws -> DiscoveryAuthenticateResponse {
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
             do {
@@ -27,10 +27,10 @@ public extension StytchB2BClient.OAuth {
                     to: .authenticate,
                     parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as DiscoveryAuthenticateResponse
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
                 return result
             } catch {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
+                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: error))
                 throw error
             }
         }
