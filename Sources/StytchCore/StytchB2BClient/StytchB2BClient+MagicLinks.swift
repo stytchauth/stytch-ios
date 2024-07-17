@@ -2,12 +2,16 @@ import Foundation
 
 public extension StytchB2BClient {
     /// The interface for interacting with magic-links products.
-    static var magicLinks: MagicLinks { .init(router: router.scopedRouter { $0.magicLinks }) }
+    static var magicLinks: MagicLinks {
+        .init(router: router.scopedRouter { $0.magicLinks })
+    }
 }
 
 public extension StytchB2BClient.MagicLinks {
     /// The interface for interacting with email magic links.
-    var email: Email { .init(router: router.scopedRouter { $0.email }) }
+    var email: Email {
+        .init(router: router.scopedRouter { $0.email })
+    }
 }
 
 public extension StytchB2BClient {
@@ -288,7 +292,7 @@ public extension StytchB2BClient.MagicLinks {
         }
 
         /// The discovered organizations.
-        public let discoveredOrganizations: [StytchB2BClient.Discovery.DiscoveredOrganization]
+        public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
         /// The intermediate session token.
         public let intermediateSessionToken: String
         /// The member's email address.

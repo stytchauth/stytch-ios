@@ -1,6 +1,13 @@
 import Foundation
 
 public extension StytchB2BClient {
+    /// The interface for interacting with passwords products.
+    static var passwords: Passwords {
+        .init(router: router.scopedRouter { $0.passwords })
+    }
+}
+
+public extension StytchB2BClient {
     /// Stytch supports creating, storing, and authenticating passwords, as well as support for account recovery (password reset) and account deduplication with passwordless login methods.
     /// Our implementation of passwords has built-in breach detection powered by [HaveIBeenPwned](https://haveibeenpwned.com/) on both sign-up and login, to prevent the use of compromised credentials and uses configurable strength requirements (either Dropbox’s [zxcvbn](https://github.com/dropbox/zxcvbn) or adjustable LUDS) to guide members towards creating passwords that are easy for humans to remember but difficult for computers to crack.
     struct Passwords {
@@ -106,11 +113,6 @@ public extension StytchB2BClient {
             try await router.post(to: .strengthCheck, parameters: parameters)
         }
     }
-}
-
-public extension StytchB2BClient {
-    /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init(router: router.scopedRouter { $0.passwords }) }
 }
 
 public extension StytchB2BClient.Passwords {

@@ -2,7 +2,9 @@ import Combine
 
 public extension StytchB2BClient {
     /// The interface for interacting with member products.
-    static var member: Members { .init(router: organizations.router.scopedRouter { $0.members }) }
+    static var member: Members {
+        .init(router: organizations.router.scopedRouter { $0.members })
+    }
 }
 
 public extension StytchB2BClient {

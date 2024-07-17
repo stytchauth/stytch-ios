@@ -1,3 +1,12 @@
+import Foundation
+
+internal extension StytchB2BClient {
+    /// The interface for interacting with magic-links products.
+    static var bootstrap: Bootstrap {
+        .init(router: router.scopedRouter { $0.bootstrap })
+    }
+}
+
 extension StytchB2BClient {
     struct Bootstrap {
         let router: NetworkingRouter<BootstrapRoute>
@@ -24,9 +33,4 @@ extension StytchB2BClient {
             #endif
         }
     }
-}
-
-internal extension StytchB2BClient {
-    /// The interface for interacting with magic-links products.
-    static var bootstrap: Bootstrap { .init(router: router.scopedRouter { $0.bootstrap }) }
 }
