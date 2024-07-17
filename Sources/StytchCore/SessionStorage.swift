@@ -159,6 +159,8 @@ final class SessionStorage {
         session = nil
         memberSession = nil
 
+        intermediateSessionToken = nil
+
         userStorage.reset()
         localStorage.organization = nil
         localStorage.member = nil
@@ -172,8 +174,6 @@ final class SessionStorage {
     func clearTokens() {
         sessionToken = nil
         sessionJwt = nil
-        cookieClient.deleteCookie(named: SessionToken.Kind.jwt.name)
-        cookieClient.deleteCookie(named: SessionToken.Kind.opaque.name)
     }
 
     @objc

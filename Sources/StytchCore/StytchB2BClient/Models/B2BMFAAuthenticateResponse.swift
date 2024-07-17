@@ -18,7 +18,7 @@ public struct B2BMFAAuthenticateResponseData: Codable, B2BMFAAuthenticateRespons
     public let sessionToken: String
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
     public let sessionJwt: String
-    ///
+    /// An optional intermediate session token to be returned if multi factor authentication is enabled
     public let intermediateSessionToken: String?
 }
 
@@ -34,6 +34,12 @@ public protocol B2BMFAAuthenticateResponseDataType {
     var sessionToken: String { get }
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
     var sessionJwt: String { get }
-    ///
+    /// An optional intermediate session token to be returned if multi factor authentication is enabled
     var intermediateSessionToken: String? { get }
+}
+
+/// The interface which a data type must conform to for all discovery flows that return a non optional intermediate session token
+public protocol DiscoveryIntermediateSessionTokenDataType {
+    /// The non optional intermediate session token returned by discovery flows separate from multi factor authentication
+    var intermediateSessionToken: String { get }
 }

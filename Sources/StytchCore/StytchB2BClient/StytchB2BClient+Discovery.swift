@@ -1,6 +1,15 @@
 import Foundation
 
 public extension StytchB2BClient {
+    /// The interface for interacting with discovery products.
+    static var discovery: Discovery {
+        .init(router: router.scopedRouter {
+            $0.discovery
+        })
+    }
+}
+
+public extension StytchB2BClient {
     /**
      * The Discovery product lets End Users discover and log in to Organizations they are a Member of, invited to, or eligible to join.
      * Unlike our other B2B products, Discovery allows End Users to authenticate without specifying an Organization in advance. This is done via a [Discovery Magic Link](https://stytch.com/docs/b2b/sdks/javascript-sdk#email-magic-links_methods_send-discovery-email) flow. After an End User is [authenticated](https://stytch.com/docs/b2b/sdks/javascript-sdk#email-magic-links_methods_authenticate-discovery-magic-link), an Intermediate Session is returned along with a list of associated Organizations.
@@ -13,30 +22,39 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [list discovered Organizations](https://stytch.com/docs/b2b/api/list-discovered-organizations) endpoint. If the `intermediate_session_token` is not passed in and there is a current Member Session, the SDK will call the endpoint with the session token.
-        public func listOrganizations(parameters: ListOrganizationsParameters) async throws -> ListOrganizationsResponse {
-            // TODO: IST - ADD
-            try await router.post(to: .organizations, parameters: parameters)
+        public func listOrganizations() async throws -> ListOrganizationsResponse {
+            try await router.post(
+                to: .organizations,
+                parameters: IntermediateSessionTokenParametersWithNoWrappedValue(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [exchange intermediate session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
         public func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) async throws -> ExchangeIntermediateSessionResponse {
-            // TODO: IST - ADD
-            try await router.post(to: .intermediateSessionsExchange, parameters: parameters)
+            try await router.post(
+                to: .intermediateSessionsExchange,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [create Organization via discovery](https://stytch.com/docs/b2b/api/create-organization-via-discovery) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
         public func createOrganization(parameters: CreateOrganizationParameters) async throws -> CreateOrganizationResponse {
-            // TODO: IST - ADD
-            try await router.post(to: .organizationsCreate, parameters: parameters)
+            try await router.post(
+                to: .organizationsCreate,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
     }
-}
-
-public extension StytchB2BClient {
-    /// The interface for interacting with discovery products.
-    static var discovery: Discovery { .init(router: router.scopedRouter { $0.discovery }) }
 }
 
 public extension StytchB2BClient.Discovery {
@@ -55,16 +73,6 @@ public extension StytchB2BClient.Discovery {
         /// A list of discovered organizations.
         public let discoveredOrganizations: [DiscoveredOrganization]
     }
-
-    /// A dedicated parameters type for Discover `listOrganizations` calls.
-    struct ListOrganizationsParameters: Encodable {
-        let intermediateSessionToken: String // TODO: IST
-
-        /// - Parameter intermediateSessionToken: The Intermediate Session Token. This token does not belong to a specific instance of a member, but may be exchanged for an existing Member Session or used to create a new organization.
-        public init(intermediateSessionToken: String) {
-            self.intermediateSessionToken = intermediateSessionToken
-        }
-    }
 }
 
 public extension StytchB2BClient.Discovery {
@@ -72,11 +80,11 @@ public extension StytchB2BClient.Discovery {
     typealias ExchangeIntermediateSessionResponse = Response<ExchangeIntermediateSessionResponseData>
 
     /// The underlying data for `ExchangeIntermediateSessionResponse`.
-    struct ExchangeIntermediateSessionResponseData: Codable, B2BAuthenticateResponseDataType {
+    struct ExchangeIntermediateSessionResponseData: Codable, B2BMFAAuthenticateResponseDataType {
         /// The current member's ID.
         public let memberId: Member.ID
         /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
-        public let memberSession: MemberSession
+        public let memberSession: MemberSession?
         /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
         public let sessionToken: String
         /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
@@ -85,28 +93,24 @@ public extension StytchB2BClient.Discovery {
         public let member: Member
         /// The current organization object.
         public let organization: Organization
-
-        // TODO: IST - I THINK THIS RETURNS A IST ALSO
+        /// An optional intermediate session token to be returned if multi factor authentication is enabled
+        public var intermediateSessionToken: String?
     }
 
     /// The dedicated parameters type for Discovery `exchangeIntermediateSession` calls.
     struct ExchangeIntermediateSessionParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
-            case intermediateSessionToken
             case organizationId
             case sessionDuration = "sessionDurationMinutes"
         }
 
-        let intermediateSessionToken: String // TODO: IST
         let organizationId: Organization.ID
         let sessionDuration: Minutes
 
         /// - Parameters:
-        ///   - intermediateSessionToken: The Intermediate Session Token. This token does not belong to a specific instance of a member, but may be exchanged for a Member Session or used to create a new organization.
         ///   - organizationId: Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations on an Organization, so be sure to preserve this value.
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
-        public init(intermediateSessionToken: String, organizationId: Organization.ID, sessionDuration: Minutes = .defaultSessionDuration) {
-            self.intermediateSessionToken = intermediateSessionToken
+        public init(organizationId: Organization.ID, sessionDuration: Minutes = .defaultSessionDuration) {
             self.organizationId = organizationId
             self.sessionDuration = sessionDuration
         }
@@ -118,11 +122,11 @@ public extension StytchB2BClient.Discovery {
     typealias CreateOrganizationResponse = Response<CreateOrganizationResponseData>
 
     /// The underlying data for `CreateOrganizationResponse`.
-    struct CreateOrganizationResponseData: Codable, B2BAuthenticateResponseDataType {
+    struct CreateOrganizationResponseData: Codable, B2BMFAAuthenticateResponseDataType {
         /// The current member's ID.
         public let memberId: Member.ID
         /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
-        public let memberSession: MemberSession
+        public let memberSession: MemberSession?
         /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
         public let sessionToken: String
         /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
@@ -131,14 +135,13 @@ public extension StytchB2BClient.Discovery {
         public let member: Member
         /// The current organization object.
         public let organization: Organization
-
-        // TODO: IST - I THINK THIS RETURNS A IST ALSO
+        /// An optional intermediate session token to be returned if multi factor authentication is enabled
+        public var intermediateSessionToken: String?
     }
 
     /// A dedicated parameters type for Discovery `createOrganization` calls.
     struct CreateOrganizationParameters: Codable {
         private enum CodingKeys: String, CodingKey {
-            case intermediateSessionToken
             case sessionDuration = "sessionDurationMinutes"
             case organizationName
             case organizationSlug
@@ -151,7 +154,6 @@ public extension StytchB2BClient.Discovery {
             case allowedAuthMethods
         }
 
-        let intermediateSessionToken: String // TODO: IST
         let sessionDuration: Minutes
         let organizationName: String?
         let organizationSlug: String?
@@ -164,7 +166,6 @@ public extension StytchB2BClient.Discovery {
         let allowedAuthMethods: [AllowedAuthMethods]?
 
         /// - Parameters:
-        ///   - intermediateSessionToken: The Intermediate Session Token. This token does not belong to a specific instance of a member, but may be exchanged for a Member Session or used to create a new organization.
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
         ///   - organizationName: The name of the Organization. If the name is not specified, a default name will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization name will be generated based on the name portion of the email. Otherwise, the organization name will be generated based on the email domain.
         ///   - organizationSlug: The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. If the slug is not specified, a default slug will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization slug will be generated based on the name portion of the email. Otherwise, the organization slug will be generated based on the email domain.
@@ -176,7 +177,6 @@ public extension StytchB2BClient.Discovery {
         ///   - authMethods: The setting that controls which authentication methods can be used by Members of an Organization.
         ///   - allowedAuthMethods: An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
         public init(
-            intermediateSessionToken: String,
             sessionDuration: Minutes = .defaultSessionDuration,
             organizationName: String? = nil,
             organizationSlug: String? = nil,
@@ -188,7 +188,6 @@ public extension StytchB2BClient.Discovery {
             authMethods: AuthMethods? = nil,
             allowedAuthMethods: [AllowedAuthMethods]? = nil
         ) {
-            self.intermediateSessionToken = intermediateSessionToken
             self.sessionDuration = sessionDuration
             self.organizationName = organizationName
             self.organizationSlug = organizationSlug

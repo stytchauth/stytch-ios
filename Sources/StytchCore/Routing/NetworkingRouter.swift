@@ -123,7 +123,7 @@ public extension NetworkingRouter {
                 )
                 localStorage.member = sessionResponse.member
                 localStorage.organization = sessionResponse.organization
-            } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponse {
+            } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
                 if let memberSession = sessionResponse.memberSession {
                     sessionStorage.updateSession(
                         sessionType: .member(memberSession),
@@ -137,6 +137,10 @@ public extension NetworkingRouter {
                 }
                 localStorage.member = sessionResponse.member
                 localStorage.organization = sessionResponse.organization
+            } else if let sessionResponse = dataContainer.data as? DiscoveryIntermediateSessionTokenDataType {
+                sessionStorage.updateSession(
+                    intermediateSessionToken: sessionResponse.intermediateSessionToken
+                )
             }
             return dataContainer.data
         } catch let error as StytchAPIError where error.statusCode == 401 {

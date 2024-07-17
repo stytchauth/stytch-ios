@@ -44,6 +44,9 @@ final class B2BSSOTestCase: BaseTestCase {
             try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
             StytchSDKError.missingPKCE
         )
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
@@ -51,6 +54,7 @@ final class B2BSSOTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/sso/authenticate",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "sso_token": "i-am-token",
