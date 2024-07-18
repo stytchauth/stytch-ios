@@ -106,13 +106,21 @@ struct Environment {
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
     #endif
-    var pkcePairManager: PKCEPairManager { PKCEPairManagerImpl(keychainClient: keychainClient, cryptoClient: cryptoClient) }
+
+    var pkcePairManager: PKCEPairManager {
+        PKCEPairManagerImpl(
+            keychainClient: keychainClient,
+            cryptoClient: cryptoClient
+        )
+    }
 
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init
 
-    var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
+    var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = {
+        $0.asyncAfter(deadline: $1, execute: $2)
+    }
 
     var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
         let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }

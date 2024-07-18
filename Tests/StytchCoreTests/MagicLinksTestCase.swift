@@ -141,5 +141,7 @@ final class MagicLinksTestCase: BaseTestCase {
             urlString: "https://web.stytch.com/sdk/v1/magic_links/authenticate",
             method: .post(["token": "12345", "session_duration_minutes": 15, "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 }

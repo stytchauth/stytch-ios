@@ -26,6 +26,10 @@ public extension StytchB2BClient {
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
         /// If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             // For authenticating if loginOrSignup was called
             if let codeVerifier = pkcePairManager.getPKCECodePair()?.codeVerifier {
                 let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
@@ -56,7 +60,13 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Authenticate Discovery Magic Link method wraps the [authenticate](https://stytch.com/docs/b2b/api/send-discovery-email) discovery magic link API endpoint, which validates the discovery magic link token passed in.
         public func discoveryAuthenticate(parameters: DiscoveryAuthenticateParameters) async throws -> DiscoveryAuthenticateResponse {
-            guard let codeVerifier: String = pkcePairManager.getPKCECodePair()?.codeVerifier else { throw StytchSDKError.missingPKCE }
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
+            guard let codeVerifier: String = pkcePairManager.getPKCECodePair()?.codeVerifier else {
+                throw StytchSDKError.missingPKCE
+            }
 
             return try await router.post(
                 to: .discoveryAuthenticate,

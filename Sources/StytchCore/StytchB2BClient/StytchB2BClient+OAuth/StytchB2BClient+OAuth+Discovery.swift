@@ -18,10 +18,15 @@ public extension StytchB2BClient.OAuth {
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: DiscoveryAuthenticateParameters) async throws -> DiscoveryAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
+
             do {
                 let result = try await router.post(
                     to: .authenticate,

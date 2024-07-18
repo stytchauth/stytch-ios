@@ -98,6 +98,8 @@ final class PasswordsTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
         _ = try await StytchClient.passwords.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
 
         try XCTAssertRequest(
@@ -110,6 +112,8 @@ final class PasswordsTestCase: BaseTestCase {
                 "password": "iAMpasswordHEARmeROAR",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testResetBySession() async throws {

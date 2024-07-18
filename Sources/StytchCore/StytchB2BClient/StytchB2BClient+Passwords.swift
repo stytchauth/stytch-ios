@@ -54,6 +54,10 @@ public extension StytchB2BClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the member is authenticated.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BMFAAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 throw StytchSDKError.missingPKCE
             }
@@ -70,8 +74,6 @@ public extension StytchB2BClient {
                 to: .resetByEmail(.complete),
                 parameters: intermediateSessionTokenParameters
             )
-
-            try? pkcePairManager.clearPKCECodePair()
 
             return response
         }

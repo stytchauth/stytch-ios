@@ -43,6 +43,7 @@ final class OAuthTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
@@ -54,6 +55,8 @@ final class OAuthTestCase: BaseTestCase {
                 "token": "i-am-token",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 }
 

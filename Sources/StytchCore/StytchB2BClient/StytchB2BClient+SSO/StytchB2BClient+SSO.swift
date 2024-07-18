@@ -30,6 +30,10 @@ public extension StytchB2BClient {
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
         /// verifying that the token is valid and hasn't expired.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 throw StytchSDKError.missingPKCE
             }

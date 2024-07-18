@@ -79,6 +79,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
         )
 
         Current.timer = { _, _, _ in .init() }
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
         _ = try await client.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
 
@@ -93,6 +94,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "password": "iAMpasswordHEARmeROAR",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testResetByExistingPassword() async throws {
