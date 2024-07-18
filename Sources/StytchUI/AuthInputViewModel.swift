@@ -34,6 +34,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
         if let magicLink = state.config.magicLink {
             let params = params(email: email, magicLink: magicLink)
             _ = try await magicLinksClient.loginOrCreate(parameters: params)
+            try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
         }
     }
 
@@ -41,6 +42,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
         if let password = state.config.password {
             let params = params(email: email, password: password)
             _ = try await passwordClient.resetByEmailStart(parameters: params)
+            try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
         }
     }
 

@@ -117,6 +117,7 @@ public struct StytchB2BClient: StytchClientType {
                 initializationState.setInitializationState(state: true)
                 try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
             } catch {
+                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_failure"))
                 throw error
             }
         }
