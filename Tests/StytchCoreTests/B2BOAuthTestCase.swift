@@ -13,6 +13,8 @@ final class B2BOAuthTestCase: BaseTestCase {
         Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
         _ = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: "i-am-token", sessionDurationMinutes: 12))
 
         try XCTAssertRequest(
@@ -25,6 +27,8 @@ final class B2BOAuthTestCase: BaseTestCase {
                 "oauth_token": "i-am-token",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testAuthenticateFailsWithPKCE() async throws {
@@ -47,6 +51,8 @@ final class B2BOAuthTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
         _ = try await StytchB2BClient.oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: "i-am-token"))
 
         try XCTAssertRequest(
@@ -57,6 +63,8 @@ final class B2BOAuthTestCase: BaseTestCase {
                 "discovery_oauth_token": "i-am-token",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testDiscoveryAuthenticateFailsWithPKCE() async throws {

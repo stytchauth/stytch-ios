@@ -15,10 +15,15 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
+
             do {
                 let result = try await router.post(
                     to: .authenticate,

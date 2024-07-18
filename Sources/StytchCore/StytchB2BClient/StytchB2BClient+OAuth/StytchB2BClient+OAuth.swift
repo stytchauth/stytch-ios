@@ -19,10 +19,15 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
+
             do {
                 let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionStorage.intermediateSessionToken,

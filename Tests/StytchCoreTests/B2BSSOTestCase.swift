@@ -48,6 +48,8 @@ final class B2BSSOTestCase: BaseTestCase {
         Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
         _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
@@ -60,6 +62,8 @@ final class B2BSSOTestCase: BaseTestCase {
                 "sso_token": "i-am-token",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testGetConnections() async throws {
