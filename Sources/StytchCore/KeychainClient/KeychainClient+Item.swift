@@ -61,7 +61,9 @@ extension KeychainClient.Item {
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)
+    static let intermediateSessionToken: Self = .init(kind: .token, name: "stytch_intermediate_session_token")
     static let codeVerifierPKCE: Self = .init(kind: .token, name: "stytch_code_verifier_pkce")
+    static let codeChallengePKCE: Self = .init(kind: .token, name: "stytch_code_challenge_pkce")
 }
 
 extension KeychainClient.Item {
@@ -71,7 +73,9 @@ extension KeychainClient.Item {
             .privateKeyRegistration,
             .sessionToken,
             .sessionJwt,
+            .intermediateSessionToken,
             .codeVerifierPKCE,
+            .codeChallengePKCE,
         ]
     }
 }

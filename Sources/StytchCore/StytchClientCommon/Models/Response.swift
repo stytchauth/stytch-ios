@@ -81,3 +81,16 @@ extension Response: B2BAuthenticateResponseDataType where Wrapped: B2BAuthentica
     public var sessionToken: String { wrapped.sessionToken }
     public var sessionJwt: String { wrapped.sessionJwt }
 }
+
+extension Response: B2BMFAAuthenticateResponseDataType where Wrapped: B2BMFAAuthenticateResponseDataType {
+    public var member: Member { wrapped.member }
+    public var memberSession: MemberSession? { wrapped.memberSession }
+    public var organization: Organization { wrapped.organization }
+    public var sessionToken: String { wrapped.sessionToken }
+    public var sessionJwt: String { wrapped.sessionJwt }
+    public var intermediateSessionToken: String? { wrapped.intermediateSessionToken }
+}
+
+extension Response: DiscoveryIntermediateSessionTokenDataType where Wrapped: DiscoveryIntermediateSessionTokenDataType {
+    public var intermediateSessionToken: String { wrapped.intermediateSessionToken }
+}

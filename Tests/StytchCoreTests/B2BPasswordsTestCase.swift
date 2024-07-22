@@ -11,14 +11,18 @@ final class B2BPasswordsTestCase: BaseTestCase {
             password: "password123",
             sessionDuration: 26
         )
-        networkInterceptor.responses { B2BAuthenticateResponse.mock }
+        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try await client.authenticate(parameters: authParams)
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/authenticate",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "email_address": "user@stytch.com",
                 "session_duration_minutes": 26,
                 "password": "password123",
@@ -51,8 +55,11 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         networkInterceptor.responses {
             BasicResponse(requestId: "123", statusCode: 200)
-            B2BAuthenticateResponse.mock
+            B2BMFAAuthenticateResponse.mock
         }
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         _ = try await client.resetByEmailStart(
             parameters: .init(organizationId: "org123", email: "user@stytch.com", loginUrl: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15, resetPasswordTemplateId: "one-two-buckle-my-shoe")
         )
@@ -72,6 +79,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
         )
 
         Current.timer = { _, _, _ in .init() }
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
         _ = try await client.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
 
@@ -79,17 +87,22 @@ final class B2BPasswordsTestCase: BaseTestCase {
             networkInterceptor.requests[1],
             urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/email/reset",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "password_reset_token": "12345",
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "session_duration_minutes": 30,
                 "password": "iAMpasswordHEARmeROAR",
             ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testResetByExistingPassword() async throws {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.resetByExistingPassword(parameters: .init(organizationId: "org123", email: "jobe@bluth.com", existingPassword: "magicIsFun", newPassword: "buster_is_trouble"))
 
@@ -97,6 +110,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/existing_password/reset",
             method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": "org123",
                 "email_address": "jobe@bluth.com",
                 "existing_password": "magicIsFun",

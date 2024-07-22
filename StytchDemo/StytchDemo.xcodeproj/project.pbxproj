@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		2222D14128306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
 		2222D14228306426008CEBD7 /* OTPAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */; };
-		2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
-		2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2222D1432835C341008CEBD7 /* StytchConfiguration.plist */; };
 		2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531A299EE16D00BA9126 /* AppDelegate.swift */; };
 		2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531C299EE16D00BA9126 /* SceneDelegate.swift */; };
 		2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2231531E299EE16D00BA9126 /* RootViewController.swift */; };
@@ -42,7 +40,6 @@
 		224F7D4E280CEDF5000230FA /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F7D4C280CEDF5000230FA /* SessionView.swift */; };
 		224FC03628486013009C9740 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = 224FC03528486013009C9740 /* Swifter */; };
 		224FC03A28488591009C9740 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FC03928488591009C9740 /* Configuration.swift */; };
-		2254779029A05C0C003DF229 /* AppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254778F29A05C0C003DF229 /* AppViewController.swift */; };
 		2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779129A05C3E003DF229 /* AuthHomeViewController.swift */; };
 		2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779329A05C6A003DF229 /* MagicLinksViewController.swift */; };
 		2254779629A05C93003DF229 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2254779529A05C93003DF229 /* Constants.swift */; };
@@ -87,6 +84,16 @@
 		53E1282C2B50092F00976CAC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53E1282B2B50092F00976CAC /* Preview Assets.xcassets */; };
 		53E128402B50092F00976CAC /* StytchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E1283F2B50092F00976CAC /* StytchUITests.swift */; };
 		53E128422B50092F00976CAC /* StytchUILaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E128412B50092F00976CAC /* StytchUILaunchTests.swift */; };
+		74234D4C2C21E1240001DA69 /* SearchManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */; };
+		74234D4E2C21EAC10001DA69 /* TOTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */; };
+		74234D512C21EB770001DA69 /* SwiftOTP in Frameworks */ = {isa = PBXBuildFile; productRef = 74234D502C21EB770001DA69 /* SwiftOTP */; };
+		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
+		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
+		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
+		74A2D1912C21FDF8007F8F20 /* OTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */; };
+		74DD38CB2C2A2ABA00BEB0DD /* OAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DD38CA2C2A2ABA00BEB0DD /* OAuthViewController.swift */; };
+		74F0088D2C24C05100E0F863 /* RecoveryCodesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F0088C2C24C05000E0F863 /* RecoveryCodesViewController.swift */; };
+		74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +108,6 @@
 
 /* Begin PBXFileReference section */
 		2222D14028306426008CEBD7 /* OTPAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationView.swift; sourceTree = "<group>"; };
-		2222D1432835C341008CEBD7 /* StytchConfiguration.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = StytchConfiguration.plist; sourceTree = "<group>"; };
 		22315318299EE16D00BA9126 /* B2BWorkbench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = B2BWorkbench.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2231531A299EE16D00BA9126 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2231531C299EE16D00BA9126 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -126,7 +132,6 @@
 		224F7D4F280CF491000230FA /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 		224F7D50280CF500000230FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		224FC03928488591009C9740 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		2254778F29A05C0C003DF229 /* AppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewController.swift; sourceTree = "<group>"; };
 		2254779129A05C3E003DF229 /* AuthHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHomeViewController.swift; sourceTree = "<group>"; };
 		2254779329A05C6A003DF229 /* MagicLinksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagicLinksViewController.swift; sourceTree = "<group>"; };
 		2254779529A05C93003DF229 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -170,6 +175,16 @@
 		53E1283F2B50092F00976CAC /* StytchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUITests.swift; sourceTree = "<group>"; };
 		53E128412B50092F00976CAC /* StytchUILaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchUILaunchTests.swift; sourceTree = "<group>"; };
 		53E1284C2B500C7400976CAC /* StytchUIDemo.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StytchUIDemo.xctestplan; sourceTree = "<group>"; };
+		74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManagerViewController.swift; sourceTree = "<group>"; };
+		74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOTPViewController.swift; sourceTree = "<group>"; };
+		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		7478F7DA2BF6467900BCB233 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPViewController.swift; sourceTree = "<group>"; };
+		74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B2BWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
+		74DD38CA2C2A2ABA00BEB0DD /* OAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthViewController.swift; sourceTree = "<group>"; };
+		74F0088C2C24C05000E0F863 /* RecoveryCodesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryCodesViewController.swift; sourceTree = "<group>"; };
+		74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationMemberViewController.swift; sourceTree = "<group>"; };
 		7763D5AF2B58698F00F00737 /* StytchUIDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StytchUIDemo.entitlements; sourceTree = "<group>"; };
 		77AC9C632AA0FF4A004059CF /* StytchDemo (iOS)-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StytchDemo (iOS)-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -179,6 +194,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74234D512C21EB770001DA69 /* SwiftOTP in Frameworks */,
 				2231532D299EE5E700BA9126 /* StytchCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,15 +248,14 @@
 			children = (
 				2231531A299EE16D00BA9126 /* AppDelegate.swift */,
 				2231531C299EE16D00BA9126 /* SceneDelegate.swift */,
-				2254778F29A05C0C003DF229 /* AppViewController.swift */,
-				2231531E299EE16D00BA9126 /* RootViewController.swift */,
-				2254779129A05C3E003DF229 /* AuthHomeViewController.swift */,
-				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
+				7478F7DA2BF6467900BCB233 /* Extensions.swift */,
 				2254779529A05C93003DF229 /* Constants.swift */,
+				74F0088E2C25BB8800E0F863 /* ViewControllers */,
 				22315320299EE16D00BA9126 /* Main.storyboard */,
 				22315323299EE16E00BA9126 /* Assets.xcassets */,
 				22315325299EE16E00BA9126 /* LaunchScreen.storyboard */,
 				22315328299EE16E00BA9126 /* Info.plist */,
+				74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */,
 			);
 			path = B2BWorkbench;
 			sourceTree = "<group>";
@@ -261,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				224F7D50280CF500000230FA /* Info.plist */,
-				2222D1432835C341008CEBD7 /* StytchConfiguration.plist */,
 				224F7D35280CC566000230FA /* StytchDemoApp.swift */,
 				22909078284D9F4600ADD3C4 /* Extensions.swift */,
 				224F7D3C280CC5DE000230FA /* ContentView.swift */,
@@ -306,13 +320,19 @@
 		2254779D29A06EBB003DF229 /* AuthMethodControllers */ = {
 			isa = PBXGroup;
 			children = (
-				2254779329A05C6A003DF229 /* MagicLinksViewController.swift */,
-				224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */,
-				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
-				2254779729A05D08003DF229 /* MemberViewController.swift */,
-				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
 				22ABFAB829F7628E00927518 /* DiscoveryViewController.swift */,
+				2254779329A05C6A003DF229 /* MagicLinksViewController.swift */,
+				2254779729A05D08003DF229 /* MemberViewController.swift */,
+				74DD38CA2C2A2ABA00BEB0DD /* OAuthViewController.swift */,
+				2254779929A05D37003DF229 /* OrganizationViewController.swift */,
+				74F370292C07B7F400AED9C9 /* OrganizationMemberViewController.swift */,
+				74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */,
+				224E6F2429E8CAEB0031D37A /* PasswordsViewController.swift */,
+				74F0088C2C24C05000E0F863 /* RecoveryCodesViewController.swift */,
 				22ABFABA29F7690100927518 /* SSOViewController.swift */,
+				74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */,
+				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
+				74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -374,6 +394,7 @@
 				224F7D42280CC624000230FA /* macOS */,
 				224F7D51280CF592000230FA /* iOS */,
 				224F7D3A280CC5DE000230FA /* Shared */,
+				749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -407,6 +428,7 @@
 				53E128262B50092E00976CAC /* ContentView.swift */,
 				53E128282B50092F00976CAC /* Assets.xcassets */,
 				53E1282A2B50092F00976CAC /* Preview Content */,
+				7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */,
 				5354B59D2B507DC900B3081C /* StytchConfiguration.plist */,
 			);
 			path = StytchUIDemo;
@@ -433,6 +455,16 @@
 			path = StytchUITests;
 			sourceTree = "<group>";
 		};
+		74F0088E2C25BB8800E0F863 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2231531E299EE16D00BA9126 /* RootViewController.swift */,
+				2254779129A05C3E003DF229 /* AuthHomeViewController.swift */,
+				2254779D29A06EBB003DF229 /* AuthMethodControllers */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -451,6 +483,7 @@
 			name = B2BWorkbench;
 			packageProductDependencies = (
 				2231532C299EE5E700BA9126 /* StytchCore */,
+				74234D502C21EB770001DA69 /* SwiftOTP */,
 			);
 			productName = B2BWorkbench;
 			productReference = 22315318299EE16D00BA9126 /* B2BWorkbench.app */;
@@ -564,7 +597,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					22315317299EE16D00BA9126 = {
 						CreatedOnToolsVersion = 14.2;
@@ -604,6 +637,7 @@
 				224FC03428486013009C9740 /* XCRemoteSwiftPackageReference "swifter" */,
 				22909075284BE79400ADD3C4 /* XCRemoteSwiftPackageReference "jwt-kit" */,
 				77AC9C5E2AA0FCCD004059CF /* XCRemoteSwiftPackageReference "recaptcha-enterprise-mobile-sdk" */,
+				74234D4F2C21EB6D0001DA69 /* XCRemoteSwiftPackageReference "SwiftOTP" */,
 			);
 			productRefGroup = 229B82192809EA3F007BC3F1 /* Products */;
 			projectDirPath = "";
@@ -634,7 +668,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2222D1452835CBAA008CEBD7 /* StytchConfiguration.plist in Resources */,
+				749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */,
 				224F7D3D280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -643,7 +677,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2222D1442835C341008CEBD7 /* StytchConfiguration.plist in Resources */,
 				224F7D3E280CC5DE000230FA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -654,6 +687,7 @@
 			files = (
 				5354B59E2B507DC900B3081C /* StytchConfiguration.plist in Resources */,
 				53E1282C2B50092F00976CAC /* Preview Assets.xcassets in Resources */,
+				7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */,
 				53E128292B50092F00976CAC /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,16 +708,22 @@
 			files = (
 				2231531F299EE16D00BA9126 /* RootViewController.swift in Sources */,
 				224E6F2529E8CAEB0031D37A /* PasswordsViewController.swift in Sources */,
+				74234D4E2C21EAC10001DA69 /* TOTPViewController.swift in Sources */,
 				2254779429A05C6A003DF229 /* MagicLinksViewController.swift in Sources */,
 				2254779229A05C3E003DF229 /* AuthHomeViewController.swift in Sources */,
+				74234D4C2C21E1240001DA69 /* SearchManagerViewController.swift in Sources */,
+				74F3702A2C07B7F400AED9C9 /* OrganizationMemberViewController.swift in Sources */,
 				2231531B299EE16D00BA9126 /* AppDelegate.swift in Sources */,
+				7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */,
 				2254779A29A05D37003DF229 /* OrganizationViewController.swift in Sources */,
 				2254779C29A05D4E003DF229 /* SessionsViewController.swift in Sources */,
 				22ABFABB29F7690100927518 /* SSOViewController.swift in Sources */,
+				74A2D1912C21FDF8007F8F20 /* OTPViewController.swift in Sources */,
 				22ABFAB929F7628E00927518 /* DiscoveryViewController.swift in Sources */,
 				2254779829A05D08003DF229 /* MemberViewController.swift in Sources */,
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,
-				2254779029A05C0C003DF229 /* AppViewController.swift in Sources */,
+				74F0088D2C24C05100E0F863 /* RecoveryCodesViewController.swift in Sources */,
+				74DD38CB2C2A2ABA00BEB0DD /* OAuthViewController.swift in Sources */,
 				2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -819,8 +859,9 @@
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = B2B;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -835,6 +876,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "B2BWorkbench-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -853,8 +895,9 @@
 				DEVELOPMENT_TEAM = 22B584A5Q6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = B2BWorkbench/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = B2B;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -869,6 +912,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "B2BWorkbench-Bridging-Header.h";
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1005,9 +1049,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Client/Shared/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "'cause biometrics and stuff.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
@@ -1040,9 +1086,11 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Client/Shared/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "'cause biometrics and stuff.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
@@ -1185,6 +1233,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
@@ -1224,6 +1273,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
@@ -1383,6 +1433,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		74234D4F2C21EB6D0001DA69 /* XCRemoteSwiftPackageReference "SwiftOTP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lachlanbell/SwiftOTP.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.2;
+			};
+		};
 		77AC9C5E2AA0FCCD004059CF /* XCRemoteSwiftPackageReference "recaptcha-enterprise-mobile-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk";
@@ -1427,6 +1485,11 @@
 		5354B59F2B507F1500B3081C /* StytchUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchUI;
+		};
+		74234D502C21EB770001DA69 /* SwiftOTP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 74234D4F2C21EB6D0001DA69 /* XCRemoteSwiftPackageReference "SwiftOTP" */;
+			productName = SwiftOTP;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -30,3 +30,12 @@ public extension Organization {
         trustedMetadata = try container.decode(JSON.self, forKey: .trustedMetadata)
     }
 }
+
+public extension Organization {
+    /// The authentication factors which are able to be managed via member-management calls.
+    enum MemberAuthenticationFactor {
+        case totp(memberId: String)
+        case phoneNumber(memberId: String)
+        case password(passwordId: String)
+    }
+}

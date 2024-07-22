@@ -1,12 +1,20 @@
 import Foundation
 
 public extension StytchB2BClient {
+    /// The interface for interacting with passwords products.
+    static var passwords: Passwords {
+        .init(router: router.scopedRouter { $0.passwords })
+    }
+}
+
+public extension StytchB2BClient {
     /// Stytch supports creating, storing, and authenticating passwords, as well as support for account recovery (password reset) and account deduplication with passwordless login methods.
     /// Our implementation of passwords has built-in breach detection powered by [HaveIBeenPwned](https://haveibeenpwned.com/) on both sign-up and login, to prevent the use of compromised credentials and uses configurable strength requirements (either Dropbox’s [zxcvbn](https://github.com/dropbox/zxcvbn) or adjustable LUDS) to guide members towards creating passwords that are easy for humans to remember but difficult for computers to crack.
     struct Passwords {
         let router: NetworkingRouter<PasswordsRoute>
 
-        @Dependency(\.keychainClient) private var keychainClient
+        @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionStorage) private var sessionStorage
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member with their email address and password. This method verifies that the member has a password currently set, and that the entered password is correct.
@@ -16,20 +24,26 @@ public extension StytchB2BClient {
         ///   a. We force a password reset to ensure that the member is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
         /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+            try await router.post(
+                to: .authenticate,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates a password reset for the email address provided. This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
-            let (codeChallenge, codeChallengeMethod) = try StytchB2BClient.generateAndStorePKCE(keychainItem: .codeVerifierPKCE)
+            let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
 
             return try await router.post(
                 to: .resetByEmail(.start),
                 parameters: CodeChallengedParameters(
-                    codeChallenge: codeChallenge,
-                    codeChallengeMethod: codeChallengeMethod,
+                    codeChallenge: pkcePair.codeChallenge,
+                    codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
                 )
             )
@@ -39,17 +53,27 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the magic link token is valid, hasn’t expired, or already been used.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BAuthenticateResponse {
-            guard let codeVerifier: String = try? keychainClient.get(.codeVerifierPKCE) else {
+        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BMFAAuthenticateResponse {
+            defer {
+                try? pkcePairManager.clearPKCECodePair()
+            }
+
+            guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
                 throw StytchSDKError.missingPKCE
             }
 
-            let response: B2BAuthenticateResponse = try await router.post(
-                to: .resetByEmail(.complete),
-                parameters: CodeVerifierParameters(codeVerifier: codeVerifier, wrapped: parameters)
+            let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                wrapped: CodeVerifierParameters(
+                    codeVerifier: pkcePair.codeVerifier,
+                    wrapped: parameters
+                )
             )
 
-            try? keychainClient.removeItem(.codeVerifierPKCE)
+            let response: B2BMFAAuthenticateResponse = try await router.post(
+                to: .resetByEmail(.complete),
+                parameters: intermediateSessionTokenParameters
+            )
 
             return response
         }
@@ -58,8 +82,14 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the existing password matches the stored value.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BAuthenticateResponse {
-            try await router.post(to: .resetByExistingPassword, parameters: parameters)
+        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BMFAAuthenticateResponse {
+            try await router.post(
+                to: .resetByExistingPassword,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    wrapped: parameters
+                )
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -85,11 +115,6 @@ public extension StytchB2BClient {
             try await router.post(to: .strengthCheck, parameters: parameters)
         }
     }
-}
-
-public extension StytchB2BClient {
-    /// The interface for interacting with passwords products.
-    static var passwords: Passwords { .init(router: router.scopedRouter { $0.passwords }) }
 }
 
 public extension StytchB2BClient.Passwords {

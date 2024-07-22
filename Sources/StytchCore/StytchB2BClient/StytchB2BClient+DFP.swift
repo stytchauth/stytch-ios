@@ -1,3 +1,9 @@
+import Foundation
+
+public extension StytchB2BClient {
+    static let dfp: DFP = .init()
+}
+
 public extension StytchB2BClient {
     struct DFP {
         #if os(iOS)
@@ -16,8 +22,4 @@ public extension StytchB2BClient {
             #endif
         }
     }
-}
-
-public extension StytchB2BClient {
-    static let dfp: DFP = .init()
 }

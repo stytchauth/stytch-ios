@@ -9,13 +9,15 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             StytchB2BClient.Discovery.ListOrganizationsResponse(requestId: "123", statusCode: 200, wrapped: .init(email: "blah@gmail.com", discoveredOrganizations: [.init(organization: .mock, membership: .init(kind: "somethign", details: nil, member: .mock), memberAuthenticated: false)]))
         }
 
-        _ = try await client.listOrganizations(parameters: .init(intermediateSessionToken: "token"))
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
+        _ = try await client.listOrganizations()
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/organizations",
             method: .post([
-                "intermediate_session_token": "token",
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
             ])
         )
     }
@@ -26,13 +28,15 @@ final class B2BDiscoveryTestCase: BaseTestCase {
         }
         Current.timer = { _, _, _ in .init() }
 
-        _ = try await client.exchangeIntermediateSession(parameters: .init(intermediateSessionToken: "asdf", organizationId: Organization.mock.id))
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+
+        _ = try await client.exchangeIntermediateSession(parameters: .init(organizationId: Organization.mock.id))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/intermediate_sessions/exchange",
             method: .post([
-                "intermediate_session_token": "asdf",
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": "org_123",
                 "session_duration_minutes": 30,
             ])
@@ -40,22 +44,36 @@ final class B2BDiscoveryTestCase: BaseTestCase {
     }
 
     func testCreateOrganization() async throws {
-        networkInterceptor.responses { StytchB2BClient.Discovery.CreateOrganizationResponse(requestId: "req", statusCode: 200, wrapped: .init(memberId: Member.mock.id, memberSession: .mock, sessionToken: "asdf", sessionJwt: "zxcv", member: .mock, organization: .mock)) }
+        networkInterceptor.responses {
+            StytchB2BClient.Discovery.CreateOrganizationResponse(
+                requestId: "req",
+                statusCode: 200,
+                wrapped: .init(
+                    memberId: Member.mock.id,
+                    memberSession: .mock,
+                    sessionToken: "asdf",
+                    sessionJwt: "zxcv",
+                    member: .mock,
+                    organization: .mock
+                )
+            )
+        }
         Current.timer = { _, _, _ in .init() }
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.createOrganization(
             parameters: .init(
-                intermediateSessionToken: "token",
                 sessionDuration: 12,
                 organizationName: "hello",
                 organizationSlug: "goodbye",
                 organizationLogoUrl: XCTUnwrap(.init(string: "file://123")),
-                ssoJitProvisioning: .allAllowed,
+                ssoJitProvisioning: .ALL_ALLOWED,
                 emailAllowedDomains: ["something.com"],
-                emailJitProvisioning: .notAllowed,
-                emailInvites: .restricted,
-                authMethods: .allAllowed,
-                allowedAuthMethods: [.magicLink, .password]
+                emailJitProvisioning: .NOT_ALLOWED,
+                emailInvites: .RESTRICTED,
+                authMethods: .ALL_ALLOWED,
+                allowedAuthMethods: [.MAGIC_LINK, .PASSWORD]
             )
         )
 
@@ -63,7 +81,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/organizations/create",
             method: .post([
-                "intermediate_session_token": "token",
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "organization_name": "hello",
                 "organization_slug": "goodbye",

@@ -77,7 +77,7 @@ public struct StytchB2BClient: StytchClientType {
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .mfauth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .multiTenantPasswords:
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
@@ -88,9 +88,23 @@ public struct StytchB2BClient: StytchClientType {
             Task {
                 try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .mfauth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        case .oauth:
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .mfauth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
+        case .discoveryOauth:
+            Task {
+                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .discoveryOauth(oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: token))))
         #endif
         }
+    }
+
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
     }
 
     func runBootstrapping() {
@@ -103,6 +117,7 @@ public struct StytchB2BClient: StytchClientType {
                 initializationState.setInitializationState(state: true)
                 try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
             } catch {
+                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_failure"))
                 throw error
             }
         }
@@ -117,12 +132,18 @@ public extension StytchB2BClient {
         case multiTenantPasswords = "multi_tenant_passwords"
         #if !os(watchOS)
         case sso
+        case oauth
+        case discoveryOauth = "discovery_oauth"
         #endif
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
     enum DeeplinkResponse {
         case auth(B2BAuthenticateResponse)
+        case mfauth(B2BMFAAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
+        #if !os(watchOS)
+        case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
+        #endif
     }
 }

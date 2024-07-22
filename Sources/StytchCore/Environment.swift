@@ -61,7 +61,11 @@ struct Environment {
 
     let sessionStorage: SessionStorage = .init()
 
-    let userStorage: UserStorage = .init()
+    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
+
+    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
+
+    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
 
     var localStorage: LocalStorage = .init()
 
@@ -70,7 +74,7 @@ struct Environment {
     var keychainClient: KeychainClient = .live
 
     #if !os(watchOS)
-    private var _webAuthSessionClient: Any? = {
+    private var _webAuthenticationSessionClient: Any? = {
         if #available(tvOS 16.0, *) {
             return WebAuthenticationSessionClient.live
         }
@@ -78,10 +82,10 @@ struct Environment {
     }()
 
     @available(tvOS 16.0, *)
-    var webAuthSessionClient: WebAuthenticationSessionClient {
+    var webAuthenticationSessionClient: WebAuthenticationSessionClient {
         // swiftlint:disable:next force_cast
-        get { _webAuthSessionClient as! WebAuthenticationSessionClient }
-        set { _webAuthSessionClient = newValue }
+        get { _webAuthenticationSessionClient as! WebAuthenticationSessionClient }
+        set { _webAuthenticationSessionClient = newValue }
     }
 
     private var _passkeysClent: Any? = {
@@ -102,29 +106,27 @@ struct Environment {
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
     #endif
+
+    var pkcePairManager: PKCEPairManager {
+        PKCEPairManagerImpl(
+            keychainClient: keychainClient,
+            cryptoClient: cryptoClient
+        )
+    }
+
     var date: () -> Date = Date.init
 
     var uuid: () -> UUID = UUID.init
 
-    var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = { $0.asyncAfter(deadline: $1, execute: $2) }
+    var asyncAfter: (DispatchQueue, DispatchTime, @escaping () -> Void) -> Void = {
+        $0.asyncAfter(deadline: $1, execute: $2)
+    }
 
     var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
         let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
         runloop.add(timer, forMode: .common)
         return timer
     }
-
-    #if !os(watchOS)
-    var openUrl: (URL) -> Void = { url in
-        DispatchQueue.main.async {
-            #if os(macOS)
-            NSWorkspace.shared.open(url)
-            #else
-            UIApplication.shared.open(url)
-            #endif
-        }
-    }
-    #endif
 
     var initializationState: InitializationState = .init()
 }

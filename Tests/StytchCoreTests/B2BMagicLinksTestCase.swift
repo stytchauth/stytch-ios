@@ -70,24 +70,48 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
     }
 
+    func testEmailInviteSend() async throws {
+        networkInterceptor.responses {
+            BasicResponse(requestId: "1234", statusCode: 200)
+        }
+        let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
+        let parameters: StytchB2BClient.MagicLinks.Email.InviteParameters = .init(
+            email: "asdf@stytch.com",
+            inviteRedirectUrl: baseUrl.appendingPathComponent("login"),
+            inviteTemplateId: "g'day",
+            locale: "en"
+        )
+
+        _ = try await StytchB2BClient.magicLinks.email.inviteSend(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/invite",
+            method: .post([
+                "email_address": "asdf@stytch.com",
+                "invite_redirect_url": "https://myapp.com/login",
+                "invite_template_id": "g'day",
+                "locale": "en",
+            ])
+        )
+    }
+
     func testAuthenticate() async throws {
-        let authResponse: B2BAuthenticateResponse = .mock
+        let authResponse: B2BMFAAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
             sessionDuration: 15
         )
 
-        await XCTAssertThrowsErrorAsync(
-            try await StytchB2BClient.magicLinks.authenticate(parameters: parameters),
-            StytchSDKError.missingPKCE
-        )
-
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
         Current.timer = { _, _, _ in .init() }
+
+        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         let response = try await StytchB2BClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -95,13 +119,23 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.member.id, authResponse.member.id)
         XCTAssertEqual(response.sessionToken, "xyzasdf")
         XCTAssertEqual(response.sessionJwt, "i'mvalidjson")
-        XCTAssertTrue(Calendar.current.isDate(response.memberSession.expiresAt, equalTo: authResponse.memberSession.expiresAt, toGranularity: .nanosecond))
+        if let responseMemberSessionExpiresAt = response.memberSession?.expiresAt, let authResponseMemberSessionExpiresAt = authResponse.memberSession?.expiresAt {
+            XCTAssertTrue(Calendar.current.isDate(responseMemberSessionExpiresAt, equalTo: authResponseMemberSessionExpiresAt, toGranularity: .second))
+        } else {
+            XCTFail("Something went wrong, one of the member sessions in nil and should not be")
+        }
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/authenticate",
-            method: .post(["magic_links_token": "12345", "session_duration_minutes": 15, "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
+            method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "magic_links_token": "12345", "session_duration_minutes": 15,
+                "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+            ])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 
     func testDiscoveryAuthenticate() async throws {
@@ -115,6 +149,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
@@ -127,6 +162,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/discovery/authenticate",
             method: .post(["discovery_magic_links_token": "12345", "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 }
 
@@ -144,6 +181,21 @@ extension B2BAuthenticateResponse {
     )
 }
 
+extension B2BMFAAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            memberSession: .mock,
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke"
+        )
+    )
+}
+
 extension Member {
     static let mock: Self = .init(
         organizationId: Organization.mock.id,
@@ -153,6 +205,7 @@ extension Member {
         ssoRegistrations: [],
         trustedMetadata: [:],
         untrustedMetadata: [:],
+        memberPasswordId: "",
         memberId: "member_1234"
     )
 }
@@ -168,6 +221,22 @@ extension MemberSession {
             expiresAt: refDate.advanced(by: 60 * 60 * 24),
             authenticationFactors: [],
             customClaims: nil,
+            roles: ["reader"],
+            memberSessionId: "mem_session_123"
+        )
+    }()
+
+    static let mockWithAdminRole: Self = {
+        let refDate = Date()
+        return .init(
+            organizationId: Organization.mock.id,
+            memberId: Member.mock.id,
+            startedAt: refDate,
+            lastAccessedAt: refDate,
+            expiresAt: refDate.advanced(by: 60 * 60 * 24),
+            authenticationFactors: [],
+            customClaims: nil,
+            roles: ["organization_admin"],
             memberSessionId: "mem_session_123"
         )
     }()

@@ -54,6 +54,15 @@
           "revision": "a51ae97214d6d24e18aa9e824eea5f1f4021d171",
           "version": null
         }
+      },
+      {
+        "package": "SwiftOTP",
+        "repositoryURL": "https://github.com/lachlanbell/SwiftOTP.git",
+        "state": {
+          "branch": null,
+          "revision": "9660551ea3df153c3cbacfa34ac3abbec73a8b84",
+          "version": "3.0.2"
+        }
       }
     ]
   },

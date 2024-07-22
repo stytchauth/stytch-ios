@@ -12,6 +12,7 @@ public struct MemberSession: Codable {
     public let expiresAt: Date
     public let authenticationFactors: [AuthenticationFactor]
     public let customClaims: JSON?
+    public let roles: [String]?
 
     let memberSessionId: ID
 }

@@ -8,16 +8,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let _ = (scene as? UIWindowScene) else {
+            return
+        }
     }
 
     func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        guard let url = URLContexts.first?.url else { return }
+        guard let url = URLContexts.first?.url else {
+            return
+        }
 
         handle(url: url)
     }
 
-    private func handle(url: URL) {
+    func handle(url: URL) {
         Task {
             do {
                 switch try await StytchB2BClient.handle(url: url, sessionDuration: 60) {
@@ -25,20 +29,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     // Handled via RootVC onAuthChange publisher
                     switch response {
                     case .auth:
-                        print(response)
+                        print("auth response: \(response)")
                     case let .discovery(authResponse):
-                        print(authResponse)
+                        print("discovery auth response: \(authResponse)")
+                    case let .discoveryOauth(authResponse):
+                        print("discovery oauth response: \(authResponse)")
+                    case let .mfauth(authResponse):
+                        print("mfa response: \(authResponse)")
                     }
                 case let .manualHandlingRequired(_, token):
-                    guard let controller = window?.rootViewController?.navigationController?.viewControllers.last as? PasswordsViewController else {
-                        fatalError("Passwords controller should still be last")
+                    if let navigationController = window?.rootViewController as? UINavigationController,
+                       let passwordsViewController = navigationController.viewControllers.last as? PasswordsViewController
+                    {
+                        passwordsViewController.resetPassword(token: token)
                     }
-                    controller.initiatePasswordReset(token: token)
+
                 case .notHandled:
                     break
                 }
             } catch {
-                print(error)
+                print("Handle URL Error: \(error.errorInfo)")
             }
         }
     }

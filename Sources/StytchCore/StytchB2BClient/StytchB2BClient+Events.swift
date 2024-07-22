@@ -1,6 +1,18 @@
 import Foundation
+
+// swiftlint:disable identifier_name
+
 public protocol StytchB2BClientEventsProtocol {
     func logEvent(parameters: StytchB2BClient.Events.Parameters) async throws
+}
+
+public extension StytchB2BClient {
+    static var events: Events {
+        .init(
+            router: router.scopedRouter { $0.events },
+            appSessionId: appSessionId
+        )
+    }
 }
 
 public extension StytchB2BClient {
@@ -54,7 +66,6 @@ public extension StytchB2BClient {
             let clientSentAt: Date
             let timezone: String
             let app: ClientInfo.App
-            // swiftlint:disable:next identifier_name
             let os: ClientInfo.OperatingSystem
             let sdk: ClientInfo.SDK
             let device: ClientInfo.Device
@@ -66,7 +77,6 @@ public extension StytchB2BClient {
                 clientSentAt: Date,
                 timezone: String,
                 app: ClientInfo.App,
-                // swiftlint:disable:next identifier_name
                 os: ClientInfo.OperatingSystem,
                 sdk: ClientInfo.SDK,
                 device: ClientInfo.Device
@@ -122,18 +132,16 @@ public extension StytchB2BClient {
     }
 }
 
-public extension StytchB2BClient {
-    static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: appSessionId) }
-}
-
 public extension StytchB2BClient.Events {
     struct Parameters {
         let eventName: String
         let details: [String: String]?
+        let error: Error?
 
-        public init(eventName: String, details: [String: String]? = nil) {
+        public init(eventName: String, details: [String: String]? = nil, error: Error? = nil) {
             self.eventName = eventName
             self.details = details
+            self.error = error
         }
     }
 }

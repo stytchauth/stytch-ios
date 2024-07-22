@@ -25,6 +25,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
         _ = try await passwordClient.resetByEmailStart(parameters: params)
+        try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
     }
 
     func resendCode(input: String) async throws {
@@ -38,6 +39,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
         case .whatsapp:
             result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: input)))
         }
+        try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": input, "type": "login_or_create_otp"]))
         state = .init(
             config: state.config,
             otpMethod: state.otpMethod,

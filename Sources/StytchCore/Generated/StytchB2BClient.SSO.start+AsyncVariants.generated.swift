@@ -7,10 +7,10 @@ import Foundation
 public extension StytchB2BClient.SSO {
     /// Start an SSO authentication flow.
     @available(tvOS 16.0, *)
-    func start(parameters: StartParameters, completion: @escaping Completion<(token: String, url: URL)>) {
+    func start(configuration: WebAuthenticationConfiguration, completion: @escaping Completion<(token: String, url: URL)>) {
         Task {
             do {
-                completion(.success(try await start(parameters: parameters)))
+                completion(.success(try await start(configuration: configuration)))
             } catch {
                 completion(.failure(error))
             }
@@ -19,12 +19,12 @@ public extension StytchB2BClient.SSO {
 
     /// Start an SSO authentication flow.
     @available(tvOS 16.0, *)
-    func start(parameters: StartParameters) -> AnyPublisher<(token: String, url: URL), Error> {
+    func start(configuration: WebAuthenticationConfiguration) -> AnyPublisher<(token: String, url: URL), Error> {
         return Deferred {
             Future({ promise in
                 Task {
                     do {
-                        promise(.success(try await start(parameters: parameters)))
+                        promise(.success(try await start(configuration: configuration)))
                     } catch {
                         promise(.failure(error))
                     }

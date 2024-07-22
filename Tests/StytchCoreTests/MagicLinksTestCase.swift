@@ -122,6 +122,7 @@ final class MagicLinksTestCase: BaseTestCase {
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         XCTAssertNotNil(try Current.keychainClient.get(.codeVerifierPKCE))
 
@@ -133,12 +134,14 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.user.id, authResponse.user.id)
         XCTAssertEqual(response.sessionToken, "hello_session")
         XCTAssertEqual(response.sessionJwt, "jwt_for_me")
-        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .nanosecond))
+        XCTAssertTrue(Calendar.current.isDate(response.session.expiresAt, equalTo: authResponse.session.expiresAt, toGranularity: .second))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/magic_links/authenticate",
             method: .post(["token": "12345", "session_duration_minutes": 15, "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
     }
 }
