@@ -136,7 +136,7 @@ public extension StytchB2BClient.Passwords {
         ///    - organizationId: The ID of the intended organization.
         ///    - email: The members's email address.
         ///    - password: The member's password.
-        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(organizationId: Organization.ID, email: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.organizationId = organizationId
             self.email = email

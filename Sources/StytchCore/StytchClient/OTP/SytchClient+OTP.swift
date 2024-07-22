@@ -51,7 +51,7 @@ public extension StytchClient.OTP {
         /// - Parameters:
         ///   - code: The one-time passcode
         ///   - methodId: The methodId captured upon requesting the OTP.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(code: String, methodId: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.code = code
             self.methodId = methodId

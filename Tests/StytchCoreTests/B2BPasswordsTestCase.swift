@@ -90,7 +90,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "password_reset_token": "12345",
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
                 "password": "iAMpasswordHEARmeROAR",
             ])
         )
@@ -115,7 +115,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "email_address": "jobe@bluth.com",
                 "existing_password": "magicIsFun",
                 "new_password": "buster_is_trouble",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
             ])
         )
     }

@@ -61,7 +61,7 @@ public extension StytchClient.TOTP {
 
         /// - Parameters:
         ///   - totpCode: The TOTP code to authenticate. The TOTP code should consist of 6 digits.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(totpCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.totpCode = totpCode
             self.sessionDuration = sessionDuration
@@ -80,7 +80,7 @@ public extension StytchClient.TOTP {
 
         /// - Parameters:
         ///   - recoveryCode: The recovery code to authenticate.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(recoveryCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.recoveryCode = recoveryCode
             self.sessionDuration = sessionDuration

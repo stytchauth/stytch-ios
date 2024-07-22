@@ -65,7 +65,7 @@ public struct StytchClient: StytchClientType {
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
     public static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration

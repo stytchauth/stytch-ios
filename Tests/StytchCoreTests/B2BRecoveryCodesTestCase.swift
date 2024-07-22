@@ -62,7 +62,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/b2b/recovery_codes/recover",
             method: .post([
-                "session_duration_minutes": JSON.number(30),
+                "session_duration_minutes": JSON.number(5),
                 "organization_id": JSON.string(organizationId),
                 "member_id": JSON.string(memberId),
                 "recovery_code": JSON.string(recoveryCode),

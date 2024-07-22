@@ -44,7 +44,7 @@ public extension StytchClient.MagicLinks {
          Initializes the parameters struct
          - Parameters:
            - token: The token extracted from the magic link.
-           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
          */
         public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.token = token

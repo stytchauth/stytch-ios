@@ -19,6 +19,10 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.userStorage) private var userStorage
 
+    @Dependency(\.memberStorage) private var memberStorage
+
+    @Dependency(\.organizationStorage) private var organizationStorage
+
     @Dependency(\.localStorage) private var localStorage
 
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
@@ -121,8 +125,8 @@ public extension NetworkingRouter {
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
-                localStorage.member = sessionResponse.member
-                localStorage.organization = sessionResponse.organization
+                memberStorage.update(sessionResponse.member)
+                organizationStorage.update(sessionResponse.organization)
             } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
                 if let memberSession = sessionResponse.memberSession {
                     sessionStorage.updateSession(
@@ -135,8 +139,8 @@ public extension NetworkingRouter {
                         intermediateSessionToken: sessionResponse.intermediateSessionToken
                     )
                 }
-                localStorage.member = sessionResponse.member
-                localStorage.organization = sessionResponse.organization
+                memberStorage.update(sessionResponse.member)
+                organizationStorage.update(sessionResponse.organization)
             } else if let sessionResponse = dataContainer.data as? DiscoveryIntermediateSessionTokenDataType {
                 sessionStorage.updateSession(
                     intermediateSessionToken: sessionResponse.intermediateSessionToken

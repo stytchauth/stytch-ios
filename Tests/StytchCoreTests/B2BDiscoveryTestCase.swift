@@ -38,7 +38,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": "org_123",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
             ])
         )
     }

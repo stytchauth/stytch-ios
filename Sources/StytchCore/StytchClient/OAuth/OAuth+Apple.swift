@@ -82,7 +82,7 @@ public extension StytchClient.OAuth.Apple {
 
         #if !os(watchOS)
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         ///   - presentationContextProvider: This native Apple authorization type allows you to present Sign In With Apple in the window of your choosing.
         public init(
             sessionDuration: Minutes = .defaultSessionDuration,
@@ -93,7 +93,7 @@ public extension StytchClient.OAuth.Apple {
         }
         #else
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(sessionDuration: Minutes = .defaultSessionDuration) {
             self.sessionDuration = sessionDuration
         }
