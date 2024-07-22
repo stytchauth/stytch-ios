@@ -246,7 +246,7 @@ Full reference documentation is available for [StytchCore](https://stytchauth.gi
 
 ### Questions?
 
-Feel free to reach out any time at [support@stytch.com](mailto:support@stytch.com), in our [Slack](https://stytch.slack.com/join/shared_invite/zt-2f0fi1ruu-ub~HGouWRmPARM1MTwPESA), or in our [Forum](https://forum.stytch.com).
+Feel free to reach out any time at [support@stytch.com](mailto:support@stytch.com), in our [Slack](https://stytch.com/docs/resources/support/overview), or in our [Forum](https://forum.stytch.com).
 
 ## License
 
