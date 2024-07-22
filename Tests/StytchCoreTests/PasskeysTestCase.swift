@@ -87,7 +87,7 @@ final class PasskeysTestCase: BaseTestCase {
             urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate",
             method: .post([
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"signature\":\"ZmFrZV9zaWduYXR1cmU\",\"authenticatorData\":\"ZmFrZV9hdXRoX2RhdGE\",\"userHandle\":\"ZmFrZV91c2VyX2lk\"},\"type\":\"public-key\"}",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
             ])
         )
     }

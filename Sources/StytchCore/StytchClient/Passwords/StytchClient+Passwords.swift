@@ -136,7 +136,7 @@ public extension StytchClient.Passwords {
         ///  - Parameters:
         ///    - email: The user's email address.
         ///    - password: The user's password.
-        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(email: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.email = email
             self.password = password

@@ -79,7 +79,7 @@ final class B2BSessionsTestCase: BaseTestCase {
             urlString: "https://web.stytch.com/sdk/v1/b2b/sessions/exchange",
             method: .post([
                 "organization_id": JSON(stringLiteral: organizationID),
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
             ])
         )
     }

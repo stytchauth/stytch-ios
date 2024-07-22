@@ -7,7 +7,9 @@ public enum Sessions {
 
         let sessionDuration: Minutes?
 
-        /// - Parameter sessionDuration: The duration, in minutes, of the requested session. If included, this value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the SDK Configuration page of the Stytch dashboard. Defaults to nil, leaving the original session expiration intact.
+        /// - Parameter sessionDuration: The duration, in minutes, of the requested session.
+        /// If included, this value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the SDK Configuration page of the Stytch dashboard.
+        /// Defaults to nil, leaving the original session expiration intact.
         public init(sessionDuration: Minutes? = nil) {
             self.sessionDuration = sessionDuration
         }

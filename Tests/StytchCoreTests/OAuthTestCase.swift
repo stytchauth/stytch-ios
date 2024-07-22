@@ -19,7 +19,7 @@ final class OAuthTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://web.stytch.com/sdk/v1/oauth/apple/id_token/authenticate",
             method: .post([
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
                 "nonce": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "id_token": "id_token_123",
             ])

@@ -9,7 +9,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totps.create(parameters: .init())
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps", method: .post(["expiration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps", method: .post(["expiration_minutes": 5]))
     }
 
     func testAuthenticate() async throws {
@@ -19,7 +19,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totps.authenticate(parameters: .init(totpCode: "test-code"))
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 5]))
     }
 
     func testRecover() async throws {
@@ -31,7 +31,7 @@ final class TOTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.totps.recover(parameters: .init(recoveryCode: "recover-edoc"))
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recover", method: .post(["recovery_code": "recover-edoc", "session_duration_minutes": 30]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/totps/recover", method: .post(["recovery_code": "recover-edoc", "session_duration_minutes": 5]))
     }
 
     func testRecoveryCodes() async throws {

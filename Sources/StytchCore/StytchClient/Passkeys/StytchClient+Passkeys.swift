@@ -147,7 +147,7 @@ public extension StytchClient.Passkeys {
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(
             domain: String,
             requestBehavior: RequestBehavior = .defaultPlatformValue,

@@ -24,8 +24,7 @@ extension Minutes: ExpressibleByIntegerLiteral {
 }
 
 public extension Minutes {
-    /// 30
-    static let defaultSessionDuration: Self = 30
+    static let defaultSessionDuration: Self = 5
 
     static func == (lhs: Minutes, rhs: Minutes) -> Bool {
         lhs.rawValue == rhs.rawValue

@@ -108,7 +108,7 @@ final class PasswordsTestCase: BaseTestCase {
             method: .post([
                 "token": "12345",
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
                 "password": "iAMpasswordHEARmeROAR",
             ])
         )
@@ -144,7 +144,7 @@ final class PasswordsTestCase: BaseTestCase {
                 "email_address": "user@stytch.com",
                 "existing_password": "password123",
                 "new_password": "password234",
-                "session_duration_minutes": 30,
+                "session_duration_minutes": 5,
             ])
         )
     }

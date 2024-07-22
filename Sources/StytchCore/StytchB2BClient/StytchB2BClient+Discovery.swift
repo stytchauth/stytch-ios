@@ -109,7 +109,7 @@ public extension StytchB2BClient.Discovery {
 
         /// - Parameters:
         ///   - organizationId: Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations on an Organization, so be sure to preserve this value.
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         public init(organizationId: Organization.ID, sessionDuration: Minutes = .defaultSessionDuration) {
             self.organizationId = organizationId
             self.sessionDuration = sessionDuration
@@ -166,7 +166,7 @@ public extension StytchB2BClient.Discovery {
         let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
 
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - organizationName: The name of the Organization. If the name is not specified, a default name will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization name will be generated based on the name portion of the email. Otherwise, the organization name will be generated based on the email domain.
         ///   - organizationSlug: The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. If the slug is not specified, a default slug will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization slug will be generated based on the name portion of the email. Otherwise, the organization slug will be generated based on the email domain.
         ///   - organizationLogoUrl: The image URL of the Organization logo.

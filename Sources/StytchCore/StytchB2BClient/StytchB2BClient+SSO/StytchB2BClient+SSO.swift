@@ -143,7 +143,7 @@ public extension StytchB2BClient.SSO {
 
         /// - Parameters:
         ///   - token: The token to authenticate.
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 30 minutes.
+        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
             self.token = token
             self.sessionDuration = sessionDuration
