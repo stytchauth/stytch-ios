@@ -5,6 +5,7 @@ final class B2BOTPTestCase: BaseTestCase {
     func testSend() async throws {
         networkInterceptor.responses {
             BasicResponse(requestId: "1234", statusCode: 200)
+            BasicResponse(requestId: "1234", statusCode: 200)
         }
 
         let organizationId = "orgid1234"
@@ -32,6 +33,30 @@ final class B2BOTPTestCase: BaseTestCase {
                 "member_id": JSON.string(memberId),
                 "mfa_phone_number": JSON.string(mfaPhoneNumber),
                 "locale": JSON.string(locale),
+                "enable_autofill": false
+            ])
+        )
+        
+        // Now test with autofill enabled
+        let autofillParameters = StytchB2BClient.OTP.SendParameters(
+            organizationId: organizationId,
+            memberId: memberId,
+            mfaPhoneNumber: mfaPhoneNumber,
+            locale: locale,
+            enableAutofill: true
+        )
+        _ = try await StytchB2BClient.otp.send(parameters: autofillParameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[1],
+            urlString: "https://web.stytch.com/sdk/v1/b2b/otps/sms/send",
+            method: .post([
+                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "organization_id": JSON.string(organizationId),
+                "member_id": JSON.string(memberId),
+                "mfa_phone_number": JSON.string(mfaPhoneNumber),
+                "locale": JSON.string(locale),
+                "enable_autofill": true
             ])
         )
     }
