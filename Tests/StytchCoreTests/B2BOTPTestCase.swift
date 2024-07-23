@@ -32,7 +32,7 @@ final class B2BOTPTestCase: BaseTestCase {
                 "member_id": JSON.string(memberId),
                 "mfa_phone_number": JSON.string(mfaPhoneNumber),
                 "locale": JSON.string(locale),
-                "enable_autofill": false
+                "enable_autofill": false,
             ])
         )
     }
@@ -68,7 +68,7 @@ final class B2BOTPTestCase: BaseTestCase {
                 "member_id": JSON.string(memberId),
                 "mfa_phone_number": JSON.string(mfaPhoneNumber),
                 "locale": JSON.string(locale),
-                "enable_autofill": true
+                "enable_autofill": true,
             ])
         )
     }
