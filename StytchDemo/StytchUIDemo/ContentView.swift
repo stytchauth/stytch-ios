@@ -5,43 +5,74 @@ import SwiftUI
 
 struct ContentView: View {
     var config: StytchUIClient.Configuration
-    @State private var authPresented = false
+    @State private var isInitialized = false
+    @State private var shouldPresentAuth = false
     @State private var sessionAndUser: (Session, User)?
-    @State private var cancellable: AnyCancellable? = nil
+    @State var subscriptions: Set<AnyCancellable> = []
 
     var body: some View {
         NavigationView {
-            VStack {
-                Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
-                Text("Hello, world!")
+            VStack(spacing: 20) {
+                Text("You have logged in with Stytch!")
+                    .font(.largeTitle)
+                    .bold()
+                    .multilineTextAlignment(.center)
+
+                Button("Log Out") {
+                    logOut()
+                }.font(.title).bold()
             }
             .padding()
             .authenticationSheet(
-                isPresented: $authPresented,
-                config: config
-            )
+                isPresented: $shouldPresentAuth
+            ).onOpenURL { url in
+                let didHandle = StytchUIClient.handle(url: url)
+                print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
+            }
         }.task {
-            // If you dont have a StytchConfiguration.plist you need to call configure here
-            // StytchClient.configure(publicToken: "public-token")
+            StytchUIClient.configure(publicToken: "public-token", config: config)
+            setUpObservations()
+        }
+    }
 
-            cancellable = StytchClient.isInitialized.sink { result in
-                let session = StytchClient.sessions.session
-                let user = StytchClient.user.getSync()
-                if let session, let user {
-                    sessionAndUser = (session, user)
-                    authPresented = false
-                } else {
-                    authPresented = true
-                    print("no session and user tuple")
-                }
-                print("isInitialized: \(result)")
+    func setUpObservations() {
+        StytchClient.isInitialized.sink { isInitialized in
+            let session = StytchClient.sessions.session
+            let user = StytchClient.user.getSync()
+            if let session, let user {
+                sessionAndUser = (session, user)
+                shouldPresentAuth = false
+                print("we have a session and a user")
+            } else {
+                shouldPresentAuth = true
+                print("we do not have a session and a user")
+            }
+            self.isInitialized = isInitialized
+        }.store(in: &subscriptions)
+
+        StytchClient.sessions.onAuthChange.sink { token in
+            if let token = token {
+                shouldPresentAuth = false
+                print("we have a session token")
+            } else {
+                shouldPresentAuth = true
+                print("we do not have a session token")
+            }
+        }.store(in: &subscriptions)
+    }
+
+    func logOut() {
+        Task {
+            do {
+                let response = try await StytchClient.sessions.revoke()
+                print("log out response: \(response)")
+            } catch {
+                print("log out error: \(error.errorInfo)")
             }
         }
     }
 }
 
 #Preview {
-    ContentView(config: .realisticStytchUIConfig)
+    ContentView(config: StytchUIDemoApp.realisticStytchUIConfig)
 }

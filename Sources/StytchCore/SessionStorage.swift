@@ -165,10 +165,12 @@ final class SessionStorage {
         localStorage.organization = nil
         localStorage.member = nil
 
-        _onAuthChange.send(())
         sessionsPollingClient.stop()
         memberSessionsPollingClient.stop()
         clearTokens()
+
+        // This should always be called last
+        _onAuthChange.send(())
     }
 
     func clearTokens() {
