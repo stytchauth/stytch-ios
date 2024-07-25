@@ -10,7 +10,7 @@
   ],
   "defaultOptions" : {
     "targetForVariableExpansion" : {
-      "containerPath" : "container:StytchDemo.xcodeproj",
+      "containerPath" : "container:Stytch.xcodeproj",
       "identifier" : "53E128212B50092E00976CAC",
       "name" : "StytchUIDemo"
     }
@@ -18,7 +18,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:StytchDemo.xcodeproj",
+        "containerPath" : "container:Stytch.xcodeproj",
         "identifier" : "53E1283A2B50092F00976CAC",
         "name" : "StytchUITests"
       }

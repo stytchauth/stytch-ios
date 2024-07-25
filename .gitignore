@@ -45,11 +45,11 @@ fastlane/test_output
 !*.playground/Sources/.gitkeep
 
 # Demo
-StytchDemo/*file.lock*
-!StytchDemo/StytchDemo.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-StytchDemo/Client/Shared/StytchConfiguration.plist
-StytchDemo/Client/iOS/iOS.entitlements
-StytchDemo/Client/macOS/macOS.entitlements
+Stytch/*file.lock*
+!Stytch/Stytch.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+Stytch/DemoApps/StytchDemo/Shared/StytchConfiguration.plist
+Stytch/DemoApps/StytchDemo/iOS/iOS.entitlements
+Stytch/DemoApps/StytchDemo/macOS/macOS.entitlements
 # Dependencies
 .mint/
 .bundle/

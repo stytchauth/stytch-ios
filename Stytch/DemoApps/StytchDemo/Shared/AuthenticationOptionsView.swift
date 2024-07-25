@@ -6,19 +6,15 @@ struct AuthenticationOptionsView: View {
     let session: Session?
     let onAuth: (AuthenticateResponseType) -> Void
     @Environment(\.presentationMode) private var presentationMode
-    @State private var authPresented = false
 
     var redirectUrl: URL { configuration.serverUrl }
 
     var body: some View {
         VStack {
-            Button("Authenticate with UI") {
-                authPresented = true
+            NavigationLink("Authenticate with Email") {
+                EmailAuthenticationView()
             }
             .padding()
-
-            NavigationLink("Authenticate with Email") { EmailAuthenticationView() }
-                .padding()
 
             NavigationLink("Authenticate with Password") {
                 PasswordAuthenticationView {
@@ -98,31 +94,6 @@ struct AuthenticationOptionsView: View {
                 }
             }
             .padding()
-        }
-        .authenticationSheet(
-            isPresented: $authPresented,
-            config: .init(
-                navigation: .init(),
-                products: .init(
-                    oauth: .init(
-                        providers: [.apple, .thirdParty(.google)],
-                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                    ),
-                    password: .init(
-                        loginURL: .init(string: "stytch-auth://login")!,
-                        resetPasswordURL: .init(string: "stytch-auth://reset")!,
-                        resetPasswordExpiration: 120
-                    ),
-                    magicLink: .init(
-                        loginMagicLinkUrl: .init(string: "stytch-auth://login")!,
-                        signupMagicLinkUrl: .init(string: "stytch-auth://signup")!
-                    ),
-                    otp: .init(methods: [.sms, .whatsapp])
-                )
-            )
-        ) { response in
-            onAuth(response)
         }
     }
 }

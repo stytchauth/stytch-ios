@@ -10,7 +10,7 @@ struct Configuration {
 let configuration = Configuration()
 
 @main
-struct StytchDemoApp: App {
+struct StytchApp: App {
     @State private var sessionUser: (Session, User)?
     @State private var errorAlertPresented = false
     @State private var errorMessage = ""

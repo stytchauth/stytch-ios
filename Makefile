@@ -6,8 +6,8 @@ IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
 ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
-TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchCoreTests -sdk
-UI_UNIT_TESTS=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project StytchDemo/StytchDemo.xcodeproj -scheme StytchUIUnitTests -sdk
+TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project Stytch/Stytch.xcodeproj -scheme StytchCoreTests -sdk
+UI_UNIT_TESTS=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project Stytch/Stytch.xcodeproj -scheme StytchUIUnitTests -sdk
 HOSTING_BASE_PATH=$(shell echo stytch-ios/$$REF | sed 's:/$$::')
 
 .PHONY: coverage
@@ -19,11 +19,6 @@ coverage:
 .PHONY: codegen
 codegen:
 	$(ARCH) mint run sourcery --templates Resources/Sourcery/Templates --sources Sources --output Sources --parseDocumentation
-
-.PHONY: demo
-demo:
-	Scripts/demo setup
-	bundle exec --gemfile=StytchDemo/Gemfile Scripts/demo start
 
 .PHONY: docs
 docs: codegen
@@ -78,7 +73,3 @@ test-watchos: codegen
 .PHONY: tools
 tools:
 	$(ARCH) mint bootstrap
-
-.PHONY: xc-framework
-xc-framework:
-	$(ARCH) mint run swift-create-xcframework --zip --xc-setting SKIP_INSTALL=NO --xc-setting BUILD_LIBRARY_FOR_DISTRIBUTION=YES
