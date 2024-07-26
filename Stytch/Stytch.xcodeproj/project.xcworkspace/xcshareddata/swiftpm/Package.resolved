@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "jwt-kit",
-        "repositoryURL": "https://github.com/vapor/jwt-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "c2595b9ad7f512d7f334830b4df1fed6e917946a",
-          "version": "4.13.4"
-        }
-      },
-      {
         "package": "PhoneNumberKit",
         "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
         "state": {
@@ -44,15 +35,6 @@
           "branch": null,
           "revision": "46072478ca365fe48370993833cb22de9b41567f",
           "version": "3.5.2"
-        }
-      },
-      {
-        "package": "Swifter",
-        "repositoryURL": "https://github.com/namolnad/swifter.git",
-        "state": {
-          "branch": "update-to-async",
-          "revision": "a51ae97214d6d24e18aa9e824eea5f1f4021d171",
-          "version": null
         }
       },
       {

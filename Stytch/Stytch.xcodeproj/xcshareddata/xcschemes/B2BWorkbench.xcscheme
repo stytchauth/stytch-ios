@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-               BuildableName = "StytchDemo.app"
-               BlueprintName = "StytchDemo (iOS)"
-               ReferencedContainer = "container:StytchDemo.xcodeproj">
+               BlueprintIdentifier = "22315317299EE16D00BA9126"
+               BuildableName = "B2BWorkbench.app"
+               BlueprintName = "B2BWorkbench"
+               ReferencedContainer = "container:Stytch.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -43,10 +43,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-            BuildableName = "StytchDemo.app"
-            BlueprintName = "StytchDemo (iOS)"
-            ReferencedContainer = "container:StytchDemo.xcodeproj">
+            BlueprintIdentifier = "22315317299EE16D00BA9126"
+            BuildableName = "B2BWorkbench.app"
+            BlueprintName = "B2BWorkbench"
+            ReferencedContainer = "container:Stytch.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -60,10 +60,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-            BuildableName = "StytchDemo.app"
-            BlueprintName = "StytchDemo (iOS)"
-            ReferencedContainer = "container:StytchDemo.xcodeproj">
+            BlueprintIdentifier = "22315317299EE16D00BA9126"
+            BuildableName = "B2BWorkbench.app"
+            BlueprintName = "B2BWorkbench"
+            ReferencedContainer = "container:Stytch.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

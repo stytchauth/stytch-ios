@@ -44,7 +44,7 @@ Async functions are available via various mechanisms (Async/Await, Combine, call
 
  Prior to using any authentication methods, you must configure the StytchClient/StytchB2BClient via one of two techniques:
 1. Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` (consumer) or ``StytchB2BClient/configure(publicToken:hostUrl:)`` (B2B) functions.
-1. Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-ios/blob/main/StytchDemo/Client/Shared/StytchConfiguration.plist))
+1. Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-ios/blob/main/Stytch/Client/Shared/StytchConfiguration.plist))
  
 ### Usage
 

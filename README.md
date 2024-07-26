@@ -144,11 +144,11 @@ The [Swift Package Manager](https://www.swift.org/package-manager/) is a tool fo
 
 ### Configuration
 
-To start using one of the Stytch clients (StytchClient or StytchB2BClient), you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](StytchDemo/Client/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
+To start using one of the Stytch clients (StytchClient or StytchB2BClient), you must configure it via one of two techniques: 1) Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](Stytch/Client/Shared/StytchConfiguration.plist)) or 2) Programmatically at app launch (see `.task {}` [below](#manual-configuration--deeplink-handling).)
 
 #### Associated Domains
 
-If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](StytchDemo/Client/macOS/macOS.entitlements)).
+If you are using a redirect authentication product (Email Magic Links/OAuth) you will need to set up Associated Domains on [your website](https://developer.apple.com/documentation/Xcode/supporting-associated-domains) and in your app's entitlements ([example](Stytch/Client/macOS/macOS.entitlements)).
 
 ![Entitlements screenshot](Resources/Assets/Entitlements-dark-mode.png#gh-dark-mode-only)
 ![Entitlements screenshot](Resources/Assets/Entitlements-light-mode.png#gh-light-mode-only)
@@ -242,7 +242,7 @@ Full reference documentation is available for [StytchCore](https://stytchauth.gi
 1. What are the some of the default behaviors of the SDK?
     1. A few things here: 1) the session token/JWT will be stored in/retrieved from the system Keychain, so will safely persist across app launches. 2) The session and user objects are cached in memory by the SDK, though these must first be received by a successful `authenticate` call. 3) After a successful authentication call, the SDK will begin polling in the background to refresh the session and its corresponding JWT, to ensure the JWT is always valid (the JWT expires every 5 minutes, regardless of the session expiration.)
 1. Are there guides or sample apps available to see this in use?
-    1. Yes! There is a UIKit example consumer app available [here](https://github.com/stytchauth/stytch-ios-uikit-example). Also, there is a [SwiftUI macOS/iOS Consumer app](https://github.com/stytchauth/stytch-ios/tree/main/StytchDemo/Client) and a [UIKit iOS B2B app](https://github.com/stytchauth/stytch-ios/tree/main/StytchDemo/B2BWorkbench) included in this repo.
+    1. Yes! There is a UIKit example consumer app available [here](https://github.com/stytchauth/stytch-ios-uikit-example). Also, there is a [SwiftUI macOS/iOS Consumer app](https://github.com/stytchauth/stytch-ios/tree/main/Stytch/Client) and a [UIKit iOS B2B app](https://github.com/stytchauth/stytch-ios/tree/main/Stytch/B2BWorkbench) included in this repo.
 
 ### Questions?
 

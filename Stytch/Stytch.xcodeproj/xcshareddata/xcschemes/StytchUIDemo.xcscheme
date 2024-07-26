@@ -17,7 +17,7 @@
                BlueprintIdentifier = "53E128212B50092E00976CAC"
                BuildableName = "StytchUIDemo.app"
                BlueprintName = "StytchUIDemo"
-               ReferencedContainer = "container:StytchDemo.xcodeproj">
+               ReferencedContainer = "container:Stytch.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,7 +29,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:StytchUIDemo.xctestplan"
+            reference = "container:DemoApps/StytchUI.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -42,7 +42,7 @@
                BlueprintIdentifier = "53E128302B50092F00976CAC"
                BuildableName = "StytchUIDemoTests.xctest"
                BlueprintName = "StytchUIDemoTests"
-               ReferencedContainer = "container:StytchDemo.xcodeproj">
+               ReferencedContainer = "container:Stytch.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -52,7 +52,7 @@
                BlueprintIdentifier = "53E1283A2B50092F00976CAC"
                BuildableName = "StytchUITests.xctest"
                BlueprintName = "StytchUITests"
-               ReferencedContainer = "container:StytchDemo.xcodeproj">
+               ReferencedContainer = "container:Stytch.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -74,7 +74,7 @@
             BlueprintIdentifier = "53E128212B50092E00976CAC"
             BuildableName = "StytchUIDemo.app"
             BlueprintName = "StytchUIDemo"
-            ReferencedContainer = "container:StytchDemo.xcodeproj">
+            ReferencedContainer = "container:Stytch.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -91,7 +91,7 @@
             BlueprintIdentifier = "53E128212B50092E00976CAC"
             BuildableName = "StytchUIDemo.app"
             BlueprintName = "StytchUIDemo"
-            ReferencedContainer = "container:StytchDemo.xcodeproj">
+            ReferencedContainer = "container:Stytch.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
