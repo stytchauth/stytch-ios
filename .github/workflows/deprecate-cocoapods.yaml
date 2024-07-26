@@ -1,0 +1,19 @@
+name: Deprecate Cocoapods
+
+on:
+  workflow_dispatch:
+
+env:
+  COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+
+jobs:
+  deprecate:
+    runs-on: macos-13
+    steps:
+    - uses: actions/checkout@v3
+    - name: Bootstrap
+      uses: ./.github/actions/bootstrap
+    - name: Deprecate Cocoapods
+      run: |
+        set -eo pipefail
+        bundle exec pod trunk deprecate Stytch
