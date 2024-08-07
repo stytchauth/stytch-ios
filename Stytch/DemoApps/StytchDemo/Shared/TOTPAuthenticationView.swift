@@ -26,7 +26,7 @@ struct TOTPAuthenticationView: View {
                     do {
                         onAuth(try await StytchClient.totps.authenticate(parameters: .init(totpCode: code)))
                     } catch {
-                        print(error)
+                        print(error.errorInfo)
                     }
                 }
             }
@@ -39,7 +39,7 @@ struct TOTPAuthenticationView: View {
                         let resp = try await StytchClient.totps.create(parameters: .init())
                         self.secret = resp.secret
                     } catch {
-                        print(error)
+                        print(error.errorInfo)
                     }
                 }
             }

@@ -28,7 +28,7 @@ struct PasskeysAuthenticationView: View {
                         _ = try await StytchClient.passkeys.register(parameters: .init(domain: domain))
                         presentationMode.wrappedValue.dismiss()
                     } catch {
-                        print(error)
+                        print(error.errorInfo)
                     }
                 }
             }
@@ -39,7 +39,7 @@ struct PasskeysAuthenticationView: View {
                     do {
                         onAuth(try await StytchClient.passkeys.authenticate(parameters: .init(domain: domain)))
                     } catch {
-                        print(error)
+                        print(error.errorInfo)
                     }
                 }
             }

@@ -31,7 +31,7 @@ struct ResetPasswordView: View {
             do {
                 onAuth(try await model.resetPassword(token: token))
             } catch {
-                print(error)
+                print(error.errorInfo)
             }
         }
     }
