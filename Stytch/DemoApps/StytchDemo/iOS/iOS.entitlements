@@ -8,7 +8,7 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>webcredentials:stytch-passkey-app-association.vercel.app</string>
+		<string>webcredentials:jordanhaven.dev</string>
 	</array>
 </dict>
 </plist>
