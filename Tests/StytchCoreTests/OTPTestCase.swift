@@ -16,6 +16,7 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         try await [
@@ -27,7 +28,12 @@ final class OTPTestCase: BaseTestCase {
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/sms/login_or_create",
-                body: ["phone_number": "+11098765432"]
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/login_or_create",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
@@ -52,6 +58,7 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         XCTAssertFalse(Current.sessionStorage.persistedSessionIdentifiersExist)
@@ -65,7 +72,12 @@ final class OTPTestCase: BaseTestCase {
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
-                body: ["phone_number": "+11098765432"]
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah")),
@@ -94,6 +106,7 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         try Current.keychainClient.set("123", for: .sessionToken)
@@ -109,7 +122,12 @@ final class OTPTestCase: BaseTestCase {
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
                 urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
-                body: ["phone_number": "+11098765432"]
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),

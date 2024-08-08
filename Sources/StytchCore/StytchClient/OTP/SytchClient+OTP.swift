@@ -69,6 +69,7 @@ public extension StytchClient.OTP {
             case expiration = "expirationMinutes"
             case loginTemplateId
             case signupTemplateId
+            case enableAutofill
         }
 
         let deliveryMethod: DeliveryMethod
@@ -86,8 +87,11 @@ public extension StytchClient.OTP {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encodeIfPresent(expiration, forKey: .expiration)
             switch deliveryMethod {
-            case let .sms(value), let .whatsapp(value):
-                try container.encode(value, forKey: .phoneNumber)
+            case let .whatsapp(phoneNumber):
+                try container.encode(phoneNumber, forKey: .phoneNumber)
+            case let .sms(phoneNumber, enableAutofill):
+                try container.encode(phoneNumber, forKey: .phoneNumber)
+                try container.encode(enableAutofill, forKey: .enableAutofill)
             case let .email(email, loginTemplateId, signupTemplateId):
                 try container.encode(email, forKey: .email)
                 try container.encodeIfPresent(loginTemplateId, forKey: .loginTemplateId)
@@ -108,8 +112,8 @@ public extension StytchClient.OTP {
 
     /// The mechanism use to deliver one-time passcodes.
     enum DeliveryMethod {
-        /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
-        case sms(phoneNumber: String)
+        /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX), and a boolean to indicate whether the SMS message should include autofill metadata
+        case sms(phoneNumber: String, enableAutofill: Bool = false)
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
         case whatsapp(phoneNumber: String)
         /// The email address of the user to send the one-time passcode to as well as the custom email template ID values.

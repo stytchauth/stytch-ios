@@ -55,7 +55,7 @@ struct OTPAuthenticationView: View, Sendable {
             case .whatsapp:
                 return .whatsapp(phoneNumber: normalizedPhone())
             case .sms:
-                return .sms(phoneNumber: normalizedPhone())
+                return .sms(phoneNumber: normalizedPhone(), enableAutofill: true)
             case .email:
                 return .email(email: value, loginTemplateId: loginTemplateId.presence, signupTemplateId: signupTemplateId.presence)
             }
