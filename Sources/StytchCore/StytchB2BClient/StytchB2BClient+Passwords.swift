@@ -294,19 +294,14 @@ public extension StytchB2BClient.Passwords {
 
     /// The dedicated parameters type for passwords `strengthCheck` calls.
     struct StrengthCheckParameters: Encodable {
-        private enum CodingKeys: String, CodingKey {
-            case email = "emailAddress"
-            case password
-        }
-
-        let email: String?
+        let emailAddress: String?
         let password: String
 
         /// - Parameters:
-        ///   - email: A member's email address.
+        ///   - emailAddress: A member's email address.
         ///   - password: The password for the strength check.
-        public init(email: String? = nil, password: String) {
-            self.email = email
+        public init(emailAddress: String? = nil, password: String) {
+            self.emailAddress = emailAddress
             self.password = password
         }
     }
