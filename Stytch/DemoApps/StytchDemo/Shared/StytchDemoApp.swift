@@ -3,7 +3,7 @@ import StytchUI
 import SwiftUI
 
 struct Configuration {
-    let publicToken = "public-token-example"
+    let publicToken = "your-public-token-here"
     let serverUrl = URL(string: "http://example.com")!
 }
 

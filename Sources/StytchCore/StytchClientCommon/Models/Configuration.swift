@@ -19,7 +19,13 @@ struct Configuration {
         var urlComponents: URLComponents = .init()
         urlComponents.scheme = "https"
         urlComponents.path = "/sdk/v1/"
-        urlComponents.host = "web.stytch.com"
+
+        if publicToken.hasPrefix("public-token-test") {
+            urlComponents.host = "test.stytch.com"
+        } else {
+            urlComponents.host = "api.stytch.com"
+        }
+
         guard let url = urlComponents.url else {
             fatalError("Error generating URL from URLComponents: \(urlComponents)")
         }

@@ -23,7 +23,6 @@ struct CodeChallengedParameters<T: Encodable>: Encodable {
         try wrapped.encode(to: encoder)
 
         try container.encode(codeChallenge, forKey: .codeChallenge(prefix: codingPrefix?.rawValue))
-        try container.encode(codeChallengeMethod, forKey: .codeChallengeMethod(prefix: codingPrefix?.rawValue))
     }
 }
 
