@@ -19,7 +19,7 @@ struct Configuration {
         var urlComponents: URLComponents = .init()
         urlComponents.scheme = "https"
         urlComponents.path = "/sdk/v1/"
-        urlComponents.host = "test.stytch.com"
+        urlComponents.host = "web.stytch.com"
         guard let url = urlComponents.url else {
             fatalError("Error generating URL from URLComponents: \(urlComponents)")
         }
