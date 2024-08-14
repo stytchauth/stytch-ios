@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 
 public protocol RouteType {
     var path: Path { get }
@@ -24,6 +25,8 @@ public struct NetworkingRouter<Route: RouteType> {
     @Dependency(\.organizationStorage) private var organizationStorage
 
     @Dependency(\.localStorage) private var localStorage
+
+    @Dependency(\.keychainClient) private var keychainClient
 
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
         self.getConfiguration = getConfiguration
@@ -119,6 +122,13 @@ public extension NetworkingRouter {
                     hostUrl: configuration.hostUrl
                 )
                 userStorage.update(sessionResponse.user)
+                // if we have a local biometric registration that doesn't exist on the user object, delete the local
+                if let queryResult: KeychainClient.QueryResult = try? keychainClient.get(.privateKeyRegistration).first,
+                   let biometricRegistrationId = try? queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }),
+                   !sessionResponse.user.biometricRegistrations.map({ $0.id }).contains(biometricRegistrationId.registrationId)
+                {
+                    try? keychainClient.removeItem(.privateKeyRegistration)
+                }
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionStorage.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
