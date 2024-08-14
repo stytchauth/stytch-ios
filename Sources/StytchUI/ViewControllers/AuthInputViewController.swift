@@ -148,7 +148,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     private func setupPhoneNumberInput(input: PhoneNumberInput) {
         input.onButtonPressed = { [weak self] _ in
             guard let self else { return }
-            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit)
+            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit, options: .init())
             countryPickerViewController.delegate = input
             let navigationController = UINavigationController(rootViewController: countryPickerViewController)
             present(navigationController, animated: true)
