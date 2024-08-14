@@ -108,6 +108,7 @@ public extension NetworkingRouter {
             try? keychainClient.removeItem(.privateKeyRegistration)
         }
     }
+
     // swiftlint:disable:next function_body_length
     private func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method,
