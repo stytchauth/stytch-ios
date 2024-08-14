@@ -47,6 +47,7 @@ public extension StytchB2BClient.OTP {
         public let memberId: String
         public let mfaPhoneNumber: String?
         public let locale: String?
+        public let enableAutofill: Bool
 
         /// - Parameters:
         ///   - organizationId: The ID of the organization the member belongs to
@@ -54,12 +55,14 @@ public extension StytchB2BClient.OTP {
         ///   - mfaPhoneNumber: The phone number to send the OTP to. If the member already has a phone number, this argument is not needed.
         ///     If the member does not have a phone number and this argument is not provided, an error will be thrown.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
-        //      Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
-        public init(organizationId: String, memberId: String, mfaPhoneNumber: String? = nil, locale: String? = nil) {
+        ///      Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
+        ///   - enableAutofill: indicates whether the SMS message should include autofill metadata
+        public init(organizationId: String, memberId: String, mfaPhoneNumber: String? = nil, locale: String? = nil, enableAutofill: Bool = false) {
             self.organizationId = organizationId
             self.memberId = memberId
             self.mfaPhoneNumber = mfaPhoneNumber
             self.locale = locale
+            self.enableAutofill = enableAutofill
         }
     }
 }
