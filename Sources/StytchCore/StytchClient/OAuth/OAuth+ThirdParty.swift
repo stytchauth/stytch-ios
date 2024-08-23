@@ -69,17 +69,29 @@ public extension StytchClient.OAuth.ThirdParty {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
 
-            let queryParameters: [(String, String?)] = [
-                ("code_challenge", try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge),
-                ("public_token", publicToken),
-                ("login_redirect_url", loginRedirectUrl?.absoluteString),
-                ("signup_redirect_url", signupRedirectUrl?.absoluteString),
-                ("custom_scopes", customScopes?.joined(separator: " ")),
-                ("provider_params", providerParams?.toURLParameters()),
+            var queryParameters: [String: String] = [
+                "code_challenge": try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge,
+                "public_token": publicToken,
             ]
 
+            if let customScopes = customScopes?.joined(separator: " ") {
+                queryParameters["custom_scopes"] = customScopes
+            }
+
+            if let providerParams = providerParams?.toURLParameters() {
+                queryParameters["provider_params"] = providerParams
+            }
+
+            if let loginRedirectUrl = loginRedirectUrl?.absoluteString {
+                queryParameters["login_redirect_url"] = loginRedirectUrl
+            }
+
+            if let signupRedirectUrl = signupRedirectUrl?.absoluteString {
+                queryParameters["signup_redirect_url"] = signupRedirectUrl
+            }
+
             let domain = Current.localStorage.stytchDomain(publicToken)
-            guard let url = URL(string: "https://\(domain)/v1/public/oauth/\(providerName)/start")?.appending(queryParameters: queryParameters) else {
+            guard let url = URL(string: "https://\(domain)/v1/public/oauth/\(providerName)/start?\(queryParameters.toURLParameters())") else {
                 throw StytchSDKError.invalidStartURL
             }
 
