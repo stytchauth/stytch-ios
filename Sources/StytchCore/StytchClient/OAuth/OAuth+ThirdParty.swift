@@ -38,6 +38,7 @@ public extension StytchClient.OAuth.ThirdParty {
         let loginRedirectUrl: URL?
         let signupRedirectUrl: URL?
         let customScopes: [String]?
+        let providerParams: [String: String]?
         public let clientType: ClientType = .consumer
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
@@ -50,14 +51,17 @@ public extension StytchClient.OAuth.ThirdParty {
         ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
         ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
         ///   - customScopes: Any additional scopes to be requested from the identity provider.
+        ///   - providerParams: An optional mapping of provider specific values to pass through to the OAuth provider
         public init(
             loginRedirectUrl: URL? = nil,
             signupRedirectUrl: URL? = nil,
-            customScopes: [String]? = nil
+            customScopes: [String]? = nil,
+            providerParams: [String: String]? = nil
         ) {
             self.loginRedirectUrl = loginRedirectUrl
             self.signupRedirectUrl = signupRedirectUrl
             self.customScopes = customScopes
+            self.providerParams = providerParams
         }
 
         public func startUrl(_ providerName: String) throws -> URL {
@@ -71,6 +75,7 @@ public extension StytchClient.OAuth.ThirdParty {
                 ("login_redirect_url", loginRedirectUrl?.absoluteString),
                 ("signup_redirect_url", signupRedirectUrl?.absoluteString),
                 ("custom_scopes", customScopes?.joined(separator: " ")),
+                ("provider_params", providerParams?.toURLParameters()),
             ]
 
             let domain = Current.localStorage.stytchDomain(publicToken)
