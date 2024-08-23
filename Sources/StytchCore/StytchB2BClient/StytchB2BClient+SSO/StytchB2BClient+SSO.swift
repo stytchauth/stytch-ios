@@ -105,16 +105,25 @@ public extension StytchB2BClient.SSO {
                 throw StytchSDKError.B2BSDKNotConfigured
             }
 
-            let queryParameters: [(String, String?)] = [
-                ("pkce_code_challenge", try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge),
-                ("public_token", publicToken),
-                ("connection_id", connectionId),
-                ("login_redirect_url", loginRedirectUrl?.absoluteString),
-                ("signup_redirect_url", signupRedirectUrl?.absoluteString),
+            var queryParameters: [String: String] = [
+                "pkce_code_challenge": try pkcePairManager.generateAndReturnPKCECodePair().codeChallenge,
+                "public_token": publicToken,
             ]
 
+            if let connectionId {
+                queryParameters["connection_id"] = connectionId
+            }
+
+            if let loginRedirectUrl = loginRedirectUrl?.absoluteString {
+                queryParameters["login_redirect_url"] = loginRedirectUrl
+            }
+
+            if let signupRedirectUrl = signupRedirectUrl?.absoluteString {
+                queryParameters["signup_redirect_url"] = signupRedirectUrl
+            }
+
             let domain = Current.localStorage.stytchDomain(publicToken)
-            guard let url = URL(string: "https://\(domain)/v1/public/sso/start")?.appending(queryParameters: queryParameters) else {
+            guard let url = URL(string: "https://\(domain)/v1/public/sso/start?\(queryParameters.toURLParameters())") else {
                 throw StytchSDKError.invalidStartURL
             }
 
