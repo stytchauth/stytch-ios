@@ -17,7 +17,7 @@ final actor DFPClient: DFPProvider {
                 if let rootViewController = UIApplication.shared.rootViewController {
                     let messageHandler = MessageHandler()
                     messageHandler.addContinuation(continuation)
-                    let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)', 'http://\(dfppaDomain)/submit');", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+                    let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)', 'https://\(dfppaDomain)/submit');", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                     let userContentController = WKUserContentController()
                     userContentController.addUserScript(userScript)
                     userContentController.add(messageHandler, name: "StytchDFP")

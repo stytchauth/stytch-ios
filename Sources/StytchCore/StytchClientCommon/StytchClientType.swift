@@ -97,6 +97,7 @@ extension StytchClientType {
             ]
         }
         networkingClient.publicToken = configuration?.publicToken ?? ""
+        networkingClient.dfppaDomain = configuration?.dfppaDomain ?? ""
     }
 
     private func resetKeychainOnFreshInstall() {

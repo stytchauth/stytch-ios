@@ -5,8 +5,8 @@
     </head>
     <body>
         <script>
-            function fetchTelemetryId(publicToken) {
-                window.GetTelemetryID({ publicToken: publicToken, platform: "iOS" })
+            function fetchTelemetryId(publicToken, dfppaDomain) {
+                window.GetTelemetryID({ publicToken: publicToken, submitURL: dfppaDomain, platform: "iOS" })
                     .then((telemetryId) => window.webkit.messageHandlers.StytchDFP.postMessage(telemetryId))
                     .catch((error) => window.webkit.messageHandlers.StytchDFP.postMessage(error.message));
             }
