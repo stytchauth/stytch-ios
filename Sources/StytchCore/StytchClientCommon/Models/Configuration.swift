@@ -1,23 +1,24 @@
 import Foundation
 
+// swiftlint:disable type_contents_order
+
 struct Configuration {
     private enum CodingKeys: String, CodingKey {
         case publicToken = "StytchPublicToken"
         case hostUrl = "StytchHostURL"
         case dfppaDomain = "StytchDfppaDomain"
     }
-    
+
     let publicToken: String
     let hostUrl: URL?
     let dfppaDomain: String
-    
+
     internal init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
         self.publicToken = publicToken
         self.hostUrl = hostUrl
         if let dfppaDomain {
             self.dfppaDomain = dfppaDomain
-        }
-        else {
+        } else {
             self.dfppaDomain = "telemetry.stytch.com"
         }
     }

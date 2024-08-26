@@ -8,7 +8,7 @@ final class NetworkingClient {
     var dfpAuthMode = DFPProtectedAuthMode.observation
 
     var publicToken: String = ""
-    
+
     var dfppaDomain: String = ""
 
     private let handleRequest: (URLRequest, Bool, DFPProtectedAuthMode, String, String) async throws -> (Data, HTTPURLResponse)
