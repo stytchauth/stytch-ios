@@ -13,7 +13,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/crypto_wallets/authenticate/start/primary",
+            urlString: "https://api.stytch.com/sdk/v1/crypto_wallets/authenticate/start/primary",
             method: .post([
                 "crypto_wallet_type": "ethereum",
                 "crypto_wallet_address": "mock-crypto-address",
@@ -37,7 +37,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/crypto_wallets/authenticate/start/secondary",
+            urlString: "https://api.stytch.com/sdk/v1/crypto_wallets/authenticate/start/secondary",
             method: .post([
                 "crypto_wallet_type": "ethereum",
                 "crypto_wallet_address": "mock-crypto-address",
@@ -60,7 +60,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/crypto_wallets/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/crypto_wallets/authenticate",
             method: .post([
                 "crypto_wallet_type": "solana",
                 "crypto_wallet_address": "mock-crypto-address",

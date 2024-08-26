@@ -21,7 +21,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         XCTAssertEqual(createOrganizationMemberResponse.member.emailAddress, emailAddress)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members",
             method: .post(["email_address": JSON.string(emailAddress)])
         )
     }
@@ -46,7 +46,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         XCTAssertEqual(updateOrganizationMemberResponse.member.name, name)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/update/\(memberId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/update/\(memberId)",
             method: .put(["member_id": JSON.string(memberId), "name": JSON.string(name)])
         )
     }
@@ -63,7 +63,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         let updateOrganizationMemberResponse = try await StytchB2BClient.organizations.members.delete(memberId: memberId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)",
             method: .delete
         )
     }
@@ -84,7 +84,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         let reactivateOrganizationMemberResponse = try await StytchB2BClient.organizations.members.reactivate(memberId: memberId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)/reactivate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)/reactivate",
             method: .put(JSON.string(memberId))
         )
     }
@@ -106,7 +106,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .totp(memberId: memberId))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deleteTOTP/\(memberId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/deleteTOTP/\(memberId)",
             method: .delete
         )
     }
@@ -127,7 +127,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .phoneNumber(memberId: memberId))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deletePhoneNumber/\(memberId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/deletePhoneNumber/\(memberId)",
             method: .delete
         )
     }
@@ -149,7 +149,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         _ = try await StytchB2BClient.organizations.members.deleteFactor(factor: .password(passwordId: passwordId))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/passwords/\(passwordId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/passwords/\(passwordId)",
             method: .delete
         )
     }

@@ -11,13 +11,13 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
     }
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPObservationMode(session _: URLSession, request _: URLRequest, publicToken _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(session _: URLSession, request _: URLRequest, publicToken _: String, dfppaDomain _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPDecisioningMode(session _: URLSession, request _: URLRequest, publicToken _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(session _: URLSession, request _: URLRequest, publicToken _: String, dfppaDomain _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }

@@ -14,7 +14,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
         _ = try await StytchB2BClient.recoveryCodes.get()
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/recovery_codes",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/recovery_codes",
             method: .get
         )
     }
@@ -31,7 +31,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
         _ = try await StytchB2BClient.recoveryCodes.rotate()
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/recovery_codes/rotate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/recovery_codes/rotate",
             method: .post(nil)
         )
     }
@@ -60,7 +60,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/recovery_codes/recover",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/recovery_codes/recover",
             method: .post([
                 "session_duration_minutes": JSON.number(5),
                 "organization_id": JSON.string(organizationId),

@@ -54,7 +54,7 @@ final class B2BSSOTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,
@@ -81,7 +81,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.getConnections()
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso",
             method: .get
         )
     }
@@ -100,7 +100,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.deleteConnection(connectionId: connectionId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/\(connectionId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/\(connectionId)",
             method: .delete
         )
     }
@@ -122,7 +122,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.oidc.createConnection(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/oidc",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/oidc",
             method: .post(["display_name": JSON.string(displayName), "identity_provider": JSON.string(identityProvider)])
         )
     }
@@ -143,7 +143,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.oidc.updateConnection(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/oidc/\(connectionId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/oidc/\(connectionId)",
             method: .put(["connection_id": JSON.string(connectionId)])
         )
     }
@@ -165,7 +165,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.saml.createConnection(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/saml",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml",
             method: .post(["display_name": JSON.string(displayName), "identity_provider": JSON.string(identityProvider)])
         )
     }
@@ -186,7 +186,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.saml.updateConnection(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)",
             method: .put(["connection_id": JSON.string(connectionId)])
         )
     }
@@ -208,7 +208,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.saml.updateConnectionByURL(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)/url",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)/url",
             method: .put(["connection_id": JSON.string(connectionId), "metadata_url": JSON.string(metadataUrl)])
         )
     }
@@ -230,7 +230,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try await StytchB2BClient.sso.saml.deleteVerificationCertificate(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)/verification_certificates/\(certificateId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)/verification_certificates/\(certificateId)",
             method: .delete
         )
     }

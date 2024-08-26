@@ -19,7 +19,7 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/oauth/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/oauth/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,
@@ -57,7 +57,7 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/oauth/discovery/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/oauth/discovery/authenticate",
             method: .post([
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "discovery_oauth_token": "i-am-token",

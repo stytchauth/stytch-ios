@@ -16,22 +16,28 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         try await [
             ExpectedValues(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
-                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
+                urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/sms/login_or_create",
-                body: ["phone_number": "+11098765432"]
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/login_or_create",
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/login_or_create",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/login_or_create",
+                urlString: "https://api.stytch.com/sdk/v1/otps/email/login_or_create",
                 body: ["email": "test@stytch.com"]
             ),
         ]
@@ -52,6 +58,7 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         XCTAssertFalse(Current.sessionStorage.persistedSessionIdentifiersExist)
@@ -59,22 +66,27 @@ final class OTPTestCase: BaseTestCase {
         try await [
             ExpectedValues(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
-                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/primary",
+                urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/primary",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/primary",
-                body: ["phone_number": "+11098765432"]
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/primary",
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/primary",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                urlString: "https://api.stytch.com/sdk/v1/otps/email/send/primary",
                 body: ["email": "test@stytch.com", "login_template_id": "fake-id", "signup_template_id": "blah"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/primary",
+                urlString: "https://api.stytch.com/sdk/v1/otps/email/send/primary",
                 body: ["email": "test@stytch.com"]
             ),
         ]
@@ -94,6 +106,7 @@ final class OTPTestCase: BaseTestCase {
             response
             response
             response
+            response
         }
 
         try Current.keychainClient.set("123", for: .sessionToken)
@@ -103,17 +116,22 @@ final class OTPTestCase: BaseTestCase {
         try await [
             ExpectedValues(
                 parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
-                urlString: "https://web.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
+                urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
             ),
             .init(
                 parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/sms/send/secondary",
-                body: ["phone_number": "+11098765432"]
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/secondary",
+                body: ["phone_number": "+11098765432", "enable_autofill": false]
+            ),
+            .init(
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/secondary",
+                body: ["phone_number": "+11098765432", "enable_autofill": true]
             ),
             .init(
                 parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
-                urlString: "https://web.stytch.com/sdk/v1/otps/email/send/secondary",
+                urlString: "https://api.stytch.com/sdk/v1/otps/email/send/secondary",
                 body: ["email": "test@stytch.com"]
             ),
         ]
@@ -144,7 +162,7 @@ final class OTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/otps/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/otps/authenticate",
             method: .post([
                 "token": "i_am_code",
                 "method_id": "method_id_fake_id",

@@ -118,7 +118,7 @@ final class PasswordsViewController: UIViewController {
             do {
                 let response = try await StytchB2BClient.passwords.strengthCheck(
                     parameters: .init(
-                        email: emailTextField.text,
+                        emailAddress: emailTextField.text,
                         password: password
                     )
                 )

@@ -26,10 +26,9 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/login_or_signup",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/email/login_or_signup",
             method: .post([
                 "organization_id": "org_123",
-                "pkce_code_challenge_method": "S256",
                 "signup_redirect_url": "https://myapp.com/signup",
                 "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email_address": "asdf@stytch.com",
@@ -58,9 +57,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/discovery/send",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/email/discovery/send",
             method: .post([
-                "pkce_code_challenge_method": "S256",
                 "discovery_redirect_url": "https://myapp.com/login",
                 "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email_address": "asdf@stytch.com",
@@ -86,7 +84,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/email/invite",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/email/invite",
             method: .post([
                 "email_address": "asdf@stytch.com",
                 "invite_redirect_url": "https://myapp.com/login",
@@ -127,7 +125,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "magic_links_token": "12345", "session_duration_minutes": 15,
@@ -159,7 +157,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/magic_links/discovery/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/discovery/authenticate",
             method: .post(["discovery_magic_links_token": "12345", "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
 

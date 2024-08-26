@@ -22,7 +22,7 @@ final class B2BOrganizationsTestCase: BaseTestCase {
         XCTAssertEqual(getOrganizationResponse.organization.id, StytchB2BClient.organizations.getSync()?.id)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/me",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/me",
             method: .get
         )
     }
@@ -41,7 +41,7 @@ final class B2BOrganizationsTestCase: BaseTestCase {
         XCTAssertEqual(updateOrganizationResponse.organization.id, StytchB2BClient.organizations.getSync()?.id)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/me",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/me",
             method: .put(["organization_name": "foo bar"])
         )
     }
@@ -59,7 +59,7 @@ final class B2BOrganizationsTestCase: BaseTestCase {
         XCTAssertEqual(deleteOrganizationResponse.organizationId, organizationId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/me",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/me",
             method: .delete
         )
     }
@@ -87,7 +87,7 @@ final class B2BOrganizationsTestCase: BaseTestCase {
         _ = try await StytchB2BClient.organizations.searchMembers(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/me/members/search",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/me/members/search",
             method: .post([
                 "query": StytchCore.JSON.object(
                     [

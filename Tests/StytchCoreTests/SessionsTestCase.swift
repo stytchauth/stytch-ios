@@ -20,7 +20,7 @@ final class SessionsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/sessions/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/sessions/authenticate",
             method: .post(["session_duration_minutes": 15])
         )
 
@@ -44,7 +44,7 @@ final class SessionsTestCase: BaseTestCase {
 
         _ = try await StytchClient.sessions.revoke()
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNil(StytchClient.sessions.sessionJwt)
         XCTAssertNil(StytchClient.sessions.sessionToken)
@@ -71,7 +71,7 @@ final class SessionsTestCase: BaseTestCase {
             StytchError(name: "fake_error", message: "I'm a mock error")
         )
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNotNil(StytchClient.sessions.sessionJwt)
         XCTAssertNotNil(StytchClient.sessions.sessionToken)
@@ -81,7 +81,7 @@ final class SessionsTestCase: BaseTestCase {
             StytchError(name: "fake_error", message: "I'm a mock error")
         )
 
-        try XCTAssertRequest(networkInterceptor.requests[1], urlString: "https://web.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[1], urlString: "https://api.stytch.com/sdk/v1/sessions/revoke", method: .post([:]))
 
         XCTAssertNil(StytchClient.sessions.sessionJwt)
         XCTAssertNil(StytchClient.sessions.sessionToken)

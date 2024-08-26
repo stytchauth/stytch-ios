@@ -29,12 +29,12 @@ final class PasskeysTestCase: BaseTestCase {
         _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/webauthn/register/start",
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
         try XCTAssertRequest(
             networkInterceptor.requests[1],
-            urlString: "https://web.stytch.com/sdk/v1/webauthn/register",
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/register",
             method: .post([
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\"},\"type\":\"public-key\"}",
             ])
@@ -79,12 +79,12 @@ final class PasskeysTestCase: BaseTestCase {
         #endif
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
         try XCTAssertRequest(
             networkInterceptor.requests[1],
-            urlString: "https://web.stytch.com/sdk/v1/webauthn/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate",
             method: .post([
                 "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"signature\":\"ZmFrZV9zaWduYXR1cmU\",\"authenticatorData\":\"ZmFrZV9hdXRoX2RhdGE\",\"userHandle\":\"ZmFrZV91c2VyX2lk\"},\"type\":\"public-key\"}",
                 "session_duration_minutes": 5,
@@ -107,7 +107,7 @@ final class PasskeysTestCase: BaseTestCase {
         _ = try await StytchClient.passkeys.update(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/webauthn/update/webauthn-registration-id",
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/update/webauthn-registration-id",
             method: .put(["name": "Cool new name"])
         )
     }

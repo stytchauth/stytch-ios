@@ -35,7 +35,7 @@ extension NetworkingClient {
                 }
             }
         }
-        return .init { request, dfpEnabled, dfpAuthMode, publicToken in
+        return .init { request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain in
             #if os(iOS)
             if request.url?.path.contains("/events") == true {
                 return try await defaultRequestHandler(session: session, request: request)
@@ -45,9 +45,9 @@ extension NetworkingClient {
             }
             switch dfpAuthMode {
             case .observation:
-                return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
             case .decisioning:
-                return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
             }
             #endif
             return try await defaultRequestHandler(session: session, request: request)

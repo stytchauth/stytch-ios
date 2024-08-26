@@ -15,7 +15,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/organizations",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/organizations",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
             ])
@@ -34,7 +34,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/intermediate_sessions/exchange",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/intermediate_sessions/exchange",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": "org_123",
@@ -79,7 +79,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/discovery/organizations/create",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/organizations/create",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": 12,

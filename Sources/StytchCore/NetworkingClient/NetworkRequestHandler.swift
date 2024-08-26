@@ -5,10 +5,10 @@ internal protocol NetworkRequestHandler {
     func handleDFPDisabled(session: URLSession, request: URLRequest, captcha: CaptchaProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, dfppaDomain: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, dfppaDomain: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse)
     #endif
 }
 
@@ -28,12 +28,12 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
     }
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(session: URLSession, request: URLRequest, publicToken: String, dfppaDomain: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // OBSERVATION = Always DFP; CAPTCHA if configured
         var newRequest = request
         let oldBody = newRequest.httpBody ?? Data("{}".utf8)
         var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        newBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
+        newBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
         if captcha.isConfigured() {
             newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         }
@@ -42,12 +42,12 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
     }
 
     // swiftlint:disable:next function_parameter_count
-    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(session: URLSession, request: URLRequest, publicToken: String, dfppaDomain: String, captcha: CaptchaProvider, dfp: DFPProvider, requestHandler: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
         // DECISIONING = add DFP Id, proceed; if request 403s, add a captcha token
         var firstRequest = request
         let oldBody = firstRequest.httpBody ?? Data("{}".utf8)
         var firstRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        firstRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
+        firstRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
         firstRequest.httpBody = try JSONSerialization.data(withJSONObject: firstRequestBody)
         let (data, response) = try await requestHandler(session, firstRequest)
         if response.statusCode != 403 {
@@ -55,7 +55,7 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
         }
         var secondRequest = request
         var secondRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        secondRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken) as AnyObject
+        secondRequestBody["dfp_telemetry_id"] = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
         secondRequestBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequestBody)
         return try await requestHandler(session, secondRequest)

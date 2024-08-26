@@ -50,8 +50,8 @@ extension StytchClientType {
     public var initializationState: InitializationState { Current.initializationState }
 
     // swiftlint:disable:next identifier_name
-    static func _configure(publicToken: String, hostUrl: URL? = nil) {
-        instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl)
+    static func _configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+        instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
     }
 
     // swiftlint:disable:next identifier_name
@@ -97,6 +97,7 @@ extension StytchClientType {
             ]
         }
         networkingClient.publicToken = configuration?.publicToken ?? ""
+        networkingClient.dfppaDomain = configuration?.dfppaDomain ?? ""
     }
 
     private func resetKeychainOnFreshInstall() {
