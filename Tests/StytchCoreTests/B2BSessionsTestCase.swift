@@ -20,7 +20,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sessions/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sessions/authenticate",
             method: .post(["session_duration_minutes": 15])
         )
 
@@ -44,7 +44,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         _ = try await StytchB2BClient.sessions.revoke()
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/b2b/sessions/revoke", method: .post([:]))
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/b2b/sessions/revoke", method: .post([:]))
 
         XCTAssertNil(StytchB2BClient.sessions.sessionJwt)
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
@@ -76,7 +76,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/sessions/exchange",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sessions/exchange",
             method: .post([
                 "organization_id": JSON(stringLiteral: organizationID),
                 "session_duration_minutes": 5,

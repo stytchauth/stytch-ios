@@ -27,9 +27,8 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/magic_links/email/login_or_create",
+            urlString: "https://api.stytch.com/sdk/v1/magic_links/email/login_or_create",
             method: .post([
-                "code_challenge_method": "S256",
                 "signup_magic_link_url": "https://myapp.com/signup",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "signup_expiration_minutes": 30,
@@ -63,9 +62,8 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/primary",
+            urlString: "https://api.stytch.com/sdk/v1/magic_links/email/send/primary",
             method: .post([
-                "code_challenge_method": "S256",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
@@ -97,9 +95,8 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/magic_links/email/send/secondary",
+            urlString: "https://api.stytch.com/sdk/v1/magic_links/email/send/secondary",
             method: .post([
-                "code_challenge_method": "S256",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
@@ -138,7 +135,7 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/magic_links/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/magic_links/authenticate",
             method: .post(["token": "12345", "session_duration_minutes": 15, "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741"])
         )
 

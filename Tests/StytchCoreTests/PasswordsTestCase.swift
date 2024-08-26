@@ -16,7 +16,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords",
+            urlString: "https://api.stytch.com/sdk/v1/passwords",
             method: .post([
                 "email": "user@stytch.com",
                 "session_duration_minutes": 26,
@@ -32,7 +32,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/authenticate",
             method: .post([
                 "email": "user@stytch.com",
                 "session_duration_minutes": 26,
@@ -62,7 +62,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/strength_check",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/strength_check",
             method: .post([
                 "password": "p@ssword123",
             ])
@@ -85,13 +85,12 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset/start",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/email/reset/start",
             method: .post([
                 "email": "user@stytch.com",
                 "reset_password_expiration_minutes": 15,
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
-                "code_challenge_method": "S256",
                 "reset_password_template_id": "one-two-buckle-my-shoe",
             ])
         )
@@ -104,7 +103,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[1],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/email/reset",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/email/reset",
             method: .post([
                 "token": "12345",
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
@@ -123,7 +122,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/session/reset",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/session/reset",
             method: .post([
                 "session_duration_minutes": 10,
                 "password": "password123",
@@ -139,7 +138,7 @@ final class PasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/passwords/existing_password/reset",
+            urlString: "https://api.stytch.com/sdk/v1/passwords/existing_password/reset",
             method: .post([
                 "email_address": "user@stytch.com",
                 "existing_password": "password123",

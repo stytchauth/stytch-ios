@@ -26,7 +26,7 @@ final class B2BTOTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/totp",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/totp",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "expiration_minutes": JSON.number(5),
@@ -60,7 +60,7 @@ final class B2BTOTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/totp/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/totp/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": JSON.number(5),

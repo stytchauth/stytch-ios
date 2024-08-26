@@ -20,7 +20,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "email_address": "user@stytch.com",
@@ -39,7 +39,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/strength_check",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/strength_check",
             method: .post([
                 "password": "p@ssword123",
                 "email_address": "bob@loblaw.com",
@@ -66,14 +66,13 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/email/reset/start",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/email/reset/start",
             method: .post([
                 "organization_id": "org123",
                 "email_address": "user@stytch.com",
                 "reset_password_expiration_minutes": 15,
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
-                "code_challenge_method": "S256",
                 "reset_password_template_id": "one-two-buckle-my-shoe",
             ])
         )
@@ -85,7 +84,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[1],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/email/reset",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/email/reset",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "password_reset_token": "12345",
@@ -108,7 +107,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/existing_password/reset",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/existing_password/reset",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": "org123",
@@ -128,7 +127,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/passwords/session/reset",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/session/reset",
             method: .post([
                 "organization_id": "org123",
                 "password": "hi, i'm Tom.",

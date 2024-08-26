@@ -41,7 +41,7 @@ final class B2BMembersTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/me",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/me",
             method: .get
         )
     }
@@ -56,7 +56,7 @@ final class B2BMembersTestCase: BaseTestCase {
         XCTAssertEqual(updateMemberResponse.memberId, StytchB2BClient.member.getSync()?.memberId.rawValue)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/update",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/update",
             method: .put(["name": "foo bar", "untrusted_metadata": ["blah": 1]])
         )
     }
@@ -71,7 +71,7 @@ final class B2BMembersTestCase: BaseTestCase {
         XCTAssertNotNil(StytchB2BClient.member.getSync())
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deletePhoneNumber",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/deletePhoneNumber",
             method: .delete
         )
     }
@@ -86,7 +86,7 @@ final class B2BMembersTestCase: BaseTestCase {
         XCTAssertNotNil(StytchB2BClient.member.getSync())
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/deleteTOTP",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/deleteTOTP",
             method: .delete
         )
     }
@@ -101,7 +101,7 @@ final class B2BMembersTestCase: BaseTestCase {
         XCTAssertNotNil(StytchB2BClient.member.getSync())
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/passwords/passwordId-1234",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/passwords/passwordId-1234",
             method: .delete
         )
     }

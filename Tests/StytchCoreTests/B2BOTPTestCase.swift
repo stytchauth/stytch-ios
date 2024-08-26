@@ -25,7 +25,7 @@ final class B2BOTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/otps/sms/send",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/send",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": JSON.string(organizationId),
@@ -61,7 +61,7 @@ final class B2BOTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/otps/sms/send",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/send",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "organization_id": JSON.string(organizationId),
@@ -97,7 +97,7 @@ final class B2BOTPTestCase: BaseTestCase {
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/otps/sms/authenticate",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/authenticate",
             method: .post([
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "session_duration_minutes": JSON.number(5),

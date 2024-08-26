@@ -17,7 +17,7 @@ final class B2BSearchManagerTestCase: BaseTestCase {
         _ = try await StytchB2BClient.searchManager.searchMember(searchMemberParameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/members/search",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/search",
             method: .post([
                 "email_address": StytchCore.JSON.string(emailAddress),
                 "organization_id": StytchCore.JSON.string(organizationId),
@@ -39,7 +39,7 @@ final class B2BSearchManagerTestCase: BaseTestCase {
         _ = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/b2b/organizations/search",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/search",
             method: .post([
                 "organization_slug": StytchCore.JSON.string(organizationSlug),
             ])

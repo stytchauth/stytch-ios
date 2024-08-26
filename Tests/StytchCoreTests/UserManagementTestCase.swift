@@ -14,7 +14,7 @@ final class UserManagementTestCase: BaseTestCase {
         let getUserResponse = try await StytchClient.user.get()
         XCTAssertNotNil(StytchClient.user.getSync())
         XCTAssertEqual(getUserResponse.id, StytchClient.user.getSync()?.id)
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/users/me", method: .get)
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/users/me", method: .get)
     }
 
     func testUpdate() async throws {
@@ -25,7 +25,7 @@ final class UserManagementTestCase: BaseTestCase {
         XCTAssertEqual(updateUserResponse.id, StytchClient.user.getSync()?.id)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://web.stytch.com/sdk/v1/users/me",
+            urlString: "https://api.stytch.com/sdk/v1/users/me",
             method: .put(["name": ["first_name": "Dan"], "untrusted_metadata": ["blah": 1]])
         )
     }
@@ -57,7 +57,7 @@ final class UserManagementTestCase: BaseTestCase {
             XCTAssertNil(StytchClient.user.getSync())
             _ = try await StytchClient.user.deleteFactor(values.factor)
             XCTAssertNotNil(StytchClient.user.getSync())
-            try XCTAssertRequest(networkInterceptor.requests[index], urlString: "https://web.stytch.com/sdk/v1/users/\(values.pathComponent)/\(values.id)", method: .delete)
+            try XCTAssertRequest(networkInterceptor.requests[index], urlString: "https://api.stytch.com/sdk/v1/users/\(values.pathComponent)/\(values.id)", method: .delete)
         }
     }
 }

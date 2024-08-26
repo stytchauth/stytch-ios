@@ -111,7 +111,7 @@ final class BiometricsTestCase: BaseTestCase {
 
         _ = try await StytchClient.biometrics.removeRegistration()
 
-        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://web.stytch.com/sdk/v1/users/biometric_registrations/bio_reg_123", method: .delete)
+        try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/users/biometric_registrations/bio_reg_123", method: .delete)
         XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
     }
 }
