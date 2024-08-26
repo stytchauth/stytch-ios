@@ -9,8 +9,11 @@ public extension StytchClient {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
+            guard let dfppaDomain = StytchClient.instance.configuration?.dfppaDomain else {
+                throw StytchSDKError.consumerSDKNotConfigured
+            }
             #if os(iOS)
-            return await dfpClient.getTelemetryId(publicToken: publicToken)
+            return await dfpClient.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain)
             #else
             return ""
             #endif

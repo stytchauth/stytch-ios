@@ -2,20 +2,27 @@ import Foundation
 
 struct Configuration {
     private enum CodingKeys: String, CodingKey {
-        case hostUrl = "StytchHostURL"
         case publicToken = "StytchPublicToken"
+        case hostUrl = "StytchHostURL"
+        case dfppaDomain = "StytchDfppaDomain"
+    }
+    
+    let publicToken: String
+    let hostUrl: URL?
+    let dfppaDomain: String
+    
+    internal init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+        self.publicToken = publicToken
+        self.hostUrl = hostUrl
+        if let dfppaDomain {
+            self.dfppaDomain = dfppaDomain
+        }
+        else {
+            self.dfppaDomain = "telemetry.stytch.com"
+        }
     }
 
-    let publicToken: String
-
-    let hostUrl: URL?
-
     var baseUrl: URL {
-        #if DEBUG
-        if let urlString = ProcessInfo.processInfo.environment["STYTCH_API_URL"], let url = URL(string: urlString) {
-            return url
-        }
-        #endif
         var urlComponents: URLComponents = .init()
         urlComponents.scheme = "https"
         urlComponents.path = "/sdk/v1/"
@@ -37,6 +44,7 @@ extension Configuration: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         publicToken = try container.decode(key: .publicToken)
+        dfppaDomain = try container.decode(key: .dfppaDomain)
         do {
             hostUrl = try container.decode(key: .hostUrl)
         } catch {
@@ -45,7 +53,7 @@ extension Configuration: Decodable {
                 return
             }
             guard let url = URL(string: urlString) else {
-                throw DecodingError.dataCorruptedError(forKey: .hostUrl, in: container, debugDescription: "Not a valid URL")
+                throw DecodingError.dataCorruptedError(forKey: .hostUrl, in: container, debugDescription: "Not a valid hostUrl URL")
             }
             hostUrl = url
         }

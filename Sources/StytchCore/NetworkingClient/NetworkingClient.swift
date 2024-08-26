@@ -8,15 +8,17 @@ final class NetworkingClient {
     var dfpAuthMode = DFPProtectedAuthMode.observation
 
     var publicToken: String = ""
+    
+    var dfppaDomain: String = ""
 
-    private let handleRequest: (URLRequest, Bool, DFPProtectedAuthMode, String) async throws -> (Data, HTTPURLResponse)
+    private let handleRequest: (URLRequest, Bool, DFPProtectedAuthMode, String, String) async throws -> (Data, HTTPURLResponse)
 
-    init(handleRequest: @escaping (URLRequest, Bool, DFPProtectedAuthMode, String) async throws -> (Data, HTTPURLResponse)) {
+    init(handleRequest: @escaping (URLRequest, Bool, DFPProtectedAuthMode, String, String) async throws -> (Data, HTTPURLResponse)) {
         self.handleRequest = handleRequest
     }
 
     func performRequest(_ method: Method, url: URL) async throws -> (Data, HTTPURLResponse) {
-        try await handleRequest(urlRequest(url: url, method: method), dfpEnabled, dfpAuthMode, publicToken)
+        try await handleRequest(urlRequest(url: url, method: method), dfpEnabled, dfpAuthMode, publicToken, dfppaDomain)
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {

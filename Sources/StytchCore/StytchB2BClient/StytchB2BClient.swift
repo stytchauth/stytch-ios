@@ -35,8 +35,8 @@ public struct StytchB2BClient: StytchClientType {
        - publicToken: Available via the Stytch dashboard in the `API keys` section
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
      */
-    public static func configure(publicToken: String, hostUrl: URL? = nil) {
-        _configure(publicToken: publicToken, hostUrl: hostUrl)
+    public static func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+        _configure(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink

@@ -35,7 +35,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
         networkInterceptor.responses {
             StytchB2BClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, strengthPolicy: "something", breachDetectionOnCreate: true, zxcvbnFeedback: .init(suggestions: [], warning: "meh. do something."), ludsFeedback: nil))
         }
-        _ = try await client.strengthCheck(parameters: .init(email: "bob@loblaw.com", password: "p@ssword123"))
+        _ = try await client.strengthCheck(parameters: .init(emailAddress: "bob@loblaw.com", password: "p@ssword123"))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],

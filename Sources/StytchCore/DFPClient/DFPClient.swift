@@ -4,11 +4,11 @@ import UIKit
 import WebKit
 
 internal protocol DFPProvider {
-    func getTelemetryId(publicToken: String) async -> String
+    func getTelemetryId(publicToken: String, dfppaDomain: String) async -> String
 }
 
 final actor DFPClient: DFPProvider {
-    func getTelemetryId(publicToken: String) async -> String {
+    func getTelemetryId(publicToken: String, dfppaDomain: String) async -> String {
         guard let dfpFileUrl = getResource(myBundle: Bundle(for: Self.self), name: "dfp", ext: "html") else {
             return "Unable to load DFP file"
         }
@@ -17,7 +17,7 @@ final actor DFPClient: DFPProvider {
                 if let rootViewController = UIApplication.shared.rootViewController {
                     let messageHandler = MessageHandler()
                     messageHandler.addContinuation(continuation)
-                    let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)')", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+                    let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)', 'http://\(dfppaDomain)/submit');", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                     let userContentController = WKUserContentController()
                     userContentController.addUserScript(userScript)
                     userContentController.add(messageHandler, name: "StytchDFP")

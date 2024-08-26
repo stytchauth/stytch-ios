@@ -28,7 +28,7 @@ private struct ConfiguredRecaptchaProviderMock: CaptchaProvider {
 }
 
 private struct DFPProviderMock: DFPProvider {
-    func getTelemetryId(publicToken _: String) async -> String {
+    func getTelemetryId(publicToken _: String, dfppaDomain _: String) async -> String {
         "dfp-telemetry-id"
     }
 }
@@ -91,7 +91,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(!hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPObservationModeWithCaptcha() async throws {
@@ -106,7 +106,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPDecisioningMode() async throws {
@@ -132,7 +132,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
                 return (Data(), HTTPURLResponse())
             }
         }
-        try await handler.handleDFPDecisioningMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        try await handler.handleDFPDecisioningMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 }
 #endif
