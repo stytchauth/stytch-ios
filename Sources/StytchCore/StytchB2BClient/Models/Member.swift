@@ -4,14 +4,23 @@ import Foundation
 public struct Member: Codable {
     public typealias ID = Identifier<Self, String>
 
+    /// Globally unique UUID that identifies a specific Member. The member_id is critical to perform operations on a Member, so be sure to preserve this value.
     public var id: ID { memberId }
+    /// Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on an Organization, so be sure to preserve this value.
     public let organizationId: Organization.ID
+    /// The email address of the Member.
     public let emailAddress: String
+    /// The status of the Member. The possible values are: pending, invited, active, or deleted.
     public let status: Status
+    /// The name of the Member.
     public let name: String
+    /// An array of registered SAML Connection or OIDC Connection objects the Member has authenticated with.
     public let ssoRegistrations: [SSORegistration]
+    /// An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
     public let trustedMetadata: JSON
+    /// An arbitrary JSON object of application-specific data. These fields can be edited directly by the frontend SDK, and should not be used to store critical information. See the Metadata resource (https://stytch.com/docs/b2b/api/metadata) for complete field behavior details.
     public let untrustedMetadata: JSON
+    /// Globally unique UUID that identifies a Member's password.
     public let memberPasswordId: String
 
     let memberId: ID
@@ -43,9 +52,13 @@ public extension Member {
 public struct SSORegistration: Codable {
     public typealias ID = Identifier<Self, String>
 
+    /// The unique ID of an SSO Registration.
     public var id: ID { registrationId }
+    /// Globally unique UUID that identifies a specific SSO connection_id for a Member.
     public let connectionId: String
+    /// The ID of the member given by the identity provider.
     public let externalId: String
+    /// An object for storing SSO attributes brought over from the identity provider.
     public let ssoAttributes: JSON
 
     let registrationId: ID

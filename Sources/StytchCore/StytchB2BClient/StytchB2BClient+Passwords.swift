@@ -159,13 +159,13 @@ public extension StytchB2BClient.Passwords {
             case locale
         }
 
-        public let organizationId: Organization.ID
-        public let email: String
-        public let loginUrl: URL?
-        public let resetPasswordUrl: URL?
-        public let resetPasswordExpiration: Minutes?
-        public let resetPasswordTemplateId: String?
-        public let locale: String?
+        let organizationId: Organization.ID
+        let email: String
+        let loginUrl: URL?
+        let resetPasswordUrl: URL?
+        let resetPasswordExpiration: Minutes?
+        let resetPasswordTemplateId: String?
+        let locale: String?
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
@@ -204,9 +204,9 @@ public extension StytchB2BClient.Passwords {
             case sessionDuration = "sessionDurationMinutes"
         }
 
-        public let token: String
-        public let password: String
-        public let sessionDuration: Minutes
+        let token: String
+        let password: String
+        let sessionDuration: Minutes
 
         /// - Parameters:
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
@@ -231,11 +231,11 @@ public extension StytchB2BClient.Passwords {
             case sessionDuration = "sessionDurationMinutes"
         }
 
-        public let organizationId: Organization.ID
-        public let email: String
-        public let existingPassword: String
-        public let newPassword: String
-        public let sessionDuration: Minutes
+        let organizationId: Organization.ID
+        let email: String
+        let existingPassword: String
+        let newPassword: String
+        let sessionDuration: Minutes
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
@@ -275,8 +275,8 @@ public extension StytchB2BClient.Passwords {
 
     /// The dedicated parameters type for passwords `resetBySession` calls.
     struct ResetBySessionParameters: Encodable {
-        public let organizationId: Organization.ID
-        public let password: String
+        let organizationId: Organization.ID
+        let password: String
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
@@ -311,25 +311,38 @@ public extension StytchB2BClient.Passwords {
         public let validPassword: Bool
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
+        /// Returns true if the password has been breached. Powered by HaveIBeenPwned (https://haveibeenpwned.com).
         public let breachedPassword: Bool
+        /// The strength policy type enforced, either zxcvbn or luds.
         public let strengthPolicy: String
+        /// Will return true if breach detection will be evaluated. By default this option is enabled. This option can be disabled by contacting support@stytch.com. If this value is false then breached_password will always be false as well.
         public let breachDetectionOnCreate: Bool
+        /// Feedback for how to improve the password's strength using zxcvbn.
         public let zxcvbnFeedback: ZxcvbnFeedback?
+        /// Feedback for how to improve the password's strength using luds.
         public let ludsFeedback: LudsFeedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
         public struct ZxcvbnFeedback: Codable {
+            /// For zxcvbn validation, contains end user consumable suggestions on how to improve the strength of the password.
             public let suggestions: [String]
+            /// For zxcvbn validation, contains an end user consumable warning if the password is valid but not strong enough.
             public let warning: String
         }
 
         /// LUDS-specific password feedback.
         public struct LudsFeedback: Codable {
+            /// For LUDS validation, whether the password contains at least one lowercase letter.
             public let hasLowerCase: Bool
+            /// For LUDS validation, whether the password contains at least one uppercase letter.
             public let hasUpperCase: Bool
+            /// For LUDS validation, whether the password contains at least one digit.
             public let hasDigit: Bool
+            /// For LUDS validation, whether the password contains at least one symbol. Any UTF8 character outside of a-z or A-Z may count as a valid symbol.
             public let hasSymbol: Bool
+            /// For LUDS validation, the number of complexity requirements that are missing from the password. Check the complexity fields to see which requirements are missing.
             public let missingComplexity: Int
+            /// For LUDS validation, this is the required length of the password that you've set minus the length of the password being checked. The user will need to add this many characters to the password to make it valid.
             public let missingCharacters: Int
         }
     }

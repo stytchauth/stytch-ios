@@ -1,6 +1,5 @@
 import Foundation
 
-// FIXME: - move this code to the extracted client file
 #if !os(tvOS) && !os(watchOS)
 import LocalAuthentication
 public extension StytchClient.Biometrics {
@@ -34,8 +33,8 @@ public extension StytchClient {
         }
 
         #if !os(tvOS) && !os(watchOS)
+        /// Indicates if biometrics are available
         public var availability: Availability {
-            // FIXME: - wrap this in a client of some kind (BiometricsAvailabilityClient) and extract it
             let context = LAContext()
             var error: NSError?
             switch (context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {

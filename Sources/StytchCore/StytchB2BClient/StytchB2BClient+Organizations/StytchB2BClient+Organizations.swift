@@ -83,3 +83,23 @@ public extension StytchB2BClient.Organizations {
         public let organizationId: String
     }
 }
+
+public extension StytchB2BClient.Organizations {
+    typealias SearchMembersResponse = Response<SearchResponseData>
+
+    struct SearchResponseData: Codable {
+        // An array of Member objects.
+        public let members: [Member]
+        // The search results_metadata object contains metadata relevant to your specific query like total and next_cursor.
+        public let resultsMetadata: SearchResponseResultsMetadata
+        // A map from organization_id to Organization object. The map only contains the Organizations that the Members belongs to.
+        public let organizations: [String: Organization]
+    }
+
+    struct SearchResponseResultsMetadata: Codable {
+        // The total number of results returned by your search query.
+        public let total: Int
+        // The next_cursor string is returned when your search result contains more than one page of results. This value is passed into your next search call in the cursor field.
+        public let nextCursor: String?
+    }
+}
