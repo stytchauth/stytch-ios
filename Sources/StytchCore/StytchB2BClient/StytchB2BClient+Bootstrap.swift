@@ -17,7 +17,7 @@ extension StytchB2BClient {
         @Dependency(\.networkingClient) private var networkingClient
         @Dependency(\.localStorage) private var localStorage
 
-        public func fetch() async throws {
+        func fetch() async throws {
             guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.B2BSDKNotConfigured
             }

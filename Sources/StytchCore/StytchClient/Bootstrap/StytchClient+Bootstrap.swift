@@ -8,7 +8,7 @@ extension StytchClient {
         @Dependency(\.networkingClient) private var networkingClient
         @Dependency(\.localStorage) private var localStorage
 
-        public func fetch() async throws {
+        func fetch() async throws {
             guard let publicToken = StytchClient.instance.configuration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }

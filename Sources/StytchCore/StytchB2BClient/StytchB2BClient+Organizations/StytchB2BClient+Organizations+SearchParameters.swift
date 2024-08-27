@@ -168,18 +168,3 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         }
     }
 }
-
-public extension StytchB2BClient.Organizations {
-    typealias SearchMembersResponse = Response<SearchResponseData>
-
-    struct SearchResponseData: Codable {
-        public let members: [Member]
-        public let resultsMetadata: SearchResponseResultsMetadata
-        public let organizations: [String: Organization]
-    }
-
-    struct SearchResponseResultsMetadata: Codable {
-        public let total: Int
-        public let nextCursor: String?
-    }
-}

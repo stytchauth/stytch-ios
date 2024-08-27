@@ -12,10 +12,15 @@ public struct Organization: Codable {
         case trustedMetadata
     }
 
+    /// Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on an Organization, so be sure to preserve this value.
     public var id: ID { organizationId }
+    /// The name of the Organization. Must be between 1 and 128 characters in length.
     public let name: String
+    /// The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. Must be between 2 and 128 characters in length.
     public let slug: String
+    /// The image URL of the Organization logo.
     public let logoUrl: URL?
+    /// An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
     public let trustedMetadata: JSON
     let organizationId: ID
 }

@@ -103,6 +103,7 @@ public struct StytchB2BClient: StytchClientType {
         }
     }
 
+    /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
     }

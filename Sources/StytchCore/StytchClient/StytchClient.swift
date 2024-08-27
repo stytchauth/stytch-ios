@@ -21,8 +21,12 @@ public struct StytchClient: StytchClientType {
 
     static let appSessionId: String = UUID().uuidString
 
-    public static var bootStrapData: BootstrapResponseData? {
+    static var bootStrapData: BootstrapResponseData? {
         Self.instance.localStorage.bootstrapData
+    }
+
+    public static var disableSdkWatermark: Bool {
+        bootStrapData?.disableSdkWatermark ?? true
     }
 
     private init() {
@@ -96,6 +100,7 @@ public struct StytchClient: StytchClientType {
         }
     }
 
+    /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
     }

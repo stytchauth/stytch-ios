@@ -43,11 +43,11 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient.OTP {
     struct SendParameters: Codable {
-        public let organizationId: String
-        public let memberId: String
-        public let mfaPhoneNumber: String?
-        public let locale: String?
-        public let enableAutofill: Bool
+        let organizationId: String
+        let memberId: String
+        let mfaPhoneNumber: String?
+        let locale: String?
+        let enableAutofill: Bool
 
         /// - Parameters:
         ///   - organizationId: The ID of the organization the member belongs to

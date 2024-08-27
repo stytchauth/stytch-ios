@@ -75,6 +75,10 @@ public struct SessionTokens {
     internal let jwt: SessionToken
     internal let opaque: SessionToken
 
+    /// A nullable initializer that requires the caller to pass at least one non-nil instance of each token type.
+    /// - Parameters:
+    ///   - jwt: An instance of `SessionToken` with a `type` of `.jwt`
+    ///   - opaque: An instance of `SessionToken` with a `type` of `.opaque`
     public init?(jwt: SessionToken, opaque: SessionToken) {
         if jwt.kind != .jwt, opaque.kind != .opaque {
             return nil

@@ -47,6 +47,8 @@ extension StytchClientType {
 
     var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
 
+    /// An instance of `InitializationState` that wraps a publisher `isInitialized` that alerts the caller when the bootstrap call has completed successfully.
+    /// NOTE: It does not represent if the Stytch iOS SDK is ready to use or not. That is currently solely determined by the SDK having a valid public token.
     public var initializationState: InitializationState { Current.initializationState }
 
     // swiftlint:disable:next identifier_name

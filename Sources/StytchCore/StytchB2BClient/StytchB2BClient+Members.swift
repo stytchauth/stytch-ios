@@ -90,6 +90,21 @@ public extension StytchB2BClient.Members {
         let mfaPhoneNumber: String?
         let defaultMfaMethod: String?
 
+        /// - Parameters:
+        ///   - name: The name of the Member. If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.info.name action on the stytch.member Resource.
+        ///     Alternatively, if the Member Session matches the Member associated with the member_id passed in the request, the authorization check will also allow a Member Session that has permission to perform the update.info.name action on the stytch.self Resource.
+        ///   - untrustedMetadata: An arbitrary JSON object of application-specific data. These fields can be edited directly by the frontend SDK, and should not be used to store critical information. See the Metadata resource for complete field behavior details.
+        ///     If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.info.untrusted-metadata action on the stytch.member Resource.
+        ///     Alternatively, if the Member Session matches the Member associated with the member_id passed in the request, the authorization check will also allow a Member Session that has permission to perform the update.info.untrusted-metadata action on the stytch.self Resource.
+        ///   - mfaEnrolled: Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set to REQUIRED_FOR_ALL.
+        ///     If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.settings.mfa-enrolled action on the stytch.member Resource.
+        ///     Alternatively, if the Member Session matches the Member associated with the member_id passed in the request, the authorization check will also allow a Member Session that has permission to perform the update.settings.mfa-enrolled action on the stytch.self Resource.
+        ///   - mfaPhoneNumber: Sets the Member's phone number. Throws an error if the Member already has a phone number. To change the Member's phone number, use the Delete member phone number endpoint to delete the Member's existing phone number first.
+        ///     If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.info.mfa-phone action on the stytch.member Resource.
+        ///     Alternatively, if the Member Session matches the Member associated with the member_id passed in the request, the authorization check will also allow a Member Session that has permission to perform the update.info.mfa-phone action on the stytch.self Resource.
+        ///   - defaultMfaMethod: Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set to REQUIRED_FOR_ALL.
+        ///     If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.settings.default-mfa-method action on the stytch.member Resource.
+        ///     Alternatively, if the Member Session matches the Member associated with the member_id passed in the request, the authorization check will also allow a Member Session that has permission to perform the update.settings.default-mfa-method action on the stytch.self Resource.
         public init(
             name: String? = nil,
             untrustedMetadata: JSON? = nil,

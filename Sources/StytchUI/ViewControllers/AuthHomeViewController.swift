@@ -82,7 +82,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
             stackView.addArrangedSubview(inputController.view)
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
-        if let disableSdkWatermark = StytchClient.bootStrapData?.disableSdkWatermark, !disableSdkWatermark {
+        if StytchClient.disableSdkWatermark == false {
             stackView.addArrangedSubview(poweredByStytch)
         }
         stackView.addArrangedSubview(SpacerView())
