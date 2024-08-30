@@ -18,11 +18,11 @@ final class UserManagementTestCase: BaseTestCase {
     }
 
     func testUpdate() async throws {
-        networkInterceptor.responses { UserResponse(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123")) }
+        networkInterceptor.responses { NestedUserResponse(requestId: "123", statusCode: 200, wrapped: UserResponseData(user: .mock(userId: "mock-user-id-123"))) }
         XCTAssertNil(StytchClient.user.getSync())
         let updateUserResponse = try await StytchClient.user.update(parameters: .init(name: .init(firstName: "Dan"), untrustedMetadata: ["blah": 1]))
         XCTAssertNotNil(StytchClient.user.getSync())
-        XCTAssertEqual(updateUserResponse.id, StytchClient.user.getSync()?.id)
+        XCTAssertEqual(updateUserResponse.user.id, StytchClient.user.getSync()?.id)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/users/me",
