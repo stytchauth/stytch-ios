@@ -17,7 +17,7 @@ struct OAuthAuthenticationView: View {
                     onAuth(response)
                     presentationMode.wrappedValue.dismiss()
                 } catch {
-                    print(error)
+                    print(error.errorInfo)
                 }
             }
         }
@@ -50,7 +50,7 @@ struct OAuthAuthenticationView: View {
                     )
                     onAuth(try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: 10)))
                 } catch {
-                    print(error)
+                    print(error.errorInfo)
                 }
             }
         }

@@ -66,7 +66,7 @@ struct PasswordAuthenticationView: View {
                             try await model.resetPasswordStart()
                             checkEmailPresented = true
                         } catch {
-                            print(error)
+                            print(error.errorInfo)
                         }
                     }
                 }
@@ -109,7 +109,7 @@ struct PasswordAuthenticationView: View {
                     onAuth(try await model.login())
                 }
             } catch {
-                print(error)
+                print(error.errorInfo)
             }
             isLoading = false
         }

@@ -23,9 +23,9 @@ struct ContentView: View {
                 }.font(.title).bold()
             }
             .padding()
-            .authenticationSheet(
-                isPresented: $shouldPresentAuth
-            ).onOpenURL { url in
+            .authenticationSheet(isPresented: $shouldPresentAuth, onAuthCallback: { authenticateResponseType in
+                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
+            }).onOpenURL { url in
                 let didHandle = StytchUIClient.handle(url: url)
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
             }

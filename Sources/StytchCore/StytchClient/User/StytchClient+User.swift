@@ -97,6 +97,9 @@ public extension StytchClient.UserManagement {
         let name: User.Name?
         let untrustedMetadata: JSON?
 
+        /// - Parameters:
+        ///   - name: The name of the user.
+        ///   - untrustedMetadata: The untrusted_metadata field contains an arbitrary JSON object of application-specific data. Untrusted metadata can be edited by end users directly via the SDK, and cannot be used to store critical information. See the Metadata reference for complete field behavior details.
         public init(name: User.Name? = nil, untrustedMetadata: JSON? = nil) {
             self.name = name
             self.untrustedMetadata = untrustedMetadata

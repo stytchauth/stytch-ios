@@ -27,7 +27,11 @@ struct StytchApp: App {
                 .padding()
                 .frame(minHeight: 250)
                 .task {
-                    StytchClient.configure(publicToken: configuration.publicToken)
+                    if configuration.publicToken.hasPrefix("public-token") == true {
+                        StytchClient.configure(publicToken: configuration.publicToken)
+                    } else {
+                        fatalError("Add you public token above.")
+                    }
                 }
                 // Handle web-browsing deeplinks (enables universal links on macOS)
                 .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { userActivity in
@@ -35,7 +39,9 @@ struct StytchApp: App {
                     handle(url: url)
                 }
                 // Handle deeplinks
-                .onOpenURL(perform: handle(url:))
+                .onOpenURL { url in
+                    handle(url: url)
+                }
                 // Prevent deeplink from opening new window
                 .handlesExternalEvents(preferring: [], allowing: ["*"])
                 .sheet(item: $resetPasswordToken, onDismiss: nil) { wrapped in
@@ -53,35 +59,32 @@ struct StytchApp: App {
     }
 
     private func handle(url: URL) {
-        if StytchUIClient.handle(url: url) {
-            print("handled")
-        }
-//        Task {
-//            do {
-//                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
-//                case let .handled(response):
-//                    self.sessionUser = (response.session, response.user)
-//                case .notHandled:
-//                    print("not handled")
-//                case let .manualHandlingRequired(tokenType, token):
-//                    guard tokenType == .passwordReset else {
-//                        fatalError("unexpected token type")
-//                    }
-//                    self.resetPasswordToken = .init(token: token)
-//                }
-//            } catch {
-//                handle(error: error)
-//            }
-//        }
-    }
-
-    private func handle(error: Error) {
-        switch error {
-        case let error as StytchError:
-            errorMessage = error.message
-            errorAlertPresented = true
-        default:
-            break
+        Task {
+            do {
+                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+                case let .handled(response):
+                    print("handled: \(response.session) - \(response.user)")
+                    self.sessionUser = (response.session, response.user)
+                case .notHandled:
+                    print("not handled")
+                case let .manualHandlingRequired(tokenType, token):
+                    print("manualHandlingRequired: tokenType: \(tokenType) - token: \(token)")
+                    if tokenType == .passwordReset {
+                        self.resetPasswordToken = .init(token: token)
+                    } else {
+                        // handle other token types here
+                    }
+                }
+            } catch {
+                print("handle url error: \(error)")
+                switch error {
+                case let error as StytchError:
+                    errorMessage = error.message
+                    errorAlertPresented = true
+                default:
+                    break
+                }
+            }
         }
     }
 

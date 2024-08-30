@@ -25,24 +25,6 @@ struct EmailAuthenticationView: View {
                 .textContentType(.emailAddress)
             #endif
 
-            TextField("Signup template ID", text: $signupTemplateId)
-                .onSubmit(login)
-                .padding()
-                .textFieldStyle(.roundedBorder)
-                .disableAutocorrection(true)
-            #if !os(macOS)
-                .textInputAutocapitalization(.never)
-            #endif
-
-            TextField("Login template ID", text: $loginTemplateId)
-                .onSubmit(login)
-                .padding()
-                .textFieldStyle(.roundedBorder)
-                .disableAutocorrection(true)
-            #if !os(macOS)
-                .textInputAutocapitalization(.never)
-            #endif
-
             Button(action: login, label: {
                 if isLoading {
                     ZStack {
@@ -71,17 +53,11 @@ struct EmailAuthenticationView: View {
         Task {
             do {
                 _ = try await StytchClient.magicLinks.email.loginOrCreate(
-                    parameters: .init(
-                        email: email,
-                        loginMagicLinkUrl: serverUrl,
-                        loginTemplateId: loginTemplateId.presence,
-                        signupMagicLinkUrl: serverUrl,
-                        signupTemplateId: signupTemplateId.presence
-                    )
+                    parameters: .init(email: email)
                 )
                 checkEmailPresented = true
             } catch {
-                print(error)
+                print(error.errorInfo)
             }
             isLoading = false
         }
