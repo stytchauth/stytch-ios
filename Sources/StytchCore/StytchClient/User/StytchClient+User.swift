@@ -28,10 +28,10 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants
-        public func update(parameters: UpdateParameters) async throws -> UserResponse {
-            try await updatingCachedUser {
-                try await router.put(to: .index, parameters: parameters)
-            }
+        public func update(parameters: UpdateParameters) async throws -> NestedUserResponse {
+            let response: NestedUserResponse = try await router.put(to: .index, parameters: parameters)
+            userStorage.update(response.wrapped.user)
+            return response
         }
 
         // sourcery: AsyncVariants

@@ -4,7 +4,7 @@ import Combine
 import Foundation
 
 public extension StytchClient.UserManagement {
-    func update(parameters: UpdateParameters, completion: @escaping Completion<UserResponse>) {
+    func update(parameters: UpdateParameters, completion: @escaping Completion<NestedUserResponse>) {
         Task {
             do {
                 completion(.success(try await update(parameters: parameters)))
@@ -14,7 +14,7 @@ public extension StytchClient.UserManagement {
         }
     }
 
-    func update(parameters: UpdateParameters) -> AnyPublisher<UserResponse, Error> {
+    func update(parameters: UpdateParameters) -> AnyPublisher<NestedUserResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {
