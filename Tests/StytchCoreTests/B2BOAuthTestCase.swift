@@ -15,7 +15,7 @@ final class B2BOAuthTestCase: BaseTestCase {
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
-        _ = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: "i-am-token", sessionDurationMinutes: 12))
+        _ = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: "i-am-token", sessionDurationMinutes: 12, locale: .en))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -25,6 +25,7 @@ final class B2BOAuthTestCase: BaseTestCase {
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "oauth_token": "i-am-token",
+                "locale": "en",
             ])
         )
 

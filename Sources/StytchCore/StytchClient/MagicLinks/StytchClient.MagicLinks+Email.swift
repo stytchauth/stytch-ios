@@ -55,6 +55,7 @@ public extension StytchClient.MagicLinks.Email {
             case signupExpiration = "signupExpirationMinutes"
             case loginTemplateId
             case signupTemplateId
+            case locale
         }
 
         let email: String
@@ -64,6 +65,7 @@ public extension StytchClient.MagicLinks.Email {
         let signupMagicLinkUrl: URL?
         let signupExpiration: Minutes?
         let signupTemplateId: String?
+        let locale: StytchLocale?
 
         /**
          Initializes the parameters struct
@@ -75,6 +77,7 @@ public extension StytchClient.MagicLinks.Email {
            - signupMagicLinkUrl: The url the user clicks from the sign-up email magic link. This should be a url that your app receives and parses and subsequently send an api request to authenticate the magic link and sign-up the user. If this value is not passed, the default sign-up redirect URL that you set in your Dashboard is used. If you have not set a default sign-up redirect URL, an error is returned.
            - signupExpiration: Set the expiration for the sign-up email magic link, in minutes. By default, it expires in 1 week. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
            - signupTemplateId: Use a custom template for sign-up emails. Your default email template will be used if omitted. The template must be a template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+           - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
          */
         public init(
             email: String,
@@ -83,7 +86,8 @@ public extension StytchClient.MagicLinks.Email {
             loginTemplateId: String? = nil,
             signupMagicLinkUrl: URL? = nil,
             signupExpiration: Minutes? = nil,
-            signupTemplateId: String? = nil
+            signupTemplateId: String? = nil,
+            locale: StytchLocale? = nil
         ) {
             self.email = email
             self.loginMagicLinkUrl = loginMagicLinkUrl
@@ -92,6 +96,7 @@ public extension StytchClient.MagicLinks.Email {
             self.signupMagicLinkUrl = signupMagicLinkUrl
             self.signupExpiration = signupExpiration
             self.signupTemplateId = signupTemplateId
+            self.locale = locale
         }
 
         public static func == (lhs: Parameters, rhs: Parameters) -> Bool {
@@ -100,7 +105,8 @@ public extension StytchClient.MagicLinks.Email {
                 lhs.loginTemplateId == rhs.loginTemplateId &&
                 lhs.signupMagicLinkUrl == rhs.signupMagicLinkUrl &&
                 lhs.signupExpiration == rhs.signupExpiration &&
-                lhs.signupTemplateId == rhs.signupTemplateId
+                lhs.signupTemplateId == rhs.signupTemplateId &&
+                lhs.locale == rhs.locale
         }
     }
 }

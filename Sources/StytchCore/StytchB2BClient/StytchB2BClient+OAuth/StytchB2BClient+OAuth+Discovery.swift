@@ -44,7 +44,7 @@ public extension StytchB2BClient.OAuth {
 
 public extension StytchB2BClient.OAuth.Discovery {
     struct DiscoveryAuthenticateParameters: Codable {
-        public let discoveryOauthToken: String
+        let discoveryOauthToken: String
 
         /// A data class wrapping the parameters necessary to authenticate an OAuth Discovery flow
         /// - Parameter discoveryOauthToken: The oauth token used to finish the discovery flow

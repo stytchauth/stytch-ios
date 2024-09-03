@@ -74,13 +74,13 @@ public extension StytchB2BClientSessions {
     /// The dedicated parameters type for session `exchange` calls.
     struct ExchangeParameters: Codable {
         /// The ID of the organization that the new session should belong to.
-        public let organizationID: String
+        let organizationID: String
         /// The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        public let sessionDurationMinutes: Minutes
+        let sessionDurationMinutes: Minutes
         /// The locale will be used if an OTP code is sent to the member's phone number as part of a secondary authentication requirement.
-        public let locale: String?
+        let locale: StytchLocale?
 
-        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: String? = nil) {
+        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale? = nil) {
             self.organizationID = organizationID
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale

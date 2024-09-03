@@ -1,15 +1,18 @@
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable function_body_length
+
 final class B2BPasswordsTestCase: BaseTestCase {
     private let client = StytchB2BClient.passwords
 
     func testAuthenticate() async throws {
         let authParams: StytchB2BClient.Passwords.AuthenticateParameters = .init(
             organizationId: "org123",
-            email: "user@stytch.com",
+            emailAddress: "user@stytch.com",
             password: "password123",
-            sessionDuration: 26
+            sessionDuration: 26,
+            locale: .en
         )
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
@@ -27,15 +30,33 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "session_duration_minutes": 26,
                 "password": "password123",
                 "organization_id": "org123",
+                "locale": "en",
             ])
         )
     }
 
     func testStrengthCheck() async throws {
         networkInterceptor.responses {
-            StytchB2BClient.Passwords.StrengthCheckResponse(requestId: "123", statusCode: 200, wrapped: .init(validPassword: false, score: 20, breachedPassword: true, strengthPolicy: "something", breachDetectionOnCreate: true, zxcvbnFeedback: .init(suggestions: [], warning: "meh. do something."), ludsFeedback: nil))
+            StytchB2BClient.Passwords.StrengthCheckResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .init(
+                    validPassword: false,
+                    score: 20,
+                    breachedPassword: true,
+                    strengthPolicy: "something",
+                    breachDetectionOnCreate: true,
+                    zxcvbnFeedback: .init(suggestions: [], warning: "meh. do something."),
+                    ludsFeedback: nil
+                )
+            )
         }
-        _ = try await client.strengthCheck(parameters: .init(emailAddress: "bob@loblaw.com", password: "p@ssword123"))
+        _ = try await client.strengthCheck(
+            parameters: .init(
+                emailAddress: "bob@loblaw.com",
+                password: "p@ssword123"
+            )
+        )
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -61,7 +82,15 @@ final class B2BPasswordsTestCase: BaseTestCase {
         Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.resetByEmailStart(
-            parameters: .init(organizationId: "org123", email: "user@stytch.com", loginUrl: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15, resetPasswordTemplateId: "one-two-buckle-my-shoe")
+            parameters: .init(
+                organizationId: "org123",
+                emailAddress: "user@stytch.com",
+                loginUrl: nil,
+                resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
+                resetPasswordExpiration: 15,
+                resetPasswordTemplateId: "one-two-buckle-my-shoe",
+                locale: .en
+            )
         )
 
         try XCTAssertRequest(
@@ -74,13 +103,20 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "reset_password_template_id": "one-two-buckle-my-shoe",
+                "locale": "en",
             ])
         )
 
         Current.timer = { _, _, _ in .init() }
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
-        _ = try await client.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR"))
+        _ = try await client.resetByEmail(
+            parameters: .init(
+                token: "12345",
+                password: "iAMpasswordHEARmeROAR",
+                locale: .en
+            )
+        )
 
         try XCTAssertRequest(
             networkInterceptor.requests[1],
@@ -91,6 +127,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "session_duration_minutes": 5,
                 "password": "iAMpasswordHEARmeROAR",
+                "locale": "en",
             ])
         )
 
@@ -103,7 +140,15 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
 
-        _ = try await client.resetByExistingPassword(parameters: .init(organizationId: "org123", email: "jobe@bluth.com", existingPassword: "magicIsFun", newPassword: "buster_is_trouble"))
+        _ = try await client.resetByExistingPassword(
+            parameters: .init(
+                organizationId: "org123",
+                emailAddress: "jobe@bluth.com",
+                existingPassword: "magicIsFun",
+                newPassword: "buster_is_trouble",
+                locale: .en
+            )
+        )
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -115,15 +160,22 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "existing_password": "magicIsFun",
                 "new_password": "buster_is_trouble",
                 "session_duration_minutes": 5,
+                "locale": "en",
             ])
         )
     }
 
     func testResetBySession() async throws {
-        networkInterceptor.responses { StytchB2BClient.Passwords.ResetBySessionResponse(requestId: "", statusCode: 200, wrapped: .init(memberSession: .mock, member: .mock, organization: .mock)) }
+        networkInterceptor.responses {
+            StytchB2BClient.Passwords.ResetBySessionResponse(
+                requestId: "",
+                statusCode: 200,
+                wrapped: .init(memberSession: .mock, member: .mock, organization: .mock)
+            )
+        }
         Current.timer = { _, _, _ in .init() }
 
-        _ = try await client.resetBySession(parameters: .init(organizationId: "org123", password: "hi, i'm Tom."))
+        _ = try await client.resetBySession(parameters: .init(organizationId: "org123", password: "hi, i'm Tom.", locale: .en))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -131,6 +183,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             method: .post([
                 "organization_id": "org123",
                 "password": "hi, i'm Tom.",
+                "locale": "en",
             ])
         )
     }

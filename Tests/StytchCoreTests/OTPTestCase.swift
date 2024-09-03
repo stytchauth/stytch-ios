@@ -21,24 +21,24 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
-                body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
+                body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/login_or_create",
-                body: ["phone_number": "+11098765432", "enable_autofill": false]
+                body: ["phone_number": "+11098765432", "enable_autofill": false, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/login_or_create",
-                body: ["phone_number": "+11098765432", "enable_autofill": true]
+                body: ["phone_number": "+11098765432", "enable_autofill": true, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/email/login_or_create",
-                body: ["email": "test@stytch.com"]
+                body: ["email": "test@stytch.com", "locale": "en"]
             ),
         ]
         .enumerated()
@@ -65,29 +65,29 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/primary",
-                body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
+                body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/primary",
-                body: ["phone_number": "+11098765432", "enable_autofill": false]
+                body: ["phone_number": "+11098765432", "enable_autofill": false, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/primary",
-                body: ["phone_number": "+11098765432", "enable_autofill": true]
+                body: ["phone_number": "+11098765432", "enable_autofill": true, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com", loginTemplateId: "fake-id", signupTemplateId: "blah"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/email/send/primary",
-                body: ["email": "test@stytch.com", "login_template_id": "fake-id", "signup_template_id": "blah"]
+                body: ["email": "test@stytch.com", "login_template_id": "fake-id", "signup_template_id": "blah", "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/email/send/primary",
-                body: ["email": "test@stytch.com"]
+                body: ["email": "test@stytch.com", "locale": "en"]
             ),
         ]
         .enumerated()
@@ -115,24 +115,24 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
-                body: ["expiration_minutes": 3, "phone_number": "+12345678901"]
+                body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432")),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/secondary",
-                body: ["phone_number": "+11098765432", "enable_autofill": false]
+                body: ["phone_number": "+11098765432", "enable_autofill": false, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true)),
+                parameters: .init(deliveryMethod: .sms(phoneNumber: "+11098765432", enableAutofill: true), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/sms/send/secondary",
-                body: ["phone_number": "+11098765432", "enable_autofill": true]
+                body: ["phone_number": "+11098765432", "enable_autofill": true, "locale": "en"]
             ),
             .init(
-                parameters: .init(deliveryMethod: .email(email: "test@stytch.com")),
+                parameters: .init(deliveryMethod: .email(email: "test@stytch.com"), locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/email/send/secondary",
-                body: ["email": "test@stytch.com"]
+                body: ["email": "test@stytch.com", "locale": "en"]
             ),
         ]
         .enumerated()
