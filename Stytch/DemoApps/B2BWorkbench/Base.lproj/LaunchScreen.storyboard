@@ -18,14 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="b2b-Wordmark-light-mode" translatesAutoresizingMaskIntoConstraints="NO" id="47Q-Qs-gXw">
-                                <rect key="frame" x="76.666666666666686" y="159" width="240" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="70u-s2-ora"/>
-                                    <constraint firstAttribute="width" constant="240" id="pSw-Fk-GZL"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="346" width="393.00000000000006" height="160"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B2B Workbench" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCe-DR-3EE">
-                                <rect key="frame" x="16" y="287" width="361" height="50"/>
+                                <rect key="frame" x="16" y="768" width="361" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="o0j-X9-TDm"/>
                                 </constraints>
@@ -37,11 +33,13 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="XCe-DR-3EE" firstAttribute="top" secondItem="47Q-Qs-gXw" secondAttribute="bottom" id="LJ8-Xq-MGL"/>
+                            <constraint firstAttribute="trailing" secondItem="47Q-Qs-gXw" secondAttribute="trailing" id="BUv-2K-v1t"/>
                             <constraint firstItem="XCe-DR-3EE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="RUe-Xg-hLK"/>
                             <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="UvN-vE-ccl"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XCe-DR-3EE" secondAttribute="trailing" constant="16" id="W4s-V4-YAJ"/>
-                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="pLH-JB-H01"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XCe-DR-3EE" secondAttribute="bottom" id="WnF-mx-ZTJ"/>
+                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="XZd-zG-fZC"/>
+                            <constraint firstItem="47Q-Qs-gXw" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="yBF-dN-JTO"/>
                         </constraints>
                     </view>
                 </viewController>
