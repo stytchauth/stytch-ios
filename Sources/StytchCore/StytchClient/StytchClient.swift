@@ -110,7 +110,7 @@ public struct StytchClient: StytchClientType {
             do {
                 try await Self.bootstrap.fetch()
                 if sessionStorage.persistedSessionIdentifiersExist {
-                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
+                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDuration: nil))
                 }
                 initializationState.setInitializationState(state: true)
                 try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))

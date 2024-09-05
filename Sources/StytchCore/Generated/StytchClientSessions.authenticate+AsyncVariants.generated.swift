@@ -3,9 +3,9 @@
 import Combine
 import Foundation
 
-public extension StytchClient.StytchClientSessions {
+public extension StytchClientSessions {
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
+    func authenticate(parameters: Sessions.AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchClient.StytchClientSessions {
     }
 
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
+    func authenticate(parameters: Sessions.AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

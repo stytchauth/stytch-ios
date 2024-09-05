@@ -3,9 +3,9 @@
 import Combine
 import Foundation
 
-public extension StytchB2BClient.StytchB2BClientSessions {
+public extension StytchB2BClientSessions {
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BAuthenticateResponse>) {
+    func authenticate(parameters: Sessions.AuthenticateParameters, completion: @escaping Completion<B2BAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.StytchB2BClientSessions {
     }
 
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BAuthenticateResponse, Error> {
+    func authenticate(parameters: Sessions.AuthenticateParameters) -> AnyPublisher<B2BAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

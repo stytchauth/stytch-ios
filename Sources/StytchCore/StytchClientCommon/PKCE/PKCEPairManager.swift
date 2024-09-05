@@ -1,14 +1,8 @@
-/// A data class representing the most recent PKCE code pair generated on this device. You may find this useful if you
-/// use a hybrid (frontend and backend) authentication flow, where you need to complete a PKCE flow on the backend
 public struct PKCECodePair {
     let codeChallenge: String
     let codeVerifier: String
     let method: String
 
-    /// - Parameters:
-    ///   - codeChallenge: the challenge that was generated
-    ///   - codeVerifier: the verifier of the challenge
-    ///   - method: a string identifying the encryption method used. This will always be "S256"
     init(codeChallenge: String, codeVerifier: String, method: String = "S256") {
         self.codeChallenge = codeChallenge
         self.codeVerifier = codeVerifier
