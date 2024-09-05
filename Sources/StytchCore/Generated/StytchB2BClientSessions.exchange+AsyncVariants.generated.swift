@@ -3,7 +3,7 @@
 import Combine
 import Foundation
 
-public extension StytchB2BClient.StytchB2BClientSessions {
+public extension StytchB2BClientSessions {
     /// Use this endpoint to exchange a Member's existing session for another session in a different Organization.
     func exchange(parameters: ExchangeParameters, completion: @escaping Completion<B2BMFAAuthenticateResponse>) {
         Task {
