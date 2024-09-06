@@ -10,111 +10,64 @@ _To see in-depth examples of basic, intermediate, and advanced usage of the Styt
 
 You'll interact with Stytch via the ``StytchClient`` (consumer apps) or ``StytchB2BClient`` (B2B apps), depending on your use case. Supported Stytch products are accessed via nested static variables on the client, e.g. `StytchClient.magicLinks.email`, where you can access the underlying methods, e.g. `StytchClient.magicLinks.email.loginOrCreate(parameters:)`.
 
-There are a number of authentication products currently supported by the SDK, with additional functionality coming in the near future! The currently supported products are:
+### StytchClient
 
-### Consumer apps
+Property | Methods
+--- | ---
+``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-27v6k``
+``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-9xbzg``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-79mm8``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7``
+``StytchClient/OTP`` | ``StytchClient/OTP/loginOrCreate(parameters:)-c61b``, ``StytchClient/OTP/send(parameters:)-3xcc9``, ``StytchClient/OTP/authenticate(parameters:)-5ums0``
+``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-m8w7``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-8ycmb``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()-7a8j9``
+``StytchClient/OAuth-swift.struct/ThirdParty`` | ``StytchClient/OAuth-swift.struct/ThirdParty/start(configuration:)``, ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd``
+``StytchClient/OAuth-swift.struct/Apple-swift.struct`` | ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg``
+``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-2ck6w``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk``
+``StytchClient/StytchClientSessions`` | ``StytchClient/StytchClientSessions/revoke(parameters:)-7lw27``, ``StytchClient/StytchClientSessions/authenticate(parameters:)-7gegg``
+``StytchClient/UserManagement`` | ``StytchClient/UserManagement/getSync()``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h``
+``StytchClient/CryptoWallets-swift.struct`` | ``StytchClient/CryptoWallets-swift.struct/authenticateStart(parameters:)-23wt7``, ``StytchClient/CryptoWallets-swift.struct/authenticate(parameters:)-8ea9t``
 
-Product | Methods | Delivery mechanisms
---- | --- | ---
-``StytchClient/MagicLinks-swift.struct`` | ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5``, ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1``, ``StytchClient/MagicLinks-swift.struct/authenticate(parameters:)-27v6k`` | Email 
-``StytchClient/Passwords-swift.struct`` | ``StytchClient/Passwords-swift.struct/create(parameters:)-3gtlz``, ``StytchClient/Passwords-swift.struct/authenticate(parameters:)-9xbzg``, ``StytchClient/Passwords-swift.struct/resetByEmailStart(parameters:)-4xpf9``, ``StytchClient/Passwords-swift.struct/resetByEmail(parameters:)-79mm8``, ``StytchClient/Passwords-swift.struct/strengthCheck(parameters:)-1d3s7`` | Email (resets)
-``StytchClient/OTP`` | ``StytchClient/OTP/loginOrCreate(parameters:)-c61b``, ``StytchClient/OTP/send(parameters:)-3xcc9``, ``StytchClient/OTP/authenticate(parameters:)-5ums0`` | SMS, WhatsApp, Email
-``StytchClient/Biometrics-swift.struct`` | ``StytchClient/Biometrics-swift.struct/register(parameters:)-m8w7``, ``StytchClient/Biometrics-swift.struct/authenticate(parameters:)-8ycmb``, ``StytchClient/Biometrics-swift.struct/registrationAvailable``, ``StytchClient/Biometrics-swift.struct/removeRegistration()-7a8j9`` | N/A
-``StytchClient/OAuth-swift.struct`` | ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd``, ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-239i4``, ``StytchClient/OAuth-swift.struct/ThirdParty/start(parameters:)-p3l8`` | N/A
-``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-2ck6w``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk`` | N/A
-``Sessions`` | ``Sessions/revoke(parameters:)-7lw27``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
-``StytchClient/UserManagement`` | ``StytchClient/UserManagement/getSync()``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h`` | N/A
+### StytchB2BClient
 
-### B2B apps
+Property | Methods
+--- | ---
+``StytchB2BClient/MagicLinks-swift.struct`` | ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/loginOrSignup(parameters:)-6rrup``, ``StytchB2BClient/MagicLinks-swift.struct/authenticate(parameters:)-9bkrj``, ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/discoverySend(parameters:)-1opgc``, ``StytchB2BClient/MagicLinks-swift.struct/discoveryAuthenticate(parameters:)-4vo9v``
+``StytchB2BClient/Discovery-swift.struct`` | ``StytchB2BClient/Discovery-swift.struct/createOrganization(parameters:)-7hypb``, ``StytchB2BClient/Discovery-swift.struct/listOrganizations(parameters:)-4yarj``, ``StytchB2BClient/Discovery-swift.struct/exchangeIntermediateSession(parameters:)-8uvs8``
+``StytchB2BClient/SSO-swift.struct`` | ``StytchB2BClient/SSO-swift.struct/start(parameters:)-6ik51``, ``StytchB2BClient/SSO-swift.struct/authenticate(parameters:)-1ncp1``
+``StytchB2BClient/StytchB2BClientSessions`` | ``StytchB2BClient/StytchB2BClientSessions/revoke(parameters:)-7lw27``, ``StytchB2BClient/StytchB2BClientSessions/authenticate(parameters:)-7gegg``
+``StytchB2BClient/Members`` | ``StytchB2BClient/Members/getSync()``, ``StytchB2BClient/Members/get()-7fdhf``
+``StytchB2BClient/Organizations-swift.struct`` | ``StytchB2BClient/Organizations/getSync()``, ``StytchB2BClient/Organizations/get()-2esfw``
+``StytchB2BClient/OAuth-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty/start(configuration:)``, ``StytchB2BClient/OAuth-swift.struct/authenticate(parameters:)-80abl``
+``StytchB2BClient/OTP-swift.struct`` | ``StytchB2BClient/OTP/send(parameters:)-3xcc9``, ``StytchB2BClient/OTP/authenticate(parameters:)-5ums0``
+``StytchB2BClient/TOTP-swift.struct`` | ``StytchB2BClient/TOTP/create(parameters:)-437r4``, ``StytchB2BClient/TOTP/authenticate(parameters:)-2ck6w``
+``StytchB2BClient/Passwords-swift.struct`` | ``StytchB2BClient/Passwords-swift.struct/authenticate(parameters:)-63kup``, ``StytchB2BClient/Passwords-swift.struct/resetByEmailStart(parameters:)-24ggc``, ``StytchB2BClient/Passwords-swift.struct/resetByEmail(parameters:)-6r4gk``, ``StytchB2BClient/Passwords-swift.struct/resetByExistingPassword(parameters:)-2ju8w``, ``StytchB2BClient/Passwords-swift.struct/resetBySession(parameters:)-834cf``, ``StytchB2BClient/Passwords-swift.struct/strengthCheck(parameters:)-4uctk``
+``StytchB2BClient/RBAC-swift.struct`` | ``StytchB2BClient/RBAC-swift.struct/allPermissions()-89p7d``, ``StytchB2BClient/RBAC-swift.struct/isAuthorized(resourceId:action:)-3qmjb``, ``StytchB2BClient/RBAC-swift.struct/isAuthorizedSync(resourceId:action:)``
+``StytchB2BClient/RecoveryCodes-swift.struct`` | ``StytchB2BClient/RecoveryCodes-swift.struct/get()-1dlsm``, ``StytchB2BClient/RecoveryCodes-swift.struct/rotate()-9wyz3``, ``StytchB2BClient/RecoveryCodes-swift.struct/recover(parameters:)-7r6fr``
+``StytchB2BClient/SearchManager-swift.struct`` | ``StytchB2BClient/SearchManager-swift.struct/searchMember(searchMemberParameters:)-9nw94``, ``StytchB2BClient/SearchManager-swift.struct/searchOrganization(searchOrganizationParameters:)-2a7yp``
 
-Product | Methods | Delivery mechanisms
---- | --- | ---
-``StytchB2BClient/MagicLinks-swift.struct`` | ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/loginOrSignup(parameters:)-6rrup``, ``StytchB2BClient/MagicLinks-swift.struct/authenticate(parameters:)-9bkrj``, ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/discoverySend(parameters:)-1opgc``, ``StytchB2BClient/MagicLinks-swift.struct/discoveryAuthenticate(parameters:)-4vo9v`` | Email
-``StytchB2BClient/Discovery-swift.struct`` | ``StytchB2BClient/Discovery-swift.struct/createOrganization(parameters:)-7hypb``, ``StytchB2BClient/Discovery-swift.struct/listOrganizations(parameters:)-4yarj``, ``StytchB2BClient/Discovery-swift.struct/exchangeIntermediateSession(parameters:)-8uvs8`` | N/A
-``StytchB2BClient/SSO-swift.struct`` | ``StytchB2BClient/SSO-swift.struct/start(parameters:)-6ik51``, ``StytchB2BClient/SSO-swift.struct/authenticate(parameters:)-1ncp1`` | N/A
-``Sessions`` | ``Sessions/revoke(parameters:)-7lw27``, ``Sessions/authenticate(parameters:)-7gegg`` | N/A
-``StytchB2BClient/Members`` | ``StytchB2BClient/Members/getSync()``, ``StytchB2BClient/Members/get()-7fdhf`` | N/A
-``StytchB2BClient/Organizations`` | ``StytchB2BClient/Organizations/getSync()``, ``StytchB2BClient/Organizations/get()-2esfw`` | N/A
-
-### Async Options
-
-Async functions are available via various mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
-
-### Configuration
-
- Prior to using any authentication methods, you must configure the StytchClient/StytchB2BClient via one of two techniques:
-1. Programmatically using the static ``StytchClient/configure(publicToken:hostUrl:)`` (consumer) or ``StytchB2BClient/configure(publicToken:hostUrl:)`` (B2B) functions.
-1. Automatically, by including a `StytchConfiguration.plist` file in your main app bundle ([example](https://github.com/stytchauth/stytch-ios/blob/main/Stytch/Client/Shared/StytchConfiguration.plist))
- 
-### Usage
-
-With just a few lines of code, you can easily authenticate your users and get back to focusing on the core of your product.
- 
-``` swift
-import StytchCore
-// When a user has entered their email and requests a magic link
-_ = try await StytchClient.magicLinks.email.loginOrCreate(
-    parameters: .init(email: userEmail)
-)
-// Handling the deeplink in your SwiftUI App file (similar for AppDelegate)
-YourContentView().onOpenUrl { url in
-    switch try await StytchClient.handle(url: url) {
-        // Your handling code
-    }
-}
-```
 
 ## Topics
 
 ### Consumer
 
 - ``StytchClient``
+- ``AuthenticateResponseData``
 - ``Session``
 - ``User``
 
 ### B2B
 
 - ``StytchB2BClient``
-- ``Organization``
+- ``B2BAuthenticateResponseData``
+- ``B2BMFAAuthenticateResponseData``
 - ``MemberSession``
+- ``Organization``
 - ``Member``
 
-### Sessions
+### Common
 
-- ``Sessions``
 - ``SessionToken``
-
-### Authenticate Response Types
-- ``AuthenticateResponse``
-- ``AuthenticateResponseType``
-- ``AuthenticateResponseDataType``
-- ``AuthenticateResponseData``
-- ``B2BAuthenticateResponse``
-- ``B2BAuthenticateResponseType``
-- ``B2BAuthenticateResponseDataType``
-- ``B2BAuthenticateResponseData``
-
-### Generic Response Types
-
-- ``BasicResponseType``
-- ``BasicResponse``
+- ``SessionTokens``
+- ``RBACPolicy``
 - ``Response``
-
-### Error Types
 - ``StytchError``
-
-### Deeplink Types
-
-- ``DeeplinkHandledStatus``
-
-### Additional Types
-
-- ``AuthenticationFactor``
-- ``SSORegistration``
-- ``Identifier``
-- ``Completion``
-- ``Minutes``
-- ``EmptyCodable``
-- ``JSON``
-- ``Union``
-- ``UserResponse``
+- ``StytchAPIError``
+- ``PKCECodePair``
