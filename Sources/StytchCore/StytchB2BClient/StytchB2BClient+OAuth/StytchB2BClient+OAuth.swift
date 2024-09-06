@@ -56,7 +56,7 @@ public extension StytchB2BClient.OAuth {
     struct AuthenticateParameters: Encodable {
         let oauthToken: String
         let sessionDurationMinutes: Minutes
-        let locale: String?
+        let locale: StytchLocale?
 
         /// - Parameters:
         ///   - oauthToken: The token to authenticate.
@@ -71,7 +71,7 @@ public extension StytchB2BClient.OAuth {
         public init(
             oauthToken: String,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
-            locale: String? = nil
+            locale: StytchLocale? = nil
         ) {
             self.oauthToken = oauthToken
             self.sessionDurationMinutes = sessionDurationMinutes

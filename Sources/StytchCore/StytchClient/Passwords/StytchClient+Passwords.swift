@@ -167,14 +167,16 @@ public extension StytchClient.Passwords {
             case resetPasswordUrl = "resetPasswordRedirectUrl"
             case resetPasswordExpiration = "resetPasswordExpirationMinutes"
             case resetPasswordTemplateId
+            case locale
         }
 
-        public let email: String
-        public let loginUrl: URL?
-        public let loginExpiration: Minutes?
-        public let resetPasswordUrl: URL?
-        public let resetPasswordExpiration: Minutes?
-        public let resetPasswordTemplateId: String?
+        let email: String
+        let loginUrl: URL?
+        let loginExpiration: Minutes?
+        let resetPasswordUrl: URL?
+        let resetPasswordExpiration: Minutes?
+        let resetPasswordTemplateId: String?
+        let locale: StytchLocale?
 
         /// - Parameters:
         ///   - email: The user's email address.
@@ -183,13 +185,15 @@ public extension StytchClient.Passwords {
         ///   - resetPasswordUrl: The url that the user clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
         ///   - resetPasswordExpiration: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
         ///   - resetPasswordTemplateId: Use a custom template for password reset emails. By default, it will use your default email template. The template must be a template using our built-in customizations or a custom HTML email for Passwords - Password reset.
+        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
         public init(
             email: String,
             loginUrl: URL? = nil,
             loginExpiration: Minutes? = nil,
             resetPasswordUrl: URL? = nil,
             resetPasswordExpiration: Minutes? = nil,
-            resetPasswordTemplateId: String? = nil
+            resetPasswordTemplateId: String? = nil,
+            locale: StytchLocale? = nil
         ) {
             self.email = email
             self.loginUrl = loginUrl
@@ -197,6 +201,7 @@ public extension StytchClient.Passwords {
             self.resetPasswordUrl = resetPasswordUrl
             self.resetPasswordExpiration = resetPasswordExpiration
             self.resetPasswordTemplateId = resetPasswordTemplateId
+            self.locale = locale
         }
     }
 
@@ -242,29 +247,29 @@ public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
     struct ResetByExistingPasswordParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
-            case email = "emailAddress"
+            case emailAddress
             case existingPassword
             case newPassword
             case sessionDuration = "sessionDurationMinutes"
         }
 
-        public let email: String
+        public let emailAddress: String
         public let existingPassword: String
         public let newPassword: String
         public let sessionDuration: Minutes
 
         /// - Parameters:
-        ///   - email: The user's email address.
+        ///   - emailAddress: The user's email address.
         ///   - existingPassword: The user's existing password.
         ///   - newPassword: The user's new password.
         ///   - sessionDuration: The duration of the requested session.
         public init(
-            email: String,
+            emailAddress: String,
             existingPassword: String,
             newPassword: String,
             sessionDuration: Minutes = .defaultSessionDuration
         ) {
-            self.email = email
+            self.emailAddress = emailAddress
             self.existingPassword = existingPassword
             self.newPassword = newPassword
             self.sessionDuration = sessionDuration

@@ -10,7 +10,7 @@ final class B2BOTPTestCase: BaseTestCase {
         let organizationId = "orgid1234"
         let memberId = "memberid1234"
         let mfaPhoneNumber = "+15555555555"
-        let locale = "en_us"
+        let locale = StytchLocale.en
 
         let parameters = StytchB2BClient.OTP.SendParameters(
             organizationId: organizationId,
@@ -31,7 +31,7 @@ final class B2BOTPTestCase: BaseTestCase {
                 "organization_id": JSON.string(organizationId),
                 "member_id": JSON.string(memberId),
                 "mfa_phone_number": JSON.string(mfaPhoneNumber),
-                "locale": JSON.string(locale),
+                "locale": JSON.string(locale.rawValue),
                 "enable_autofill": false,
             ])
         )
@@ -45,7 +45,7 @@ final class B2BOTPTestCase: BaseTestCase {
         let organizationId = "orgid1234"
         let memberId = "memberid1234"
         let mfaPhoneNumber = "+15555555555"
-        let locale = "en_us"
+        let locale = StytchLocale.en
 
         let parameters = StytchB2BClient.OTP.SendParameters(
             organizationId: organizationId,
@@ -67,7 +67,7 @@ final class B2BOTPTestCase: BaseTestCase {
                 "organization_id": JSON.string(organizationId),
                 "member_id": JSON.string(memberId),
                 "mfa_phone_number": JSON.string(mfaPhoneNumber),
-                "locale": JSON.string(locale),
+                "locale": JSON.string(locale.rawValue),
                 "enable_autofill": true,
             ])
         )

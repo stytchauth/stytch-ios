@@ -61,9 +61,10 @@ final class MagicLinksViewController: UIViewController {
                 let response = try await StytchB2BClient.magicLinks.email.loginOrSignup(
                     parameters: .init(
                         organizationId: .init(rawValue: orgId),
-                        email: email,
+                        emailAddress: email,
                         loginRedirectUrl: redirectUrl,
-                        signupRedirectUrl: redirectUrl
+                        signupRedirectUrl: redirectUrl,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "login or signup success - check your email!", object: response)
@@ -85,8 +86,9 @@ final class MagicLinksViewController: UIViewController {
             do {
                 let response = try await StytchB2BClient.magicLinks.email.discoverySend(
                     parameters: .init(
-                        email: email,
-                        redirectUrl: redirectUrl
+                        emailAddress: email,
+                        discoveryRedirectUrl: redirectUrl,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "discovery send success - check your email!", object: response)
@@ -108,7 +110,8 @@ final class MagicLinksViewController: UIViewController {
             do {
                 let response = try await StytchB2BClient.magicLinks.email.inviteSend(
                     parameters: .init(
-                        email: email
+                        emailAddress: email,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "invite send success - check your email!", object: response)

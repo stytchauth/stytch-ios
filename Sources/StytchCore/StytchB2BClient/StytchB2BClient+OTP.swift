@@ -46,7 +46,7 @@ public extension StytchB2BClient.OTP {
         let organizationId: String
         let memberId: String
         let mfaPhoneNumber: String?
-        let locale: String?
+        let locale: StytchLocale?
         let enableAutofill: Bool
 
         /// - Parameters:
@@ -57,7 +57,7 @@ public extension StytchB2BClient.OTP {
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///      Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         ///   - enableAutofill: indicates whether the SMS message should include autofill metadata
-        public init(organizationId: String, memberId: String, mfaPhoneNumber: String? = nil, locale: String? = nil, enableAutofill: Bool = false) {
+        public init(organizationId: String, memberId: String, mfaPhoneNumber: String? = nil, locale: StytchLocale? = nil, enableAutofill: Bool = false) {
             self.organizationId = organizationId
             self.memberId = memberId
             self.mfaPhoneNumber = mfaPhoneNumber

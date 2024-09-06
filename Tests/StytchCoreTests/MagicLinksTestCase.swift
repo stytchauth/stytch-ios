@@ -14,7 +14,8 @@ final class MagicLinksTestCase: BaseTestCase {
             loginTemplateId: "g'day",
             signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
             signupExpiration: 30,
-            signupTemplateId: "mate"
+            signupTemplateId: "mate",
+            locale: .en
         )
 
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
@@ -37,6 +38,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "login_expiration_minutes": 30,
                 "login_template_id": "g'day",
                 "signup_template_id": "mate",
+                "locale": "en",
             ])
         )
     }
@@ -48,7 +50,8 @@ final class MagicLinksTestCase: BaseTestCase {
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
             loginExpiration: 30,
-            loginTemplateId: "hello"
+            loginTemplateId: "hello",
+            locale: .en
         )
 
         XCTAssertFalse(Current.sessionStorage.persistedSessionIdentifiersExist)
@@ -69,6 +72,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
                 "login_template_id": "hello",
+                "locale": "en",
             ])
         )
     }
@@ -79,7 +83,8 @@ final class MagicLinksTestCase: BaseTestCase {
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            loginExpiration: 30
+            loginExpiration: 30,
+            locale: .en
         )
 
         try Current.keychainClient.set("123", for: .sessionToken)
@@ -101,6 +106,7 @@ final class MagicLinksTestCase: BaseTestCase {
                 "email": "asdf@stytch.com",
                 "login_magic_link_url": "https://myapp.com/login",
                 "login_expiration_minutes": 30,
+                "locale": "en",
             ])
         )
     }

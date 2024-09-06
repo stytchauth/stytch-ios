@@ -9,7 +9,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchB2BClient.MagicLinks.Email.Parameters = .init(
             organizationId: "org_123",
-            email: "asdf@stytch.com",
+            emailAddress: "asdf@stytch.com",
             loginRedirectUrl: baseUrl.appendingPathComponent("login"),
             signupRedirectUrl: baseUrl.appendingPathComponent("signup"),
             loginTemplateId: "g'day",
@@ -45,10 +45,10 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchB2BClient.MagicLinks.Email.DiscoveryParameters = .init(
-            email: "asdf@stytch.com",
-            redirectUrl: baseUrl.appendingPathComponent("login"),
+            emailAddress: "asdf@stytch.com",
+            discoveryRedirectUrl: baseUrl.appendingPathComponent("login"),
             loginTemplateId: "g'day",
-            locale: "en"
+            locale: .en
         )
 
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
@@ -74,10 +74,10 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         }
         let baseUrl = try XCTUnwrap(URL(string: "https://myapp.com"))
         let parameters: StytchB2BClient.MagicLinks.Email.InviteParameters = .init(
-            email: "asdf@stytch.com",
+            emailAddress: "asdf@stytch.com",
             inviteRedirectUrl: baseUrl.appendingPathComponent("login"),
             inviteTemplateId: "g'day",
-            locale: "en"
+            locale: .en
         )
 
         _ = try await StytchB2BClient.magicLinks.email.inviteSend(parameters: parameters)
@@ -99,7 +99,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
-            sessionDuration: 15
+            sessionDuration: 15,
+            locale: .en
         )
 
         try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
@@ -130,6 +131,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
                 "intermediate_session_token": JSON.string(intermediateSessionToken),
                 "magic_links_token": "12345", "session_duration_minutes": 15,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+                "locale": "en",
             ])
         )
 
@@ -137,7 +139,17 @@ final class B2BMagicLinksTestCase: BaseTestCase {
     }
 
     func testDiscoveryAuthenticate() async throws {
-        networkInterceptor.responses { StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse(requestId: "123", statusCode: 200, wrapped: .init(discoveredOrganizations: [], intermediateSessionToken: "IMS", email: "1@2.3")) }
+        networkInterceptor.responses {
+            StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .init(
+                    discoveredOrganizations: [],
+                    intermediateSessionToken: "IMS",
+                    emailAddress: "1@2.3"
+                )
+            )
+        }
 
         let parameters: StytchB2BClient.MagicLinks.DiscoveryAuthenticateParameters = .init(token: "12345")
 
