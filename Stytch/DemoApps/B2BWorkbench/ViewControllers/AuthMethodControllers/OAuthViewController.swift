@@ -78,7 +78,13 @@ final class OAuthViewController: UIViewController {
 
         Task {
             do {
-                let response = try await StytchB2BClient.oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: .defaultSessionDuration, locale: nil))
+                let response = try await StytchB2BClient.oauth.authenticate(
+                    parameters: .init(
+                        oauthToken: token,
+                        sessionDurationMinutes: .defaultSessionDuration,
+                        locale: .en
+                    )
+                )
                 presentAlertAndLogMessage(description: "oauth authenticate success!", object: response)
             } catch {
                 presentAlertAndLogMessage(description: "oauth authenticate error", object: error)

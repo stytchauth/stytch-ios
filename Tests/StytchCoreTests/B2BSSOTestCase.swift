@@ -41,7 +41,7 @@ final class B2BSSOTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(
-            try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
+            try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12, locale: .en)),
             StytchSDKError.missingPKCE
         )
 
@@ -50,7 +50,7 @@ final class B2BSSOTestCase: BaseTestCase {
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
-        _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
+        _ = try await StytchB2BClient.sso.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12, locale: .en))
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -60,6 +60,7 @@ final class B2BSSOTestCase: BaseTestCase {
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "sso_token": "i-am-token",
+                "locale": "en",
             ])
         )
 

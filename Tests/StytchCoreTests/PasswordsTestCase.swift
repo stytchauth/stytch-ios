@@ -4,7 +4,7 @@ import XCTest
 final class PasswordsTestCase: BaseTestCase {
     private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDuration: 26)
     private let passwordResetBySessionParams: StytchClient.Passwords.ResetBySessionParameters = .init(password: "password123", sessionDuration: 10)
-    private let passwordResetByExistingPasswordParams: StytchClient.Passwords.ResetByExistingPasswordParameters = .init(email: "user@stytch.com", existingPassword: "password123", newPassword: "password234")
+    private let passwordResetByExistingPasswordParams: StytchClient.Passwords.ResetByExistingPasswordParameters = .init(emailAddress: "user@stytch.com", existingPassword: "password123", newPassword: "password234")
 
     func testCreate() async throws {
         let userId: User.ID = ""
@@ -80,7 +80,15 @@ final class PasswordsTestCase: BaseTestCase {
             AuthenticateResponse.mock
         }
         _ = try await StytchClient.passwords.resetByEmailStart(
-            parameters: .init(email: "user@stytch.com", loginUrl: nil, loginExpiration: nil, resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")), resetPasswordExpiration: 15, resetPasswordTemplateId: "one-two-buckle-my-shoe")
+            parameters: .init(
+                email: "user@stytch.com",
+                loginUrl: nil,
+                loginExpiration: nil,
+                resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
+                resetPasswordExpiration: 15,
+                resetPasswordTemplateId: "one-two-buckle-my-shoe",
+                locale: .en
+            )
         )
 
         try XCTAssertRequest(
@@ -92,6 +100,7 @@ final class PasswordsTestCase: BaseTestCase {
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "reset_password_template_id": "one-two-buckle-my-shoe",
+                "locale": "en",
             ])
         )
 

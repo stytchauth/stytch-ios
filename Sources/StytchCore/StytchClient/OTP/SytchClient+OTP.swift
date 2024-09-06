@@ -70,22 +70,27 @@ public extension StytchClient.OTP {
             case loginTemplateId
             case signupTemplateId
             case enableAutofill
+            case locale
         }
 
         let deliveryMethod: DeliveryMethod
         let expiration: Minutes?
+        let locale: StytchLocale?
 
         /// - Parameters:
         ///   - deliveryMethod: The mechanism used to deliver the one-time passcode.
         ///   - expiration: Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10 minutes. The default expiration is 2 minutes.
-        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil) {
+        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
+        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil, locale: StytchLocale? = nil) {
             self.deliveryMethod = deliveryMethod
             self.expiration = expiration
+            self.locale = locale
         }
 
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encodeIfPresent(expiration, forKey: .expiration)
+            try container.encodeIfPresent(locale, forKey: .locale)
             switch deliveryMethod {
             case let .whatsapp(phoneNumber):
                 try container.encode(phoneNumber, forKey: .phoneNumber)

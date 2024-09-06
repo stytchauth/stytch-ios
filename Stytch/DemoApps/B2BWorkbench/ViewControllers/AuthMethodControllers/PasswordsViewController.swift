@@ -94,8 +94,9 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.authenticate(
                     parameters: .init(
                         organizationId: values.orgId,
-                        email: values.email,
-                        password: values.password
+                        emailAddress: values.email,
+                        password: values.password,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "authenticate success!", object: response)
@@ -140,8 +141,9 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.resetByEmailStart(
                     parameters: .init(
                         organizationId: values.orgId,
-                        email: values.email,
-                        resetPasswordUrl: values.redirectUrl
+                        emailAddress: values.email,
+                        resetPasswordUrl: values.redirectUrl,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "reset by email success - check your email!", object: response)
@@ -162,7 +164,8 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.resetBySession(
                     parameters: .init(
                         organizationId: values.orgId,
-                        password: values.password
+                        password: values.password,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "reset by session success!", object: response)
@@ -187,9 +190,10 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.resetByExistingPassword(
                     parameters: .init(
                         organizationId: values.orgId,
-                        email: values.email,
+                        emailAddress: values.email,
                         existingPassword: values.password,
-                        newPassword: newPassword
+                        newPassword: newPassword,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "reset by existing password success!", object: response)
@@ -209,7 +213,8 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.resetByEmail(
                     parameters: .init(
                         token: token,
-                        password: newPassword
+                        password: newPassword,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "reset password success!", object: response)

@@ -6,7 +6,14 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
     func testListOrganizations() async throws {
         networkInterceptor.responses {
-            StytchB2BClient.Discovery.ListOrganizationsResponse(requestId: "123", statusCode: 200, wrapped: .init(email: "blah@gmail.com", discoveredOrganizations: [.init(organization: .mock, membership: .init(kind: "somethign", details: nil, member: .mock), memberAuthenticated: false)]))
+            StytchB2BClient.Discovery.ListOrganizationsResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .init(
+                    emailAddress: "blah@gmail.com",
+                    discoveredOrganizations: [.init(organization: .mock, membership: .init(kind: "somethign", details: nil, member: .mock), memberAuthenticated: false)]
+                )
+            )
         }
 
         Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)

@@ -63,13 +63,8 @@ public extension StytchB2BClient.Discovery {
 
     /// The underlying data for `ListOrganizationsResponse`
     struct ListOrganizationsResponseData: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case email = "emailAddress"
-            case discoveredOrganizations
-        }
-
         /// The member's email address.
-        public let email: String
+        public let emailAddress: String
         /// A list of discovered organizations.
         public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
     }
