@@ -1,3 +1,3 @@
 extension Version {
-    static let current: Self = .init(major: 0, minor: 44, patch: 0)
+    static let current: Self = .init(major: 0, minor: 45, patch: 0)
 }
