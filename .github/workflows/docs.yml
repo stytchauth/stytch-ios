@@ -92,7 +92,7 @@ jobs:
         ref: docs/live
         path: docs-live
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4.1.7
       with:
         path: artifacts
 
