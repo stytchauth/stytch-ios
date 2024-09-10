@@ -4,7 +4,8 @@
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-               BuildableName = "Stytch.app"
-               BlueprintName = "Stytch (iOS)"
-               ReferencedContainer = "container:Stytch.xcodeproj">
+               BlueprintIdentifier = "StytchUI"
+               BuildableName = "StytchUI"
+               BlueprintName = "StytchUI"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -39,16 +40,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-            BuildableName = "Stytch.app"
-            BlueprintName = "Stytch (iOS)"
-            ReferencedContainer = "container:Stytch.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -56,16 +47,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "229B82172809EA3F007BC3F1"
-            BuildableName = "Stytch.app"
-            BlueprintName = "Stytch (iOS)"
-            ReferencedContainer = "container:Stytch.xcodeproj">
+            BlueprintIdentifier = "StytchUI"
+            BuildableName = "StytchUI"
+            BlueprintName = "StytchUI"
+            ReferencedContainer = "container:">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
