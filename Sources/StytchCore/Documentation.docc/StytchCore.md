@@ -21,7 +21,7 @@ Property | Methods
 ``StytchClient/OAuth-swift.struct/ThirdParty`` | ``StytchClient/OAuth-swift.struct/ThirdParty/start(configuration:)``, ``StytchClient/OAuth-swift.struct/authenticate(parameters:)-3tjwd``
 ``StytchClient/OAuth-swift.struct/Apple-swift.struct`` | ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg``
 ``StytchClient/TOTP`` | ``StytchClient/TOTP/create(parameters:)-437r4``, ``StytchClient/TOTP/authenticate(parameters:)-2ck6w``, ``StytchClient/TOTP/recoveryCodes()-mbxc``, ``StytchClient/TOTP/recover(parameters:)-9swfk``
-``StytchClient/StytchClientSessions`` | ``StytchClient/StytchClientSessions/revoke(parameters:)-7lw27``, ``StytchClient/StytchClientSessions/authenticate(parameters:)-7gegg``
+``StytchClient/Sessions`` | ``StytchClient/Sessions/revoke(parameters:)-7lw27``, ``StytchClient/Sessions/authenticate(parameters:)-7gegg``
 ``StytchClient/UserManagement`` | ``StytchClient/UserManagement/getSync()``, ``StytchClient/UserManagement/get()-57gt5``, ``StytchClient/UserManagement/deleteFactor(_:)-5nh6h``
 ``StytchClient/CryptoWallets-swift.struct`` | ``StytchClient/CryptoWallets-swift.struct/authenticateStart(parameters:)-23wt7``, ``StytchClient/CryptoWallets-swift.struct/authenticate(parameters:)-8ea9t``
 
@@ -32,7 +32,7 @@ Property | Methods
 ``StytchB2BClient/MagicLinks-swift.struct`` | ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/loginOrSignup(parameters:)-6rrup``, ``StytchB2BClient/MagicLinks-swift.struct/authenticate(parameters:)-9bkrj``, ``StytchB2BClient/MagicLinks-swift.struct/Email-swift.struct/discoverySend(parameters:)-1opgc``, ``StytchB2BClient/MagicLinks-swift.struct/discoveryAuthenticate(parameters:)-4vo9v``
 ``StytchB2BClient/Discovery-swift.struct`` | ``StytchB2BClient/Discovery-swift.struct/createOrganization(parameters:)-7hypb``, ``StytchB2BClient/Discovery-swift.struct/listOrganizations(parameters:)-4yarj``, ``StytchB2BClient/Discovery-swift.struct/exchangeIntermediateSession(parameters:)-8uvs8``
 ``StytchB2BClient/SSO-swift.struct`` | ``StytchB2BClient/SSO-swift.struct/start(parameters:)-6ik51``, ``StytchB2BClient/SSO-swift.struct/authenticate(parameters:)-1ncp1``
-``StytchB2BClient/StytchB2BClientSessions`` | ``StytchB2BClient/StytchB2BClientSessions/revoke(parameters:)-7lw27``, ``StytchB2BClient/StytchB2BClientSessions/authenticate(parameters:)-7gegg``
+``StytchB2BClient/Sessions`` | ``StytchB2BClient/Sessions/revoke(parameters:)-7lw27``, ``StytchB2BClient/Sessions/authenticate(parameters:)-7gegg``
 ``StytchB2BClient/Members`` | ``StytchB2BClient/Members/getSync()``, ``StytchB2BClient/Members/get()-7fdhf``
 ``StytchB2BClient/Organizations-swift.struct`` | ``StytchB2BClient/Organizations/getSync()``, ``StytchB2BClient/Organizations/get()-2esfw``
 ``StytchB2BClient/OAuth-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty/start(configuration:)``, ``StytchB2BClient/OAuth-swift.struct/authenticate(parameters:)-80abl``

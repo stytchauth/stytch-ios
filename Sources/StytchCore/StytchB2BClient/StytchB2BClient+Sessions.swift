@@ -1,35 +1,25 @@
 import Combine
 
-public extension StytchClient {
+public extension StytchB2BClient {
     /// The interface for interacting with sessions products.
-    static var sessions: StytchClientSessions {
+    static var sessions: Sessions {
         .init(router: router.scopedRouter { $0.sessions })
     }
 }
 
-enum SessionsRoute: String, RouteType {
-    case authenticate
-    case revoke
-
-    var path: Path {
-        .init(rawValue: rawValue)
-    }
-}
-
-public extension StytchClient {
+public extension StytchB2BClient {
     /// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
-    struct StytchClientSessions {
-        let router: NetworkingRouter<SessionsRoute>
+    struct Sessions {
+        let router: NetworkingRouter<StytchB2BClient.SessionsRoute>
         @Dependency(\.sessionStorage) var sessionStorage
         @Dependency(\.localStorage) var localStorage
 
-        /// If logged in, returns the cached session object.
-        public var session: Session? {
+        public var memberSession: MemberSession? {
             get {
-                localStorage.session
+                localStorage.memberSession
             }
             set {
-                localStorage.session = newValue
+                localStorage.memberSession = newValue
             }
         }
 
@@ -50,7 +40,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
             try await router.post(to: .authenticate, parameters: parameters)
         }
 
@@ -73,10 +63,16 @@ public extension StytchClient {
                 throw error
             }
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Use this endpoint to exchange a Member's existing session for another session in a different Organization.
+        public func exchange(parameters: ExchangeParameters) async throws -> B2BMFAAuthenticateResponse {
+            try await router.post(to: .exchange, parameters: parameters)
+        }
     }
 }
 
-public extension StytchClient.StytchClientSessions {
+public extension StytchB2BClient.Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
     struct AuthenticateParameters: Encodable {
         let sessionDurationMinutes: Minutes?
@@ -96,6 +92,22 @@ public extension StytchClient.StytchClientSessions {
         /// - Parameter forceClear: In the event of an error received from the network, setting this value to true will ensure the local session state is cleared.
         public init(forceClear: Bool = false) {
             self.forceClear = forceClear
+        }
+    }
+
+    /// The dedicated parameters type for session `exchange` calls.
+    struct ExchangeParameters: Codable {
+        /// The ID of the organization that the new session should belong to.
+        public let organizationID: String
+        /// The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        public let sessionDurationMinutes: Minutes
+        /// The locale will be used if an OTP code is sent to the member's phone number as part of a secondary authentication requirement.
+        public let locale: StytchLocale?
+
+        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale? = nil) {
+            self.organizationID = organizationID
+            self.sessionDurationMinutes = sessionDurationMinutes
+            self.locale = locale
         }
     }
 }
