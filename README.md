@@ -93,6 +93,10 @@ For further information and tutorials on some of our more common implementations
 
 Full reference documentation is available for [StytchCore](https://stytchauth.github.io/stytch-ios/main/StytchCore/documentation/stytchcore/) and [StytchUI](https://stytchauth.github.io/stytch-ios/main/StytchUI/documentation/stytchui/).
 
+## Navigating the Project and Running the Sample Apps
+[Instructions can be found here!](./tutorials/NavigatingTheProject.md)
+
+
 ## Get Help And Join The Community
 
 Join the discussion, ask questions, and suggest new features in our ​[Slack community](https://stytch.com/docs/resources/support/overview)!
