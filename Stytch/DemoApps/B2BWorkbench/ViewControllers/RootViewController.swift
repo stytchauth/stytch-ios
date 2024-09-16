@@ -40,6 +40,11 @@ final class RootViewController: UIViewController {
         memberIdLabel.preferredMaxLayoutWidth = view.bounds.width - 2 * Constants.padding
         memberIdLabel.isHidden = true
 
+        var publicToken = ""
+        if publicToken.isEmpty == false {
+            UserDefaults.standard.set(publicToken, forKey: Constants.publicTokenDefaultsKey)
+        }
+
         publicTokenTextField.text = UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey)
 
         authChangeCancellable = StytchB2BClient.sessions.onAuthChange
