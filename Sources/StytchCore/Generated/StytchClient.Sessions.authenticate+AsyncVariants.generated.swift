@@ -3,7 +3,7 @@
 import Combine
 import Foundation
 
-public extension StytchClient.StytchClientSessions {
+public extension StytchClient.Sessions {
     /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
     func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
         Task {

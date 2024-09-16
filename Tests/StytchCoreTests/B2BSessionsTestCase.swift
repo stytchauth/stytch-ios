@@ -4,7 +4,7 @@ import XCTest
 final class B2BSessionsTestCase: BaseTestCase {
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
-        let parameters: StytchB2BClient.StytchB2BClientSessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
+        let parameters: StytchB2BClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
 
         Current.timer = { _, _, _ in .init() }
 
@@ -71,7 +71,7 @@ final class B2BSessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         let organizationID = "org_123"
-        let parameters = StytchB2BClient.StytchB2BClientSessions.ExchangeParameters(organizationID: organizationID)
+        let parameters = StytchB2BClient.Sessions.ExchangeParameters(organizationID: organizationID)
         _ = try await StytchB2BClient.sessions.exchange(parameters: parameters)
 
         try XCTAssertRequest(

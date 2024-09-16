@@ -4,7 +4,7 @@ extension StytchB2BClient {
         case magicLinks(MagicLinksRoute)
         case organizations(OrganizationsRoute)
         case passwords(PasswordsRoute)
-        case sessions(B2BSessionsRoute)
+        case sessions(SessionsRoute)
         case sso(SSORoute)
         case events(EventsRoute)
         case bootstrap(BootstrapRoute)
@@ -331,7 +331,7 @@ extension StytchB2BClient {
         }
     }
 
-    enum B2BSessionsRoute: String, RouteType {
+    enum SessionsRoute: String, RouteType {
         case authenticate
         case revoke
         case exchange

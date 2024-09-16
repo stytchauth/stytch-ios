@@ -4,7 +4,7 @@ import XCTest
 final class SessionsTestCase: BaseTestCase {
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        let parameters: StytchClient.StytchClientSessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
 
         Current.timer = { _, _, _ in .init() }
 
