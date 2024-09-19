@@ -55,6 +55,10 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(OAuthViewController(), animated: true)
     })
 
+    lazy var scimButton: UIButton = .init(title: "SCIM", primaryAction: .init { [weak self] _ in
+        self?.navigationController?.pushViewController(SCIMViewController(), animated: true)
+    })
+
     func saveOrgID() {
         UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
     }
@@ -87,6 +91,7 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(otpButton)
         stackView.addArrangedSubview(recoveryCodesButton)
         stackView.addArrangedSubview(oauthButton)
+        stackView.addArrangedSubview(scimButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -4,7 +4,7 @@ public extension StytchB2BClient {
     /// The interface for interacting with OAuth products.
     static var oauth: OAuth {
         .init(router: router.scopedRouter {
-            $0.oauthRoute
+            $0.oauth
         })
     }
 }

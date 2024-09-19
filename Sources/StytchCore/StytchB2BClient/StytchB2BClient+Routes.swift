@@ -1,3 +1,7 @@
+import Foundation
+
+// swiftlint:disable file_length
+
 extension StytchB2BClient {
     enum BaseRoute: BaseRouteType {
         case discovery(DiscoveryRoute)
@@ -12,11 +16,12 @@ extension StytchB2BClient {
         case totp(TOTPRoute)
         case otp(OTPRoute)
         case recoveryCodes(RecoveryCodesRoute)
-        case oauthRoute(OAuthRoute)
+        case oauth(OAuthRoute)
+        case scim(SCIMRoute)
 
         var path: Path {
             switch self {
-            case let .bootstrap(route):
+            case .bootstrap:
                 let (base, next) = routeComponents
                 return base.appendingPath(next.path)
             default:
@@ -51,8 +56,10 @@ extension StytchB2BClient {
                 return ("otps", route)
             case let .recoveryCodes(route):
                 return ("recovery_codes", route)
-            case let .oauthRoute(route):
+            case let .oauth(route):
                 return ("oauth", route)
+            case let .scim(route):
+                return ("scim", route)
             }
         }
     }
@@ -362,6 +369,38 @@ extension StytchB2BClient {
                 case .authenticate:
                     return "authenticate"
                 }
+            }
+        }
+    }
+
+    enum SCIMRoute: RouteType {
+        case createConnection
+        case updateConnection(connectionId: String)
+        case deleteConnection(connectionId: String)
+        case getConnection
+        case getConnectionGroups
+        case rotateStart
+        case rotateComplete
+        case rotateCancel
+
+        var path: Path {
+            switch self {
+            case .createConnection:
+                return ""
+            case let .updateConnection(connectionId: connectionId):
+                return Path(rawValue: connectionId)
+            case let .deleteConnection(connectionId: connectionId):
+                return Path(rawValue: connectionId)
+            case .getConnection:
+                return ""
+            case .getConnectionGroups:
+                return ""
+            case .rotateStart:
+                return "rotate/start"
+            case .rotateComplete:
+                return "rotate/complete"
+            case .rotateCancel:
+                return "rotate/cancel"
             }
         }
     }
