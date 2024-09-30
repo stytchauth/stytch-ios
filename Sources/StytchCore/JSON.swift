@@ -3,7 +3,7 @@ import Foundation
 /// A simple type representing valid JSON values which includes several convenience accessors.
 public enum JSON: Hashable, Equatable {
     case array([JSON])
-    case object([String: JSON])
+    case object([String: JSON?])
     case string(String)
     case number(Double)
     case boolean(Bool)
@@ -13,7 +13,7 @@ public enum JSON: Hashable, Equatable {
         return value
     }
 
-    public var objectValue: [String: JSON]? {
+    public var objectValue: [String: JSON?]? {
         guard case let .object(value) = self else { return nil }
         return value
     }
@@ -38,8 +38,15 @@ public enum JSON: Hashable, Equatable {
     }
 
     public subscript(key: String) -> JSON? {
-        guard case let .object(dict) = self else { return nil }
-        return dict[key]
+        guard case let .object(dict) = self else {
+            return nil
+        }
+
+        if let value = dict[key] {
+            return value
+        } else {
+            return nil
+        }
     }
 
     public subscript(_ index: Int) -> JSON? {
@@ -82,7 +89,7 @@ extension JSON: Codable {
                     do {
                         self = .string(try container.decode(String.self))
                     } catch {
-                        self = .object(try container.decode([String: JSON].self))
+                        self = .object(try container.decode([String: JSON?].self))
                     }
                 }
             }

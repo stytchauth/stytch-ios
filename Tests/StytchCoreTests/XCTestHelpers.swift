@@ -81,8 +81,10 @@ private extension JSON {
                 return description
             } else {
                 for key in lhsKeys {
-                    if let description = lhs[key]?.difference(from: rhs[key]) {
-                        return description
+                    if let lhsValue = lhs[key], let rhsValue = rhs[key] {
+                        if let description = lhsValue?.difference(from: rhsValue) {
+                            return description
+                        }
                     }
                 }
             }
