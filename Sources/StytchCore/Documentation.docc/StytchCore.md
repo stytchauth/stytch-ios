@@ -35,17 +35,17 @@ Property | Methods
 ``StytchB2BClient/SSO-swift.struct`` | ``StytchB2BClient/SSO-swift.struct/start(configuration:)-2iami``, ``StytchB2BClient/SSO-swift.struct/authenticate(parameters:)-49s4``
 ``StytchB2BClient/Sessions-swift.struct`` | ``StytchB2BClient/Sessions-swift.struct/revoke(parameters:)-3e4jb``, ``StytchB2BClient/Sessions-swift.struct/authenticate(parameters:)-8909t``
 ``StytchB2BClient/Members`` | ``StytchB2BClient/Members/getSync()``, ``StytchB2BClient/Members/get()-7fdhf``
-``StytchB2BClient/Organizations-swift.struct`` | ``StytchB2BClient/Organizations/getSync()``, ``StytchB2BClient/Organizations/get()-2esfw``
-``StytchB2BClient/OTP-swift.struct`` | ``StytchB2BClient/OTP/send(parameters:)-4jutd``, ``StytchB2BClient/OTP/authenticate(parameters:)-3gx7t``
-``StytchB2BClient/TOTP-swift.struct`` | ``StytchB2BClient/TOTP/create(parameters:)-65xjg``, ``StytchB2BClient/TOTP/authenticate(parameters:)-70014``
+``StytchB2BClient/Organizations-swift.struct`` | ``StytchB2BClient/Organizations-swift.struct/getSync()``, ``StytchB2BClient/Organizations-swift.struct/get()-2esfw``
+``StytchB2BClient/OTP-swift.struct`` | ``StytchB2BClient/OTP-swift.struct/send(parameters:)-4jutd``, ``StytchB2BClient/OTP-swift.struct/authenticate(parameters:)-3gx7t``
+``StytchB2BClient/TOTP-swift.struct`` | ``StytchB2BClient/TOTP-swift.struct/create(parameters:)-65xjg``, ``StytchB2BClient/TOTP-swift.struct/authenticate(parameters:)-70014``
 ``StytchB2BClient/Passwords-swift.struct`` | ``StytchB2BClient/Passwords-swift.struct/authenticate(parameters:)-63kup``, ``StytchB2BClient/Passwords-swift.struct/resetByEmailStart(parameters:)-24ggc``, ``StytchB2BClient/Passwords-swift.struct/resetByEmail(parameters:)-6r4gk``, ``StytchB2BClient/Passwords-swift.struct/resetByExistingPassword(parameters:)-2ju8w``, ``StytchB2BClient/Passwords-swift.struct/resetBySession(parameters:)-834cf``, ``StytchB2BClient/Passwords-swift.struct/strengthCheck(parameters:)-4uctk``
 ``StytchB2BClient/RBAC-swift.struct`` | ``StytchB2BClient/RBAC-swift.struct/allPermissions()-89p7d``, ``StytchB2BClient/RBAC-swift.struct/isAuthorized(resourceId:action:)-3qmjb``, ``StytchB2BClient/RBAC-swift.struct/isAuthorizedSync(resourceId:action:)``
 ``StytchB2BClient/RecoveryCodes-swift.struct`` | ``StytchB2BClient/RecoveryCodes-swift.struct/get()-1dlsm``, ``StytchB2BClient/RecoveryCodes-swift.struct/rotate()-9wyz3``, ``StytchB2BClient/RecoveryCodes-swift.struct/recover(parameters:)-7r6fr``
 ``StytchB2BClient/SearchManager-swift.struct`` | ``StytchB2BClient/SearchManager-swift.struct/searchMember(searchMemberParameters:)-9nw94``, ``StytchB2BClient/SearchManager-swift.struct/searchOrganization(searchOrganizationParameters:)-2a7yp``
 ``StytchB2BClient/OAuth-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/authenticate(parameters:)-80abl``
-``StytchB2BClient/OAuth-swift.struct/ThirdParty-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty/start(configuration:)-956wc``
+``StytchB2BClient/OAuth-swift.struct/ThirdParty`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty/start(configuration:)-956wc``
 ``StytchB2BClient/OAuth-swift.struct/Discovery-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/Discovery-swift.struct/authenticate(parameters:)-4u0xy``
-``StytchB2BClient/OAuth-swift.struct/ThirdParty-swift.struct/Discovery-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty-swift.struct/Discovery-swift.struct/start(configuration:)-6pgj5``
+``StytchB2BClient/OAuth-swift.struct/ThirdParty/Discovery-swift.struct`` | ``StytchB2BClient/OAuth-swift.struct/ThirdParty/Discovery-swift.struct/start(configuration:)-6pgj5``
 
 ## Topics
 
