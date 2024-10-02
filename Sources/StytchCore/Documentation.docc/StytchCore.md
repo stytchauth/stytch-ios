@@ -4,7 +4,9 @@ Provides native iOS access to the Stytch SDK methods for ultimate flexibility.
 
 The iOS SDK provides methods that communicate directly with the Stytch API. These help you get up and running with Stytch faster by removing the need to create endpoints on your backend to make requests to [Stytch](https://stytch.com).
 
-In addition to StytchCore we have a seperate dependency for our pre build UI framework, [StytchUI](https://stytchauth.github.io/stytch-ios/latest/StytchUI/documentation/stytchui/), which provides a out of the box solution for using Stytch. 
+In addition to StytchCore we have a seperate dependency for our pre built UI framework, [StytchUI](https://stytchauth.github.io/stytch-ios/latest/StytchUI/documentation/stytchui/), which provides a out of the box solution for using Stytch. 
+
+[Stytch iOS Github Repo](https://github.com/stytchauth/stytch-ios)
 
 ## Using Stytch
 

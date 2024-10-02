@@ -15,12 +15,7 @@ public extension StytchB2BClient {
         @Dependency(\.localStorage) var localStorage
 
         public var memberSession: MemberSession? {
-            get {
-                localStorage.memberSession
-            }
-            set {
-                localStorage.memberSession = newValue
-            }
+            localStorage.memberSession
         }
 
         /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.

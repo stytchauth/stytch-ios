@@ -25,12 +25,7 @@ public extension StytchClient {
 
         /// If logged in, returns the cached session object.
         public var session: Session? {
-            get {
-                localStorage.session
-            }
-            set {
-                localStorage.session = newValue
-            }
+            localStorage.session
         }
 
         /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.
