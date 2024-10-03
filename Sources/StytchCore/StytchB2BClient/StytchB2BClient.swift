@@ -112,7 +112,7 @@ public struct StytchB2BClient: StytchClientType {
         Task {
             do {
                 try await Self.bootstrap.fetch()
-                if sessionStorage.persistedSessionIdentifiersExist {
+                if sessionManager.persistedSessionIdentifiersExist {
                     _ = try await Self.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
                 }
                 initializationState.setInitializationState(state: true)

@@ -26,6 +26,18 @@ public struct Session {
     public let userId: User.ID
 }
 
+extension Session: Equatable {
+    public static func == (lhs: Session, rhs: Session) -> Bool {
+        lhs.attributes == rhs.attributes &&
+            lhs.authenticationFactors == rhs.authenticationFactors &&
+            lhs.expiresAt == rhs.expiresAt &&
+            lhs.lastAccessedAt == rhs.lastAccessedAt &&
+            lhs.sessionId == rhs.sessionId &&
+            lhs.startedAt == rhs.startedAt &&
+            lhs.userId == rhs.userId
+    }
+}
+
 extension Session: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -54,10 +66,15 @@ public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    struct Attributes: Codable {
+    struct Attributes: Codable, Equatable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.
         public let userAgent: String
+
+        public static func == (lhs: Attributes, rhs: Attributes) -> Bool {
+            lhs.ipAddress == rhs.ipAddress &&
+                lhs.userAgent == rhs.userAgent
+        }
     }
 }

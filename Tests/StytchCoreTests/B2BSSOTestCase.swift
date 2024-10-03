@@ -45,7 +45,7 @@ final class B2BSSOTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())

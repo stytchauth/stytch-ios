@@ -24,11 +24,25 @@ struct ContentView: View {
     }
 
     func setUpObservations() {
-        StytchClient.sessions.onAuthChange.sink { token in
-            if token == nil {
-                isAuthenticated = false
-            } else {
+        StytchClient.sessions.onSessionChange.sink { sessionInfo in
+            switch sessionInfo {
+            case let .available(session, lastValidatedAtDate):
+                print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)")
                 isAuthenticated = true
+            case .unavailable:
+                print("Session Unavailable")
+                isAuthenticated = false
+            }
+        }.store(in: &subscriptions)
+
+        StytchClient.user.onUserChange.sink { userInfo in
+            switch userInfo {
+            case let .available(user, lastValidatedAtDate):
+                print("User Available: \(user.name) - lastValidatedAtDate: \(lastValidatedAtDate)")
+                isAuthenticated = true
+            case .unavailable:
+                print("User Unavailable")
+                isAuthenticated = false
             }
         }.store(in: &subscriptions)
     }

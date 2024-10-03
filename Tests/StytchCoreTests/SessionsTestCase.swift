@@ -1,7 +1,21 @@
+import Combine
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable multiline_function_chains
+
 final class SessionsTestCase: BaseTestCase {
+    var subscriptions: Set<AnyCancellable> = []
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+    }
+
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        subscriptions = []
+    }
+
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
         let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
@@ -10,7 +24,7 @@ final class SessionsTestCase: BaseTestCase {
 
         XCTAssertNil(StytchClient.sessions.session)
 
-        Current.sessionStorage.updateSession(
+        Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
@@ -33,7 +47,7 @@ final class SessionsTestCase: BaseTestCase {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(
+        Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
@@ -57,7 +71,7 @@ final class SessionsTestCase: BaseTestCase {
         }
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(
+        Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
@@ -104,25 +118,87 @@ final class SessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         // Given we call update session with valid member session and tokens
-        Current.sessionStorage.updateSession(
+        Current.sessionManager.updateSession(
             sessionType: .member(.mock),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: URL(string: "https://url.com")
         )
 
         // And it correctly applies the values
-        XCTAssertNotNil(Current.sessionStorage.sessionToken)
-        XCTAssertNotNil(Current.sessionStorage.sessionJwt)
-        XCTAssertNotNil(Current.sessionStorage.memberSession)
-        XCTAssertNil(Current.sessionStorage.intermediateSessionToken)
+        XCTAssertNotNil(Current.sessionManager.sessionToken)
+        XCTAssertNotNil(Current.sessionManager.sessionJwt)
+        XCTAssertNotNil(Current.memberSessionStorage.object)
+        XCTAssertNil(Current.sessionManager.intermediateSessionToken)
 
         // When we call update session with a IST value
-        Current.sessionStorage.updateSession(intermediateSessionToken: "ist")
+        Current.sessionManager.updateSession(intermediateSessionToken: "ist")
 
         // Then our IST is not nil but the other values are
-        XCTAssertNil(Current.sessionStorage.sessionToken)
-        XCTAssertNil(Current.sessionStorage.sessionJwt)
-        XCTAssertNil(Current.sessionStorage.memberSession)
-        XCTAssertNotNil(Current.sessionStorage.intermediateSessionToken)
+        XCTAssertNil(Current.sessionManager.sessionToken)
+        XCTAssertNil(Current.sessionManager.sessionJwt)
+        XCTAssertNil(Current.memberSessionStorage.object)
+        XCTAssertNotNil(Current.sessionManager.intermediateSessionToken)
+    }
+
+    func testSessionsPublisherAvailable() throws {
+        let expectation = XCTestExpectation(description: "onSessionChange completes")
+        var receivedSession: Session?
+        var receivedDate: Date?
+
+        StytchClient.sessions.onSessionChange.sink { sessionInfo in
+            switch sessionInfo {
+            case let .available(session, lastValidatedAtDate):
+                receivedSession = session
+                receivedDate = lastValidatedAtDate
+                expectation.fulfill()
+            case .unavailable:
+                break
+            }
+        }.store(in: &subscriptions)
+
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNotNil(receivedSession)
+        XCTAssertNotNil(receivedDate)
+    }
+
+    func testSessionsPublisherUnavailable() throws {
+        let expectation = XCTestExpectation(description: "onSessionChange completes")
+
+        StytchClient.sessions.onSessionChange.sink { sessionInfo in
+            switch sessionInfo {
+            case .available:
+                break
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: nil,
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(StytchClient.sessions.session)
+    }
+
+    func testGetExpiredSessionReturnsNil() throws {
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: .user(.mockWithExpiredSession(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        XCTAssertNil(StytchClient.sessions.session)
     }
 }

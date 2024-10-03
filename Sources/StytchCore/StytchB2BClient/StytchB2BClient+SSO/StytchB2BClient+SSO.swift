@@ -24,7 +24,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<SSORoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
@@ -39,7 +39,7 @@ public extension StytchB2BClient {
             }
 
             let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                intermediateSessionToken: sessionManager.intermediateSessionToken,
                 wrapped: CodeVerifierParameters(
                     codingPrefix: .pkce,
                     codeVerifier: pkcePair.codeVerifier,

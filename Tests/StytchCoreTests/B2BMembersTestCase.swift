@@ -1,8 +1,13 @@
+import Combine
 import XCTest
 @testable import StytchCore
 
 // swiftlint:disable implicitly_unwrapped_optional
+// swiftlint:disable multiline_function_chains
+
 final class B2BMembersTestCase: BaseTestCase {
+    var subscriptions: Set<AnyCancellable> = []
+
     var response: StytchB2BClient.Members.MemberResponse!
 
     override func setUpWithError() throws {
@@ -26,7 +31,7 @@ final class B2BMembersTestCase: BaseTestCase {
 
     func testSync() throws {
         XCTAssertNil(StytchB2BClient.member.getSync())
-        Current.localStorage.member = .mock
+        Current.memberStorage.update(.mock)
         XCTAssertNotNil(StytchB2BClient.member.getSync())
     }
 
@@ -65,7 +70,7 @@ final class B2BMembersTestCase: BaseTestCase {
         networkInterceptor.responses {
             response
         }
-        Current.localStorage.member = nil
+        Current.memberStorage.update(nil)
         XCTAssertNil(StytchB2BClient.member.getSync())
         _ = try await StytchB2BClient.member.deleteFactor(.phoneNumber)
         XCTAssertNotNil(StytchB2BClient.member.getSync())
@@ -80,7 +85,7 @@ final class B2BMembersTestCase: BaseTestCase {
         networkInterceptor.responses {
             response
         }
-        Current.localStorage.member = nil
+        Current.memberStorage.update(nil)
         XCTAssertNil(StytchB2BClient.member.getSync())
         _ = try await StytchB2BClient.member.deleteFactor(.totp)
         XCTAssertNotNil(StytchB2BClient.member.getSync())
@@ -95,7 +100,7 @@ final class B2BMembersTestCase: BaseTestCase {
         networkInterceptor.responses {
             response
         }
-        Current.localStorage.member = nil
+        Current.memberStorage.update(nil)
         XCTAssertNil(StytchB2BClient.member.getSync())
         _ = try await StytchB2BClient.member.deleteFactor(.password(passwordId: "passwordId-1234"))
         XCTAssertNotNil(StytchB2BClient.member.getSync())
@@ -104,5 +109,46 @@ final class B2BMembersTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/passwords/passwordId-1234",
             method: .delete
         )
+    }
+
+    func testMemberPublisherAvailable() throws {
+        let expectation = XCTestExpectation(description: "onMemberChange completes")
+        var receivedMember: Member?
+        var receivedDate: Date?
+
+        StytchB2BClient.member.onMemberChange.sink { memberInfo in
+            switch memberInfo {
+            case let .available(member, lastValidatedAtDate):
+                receivedMember = member
+                receivedDate = lastValidatedAtDate
+                expectation.fulfill()
+            case .unavailable:
+                break
+            }
+        }.store(in: &subscriptions)
+
+        Current.memberStorage.update(.mock)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNotNil(receivedMember)
+        XCTAssertNotNil(receivedDate)
+    }
+
+    func testMemberPublisherUnavailable() throws {
+        let expectation = XCTestExpectation(description: "onMemberChange completes")
+
+        StytchB2BClient.member.onMemberChange.sink { memberInfo in
+            switch memberInfo {
+            case .available:
+                break
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.memberStorage.update(nil)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(StytchB2BClient.member.getSync())
     }
 }

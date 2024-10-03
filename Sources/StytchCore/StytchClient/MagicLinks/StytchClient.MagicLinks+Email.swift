@@ -10,7 +10,7 @@ public extension StytchClient.MagicLinks {
     struct Email: MagicLinksEmailProtocol {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
-        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

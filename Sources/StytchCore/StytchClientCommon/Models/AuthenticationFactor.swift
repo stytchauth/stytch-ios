@@ -19,6 +19,14 @@ public struct AuthenticationFactor: Hashable {
     public let lastAuthenticatedAt: Date
 }
 
+extension AuthenticationFactor: Equatable {
+    public static func == (lhs: AuthenticationFactor, rhs: AuthenticationFactor) -> Bool {
+        lhs.rawData == rhs.rawData &&
+            lhs.kind == rhs.kind &&
+            lhs.lastAuthenticatedAt == rhs.lastAuthenticatedAt
+    }
+}
+
 extension AuthenticationFactor: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -13,7 +13,7 @@ public extension StytchB2BClient {
     struct OTP {
         let router: NetworkingRouter<StytchB2BClient.OTPRoute>
 
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants
         /// Send a one-time passcode (OTP) to a user using their phone number via SMS.
@@ -21,7 +21,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .send,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )
@@ -33,7 +33,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )

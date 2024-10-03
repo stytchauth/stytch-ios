@@ -25,7 +25,7 @@ extension StytchClientType {
         }
     }
 
-    var sessionStorage: SessionStorage { Current.sessionStorage }
+    var sessionManager: SessionManager { Current.sessionManager }
 
     var localStorage: LocalStorage { Current.localStorage }
 
@@ -81,15 +81,26 @@ extension StytchClientType {
             // only run this in non-test environments
             runBootstrapping()
         }
+
+        publishCachedValuesIfNeededForStartup()
+    }
+
+    // TODO: We should remove this and make "publish" private within ObjectStorage
+    private func publishCachedValuesIfNeededForStartup() {
+        Current.sessionStorage.publish()
+        Current.memberSessionStorage.publish()
+        Current.userStorage.publish()
+        Current.memberStorage.publish()
+        Current.organizationStorage.publish()
     }
 
     // To be called after configuration
     private func updateNetworkingClient() {
         let clientInfoString = try? clientInfo.base64EncodedString(encoder: jsonEncoder)
 
-        networkingClient.headerProvider = { [weak localStorage, weak sessionStorage] in
+        networkingClient.headerProvider = { [weak localStorage, weak sessionManager] in
             guard let configuration = localStorage?.configuration else { return [:] }
-            let sessionToken = sessionStorage?.sessionToken?.value ?? configuration.publicToken
+            let sessionToken = sessionManager?.sessionToken?.value ?? configuration.publicToken
             let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
 
             return [
@@ -127,16 +138,5 @@ extension StytchClientType {
                 print(error)
             }
         }
-    }
-}
-
-private extension LocalStorage {
-    private enum ConfigurationStorageKey: LocalStorageKey {
-        typealias Value = Configuration
-    }
-
-    var configuration: Configuration? {
-        get { self[ConfigurationStorageKey.self] }
-        set { self[ConfigurationStorageKey.self] = newValue }
     }
 }

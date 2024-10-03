@@ -9,7 +9,8 @@ struct KeychainClient {
 
     let removeItem: (Item) throws -> Void
 
-    @Dependency(\.jsonEncoder) private var jsonEncoder
+    @Dependency(\.jsonEncoder) var jsonEncoder
+    @Dependency(\.jsonDecoder) var jsonDecoder
 
     init(
         get: @escaping (Item) throws -> [QueryResult],

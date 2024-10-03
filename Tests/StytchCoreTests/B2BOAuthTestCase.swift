@@ -10,7 +10,7 @@ final class B2BOAuthTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())

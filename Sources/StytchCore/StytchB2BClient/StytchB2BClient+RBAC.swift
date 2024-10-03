@@ -10,10 +10,11 @@ public extension StytchB2BClient {
 public extension StytchB2BClient {
     struct RBAC {
         @Dependency(\.localStorage) private var localStorage
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
+        @Dependency(\.memberSessionStorage) private var memberSessionStorage
 
         private var memberSessionRoles: [String] {
-            sessionStorage.memberSession?.roles ?? []
+            memberSessionStorage.object?.roles ?? []
         }
 
         /// Determines whether the logged-in member is allowed to perform the specified action on the specified resource.

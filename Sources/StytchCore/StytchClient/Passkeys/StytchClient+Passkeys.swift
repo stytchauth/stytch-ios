@@ -14,7 +14,7 @@ public extension StytchClient {
         let router: NetworkingRouter<PasskeysRoute>
 
         @Dependency(\.passkeysClient) private var passkeysClient
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -52,7 +52,7 @@ public extension StytchClient {
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             let destination: PasskeysRoute
-            if sessionStorage.persistedSessionIdentifiersExist {
+            if sessionManager.persistedSessionIdentifiersExist {
                 destination = .authenticateStartSecondary
             } else {
                 destination = .authenticateStartPrimary

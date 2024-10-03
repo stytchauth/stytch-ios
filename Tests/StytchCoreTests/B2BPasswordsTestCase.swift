@@ -17,7 +17,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.authenticate(parameters: authParams)
 
@@ -79,7 +79,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             B2BMFAAuthenticateResponse.mock
         }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.resetByEmailStart(
             parameters: .init(
@@ -138,7 +138,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await client.resetByExistingPassword(
             parameters: .init(

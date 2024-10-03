@@ -1,10 +1,15 @@
+import Combine
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable multiline_function_chains
+
 final class B2BOrganizationsTestCase: BaseTestCase {
+    var subscriptions: Set<AnyCancellable> = []
+
     func testSync() throws {
         XCTAssertNil(StytchB2BClient.organizations.getSync())
-        Current.localStorage.organization = .mock
+        Current.organizationStorage.update(.mock)
         XCTAssertNotNil(StytchB2BClient.organizations.getSync())
     }
 
@@ -97,6 +102,47 @@ final class B2BOrganizationsTestCase: BaseTestCase {
                 ),
             ])
         )
+    }
+
+    func testOrganizationPublisherAvailable() throws {
+        let expectation = XCTestExpectation(description: "onOrganizationChange completes")
+        var receivedOrganization: Organization?
+        var receivedDate: Date?
+
+        StytchB2BClient.organizations.onOrganizationChange.sink { organizationInfo in
+            switch organizationInfo {
+            case let .available(organization, lastValidatedAtDate):
+                receivedOrganization = organization
+                receivedDate = lastValidatedAtDate
+                expectation.fulfill()
+            case .unavailable:
+                break
+            }
+        }.store(in: &subscriptions)
+
+        Current.organizationStorage.update(.mock)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNotNil(receivedOrganization)
+        XCTAssertNotNil(receivedDate)
+    }
+
+    func testOrganizationPublisherUnavailable() throws {
+        let expectation = XCTestExpectation(description: "onOrganizationChange completes")
+
+        StytchB2BClient.organizations.onOrganizationChange.sink { organizationInfo in
+            switch organizationInfo {
+            case .available:
+                break
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.organizationStorage.update(nil)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(StytchB2BClient.organizations.getSync())
     }
 }
 

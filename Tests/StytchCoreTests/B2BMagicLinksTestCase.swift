@@ -110,7 +110,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         let response = try await StytchB2BClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -244,6 +244,20 @@ extension MemberSession {
             startedAt: refDate,
             lastAccessedAt: refDate,
             expiresAt: refDate.advanced(by: 60 * 60 * 24),
+            authenticationFactors: [],
+            customClaims: nil,
+            roles: ["organization_admin"],
+            memberSessionId: "mem_session_123"
+        )
+    }()
+
+    static let mockWithExpiredMemberSession: Self = {
+        .init(
+            organizationId: Organization.mock.id,
+            memberId: Member.mock.id,
+            startedAt: Date.distantPast,
+            lastAccessedAt: Date.distantPast,
+            expiresAt: Date.distantPast,
             authenticationFactors: [],
             customClaims: nil,
             roles: ["organization_admin"],
