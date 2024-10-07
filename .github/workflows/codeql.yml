@@ -50,6 +50,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         queries: default
+        
     - name: Manual build for Swift
       if: matrix.language == 'swift'
       run: |
