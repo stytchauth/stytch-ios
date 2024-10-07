@@ -91,5 +91,20 @@ public extension StytchB2BClient.OAuth {
     var microsoft: ThirdParty {
         .init(provider: .microsoft)
     }
+
+    /// The interface for authenticating a user with Hubspot.
+    var hubspot: ThirdParty {
+        .init(provider: .hubspot)
+    }
+
+    /// The interface for authenticating a user with Slack.
+    var slack: ThirdParty {
+        .init(provider: .slack)
+    }
+
+    /// The interface for authenticating a user with Github.
+    var github: ThirdParty {
+        .init(provider: .github)
+    }
 }
 #endif
