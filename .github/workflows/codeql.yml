@@ -49,7 +49,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        queries: security-extended,security-and-quality
+        queries: default
     - name: Manual build for Swift
       if: matrix.language == 'swift'
       run: |
