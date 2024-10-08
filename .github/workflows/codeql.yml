@@ -39,7 +39,7 @@ jobs:
             build-mode: none
           - language: swift
             build-mode: manual
-        swift-scheme: [StytchDemo', 'StytchUIDemo']
+        swift-scheme: [StytchCore', 'StytchUI']
 
     steps:
     - name: Checkout repository
