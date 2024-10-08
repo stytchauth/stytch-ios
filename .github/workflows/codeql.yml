@@ -38,45 +38,44 @@ jobs:
             build-mode: none
           - language: swift
             build-mode: manual
-        swift-scheme: [StytchCore', 'StytchUI']
+        swift-scheme: ['StytchCore', 'StytchUI']
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-      languages: ${{ matrix.language }}
-      queries: default
-        
-    - name: Manual build for Swift
-      if: matrix.language == 'swift'
-      run: |
-      # Install dependencies (if using CocoaPods or Carthage)
-      # pod install
-      # carthage bootstrap
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: default
+      - name: Manual build for Swift
+        if: matrix.language == 'swift'
+        run: |
+          # Install dependencies (if using CocoaPods or Carthage)
+          # pod install
+          # carthage bootstrap
 
-      # Build for iOS
-        xcodebuild clean build \
-          -project Stytch.xcodeproj \
-          -scheme ${{ matrix.swift-scheme }} \
-          -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-          CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGN_IDENTITY=""
+          # Build for iOS
+          xcodebuild clean build \
+            -project Stytch.xcodeproj \
+            -scheme ${{ matrix.swift-scheme }} \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
 
-      # If you have a macOS target, uncomment and adjust the following:
-      # xcodebuild clean build \
-      #   -project Stytch.xcodeproj \
-      #   -scheme ${{ matrix.swift-scheme }} \
-      #   -sdk macosx \
-      #   CODE_SIGNING_REQUIRED=NO \
-      #   CODE_SIGN_IDENTITY=""
+          # If you have a macOS target, uncomment and adjust the following:
+          # xcodebuild clean build \
+          #   -project Stytch.xcodeproj \
+          #   -scheme ${{ matrix.swift-scheme }} \
+          #   -sdk macosx \
+          #   CODE_SIGNING_REQUIRED=NO \
+          #   CODE_SIGN_IDENTITY=""
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:${{matrix.language}}"
-    - name: Upload SARIF results
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: results.sarif
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
