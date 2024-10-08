@@ -45,8 +45,9 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
-        queries: default
+      languages: ${{ matrix.language }}
+      queries: default
+        
     - name: Manual build for Swift
       if: matrix.language == 'swift'
       run: |
