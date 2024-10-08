@@ -21,7 +21,7 @@ on:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze (${{ matrix.language }}-${{ matrix.swift-scheme }})
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
@@ -29,7 +29,6 @@ jobs:
       packages: read
       actions: read
       contents: read
-
     strategy:
       fail-fast: false
       matrix:
@@ -40,17 +39,14 @@ jobs:
           - language: swift
             build-mode: manual
         swift-scheme: [StytchCore', 'StytchUI']
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
         queries: default
-
     - name: Manual build for Swift
       if: matrix.language == 'swift'
       run: |
@@ -61,7 +57,7 @@ jobs:
       # Build for iOS
         xcodebuild clean build \
           -project Stytch.xcodeproj \
-          -scheme Stytch \
+          -scheme ${{ matrix.swift-scheme }} \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
           CODE_SIGNING_REQUIRED=NO \
@@ -69,8 +65,8 @@ jobs:
 
       # If you have a macOS target, uncomment and adjust the following:
       # xcodebuild clean build \
-      #   -project YourProject.xcodeproj \
-      #   -scheme YourMacScheme \
+      #   -project Stytch.xcodeproj \
+      #   -scheme ${{ matrix.swift-scheme }} \
       #   -sdk macosx \
       #   CODE_SIGNING_REQUIRED=NO \
       #   CODE_SIGN_IDENTITY=""
@@ -79,7 +75,6 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
-
     - name: Upload SARIF results
       uses: github/codeql-action/upload-sarif@v3
       with:
