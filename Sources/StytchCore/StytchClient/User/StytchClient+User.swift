@@ -5,7 +5,7 @@ public extension StytchClient {
     struct UserManagement {
         let router: NetworkingRouter<UsersRoute>
 
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         @Dependency(\.userStorage) private var userStorage
 
@@ -15,8 +15,8 @@ public extension StytchClient {
         }
 
         /// A publisher which emits following a change in user status and returns either the user object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onChange: AnyPublisher<User?, Never> {
-            userStorage.onChange.eraseToAnyPublisher()
+        public var onUserChange: AnyPublisher<StytchObjectInfo<User>, Never> {
+            userStorage.onChange
         }
 
         // sourcery: AsyncVariants

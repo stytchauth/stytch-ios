@@ -14,7 +14,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
@@ -30,7 +30,7 @@ public extension StytchB2BClient {
 
             do {
                 let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: CodeVerifierParameters(
                         codingPrefix: .pkce,
                         codeVerifier: pkcePair.codeVerifier,

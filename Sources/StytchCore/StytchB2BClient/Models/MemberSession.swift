@@ -25,3 +25,17 @@ public struct MemberSession: Codable {
 
     let memberSessionId: ID
 }
+
+extension MemberSession: Equatable {
+    public static func == (lhs: MemberSession, rhs: MemberSession) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.organizationId == rhs.organizationId &&
+            lhs.memberId == rhs.memberId &&
+            lhs.startedAt == rhs.startedAt &&
+            lhs.lastAccessedAt == rhs.lastAccessedAt &&
+            lhs.expiresAt == rhs.expiresAt &&
+            lhs.authenticationFactors == rhs.authenticationFactors &&
+            lhs.customClaims == rhs.customClaims &&
+            lhs.roles == rhs.roles
+    }
+}

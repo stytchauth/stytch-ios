@@ -26,6 +26,20 @@ public struct Member: Codable {
     let memberId: ID
 }
 
+extension Member: Equatable {
+    public static func == (lhs: Member, rhs: Member) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.organizationId == rhs.organizationId &&
+            lhs.emailAddress == rhs.emailAddress &&
+            lhs.status == rhs.status &&
+            lhs.name == rhs.name &&
+            lhs.ssoRegistrations == rhs.ssoRegistrations &&
+            lhs.trustedMetadata == rhs.trustedMetadata &&
+            lhs.untrustedMetadata == rhs.untrustedMetadata &&
+            lhs.memberPasswordId == rhs.memberPasswordId
+    }
+}
+
 public extension Member {
     enum Status: String, Codable {
         case pending
@@ -49,7 +63,7 @@ public extension Member {
 }
 
 /// A type representing a specific SSO registration.
-public struct SSORegistration: Codable {
+public struct SSORegistration: Codable, Equatable {
     public typealias ID = Identifier<Self, String>
 
     /// The unique ID of an SSO Registration.
@@ -62,4 +76,11 @@ public struct SSORegistration: Codable {
     public let ssoAttributes: JSON
 
     let registrationId: ID
+
+    public static func == (lhs: SSORegistration, rhs: SSORegistration) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.connectionId == rhs.connectionId &&
+            lhs.externalId == rhs.externalId &&
+            lhs.ssoAttributes == rhs.ssoAttributes
+    }
 }

@@ -1,17 +1,35 @@
 import Combine
 import Foundation
 
-final class SessionStorage {
+final class SessionManager {
+    enum SessionType {
+        case member(MemberSession)
+        case user(Session)
+
+        var expiresAt: Date {
+            switch self {
+            case let .member(memberSession):
+                return memberSession.expiresAt
+            case let .user(session):
+                return session.expiresAt
+            }
+        }
+    }
+
+    @Dependency(\.sessionStorage) private var sessionStorage
+    @Dependency(\.memberSessionStorage) private var memberSessionStorage
+    @Dependency(\.userStorage) private var userStorage
+    @Dependency(\.memberStorage) private var memberStorage
+    @Dependency(\.organizationStorage) private var organizationStorage
+    @Dependency(\.cookieClient) private var cookieClient
+    @Dependency(\.keychainClient) private var keychainClient
+    @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
+    @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
+    @Dependency(\.date) private var date
+
     var persistedSessionIdentifiersExist: Bool {
         (sessionJwt ?? sessionToken) != nil
     }
-
-    private(set) lazy var onAuthChange = _onAuthChange
-        .map { [weak self] in self?.sessionToken == nil }
-        .removeDuplicates()
-        .map { [weak self] _ in self?.sessionToken?.value }
-
-    private let _onAuthChange = PassthroughSubject<Void, Never>()
 
     private(set) var sessionToken: SessionToken? {
         get {
@@ -75,30 +93,6 @@ final class SessionStorage {
         }
     }
 
-    private(set) var session: Session? {
-        get { localStorage.session }
-        set { localStorage.session = newValue }
-    }
-
-    private(set) var memberSession: MemberSession? {
-        get { localStorage.memberSession }
-        set { localStorage.memberSession = newValue }
-    }
-
-    @Dependency(\.userStorage) private var userStorage
-
-    @Dependency(\.localStorage) private var localStorage
-
-    @Dependency(\.cookieClient) private var cookieClient
-
-    @Dependency(\.keychainClient) private var keychainClient
-
-    @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
-
-    @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
-
-    @Dependency(\.date) private var date
-
     init() {
         NotificationCenter.default
             .addObserver(
@@ -117,10 +111,9 @@ final class SessionStorage {
     ) {
         self.intermediateSessionToken = intermediateSessionToken
 
+        // If there is no session, it means that we are in MFA and all we need is the IST
         guard let sessionType else {
-            localStorage.session = nil
-            localStorage.memberSession = nil
-            clearTokens()
+            clearTokensCachedObjectsPolling()
             return
         }
 
@@ -129,9 +122,9 @@ final class SessionStorage {
 
         switch sessionType {
         case let .member(session):
-            memberSession = session
+            memberSessionStorage.update(session)
         case let .user(session):
-            self.session = session
+            sessionStorage.update(session)
         }
 
         if let tokens = tokens {
@@ -139,8 +132,6 @@ final class SessionStorage {
             tokens.jwt.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
             tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
         }
-
-        _onAuthChange.send(())
 
         switch sessionType {
         case .member:
@@ -155,31 +146,28 @@ final class SessionStorage {
         sessionJwt = tokens.jwt
     }
 
-    func reset() {
-        session = nil
-        memberSession = nil
-
+    // clear everything including the IST
+    func resetSession() {
+        clearTokensCachedObjectsPolling()
         intermediateSessionToken = nil
+    }
 
-        userStorage.reset()
-        localStorage.organization = nil
-        localStorage.member = nil
+    // clear everything but the IST
+    func clearTokensCachedObjectsPolling() {
+        sessionStorage.update(nil)
+        memberSessionStorage.update(nil)
+        userStorage.update(nil)
+        memberStorage.update(nil)
+        organizationStorage.update(nil)
+
+        sessionToken = nil
+        sessionJwt = nil
 
         sessionsPollingClient.stop()
         memberSessionsPollingClient.stop()
-        clearTokens()
-
-        // This should always be called last
-        _onAuthChange.send(())
     }
 
-    func clearTokens() {
-        sessionToken = nil
-        sessionJwt = nil
-    }
-
-    @objc
-    func cookiesDidUpdate(notification: Notification) {
+    @objc func cookiesDidUpdate(notification: Notification) {
         let storage = (notification.object as? HTTPCookieStorage) ?? .shared
 
         if let jwtCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.jwt.name, date: date()) {
@@ -188,24 +176,6 @@ final class SessionStorage {
 
         if let opaqueCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.opaque.name, date: date()) {
             sessionToken = .opaque(opaqueCookieValue)
-        }
-
-        _onAuthChange.send(())
-    }
-}
-
-extension SessionStorage {
-    enum SessionType {
-        case member(MemberSession)
-        case user(Session)
-
-        var expiresAt: Date {
-            switch self {
-            case let .member(session):
-                return session.expiresAt
-            case let .user(session):
-                return session.expiresAt
-            }
         }
     }
 }
@@ -216,7 +186,7 @@ extension HTTPCookieStorage {
 
         var cookieValue: String?
 
-        // If we have an expiresDate we should attempt to use, if not just return the cookie value
+        // If we have an expiresDate we should attempt to use it, if not just return the cookie value
         if let expiresAt = cookie?.expiresDate {
             if expiresAt > date {
                 cookieValue = cookie?.value

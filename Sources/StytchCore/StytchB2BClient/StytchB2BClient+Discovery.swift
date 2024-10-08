@@ -18,7 +18,7 @@ public extension StytchB2BClient {
     struct Discovery {
         let router: NetworkingRouter<DiscoveryRoute>
 
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [list discovered Organizations](https://stytch.com/docs/b2b/api/list-discovered-organizations) endpoint. If the `intermediate_session_token` is not passed in and there is a current Member Session, the SDK will call the endpoint with the session token.
@@ -26,7 +26,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .organizations,
                 parameters: IntermediateSessionTokenParametersWithNoWrappedValue(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken
+                    intermediateSessionToken: sessionManager.intermediateSessionToken
                 )
             )
         }
@@ -37,7 +37,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .intermediateSessionsExchange,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )
@@ -49,7 +49,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .organizationsCreate,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )

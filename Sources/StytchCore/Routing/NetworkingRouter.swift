@@ -16,7 +16,7 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.networkingClient) private var networkingClient
 
-    @Dependency(\.sessionStorage) private var sessionStorage
+    @Dependency(\.sessionManager) private var sessionManager
 
     @Dependency(\.userStorage) private var userStorage
 
@@ -95,7 +95,7 @@ public extension NetworkingRouter {
         do {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
         } catch let error as StytchAPIError where error.statusCode == 401 {
-            sessionStorage.reset()
+            sessionManager.resetSession()
             throw error
         } catch {
             throw error
@@ -124,7 +124,7 @@ public extension NetworkingRouter {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
-                sessionStorage.updateSession(
+                sessionManager.updateSession(
                     sessionType: .user(sessionResponse.session),
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
@@ -132,7 +132,7 @@ public extension NetworkingRouter {
                 userStorage.update(sessionResponse.user)
                 cleanupPotentiallyOrphanedBiometricRegistrations(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
-                sessionStorage.updateSession(
+                sessionManager.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
@@ -141,26 +141,26 @@ public extension NetworkingRouter {
                 organizationStorage.update(sessionResponse.organization)
             } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
                 if let memberSession = sessionResponse.memberSession {
-                    sessionStorage.updateSession(
+                    sessionManager.updateSession(
                         sessionType: .member(memberSession),
                         tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                         hostUrl: configuration.hostUrl
                     )
                 } else {
-                    sessionStorage.updateSession(
+                    sessionManager.updateSession(
                         intermediateSessionToken: sessionResponse.intermediateSessionToken
                     )
                 }
                 memberStorage.update(sessionResponse.member)
                 organizationStorage.update(sessionResponse.organization)
             } else if let sessionResponse = dataContainer.data as? DiscoveryIntermediateSessionTokenDataType {
-                sessionStorage.updateSession(
+                sessionManager.updateSession(
                     intermediateSessionToken: sessionResponse.intermediateSessionToken
                 )
             }
             return dataContainer.data
         } catch let error as StytchAPIError where error.statusCode == 401 {
-            sessionStorage.reset()
+            sessionManager.resetSession()
             throw error
         } catch {
             throw error

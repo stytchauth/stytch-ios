@@ -19,7 +19,7 @@ final class B2BOTPTestCase: BaseTestCase {
             locale: locale
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.otp.send(parameters: parameters)
 
@@ -55,7 +55,7 @@ final class B2BOTPTestCase: BaseTestCase {
             enableAutofill: true
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.otp.send(parameters: parameters)
 
@@ -91,7 +91,7 @@ final class B2BOTPTestCase: BaseTestCase {
             code: code
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.otp.authenticate(parameters: parameters)
 

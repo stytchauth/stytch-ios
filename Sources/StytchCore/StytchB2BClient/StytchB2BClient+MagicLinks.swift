@@ -20,7 +20,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<MagicLinksRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
@@ -33,7 +33,7 @@ public extension StytchB2BClient {
             // For authenticating if loginOrSignup was called
             if let codeVerifier = pkcePairManager.getPKCECodePair()?.codeVerifier {
                 let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: CodeVerifierParameters(
                         codingPrefix: .pkce,
                         codeVerifier: codeVerifier,
@@ -50,7 +50,7 @@ public extension StytchB2BClient {
                 return try await router.post(
                     to: .authenticate,
                     parameters: IntermediateSessionTokenParameters(
-                        intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                        intermediateSessionToken: sessionManager.intermediateSessionToken,
                         wrapped: parameters
                     )
                 )

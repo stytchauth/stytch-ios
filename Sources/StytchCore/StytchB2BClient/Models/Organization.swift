@@ -25,6 +25,16 @@ public struct Organization: Codable {
     let organizationId: ID
 }
 
+extension Organization: Equatable {
+    public static func == (lhs: Organization, rhs: Organization) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.name == rhs.name &&
+            lhs.slug == rhs.slug &&
+            lhs.logoUrl == rhs.logoUrl &&
+            lhs.trustedMetadata == rhs.trustedMetadata
+    }
+}
+
 public extension Organization {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

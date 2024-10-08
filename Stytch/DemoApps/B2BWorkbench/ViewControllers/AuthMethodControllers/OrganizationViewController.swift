@@ -59,8 +59,13 @@ final class OrganizationViewController: UIViewController {
         cancellable = StytchB2BClient.organizations.onOrganizationChange
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { organization in
-                print("OrganizationChangeListener Updated Organization: \(organization.name)")
+            .sink { organizationInfo in
+                switch organizationInfo {
+                case let .available(organization, lastValidatedAtDate):
+                    print("OrganizationChangeListener Updated Organization: \(organization.name) - \(lastValidatedAtDate)")
+                case .unavailable:
+                    break
+                }
             }
     }
 

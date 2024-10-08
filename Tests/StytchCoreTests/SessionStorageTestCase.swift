@@ -36,10 +36,10 @@ final class SessionStorageTestCase: BaseTestCase {
         keychainDateCreatedOffsetInMinutes = 11
 
         // call updateSession with only the IST which will assign it to the keychain item for the IST
-        Current.sessionStorage.updateSession(intermediateSessionToken: "1234567890")
+        Current.sessionManager.updateSession(intermediateSessionToken: "1234567890")
 
         // the IST should be nil since its been more than 10 minutes
-        XCTAssertNil(Current.sessionStorage.intermediateSessionToken)
+        XCTAssertNil(Current.sessionManager.intermediateSessionToken)
     }
 
     func testIntermediateSessionTokenIsStillValidAfter5Minutes() {
@@ -52,9 +52,9 @@ final class SessionStorageTestCase: BaseTestCase {
         keychainDateCreatedOffsetInMinutes = 5
 
         // call updateSession with only the IST which will assign it to the keychain item for the IST
-        Current.sessionStorage.updateSession(intermediateSessionToken: "1234567890")
+        Current.sessionManager.updateSession(intermediateSessionToken: "1234567890")
 
         // the IST should not be nil since its only been more than 5 minutes
-        XCTAssertNotNil(Current.sessionStorage.intermediateSessionToken)
+        XCTAssertNotNil(Current.sessionManager.intermediateSessionToken)
     }
 }

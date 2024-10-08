@@ -59,19 +59,19 @@ struct Environment {
 
     var memberSessionsPollingClient: PollingClient = .memberSessions
 
-    let sessionStorage: SessionStorage = .init()
-
-    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
-
-    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
-
-    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
+    let sessionManager: SessionManager = .init()
 
     var localStorage: LocalStorage = .init()
 
     var cookieClient: CookieClient = .live
 
     var keychainClient: KeychainClient = .live
+
+    let sessionStorage: ObjectStorage<SessionStorageWrapper> = .init(objectWrapper: SessionStorageWrapper())
+    let memberSessionStorage: ObjectStorage<MemberSessionStorageWrapper> = .init(objectWrapper: MemberSessionStorageWrapper())
+    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
+    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
+    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
 
     #if !os(watchOS)
     private var _webAuthenticationSessionClient: Any? = {

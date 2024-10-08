@@ -15,8 +15,8 @@ public extension StytchB2BClient {
         @Dependency(\.organizationStorage) private var organizationStorage
 
         /// A publisher which emits following a change in organization status and returns either the organization object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onOrganizationChange: AnyPublisher<Organization?, Never> {
-            organizationStorage.onChange.eraseToAnyPublisher()
+        public var onOrganizationChange: AnyPublisher<StytchObjectInfo<Organization>, Never> {
+            organizationStorage.onChange
         }
 
         /// Returns the most-recent cached copy of the organization object, if it has already been fetched via another method, else nil.

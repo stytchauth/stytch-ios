@@ -23,7 +23,7 @@ public extension StytchClient {
 
         @Dependency(\.keychainClient) private var keychainClient
 
-        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
 
         @Dependency(\.jsonDecoder) private var jsonDecoder
 

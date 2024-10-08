@@ -14,7 +14,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<PasswordsRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member with their email address and password. This method verifies that the member has a password currently set, and that the entered password is correct.
@@ -28,7 +28,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )
@@ -63,7 +63,7 @@ public extension StytchB2BClient {
             }
 
             let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                intermediateSessionToken: sessionManager.intermediateSessionToken,
                 wrapped: CodeVerifierParameters(
                     codeVerifier: pkcePair.codeVerifier,
                     wrapped: parameters
@@ -86,7 +86,7 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .resetByExistingPassword,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
                 )
             )

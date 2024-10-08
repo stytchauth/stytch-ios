@@ -50,13 +50,14 @@ struct ContentView: View {
             self.isInitialized = isInitialized
         }.store(in: &subscriptions)
 
-        StytchClient.sessions.onAuthChange.sink { token in
-            if let token = token {
+        StytchClient.sessions.onSessionChange.sink { sessionInfo in
+            switch sessionInfo {
+            case let .available(session, lastValidatedAtDate):
                 shouldPresentAuth = false
-                print("we have a session token")
-            } else {
+                print("we have a session")
+            case .unavailable:
                 shouldPresentAuth = true
-                print("we do not have a session token")
+                print("we do not have a session")
             }
         }.store(in: &subscriptions)
     }

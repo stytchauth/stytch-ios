@@ -20,7 +20,7 @@ final class B2BTOTPTestCase: BaseTestCase {
             expirationMinutes: .defaultSessionDuration
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.totp.create(parameters: parameters)
 
@@ -54,7 +54,7 @@ final class B2BTOTPTestCase: BaseTestCase {
             code: code
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.totp.authenticate(parameters: parameters)
 

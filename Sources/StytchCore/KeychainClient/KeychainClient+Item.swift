@@ -5,6 +5,7 @@ extension KeychainClient {
         enum Kind {
             case privateKey
             case token
+            case object
         }
 
         var kind: Kind
@@ -59,11 +60,18 @@ extension KeychainClient {
 
 extension KeychainClient.Item {
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
+
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)
     static let intermediateSessionToken: Self = .init(kind: .token, name: "stytch_intermediate_session_token")
     static let codeVerifierPKCE: Self = .init(kind: .token, name: "stytch_code_verifier_pkce")
     static let codeChallengePKCE: Self = .init(kind: .token, name: "stytch_code_challenge_pkce")
+
+    static let session: Self = .init(kind: .object, name: "stytch_session_object")
+    static let memberSession: Self = .init(kind: .object, name: "stytch_member_session_object")
+    static let user: Self = .init(kind: .object, name: "stytch_user_object")
+    static let member: Self = .init(kind: .object, name: "stytch_member_object")
+    static let organization: Self = .init(kind: .object, name: "stytch_organization_object")
 }
 
 extension KeychainClient.Item {
@@ -76,6 +84,11 @@ extension KeychainClient.Item {
             .intermediateSessionToken,
             .codeVerifierPKCE,
             .codeChallengePKCE,
+            .session,
+            .memberSession,
+            .user,
+            .member,
+            .organization,
         ]
     }
 }

@@ -64,8 +64,13 @@ final class MemberViewController: UIViewController {
         cancellable = StytchB2BClient.member.onMemberChange
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { member in
-                print("MemberChangeListener Updated Member: \(member.name)")
+            .sink { memberInfo in
+                switch memberInfo {
+                case let .available(member, lastValidatedAtDate):
+                    print("MemberChangeListener Updated Member: \(member.name) - \(lastValidatedAtDate)")
+                case .unavailable:
+                    break
+                }
             }
     }
 

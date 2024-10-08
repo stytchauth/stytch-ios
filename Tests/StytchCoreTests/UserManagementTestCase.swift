@@ -1,10 +1,15 @@
+import Combine
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable multiline_function_chains
+
 final class UserManagementTestCase: BaseTestCase {
+    var subscriptions: Set<AnyCancellable> = []
+
     func testSync() throws {
         XCTAssertNil(StytchClient.user.getSync())
-        Current.localStorage.user = .mock(userId: "123")
+        Current.userStorage.update(.mock(userId: "123"))
         XCTAssertNotNil(StytchClient.user.getSync())
     }
 
@@ -53,11 +58,52 @@ final class UserManagementTestCase: BaseTestCase {
         ]
 
         try await factors.enumerated().asyncForEach { index, values in
-            Current.localStorage.user = nil
+            Current.userStorage.update(nil)
             XCTAssertNil(StytchClient.user.getSync())
             _ = try await StytchClient.user.deleteFactor(values.factor)
             XCTAssertNotNil(StytchClient.user.getSync())
             try XCTAssertRequest(networkInterceptor.requests[index], urlString: "https://api.stytch.com/sdk/v1/users/\(values.pathComponent)/\(values.id)", method: .delete)
         }
+    }
+
+    func testUserPublisherAvailable() throws {
+        let expectation = XCTestExpectation(description: "onUserChange completes")
+        var receivedUser: User?
+        var receivedDate: Date?
+
+        StytchClient.user.onUserChange.sink { userInfo in
+            switch userInfo {
+            case let .available(user, lastValidatedAtDate):
+                receivedUser = user
+                receivedDate = lastValidatedAtDate
+                expectation.fulfill()
+            case .unavailable:
+                break
+            }
+        }.store(in: &subscriptions)
+
+        Current.userStorage.update(.mock(userId: "123"))
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNotNil(receivedUser)
+        XCTAssertNotNil(receivedDate)
+    }
+
+    func testUserPublisherUnavailable() throws {
+        let expectation = XCTestExpectation(description: "onUserChange completes")
+
+        StytchClient.user.onUserChange.sink { userInfo in
+            switch userInfo {
+            case .available:
+                break
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.userStorage.update(nil)
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(StytchClient.user.getSync())
     }
 }
