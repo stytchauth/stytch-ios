@@ -92,6 +92,7 @@ public extension NetworkingRouter {
             method,
             url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
         )
+
         do {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
         } catch let error as StytchAPIError where error.statusCode == 401 {

@@ -220,6 +220,13 @@ public extension StytchSDKError {
             errorType: "json_data_not_convertible_to_string"
         )
     )
+
+    static let startupClientNotConfiguredForClientType = StytchSDKError(
+        message: "You must call `startupClient.start(clientType:)` before calling `startupClient.start()`.",
+        options: .init(
+            errorType: "missing clientType"
+        )
+    )
 }
 
 private extension URL {

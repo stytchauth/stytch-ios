@@ -23,7 +23,7 @@ public extension StytchB2BClient.OAuth {
             }
 
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
 
@@ -32,10 +32,10 @@ public extension StytchB2BClient.OAuth {
                     to: .authenticate,
                     parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as DiscoveryAuthenticateResponse
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
                 return result
             } catch {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: error))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: error))
                 throw error
             }
         }

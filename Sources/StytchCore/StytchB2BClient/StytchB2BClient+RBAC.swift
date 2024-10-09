@@ -48,7 +48,7 @@ public extension StytchB2BClient {
         /// To check authorization using cached data, use {@link isAuthorizedSync}.
         /// Remember - authorization checks for sensitive actions should always occur on the backend as well.
         public func isAuthorized(resourceId: String, action: String) async throws -> Bool {
-            try await StytchB2BClient.bootstrap.fetch()
+            try await StartupClient.bootstrap()
             return isAuthorizedSync(resourceId: resourceId, action: action)
         }
 
@@ -61,7 +61,7 @@ public extension StytchB2BClient {
         ///
         /// Remember - authorization checks for sensitive actions should always occur on the backend as well.
         public func allPermissions() async throws -> [String: [String: Bool]] {
-            try await StytchB2BClient.bootstrap.fetch()
+            try await StartupClient.bootstrap()
 
             guard let rbacPolicy = localStorage.bootstrapData?.rbacPolicy else {
                 return [:]

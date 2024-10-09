@@ -38,7 +38,7 @@ public enum StytchUIClient {
     ) {
         Self.onAuthCallback = { response in
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
             }
             onAuthCallback?(response)
         }
@@ -94,7 +94,7 @@ public extension View {
         sheet(isPresented: isPresented) {
             StytchUIClient.onAuthCallback = { response in
                 Task {
-                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
                 }
                 onAuthCallback?(response)
             }

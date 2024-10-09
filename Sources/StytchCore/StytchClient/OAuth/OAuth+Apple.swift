@@ -42,7 +42,7 @@ public extension StytchClient.OAuth {
                     )
                 )
             }
-            _ = try await StytchClient.events.logEvent(
+            _ = try await EventsClient.logEvent(
                 parameters: .init(
                     eventName: "apple_oauth_name_found",
                     details: [

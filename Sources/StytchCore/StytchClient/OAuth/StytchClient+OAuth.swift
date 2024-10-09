@@ -20,7 +20,7 @@ public extension StytchClient {
             }
 
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
 
@@ -29,10 +29,10 @@ public extension StytchClient {
                     to: .authenticate,
                     parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as AuthenticateResponse
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_success"))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result
             } catch {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
                 throw error
             }
         }

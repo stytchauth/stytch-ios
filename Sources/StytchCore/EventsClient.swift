@@ -1,52 +1,68 @@
 import Foundation
-public protocol StytchClientEventsProtocol {
-    func logEvent(parameters: StytchClient.Events.Parameters) async throws
-}
 
-public extension StytchClient {
-    struct Events: StytchClientEventsProtocol {
-        let router: NetworkingRouter<EventsRoute>
+enum EventsClientRoute: BaseRouteType {
+    case logEvents
 
-        @Dependency(\.clientInfo) private var clientInfo
-        @Dependency(\.date) private var date
-        @Dependency(\.networkingClient) private var networkingClient
-        @Dependency(\.uuid) private var uuid
-        @Dependency(\.jsonEncoder) private var jsonEncoder
-
-        private let appSessionId: String // Captured value
-
-        init(router: NetworkingRouter<EventsRoute>, appSessionId: String) {
-            self.router = router
-            self.appSessionId = appSessionId
-        }
-
-        public func logEvent(parameters: Parameters) async throws {
-            let params = Params(
-                telemetry: .init(
-                    eventId: "event-id-\(uuid().uuidString)",
-                    appSessionId: appSessionId,
-                    persistentId: "persistent-id-\(uuid().uuidString)",
-                    clientSentAt: date(),
-                    timezone: TimeZone.current.identifier,
-                    app: clientInfo.app,
-                    os: clientInfo.os,
-                    sdk: clientInfo.sdk,
-                    device: clientInfo.device
-                ),
-                event: .init(
-                    publicToken: networkingClient.publicToken,
-                    eventName: parameters.eventName,
-                    details: parameters.details,
-                    error: parameters.error
-                )
-            )
-            try await router.post(to: .logEvents, parameters: [params])
+    var path: Path {
+        switch self {
+        case .logEvents:
+            return "events"
         }
     }
+}
 
-    private struct Params: Encodable {
+public enum EventsClient {
+    static let router: NetworkingRouter<EventsClientRoute> = .init { Current.localStorage.configuration }
+
+    static let appSessionId: String = UUID().uuidString
+
+    public static func logEvent(parameters: Parameters) async throws {
+        let params = SendParameters(
+            telemetry: .init(
+                eventId: "event-id-\(Current.uuid().uuidString)",
+                appSessionId: appSessionId,
+                persistentId: "persistent-id-\(Current.uuid().uuidString)",
+                clientSentAt: Current.date(),
+                timezone: TimeZone.current.identifier,
+                app: Current.clientInfo.app,
+                os: Current.clientInfo.os,
+                sdk: Current.clientInfo.sdk,
+                device: Current.clientInfo.device
+            ),
+            event: .init(
+                publicToken: Current.networkingClient.publicToken,
+                eventName: parameters.eventName,
+                details: parameters.details,
+                error: parameters.error
+            )
+        )
+        try await router.post(to: .logEvents, parameters: [params])
+    }
+}
+
+public extension EventsClient {
+    struct Parameters {
+        let eventName: String
+        let details: [String: String]?
+        let error: Error?
+
+        public init(eventName: String, details: [String: String]? = nil, error: Error? = nil) {
+            self.eventName = eventName
+            self.details = details
+            self.error = error
+        }
+    }
+}
+
+extension EventsClient {
+    private struct SendParameters: Encodable {
         let telemetry: Telemetry
         let event: Event
+
+        public init(telemetry: Telemetry, event: Event) {
+            self.telemetry = telemetry
+            self.event = event
+        }
 
         struct Telemetry: Encodable {
             let eventId: String
@@ -116,29 +132,6 @@ public extension StytchClient {
                 self.details = details
                 errorDescription = error?.localizedDescription
             }
-        }
-
-        public init(telemetry: Telemetry, event: Event) {
-            self.telemetry = telemetry
-            self.event = event
-        }
-    }
-}
-
-public extension StytchClient {
-    static var events: Events { .init(router: router.scopedRouter { $0.events }, appSessionId: appSessionId) }
-}
-
-public extension StytchClient.Events {
-    struct Parameters {
-        let eventName: String
-        let details: [String: String]?
-        let error: Error?
-
-        public init(eventName: String, details: [String: String]? = nil, error: Error? = nil) {
-            self.eventName = eventName
-            self.details = details
-            self.error = error
         }
     }
 }
