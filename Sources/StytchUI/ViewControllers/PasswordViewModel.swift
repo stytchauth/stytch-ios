@@ -50,7 +50,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
         guard let magicLink = state.config.magicLink else { return }
         let params = params(email: email, magicLink: magicLink)
         _ = try await magicLinksClient.loginOrCreate(parameters: params)
-        try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
+        try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
     }
 
     func forgotPassword(email: String) async throws {
@@ -58,7 +58,7 @@ extension PasswordViewModel: PasswordViewModelProtocol {
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
         _ = try await passwordClient.resetByEmailStart(parameters: params)
-        try? await StytchClient.events.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
+        try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
     }
 }
 

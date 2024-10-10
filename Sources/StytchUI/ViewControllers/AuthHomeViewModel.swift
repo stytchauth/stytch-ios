@@ -8,20 +8,15 @@ protocol AuthHomeViewModelProtocol {
 
 final class AuthHomeViewModel {
     let state: AuthHomeState
-    let eventsClient: StytchClientEventsProtocol
 
-    init(
-        state: AuthHomeState,
-        eventsClient: StytchClientEventsProtocol = StytchClient.events
-    ) {
+    init(state: AuthHomeState) {
         self.state = state
-        self.eventsClient = eventsClient
     }
 }
 
 extension AuthHomeViewModel: AuthHomeViewModelProtocol {
     func logRenderScreen() async throws {
-        try await eventsClient.logEvent(
+        try await EventsClient.logEvent(
             parameters: .init(
                 eventName: "render_login_screen",
                 details: ["options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? ""]

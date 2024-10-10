@@ -2,7 +2,6 @@ extension StytchClient {
     enum BaseRoute: BaseRouteType {
         case biometrics(BiometricsRoute)
         case cryptoWallets(CryptoWalletsRoute)
-        case events(EventsRoute)
         case magicLinks(MagicLinksRoute)
         case oauth(OAuthRoute)
         case otps(OTPRoute)
@@ -13,7 +12,6 @@ extension StytchClient {
         case users(UsersRoute)
         // swiftlint:disable:next identifier_name
         case ui(UIRoute)
-        case bootstrap(BootstrapRoute)
 
         var path: Path {
             switch self {
@@ -21,8 +19,6 @@ extension StytchClient {
                 return "biometrics".appendingPath(route.path)
             case let .cryptoWallets(route):
                 return "crypto_wallets".appendingPath(route.path)
-            case let .events(route):
-                return "".appendingPath(route.path)
             case let .magicLinks(route):
                 return "magic_links".appendingPath(route.path)
             case let .oauth(route):
@@ -41,8 +37,6 @@ extension StytchClient {
                 return "users".appendingPath(route.path)
             case let .ui(route):
                 return route.path
-            case let .bootstrap(route):
-                return "".appendingPath(route.path)
             }
         }
     }

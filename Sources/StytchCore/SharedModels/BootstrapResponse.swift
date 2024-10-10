@@ -19,6 +19,7 @@ protocol BootstrapResponseDataType {
     var dfpProtectedAuthEnabled: Bool { get }
     var dfpProtectedAuthMode: DFPProtectedAuthMode? { get }
     var rbacPolicy: RBACPolicy? { get }
+    var passwordConfig: PasswordConfig? { get }
 }
 
 /// The underlying data for `bootstrap` calls.
@@ -36,6 +37,33 @@ struct BootstrapResponseData: Codable, BootstrapResponseDataType {
     let dfpProtectedAuthEnabled: Bool
     let dfpProtectedAuthMode: DFPProtectedAuthMode?
     let rbacPolicy: RBACPolicy?
+    let passwordConfig: PasswordConfig?
+}
+
+extension BootstrapResponseData {
+    static var defaultBootstrapData: BootstrapResponseData {
+        BootstrapResponseData(
+            disableSdkWatermark: false,
+            cnameDomain: nil,
+            emailDomains: [],
+            captchaSettings: .init(enabled: false, siteKey: nil),
+            pkceRequiredForEmailMagicLinks: false,
+            pkceRequiredForPasswordResets: false,
+            pkceRequiredForOauth: false,
+            pkceRequiredForSso: false,
+            slugPattern: nil,
+            createOrganizationEnabled: false,
+            dfpProtectedAuthEnabled: false,
+            dfpProtectedAuthMode: .observation,
+            rbacPolicy: nil,
+            passwordConfig: nil
+        )
+    }
+}
+
+struct PasswordConfig: Codable {
+    let ludsComplexity: Int
+    let ludsMinimumCount: Int
 }
 
 struct CaptchaSettings: Codable {

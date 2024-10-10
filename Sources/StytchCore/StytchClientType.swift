@@ -11,14 +11,16 @@ protocol StytchClientType {
 
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
 
-    func runBootstrapping()
+    func start()
 }
 
 extension StytchClientType {
     private static var keychainClient: KeychainClient { Current.keychainClient }
 
     var configuration: Configuration? {
-        get { localStorage.configuration }
+        get {
+            localStorage.configuration
+        }
         set {
             localStorage.configuration = newValue
             updateNetworkingClient()
@@ -40,6 +42,7 @@ extension StytchClientType {
     private var clientInfo: ClientInfo { Current.clientInfo }
 
     private var uuid: () -> UUID { Current.uuid }
+
     #if os(iOS)
     private var dfpClient: DFPProvider { Current.dfpClient }
     private var captchaClient: CaptchaProvider { Current.captcha }
@@ -47,13 +50,19 @@ extension StytchClientType {
 
     var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
 
-    /// An instance of `InitializationState` that wraps a publisher `isInitialized` that alerts the caller when the bootstrap call has completed successfully.
-    /// NOTE: It does not represent if the Stytch iOS SDK is ready to use or not. That is currently solely determined by the SDK having a valid public token.
-    public var initializationState: InitializationState { Current.initializationState }
+    // swiftlint:disable:next type_contents_order
+    mutating func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+        configuration = .init(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
 
-    // swiftlint:disable:next identifier_name
-    static func _configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
-        instance.configuration = .init(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
+        updateNetworkingClient()
+        resetKeychainOnFreshInstall()
+        runKeychainMigrations()
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+            // only run this in non-test environments
+            start()
+        }
+
+        publishCachedValuesIfNeededForStartup()
     }
 
     // swiftlint:disable:next identifier_name
@@ -67,22 +76,6 @@ extension StytchClientType {
             return nil
         }
         return (tokenType: type, token)
-    }
-
-    mutating func postInit() {
-        if let url = Bundle.main.url(forResource: "StytchConfiguration", withExtension: "plist"), let data = try? Data(contentsOf: url) {
-            configuration = try? PropertyListDecoder().decode(Configuration.self, from: data)
-        }
-
-        updateNetworkingClient()
-        resetKeychainOnFreshInstall()
-        runKeychainMigrations()
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-            // only run this in non-test environments
-            runBootstrapping()
-        }
-
-        publishCachedValuesIfNeededForStartup()
     }
 
     // TODO: We should remove this and make "publish" private within ObjectStorage

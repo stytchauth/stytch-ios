@@ -67,9 +67,14 @@ struct Environment {
 
     var keychainClient: KeychainClient = .live
 
+    var networkMonitor: NetworkMonitor = .init()
+
+    // consumer
     let sessionStorage: ObjectStorage<SessionStorageWrapper> = .init(objectWrapper: SessionStorageWrapper())
-    let memberSessionStorage: ObjectStorage<MemberSessionStorageWrapper> = .init(objectWrapper: MemberSessionStorageWrapper())
     let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
+
+    // b2b
+    let memberSessionStorage: ObjectStorage<MemberSessionStorageWrapper> = .init(objectWrapper: MemberSessionStorageWrapper())
     let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
     let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
 
@@ -127,6 +132,4 @@ struct Environment {
         runloop.add(timer, forMode: .common)
         return timer
     }
-
-    var initializationState: InitializationState = .init()
 }

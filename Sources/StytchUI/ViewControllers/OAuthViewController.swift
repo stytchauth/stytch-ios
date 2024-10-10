@@ -32,7 +32,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
             do {
                 try await viewModel.startOAuth(provider: provider)
             } catch {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                 presentAlert(error: error)
             }
         }
