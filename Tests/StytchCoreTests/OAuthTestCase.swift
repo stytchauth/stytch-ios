@@ -35,15 +35,18 @@ final class OAuthTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        networkInterceptor.responses { AuthenticateResponse.mock }
+        networkInterceptor.responses { StytchClient.OAuth.OAuthAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(
             try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
             StytchSDKError.missingPKCE
         )
+
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
+        networkInterceptor.responses { StytchClient.OAuth.OAuthAuthenticateResponse.mock }
         _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
 
         try XCTAssertRequest(
@@ -142,3 +145,20 @@ private extension StytchClient.OAuth.ThirdParty.Provider {
     }
 }
 #endif
+
+extension StytchClient.OAuth.OAuthAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            user: .mock(userId: "123"),
+            sessionToken: "123",
+            sessionJwt: "123",
+            session: .mock(userId: "123"),
+            oauthUserRegistrationId: "123",
+            providerSubject: "123",
+            providerType: "123",
+            providerValues: .mock
+        )
+    )
+}

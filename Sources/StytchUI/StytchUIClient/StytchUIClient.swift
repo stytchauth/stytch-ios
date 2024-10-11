@@ -54,8 +54,13 @@ public enum StytchUIClient {
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         Task { @MainActor in
             switch try await StytchClient.handle(url: url) {
-            case let .handled(response):
-                self.onAuthCallback?(response)
+            case let .handled(responseData):
+                switch responseData {
+                case let .auth(response):
+                    self.onAuthCallback?(response)
+                case let .oauth(response):
+                    self.onAuthCallback?(response)
+                }
             case .notHandled:
                 break
             case let .manualHandlingRequired(_, token):

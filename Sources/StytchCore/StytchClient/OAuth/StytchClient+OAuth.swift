@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol OAuthProviderProtocol {
-    func authenticate(parameters: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse
+    func authenticate(parameters: StytchClient.OAuth.AuthenticateParameters) async throws -> StytchClient.OAuth.OAuthAuthenticateResponse
 }
 
 public extension StytchClient {
@@ -14,7 +14,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> OAuthAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -28,7 +28,7 @@ public extension StytchClient {
                 let result = try await router.post(
                     to: .authenticate,
                     parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
-                ) as AuthenticateResponse
+                ) as OAuthAuthenticateResponse
                 try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_success"))
                 return result
             } catch {
@@ -128,5 +128,31 @@ public extension StytchClient.OAuth {
             self.token = token
             self.sessionDuration = sessionDuration
         }
+    }
+}
+
+public extension StytchClient.OAuth {
+    /// The concrete response type for OAuth `authenticate` calls.
+    typealias OAuthAuthenticateResponse = Response<OAuthAuthenticateResponseData>
+
+    struct OAuthAuthenticateResponseData: Codable, AuthenticateResponseDataType {
+        /// The current user object.
+        public let user: User
+        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
+        public let sessionToken: String
+        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
+        public let sessionJwt: String
+        /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+        public let session: Session
+        /// The unique ID for an OAuth registration.
+        public let oauthUserRegistrationId: String
+        /// The unique identifier for the User within a given OAuth provider. Also commonly called the "sub" or "Subject field" in OAuth protocols.
+        public let providerSubject: String
+        /// Denotes the OAuth identity provider that the user has authenticated with, e.g. Google, Facebook, GitHub etc.
+        public let providerType: String
+        /// The provider_values object lists relevant identifiers, values, and scopes for a given OAuth provider.
+        /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
+        /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.
+        public let providerValues: OAuthProviderValues
     }
 }

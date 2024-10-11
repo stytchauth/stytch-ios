@@ -5,7 +5,7 @@ final class B2BOAuthTestCase: BaseTestCase {
     @available(tvOS 16.0, *)
     func testAuthenticate() async throws {
         networkInterceptor.responses {
-            B2BMFAAuthenticateResponse.mock
+            StytchB2BClient.OAuth.OAuthAuthenticateResponse.mock
         }
 
         Current.timer = { _, _, _ in .init() }
@@ -84,4 +84,33 @@ extension StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponseData {
             discoveredOrganizations: []
         )
     }
+}
+
+extension StytchB2BClient.OAuth.OAuthAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            memberSession: .mock,
+            memberId: "member_id_123",
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
+            memberAuthenticated: false,
+            mfaRequired: nil,
+            providerValues: .mock
+        )
+    )
+}
+
+extension OAuthProviderValues {
+    static let mock: Self = .init(
+        accessToken: "",
+        idToken: "",
+        refreshToken: nil,
+        scopes: [],
+        expiresAt: Date()
+    )
 }

@@ -135,7 +135,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
     }
 
     func testResetByExistingPassword() async throws {
-        networkInterceptor.responses { B2BAuthenticateResponse.mock }
+        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)

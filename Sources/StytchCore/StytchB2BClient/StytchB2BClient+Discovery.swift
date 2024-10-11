@@ -33,7 +33,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [exchange intermediate session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-        public func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) async throws -> ExchangeIntermediateSessionResponse {
+        public func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) async throws -> B2BMFAAuthenticateResponseData {
             try await router.post(
                 to: .intermediateSessionsExchange,
                 parameters: IntermediateSessionTokenParameters(
@@ -45,7 +45,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [create Organization via discovery](https://stytch.com/docs/b2b/api/create-organization-via-discovery) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-        public func createOrganization(parameters: CreateOrganizationParameters) async throws -> CreateOrganizationResponse {
+        public func createOrganization(parameters: CreateOrganizationParameters) async throws -> B2BMFAAuthenticateResponseData {
             try await router.post(
                 to: .organizationsCreate,
                 parameters: IntermediateSessionTokenParameters(
@@ -71,27 +71,6 @@ public extension StytchB2BClient.Discovery {
 }
 
 public extension StytchB2BClient.Discovery {
-    /// The response type for Discovery `exchangeIntermediateSession` calls.
-    typealias ExchangeIntermediateSessionResponse = Response<ExchangeIntermediateSessionResponseData>
-
-    /// The underlying data for `ExchangeIntermediateSessionResponse`.
-    struct ExchangeIntermediateSessionResponseData: Codable, B2BMFAAuthenticateResponseDataType {
-        /// The current member's ID.
-        public let memberId: Member.ID
-        /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
-        public let memberSession: MemberSession?
-        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
-        public let sessionToken: String
-        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
-        public let sessionJwt: String
-        /// The current member object.
-        public let member: Member
-        /// The current organization object.
-        public let organization: Organization
-        /// An optional intermediate session token to be returned if multi factor authentication is enabled
-        public var intermediateSessionToken: String?
-    }
-
     /// The dedicated parameters type for Discovery `exchangeIntermediateSession` calls.
     struct ExchangeIntermediateSessionParameters: Encodable {
         private enum CodingKeys: String, CodingKey {
@@ -113,27 +92,6 @@ public extension StytchB2BClient.Discovery {
 }
 
 public extension StytchB2BClient.Discovery {
-    /// The response type for Discovery `createOrganization` calls.
-    typealias CreateOrganizationResponse = Response<CreateOrganizationResponseData>
-
-    /// The underlying data for `CreateOrganizationResponse`.
-    struct CreateOrganizationResponseData: Codable, B2BMFAAuthenticateResponseDataType {
-        /// The current member's ID.
-        public let memberId: Member.ID
-        /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
-        public let memberSession: MemberSession?
-        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
-        public let sessionToken: String
-        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
-        public let sessionJwt: String
-        /// The current member object.
-        public let member: Member
-        /// The current organization object.
-        public let organization: Organization
-        /// An optional intermediate session token to be returned if multi factor authentication is enabled
-        public var intermediateSessionToken: String?
-    }
-
     /// A dedicated parameters type for Discovery `createOrganization` calls.
     struct CreateOrganizationParameters: Codable {
         private enum CodingKeys: String, CodingKey {

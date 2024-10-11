@@ -92,6 +92,9 @@ extension Response: B2BMFAAuthenticateResponseDataType where Wrapped: B2BMFAAuth
     public var sessionToken: String { wrapped.sessionToken }
     public var sessionJwt: String { wrapped.sessionJwt }
     public var intermediateSessionToken: String? { wrapped.intermediateSessionToken }
+    public var memberId: Member.ID { wrapped.memberId }
+    public var memberAuthenticated: Bool { wrapped.memberAuthenticated }
+    public var mfaRequired: MFARequired? { wrapped.mfaRequired }
 }
 
 extension Response: DiscoveryIntermediateSessionTokenDataType where Wrapped: DiscoveryIntermediateSessionTokenDataType {

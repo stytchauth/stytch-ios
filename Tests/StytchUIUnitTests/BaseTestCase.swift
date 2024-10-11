@@ -132,3 +132,30 @@ extension StytchClient.OAuth.Apple.AuthenticateResponse {
         )
     }
 }
+
+extension StytchClient.OAuth.OAuthAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            user: .mock(userId: "123"),
+            sessionToken: "123",
+            sessionJwt: "123",
+            session: .mock(userId: "123"),
+            oauthUserRegistrationId: "123",
+            providerSubject: "123",
+            providerType: "123",
+            providerValues: .mock
+        )
+    )
+}
+
+extension OAuthProviderValues {
+    static let mock: Self = .init(
+        accessToken: "",
+        idToken: "",
+        refreshToken: nil,
+        scopes: [],
+        expiresAt: Date()
+    )
+}

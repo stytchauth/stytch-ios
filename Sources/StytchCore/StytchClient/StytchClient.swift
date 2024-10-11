@@ -77,6 +77,12 @@ public extension StytchClient {
         case passwordReset = "reset_password"
     }
 
+    /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
+    enum DeeplinkResponse {
+        case auth(AuthenticateResponse)
+        case oauth(StytchClient.OAuth.OAuthAuthenticateResponse)
+    }
+
     /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchClient/tokenValues(for:)``
     static func canHandle(url: URL) -> Bool {
         (try? tokenValues(for: url)) != nil
@@ -93,7 +99,7 @@ public extension StytchClient {
     static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
-    ) async throws -> DeeplinkHandledStatus<AuthenticateResponse, DeeplinkTokenType> {
+    ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
@@ -106,12 +112,12 @@ public extension StytchClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .oauth:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: .oauth(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .passwordReset:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))

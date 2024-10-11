@@ -197,11 +197,14 @@ extension B2BMFAAuthenticateResponse {
         statusCode: 200,
         wrapped: .init(
             memberSession: .mock,
+            memberId: "member_id_123",
             member: .mock,
             organization: .mock,
             sessionToken: "xyzasdf",
             sessionJwt: "i'mvalidjson",
-            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke"
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
+            memberAuthenticated: false,
+            mfaRequired: nil
         )
     )
 }

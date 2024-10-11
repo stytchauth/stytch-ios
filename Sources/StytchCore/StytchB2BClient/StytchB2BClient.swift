@@ -79,6 +79,7 @@ public extension StytchB2BClient {
     enum DeeplinkResponse {
         case auth(B2BAuthenticateResponse)
         case mfauth(B2BMFAAuthenticateResponse)
+        case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
         case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
@@ -132,7 +133,7 @@ public extension StytchB2BClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .mfauth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
+            return try await .handled(response: .mfaOAuth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
         case .discoveryOauth:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))

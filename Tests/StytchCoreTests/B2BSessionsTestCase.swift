@@ -70,7 +70,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
     func testSessionExchange() async throws {
         networkInterceptor.responses {
-            B2BAuthenticateResponse.mock
+            B2BMFAAuthenticateResponse.mock
         }
 
         Current.timer = { _, _, _ in .init() }

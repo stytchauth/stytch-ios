@@ -62,9 +62,15 @@ struct StytchApp: App {
         Task {
             do {
                 switch try await StytchClient.handle(url: url, sessionDuration: 5) {
-                case let .handled(response):
-                    print("handled: \(response.session) - \(response.user)")
-                    self.sessionUser = (response.session, response.user)
+                case let .handled(responseData):
+                    switch responseData {
+                    case let .auth(response):
+                        print("handled: \(response.session) - \(response.user)")
+                        self.sessionUser = (response.session, response.user)
+                    case let .oauth(response):
+                        print("handled: \(response.session) - \(response.user)")
+                        self.sessionUser = (response.session, response.user)
+                    }
                 case .notHandled:
                     print("not handled")
                 case let .manualHandlingRequired(tokenType, token):
