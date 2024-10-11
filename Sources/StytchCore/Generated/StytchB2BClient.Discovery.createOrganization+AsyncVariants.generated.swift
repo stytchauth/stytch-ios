@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchB2BClient.Discovery {
     /// Wraps Stytch's [create Organization via discovery](https://stytch.com/docs/b2b/api/create-organization-via-discovery) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-    func createOrganization(parameters: CreateOrganizationParameters, completion: @escaping Completion<CreateOrganizationResponse>) {
+    func createOrganization(parameters: CreateOrganizationParameters, completion: @escaping Completion<B2BMFAAuthenticateResponseData>) {
         Task {
             do {
                 completion(.success(try await createOrganization(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.Discovery {
     }
 
     /// Wraps Stytch's [create Organization via discovery](https://stytch.com/docs/b2b/api/create-organization-via-discovery) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-    func createOrganization(parameters: CreateOrganizationParameters) -> AnyPublisher<CreateOrganizationResponse, Error> {
+    func createOrganization(parameters: CreateOrganizationParameters) -> AnyPublisher<B2BMFAAuthenticateResponseData, Error> {
         return Deferred {
             Future({ promise in
                 Task {

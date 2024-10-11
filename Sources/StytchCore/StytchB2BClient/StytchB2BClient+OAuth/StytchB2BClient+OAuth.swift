@@ -18,7 +18,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> OAuthAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -41,7 +41,7 @@ public extension StytchB2BClient {
                 let result = try await router.post(
                     to: .authenticate,
                     parameters: intermediateSessionTokenParameters
-                ) as B2BMFAAuthenticateResponse
+                ) as OAuthAuthenticateResponse
                 try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_oauth_success"))
                 return result
             } catch {
@@ -77,6 +77,36 @@ public extension StytchB2BClient.OAuth {
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
+    }
+}
+
+public extension StytchB2BClient.OAuth {
+    /// The concrete response type for B2B OAuth `authenticate` calls.
+    typealias OAuthAuthenticateResponse = Response<OAuthAuthenticateResponseData>
+
+    struct OAuthAuthenticateResponseData: Codable, B2BMFAAuthenticateResponseDataType {
+        /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+        public let memberSession: MemberSession?
+        /// The current member's ID.
+        public let memberId: Member.ID
+        /// The current member object.
+        public let member: Member
+        /// The current organization object.
+        public let organization: Organization
+        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
+        public let sessionToken: String
+        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
+        public let sessionJwt: String
+        /// An optional intermediate session token to be returned if multi factor authentication is enabled
+        public let intermediateSessionToken: String?
+        /// Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to the Organization.
+        public let memberAuthenticated: Bool
+        /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+        public let mfaRequired: MFARequired?
+        /// /// The provider_values object lists relevant identifiers, values, and scopes for a given OAuth provider.
+        /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
+        /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.
+        public let providerValues: OAuthProviderValues
     }
 }
 

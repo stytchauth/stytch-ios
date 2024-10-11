@@ -126,7 +126,7 @@ class OAuthSpy: OAuthProviderProtocol {
         self.callback = callback
     }
 
-    func authenticate(parameters _: StytchClient.OAuth.AuthenticateParameters) async throws -> AuthenticateResponse {
+    func authenticate(parameters _: StytchClient.OAuth.AuthenticateParameters) async throws -> StytchClient.OAuth.OAuthAuthenticateResponse {
         callback(.oauthAuthenticate)
         return .mock
     }

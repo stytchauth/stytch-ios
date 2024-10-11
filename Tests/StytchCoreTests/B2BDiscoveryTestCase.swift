@@ -30,9 +30,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
     }
 
     func testExchangeIntermediateSession() async throws {
-        networkInterceptor.responses {
-            StytchB2BClient.Discovery.ExchangeIntermediateSessionResponse(requestId: "asdf", statusCode: 200, wrapped: .init(memberId: Member.mock.id, memberSession: .mock, sessionToken: "session_token", sessionJwt: "session_jwt", member: .mock, organization: .mock))
-        }
+        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
@@ -51,20 +49,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
     }
 
     func testCreateOrganization() async throws {
-        networkInterceptor.responses {
-            StytchB2BClient.Discovery.CreateOrganizationResponse(
-                requestId: "req",
-                statusCode: 200,
-                wrapped: .init(
-                    memberId: Member.mock.id,
-                    memberSession: .mock,
-                    sessionToken: "asdf",
-                    sessionJwt: "zxcv",
-                    member: .mock,
-                    organization: .mock
-                )
-            )
-        }
+        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
