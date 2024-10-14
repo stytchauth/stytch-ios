@@ -61,8 +61,6 @@ extension StytchClientType {
             // only run this in non-test environments
             start()
         }
-
-        publishCachedValuesIfNeededForStartup()
     }
 
     // swiftlint:disable:next identifier_name
@@ -76,15 +74,6 @@ extension StytchClientType {
             return nil
         }
         return (tokenType: type, token)
-    }
-
-    // TODO: We should remove this and make "publish" private within ObjectStorage
-    private func publishCachedValuesIfNeededForStartup() {
-        Current.sessionStorage.publish()
-        Current.memberSessionStorage.publish()
-        Current.userStorage.publish()
-        Current.memberStorage.publish()
-        Current.organizationStorage.publish()
     }
 
     // To be called after configuration

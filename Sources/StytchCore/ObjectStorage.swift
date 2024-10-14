@@ -38,6 +38,7 @@ extension ObjectStorageWrapper {
 
 class ObjectStorage<WrapperType: ObjectStorageWrapper> {
     private let objectWrapper: WrapperType
+    private var cancellable: AnyCancellable?
 
     private let _onChange = PassthroughSubject<StytchObjectInfo<WrapperType.ObjectType>, Never>()
     var onChange: AnyPublisher<StytchObjectInfo<WrapperType.ObjectType>, Never> {
@@ -46,6 +47,11 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
 
     init(objectWrapper: WrapperType) {
         self.objectWrapper = objectWrapper
+
+        // only observe the first fire of this event so that we can publish objects on startup
+        cancellable = StartupClient.isInitialized.first().sink { [weak self] _ in
+            self?.publish()
+        }
     }
 
     var object: WrapperType.ObjectType? {
@@ -57,7 +63,7 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
         publish()
     }
 
-    func publish() {
+    private func publish() {
         if let object = object, let lastValidatedAtDate = objectWrapper.lastValidatedAtDate {
             _onChange.send(.available(object, lastValidatedAtDate))
         } else {
