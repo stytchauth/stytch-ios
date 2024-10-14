@@ -49,7 +49,8 @@ public extension StytchB2BClient {
 
             return try await router.post(
                 to: .authenticate,
-                parameters: intermediateSessionTokenParameters
+                parameters: intermediateSessionTokenParameters,
+                useDFPPA: true
             )
         }
 

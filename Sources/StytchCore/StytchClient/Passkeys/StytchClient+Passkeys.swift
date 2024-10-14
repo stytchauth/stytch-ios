@@ -79,7 +79,8 @@ public extension StytchClient {
                         signature: credential.signature,
                         userHandle: credential.userID
                     )
-                ).wrapped(sessionDuration: parameters.sessionDuration)
+                ).wrapped(sessionDuration: parameters.sessionDuration),
+                useDFPPA: true
             )
         }
 

@@ -23,7 +23,8 @@ public extension StytchB2BClient {
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -35,7 +36,8 @@ public extension StytchB2BClient {
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
     }

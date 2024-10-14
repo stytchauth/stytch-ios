@@ -42,7 +42,8 @@ public extension StytchB2BClient {
                 )
                 return try await router.post(
                     to: .authenticate,
-                    parameters: intermediateSessionTokenParameters
+                    parameters: intermediateSessionTokenParameters,
+                    useDFPPA: true
                 )
             }
             // For authenticating if inviteSend was called, in which case we will not have a PKCE challenge code
@@ -52,7 +53,8 @@ public extension StytchB2BClient {
                     parameters: IntermediateSessionTokenParameters(
                         intermediateSessionToken: sessionManager.intermediateSessionToken,
                         wrapped: parameters
-                    )
+                    ),
+                    useDFPPA: true
                 )
             }
         }
@@ -70,7 +72,8 @@ public extension StytchB2BClient {
 
             return try await router.post(
                 to: .discoveryAuthenticate,
-                parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters)
+                parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: codeVerifier, wrapped: parameters),
+                useDFPPA: true
             )
         }
     }
@@ -152,7 +155,8 @@ public extension StytchB2BClient.MagicLinks {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 

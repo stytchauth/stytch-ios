@@ -130,7 +130,8 @@ public extension StytchClient {
                     signature: cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
                     biometricRegistrationId: startResponse.biometricRegistrationId,
                     sessionDurationMinutes: parameters.sessionDuration
-                )
+                ),
+                useDFPPA: true
             )
         }
     }

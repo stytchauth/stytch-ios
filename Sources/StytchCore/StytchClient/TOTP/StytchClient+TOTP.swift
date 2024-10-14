@@ -12,7 +12,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -24,7 +24,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [recover](https://stytch.com/docs/api/totp-recover) endpoint. Call this method to authenticate a recovery code for a TOTP instance.
         public func recover(parameters: RecoverParameters) async throws -> RecoverResponse {
-            try await router.post(to: .recover, parameters: parameters)
+            try await router.post(to: .recover, parameters: parameters, useDFPPA: true)
         }
     }
 }

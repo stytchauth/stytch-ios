@@ -40,7 +40,8 @@ public extension StytchB2BClient {
 
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: intermediateSessionTokenParameters
+                    parameters: intermediateSessionTokenParameters,
+                    useDFPPA: true
                 ) as OAuthAuthenticateResponse
                 try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_oauth_success"))
                 return result

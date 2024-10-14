@@ -45,44 +45,57 @@ public struct NetworkingRouter<Route: RouteType> {
 }
 
 public extension NetworkingRouter {
+    func post<Parameters: Encodable>(
+        to route: Route,
+        parameters: Parameters,
+        useDFPPA: Bool = false
+    ) async throws {
+        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route, useDFPPA: useDFPPA)
+    }
+
     func post<Response: Decodable>(
-        to route: Route
+        to route: Route,
+        useDFPPA: Bool = false
     ) async throws -> Response {
-        try await performRequest(.post(nil), route: route)
+        try await performRequest(.post(nil), route: route, useDFPPA: useDFPPA)
     }
 
     func post<Parameters: Encodable, Response: Decodable>(
         to route: Route,
-        parameters: Parameters
+        parameters: Parameters,
+        useDFPPA: Bool = false
     ) async throws -> Response {
-        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
-    }
-
-    func post<Parameters: Encodable>(
-        to route: Route,
-        parameters: Parameters
-    ) async throws {
-        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route)
+        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route, useDFPPA: useDFPPA)
     }
 
     func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
-        parameters: Parameters
+        parameters: Parameters,
+        useDFPPA: Bool = false
     ) async throws -> Response {
-        try await performRequest(.put(jsonEncoder.encode(parameters)), route: route)
+        try await performRequest(.put(jsonEncoder.encode(parameters)), route: route, useDFPPA: useDFPPA)
     }
 
-    func get<Response: Decodable>(route: Route) async throws -> Response {
-        try await performRequest(.get, route: route)
+    func get<Response: Decodable>(
+        route: Route,
+        useDFPPA: Bool = false
+    ) async throws -> Response {
+        try await performRequest(.get, route: route, useDFPPA: useDFPPA)
     }
 
-    func delete<Response: Decodable>(route: Route) async throws -> Response {
-        try await performRequest(.delete, route: route)
+    func delete<Response: Decodable>(
+        route: Route,
+        useDFPPA: Bool = false
+    ) async throws -> Response {
+        try await performRequest(.delete, route: route, useDFPPA: useDFPPA)
     }
+}
 
+public extension NetworkingRouter {
     private func performRequest(
         _ method: NetworkingClient.Method,
-        route: Route
+        route: Route,
+        useDFPPA: Bool
     ) async throws {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
@@ -90,7 +103,8 @@ public extension NetworkingRouter {
 
         let (data, response) = try await networkingClient.performRequest(
             method,
-            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue),
+            useDFPPA: useDFPPA
         )
 
         do {
@@ -113,13 +127,14 @@ public extension NetworkingRouter {
     // swiftlint:disable:next function_body_length
     private func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method,
-        route: Route
+        route: Route,
+        useDFPPA: Bool
     ) async throws -> Response {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
         let url = configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
-        let (data, response) = try await networkingClient.performRequest(method, url: url)
+        let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
 
         do {
             try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)

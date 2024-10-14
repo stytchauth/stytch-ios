@@ -35,7 +35,7 @@ public class StytchAPIError: StytchError, Decodable {
     /// The type of the error.
     public let errorType: String
     /// The message associated with the error.
-    private let errorMessage: String
+    public let errorMessage: String
     /// The url at which further information about the error can be found. Nil if no additional information available.
     public var url: URL? { errorUrl }
     private let errorUrl: URL?
