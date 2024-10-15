@@ -64,7 +64,7 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `discovery` or `sso`.
-    enum DeeplinkTokenType: String {
+    enum DeeplinkTokenType: String, Sendable {
         case discovery
         case multiTenantMagicLinks = "multi_tenant_magic_links"
         case multiTenantPasswords = "multi_tenant_passwords"
@@ -76,7 +76,7 @@ public extension StytchB2BClient {
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
-    enum DeeplinkResponse {
+    enum DeeplinkResponse: Sendable {
         case auth(B2BAuthenticateResponse)
         case mfauth(B2BMFAAuthenticateResponse)
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)

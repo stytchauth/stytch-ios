@@ -31,7 +31,7 @@ public extension StytchClient {
 
 public extension StytchClient.MagicLinks {
     /// A dedicated parameters type for magic links `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case token
             case sessionDuration = "sessionDurationMinutes"

@@ -1,6 +1,6 @@
 /// A simple, generic, wrapper type which combines two values and provides dynamic-member-access to the underlying wrapped values.
 @dynamicMemberLookup
-public struct Union<LHS, RHS> {
+public struct Union<LHS: Sendable, RHS: Sendable>: Sendable {
     let lhs: LHS
     let rhs: RHS
 

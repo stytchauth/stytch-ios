@@ -119,7 +119,7 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for password `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -158,7 +158,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
-    struct ResetByEmailStartParameters: Encodable {
+    struct ResetByEmailStartParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -207,7 +207,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmail` calls.
-    struct ResetByEmailParameters: Encodable {
+    struct ResetByEmailParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case token = "passwordResetToken"
             case password
@@ -241,7 +241,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
-    struct ResetByExistingPasswordParameters: Encodable {
+    struct ResetByExistingPasswordParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -288,7 +288,7 @@ public extension StytchB2BClient.Passwords {
     typealias ResetBySessionResponse = Response<ResetBySessionResponseData>
 
     /// The underlying data for passwords `resetBySession` calls.
-    struct ResetBySessionResponseData: Codable {
+    struct ResetBySessionResponseData: Codable, Sendable {
         /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
         public let memberSession: MemberSession
         /// The current member object.
@@ -298,7 +298,7 @@ public extension StytchB2BClient.Passwords {
     }
 
     /// The dedicated parameters type for passwords `resetBySession` calls.
-    struct ResetBySessionParameters: Encodable {
+    struct ResetBySessionParameters: Encodable, Sendable {
         let organizationId: Organization.ID
         let password: String
         let locale: StytchLocale?
@@ -320,7 +320,7 @@ public extension StytchB2BClient.Passwords {
     typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
 
     /// The dedicated parameters type for passwords `strengthCheck` calls.
-    struct StrengthCheckParameters: Encodable {
+    struct StrengthCheckParameters: Encodable, Sendable {
         let emailAddress: String?
         let password: String
 
@@ -334,7 +334,7 @@ public extension StytchB2BClient.Passwords {
     }
 
     /// The underlying data for passwords `strengthCheck` calls.
-    struct StrengthCheckResponseData: Codable {
+    struct StrengthCheckResponseData: Codable, Sendable {
         public let validPassword: Bool
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
@@ -350,7 +350,7 @@ public extension StytchB2BClient.Passwords {
         public let ludsFeedback: LudsFeedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
-        public struct ZxcvbnFeedback: Codable {
+        public struct ZxcvbnFeedback: Codable, Sendable {
             /// For zxcvbn validation, contains end user consumable suggestions on how to improve the strength of the password.
             public let suggestions: [String]
             /// For zxcvbn validation, contains an end user consumable warning if the password is valid but not strong enough.
@@ -358,7 +358,7 @@ public extension StytchB2BClient.Passwords {
         }
 
         /// LUDS-specific password feedback.
-        public struct LudsFeedback: Codable {
+        public struct LudsFeedback: Codable, Sendable {
             /// For LUDS validation, whether the password contains at least one lowercase letter.
             public let hasLowerCase: Bool
             /// For LUDS validation, whether the password contains at least one uppercase letter.

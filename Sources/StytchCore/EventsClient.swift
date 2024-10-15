@@ -41,7 +41,7 @@ public enum EventsClient {
 }
 
 public extension EventsClient {
-    struct Parameters {
+    struct Parameters: Sendable {
         let eventName: String
         let details: [String: String]?
         let error: Error?

@@ -2,7 +2,7 @@ import Foundation
 
 /// The RBAC Policy document that contains all defined Roles and Resources – which are managed in the Dashboard (https://stytch.com/dashboard/rbac).
 /// Read more about these entities and how they work in our RBAC overview (https://stytch.com/docs/b2b/guides/rbac/overview).
-public struct RBACPolicy: Codable {
+public struct RBACPolicy: Codable, Sendable {
     /// An array of Role objects.
     public let roles: [RBACPolicyRole]
     /// An array of Resource objects.
@@ -56,7 +56,7 @@ public struct RBACPolicy: Codable {
 }
 
 /// A list of permissions that link a Resource to a list of actions.
-public struct RBACPermission: Codable {
+public struct RBACPermission: Codable, Sendable {
     /// A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
     /// A resource_id is not allowed to start with stytch, which is a special prefix used for Stytch default Resources with reserved resource_ids.
     /// These include: stytch.organization, stytch.member, stytch.sso, stytch.self
@@ -81,7 +81,7 @@ public struct RBACPermission: Codable {
 /// Refer to this guide for details on controls for delegating Roles to Members (https://stytch.com/docs/b2b/guides/rbac/role-assignment).
 /// All Roles are stored in your Project's RBAC Policy. You can create, manage, and assign Roles in the Dashboard (https://stytch.com/dashboard).
 /// Check out the RBAC overview to learn more about Stytch's RBAC permissioning model (https://stytch.com/docs/b2b/guides/rbac/overview).
-public struct RBACPolicyRole: Codable {
+public struct RBACPolicyRole: Codable, Sendable {
     /// The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
     /// Reserved role_ids that are predefined by Stytch include: stytch_member, stytch_admin
     /// Check out the guide on Stytch default Roles for a more detailed explanation (https://stytch.com/docs/b2b/guides/rbac/stytch-default).
@@ -96,7 +96,7 @@ public struct RBACPolicyRole: Codable {
 /// The actions list enumerates all the valid operations that can be performed upon the Resource.
 /// All Resources are stored in your Project's RBAC Policy. You can create and manage Resources in the Dashboard (https://stytch.com/dashboard).
 /// Check out the RBAC overview to learn more about Stytch's RBAC permissioning model (https://stytch.com/docs/b2b/guides/rbac/overview).
-public struct RBACPolicyResource: Codable {
+public struct RBACPolicyResource: Codable, Sendable {
     /// A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
     /// A resource_id is not allowed to start with stytch, which is a special prefix used for Stytch default
     /// Resources with reserved resource_ids. These include: stytch.organization, stytch.member, stytch.sso, stytch.self

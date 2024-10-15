@@ -12,7 +12,7 @@ public extension StytchB2BClient.SCIM {
 }
 
 public extension StytchB2BClient.SCIM {
-    struct SCIMConnection: Codable {
+    struct SCIMConnection: Codable, Sendable {
         /// Globally unique UUID that identifies a specific Organization.
         public let organizationId: String
         /// Globally unique UUID that identifies a specific SCIM Connection.
@@ -38,7 +38,7 @@ public extension StytchB2BClient.SCIM {
         public let nextBearerTokenExpiresAt: String?
     }
 
-    struct SCIMConnectionWithBearerToken: Codable {
+    struct SCIMConnectionWithBearerToken: Codable, Sendable {
         /// Globally unique UUID that identifies a specific Organization.
         public let organizationId: String
         /// Globally unique UUID that identifies a specific SCIM Connection.
@@ -60,7 +60,7 @@ public extension StytchB2BClient.SCIM {
         public let bearerTokenExpiresAt: String
     }
 
-    struct SCIMConnectionWithNextBearerToken: Codable {
+    struct SCIMConnectionWithNextBearerToken: Codable, Sendable {
         /// Globally unique UUID that identifies a specific Organization.
         public let organizationId: String
         /// Globally unique UUID that identifies a specific SCIM Connection.
@@ -86,14 +86,14 @@ public extension StytchB2BClient.SCIM {
         public let nextBearerTokenExpiresAt: String
     }
 
-    struct SCIMGroupImplicitRoleAssignment: Codable {
+    struct SCIMGroupImplicitRoleAssignment: Codable, Sendable {
         /// The ID of the role.
         public let roleId: String
         /// The ID of the group.
         public let groupId: String
     }
 
-    struct SCIMGroup: Codable {
+    struct SCIMGroup: Codable, Sendable {
         /// Globally unique UUID that identifies a specific Organization.
         public let organizationId: String
         /// Globally unique UUID that identifies a specific SCIM Connection.
@@ -104,44 +104,44 @@ public extension StytchB2BClient.SCIM {
         public let groupName: String
     }
 
-    struct SCIMCreateConnectionResponseData: Codable {
+    struct SCIMCreateConnectionResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnectionWithBearerToken
     }
 
-    struct SCIMUpdateConnectionResponseData: Codable {
+    struct SCIMUpdateConnectionResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnection
     }
 
-    struct SCIMDeleteConnectionResponseData: Codable {
+    struct SCIMDeleteConnectionResponseData: Codable, Sendable {
         /// lobally unique UUID that identifies a specific SCIM Connection.
         public let connectionId: String
     }
 
-    struct SCIMGetConnectionResponseData: Codable {
+    struct SCIMGetConnectionResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnection
     }
 
-    struct SCIMGetConnectionGroupsResponseData: Codable {
+    struct SCIMGetConnectionGroupsResponseData: Codable, Sendable {
         /// List of SCIM Groups for the connection.
         public let scimGroups: [SCIMGroup]?
         /// The cursor to use to get the next page of results.
         public let nextCursor: String?
     }
 
-    struct SCIMRotateStartResponseData: Codable {
+    struct SCIMRotateStartResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnectionWithNextBearerToken
     }
 
-    struct SCIMRotateCompleteResponseData: Codable {
+    struct SCIMRotateCompleteResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnection
     }
 
-    struct SCIMRotateCancelResponseData: Codable {
+    struct SCIMRotateCancelResponseData: Codable, Sendable {
         /// The SCIM Connection object affected by this API call.
         public let connection: SCIMConnection
     }

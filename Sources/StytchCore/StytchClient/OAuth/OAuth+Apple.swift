@@ -60,7 +60,7 @@ public extension StytchClient.OAuth.Apple {
     typealias AuthenticateResponse = Response<AuthenticateResponseData>
 
     /// The underlying data for Sign In With Apple `authenticate` calls.
-    struct AuthenticateResponseData: Codable, AuthenticateResponseDataType {
+    struct AuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         /// The current user object.
         public let user: User
         /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
@@ -102,13 +102,13 @@ public extension StytchClient.OAuth.Apple {
 }
 
 extension StytchClient.OAuth.Apple {
-    struct AuthenticateParameters: Codable {
+    struct AuthenticateParameters: Codable, Sendable {
         let idToken: String
         let nonce: String
         let sessionDurationMinutes: Minutes
     }
 
-    struct Name: Codable {
+    struct Name: Codable, Sendable {
         let firstName: String?
         let lastName: String?
     }

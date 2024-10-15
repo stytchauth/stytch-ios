@@ -5,7 +5,7 @@ import Foundation
  E.g. An email which was used to log in, or a phone which was used
  via SMS as an OTP second factor.
  */
-public struct AuthenticationFactor: Hashable {
+public struct AuthenticationFactor: Hashable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case lastAuthenticatedAt
         case kind = "type"

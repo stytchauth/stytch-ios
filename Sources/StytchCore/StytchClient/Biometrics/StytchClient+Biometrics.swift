@@ -147,7 +147,7 @@ public extension StytchClient.Biometrics {
     typealias RegisterCompleteResponse = Response<RegisterCompleteResponseData>
 
     /// A dedicated parameters type for biometrics `authenticate` calls.
-    struct AuthenticateParameters {
+    struct AuthenticateParameters: Sendable {
         let sessionDuration: Minutes
 
         /// Initializes the parameters struct
@@ -158,7 +158,7 @@ public extension StytchClient.Biometrics {
     }
 
     /// A dedicated parameters type for biometrics `register` calls.
-    struct RegisterParameters {
+    struct RegisterParameters: Sendable {
         let identifier: String
         let accessPolicy: AccessPolicy
         let sessionDuration: Minutes
@@ -179,7 +179,7 @@ public extension StytchClient.Biometrics {
         }
     }
 
-    struct RegisterCompleteResponseData: Codable, AuthenticateResponseDataType {
+    struct RegisterCompleteResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let biometricRegistrationId: User.BiometricRegistration.ID
         public let user: User
         public let session: Session
@@ -190,7 +190,7 @@ public extension StytchClient.Biometrics {
 
 public extension StytchClient.Biometrics.RegisterParameters {
     /// Defines the policy as to how the user must confirm their device ownership.
-    enum AccessPolicy {
+    enum AccessPolicy: Sendable {
         /// The device will first try to confirm access rights via biometrics and will fall back to device passcode.
         case deviceOwnerAuthentication
         /// The device will try to confirm access rights via biometrics.
@@ -217,31 +217,31 @@ public extension StytchClient.Biometrics.RegisterParameters {
 
 // Internal/private parameters and keys
 extension StytchClient.Biometrics {
-    struct AuthenticateStartParameters: Encodable {
+    struct AuthenticateStartParameters: Encodable, Sendable {
         let publicKey: Data
     }
 
-    struct AuthenticateStartResponse: Codable {
+    struct AuthenticateStartResponse: Codable, Sendable {
         let challenge: Data
         let biometricRegistrationId: User.BiometricRegistration.ID
     }
 
-    struct AuthenticateCompleteParameters: Codable {
+    struct AuthenticateCompleteParameters: Codable, Sendable {
         let signature: Data
         let biometricRegistrationId: User.BiometricRegistration.ID
         let sessionDurationMinutes: Minutes
     }
 
-    private struct RegisterStartParameters: Encodable {
+    private struct RegisterStartParameters: Encodable, Sendable {
         let publicKey: Data
     }
 
-    struct RegisterStartResponse: Codable {
+    struct RegisterStartResponse: Codable, Sendable {
         let biometricRegistrationId: User.BiometricRegistration.ID
         let challenge: Data
     }
 
-    private struct RegisterFinishParameters: Encodable {
+    private struct RegisterFinishParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case biometricRegistrationId, signature, sessionDuration = "sessionDurationMinutes"
         }

@@ -3,7 +3,7 @@ import Foundation
  A generic type which encompasses the ``requestId`` and ``statusCode``, along with dynamic member accessors for the wrapped type.
  */
 @dynamicMemberLookup
-public struct Response<Wrapped: Decodable>: Decodable {
+public struct Response<Wrapped: Decodable & Sendable>: Decodable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case requestId, statusCode
     }
@@ -44,7 +44,7 @@ public protocol BasicResponseType {
 }
 
 /// An empty type to allow encoding/decoding the absence of a value within various generic Codable types.
-public struct EmptyCodable: Codable {}
+public struct EmptyCodable: Codable, Sendable {}
 
 /// A concrete response type which provides only the `requestId` and `statusCode`.
 public typealias BasicResponse = Response<EmptyCodable>

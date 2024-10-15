@@ -1,7 +1,7 @@
 import Foundation
 
 public extension StytchB2BClient.Organizations {
-    struct SearchParameters: Codable {
+    struct SearchParameters: Codable, Sendable {
         let query: SearchQuery
         let cursor: String?
         let limit: String?
@@ -34,7 +34,7 @@ public extension StytchB2BClient.Organizations {
 }
 
 public extension StytchB2BClient.Organizations.SearchParameters {
-    struct SearchQuery: Codable {
+    struct SearchQuery: Codable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case searchOperator = "operator"
             case searchOperandsJSON = "operands"
@@ -54,7 +54,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
 }
 
 public extension StytchB2BClient.Organizations.SearchParameters {
-    enum SearchOperator: String, Codable {
+    enum SearchOperator: String, Codable, Sendable {
         // swiftlint:disable:next identifier_name
         case OR
         case AND
@@ -62,7 +62,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
 }
 
 /// A generic protocol to define operand types generating the JSON needed for a search query.
-public protocol SearchQueryOperand {
+public protocol SearchQueryOperand: Sendable {
     var filterName: String { get }
     var filterValueJSON: JSON { get }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 public extension StytchB2BClient.Organizations.Members {
-    struct UpdateParameters: Codable {
+    struct UpdateParameters: Codable, Sendable {
         let memberId: String
         let name: String?
         let untrustedMetadata: JSON?

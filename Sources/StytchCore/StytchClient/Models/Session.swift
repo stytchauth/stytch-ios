@@ -3,7 +3,7 @@ import Foundation
 /**
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
-public struct Session {
+public struct Session: Sendable {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
@@ -66,7 +66,7 @@ public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    struct Attributes: Codable, Equatable {
+    struct Attributes: Codable, Equatable, Sendable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.

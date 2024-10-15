@@ -62,7 +62,7 @@ public extension StytchB2BClient.Discovery {
     typealias ListOrganizationsResponse = Response<ListOrganizationsResponseData>
 
     /// The underlying data for `ListOrganizationsResponse`
-    struct ListOrganizationsResponseData: Codable {
+    struct ListOrganizationsResponseData: Codable, Sendable {
         /// The member's email address.
         public let emailAddress: String
         /// A list of discovered organizations.
@@ -72,7 +72,7 @@ public extension StytchB2BClient.Discovery {
 
 public extension StytchB2BClient.Discovery {
     /// The dedicated parameters type for Discovery `exchangeIntermediateSession` calls.
-    struct ExchangeIntermediateSessionParameters: Encodable {
+    struct ExchangeIntermediateSessionParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case sessionDuration = "sessionDurationMinutes"
@@ -93,7 +93,7 @@ public extension StytchB2BClient.Discovery {
 
 public extension StytchB2BClient.Discovery {
     /// A dedicated parameters type for Discovery `createOrganization` calls.
-    struct CreateOrganizationParameters: Codable {
+    struct CreateOrganizationParameters: Codable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case sessionDuration = "sessionDurationMinutes"
             case organizationName

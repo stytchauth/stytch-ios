@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type defining a user; including information about their name, status, the auth factors associated with them, and more.
-public struct User {
+public struct User: Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// The date the user was originally created.
@@ -75,7 +75,7 @@ extension User: Codable {
 }
 
 public extension User {
-    struct Password: Codable, Equatable {
+    struct Password: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
 
         public var id: ID { passwordId }
@@ -88,7 +88,7 @@ public extension User {
         }
     }
 
-    struct CryptoWallet: Codable, Equatable {
+    struct CryptoWallet: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The id of the crypto wallet.
         public var id: ID { cryptoWalletId }
@@ -110,7 +110,7 @@ public extension User {
         }
     }
 
-    struct Email: Codable, Equatable {
+    struct Email: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The email address.
         public let email: String
@@ -127,7 +127,7 @@ public extension User {
         }
     }
 
-    struct Name: Codable, Equatable {
+    struct Name: Codable, Equatable, Sendable {
         /// The user's first name.
         public let firstName: String?
         /// The user's last name.
@@ -148,7 +148,7 @@ public extension User {
         }
     }
 
-    struct Provider: Codable, Equatable {
+    struct Provider: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The subject of the provider.
         public let providerSubject: String
@@ -168,7 +168,7 @@ public extension User {
         }
     }
 
-    struct PhoneNumber: Codable, Equatable {
+    struct PhoneNumber: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The phone number.
         public let phoneNumber: String
@@ -185,14 +185,14 @@ public extension User {
         }
     }
 
-    enum UserStatus: String, Codable {
+    enum UserStatus: String, Codable, Sendable {
         /// The user is an active user.
         case active
         /// The user is still in a pending status.
         case pending
     }
 
-    struct TOTP: Codable, Equatable {
+    struct TOTP: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The id of the TOTP.
         public var id: ID { totpId }
@@ -206,7 +206,7 @@ public extension User {
         }
     }
 
-    struct WebAuthNRegistration: Codable, Equatable {
+    struct WebAuthNRegistration: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The domain of the WebAuthN registration.
         public let domain: String
@@ -226,7 +226,7 @@ public extension User {
         }
     }
 
-    struct BiometricRegistration: Codable, Equatable {
+    struct BiometricRegistration: Codable, Equatable, Sendable {
         public typealias ID = Identifier<Self, String>
         /// The verification status of the registration.
         public let verified: Bool

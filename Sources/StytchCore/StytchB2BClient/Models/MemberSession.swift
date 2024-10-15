@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type defining a member's session; including information about its validity, expiry, factors associated with this session, and more.
-public struct MemberSession: Codable {
+public struct MemberSession: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// Globally unique UUID that identifies a specific Session in the Stytch API. The member_session_id is critical to perform operations on an Session, so be sure to preserve this value.

@@ -105,7 +105,7 @@ public extension StytchClient {
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
     /// A dedicated parameters type for passkeys `register` calls.
-    struct RegisterParameters: Encodable {
+    struct RegisterParameters: Encodable, Sendable {
         let domain: String
         let returnPasskeyCredentialOptions: Bool = true
 
@@ -117,10 +117,10 @@ public extension StytchClient.Passkeys {
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
-    struct AuthenticateParameters {
+    struct AuthenticateParameters: Sendable {
         // swiftlint:disable duplicate_enum_cases
         /// A type representing the desired request behavior
-        public enum RequestBehavior {
+        public enum RequestBehavior: Sendable {
             #if os(iOS)
             /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
             case `default`(preferLocalCredentials: Bool)
@@ -160,7 +160,7 @@ public extension StytchClient.Passkeys {
     }
 
     /// A dedicated parameters type for passkeys `update` calls.
-    struct UpdateParameters: Encodable {
+    struct UpdateParameters: Encodable, Sendable {
         let id: User.WebAuthNRegistration.ID
         let name: String
         /// - Parameters:
@@ -175,16 +175,16 @@ public extension StytchClient.Passkeys {
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 extension StytchClient.Passkeys {
-    struct StartParameters: Encodable {
+    struct StartParameters: Encodable, Sendable {
         let domain: String
         let returnPasskeyCredentialOptions: Bool = true
     }
 
-    struct PasskeysUser: Codable {
+    struct PasskeysUser: Codable, Sendable {
         let displayName: String
     }
 
-    private struct CredentialCreationOptions: Codable {
+    private struct CredentialCreationOptions: Codable, Sendable {
         enum CodingKeys: CodingKey {
             case challenge
             case user
@@ -218,7 +218,7 @@ extension StytchClient.Passkeys {
         }
     }
 
-    private struct CredentialOptions: Codable {
+    private struct CredentialOptions: Codable, Sendable {
         enum CodingKeys: CodingKey {
             case challenge
         }
@@ -246,7 +246,7 @@ extension StytchClient.Passkeys {
         }
     }
 
-    struct RegisterStartResponseData: Codable {
+    struct RegisterStartResponseData: Codable, Sendable {
         private enum CodingKeys: CodingKey {
             case userId
             case publicKeyCredentialCreationOptions
@@ -279,7 +279,7 @@ extension StytchClient.Passkeys {
         }
     }
 
-    struct AuthenticateStartResponseData: Codable {
+    struct AuthenticateStartResponseData: Codable, Sendable {
         private enum CodingKeys: CodingKey {
             case userId
             case publicKeyCredentialRequestOptions
@@ -310,7 +310,7 @@ extension StytchClient.Passkeys {
     }
 }
 
-public struct PasskeysUpdateResponseData: Codable {
+public struct PasskeysUpdateResponseData: Codable, Sendable {
     private enum CodingKeys: CodingKey {
         case webauthnRegistrationId
     }
@@ -332,7 +332,7 @@ public struct PasskeysUpdateResponseData: Codable {
     }
 }
 
-public struct PasskeysUpdateRequest: Codable {
+public struct PasskeysUpdateRequest: Codable, Sendable {
     private enum CodingKeys: CodingKey {
         case name
     }
@@ -348,7 +348,7 @@ public typealias PasskeysUpdateResponse = Response<PasskeysUpdateResponseData>
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 private extension StytchClient.Passkeys {
-    struct Credential<Response: CredentialResponse>: Encodable {
+    struct Credential<Response: CredentialResponse & Sendable>: Encodable, Sendable {
         private enum CodingKeys: CodingKey {
             case type
             case id
@@ -379,7 +379,7 @@ private extension StytchClient.Passkeys {
         }
     }
 
-    struct AttestationResponse: CredentialResponse {
+    struct AttestationResponse: CredentialResponse, Sendable {
         let clientDataJSON: Data
         let attestationObject: Data
 
@@ -395,7 +395,7 @@ private extension StytchClient.Passkeys {
         }
     }
 
-    struct AssertionResponse: CredentialResponse {
+    struct AssertionResponse: CredentialResponse, Sendable {
         let clientDataJSON: Data
         let authenticatorData: Data
         let signature: Data
@@ -418,5 +418,5 @@ private extension StytchClient.Passkeys {
     }
 }
 
-private protocol CredentialResponse: Encodable {}
+private protocol CredentialResponse: Encodable, Sendable {}
 #endif

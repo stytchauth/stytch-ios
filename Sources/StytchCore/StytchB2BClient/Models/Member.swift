@@ -1,7 +1,7 @@
 import Foundation
 
 /// A type defining an organization member; including information about their name, status, the auth factors associated with them, and more.
-public struct Member: Codable {
+public struct Member: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// Globally unique UUID that identifies a specific Member. The member_id is critical to perform operations on a Member, so be sure to preserve this value.
@@ -41,7 +41,7 @@ extension Member: Equatable {
 }
 
 public extension Member {
-    enum Status: String, Codable {
+    enum Status: String, Codable, Sendable {
         case pending
         case active
         case deleted
@@ -63,7 +63,7 @@ public extension Member {
 }
 
 /// A type representing a specific SSO registration.
-public struct SSORegistration: Codable, Equatable {
+public struct SSORegistration: Codable, Equatable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// The unique ID of an SSO Registration.

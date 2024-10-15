@@ -1,7 +1,7 @@
 import Foundation
 
 /// A simple type representing valid JSON values which includes several convenience accessors.
-public enum JSON: Hashable, Equatable {
+public enum JSON: Hashable, Equatable, Sendable {
     case array([JSON])
     case object([String: JSON?])
     case string(String)

@@ -69,7 +69,7 @@ public extension StytchB2BClient.Members {
     typealias MemberResponse = Response<MemberResponseData>
 
     /// The underlying data for the MemberResponse type.
-    struct MemberResponseData: Codable {
+    struct MemberResponseData: Codable, Sendable {
         /// The current member's member id.
         public let memberId: String?
 
@@ -83,7 +83,7 @@ public extension StytchB2BClient.Members {
 
 public extension StytchB2BClient.Members {
     /// The dedicated parameters type for the update member call.
-    struct UpdateParameters: Codable {
+    struct UpdateParameters: Codable, Sendable {
         let name: String?
         let untrustedMetadata: JSON?
         let mfaEnrolled: Bool?

@@ -71,14 +71,14 @@ public extension StytchClient {
 
 public extension StytchClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
-    enum DeeplinkTokenType: String {
+    enum DeeplinkTokenType: String, Sendable {
         case magicLinks = "magic_links"
         case oauth
         case passwordReset = "reset_password"
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
-    enum DeeplinkResponse {
+    enum DeeplinkResponse: Sendable {
         case auth(AuthenticateResponse)
         case oauth(StytchClient.OAuth.OAuthAuthenticateResponse)
     }

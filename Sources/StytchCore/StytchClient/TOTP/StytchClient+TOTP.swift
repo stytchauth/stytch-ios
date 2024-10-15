@@ -36,7 +36,7 @@ public extension StytchClient {
 
 public extension StytchClient.TOTP {
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
-    struct CreateParameters: Encodable {
+    struct CreateParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case expiration = "expirationMinutes"
         }
@@ -50,7 +50,7 @@ public extension StytchClient.TOTP {
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-2ck6w`` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case totpCode
             case sessionDuration = "sessionDurationMinutes"
@@ -69,7 +69,7 @@ public extension StytchClient.TOTP {
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` calls.
-    struct RecoverParameters: Encodable {
+    struct RecoverParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case recoveryCode
             case sessionDuration = "sessionDurationMinutes"
@@ -97,7 +97,7 @@ public extension StytchClient.TOTP {
     typealias RecoveryCodesResponse = Response<RecoveryCodesResponseData>
 
     /// The underlying data for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` responses.
-    struct CreateResponseData: Codable {
+    struct CreateResponseData: Codable, Sendable {
         public let totpId: User.TOTP.ID
         public let secret: String
         public let qrCode: String
@@ -107,7 +107,7 @@ public extension StytchClient.TOTP {
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` responses.
-    struct RecoverResponseData: Codable, AuthenticateResponseDataType {
+    struct RecoverResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let userId: User.ID
         public let totpId: User.TOTP.ID
         public let user: User
@@ -117,13 +117,13 @@ public extension StytchClient.TOTP {
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` responses.
-    struct RecoveryCodesResponseData: Codable {
+    struct RecoveryCodesResponseData: Codable, Sendable {
         public let userId: User.ID
         public let totps: [Union<User.TOTP, RecoveryCodes>]
     }
 
     /// Additional data unioned to the ``User`` type.
-    struct RecoveryCodes: Codable {
+    struct RecoveryCodes: Codable, Sendable {
         public let recoveryCodes: [String]
     }
 }

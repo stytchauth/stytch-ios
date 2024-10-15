@@ -42,7 +42,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient.OTP {
-    struct SendParameters: Codable {
+    struct SendParameters: Codable, Sendable {
         let organizationId: String
         let memberId: String
         let mfaPhoneNumber: String?
@@ -68,7 +68,7 @@ public extension StytchB2BClient.OTP {
 }
 
 public extension StytchB2BClient.OTP {
-    struct AuthenticateParameters: Codable {
+    struct AuthenticateParameters: Codable, Sendable {
         let sessionDurationMinutes: Minutes
         let organizationId: String
         let memberId: String
