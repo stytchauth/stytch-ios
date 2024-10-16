@@ -11,7 +11,8 @@ final class NetworkingClientInterceptor {
         responses = []
     }
 
-    func handleRequest(request: URLRequest, _: Bool, _: DFPProtectedAuthMode, _: String, _: String) async throws -> (Data, HTTPURLResponse) {
+    // swiftlint:disable:next function_parameter_count
+    func handleRequest(request: URLRequest, _: Bool, _: DFPProtectedAuthMode, _: String, _: String, _: Bool) async throws -> (Data, HTTPURLResponse) {
         if request.url?.absoluteString.contains("/v1/events") != nil {
             responses.append(.success(try Current.jsonEncoder.encode(AuthenticateResponse.mock)).map { $0.surroundInDataJSONContainer() })
         }

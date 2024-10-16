@@ -30,7 +30,8 @@ public extension StytchB2BClient {
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -45,7 +46,8 @@ public extension StytchB2BClient {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -72,7 +74,8 @@ public extension StytchB2BClient {
 
             let response: B2BMFAAuthenticateResponse = try await router.post(
                 to: .resetByEmail(.complete),
-                parameters: intermediateSessionTokenParameters
+                parameters: intermediateSessionTokenParameters,
+                useDFPPA: true
             )
 
             return response
@@ -88,7 +91,8 @@ public extension StytchB2BClient {
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -97,7 +101,7 @@ public extension StytchB2BClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
         public func resetBySession(parameters: ResetBySessionParameters) async throws -> ResetBySessionResponse {
-            try await router.post(to: .resetBySession, parameters: parameters)
+            try await router.post(to: .resetBySession, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
