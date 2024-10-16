@@ -141,7 +141,7 @@ public extension StytchB2BClient.SSO {
 
 public extension StytchB2BClient.SSO {
     /// A dedicated parameters type for SSO `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case token = "ssoToken"
             case sessionDuration = "sessionDurationMinutes"
@@ -167,7 +167,7 @@ public extension StytchB2BClient.SSO {
 public extension StytchB2BClient.SSO {
     typealias GetConnectionsResponse = Response<GetConnectionsResponseData>
 
-    struct GetConnectionsResponseData: Codable {
+    struct GetConnectionsResponseData: Codable, Sendable {
         /// The list of SAML Connections owned by this organization.
         public let samlConnections: [SAML.SAMLConnection]
         /// The list of OIDC Connections owned by this organization.
@@ -178,7 +178,7 @@ public extension StytchB2BClient.SSO {
 public extension StytchB2BClient.SSO {
     typealias DeleteConnectionResponse = Response<DeleteConnectionResponseData>
 
-    struct DeleteConnectionResponseData: Codable {
+    struct DeleteConnectionResponseData: Codable, Sendable {
         /// The connection_id that was deleted as part of the delete request.
         public let connectionId: String
     }

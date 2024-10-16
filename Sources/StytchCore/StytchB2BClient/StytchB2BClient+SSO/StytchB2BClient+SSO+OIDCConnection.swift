@@ -2,7 +2,7 @@ import Foundation
 
 #if !os(watchOS)
 public extension StytchB2BClient.SSO.OIDC {
-    struct OIDCConnection: Codable {
+    struct OIDCConnection: Codable, Sendable {
         let organizationId: String
         let connectionId: String
         let status: String

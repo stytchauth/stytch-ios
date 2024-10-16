@@ -12,19 +12,20 @@ extension PasskeysClient {
                 name: username, // We likely want to enforce this to be an email or phone number (if acct exists, must also be in active session during registration)
                 userID: .init(userId.rawValue.utf8) // WebAuthN backend currently relies on session auth, so isn't a pending user id
             )
+
             let controller = ASAuthorizationController(authorizationRequests: [request])
             let delegate = Delegate()
             controller.delegate = delegate
-            //            controller.presentationContextProvider = parameters.presentationContextProvider // TODO: consider passing this in as optional param
+            // controller.presentationContextProvider = parameters.presentationContextProvider // TODO: consider passing this in as optional param
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
                 delegate.continuation = continuation
                 controller.performRequests()
             }
 
-            guard
-                let credential = credential as? ASAuthorizationPublicKeyCredentialRegistration
-            else { throw StytchSDKError.invalidCredentialType }
+            guard let credential = credential as? ASAuthorizationPublicKeyCredentialRegistration else {
+                throw StytchSDKError.invalidCredentialType
+            }
 
             return credential
         },
@@ -52,9 +53,9 @@ extension PasskeysClient {
                 }
             }
 
-            guard
-                let credential = credential as? ASAuthorizationPublicKeyCredentialAssertion
-            else { throw StytchSDKError.invalidCredentialType }
+            guard let credential = credential as? ASAuthorizationPublicKeyCredentialAssertion else {
+                throw StytchSDKError.invalidCredentialType
+            }
 
             return credential
         }

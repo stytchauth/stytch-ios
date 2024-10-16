@@ -69,7 +69,7 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient.Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         let sessionDurationMinutes: Minutes?
 
         /// - Parameter sessionDurationMinutes: The duration, in minutes, of the requested session.
@@ -91,7 +91,7 @@ public extension StytchB2BClient.Sessions {
     }
 
     /// The dedicated parameters type for session `exchange` calls.
-    struct ExchangeParameters: Codable {
+    struct ExchangeParameters: Codable, Sendable {
         /// The ID of the organization that the new session should belong to.
         public let organizationID: String
         /// The duration, in minutes, for the requested session. Defaults to 5 minutes.

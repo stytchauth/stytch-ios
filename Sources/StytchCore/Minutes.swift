@@ -1,5 +1,5 @@
 /// A dedicated type which represents the minutes unit of time.
-public struct Minutes: Codable, Equatable {
+public struct Minutes: Codable, Equatable, Sendable {
     let rawValue: UInt
 
     public init(rawValue: UInt) {

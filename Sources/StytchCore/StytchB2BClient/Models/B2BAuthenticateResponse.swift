@@ -7,7 +7,7 @@ public typealias B2BAuthenticateResponse = Response<B2BAuthenticateResponseData>
 public typealias B2BAuthenticateResponseType = BasicResponseType & B2BAuthenticateResponseDataType
 
 /// The underlying data for B2B `authenticate` calls.
-public struct B2BAuthenticateResponseData: Codable, B2BAuthenticateResponseDataType {
+public struct B2BAuthenticateResponseData: Codable, Sendable, B2BAuthenticateResponseDataType {
     /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     public let memberSession: MemberSession
     /// The current member object.

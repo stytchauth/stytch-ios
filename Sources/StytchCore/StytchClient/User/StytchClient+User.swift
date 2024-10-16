@@ -71,7 +71,7 @@ public extension StytchClient {
     static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
 
-public struct UserResponseData: Codable {
+public struct UserResponseData: Codable, Sendable {
     /// The current user object.
     public let user: User
 }
@@ -83,7 +83,7 @@ public typealias NestedUserResponse = Response<UserResponseData>
 
 public extension StytchClient.UserManagement {
     /// The authentication factors which are able to be managed via user-management calls.
-    enum AuthenticationFactor {
+    enum AuthenticationFactor: Sendable {
         case biometricRegistration(id: User.BiometricRegistration.ID)
         case cryptoWallet(id: User.CryptoWallet.ID)
         case email(id: User.Email.ID)
@@ -93,7 +93,7 @@ public extension StytchClient.UserManagement {
         case oauth(id: User.Provider.ID)
     }
 
-    struct UpdateParameters: Encodable {
+    struct UpdateParameters: Encodable, Sendable {
         let name: User.Name?
         let untrustedMetadata: JSON?
 

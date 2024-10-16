@@ -2,9 +2,9 @@ import Foundation
 
 // TODO: include optional expiration here
 /// Represents one of two kinds of tokens used to represent a session (see ``SessionToken/Kind-swift.enum``, for more info.) These tokens are used to authenticate the current user/member.
-public struct SessionToken: Equatable {
+public struct SessionToken: Equatable, Sendable {
     /// A type representing the different kinds of session tokens available.
-    public enum Kind: CaseIterable {
+    public enum Kind: CaseIterable, Sendable {
         /// An token which is an opaque string, simply representing the session.
         case opaque
         /// A JWT representing the session, which contains signed and serialized information about the session.
@@ -71,7 +71,7 @@ public struct SessionToken: Equatable {
 }
 
 /// A public interface to require the caller to explicitly pass one of each type of non nil token in order to update a session.
-public struct SessionTokens {
+public struct SessionTokens: Sendable {
     internal let jwt: SessionToken
     internal let opaque: SessionToken
 

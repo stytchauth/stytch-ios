@@ -73,7 +73,7 @@ public extension StytchClient {
 
 public extension StytchClient.Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         let sessionDurationMinutes: Minutes?
 
         /// - Parameter sessionDurationMinutes: The duration, in minutes, of the requested session.
@@ -85,7 +85,7 @@ public extension StytchClient.Sessions {
     }
 
     /// The dedicated parameters type for session `revoke` calls.
-    struct RevokeParameters {
+    struct RevokeParameters: Sendable {
         let forceClear: Bool
 
         /// - Parameter forceClear: In the event of an error received from the network, setting this value to true will ensure the local session state is cleared.

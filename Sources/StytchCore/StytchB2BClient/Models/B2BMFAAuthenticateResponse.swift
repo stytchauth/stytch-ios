@@ -7,7 +7,7 @@ public typealias B2BMFAAuthenticateResponse = Response<B2BMFAAuthenticateRespons
 public typealias B2BMFAAuthenticateResponseType = BasicResponseType & B2BMFAAuthenticateResponseDataType
 
 /// The underlying data for B2B MFA `authenticate` calls.
-public struct B2BMFAAuthenticateResponseData: Codable, B2BMFAAuthenticateResponseDataType {
+public struct B2BMFAAuthenticateResponseData: Codable, Sendable, B2BMFAAuthenticateResponseDataType {
     /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     public let memberSession: MemberSession?
     /// The current member's ID.
@@ -56,7 +56,7 @@ public protocol DiscoveryIntermediateSessionTokenDataType {
     var intermediateSessionToken: String { get }
 }
 
-public struct MFARequired: Codable {
+public struct MFARequired: Codable, Sendable {
     /// Information about the Member's options for completing MFA.
     public let memberOptions: MemberOptions?
     /// If null, indicates that no secondary authentication has been initiated.
@@ -65,7 +65,7 @@ public struct MFARequired: Codable {
     public let secondaryAuthInitiated: String?
 }
 
-public struct MemberOptions: Codable {
+public struct MemberOptions: Codable, Sendable {
     /// The Member's MFA phone number.
     public let mfaPhoneNumber: String
     /// The Member's MFA TOTP registration ID.

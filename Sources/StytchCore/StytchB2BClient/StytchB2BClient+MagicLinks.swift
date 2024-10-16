@@ -276,7 +276,7 @@ public extension StytchB2BClient.MagicLinks {
     typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
 
     /// The underlying data for the DiscoveryAuthenticateResponse type.
-    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable {
+    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable, Sendable {
         /// The discovered organizations.
         public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
         /// The intermediate session token.

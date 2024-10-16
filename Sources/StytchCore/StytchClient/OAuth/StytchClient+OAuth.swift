@@ -112,7 +112,7 @@ public extension StytchClient.OAuth {
 
 public extension StytchClient.OAuth {
     /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey { case token, sessionDuration = "sessionDurationMinutes" }
 
         let token: String
@@ -135,7 +135,7 @@ public extension StytchClient.OAuth {
     /// The concrete response type for OAuth `authenticate` calls.
     typealias OAuthAuthenticateResponse = Response<OAuthAuthenticateResponseData>
 
-    struct OAuthAuthenticateResponseData: Codable, AuthenticateResponseDataType {
+    struct OAuthAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         /// The current user object.
         public let user: User
         /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.

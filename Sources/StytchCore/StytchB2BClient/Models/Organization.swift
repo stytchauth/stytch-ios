@@ -1,7 +1,7 @@
 import Foundation
 
 /// A data type representing an organization of which a member may belong to.
-public struct Organization: Codable {
+public struct Organization: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {

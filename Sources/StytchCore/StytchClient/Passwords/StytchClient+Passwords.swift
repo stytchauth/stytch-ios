@@ -116,7 +116,7 @@ public extension StytchClient.Passwords {
     typealias CreateResponse = Response<CreateResponseData>
 
     /// The underlying data for passwords `create` calls.
-    struct CreateResponseData: Decodable, AuthenticateResponseDataType {
+    struct CreateResponseData: Decodable, Sendable, AuthenticateResponseDataType {
         public let emailId: User.Email.ID
         public let userId: User.ID
         public let user: User
@@ -126,7 +126,7 @@ public extension StytchClient.Passwords {
     }
 
     /// The dedicated parameters type for password `create` and `authenticate` calls.
-    struct PasswordParameters: Encodable {
+    struct PasswordParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "sessionDurationMinutes" }
 
         let email: String
@@ -147,7 +147,7 @@ public extension StytchClient.Passwords {
 
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
-    struct ResetByEmailStartParameters: Encodable, Equatable {
+    struct ResetByEmailStartParameters: Encodable, Equatable, Sendable {
         public static func == (
             lhs: ResetByEmailStartParameters,
             rhs: ResetByEmailStartParameters
@@ -206,7 +206,7 @@ public extension StytchClient.Passwords {
     }
 
     /// The dedicated parameters type for passwords `resetByEmail` calls.
-    struct ResetByEmailParameters: Encodable {
+    struct ResetByEmailParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey { case token, password, sessionDuration = "sessionDurationMinutes" }
 
         public let token: String
@@ -227,7 +227,7 @@ public extension StytchClient.Passwords {
 
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetBySession` calls
-    struct ResetBySessionParameters: Encodable {
+    struct ResetBySessionParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey { case password, sessionDuration = "sessionDurationMinutes" }
 
         public let password: String
@@ -245,7 +245,7 @@ public extension StytchClient.Passwords {
 
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
-    struct ResetByExistingPasswordParameters: Encodable {
+    struct ResetByExistingPasswordParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case emailAddress
             case existingPassword
@@ -282,7 +282,7 @@ public extension StytchClient.Passwords {
     typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
 
     /// The dedicated parameters type for passwords `strengthCheck` calls.
-    struct StrengthCheckParameters: Encodable {
+    struct StrengthCheckParameters: Encodable, Sendable {
         let email: String?
         let password: String
 
@@ -296,7 +296,7 @@ public extension StytchClient.Passwords {
     }
 
     /// The underlying data for passwords `strengthCheck` calls.
-    struct StrengthCheckResponseData: Codable {
+    struct StrengthCheckResponseData: Codable, Sendable {
         public let validPassword: Bool
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
@@ -304,14 +304,14 @@ public extension StytchClient.Passwords {
         public let feedback: Feedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
-        public struct Feedback: Codable {
+        public struct Feedback: Codable, Sendable {
             public let suggestions: [String]
             public let warning: String
             public let ludsRequirements: LudsRequirement?
         }
 
         /// An explanation of how a given password passes or fails a LUDS check
-        public struct LudsRequirement: Codable {
+        public struct LudsRequirement: Codable, Sendable {
             public let hasLowerCase: Bool
             public let hasUpperCase: Bool
             public let hasDigit: Bool

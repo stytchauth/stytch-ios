@@ -1,6 +1,6 @@
 /// A data class representing the most recent PKCE code pair generated on this device. You may find this useful if you
 /// use a hybrid (frontend and backend) authentication flow, where you need to complete a PKCE flow on the backend
-public struct PKCECodePair {
+public struct PKCECodePair: Sendable {
     let codeChallenge: String
     let codeVerifier: String
     let method: String

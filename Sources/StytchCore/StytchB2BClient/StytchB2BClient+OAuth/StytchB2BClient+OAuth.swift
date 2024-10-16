@@ -53,7 +53,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient.OAuth {
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         let oauthToken: String
         let sessionDurationMinutes: Minutes
         let locale: StytchLocale?
@@ -84,7 +84,7 @@ public extension StytchB2BClient.OAuth {
     /// The concrete response type for B2B OAuth `authenticate` calls.
     typealias OAuthAuthenticateResponse = Response<OAuthAuthenticateResponseData>
 
-    struct OAuthAuthenticateResponseData: Codable, B2BMFAAuthenticateResponseDataType {
+    struct OAuthAuthenticateResponseData: Codable, Sendable, B2BMFAAuthenticateResponseDataType {
         /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
         public let memberSession: MemberSession?
         /// The current member's ID.

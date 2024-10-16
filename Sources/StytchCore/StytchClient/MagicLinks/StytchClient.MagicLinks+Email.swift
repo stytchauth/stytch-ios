@@ -46,7 +46,7 @@ public extension StytchClient.MagicLinks {
 
 public extension StytchClient.MagicLinks.Email {
     /// The dedicated parameters type for ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5`` and ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1`` calls.
-    struct Parameters: Encodable, Equatable {
+    struct Parameters: Encodable, Equatable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case email
             case loginMagicLinkUrl

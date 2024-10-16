@@ -1,6 +1,6 @@
 import Foundation
 
-public struct OAuthProviderValues: Codable {
+public struct OAuthProviderValues: Codable, Sendable {
     /// The access_token that you may use to access the User's data in the provider's API.
     public let accessToken: String
     /// The id_token returned by the OAuth provider. ID Tokens are JWTs that contain structured information about a user. The exact content of each ID Token varies from provider to provider.

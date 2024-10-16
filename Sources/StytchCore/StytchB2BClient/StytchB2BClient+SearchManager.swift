@@ -28,7 +28,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient.SearchManager {
-    struct SearchMemberParameters: Codable {
+    struct SearchMemberParameters: Codable, Sendable {
         let emailAddress: String
         let organizationId: String
 
@@ -45,12 +45,12 @@ public extension StytchB2BClient.SearchManager {
 public extension StytchB2BClient.SearchManager {
     typealias SearchMemberResponse = Response<SearchMemberResponseData>
 
-    struct SearchMemberResponseData: Codable {
+    struct SearchMemberResponseData: Codable, Sendable {
         /// The matching member.
         public let member: MemberSearchResponse
     }
 
-    struct MemberSearchResponse: Codable {
+    struct MemberSearchResponse: Codable, Sendable {
         public let status: String
         public let name: String
         public let memberPasswordId: String
@@ -58,7 +58,7 @@ public extension StytchB2BClient.SearchManager {
 }
 
 public extension StytchB2BClient.SearchManager {
-    struct SearchOrganizationParameters: Codable {
+    struct SearchOrganizationParameters: Codable, Sendable {
         let organizationSlug: String
 
         /// - Parameter organizationSlug: The URL slug of the Organization to get.
@@ -71,12 +71,12 @@ public extension StytchB2BClient.SearchManager {
 public extension StytchB2BClient.SearchManager {
     typealias SearchOrganizationResponse = Response<SearchOrganizationResponseData>
 
-    struct SearchOrganizationResponseData: Codable {
+    struct SearchOrganizationResponseData: Codable, Sendable {
         /// The matching organization.
         public let organization: OrganizationSearchResponse
     }
 
-    struct OrganizationSearchResponse: Codable {
+    struct OrganizationSearchResponse: Codable, Sendable {
         /// Globally unique UUID that identifies an organization in the Stytch API.
         public let organizationId: String
         /// The name of the organization.

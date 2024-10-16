@@ -42,7 +42,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient.TOTP {
-    struct CreateParameters: Codable {
+    struct CreateParameters: Codable, Sendable {
         let organizationId: String
         let memberId: String
         let expirationMinutes: Minutes
@@ -64,7 +64,7 @@ public extension StytchB2BClient.TOTP {
 public extension StytchB2BClient.TOTP {
     typealias CreateResponse = Response<CreateResponseData>
 
-    struct CreateResponseData: Codable {
+    struct CreateResponseData: Codable, Sendable {
         /// Globally unique UUID that identifies a specific TOTP registration in the Stytch API.
         public let totpRegistrationId: String
 
@@ -80,7 +80,7 @@ public extension StytchB2BClient.TOTP {
 }
 
 public extension StytchB2BClient.TOTP {
-    struct AuthenticateParameters: Codable {
+    struct AuthenticateParameters: Codable, Sendable {
         let sessionDurationMinutes: Minutes
         let organizationId: String
         let memberId: String
