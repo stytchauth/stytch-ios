@@ -127,7 +127,6 @@ public class StytchDeeplinkError: StytchSDKError {}
 
 public extension StytchSDKError {
     static let uiEmlAndOtpInvalid = StytchUIInvalidConfiguration(message: "You cannot have both Email Magic Links and Email OTP configured at the same time.")
-    static let uiNoAuthFactor = StytchUIInvalidConfiguration(message: "You must have at least one primary authentication factor (Passwords, EML, or Email OTP) enabled.")
     static let consumerSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchClient")
     static let B2BSDKNotConfigured = StytchSDKNotConfiguredError(clientName: "StytchB2BClient")
     static let missingPKCE = StytchSDKError(

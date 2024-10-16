@@ -17,13 +17,6 @@ final class StytchUITests: XCTestCase {
         app.terminate()
     }
 
-    func testDefaultUIPresentsAlert() throws {
-        app.launchEnvironment["config"] = "default"
-        app.launch()
-
-        XCTAssert(noAuthError.exists)
-    }
-
     func testInvalidEmailUIPresentsAlert() throws {
         app.launchEnvironment["config"] = "invalidemail"
         app.launch()
