@@ -23,7 +23,7 @@ public extension StytchClient {
         ///
         /// Existing passwordless users who wish to create a password need to go through the reset password flow.
         public func create(parameters: PasswordParameters) async throws -> CreateResponse {
-            try await router.post(to: .create, parameters: parameters)
+            try await router.post(to: .create, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -35,7 +35,7 @@ public extension StytchClient {
         /// 2. The user used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account takeover attack.
         public func authenticate(parameters: PasswordParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -49,7 +49,8 @@ public extension StytchClient {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -68,7 +69,8 @@ public extension StytchClient {
 
             let response: AuthenticateResponse = try await router.post(
                 to: .resetByEmail(.complete),
-                parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
+                parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters),
+                useDFPPA: true
             )
 
             return response
@@ -93,7 +95,7 @@ public extension StytchClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetBySession(parameters: ResetBySessionParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .resetBySession, parameters: parameters)
+            try await router.post(to: .resetBySession, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -101,7 +103,7 @@ public extension StytchClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the user is authenticated.
         public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .resetByExistingPassword, parameters: parameters)
+            try await router.post(to: .resetByExistingPassword, parameters: parameters, useDFPPA: true)
         }
     }
 }

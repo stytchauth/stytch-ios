@@ -24,7 +24,8 @@ public extension StytchClient.MagicLinks {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -35,7 +36,8 @@ public extension StytchClient.MagicLinks {
 
             return try await router.post(
                 to: activeSessionExists ? .sendSecondary : .sendPrimary,
-                parameters: CodeChallengedParameters(codeChallenge: pkcePair.codeChallenge, codeChallengeMethod: pkcePair.method, wrapped: parameters)
+                parameters: CodeChallengedParameters(codeChallenge: pkcePair.codeChallenge, codeChallengeMethod: pkcePair.method, wrapped: parameters),
+                useDFPPA: true
             )
         }
     }

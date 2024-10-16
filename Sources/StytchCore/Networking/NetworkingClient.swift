@@ -1,24 +1,23 @@
 import Foundation
 
 final class NetworkingClient {
+    typealias NetworkingClientRequestBlock = (URLRequest, Bool, DFPProtectedAuthMode, String, String, Bool) async throws -> (Data, HTTPURLResponse)
+
     var headerProvider: (() -> [String: String])?
-
     var dfpEnabled: Bool = false
-
     var dfpAuthMode = DFPProtectedAuthMode.observation
-
     var publicToken: String = ""
-
     var dfppaDomain: String = ""
 
-    private let handleRequest: (URLRequest, Bool, DFPProtectedAuthMode, String, String) async throws -> (Data, HTTPURLResponse)
+    private let handleRequest: NetworkingClientRequestBlock
 
-    init(handleRequest: @escaping (URLRequest, Bool, DFPProtectedAuthMode, String, String) async throws -> (Data, HTTPURLResponse)) {
+    init(handleRequest: @escaping NetworkingClientRequestBlock) {
         self.handleRequest = handleRequest
     }
 
-    func performRequest(_ method: Method, url: URL) async throws -> (Data, HTTPURLResponse) {
-        try await handleRequest(urlRequest(url: url, method: method), dfpEnabled, dfpAuthMode, publicToken, dfppaDomain)
+    func performRequest(_ method: Method, url: URL, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
+        let request = urlRequest(url: url, method: method)
+        return try await handleRequest(request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain, useDFPPA)
     }
 
     private func urlRequest(url: URL, method: Method) -> URLRequest {

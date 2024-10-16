@@ -54,14 +54,15 @@ final class NetworkingClientTestCase: XCTestCase {
         onClientCreate: ((NetworkingClient) -> Void)? = nil,
         onPerformRequest: @escaping (_ request: URLRequest, _ line: UInt) -> Void
     ) async throws {
-        let networkingClient: NetworkingClient = .init { request, _, _, _, _ in
+        let networkingClient: NetworkingClient = .init { request, _, _, _, _, _ in
             onPerformRequest(request, line)
             return (.init(), .init())
         }
         onClientCreate?(networkingClient)
         _ = try await networkingClient.performRequest(
             method,
-            url: try url ?? XCTUnwrap(URL(string: "https://www.stytch.com"))
+            url: try url ?? XCTUnwrap(URL(string: "https://www.stytch.com")),
+            useDFPPA: false
         )
     }
 }

@@ -30,7 +30,8 @@ public extension StytchB2BClient.OAuth {
             do {
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
+                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters),
+                    useDFPPA: true
                 ) as DiscoveryAuthenticateResponse
                 try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
                 return result

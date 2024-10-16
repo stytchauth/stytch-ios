@@ -14,7 +14,11 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
         public func loginOrCreate(parameters: Parameters) async throws -> OTPResponse {
-            try await router.post(to: .loginOrCreate(parameters.deliveryMethod), parameters: parameters)
+            try await router.post(
+                to: .loginOrCreate(parameters.deliveryMethod),
+                parameters: parameters,
+                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -22,14 +26,15 @@ public extension StytchClient {
         public func send(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(
                 to: activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
-                parameters: parameters
+                parameters: parameters,
+                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
             )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
     }
 }
@@ -132,6 +137,17 @@ public extension StytchClient.OTP {
                 return "whatsapp"
             case .email:
                 return "email"
+            }
+        }
+
+        var shouldUseDFPPA: Bool {
+            switch self {
+            case .sms(phoneNumber: _, enableAutofill: _):
+                return true
+            case .whatsapp(phoneNumber: _):
+                return true
+            case .email(email: _, loginTemplateId: _, signupTemplateId: _):
+                return false
             }
         }
     }

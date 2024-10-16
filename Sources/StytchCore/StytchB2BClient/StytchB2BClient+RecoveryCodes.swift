@@ -22,13 +22,13 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Rotate the recovery codes for an authenticated member
         public func rotate() async throws -> RecoveryCodesResponse {
-            try await router.post(to: .rotate)
+            try await router.post(to: .rotate, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants
         /// Consume a recovery code for a member
         public func recover(parameters: RecoveryCodesRecoverParameters) async throws -> RecoveryCodesRecoverResponse {
-            try await router.post(to: .recover, parameters: parameters)
+            try await router.post(to: .recover, parameters: parameters, useDFPPA: true)
         }
     }
 }
