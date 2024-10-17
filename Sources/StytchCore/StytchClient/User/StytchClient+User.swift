@@ -1,4 +1,5 @@
 import Combine
+@preconcurrency import SwiftyJSON
 
 public extension StytchClient {
     /// The SDK allows you to manage the current user's information, such as fetching the user, viewing the most recent cached version of the user, or deleting existing authentication factors associated with this user.

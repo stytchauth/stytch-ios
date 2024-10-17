@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A data type representing an organization of which a member may belong to.
 public struct Organization: Codable, Sendable {

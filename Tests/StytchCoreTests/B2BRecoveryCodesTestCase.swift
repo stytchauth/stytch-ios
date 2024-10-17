@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -62,10 +63,10 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/recovery_codes/recover",
             method: .post([
-                "session_duration_minutes": JSON.number(5),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
-                "recovery_code": JSON.string(recoveryCode),
+                "session_duration_minutes": JSON(integerLiteral: 5),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
+                "recovery_code": JSON(stringLiteral: recoveryCode),
             ])
         )
     }

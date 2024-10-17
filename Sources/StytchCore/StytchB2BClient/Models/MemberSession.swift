@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A type defining a member's session; including information about its validity, expiry, factors associated with this session, and more.
 public struct MemberSession: Codable, Sendable {

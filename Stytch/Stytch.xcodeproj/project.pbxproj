@@ -536,6 +536,7 @@
 			packageReferences = (
 				77AC9C5E2AA0FCCD004059CF /* XCRemoteSwiftPackageReference "recaptcha-enterprise-mobile-sdk" */,
 				74234D4F2C21EB6D0001DA69 /* XCRemoteSwiftPackageReference "SwiftOTP" */,
+				749E98562CC0AAA8002F21AC /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 			);
 			productRefGroup = 229B82192809EA3F007BC3F1 /* Products */;
 			projectDirPath = "";
@@ -1260,6 +1261,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 3.0.2;
+			};
+		};
+		749E98562CC0AAA8002F21AC /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
 			};
 		};
 		77AC9C5E2AA0FCCD004059CF /* XCRemoteSwiftPackageReference "recaptcha-enterprise-mobile-sdk" */ = {

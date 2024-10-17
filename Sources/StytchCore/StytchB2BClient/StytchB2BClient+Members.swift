@@ -1,4 +1,5 @@
 import Combine
+@preconcurrency import SwiftyJSON
 
 public extension StytchB2BClient {
     /// The interface for interacting with member products.

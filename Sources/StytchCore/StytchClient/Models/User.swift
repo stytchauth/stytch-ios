@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A type defining a user; including information about their name, status, the auth factors associated with them, and more.
 public struct User: Sendable {

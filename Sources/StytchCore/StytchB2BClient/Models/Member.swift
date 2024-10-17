@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A type defining an organization member; including information about their name, status, the auth factors associated with them, and more.
 public struct Member: Codable, Sendable {

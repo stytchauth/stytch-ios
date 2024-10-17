@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -21,7 +22,7 @@ final class B2BOAuthTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/oauth/authenticate",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "oauth_token": "i-am-token",

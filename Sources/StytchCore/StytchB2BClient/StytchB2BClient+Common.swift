@@ -1,5 +1,5 @@
 import Foundation
-
+@preconcurrency import SwiftyJSON
 // swiftlint:disable identifier_name
 
 public extension StytchB2BClient {
