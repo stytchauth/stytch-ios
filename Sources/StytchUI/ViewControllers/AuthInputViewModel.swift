@@ -1,5 +1,6 @@
 import Foundation
 import StytchCore
+@preconcurrency import SwiftyJSON
 
 protocol AuthInputViewModelProtocol {
     func getUserIntent(email: String) async throws -> PasswordState.Intent?
@@ -47,7 +48,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
     }
 
     func getUserIntent(email: String) async throws -> PasswordState.Intent? {
-        let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON.object(["email": .string(email)]))
+        let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON(dictionaryLiteral: ("email", email)))
         return userSearch.userType.passwordIntent
     }
 

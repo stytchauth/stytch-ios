@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 public extension StytchB2BClient.Organizations {
     struct SearchParameters: Codable, Sendable {
@@ -48,7 +49,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         ///   - searchOperands: An array of SearchQueryOperand(s) created via 'SearchParameters.searchQueryOperand(...)'
         public init(searchOperator: SearchOperator, searchOperands: [any SearchQueryOperand]) {
             self.searchOperator = searchOperator
-            searchOperandsJSON = JSON.array(searchOperands.map(\.json))
+            searchOperandsJSON = JSON(arrayLiteral: searchOperands.map(\.json))
         }
     }
 }
@@ -83,7 +84,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
             for string in filterValue {
                 filterValueJSON.append(JSON(stringLiteral: string))
             }
-            return JSON.array(filterValueJSON)
+            return JSON(arrayLiteral: filterValueJSON)
         }
 
         init(filterName: String, filterValue: [String]) {
@@ -97,7 +98,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         let filterValue: String
 
         public var filterValueJSON: JSON {
-            JSON.string(filterValue)
+            JSON(stringLiteral: filterValue)
         }
 
         init(filterName: String, filterValue: String) {
@@ -111,7 +112,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         let filterValue: Bool
 
         public var filterValueJSON: JSON {
-            JSON.boolean(filterValue)
+            JSON(booleanLiteral: filterValue)
         }
 
         init(filterName: String, filterValue: Bool) {

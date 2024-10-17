@@ -1,8 +1,9 @@
 import Combine
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
-// swiftlint:disable multiline_function_chains
+// swiftlint:disable multiline_function_chains vertical_parameter_alignment_on_call
 
 final class B2BOrganizationsTestCase: BaseTestCase {
     var subscriptions: Set<AnyCancellable> = []
@@ -78,9 +79,11 @@ final class B2BOrganizationsTestCase: BaseTestCase {
             )
         }
 
+        let filterName = StytchB2BClient.Organizations.SearchParameters.SearchQueryOperandFilterNames.memberIsBreakglass.rawValue
+        let searchOperand = StytchB2BClient.Organizations.SearchParameters.SearchQueryOperandBool(filterName: filterName, filterValue: true)
         let query = StytchB2BClient.Organizations.SearchParameters.SearchQuery(
             searchOperator: .AND,
-            searchOperands: []
+            searchOperands: [searchOperand]
         )
 
         let parameters = StytchB2BClient.Organizations.SearchParameters(
@@ -94,12 +97,9 @@ final class B2BOrganizationsTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/me/members/search",
             method: .post([
-                "query": StytchCore.JSON.object(
-                    [
-                        "operator": StytchCore.JSON.string("AND"),
-                        "operands": StytchCore.JSON.array([]),
-                    ]
-                ),
+                "query": JSON(dictionaryLiteral:
+                    ("operator", JSON(stringLiteral: "AND").rawValue),
+                    ("operands", JSON(arrayLiteral: [searchOperand.json]).rawValue)),
             ])
         )
     }

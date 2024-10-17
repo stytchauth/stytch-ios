@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -24,7 +25,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/organizations",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
             ])
         )
     }
@@ -41,7 +42,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/intermediate_sessions/exchange",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "organization_id": "org_123",
                 "session_duration_minutes": 5,
             ])
@@ -73,7 +74,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/discovery/organizations/create",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "organization_name": "hello",
                 "organization_slug": "goodbye",

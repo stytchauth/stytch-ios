@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -27,11 +28,11 @@ final class B2BOTPTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/send",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
-                "mfa_phone_number": JSON.string(mfaPhoneNumber),
-                "locale": JSON.string(locale.rawValue),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
+                "mfa_phone_number": JSON(stringLiteral: mfaPhoneNumber),
+                "locale": JSON(stringLiteral: locale.rawValue),
                 "enable_autofill": false,
             ])
         )
@@ -63,11 +64,11 @@ final class B2BOTPTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/send",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
-                "mfa_phone_number": JSON.string(mfaPhoneNumber),
-                "locale": JSON.string(locale.rawValue),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
+                "mfa_phone_number": JSON(stringLiteral: mfaPhoneNumber),
+                "locale": JSON(stringLiteral: locale.rawValue),
                 "enable_autofill": true,
             ])
         )
@@ -99,11 +100,11 @@ final class B2BOTPTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/otps/sms/authenticate",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
-                "session_duration_minutes": JSON.number(5),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
-                "code": JSON.string(code),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "session_duration_minutes": JSON(integerLiteral: 5),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
+                "code": JSON(stringLiteral: code),
             ])
         )
     }

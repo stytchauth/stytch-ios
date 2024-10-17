@@ -1,3 +1,5 @@
+@preconcurrency import SwiftyJSON
+
 public extension StytchClient {
     /// Time-based One-time Passcodes (TOTPs) are one-time passcodes that are generated based on a shared secret and the current time. TOTPs are also often referred to as Authenticator Apps and are a common form of secondary authentication. Creating a Stytch instance of a TOTP for a User creates a shared secret. This secret is shared by Stytch with the end user's authenticator application of choice (e.g. Google Authenticator). The authenticator app can then generate TOTPs that are valid for a specific amount of time (generally 30 seconds). The end user inputs the TOTP and the developer can use the authenticate method to verify that the TOTP is valid. To call these methods, TOTPs must be enabled in the [SDK Configuration page](https://stytch.com/dashboard/sdk-configuration) of the Stytch dashboard.
     struct TOTP {

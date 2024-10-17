@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -19,8 +20,8 @@ final class B2BSearchManagerTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/search",
             method: .post([
-                "email_address": StytchCore.JSON.string(emailAddress),
-                "organization_id": StytchCore.JSON.string(organizationId),
+                "email_address": JSON(stringLiteral: emailAddress),
+                "organization_id": JSON(stringLiteral: organizationId),
             ])
         )
     }
@@ -41,7 +42,7 @@ final class B2BSearchManagerTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/search",
             method: .post([
-                "organization_slug": StytchCore.JSON.string(organizationSlug),
+                "organization_slug": JSON(stringLiteral: organizationSlug),
             ])
         )
     }

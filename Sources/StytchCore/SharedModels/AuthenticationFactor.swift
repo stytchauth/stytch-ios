@@ -1,11 +1,11 @@
 import Foundation
-
+@preconcurrency import SwiftyJSON
 /**
  A type which describes an factor used to authenticate a session.
  E.g. An email which was used to log in, or a phone which was used
  via SMS as an OTP second factor.
  */
-public struct AuthenticationFactor: Hashable, Sendable {
+public struct AuthenticationFactor: Sendable {
     private enum CodingKeys: String, CodingKey {
         case lastAuthenticatedAt
         case kind = "type"
@@ -43,15 +43,15 @@ extension AuthenticationFactor: Codable {
 public extension AuthenticationFactor {
     /// If the factor is an email factor this will be the associated email address value, else nil
     var emailAddress: String? {
-        rawData["email_factor"]["email_address"]?.stringValue
+        rawData["email_factor"]["email_address"].stringValue
     }
 
     /// If the factor is a phone factor (SMS/WhatsApp delivery method) this will be the associated phone number value, else nil
     var phoneNumber: String? {
-        rawData["phone_factor"]["phone_number"]?.stringValue
+        rawData["phone_factor"]["phone_number"].stringValue
     }
 
     var deliveryMethod: String? {
-        rawData["delivery_method"]?.stringValue
+        rawData["delivery_method"].stringValue
     }
 }

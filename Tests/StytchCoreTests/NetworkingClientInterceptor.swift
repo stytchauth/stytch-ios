@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 

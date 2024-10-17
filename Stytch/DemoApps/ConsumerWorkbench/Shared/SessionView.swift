@@ -18,14 +18,30 @@ struct SessionView: View {
             Text("Expires at: " + session.expiresAt.formatted(date: .abbreviated, time: .shortened))
             Text("User agent: " + (session.attributes.userAgent.presence ?? "N/A"))
             Text("Factors:").bold()
-            ForEach(session.authenticationFactors, id: \.self) { factor in
-                Text("Factor delivery method: \(factor.deliveryMethod ?? "N/A")")
-                Text("Factor type: \(factor.kind)")
-                Text("Factor contact info: \(factor.emailAddress ?? factor.phoneNumber ?? "N/A")")
-                Text("Last authenticated: ") + Text(factor.lastAuthenticatedAt, format: .dateTime)
-            }
-            .padding([.leading], 8)
+            Text(session.factorsDescription)
+                .padding([.leading], 8)
         }
         .navigationTitle("Hi, \(sessionUser.user.name.firstName.presence ?? "pal")!")
+    }
+}
+
+extension AuthenticationFactor {
+    var description: String {
+        """
+        Factor delivery method: \(deliveryMethod ?? "N/A")
+        Factor type: \(kind)
+        Factor contact info: \(emailAddress ?? phoneNumber ?? "N/A")
+        Last authenticated: ") + Text(factor.lastAuthenticatedAt, format: .dateTime)
+        """
+    }
+}
+
+extension Session {
+    var factorsDescription: String {
+        var returnString = ""
+        for factor in authenticationFactors {
+            returnString = returnString + factor.description + "\n"
+        }
+        return returnString
     }
 }

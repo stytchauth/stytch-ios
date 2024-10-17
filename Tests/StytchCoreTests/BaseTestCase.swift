@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -109,7 +110,7 @@ extension Session {
                 .init(
                     rawData: [
                         "type": "magic_link",
-                        "last_authenticated_at": .string(ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
+                        "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
                     ],
                     kind: "magic_link",
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
@@ -130,7 +131,7 @@ extension Session {
                 .init(
                     rawData: [
                         "type": "magic_link",
-                        "last_authenticated_at": .string(ISO8601DateFormatter().string(from: Date.distantPast)),
+                        "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: Date.distantPast)),
                     ],
                     kind: "magic_link",
                     lastAuthenticatedAt: Date.distantPast
