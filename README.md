@@ -23,8 +23,12 @@ Stytch uses the [Swift Package Manager](https://www.swift.org/package-manager/) 
 1. Open Xcode
 2. File > Add Package Dependencies
 3. Enter https://github.com/stytchauth/stytch-ios
-4. Choose Package Requirements (Up to next minor, up to next major, etc)
+4. Choose Package Requirements. 
 5. In your Build Settings, under `Other Linker Flags`, add `-ObjC`
+
+We highly recommend that you use "Up To Next Major Version" and never point to `main` or any other branch directly. Knowing what version of the SDK you are using will make it easier for us to support you!
+
+![package-installation](tutorials/assets/package-installation.png)
 
 ## Configuration
 
