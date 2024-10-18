@@ -11,7 +11,7 @@
 			<string>com.stytch.StytchUIDemo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>iossdkstytchsampleapp</string>
+				<string>stytch-demo</string>
 			</array>
 		</dict>
 	</array>
