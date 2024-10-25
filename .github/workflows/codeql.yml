@@ -45,7 +45,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          queries: security
+          queries: security-extended
           packs: codeql/swift-queries,codeql/ruby-queries
 
       - name: Install Swift dependencies
