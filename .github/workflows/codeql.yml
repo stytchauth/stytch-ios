@@ -16,7 +16,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '21 15 * *1'
+    - cron: '21 15 * * 1'
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }}-${{ matrix.swift-scheme }})
