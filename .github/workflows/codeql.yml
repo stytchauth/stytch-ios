@@ -46,7 +46,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           queries: security
-          packs: swift-queries,codeql/ruby-queries
+          packs: codeql/swift-queries,codeql/ruby-queries
 
       - name: Install Swift dependencies
         if: matrix.language == 'swift'
