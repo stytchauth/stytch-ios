@@ -45,7 +45,8 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          queries: default
+          queries: security
+          packs: swift-queries,codeql/ruby-queries
 
       - name: Install Swift dependencies
         if: matrix.language == 'swift'
@@ -83,20 +84,6 @@ jobs:
             GCC_OPTIMIZATION_LEVEL=0 \
             SWIFT_OPTIMIZATION_LEVEL="-Onone" \
             | xcpretty
-          
-          # Build for macOS (uncomment if needed)
-          # xcodebuild clean build \
-          #   -project Stytch.xcodeproj \
-          #   -scheme ${{ matrix.swift-scheme }} \
-          #   -sdk macosx \
-          #   -configuration Debug \
-          #   ONLY_ACTIVE_ARCH=YES \
-          #   CODE_SIGNING_REQUIRED=NO \
-          #   CODE_SIGN_IDENTITY="" \
-          #   CODE_SIGNING_ALLOWED=NO \
-          #   GCC_OPTIMIZATION_LEVEL=0 \
-          #   SWIFT_OPTIMIZATION_LEVEL="-Onone" \
-          #   | xcpretty
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
