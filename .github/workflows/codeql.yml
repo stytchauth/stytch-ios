@@ -10,15 +10,13 @@
 # supported CodeQL languages.
 #
 name: "CodeQL Advanced"
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '21 15 * * 1'
-
+    - cron: '21 15 * *1'
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }}-${{ matrix.swift-scheme }})
@@ -42,39 +40,72 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: default
+
+      - name: Set up Xcode
+        if: matrix.language == 'swift'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install Swift dependencies
+        if: matrix.language == 'swift'
+        run: |
+          # Initialize package dependencies
+          xcodebuild -resolvePackageDependencies
+          
+          # If using CocoaPods (uncomment if needed)
+          # pod install || true
+          
+          # If using Carthage (uncomment if needed)
+          # brew install carthage
+          # carthage bootstrap --platform iOS --no-use-binaries --cache-builds || true
+
       - name: Manual build for Swift
         if: matrix.language == 'swift'
         run: |
-          # Install dependencies (if using CocoaPods or Carthage)
-          # pod install
-          # carthage bootstrap
-
+          # Clean derived data
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+          
           # Build for iOS
           xcodebuild clean build \
             -project Stytch.xcodeproj \
             -scheme ${{ matrix.swift-scheme }} \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -configuration Debug \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY=""
-
-          # If you have a macOS target, uncomment and adjust the following:
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            GCC_OPTIMIZATION_LEVEL=0 \
+            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
+            | xcpretty
+          
+          # Build for macOS (uncomment if needed)
           # xcodebuild clean build \
-          #   -project Stytch.xcodeproj \
-          #   -scheme ${{ matrix.swift-scheme }} \
-          #   -sdk macosx \
-          #   CODE_SIGNING_REQUIRED=NO \
-          #   CODE_SIGN_IDENTITY=""
+          #   -project Stytch.xcodeproj \
+          #   -scheme ${{ matrix.swift-scheme }} \
+          #   -sdk macosx \
+          #   -configuration Debug \
+          #   ONLY_ACTIVE_ARCH=YES \
+          #   CODE_SIGNING_REQUIRED=NO \
+          #   CODE_SIGN_IDENTITY="" \
+          #   CODE_SIGNING_ALLOWED=NO \
+          #   GCC_OPTIMIZATION_LEVEL=0 \
+          #   SWIFT_OPTIMIZATION_LEVEL="-Onone" \
+          #   | xcpretty
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
+
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v3
         with:
