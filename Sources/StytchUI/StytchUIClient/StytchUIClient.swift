@@ -45,7 +45,8 @@ public enum StytchUIClient {
         let rootController = AuthRootViewController(config: Self.config)
         currentController = rootController
         setUpSessionChangeListener()
-        controller.present(rootController, animated: true)
+        let navigationController = UINavigationController(rootViewController: rootController)
+        controller.present(navigationController, animated: true)
     }
 
     /// Use this function to handle incoming deeplinks for password resets.
