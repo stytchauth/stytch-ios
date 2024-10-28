@@ -5,9 +5,7 @@ import SwiftUI
 
 struct ContentView: View {
     var config: StytchUIClient.Configuration
-    @State private var isInitialized = false
     @State private var shouldPresentAuth = false
-    @State private var sessionAndUser: (Session, User)?
     @State var subscriptions: Set<AnyCancellable> = []
 
     var body: some View {
@@ -36,28 +34,14 @@ struct ContentView: View {
     }
 
     func setUpObservations() {
-        StytchClient.isInitialized.sink { isInitialized in
-            let session = StytchClient.sessions.session
-            let user = StytchClient.user.getSync()
-            if let session, let user {
-                sessionAndUser = (session, user)
-                shouldPresentAuth = false
-                print("we have a session and a user")
-            } else {
-                shouldPresentAuth = true
-                print("we do not have a session and a user")
-            }
-            self.isInitialized = isInitialized
-        }.store(in: &subscriptions)
-
         StytchClient.sessions.onSessionChange.sink { sessionInfo in
             switch sessionInfo {
             case let .available(session, lastValidatedAtDate):
+                print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
                 shouldPresentAuth = false
-                print("we have a session")
             case .unavailable:
+                print("Session Unavailable\n")
                 shouldPresentAuth = true
-                print("we do not have a session")
             }
         }.store(in: &subscriptions)
     }
