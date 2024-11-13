@@ -16,12 +16,12 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '21 15 * * 1'  # Runs at 15:21 UTC every Monday
+    - cron: '21 15 * *1'  # Runs at 15:21 UTC every Monday
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }}-${{ matrix.swift-scheme }})
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    name: Analyze (swift-${{ matrix.swift-scheme }})
+    runs-on: macos-latest
+    timeout-minutes: 120
     permissions:
       security-events: write
       packages: read
@@ -30,42 +30,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['ruby', 'swift']
+        language: ['swift']
         include:
-          - language: ruby
-            build-mode: none
           - language: swift
             build-mode: manual
         swift-scheme: ['StytchCore', 'StytchUI']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: security-extended
-          packs: codeql/swift-queries,codeql/ruby-queries
-
+          packs: codeql/swift-queries
       - name: Install Swift dependencies
-        if: matrix.language == 'swift'
         run: |
           # Print Xcode version for debugging
           xcodebuild -version
           
           # Initialize package dependencies
           xcodebuild -resolvePackageDependencies
-          
-          # If using CocoaPods (uncomment if needed)
-          # pod install || true
-          
-          # If using Carthage (uncomment if needed)
-          # brew install carthage
-          # carthage bootstrap --platform iOS --no-use-binaries --cache-builds || true
-
       - name: Manual build for Swift
-        if: matrix.language == 'swift'
         run: |
           # Clean derived data
           rm -rf ~/Library/Developer/Xcode/DerivedData/*
@@ -84,12 +70,10 @@ jobs:
             GCC_OPTIMIZATION_LEVEL=0 \
             SWIFT_OPTIMIZATION_LEVEL="-Onone" \
             | xcpretty
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
-
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v3
         with:
