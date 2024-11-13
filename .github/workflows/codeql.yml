@@ -18,8 +18,8 @@ on:
   schedule:
     - cron: '21 15 * * 1'  # Runs at 15:21 UTC every Monday
 jobs:
-  analyze:
-    name: Analyze (swift-${{ matrix.swift-scheme }})
+  analyze-stytch-core:
+    name: Analyze (swift-StytchCore)
     runs-on: macos-latest
     timeout-minutes: 120
     permissions:
@@ -27,21 +27,13 @@ jobs:
       packages: read
       actions: read
       contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['swift']
-        include:
-          - language: swift
-            build-mode: manual
-        swift-scheme: ['StytchCore', 'StytchUI']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: swift
           queries: security-extended
           packs: codeql/swift-queries
       - name: Install Swift dependencies
@@ -59,7 +51,7 @@ jobs:
           # Build for iOS
           xcodebuild clean build \
             -project Stytch.xcodeproj \
-            -scheme ${{ matrix.swift-scheme }} \
+            -scheme StytchCore \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
             -configuration Debug \
@@ -73,8 +65,60 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
-          output: results.sarif
+          category: "/language:swift/scheme:StytchCore"
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+
+  analyze-stytch-ui:
+    name: Analyze (swift-StytchUI)
+    runs-on: macos-latest
+    timeout-minutes: 120
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: swift
+          queries: security-extended
+          packs: codeql/swift-queries
+      - name: Install Swift dependencies
+        run: |
+          # Print Xcode version for debugging
+          xcodebuild -version
+          
+          # Initialize package dependencies
+          xcodebuild -resolvePackageDependencies
+      - name: Manual build for Swift
+        run: |
+          # Clean derived data
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+          
+          # Build for iOS
+          xcodebuild clean build \
+            -project Stytch.xcodeproj \
+            -scheme StytchUI \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -configuration Debug \
+            ONLY_ACTIVE_ARCH=YES \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_ALLOWED=NO \
+            GCC_OPTIMIZATION_LEVEL=0 \
+            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
+            | xcpretty
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:swift/scheme:StytchUI"
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v3
         with:
