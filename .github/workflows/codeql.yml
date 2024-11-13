@@ -16,7 +16,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '21 15 * *1'  # Runs at 15:21 UTC every Monday
+    - cron: '21 15 * * 1'  # Runs at 15:21 UTC every Monday
 jobs:
   analyze:
     name: Analyze (swift-${{ matrix.swift-scheme }})
