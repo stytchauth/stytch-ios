@@ -66,11 +66,6 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:swift/scheme:StytchCore"
-          output: sarif-results/stytch-core-results.sarif
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: sarif-results/stytch-core-results.sarif
 
   analyze-stytch-ui:
     name: Analyze (swift-StytchUI)
@@ -120,8 +115,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:swift/scheme:StytchUI"
-          output: sarif-results/stytch-ui-results.sarif
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: sarif-results/stytch-ui-results.sarif
