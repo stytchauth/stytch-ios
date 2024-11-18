@@ -10,10 +10,11 @@ public extension StytchB2BClient {
 public extension StytchB2BClient {
     struct RBAC {
         @Dependency(\.localStorage) private var localStorage
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
+        @Dependency(\.memberSessionStorage) private var memberSessionStorage
 
         private var memberSessionRoles: [String] {
-            sessionStorage.memberSession?.roles ?? []
+            memberSessionStorage.object?.roles ?? []
         }
 
         /// Determines whether the logged-in member is allowed to perform the specified action on the specified resource.
@@ -47,7 +48,7 @@ public extension StytchB2BClient {
         /// To check authorization using cached data, use {@link isAuthorizedSync}.
         /// Remember - authorization checks for sensitive actions should always occur on the backend as well.
         public func isAuthorized(resourceId: String, action: String) async throws -> Bool {
-            try await StytchB2BClient.bootstrap.fetch()
+            try await StartupClient.bootstrap()
             return isAuthorizedSync(resourceId: resourceId, action: action)
         }
 
@@ -60,7 +61,7 @@ public extension StytchB2BClient {
         ///
         /// Remember - authorization checks for sensitive actions should always occur on the backend as well.
         public func allPermissions() async throws -> [String: [String: Bool]] {
-            try await StytchB2BClient.bootstrap.fetch()
+            try await StartupClient.bootstrap()
 
             guard let rbacPolicy = localStorage.bootstrapData?.rbacPolicy else {
                 return [:]

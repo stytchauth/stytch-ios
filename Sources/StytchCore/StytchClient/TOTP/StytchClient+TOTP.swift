@@ -1,3 +1,5 @@
+@preconcurrency import SwiftyJSON
+
 public extension StytchClient {
     /// Time-based One-time Passcodes (TOTPs) are one-time passcodes that are generated based on a shared secret and the current time. TOTPs are also often referred to as Authenticator Apps and are a common form of secondary authentication. Creating a Stytch instance of a TOTP for a User creates a shared secret. This secret is shared by Stytch with the end user's authenticator application of choice (e.g. Google Authenticator). The authenticator app can then generate TOTPs that are valid for a specific amount of time (generally 30 seconds). The end user inputs the TOTP and the developer can use the authenticate method to verify that the TOTP is valid. To call these methods, TOTPs must be enabled in the [SDK Configuration page](https://stytch.com/dashboard/sdk-configuration) of the Stytch dashboard.
     struct TOTP {
@@ -12,7 +14,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -24,7 +26,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [recover](https://stytch.com/docs/api/totp-recover) endpoint. Call this method to authenticate a recovery code for a TOTP instance.
         public func recover(parameters: RecoverParameters) async throws -> RecoverResponse {
-            try await router.post(to: .recover, parameters: parameters)
+            try await router.post(to: .recover, parameters: parameters, useDFPPA: true)
         }
     }
 }
@@ -36,7 +38,7 @@ public extension StytchClient {
 
 public extension StytchClient.TOTP {
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
-    struct CreateParameters: Encodable {
+    struct CreateParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case expiration = "expirationMinutes"
         }
@@ -50,7 +52,7 @@ public extension StytchClient.TOTP {
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-2ck6w`` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case totpCode
             case sessionDuration = "sessionDurationMinutes"
@@ -69,7 +71,7 @@ public extension StytchClient.TOTP {
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` calls.
-    struct RecoverParameters: Encodable {
+    struct RecoverParameters: Encodable, Sendable {
         enum CodingKeys: String, CodingKey {
             case recoveryCode
             case sessionDuration = "sessionDurationMinutes"
@@ -97,7 +99,7 @@ public extension StytchClient.TOTP {
     typealias RecoveryCodesResponse = Response<RecoveryCodesResponseData>
 
     /// The underlying data for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` responses.
-    struct CreateResponseData: Codable {
+    struct CreateResponseData: Codable, Sendable {
         public let totpId: User.TOTP.ID
         public let secret: String
         public let qrCode: String
@@ -107,7 +109,7 @@ public extension StytchClient.TOTP {
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` responses.
-    struct RecoverResponseData: Codable, AuthenticateResponseDataType {
+    struct RecoverResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let userId: User.ID
         public let totpId: User.TOTP.ID
         public let user: User
@@ -117,13 +119,13 @@ public extension StytchClient.TOTP {
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` responses.
-    struct RecoveryCodesResponseData: Codable {
+    struct RecoveryCodesResponseData: Codable, Sendable {
         public let userId: User.ID
         public let totps: [Union<User.TOTP, RecoveryCodes>]
     }
 
     /// Additional data unioned to the ``User`` type.
-    struct RecoveryCodes: Codable {
+    struct RecoveryCodes: Codable, Sendable {
         public let recoveryCodes: [String]
     }
 }

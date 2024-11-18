@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -45,7 +46,7 @@ final class B2BSSOTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
@@ -56,7 +57,7 @@ final class B2BSSOTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/authenticate",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "session_duration_minutes": 12,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "sso_token": "i-am-token",
@@ -124,7 +125,7 @@ final class B2BSSOTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/oidc",
-            method: .post(["display_name": JSON.string(displayName), "identity_provider": JSON.string(identityProvider)])
+            method: .post(["display_name": JSON(stringLiteral: displayName), "identity_provider": JSON(stringLiteral: identityProvider)])
         )
     }
 
@@ -145,7 +146,7 @@ final class B2BSSOTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/oidc/\(connectionId)",
-            method: .put(["connection_id": JSON.string(connectionId)])
+            method: .put(["connection_id": JSON(stringLiteral: connectionId)])
         )
     }
 
@@ -167,7 +168,7 @@ final class B2BSSOTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml",
-            method: .post(["display_name": JSON.string(displayName), "identity_provider": JSON.string(identityProvider)])
+            method: .post(["display_name": JSON(stringLiteral: displayName), "identity_provider": JSON(stringLiteral: identityProvider)])
         )
     }
 
@@ -188,7 +189,7 @@ final class B2BSSOTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)",
-            method: .put(["connection_id": JSON.string(connectionId)])
+            method: .put(["connection_id": JSON(stringLiteral: connectionId)])
         )
     }
 
@@ -210,7 +211,7 @@ final class B2BSSOTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/sso/saml/\(connectionId)/url",
-            method: .put(["connection_id": JSON.string(connectionId), "metadata_url": JSON.string(metadataUrl)])
+            method: .put(["connection_id": JSON(stringLiteral: connectionId), "metadata_url": JSON(stringLiteral: metadataUrl)])
         )
     }
 

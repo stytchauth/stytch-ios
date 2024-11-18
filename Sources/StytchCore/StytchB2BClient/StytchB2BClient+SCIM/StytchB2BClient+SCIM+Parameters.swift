@@ -1,7 +1,7 @@
 import Foundation
 
 public extension StytchB2BClient.SCIM {
-    struct CreateConnectionParameters: Codable {
+    struct CreateConnectionParameters: Codable, Sendable {
         let displayName: String?
         let identityProvider: String?
 
@@ -17,7 +17,7 @@ public extension StytchB2BClient.SCIM {
         }
     }
 
-    struct UpdateConnectionParameters: Codable {
+    struct UpdateConnectionParameters: Codable, Sendable {
         let connectionId: String
         let displayName: String?
         let identityProvider: String?
@@ -41,7 +41,7 @@ public extension StytchB2BClient.SCIM {
         }
     }
 
-    struct GetConnectionGroupsParameters: Codable {
+    struct GetConnectionGroupsParameters: Codable, Sendable {
         let limit: Int?
         let cursor: String?
 
@@ -54,7 +54,7 @@ public extension StytchB2BClient.SCIM {
         }
     }
 
-    struct RotateParameters: Codable {
+    struct RotateParameters: Codable, Sendable {
         let connectionId: String
 
         /// - Parameter connectionId: Globally unique UUID that identifies a specific SCIM Connection.

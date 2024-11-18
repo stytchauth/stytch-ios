@@ -17,14 +17,19 @@ final actor DFPClient: DFPProvider {
                 if let rootViewController = UIApplication.shared.rootViewController {
                     let messageHandler = MessageHandler()
                     messageHandler.addContinuation(continuation)
+
                     let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)', 'https://\(dfppaDomain)/submit');", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                     let userContentController = WKUserContentController()
+
                     userContentController.addUserScript(userScript)
                     userContentController.add(messageHandler, name: "StytchDFP")
+
                     let configuration = WKWebViewConfiguration()
                     configuration.userContentController = userContentController
+
                     let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
                     messageHandler.addWebView(webView)
+
                     rootViewController.view.addSubview(webView)
                     webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
                 } else {

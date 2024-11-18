@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -110,7 +111,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         let response = try await StytchB2BClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -128,7 +129,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/magic_links/authenticate",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "magic_links_token": "12345", "session_duration_minutes": 15,
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "locale": "en",
@@ -197,11 +198,14 @@ extension B2BMFAAuthenticateResponse {
         statusCode: 200,
         wrapped: .init(
             memberSession: .mock,
+            memberId: "member_id_123",
             member: .mock,
             organization: .mock,
             sessionToken: "xyzasdf",
             sessionJwt: "i'mvalidjson",
-            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke"
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
+            memberAuthenticated: false,
+            mfaRequired: nil
         )
     )
 }
@@ -244,6 +248,20 @@ extension MemberSession {
             startedAt: refDate,
             lastAccessedAt: refDate,
             expiresAt: refDate.advanced(by: 60 * 60 * 24),
+            authenticationFactors: [],
+            customClaims: nil,
+            roles: ["organization_admin"],
+            memberSessionId: "mem_session_123"
+        )
+    }()
+
+    static let mockWithExpiredMemberSession: Self = {
+        .init(
+            organizationId: Organization.mock.id,
+            memberId: Member.mock.id,
+            startedAt: Date.distantPast,
+            lastAccessedAt: Date.distantPast,
+            expiresAt: Date.distantPast,
             authenticationFactors: [],
             customClaims: nil,
             roles: ["organization_admin"],

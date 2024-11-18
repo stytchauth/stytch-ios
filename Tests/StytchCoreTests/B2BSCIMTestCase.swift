@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -17,7 +18,7 @@ final class B2BSCIMTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/scim",
-            method: .post(["display_name": JSON.string("A New SCIM Connection!")])
+            method: .post(["display_name": JSON(stringLiteral: "A New SCIM Connection!")])
         )
     }
 
@@ -43,7 +44,7 @@ final class B2BSCIMTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/scim/\(connectionId)",
-            method: .put(["connection_id": JSON.string("connectionId"), "display_name": JSON.string("A Updated SCIM Connection!")])
+            method: .put(["connection_id": JSON(stringLiteral: "connectionId"), "display_name": JSON(stringLiteral: "A Updated SCIM Connection!")])
         )
     }
 
@@ -121,7 +122,7 @@ final class B2BSCIMTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/scim/rotate/start",
-            method: .post(["connection_id": JSON.string("connectionId")])
+            method: .post(["connection_id": JSON(stringLiteral: "connectionId")])
         )
     }
 
@@ -142,7 +143,7 @@ final class B2BSCIMTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/scim/rotate/complete",
-            method: .post(["connection_id": JSON.string("connectionId")])
+            method: .post(["connection_id": JSON(stringLiteral: "connectionId")])
         )
     }
 
@@ -163,7 +164,7 @@ final class B2BSCIMTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/scim/rotate/cancel",
-            method: .post(["connection_id": JSON.string("connectionId")])
+            method: .post(["connection_id": JSON(stringLiteral: "connectionId")])
         )
     }
 }

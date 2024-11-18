@@ -10,7 +10,7 @@ public extension StytchClient {
     struct CryptoWallets: CryptoWalletsProtocol {
         let router: NetworkingRouter<CryptoWalletsRoute>
 
-        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate_start](https://stytch.com/docs/api/crypto-wallet-authenticate-start) endpoint. Call this method to load the challenge data. Pass this challenge to your user's wallet for signing.
@@ -22,20 +22,20 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate](https://stytch.com/docs/api/crypto-wallet-authenticate) endpoint. Call this method after the user signs the challenge to validate the signature.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
     }
 }
 
 public extension StytchClient.CryptoWallets {
     /// The type of crypto wallet. Currently `ethereum` and `solana` are supported. Wallets for any EVM-compatible chains (such as Polygon or BSC) are also supported and are grouped under the `ethereum` type.
-    enum WalletType: String, Codable {
+    enum WalletType: String, Codable, Sendable {
         case ethereum
         case solana
     }
 
     /// The dedicated parameters type for crypto wallets `authenticateStart` calls.
-    struct AuthenticateStartParameters: Encodable {
+    struct AuthenticateStartParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case cryptoWalletType
             case cryptoWalletAddress
@@ -54,7 +54,7 @@ public extension StytchClient.CryptoWallets {
     }
 
     /// The dedicated parameters type for crypto wallets `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case cryptoWalletType
             case cryptoWalletAddress
@@ -82,7 +82,7 @@ public extension StytchClient.CryptoWallets {
     typealias AuthenticateStartResponse = Response<CryptoWalletsAuthenticateResponseData>
 
     /// The underlying data for crypto wallets `authenticateStart` calls.
-    struct CryptoWalletsAuthenticateResponseData: Codable {
+    struct CryptoWalletsAuthenticateResponseData: Codable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case challenge
         }

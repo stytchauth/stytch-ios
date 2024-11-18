@@ -15,8 +15,8 @@ public extension StytchB2BClient {
         @Dependency(\.organizationStorage) private var organizationStorage
 
         /// A publisher which emits following a change in organization status and returns either the organization object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onOrganizationChange: AnyPublisher<Organization?, Never> {
-            organizationStorage.onChange.eraseToAnyPublisher()
+        public var onOrganizationChange: AnyPublisher<StytchObjectInfo<Organization>, Never> {
+            organizationStorage.onChange
         }
 
         /// Returns the most-recent cached copy of the organization object, if it has already been fetched via another method, else nil.
@@ -67,7 +67,7 @@ public extension StytchB2BClient.Organizations {
     typealias OrganizationResponse = Response<OrganizationResponseData>
 
     /// The underlying data for the OrganizationResponse type.
-    struct OrganizationResponseData: Codable {
+    struct OrganizationResponseData: Codable, Sendable {
         /// The current organization.
         public let organization: Organization
     }
@@ -78,7 +78,7 @@ public extension StytchB2BClient.Organizations {
     typealias OrganizationDeleteResponse = Response<OrganizationDeleteResponseData>
 
     /// The underlying data for the OrganizationDeleteResponse type.
-    struct OrganizationDeleteResponseData: Codable {
+    struct OrganizationDeleteResponseData: Codable, Sendable {
         /// The current organization id that was deleted.
         public let organizationId: String
     }
@@ -87,7 +87,7 @@ public extension StytchB2BClient.Organizations {
 public extension StytchB2BClient.Organizations {
     typealias SearchMembersResponse = Response<SearchResponseData>
 
-    struct SearchResponseData: Codable {
+    struct SearchResponseData: Codable, Sendable {
         // An array of Member objects.
         public let members: [Member]
         // The search results_metadata object contains metadata relevant to your specific query like total and next_cursor.
@@ -96,7 +96,7 @@ public extension StytchB2BClient.Organizations {
         public let organizations: [String: Organization]
     }
 
-    struct SearchResponseResultsMetadata: Codable {
+    struct SearchResponseResultsMetadata: Codable, Sendable {
         // The total number of results returned by your search query.
         public let total: Int
         // The next_cursor string is returned when your search result contains more than one page of results. This value is passed into your next search call in the cursor field.

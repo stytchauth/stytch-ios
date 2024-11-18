@@ -1,7 +1,8 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A type defining a member's session; including information about its validity, expiry, factors associated with this session, and more.
-public struct MemberSession: Codable {
+public struct MemberSession: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// Globally unique UUID that identifies a specific Session in the Stytch API. The member_session_id is critical to perform operations on an Session, so be sure to preserve this value.
@@ -24,4 +25,18 @@ public struct MemberSession: Codable {
     public let roles: [String]?
 
     let memberSessionId: ID
+}
+
+extension MemberSession: Equatable {
+    public static func == (lhs: MemberSession, rhs: MemberSession) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.organizationId == rhs.organizationId &&
+            lhs.memberId == rhs.memberId &&
+            lhs.startedAt == rhs.startedAt &&
+            lhs.lastAccessedAt == rhs.lastAccessedAt &&
+            lhs.expiresAt == rhs.expiresAt &&
+            lhs.authenticationFactors == rhs.authenticationFactors &&
+            lhs.customClaims == rhs.customClaims &&
+            lhs.roles == rhs.roles
+    }
 }

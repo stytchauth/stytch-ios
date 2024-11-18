@@ -1,7 +1,8 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 public extension StytchB2BClient.Organizations.Members {
-    struct CreateParameters: Codable {
+    struct CreateParameters: Codable, Sendable {
         let emailAddress: String
         let name: String?
         let untrustedMetadata: JSON?

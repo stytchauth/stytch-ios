@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -20,7 +21,7 @@ final class B2BTOTPTestCase: BaseTestCase {
             expirationMinutes: .defaultSessionDuration
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.totp.create(parameters: parameters)
 
@@ -28,10 +29,10 @@ final class B2BTOTPTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/totp",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
-                "expiration_minutes": JSON.number(5),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "expiration_minutes": JSON(integerLiteral: 5),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
             ])
         )
     }
@@ -54,7 +55,7 @@ final class B2BTOTPTestCase: BaseTestCase {
             code: code
         )
 
-        Current.sessionStorage.updateSession(intermediateSessionToken: intermediateSessionToken)
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         _ = try await StytchB2BClient.totp.authenticate(parameters: parameters)
 
@@ -62,11 +63,11 @@ final class B2BTOTPTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/totp/authenticate",
             method: .post([
-                "intermediate_session_token": JSON.string(intermediateSessionToken),
-                "session_duration_minutes": JSON.number(5),
-                "organization_id": JSON.string(organizationId),
-                "member_id": JSON.string(memberId),
-                "code": JSON.string(code),
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "session_duration_minutes": JSON(integerLiteral: 5),
+                "organization_id": JSON(stringLiteral: organizationId),
+                "member_id": JSON(stringLiteral: memberId),
+                "code": JSON(stringLiteral: code),
             ])
         )
     }

@@ -21,31 +21,26 @@ public extension StytchClient {
     struct Sessions {
         let router: NetworkingRouter<SessionsRoute>
         @Dependency(\.sessionStorage) var sessionStorage
-        @Dependency(\.localStorage) var localStorage
+        @Dependency(\.sessionManager) var sessionManager
 
         /// If logged in, returns the cached session object.
         public var session: Session? {
-            get {
-                localStorage.session
-            }
-            set {
-                localStorage.session = newValue
-            }
+            sessionStorage.object
         }
 
         /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.
         public var sessionToken: SessionToken? {
-            sessionStorage.sessionToken
+            sessionManager.sessionToken
         }
 
         /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
         public var sessionJwt: SessionToken? {
-            sessionStorage.sessionJwt
+            sessionManager.sessionJwt
         }
 
         /// A publisher which emits following a change in authentication status and returns either the opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onAuthChange: AnyPublisher<String?, Never> {
-            sessionStorage.onAuthChange.eraseToAnyPublisher()
+        public var onSessionChange: AnyPublisher<StytchObjectInfo<Session>, Never> {
+            sessionStorage.onChange
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -58,7 +53,7 @@ public extension StytchClient {
         /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
         /// and persistent storage are kept up-to-date. You are required to include both the opaque token and the jwt.
         public func update(sessionTokens: SessionTokens) {
-            sessionStorage.updatePersistentStorage(tokens: sessionTokens)
+            sessionManager.updatePersistentStorage(tokens: sessionTokens)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -66,10 +61,10 @@ public extension StytchClient {
         public func revoke(parameters: RevokeParameters = .init()) async throws -> BasicResponse {
             do {
                 let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
-                sessionStorage.reset()
+                sessionManager.resetSession()
                 return response
             } catch {
-                if parameters.forceClear { sessionStorage.reset() }
+                if parameters.forceClear { sessionManager.resetSession() }
                 throw error
             }
         }
@@ -78,7 +73,7 @@ public extension StytchClient {
 
 public extension StytchClient.Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         let sessionDurationMinutes: Minutes?
 
         /// - Parameter sessionDurationMinutes: The duration, in minutes, of the requested session.
@@ -90,7 +85,7 @@ public extension StytchClient.Sessions {
     }
 
     /// The dedicated parameters type for session `revoke` calls.
-    struct RevokeParameters {
+    struct RevokeParameters: Sendable {
         let forceClear: Bool
 
         /// - Parameter forceClear: In the event of an error received from the network, setting this value to true will ensure the local session state is cleared.

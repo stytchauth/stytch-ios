@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 @testable import StytchUI
@@ -39,7 +40,7 @@ extension Session {
                 .init(
                     rawData: [
                         "type": "magic_link",
-                        "last_authenticated_at": .string(ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
+                        "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
                     ],
                     kind: "magic_link",
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
@@ -131,4 +132,31 @@ extension StytchClient.OAuth.Apple.AuthenticateResponse {
             )
         )
     }
+}
+
+extension StytchClient.OAuth.OAuthAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            user: .mock(userId: "123"),
+            sessionToken: "123",
+            sessionJwt: "123",
+            session: .mock(userId: "123"),
+            oauthUserRegistrationId: "123",
+            providerSubject: "123",
+            providerType: "123",
+            providerValues: .mock
+        )
+    )
+}
+
+extension OAuthProviderValues {
+    static let mock: Self = .init(
+        accessToken: "",
+        idToken: "",
+        refreshToken: nil,
+        scopes: [],
+        expiresAt: Date()
+    )
 }

@@ -4,7 +4,7 @@ import UIKit
 
 final class RootViewController: UIViewController {
     let stackView = UIStackView.stytchB2BStackView()
-    var authChangeCancellable: AnyCancellable?
+    var subscriptions: Set<AnyCancellable> = []
 
     lazy var publicTokenTextField: UITextField = .init(title: "Stytch Public Token", primaryAction: submitAction)
 
@@ -46,13 +46,29 @@ final class RootViewController: UIViewController {
         }
         publicTokenTextField.text = UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey)
 
-        authChangeCancellable = StytchB2BClient.sessions.onAuthChange
-            .map { _ in StytchB2BClient.member.getSync() }
+        StytchB2BClient.member.onMemberChange
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] member in
-                self?.memberIdLabel.isHidden = member == nil
-                self?.memberIdLabel.text = member.map { "Welcome, \($0.id.rawValue)!" } ?? "Logged out"
-            })
+            .sink(receiveValue: { [weak self] memberInfo in
+                switch memberInfo {
+                case let .available(member, lastValidatedAtDate):
+                    print("Member Available: \(member.name) - lastValidatedAtDate: \(lastValidatedAtDate)")
+                    self?.memberIdLabel.text = "Welcome, \(member.id.rawValue)!"
+                case .unavailable:
+                    print("Member Unavailable")
+                    self?.memberIdLabel.text = "Logged out"
+                }
+            }).store(in: &subscriptions)
+
+        StytchB2BClient.sessions.onMemberSessionChange
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { sessionInfo in
+                switch sessionInfo {
+                case let .available(session, lastValidatedAtDate):
+                    print("Member Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)")
+                case .unavailable:
+                    print("Member Session Unavailable")
+                }
+            }).store(in: &subscriptions)
     }
 
     func submit(token: String?) {

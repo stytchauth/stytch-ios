@@ -22,13 +22,13 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Rotate the recovery codes for an authenticated member
         public func rotate() async throws -> RecoveryCodesResponse {
-            try await router.post(to: .rotate)
+            try await router.post(to: .rotate, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants
         /// Consume a recovery code for a member
         public func recover(parameters: RecoveryCodesRecoverParameters) async throws -> RecoveryCodesRecoverResponse {
-            try await router.post(to: .recover, parameters: parameters)
+            try await router.post(to: .recover, parameters: parameters, useDFPPA: true)
         }
     }
 }
@@ -36,14 +36,14 @@ public extension StytchB2BClient {
 public extension StytchB2BClient.RecoveryCodes {
     typealias RecoveryCodesResponse = Response<RecoveryCodesResponseData>
 
-    struct RecoveryCodesResponseData: Codable {
+    struct RecoveryCodesResponseData: Codable, Sendable {
         /// The recovery codes used to authenticate the member in place of a secondary factor.
         public let recoveryCodes: [String]
     }
 }
 
 public extension StytchB2BClient.RecoveryCodes {
-    struct RecoveryCodesRecoverParameters: Codable {
+    struct RecoveryCodesRecoverParameters: Codable, Sendable {
         let sessionDurationMinutes: Minutes
         let organizationId: String
         let memberId: String
@@ -74,7 +74,7 @@ public extension StytchB2BClient.RecoveryCodes {
 public extension StytchB2BClient.RecoveryCodes {
     typealias RecoveryCodesRecoverResponse = Response<RecoveryCodesRecoverResponseData>
 
-    struct RecoveryCodesRecoverResponseData: Codable {
+    struct RecoveryCodesRecoverResponseData: Codable, Sendable {
         /// Number of recovery codes remaining for the member.
         public let recoveryCodesRemaining: Int
     }

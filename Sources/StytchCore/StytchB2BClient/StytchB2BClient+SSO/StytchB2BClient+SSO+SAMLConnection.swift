@@ -2,7 +2,7 @@ import Foundation
 
 #if !os(watchOS)
 public extension StytchB2BClient.SSO.SAML {
-    struct SAMLConnection: Codable {
+    struct SAMLConnection: Codable, Sendable {
         let organizationId: String
         let connectionId: String
         let status: String
@@ -77,7 +77,7 @@ public extension StytchB2BClient.SSO.SAML {
 }
 
 public extension StytchB2BClient.SSO.SAML {
-    struct X509Certificate: Codable {
+    struct X509Certificate: Codable, Sendable {
         let certificateId: String
         let certificate: String
         let issuer: String
@@ -99,7 +99,7 @@ public extension StytchB2BClient.SSO.SAML {
         }
     }
 
-    struct ConnectionRoleAssignment: Codable {
+    struct ConnectionRoleAssignment: Codable, Sendable {
         let roleId: String
 
         init(roleId: String) {
@@ -107,7 +107,7 @@ public extension StytchB2BClient.SSO.SAML {
         }
     }
 
-    struct GroupRoleAssignment: Codable {
+    struct GroupRoleAssignment: Codable, Sendable {
         let roleId: String
         let group: String
 

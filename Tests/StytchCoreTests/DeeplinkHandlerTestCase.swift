@@ -28,8 +28,14 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
 
         switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
         case let .handled(response):
-            XCTAssertEqual(response.sessionJwt, "jwt_for_me")
-            XCTAssertEqual(response.session.authenticationFactors.count, 1)
+            switch response {
+            case let .auth(responseData):
+                XCTAssertEqual(responseData.sessionJwt, "jwt_for_me")
+                XCTAssertEqual(responseData.session.authenticationFactors.count, 1)
+            case let .oauth(responseData):
+                XCTAssertEqual(responseData.sessionJwt, "jwt_for_me")
+                XCTAssertEqual(responseData.session.authenticationFactors.count, 1)
+            }
         case .notHandled, .manualHandlingRequired:
             XCTFail("expected to be handled")
         }

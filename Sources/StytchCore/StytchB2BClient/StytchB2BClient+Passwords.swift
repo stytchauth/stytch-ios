@@ -14,7 +14,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<PasswordsRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member with their email address and password. This method verifies that the member has a password currently set, and that the entered password is correct.
@@ -28,9 +28,10 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -45,7 +46,8 @@ public extension StytchB2BClient {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -63,7 +65,7 @@ public extension StytchB2BClient {
             }
 
             let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                intermediateSessionToken: sessionManager.intermediateSessionToken,
                 wrapped: CodeVerifierParameters(
                     codeVerifier: pkcePair.codeVerifier,
                     wrapped: parameters
@@ -72,7 +74,8 @@ public extension StytchB2BClient {
 
             let response: B2BMFAAuthenticateResponse = try await router.post(
                 to: .resetByEmail(.complete),
-                parameters: intermediateSessionTokenParameters
+                parameters: intermediateSessionTokenParameters,
+                useDFPPA: true
             )
 
             return response
@@ -86,9 +89,10 @@ public extension StytchB2BClient {
             try await router.post(
                 to: .resetByExistingPassword,
                 parameters: IntermediateSessionTokenParameters(
-                    intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -97,7 +101,7 @@ public extension StytchB2BClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
         public func resetBySession(parameters: ResetBySessionParameters) async throws -> ResetBySessionResponse {
-            try await router.post(to: .resetBySession, parameters: parameters)
+            try await router.post(to: .resetBySession, parameters: parameters, useDFPPA: true)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -119,7 +123,7 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for password `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -158,7 +162,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
-    struct ResetByEmailStartParameters: Encodable {
+    struct ResetByEmailStartParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -207,7 +211,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmail` calls.
-    struct ResetByEmailParameters: Encodable {
+    struct ResetByEmailParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case token = "passwordResetToken"
             case password
@@ -241,7 +245,7 @@ public extension StytchB2BClient.Passwords {
 
 public extension StytchB2BClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
-    struct ResetByExistingPasswordParameters: Encodable {
+    struct ResetByExistingPasswordParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case organizationId
             case emailAddress
@@ -288,7 +292,7 @@ public extension StytchB2BClient.Passwords {
     typealias ResetBySessionResponse = Response<ResetBySessionResponseData>
 
     /// The underlying data for passwords `resetBySession` calls.
-    struct ResetBySessionResponseData: Codable {
+    struct ResetBySessionResponseData: Codable, Sendable {
         /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
         public let memberSession: MemberSession
         /// The current member object.
@@ -298,7 +302,7 @@ public extension StytchB2BClient.Passwords {
     }
 
     /// The dedicated parameters type for passwords `resetBySession` calls.
-    struct ResetBySessionParameters: Encodable {
+    struct ResetBySessionParameters: Encodable, Sendable {
         let organizationId: Organization.ID
         let password: String
         let locale: StytchLocale?
@@ -320,7 +324,7 @@ public extension StytchB2BClient.Passwords {
     typealias StrengthCheckResponse = Response<StrengthCheckResponseData>
 
     /// The dedicated parameters type for passwords `strengthCheck` calls.
-    struct StrengthCheckParameters: Encodable {
+    struct StrengthCheckParameters: Encodable, Sendable {
         let emailAddress: String?
         let password: String
 
@@ -334,7 +338,7 @@ public extension StytchB2BClient.Passwords {
     }
 
     /// The underlying data for passwords `strengthCheck` calls.
-    struct StrengthCheckResponseData: Codable {
+    struct StrengthCheckResponseData: Codable, Sendable {
         public let validPassword: Bool
         /// A score from 0-4 to indicate the strength of a password. Useful for progress bars.
         public let score: Double
@@ -350,7 +354,7 @@ public extension StytchB2BClient.Passwords {
         public let ludsFeedback: LudsFeedback?
 
         /// A warning and collection of suggestions for improving the strength of a given password.
-        public struct ZxcvbnFeedback: Codable {
+        public struct ZxcvbnFeedback: Codable, Sendable {
             /// For zxcvbn validation, contains end user consumable suggestions on how to improve the strength of the password.
             public let suggestions: [String]
             /// For zxcvbn validation, contains an end user consumable warning if the password is valid but not strong enough.
@@ -358,7 +362,7 @@ public extension StytchB2BClient.Passwords {
         }
 
         /// LUDS-specific password feedback.
-        public struct LudsFeedback: Codable {
+        public struct LudsFeedback: Codable, Sendable {
             /// For LUDS validation, whether the password contains at least one lowercase letter.
             public let hasLowerCase: Bool
             /// For LUDS validation, whether the password contains at least one uppercase letter.

@@ -11,31 +11,26 @@ public extension StytchB2BClient {
     /// The SDK may be used to check whether a user has a cached session, view the current session, refresh the session, and revoke the session. To authenticate a session on your backend, you must use either the Stytch API or a Stytch server-side library. **NOTE**: - After a successful authentication, the session will be automatically refreshed in the background to ensure the sessionJwt remains valid (it expires after 5 minutes.) Session polling will be stopped after a session is revoked or after an unauthenticated error response is received.
     struct Sessions {
         let router: NetworkingRouter<StytchB2BClient.SessionsRoute>
-        @Dependency(\.sessionStorage) var sessionStorage
-        @Dependency(\.localStorage) var localStorage
+        @Dependency(\.memberSessionStorage) var memberSessionStorage
+        @Dependency(\.sessionManager) var sessionManager
 
         public var memberSession: MemberSession? {
-            get {
-                localStorage.memberSession
-            }
-            set {
-                localStorage.memberSession = newValue
-            }
+            memberSessionStorage.object
         }
 
         /// An opaque token representing your session, which your servers can check with Stytch's servers to verify your session status.
         public var sessionToken: SessionToken? {
-            sessionStorage.sessionToken
+            sessionManager.sessionToken
         }
 
         /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
         public var sessionJwt: SessionToken? {
-            sessionStorage.sessionJwt
+            sessionManager.sessionJwt
         }
 
         /// A publisher which emits following a change in authentication status and returns either the opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onAuthChange: AnyPublisher<String?, Never> {
-            sessionStorage.onAuthChange.eraseToAnyPublisher()
+        public var onMemberSessionChange: AnyPublisher<StytchObjectInfo<MemberSession>, Never> {
+            memberSessionStorage.onChange
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -48,7 +43,7 @@ public extension StytchB2BClient {
         /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
         /// and persistent storage are kept up-to-date. You are required to include both the opaque token and the jwt.
         public func update(sessionTokens: SessionTokens) {
-            sessionStorage.updatePersistentStorage(tokens: sessionTokens)
+            sessionManager.updatePersistentStorage(tokens: sessionTokens)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -56,10 +51,10 @@ public extension StytchB2BClient {
         public func revoke(parameters: RevokeParameters = .init()) async throws -> BasicResponse {
             do {
                 let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
-                sessionStorage.reset()
+                sessionManager.resetSession()
                 return response
             } catch {
-                if parameters.forceClear { sessionStorage.reset() }
+                if parameters.forceClear { sessionManager.resetSession() }
                 throw error
             }
         }
@@ -74,7 +69,7 @@ public extension StytchB2BClient {
 
 public extension StytchB2BClient.Sessions {
     /// The dedicated parameters type for sessions `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         let sessionDurationMinutes: Minutes?
 
         /// - Parameter sessionDurationMinutes: The duration, in minutes, of the requested session.
@@ -96,7 +91,7 @@ public extension StytchB2BClient.Sessions {
     }
 
     /// The dedicated parameters type for session `exchange` calls.
-    struct ExchangeParameters: Codable {
+    struct ExchangeParameters: Codable, Sendable {
         /// The ID of the organization that the new session should belong to.
         public let organizationID: String
         /// The duration, in minutes, for the requested session. Defaults to 5 minutes.

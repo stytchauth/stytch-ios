@@ -91,11 +91,11 @@ final class KeychainClientTestCase: BaseTestCase {
         Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
         try Current.keychainClient.set("token", for: .sessionToken)
         try Current.keychainClient.set("token_jwt", for: .sessionJwt)
-        StytchClient.instance.postInit()
+        StytchClient.configure(publicToken: "some public token")
         XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
         XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
         Current.defaults.removeObject(forKey: installIdKey)
-        StytchClient.instance.postInit()
+        StytchClient.configure(publicToken: "some public token")
         XCTAssertNil(try Current.keychainClient.get(.sessionToken))
         XCTAssertNil(try Current.keychainClient.get(.sessionJwt))
     }

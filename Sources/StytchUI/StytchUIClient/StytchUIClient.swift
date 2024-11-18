@@ -38,14 +38,15 @@ public enum StytchUIClient {
     ) {
         Self.onAuthCallback = { response in
             Task {
-                try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
             }
             onAuthCallback?(response)
         }
         let rootController = AuthRootViewController(config: Self.config)
         currentController = rootController
         setUpSessionChangeListener()
-        controller.present(rootController, animated: true)
+        let navigationController = UINavigationController(rootViewController: rootController)
+        controller.present(navigationController, animated: true)
     }
 
     /// Use this function to handle incoming deeplinks for password resets.
@@ -54,8 +55,13 @@ public enum StytchUIClient {
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         Task { @MainActor in
             switch try await StytchClient.handle(url: url) {
-            case let .handled(response):
-                self.onAuthCallback?(response)
+            case let .handled(responseData):
+                switch responseData {
+                case let .auth(response):
+                    self.onAuthCallback?(response)
+                case let .oauth(response):
+                    self.onAuthCallback?(response)
+                }
             case .notHandled:
                 break
             case let .manualHandlingRequired(_, token):
@@ -75,7 +81,7 @@ public enum StytchUIClient {
     }
 
     static func setUpSessionChangeListener() {
-        cancellable = StytchClient.sessions.onAuthChange
+        cancellable = StytchClient.sessions.onSessionChange
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak currentController] _ in
@@ -94,11 +100,11 @@ public extension View {
         sheet(isPresented: isPresented) {
             StytchUIClient.onAuthCallback = { response in
                 Task {
-                    try? await StytchClient.events.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
                 }
                 onAuthCallback?(response)
             }
-            return AuthenticationView(config: StytchUIClient.config)
+            return AuthenticationView()
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }
@@ -107,10 +113,8 @@ public extension View {
 struct AuthenticationView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
 
-    let config: StytchUIClient.Configuration
-
     func makeUIViewController(context _: Context) -> UIViewController {
-        let controller = AuthRootViewController(config: config)
+        let controller = AuthRootViewController(config: StytchUIClient.config)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
         return UINavigationController(rootViewController: controller)

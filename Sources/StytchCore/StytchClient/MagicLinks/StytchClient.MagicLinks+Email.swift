@@ -10,7 +10,7 @@ public extension StytchClient.MagicLinks {
     struct Email: MagicLinksEmailProtocol {
         let router: NetworkingRouter<StytchClient.MagicLinksRoute.EmailRoute>
 
-        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
         @Dependency(\.pkcePairManager) private var pkcePairManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -24,7 +24,8 @@ public extension StytchClient.MagicLinks {
                     codeChallenge: pkcePair.codeChallenge,
                     codeChallengeMethod: pkcePair.method,
                     wrapped: parameters
-                )
+                ),
+                useDFPPA: true
             )
         }
 
@@ -35,7 +36,8 @@ public extension StytchClient.MagicLinks {
 
             return try await router.post(
                 to: activeSessionExists ? .sendSecondary : .sendPrimary,
-                parameters: CodeChallengedParameters(codeChallenge: pkcePair.codeChallenge, codeChallengeMethod: pkcePair.method, wrapped: parameters)
+                parameters: CodeChallengedParameters(codeChallenge: pkcePair.codeChallenge, codeChallengeMethod: pkcePair.method, wrapped: parameters),
+                useDFPPA: true
             )
         }
     }
@@ -46,7 +48,7 @@ public extension StytchClient.MagicLinks {
 
 public extension StytchClient.MagicLinks.Email {
     /// The dedicated parameters type for ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/loginOrCreate(parameters:)-9n8i5`` and ``StytchClient/MagicLinks-swift.struct/Email-swift.struct/send(parameters:)-2i2l1`` calls.
-    struct Parameters: Encodable, Equatable {
+    struct Parameters: Encodable, Equatable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case email
             case loginMagicLinkUrl

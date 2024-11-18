@@ -1,5 +1,5 @@
 /// A generic type which enables type-safety for string-based identifiers.
-public struct Identifier<T, RawValue> {
+public struct Identifier<T, RawValue: Sendable>: Sendable {
     public let rawValue: RawValue
 
     public init(rawValue: RawValue) {

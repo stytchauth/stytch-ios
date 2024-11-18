@@ -1,4 +1,5 @@
 import Combine
+@preconcurrency import SwiftyJSON
 
 public extension StytchB2BClient {
     /// The interface for interacting with member products.
@@ -15,8 +16,8 @@ public extension StytchB2BClient {
         @Dependency(\.memberStorage) private var memberStorage
 
         /// A publisher which emits following a change in member status and returns either the member object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onMemberChange: AnyPublisher<Member?, Never> {
-            memberStorage.onChange.eraseToAnyPublisher()
+        public var onMemberChange: AnyPublisher<StytchObjectInfo<Member>, Never> {
+            memberStorage.onChange
         }
 
         /// Returns the most-recent cached copy of the member object, if it has already been fetched via another method, else nil.
@@ -69,7 +70,7 @@ public extension StytchB2BClient.Members {
     typealias MemberResponse = Response<MemberResponseData>
 
     /// The underlying data for the MemberResponse type.
-    struct MemberResponseData: Codable {
+    struct MemberResponseData: Codable, Sendable {
         /// The current member's member id.
         public let memberId: String?
 
@@ -83,7 +84,7 @@ public extension StytchB2BClient.Members {
 
 public extension StytchB2BClient.Members {
     /// The dedicated parameters type for the update member call.
-    struct UpdateParameters: Codable {
+    struct UpdateParameters: Codable, Sendable {
         let name: String?
         let untrustedMetadata: JSON?
         let mfaEnrolled: Bool?

@@ -1,7 +1,13 @@
+import Combine
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable multiline_function_chains
+
 final class B2BSessionsTestCase: BaseTestCase {
+    var subscriptions: Set<AnyCancellable> = []
+
     func testSessionsAuthenticate() async throws {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
         let parameters: StytchB2BClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
@@ -10,8 +16,8 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         XCTAssertNil(StytchB2BClient.sessions.memberSession)
 
-        Current.sessionStorage.updateSession(
-            sessionType: .user(.mock(userId: "i_am_user")),
+        Current.sessionManager.updateSession(
+            sessionType: .member(.mock),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
@@ -33,8 +39,8 @@ final class B2BSessionsTestCase: BaseTestCase {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         Current.timer = { _, _, _ in .init() }
 
-        Current.sessionStorage.updateSession(
-            sessionType: .user(.mock(userId: "i_am_user")),
+        Current.sessionManager.updateSession(
+            sessionType: .member(.mock),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
             hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
         )
@@ -65,7 +71,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
     func testSessionExchange() async throws {
         networkInterceptor.responses {
-            B2BAuthenticateResponse.mock
+            B2BMFAAuthenticateResponse.mock
         }
 
         Current.timer = { _, _, _ in .init() }
@@ -82,5 +88,67 @@ final class B2BSessionsTestCase: BaseTestCase {
                 "session_duration_minutes": 5,
             ])
         )
+    }
+
+    func testMemberSessionsPublisherAvailable() throws {
+        let expectation = XCTestExpectation(description: "onMemberSessionChange completes")
+        var receivedMemberSession: MemberSession?
+        var receivedDate: Date?
+
+        StytchB2BClient.sessions.onMemberSessionChange.sink { memberSessionInfo in
+            switch memberSessionInfo {
+            case let .available(memberSession, lastValidatedAtDate):
+                receivedMemberSession = memberSession
+                receivedDate = lastValidatedAtDate
+                expectation.fulfill()
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: .member(.mock),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNotNil(receivedMemberSession)
+        XCTAssertNotNil(receivedDate)
+    }
+
+    func testMemberSessionsPublisherUnavailable() throws {
+        let expectation = XCTestExpectation(description: "onMemberSessionChange completes")
+
+        StytchB2BClient.sessions.onMemberSessionChange.sink { sessionInfo in
+            switch sessionInfo {
+            case .available:
+                break
+            case .unavailable:
+                expectation.fulfill()
+            }
+        }.store(in: &subscriptions)
+
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: nil,
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertNil(StytchB2BClient.sessions.memberSession)
+    }
+
+    func testGetExpiredMemberSessionReturnsNil() throws {
+        Current.timer = { _, _, _ in .init() }
+        Current.sessionManager.updateSession(
+            sessionType: .member(.mockWithExpiredMemberSession),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        XCTAssertNil(StytchB2BClient.sessions.memberSession)
     }
 }

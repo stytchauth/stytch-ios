@@ -1,7 +1,8 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A data type representing an organization of which a member may belong to.
-public struct Organization: Codable {
+public struct Organization: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
@@ -23,6 +24,16 @@ public struct Organization: Codable {
     /// An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
     public let trustedMetadata: JSON
     let organizationId: ID
+}
+
+extension Organization: Equatable {
+    public static func == (lhs: Organization, rhs: Organization) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.name == rhs.name &&
+            lhs.slug == rhs.slug &&
+            lhs.logoUrl == rhs.logoUrl &&
+            lhs.trustedMetadata == rhs.trustedMetadata
+    }
 }
 
 public extension Organization {

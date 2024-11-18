@@ -3,7 +3,7 @@ import Foundation
 /**
  A type defining a session; including information about its validity, expiry, factors associated with this session, and more.
  */
-public struct Session {
+public struct Session: Sendable {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
@@ -24,6 +24,18 @@ public struct Session {
     public let startedAt: Date
     /// The user id associated with this session.
     public let userId: User.ID
+}
+
+extension Session: Equatable {
+    public static func == (lhs: Session, rhs: Session) -> Bool {
+        lhs.attributes == rhs.attributes &&
+            lhs.authenticationFactors == rhs.authenticationFactors &&
+            lhs.expiresAt == rhs.expiresAt &&
+            lhs.lastAccessedAt == rhs.lastAccessedAt &&
+            lhs.sessionId == rhs.sessionId &&
+            lhs.startedAt == rhs.startedAt &&
+            lhs.userId == rhs.userId
+    }
 }
 
 extension Session: Codable {
@@ -54,10 +66,15 @@ public extension Session {
     /**
      A type which contains metadata relating to a session.
      */
-    struct Attributes: Codable {
+    struct Attributes: Codable, Equatable, Sendable {
         /// The IP Address associated with a session.
         public let ipAddress: String
         /// The user agent associated with a session.
         public let userAgent: String
+
+        public static func == (lhs: Attributes, rhs: Attributes) -> Bool {
+            lhs.ipAddress == rhs.ipAddress &&
+                lhs.userAgent == rhs.userAgent
+        }
     }
 }

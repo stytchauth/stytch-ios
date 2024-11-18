@@ -14,16 +14,13 @@ import UIKit
 public struct StytchB2BClient: StytchClientType {
     static var instance: StytchB2BClient = .init()
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
-    public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
-
-    static let appSessionId: String = UUID().uuidString
+    public static var isInitialized: AnyPublisher<Bool, Never> { StartupClient.isInitialized }
 
     private init() {
-        postInit()
         #if os(iOS)
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
             Task {
-                try await Self.sessions.authenticate(parameters: .init())
+                try await StartupClient.start(type: ClientType.b2b)
             }
         }
         #endif
@@ -36,7 +33,7 @@ public struct StytchB2BClient: StytchClientType {
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
      */
     public static func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
-        _configure(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
+        instance.configure(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
@@ -46,80 +43,20 @@ public struct StytchB2BClient: StytchClientType {
         return (tokenType, token)
     }
 
-    /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchB2BClient/tokenValues(for:)``
-    public static func canHandle(url: URL) -> Bool {
-        (try? _tokenValues(for: url)) != nil
-    }
-
-    // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-    /// This function is provided as a simple convenience handler to be used in your AppDelegate or
-    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
-    /// the length requested here.
-    ///  - Parameters:
-    ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    public static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
-        guard let (tokenType, token) = try tokenValues(for: url) else {
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
-            }
-            return .notHandled
-        }
-
-        switch tokenType {
-        case .discovery:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
-        case .multiTenantMagicLinks:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return try await .handled(response: .mfauth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
-        case .multiTenantPasswords:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return .manualHandlingRequired(.multiTenantPasswords, token: token)
-        #if !os(watchOS)
-        case .sso:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return try await .handled(response: .mfauth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
-        case .oauth:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return try await .handled(response: .mfauth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
-        case .discoveryOauth:
-            Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
-            }
-            return try await .handled(response: .discoveryOauth(oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: token))))
-        #endif
-        }
-    }
-
     /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
     }
+}
 
-    func runBootstrapping() {
+public extension StytchB2BClient {
+    func start() {
         Task {
             do {
-                try await Self.bootstrap.fetch()
-                if sessionStorage.persistedSessionIdentifiersExist {
-                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
-                }
-                initializationState.setInitializationState(state: true)
-                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
+                try await StartupClient.start(type: ClientType.b2b)
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
             } catch {
-                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_failure"))
-                throw error
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
             }
         }
     }
@@ -127,7 +64,7 @@ public struct StytchB2BClient: StytchClientType {
 
 public extension StytchB2BClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `discovery` or `sso`.
-    enum DeeplinkTokenType: String {
+    enum DeeplinkTokenType: String, Sendable {
         case discovery
         case multiTenantMagicLinks = "multi_tenant_magic_links"
         case multiTenantPasswords = "multi_tenant_passwords"
@@ -139,12 +76,70 @@ public extension StytchB2BClient {
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
-    enum DeeplinkResponse {
+    enum DeeplinkResponse: Sendable {
         case auth(B2BAuthenticateResponse)
         case mfauth(B2BMFAAuthenticateResponse)
+        case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
         case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
         #endif
+    }
+
+    /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchB2BClient/tokenValues(for:)``
+    static func canHandle(url: URL) -> Bool {
+        (try? _tokenValues(for: url)) != nil
+    }
+
+    // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+    /// This function is provided as a simple convenience handler to be used in your AppDelegate or
+    /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// the length requested here.
+    ///  - Parameters:
+    ///    - url: A `URL` passed to your application as a deeplink.
+    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
+        guard let (tokenType, token) = try tokenValues(for: url) else {
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
+            }
+            return .notHandled
+        }
+
+        switch tokenType {
+        case .discovery:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
+        case .multiTenantMagicLinks:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .mfauth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        case .multiTenantPasswords:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return .manualHandlingRequired(.multiTenantPasswords, token: token)
+        #if !os(watchOS)
+        case .sso:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .mfauth(sso.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+        case .oauth:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .mfaOAuth(oauth.authenticate(parameters: .init(oauthToken: token, sessionDurationMinutes: sessionDuration))))
+        case .discoveryOauth:
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            }
+            return try await .handled(response: .discoveryOauth(oauth.discovery.authenticate(parameters: .init(discoveryOauthToken: token))))
+        #endif
+        }
     }
 }

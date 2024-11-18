@@ -32,8 +32,8 @@ struct StytchUIDemoApp: App {
         products: .init(
             oauth: .init(
                 providers: [.apple, .thirdParty(.google)],
-                loginRedirectUrl: .init(string: "stytch-ui://login")!,
-                signupRedirectUrl: .init(string: "stytch-ui://signup")!
+                loginRedirectUrl: .init(string: "stytch-demo://auth")!,
+                signupRedirectUrl: .init(string: "stytch-demo://auth")!
             ),
             password: .init(),
             magicLink: .init(),

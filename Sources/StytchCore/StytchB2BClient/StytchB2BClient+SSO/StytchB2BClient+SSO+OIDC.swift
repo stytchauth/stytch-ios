@@ -41,7 +41,7 @@ public extension StytchB2BClient.SSO.OIDC {
 }
 
 public extension StytchB2BClient.SSO.OIDC {
-    struct UpdateConnectionParameters: Codable {
+    struct UpdateConnectionParameters: Codable, Sendable {
         let connectionId: String
         let displayName: String?
         let issuer: String?
@@ -95,7 +95,7 @@ public extension StytchB2BClient.SSO.OIDC {
     typealias OIDCConnectionResponse = Response<OIDCConnectionResponseData>
 
     /// The underlying data for the OIDC connection type.
-    struct OIDCConnectionResponseData: Codable {
+    struct OIDCConnectionResponseData: Codable, Sendable {
         /// The OIDC Connection object affected by this API call.
         public let connection: OIDCConnection
     }

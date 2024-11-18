@@ -1,11 +1,12 @@
 import Combine
+@preconcurrency import SwiftyJSON
 
 public extension StytchClient {
     /// The SDK allows you to manage the current user's information, such as fetching the user, viewing the most recent cached version of the user, or deleting existing authentication factors associated with this user.
     struct UserManagement {
         let router: NetworkingRouter<UsersRoute>
 
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         @Dependency(\.userStorage) private var userStorage
 
@@ -15,8 +16,8 @@ public extension StytchClient {
         }
 
         /// A publisher which emits following a change in user status and returns either the user object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onChange: AnyPublisher<User?, Never> {
-            userStorage.onChange.eraseToAnyPublisher()
+        public var onUserChange: AnyPublisher<StytchObjectInfo<User>, Never> {
+            userStorage.onChange
         }
 
         // sourcery: AsyncVariants
@@ -71,7 +72,7 @@ public extension StytchClient {
     static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
 
-public struct UserResponseData: Codable {
+public struct UserResponseData: Codable, Sendable {
     /// The current user object.
     public let user: User
 }
@@ -83,7 +84,7 @@ public typealias NestedUserResponse = Response<UserResponseData>
 
 public extension StytchClient.UserManagement {
     /// The authentication factors which are able to be managed via user-management calls.
-    enum AuthenticationFactor {
+    enum AuthenticationFactor: Sendable {
         case biometricRegistration(id: User.BiometricRegistration.ID)
         case cryptoWallet(id: User.CryptoWallet.ID)
         case email(id: User.Email.ID)
@@ -93,7 +94,7 @@ public extension StytchClient.UserManagement {
         case oauth(id: User.Provider.ID)
     }
 
-    struct UpdateParameters: Encodable {
+    struct UpdateParameters: Encodable, Sendable {
         let name: User.Name?
         let untrustedMetadata: JSON?
 

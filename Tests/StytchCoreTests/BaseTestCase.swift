@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -24,7 +25,7 @@ class BaseTestCase: XCTestCase {
         Current.asyncAfter = { _, _, _ in
             XCTFail("Unexpected asyncAfter run")
         }
-        Current.sessionStorage.reset()
+        Current.sessionManager.resetSession()
         Current.cryptoClient.dataWithRandomBytesOfCount = { count in
             .init(bytes: Array([UInt8].mockBytes.prefix(Int(count))), count: Int(count))
         }
@@ -109,7 +110,7 @@ extension Session {
                 .init(
                     rawData: [
                         "type": "magic_link",
-                        "last_authenticated_at": .string(ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
+                        "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
                     ],
                     kind: "magic_link",
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
@@ -119,6 +120,27 @@ extension Session {
             lastAccessedAt: refDate.addingTimeInterval(-30),
             sessionId: "im_a_session_id",
             startedAt: refDate.addingTimeInterval(-30),
+            userId: userId
+        )
+    }
+
+    static func mockWithExpiredSession(userId: User.ID) -> Self {
+        .init(
+            attributes: .init(ipAddress: "", userAgent: ""),
+            authenticationFactors: [
+                .init(
+                    rawData: [
+                        "type": "magic_link",
+                        "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: Date.distantPast)),
+                    ],
+                    kind: "magic_link",
+                    lastAuthenticatedAt: Date.distantPast
+                ),
+            ],
+            expiresAt: Date.distantPast,
+            lastAccessedAt: Date.distantPast,
+            sessionId: "im_a_session_id",
+            startedAt: Date.distantPast,
             userId: userId
         )
     }

@@ -1,7 +1,5 @@
 import Foundation
 
-// swiftlint:disable file_length
-
 extension StytchB2BClient {
     enum BaseRoute: BaseRouteType {
         case discovery(DiscoveryRoute)
@@ -10,8 +8,6 @@ extension StytchB2BClient {
         case passwords(PasswordsRoute)
         case sessions(SessionsRoute)
         case sso(SSORoute)
-        case events(EventsRoute)
-        case bootstrap(BootstrapRoute)
         case searchManager(SearchManagerRoute)
         case totp(TOTPRoute)
         case otp(OTPRoute)
@@ -21,9 +17,6 @@ extension StytchB2BClient {
 
         var path: Path {
             switch self {
-            case .bootstrap:
-                let (base, next) = routeComponents
-                return base.appendingPath(next.path)
             default:
                 let (base, next) = routeComponents
                 return "b2b".appendingPath(base).appendingPath(next.path)
@@ -44,10 +37,6 @@ extension StytchB2BClient {
                 return ("sessions", route)
             case let .sso(route):
                 return ("sso", route)
-            case let .bootstrap(route):
-                return ("", route)
-            case let .events(route):
-                return ("", route)
             case let .searchManager(route):
                 return ("", route)
             case let .totp(route):
@@ -264,17 +253,6 @@ extension StytchB2BClient {
                 return "authenticate"
             case .strengthCheck:
                 return "strength_check"
-            }
-        }
-    }
-
-    enum BootstrapRoute: RouteType {
-        case fetch(Path)
-
-        var path: Path {
-            switch self {
-            case let .fetch(publicToken):
-                return "projects/bootstrap".appendingPath(publicToken)
             }
         }
     }

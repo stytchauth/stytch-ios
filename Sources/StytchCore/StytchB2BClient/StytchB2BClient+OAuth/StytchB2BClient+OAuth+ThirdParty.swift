@@ -143,9 +143,12 @@ public extension StytchB2BClient.OAuth.ThirdParty {
 }
 
 extension StytchB2BClient.OAuth.ThirdParty {
-    enum Provider: String, CaseIterable, Codable {
+    enum Provider: String, CaseIterable, Codable, Sendable {
         case google
         case microsoft
+        case hubspot
+        case slack
+        case github
     }
 }
 #endif

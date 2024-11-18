@@ -9,12 +9,16 @@ public extension StytchClient {
     struct OTP: OTPProtocol {
         let router: NetworkingRouter<OTPRoute>
 
-        @Dependency(\.sessionStorage.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
         public func loginOrCreate(parameters: Parameters) async throws -> OTPResponse {
-            try await router.post(to: .loginOrCreate(parameters.deliveryMethod), parameters: parameters)
+            try await router.post(
+                to: .loginOrCreate(parameters.deliveryMethod),
+                parameters: parameters,
+                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
+            )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -22,14 +26,15 @@ public extension StytchClient {
         public func send(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(
                 to: activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
-                parameters: parameters
+                parameters: parameters,
+                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
             )
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
         }
     }
 }
@@ -41,7 +46,7 @@ public extension StytchClient {
 
 public extension StytchClient.OTP {
     /// The dedicated parameters type for OTP `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey { case code = "token", methodId, sessionDuration = "sessionDurationMinutes" }
 
         let code: String
@@ -62,7 +67,7 @@ public extension StytchClient.OTP {
 
 public extension StytchClient.OTP {
     /// The dedicated parameters type for OTP `loginOrCreate` and `send` calls.
-    struct Parameters: Encodable {
+    struct Parameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case phoneNumber
             case email
@@ -111,12 +116,12 @@ public extension StytchClient.OTP {
     typealias OTPResponse = Response<OTPResponseData>
 
     /// The underlying data for OTP `loginOrCreate` and `send` responses.
-    struct OTPResponseData: Codable {
+    struct OTPResponseData: Codable, Sendable {
         public let methodId: String
     }
 
     /// The mechanism use to deliver one-time passcodes.
-    enum DeliveryMethod {
+    enum DeliveryMethod: Sendable {
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX), and a boolean to indicate whether the SMS message should include autofill metadata
         case sms(phoneNumber: String, enableAutofill: Bool = false)
         /// The phone number of the user to send a one-time passcode. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX)
@@ -132,6 +137,17 @@ public extension StytchClient.OTP {
                 return "whatsapp"
             case .email:
                 return "email"
+            }
+        }
+
+        var shouldUseDFPPA: Bool {
+            switch self {
+            case .sms(phoneNumber: _, enableAutofill: _):
+                return true
+            case .whatsapp(phoneNumber: _):
+                return true
+            case .email(email: _, loginTemplateId: _, signupTemplateId: _):
+                return false
             }
         }
     }

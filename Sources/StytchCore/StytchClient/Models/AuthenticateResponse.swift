@@ -17,7 +17,7 @@ public protocol AuthenticateResponseDataType {
 }
 
 /// The underlying data for `authenticate` calls.
-public struct AuthenticateResponseData: Codable, AuthenticateResponseDataType {
+public struct AuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
     /// The current user object.
     public let user: User
     /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.

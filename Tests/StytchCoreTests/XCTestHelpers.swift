@@ -1,4 +1,5 @@
 import StytchCore
+@preconcurrency import SwiftyJSON
 import XCTest
 
 func XCTAssertThrowsErrorAsync<T, R: Error>(
@@ -68,35 +69,60 @@ enum XCTHTTPMethod {
 }
 
 private func XCTAssertEqualJSON(_ value1: JSON, _ value2: JSON, file: StaticString = #file, line: UInt = #line) {
-    guard let message = value2.difference(from: value1) else { return }
-    XCTFail("JSON differed:\n" + message, file: file, line: line)
+    if value1 != value2 {
+        let errorMessage =
+            """
+            JSON did not match:
+
+            JSON:
+            \(value1.description)
+
+            Expected:
+            \(value2.description)
+
+            Difference:
+            \(value1.difference(from: value2) ?? "No Differnce String")
+            """
+        XCTFail(errorMessage, file: file, line: line)
+    }
 }
 
 private extension JSON {
+    // swiftlint:disable:next cyclomatic_complexity
     func difference(from other: JSON?) -> String? {
-        switch (self, other) {
-        case let (.object(lhs), .object(rhs)):
-            let lhsKeys = lhs.keys.sorted()
-            if let description = lhsKeys.difference(from: rhs.keys.sorted()).testDescription(descriptor: "key") {
+        guard let other else {
+            return "\(self) != \("nil")"
+        }
+
+        switch (type, other.type) {
+        case (.string, .string):
+            return stringValue.difference(from: other.stringValue).testDescription(descriptor: "character").map { "\(self) != \(other)\n" + $0 }
+        case (.number, .number):
+            return self != other ? "\(self) != \(other)" : nil
+        case (.bool, .bool):
+            return self != other ? "\(self) != \(other)" : nil
+        case (.array, .array):
+            return arrayValue.difference(from: other.arrayValue).testDescription(descriptor: "value")
+        case (.dictionary, .dictionary):
+            let selfKeys = dictionaryValue.keys.sorted()
+            if let description = selfKeys.difference(from: other.dictionaryValue.keys.sorted()).testDescription(descriptor: "key") {
                 return description
             } else {
-                for key in lhsKeys {
-                    if let description = lhs[key]?.difference(from: rhs[key]) {
-                        return description
+                for key in selfKeys {
+                    if let selfValue = dictionaryValue[key], let otherValue = other.dictionaryValue[key] {
+                        if let description = selfValue.difference(from: otherValue) {
+                            return description
+                        }
                     }
                 }
             }
             return nil
-        case let (.array(lhs), .array(rhs)):
-            return lhs.difference(from: rhs).testDescription(descriptor: "value")
-        case let (.number(lhs), .number(rhs)):
-            return lhs != rhs ? "\(lhs) != \(rhs)" : nil
-        case let (.boolean(lhs), .boolean(rhs)):
-            return lhs != rhs ? "\(lhs) != \(rhs)" : nil
-        case let (.string(lhs), .string(rhs)):
-            return lhs.difference(from: rhs).testDescription(descriptor: "character").map { "\(lhs) != \(rhs)\n" + $0 }
+        case (.null, .null):
+            return self != other ? "\(self) != \(other)" : nil
+        case (.unknown, .unknown):
+            return self != other ? "\(self) != \(other)" : nil
         default:
-            return "\(self) != \(other ?? "nil")"
+            return "\(self) != \(other)"
         }
     }
 }
@@ -104,7 +130,6 @@ private extension JSON {
 private extension CollectionDifference {
     func testDescription(descriptor: String) -> String? {
         guard case let descriptions = compactMap({ $0.testDescription(descriptor: descriptor) }), !descriptions.isEmpty else { return nil }
-
         return "- " + descriptions.joined(separator: "\n- ")
     }
 }

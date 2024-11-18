@@ -24,7 +24,7 @@ public extension StytchB2BClient {
         let router: NetworkingRouter<SSORoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
-        @Dependency(\.sessionStorage) private var sessionStorage
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
@@ -39,7 +39,7 @@ public extension StytchB2BClient {
             }
 
             let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
-                intermediateSessionToken: sessionStorage.intermediateSessionToken,
+                intermediateSessionToken: sessionManager.intermediateSessionToken,
                 wrapped: CodeVerifierParameters(
                     codingPrefix: .pkce,
                     codeVerifier: pkcePair.codeVerifier,
@@ -49,7 +49,8 @@ public extension StytchB2BClient {
 
             return try await router.post(
                 to: .authenticate,
-                parameters: intermediateSessionTokenParameters
+                parameters: intermediateSessionTokenParameters,
+                useDFPPA: true
             )
         }
 
@@ -141,7 +142,7 @@ public extension StytchB2BClient.SSO {
 
 public extension StytchB2BClient.SSO {
     /// A dedicated parameters type for SSO `authenticate` calls.
-    struct AuthenticateParameters: Encodable {
+    struct AuthenticateParameters: Encodable, Sendable {
         private enum CodingKeys: String, CodingKey {
             case token = "ssoToken"
             case sessionDuration = "sessionDurationMinutes"
@@ -167,7 +168,7 @@ public extension StytchB2BClient.SSO {
 public extension StytchB2BClient.SSO {
     typealias GetConnectionsResponse = Response<GetConnectionsResponseData>
 
-    struct GetConnectionsResponseData: Codable {
+    struct GetConnectionsResponseData: Codable, Sendable {
         /// The list of SAML Connections owned by this organization.
         public let samlConnections: [SAML.SAMLConnection]
         /// The list of OIDC Connections owned by this organization.
@@ -178,7 +179,7 @@ public extension StytchB2BClient.SSO {
 public extension StytchB2BClient.SSO {
     typealias DeleteConnectionResponse = Response<DeleteConnectionResponseData>
 
-    struct DeleteConnectionResponseData: Codable {
+    struct DeleteConnectionResponseData: Codable, Sendable {
         /// The connection_id that was deleted as part of the delete request.
         public let connectionId: String
     }

@@ -59,19 +59,24 @@ struct Environment {
 
     var memberSessionsPollingClient: PollingClient = .memberSessions
 
-    let sessionStorage: SessionStorage = .init()
-
-    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
-
-    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
-
-    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
+    let sessionManager: SessionManager = .init()
 
     var localStorage: LocalStorage = .init()
 
     var cookieClient: CookieClient = .live
 
     var keychainClient: KeychainClient = .live
+
+    var networkMonitor: NetworkMonitor = .init()
+
+    // consumer
+    let sessionStorage: ObjectStorage<SessionStorageWrapper> = .init(objectWrapper: SessionStorageWrapper())
+    let userStorage: ObjectStorage<UserStorageWrapper> = .init(objectWrapper: UserStorageWrapper())
+
+    // b2b
+    let memberSessionStorage: ObjectStorage<MemberSessionStorageWrapper> = .init(objectWrapper: MemberSessionStorageWrapper())
+    let memberStorage: ObjectStorage<MemberStorageWrapper> = .init(objectWrapper: MemberStorageWrapper())
+    let organizationStorage: ObjectStorage<OrganizationStorageWrapper> = .init(objectWrapper: OrganizationStorageWrapper())
 
     #if !os(watchOS)
     private var _webAuthenticationSessionClient: Any? = {
@@ -127,6 +132,4 @@ struct Environment {
         runloop.add(timer, forMode: .common)
         return timer
     }
-
-    var initializationState: InitializationState = .init()
 }

@@ -1,7 +1,8 @@
 import Foundation
+@preconcurrency import SwiftyJSON
 
 /// A type defining an organization member; including information about their name, status, the auth factors associated with them, and more.
-public struct Member: Codable {
+public struct Member: Codable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// Globally unique UUID that identifies a specific Member. The member_id is critical to perform operations on a Member, so be sure to preserve this value.
@@ -26,8 +27,22 @@ public struct Member: Codable {
     let memberId: ID
 }
 
+extension Member: Equatable {
+    public static func == (lhs: Member, rhs: Member) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.organizationId == rhs.organizationId &&
+            lhs.emailAddress == rhs.emailAddress &&
+            lhs.status == rhs.status &&
+            lhs.name == rhs.name &&
+            lhs.ssoRegistrations == rhs.ssoRegistrations &&
+            lhs.trustedMetadata == rhs.trustedMetadata &&
+            lhs.untrustedMetadata == rhs.untrustedMetadata &&
+            lhs.memberPasswordId == rhs.memberPasswordId
+    }
+}
+
 public extension Member {
-    enum Status: String, Codable {
+    enum Status: String, Codable, Sendable {
         case pending
         case active
         case deleted
@@ -49,7 +64,7 @@ public extension Member {
 }
 
 /// A type representing a specific SSO registration.
-public struct SSORegistration: Codable {
+public struct SSORegistration: Codable, Equatable, Sendable {
     public typealias ID = Identifier<Self, String>
 
     /// The unique ID of an SSO Registration.
@@ -62,4 +77,11 @@ public struct SSORegistration: Codable {
     public let ssoAttributes: JSON
 
     let registrationId: ID
+
+    public static func == (lhs: SSORegistration, rhs: SSORegistration) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.connectionId == rhs.connectionId &&
+            lhs.externalId == rhs.externalId &&
+            lhs.ssoAttributes == rhs.ssoAttributes
+    }
 }

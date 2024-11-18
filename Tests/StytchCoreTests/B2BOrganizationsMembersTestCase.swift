@@ -1,3 +1,4 @@
+@preconcurrency import SwiftyJSON
 import XCTest
 @testable import StytchCore
 
@@ -22,7 +23,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members",
-            method: .post(["email_address": JSON.string(emailAddress)])
+            method: .post(["email_address": JSON(stringLiteral: emailAddress)])
         )
     }
 
@@ -47,7 +48,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/update/\(memberId)",
-            method: .put(["member_id": JSON.string(memberId), "name": JSON.string(name)])
+            method: .put(["member_id": JSON(stringLiteral: memberId), "name": JSON(stringLiteral: name)])
         )
     }
 
@@ -85,7 +86,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)/reactivate",
-            method: .put(JSON.string(memberId))
+            method: .put(JSON(stringLiteral: memberId))
         )
     }
 

@@ -9,7 +9,7 @@ final class B2BRBACTestCase: BaseTestCase {
     func testIsAuthorizedSync() {
         // Given we have loaded the bootstrap data and we have a member session
         Current.localStorage.bootstrapData = .mock
-        Current.localStorage.memberSession = .mock
+        Current.memberSessionStorage.update(.mock)
 
         // When we have verified that we have the expected permissions
         let isAuthorizedSync = StytchB2BClient.rbac.isAuthorizedSync(resourceId: "documents", action: "read")
@@ -22,7 +22,7 @@ final class B2BRBACTestCase: BaseTestCase {
         // Given we have loaded the bootstrap data and we have a member session
         // And we have verified that we have the expected permissions
         Current.localStorage.bootstrapData = .mock
-        Current.localStorage.memberSession = .mock
+        Current.memberSessionStorage.update(.mock)
         XCTAssertTrue(StytchB2BClient.rbac.isAuthorizedSync(resourceId: "documents", action: "read"))
 
         // This will confirm the results that we have loaded a new bootstrap response below
@@ -30,7 +30,7 @@ final class B2BRBACTestCase: BaseTestCase {
         XCTAssertFalse(isAuthorizedFalse)
 
         // When we check for isAuthorized by fetching a new bootstrap response
-        Current.localStorage.memberSession = .mockWithAdminRole
+        Current.memberSessionStorage.update(.mockWithAdminRole)
         networkInterceptor.responses {
             BootstrapResponse(requestId: "1234", statusCode: 200, wrapped: .mockWithoutDefaultRBACRole)
         }
@@ -42,14 +42,14 @@ final class B2BRBACTestCase: BaseTestCase {
 
     func testAllPermissions() async throws {
         // Give that we load the the first boot strap response and get the permissions
-        Current.localStorage.memberSession = .mock
+        Current.memberSessionStorage.update(.mock)
         networkInterceptor.responses {
             BootstrapResponse(requestId: "1234", statusCode: 200, wrapped: .mock)
         }
         let allPermissions1 = try await StytchB2BClient.rbac.allPermissions()
 
         // When we load a new boot strap response and get the new permissions
-        Current.localStorage.memberSession = .mockWithAdminRole
+        Current.memberSessionStorage.update(.mockWithAdminRole)
         networkInterceptor.responses {
             BootstrapResponse(requestId: "1234", statusCode: 200, wrapped: .mockWithoutDefaultRBACRole)
         }
@@ -75,7 +75,8 @@ extension BootstrapResponseData {
             createOrganizationEnabled: false,
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: nil,
-            rbacPolicy: .mock
+            rbacPolicy: .mock,
+            passwordConfig: nil
         )
     }
 
@@ -93,7 +94,8 @@ extension BootstrapResponseData {
             createOrganizationEnabled: false,
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: nil,
-            rbacPolicy: .mockWithoutDefaultRole
+            rbacPolicy: .mockWithoutDefaultRole,
+            passwordConfig: nil
         )
     }
 }

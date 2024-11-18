@@ -58,7 +58,7 @@ public extension StytchB2BClient.Organizations.Members {
     typealias OrganizationMemberResponse = Response<OrganizationMemberResponseData>
 
     /// The underlying data for the MemberResponse type.
-    struct OrganizationMemberResponseData: Codable {
+    struct OrganizationMemberResponseData: Codable, Sendable {
         /// The current member's member id.
         public let memberId: String?
 
@@ -75,7 +75,7 @@ public extension StytchB2BClient.Organizations.Members {
     typealias OrganizationMemberDeleteResponse = Response<OrganizationMemberDeleteResponseData>
 
     /// The underlying data for the OrganizationMemberDeleteResponse type.
-    struct OrganizationMemberDeleteResponseData: Codable {
+    struct OrganizationMemberDeleteResponseData: Codable, Sendable {
         /// The current member id that was deleted.
         public let memberId: String
     }

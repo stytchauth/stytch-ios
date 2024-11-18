@@ -23,19 +23,20 @@ public extension StytchB2BClient.OAuth {
             }
 
             guard let pkcePair: PKCECodePair = pkcePairManager.getPKCECodePair() else {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: StytchSDKError.missingPKCE))
                 throw StytchSDKError.missingPKCE
             }
 
             do {
                 let result = try await router.post(
                     to: .authenticate,
-                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
+                    parameters: CodeVerifierParameters(codingPrefix: .pkce, codeVerifier: pkcePair.codeVerifier, wrapped: parameters),
+                    useDFPPA: true
                 ) as DiscoveryAuthenticateResponse
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_success"))
                 return result
             } catch {
-                try? await StytchB2BClient.events.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: error))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "b2b_discovery_oauth_failure", error: error))
                 throw error
             }
         }
@@ -43,7 +44,7 @@ public extension StytchB2BClient.OAuth {
 }
 
 public extension StytchB2BClient.OAuth.Discovery {
-    struct DiscoveryAuthenticateParameters: Codable {
+    struct DiscoveryAuthenticateParameters: Codable, Sendable {
         let discoveryOauthToken: String
 
         /// A data class wrapping the parameters necessary to authenticate an OAuth Discovery flow
@@ -57,7 +58,7 @@ public extension StytchB2BClient.OAuth.Discovery {
 public extension StytchB2BClient.OAuth.Discovery {
     typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
 
-    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable {
+    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable, Sendable {
         /// The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but represents a bag of factors that may be converted to a member session.
         /// The token can be used with the OTP SMS Authenticate endpoint, TOTP Authenticate endpoint, or Recovery Codes Recover endpoint to complete an MFA flow and log in to the Organization.
         /// It can also be used with the Exchange Intermediate Session endpoint to join a specific Organization that allows the factors represented by the intermediate session token;

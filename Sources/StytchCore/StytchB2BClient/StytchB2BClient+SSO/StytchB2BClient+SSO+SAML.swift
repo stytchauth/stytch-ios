@@ -51,7 +51,7 @@ public extension StytchB2BClient.SSO.SAML {
 }
 
 public extension StytchB2BClient.SSO.SAML {
-    struct UpdateConnectionParameters: Codable {
+    struct UpdateConnectionParameters: Codable, Sendable {
         let connectionId: String
         let idpEntityId: String?
         let displayName: String?
@@ -105,7 +105,7 @@ public extension StytchB2BClient.SSO.SAML {
 }
 
 public extension StytchB2BClient.SSO.SAML {
-    struct UpdateConnectionByURLParameters: Codable {
+    struct UpdateConnectionByURLParameters: Codable, Sendable {
         let connectionId: String
         let metadataUrl: String
 
@@ -120,7 +120,7 @@ public extension StytchB2BClient.SSO.SAML {
 }
 
 public extension StytchB2BClient.SSO.SAML {
-    struct DeleteVerificationCertificateParameters: Codable {
+    struct DeleteVerificationCertificateParameters: Codable, Sendable {
         let connectionId: String
         let certificateId: String
 
@@ -139,7 +139,7 @@ public extension StytchB2BClient.SSO.SAML {
     typealias SAMLConnectionResponse = Response<SAMLConnectionResponseData>
 
     /// The underlying data for the SAML connection type.
-    struct SAMLConnectionResponseData: Codable {
+    struct SAMLConnectionResponseData: Codable, Sendable {
         /// The SAML Connection object affected by this API call.
         public let connection: SAMLConnection
     }
@@ -151,7 +151,7 @@ public extension StytchB2BClient.SSO.SAML {
     typealias SAMLDeleteVerificationCertificateResponse = Response<SAMLDeleteVerificationCertificateResponseData>
 
     /// The underlying data for the delete verification certificate type.
-    struct SAMLDeleteVerificationCertificateResponseData: Codable {
+    struct SAMLDeleteVerificationCertificateResponseData: Codable, Sendable {
         /// The ID of the certificate that was deleted.
         public let certificateId: String
     }

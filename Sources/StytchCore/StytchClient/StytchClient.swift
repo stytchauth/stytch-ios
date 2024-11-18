@@ -15,26 +15,19 @@ import UIKit
 public struct StytchClient: StytchClientType {
     static var instance: StytchClient = .init()
     static var router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
-    public static var isInitialized: AnyPublisher<Bool, Never> { instance.initializationState.isInitialized }
+    public static var isInitialized: AnyPublisher<Bool, Never> { StartupClient.isInitialized }
     // swiftlint:disable:next identifier_name
     public static var _uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
 
-    static let appSessionId: String = UUID().uuidString
-
-    static var bootStrapData: BootstrapResponseData? {
-        Self.instance.localStorage.bootstrapData
-    }
-
     public static var disableSdkWatermark: Bool {
-        bootStrapData?.disableSdkWatermark ?? true
+        Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
     }
 
     private init() {
-        postInit()
         #if os(iOS)
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
             Task {
-                try await Self.sessions.authenticate(parameters: .init())
+                try await StartupClient.start(type: ClientType.consumer)
             }
         }
         #endif
@@ -47,7 +40,7 @@ public struct StytchClient: StytchClientType {
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
      */
     public static func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain _: String? = nil) {
-        _configure(publicToken: publicToken, hostUrl: hostUrl)
+        instance.configure(publicToken: publicToken, hostUrl: hostUrl)
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
@@ -57,8 +50,41 @@ public struct StytchClient: StytchClientType {
         return (tokenType, token)
     }
 
+    /// Retrieve the most recently created PKCE code pair from the device, if available
+    public static func getPKCECodePair() -> PKCECodePair? {
+        Self.instance.pkcePairManager.getPKCECodePair()
+    }
+}
+
+public extension StytchClient {
+    func start() {
+        Task {
+            do {
+                try await StartupClient.start(type: ClientType.consumer)
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
+            } catch {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
+            }
+        }
+    }
+}
+
+public extension StytchClient {
+    /// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
+    enum DeeplinkTokenType: String, Sendable {
+        case magicLinks = "magic_links"
+        case oauth
+        case passwordReset = "reset_password"
+    }
+
+    /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
+    enum DeeplinkResponse: Sendable {
+        case auth(AuthenticateResponse)
+        case oauth(StytchClient.OAuth.OAuthAuthenticateResponse)
+    }
+
     /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchClient/tokenValues(for:)``
-    public static func canHandle(url: URL) -> Bool {
+    static func canHandle(url: URL) -> Bool {
         (try? tokenValues(for: url)) != nil
     }
 
@@ -70,13 +96,13 @@ public struct StytchClient: StytchClientType {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    public static func handle(
+    static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
-    ) async throws -> DeeplinkHandledStatus<AuthenticateResponse, DeeplinkTokenType> {
+    ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
         guard let (tokenType, token) = try tokenValues(for: url) else {
             Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
             }
             return .notHandled
         }
@@ -84,49 +110,19 @@ public struct StytchClient: StytchClientType {
         switch tokenType {
         case .magicLinks:
             Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .oauth:
             Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration)))
+            return try await .handled(response: .oauth(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
         case .passwordReset:
             Task {
-                try? await Self.events.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
             return .manualHandlingRequired(tokenType, token: token)
         }
-    }
-
-    /// Retrieve the most recently created PKCE code pair from the device, if available
-    public static func getPKCECodePair() -> PKCECodePair? {
-        Self.instance.pkcePairManager.getPKCECodePair()
-    }
-
-    func runBootstrapping() {
-        Task {
-            do {
-                try await Self.bootstrap.fetch()
-                if sessionStorage.persistedSessionIdentifiersExist {
-                    _ = try await Self.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
-                }
-                initializationState.setInitializationState(state: true)
-                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_success"))
-            } catch {
-                try? await Self.events.logEvent(parameters: .init(eventName: "client_initialization_failure"))
-                throw error
-            }
-        }
-    }
-}
-
-public extension StytchClient {
-    /// Represents the type of deeplink token which has been parsed. e.g. `magicLinks` or `passwordReset`.
-    enum DeeplinkTokenType: String {
-        case magicLinks = "magic_links"
-        case oauth
-        case passwordReset = "reset_password"
     }
 }
