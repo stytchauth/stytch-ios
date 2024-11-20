@@ -3,8 +3,8 @@
 import Combine
 import Foundation
 
-public extension StytchB2BClient.OTP {
-    /// Send a one-time passcode (OTP) to a user using their phone number via SMS.
+public extension StytchB2BClient.OTP.Email.Discovery {
+    /// Send a one-time passcode (OTP) to a user using their email address.
     func send(parameters: SendParameters, completion: @escaping Completion<BasicResponse>) {
         Task {
             do {
@@ -15,7 +15,7 @@ public extension StytchB2BClient.OTP {
         }
     }
 
-    /// Send a one-time passcode (OTP) to a user using their phone number via SMS.
+    /// Send a one-time passcode (OTP) to a user using their email address.
     func send(parameters: SendParameters) -> AnyPublisher<BasicResponse, Error> {
         return Deferred {
             Future({ promise in

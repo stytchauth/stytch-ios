@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 
 extension StytchB2BClient {
@@ -286,15 +287,60 @@ extension StytchB2BClient {
     }
 
     enum OTPRoute: RouteType {
-        case send
-        case authenticate
+        case sms(SMSRoute)
+        case email(EmailRoute)
 
         var path: Path {
             switch self {
-            case .send:
-                return "sms/send"
-            case .authenticate:
-                return "sms/authenticate"
+            case let .sms(route):
+                return "sms".appendingPath(route.path)
+            case let .email(route):
+                return "email".appendingPath(route.path)
+            }
+        }
+
+        enum SMSRoute: RouteType {
+            case send
+            case authenticate
+
+            var path: Path {
+                switch self {
+                case .send:
+                    return "send"
+                case .authenticate:
+                    return "authenticate"
+                }
+            }
+        }
+
+        enum EmailRoute: RouteType {
+            case loginOrSignup
+            case authenticate
+            case discovery(DiscoveryRoute)
+
+            var path: Path {
+                switch self {
+                case .loginOrSignup:
+                    return "login_or_signup"
+                case .authenticate:
+                    return "authenticate"
+                case let .discovery(route):
+                    return "discovery".appendingPath(route.path)
+                }
+            }
+
+            enum DiscoveryRoute: RouteType {
+                case send
+                case authenticate
+
+                var path: Path {
+                    switch self {
+                    case .send:
+                        return "send"
+                    case .authenticate:
+                        return "authenticate"
+                    }
+                }
             }
         }
     }

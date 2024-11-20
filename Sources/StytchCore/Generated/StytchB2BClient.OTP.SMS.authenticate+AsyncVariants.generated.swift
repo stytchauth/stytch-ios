@@ -3,7 +3,7 @@
 import Combine
 import Foundation
 
-public extension StytchB2BClient.OTP {
+public extension StytchB2BClient.OTP.SMS {
     /// Authenticate a one-time passcode (OTP) sent to a user via SMS.
     func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BAuthenticateResponse>) {
         Task {

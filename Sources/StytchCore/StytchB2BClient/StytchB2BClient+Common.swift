@@ -139,3 +139,26 @@ public extension StytchB2BClient {
         public let member: Member
     }
 }
+
+public extension StytchB2BClient {
+    typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
+
+    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable, Sendable {
+        /// The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but represents a bag of factors that may be converted to a member session.
+        /// The token can be used with the OTP SMS Authenticate endpoint, TOTP Authenticate endpoint, or Recovery Codes Recover endpoint to complete an MFA flow and log in to the Organization.
+        /// It can also be used with the Exchange Intermediate Session endpoint to join a specific Organization that allows the factors represented by the intermediate session token;
+        /// or the Create Organization via Discovery endpoint to create a new Organization and Member.
+        public let intermediateSessionToken: String
+        /// The email address.
+        public let emailAddress: String
+        /// An array of discovered_organization objects tied to the intermediate_session_token, session_token, or session_jwt. See the Discovered Organization Object for complete details.
+        /// Note that Organizations will only appear here under any of the following conditions:
+        /// The end user is already a Member of the Organization.
+        /// The end user is invited to the Organization.
+        /// The end user can join the Organization because:
+        /// a) The Organization allows JIT provisioning.
+        /// b) The Organizations' allowed domains list contains the Member's email domain.
+        /// c) The Organization has at least one other Member with a verified email address with the same domain as the end user (to prevent phishing attacks).
+        public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
+    }
+}

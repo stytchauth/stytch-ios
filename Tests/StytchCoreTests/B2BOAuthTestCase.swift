@@ -43,7 +43,7 @@ final class B2BOAuthTestCase: BaseTestCase {
     @available(tvOS 16.0, *)
     func testDiscoveryAuthenticate() async throws {
         networkInterceptor.responses {
-            StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse(
+            StytchB2BClient.DiscoveryAuthenticateResponse(
                 requestId: "1234",
                 statusCode: 200,
                 wrapped: .mock
@@ -77,7 +77,7 @@ final class B2BOAuthTestCase: BaseTestCase {
     }
 }
 
-extension StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponseData {
+extension StytchB2BClient.DiscoveryAuthenticateResponseData {
     static var mock: Self {
         .init(
             intermediateSessionToken: "",
