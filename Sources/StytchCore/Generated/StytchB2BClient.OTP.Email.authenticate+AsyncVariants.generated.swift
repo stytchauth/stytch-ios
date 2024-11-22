@@ -3,9 +3,9 @@
 import Combine
 import Foundation
 
-public extension StytchB2BClient.OAuth.Discovery {
-    /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: DiscoveryAuthenticateParameters, completion: @escaping Completion<StytchB2BClient.DiscoveryAuthenticateResponse>) {
+public extension StytchB2BClient.OTP.Email {
+    /// Authenticate a one-time passcode (OTP) sent to a user via Email.
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -15,8 +15,8 @@ public extension StytchB2BClient.OAuth.Discovery {
         }
     }
 
-    /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
-    func authenticate(parameters: DiscoveryAuthenticateParameters) -> AnyPublisher<StytchB2BClient.DiscoveryAuthenticateResponse, Error> {
+    /// Authenticate a one-time passcode (OTP) sent to a user via Email.
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

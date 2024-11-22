@@ -82,7 +82,7 @@ public extension StytchB2BClient {
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
-        case discoveryOauth(StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateResponse)
+        case discoveryOauth(StytchB2BClient.DiscoveryAuthenticateResponse)
         #endif
     }
 

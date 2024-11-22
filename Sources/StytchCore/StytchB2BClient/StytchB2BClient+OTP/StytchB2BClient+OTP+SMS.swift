@@ -1,17 +1,17 @@
 import Foundation
 
-public extension StytchB2BClient {
-    /// The interface for interacting with otp products.
-    static var otp: OTP {
+public extension StytchB2BClient.OTP {
+    /// The interface for interacting with otp sms products.
+    var sms: SMS {
         .init(router: router.scopedRouter {
-            $0.otp
+            $0.sms
         })
     }
 }
 
-public extension StytchB2BClient {
-    struct OTP {
-        let router: NetworkingRouter<StytchB2BClient.OTPRoute>
+public extension StytchB2BClient.OTP {
+    struct SMS {
+        let router: NetworkingRouter<StytchB2BClient.OTPRoute.SMSRoute>
 
         @Dependency(\.sessionManager) private var sessionManager
 
@@ -43,7 +43,7 @@ public extension StytchB2BClient {
     }
 }
 
-public extension StytchB2BClient.OTP {
+public extension StytchB2BClient.OTP.SMS {
     struct SendParameters: Codable, Sendable {
         let organizationId: String
         let memberId: String
@@ -69,7 +69,7 @@ public extension StytchB2BClient.OTP {
     }
 }
 
-public extension StytchB2BClient.OTP {
+public extension StytchB2BClient.OTP.SMS {
     struct AuthenticateParameters: Codable, Sendable {
         let sessionDurationMinutes: Minutes
         let organizationId: String
