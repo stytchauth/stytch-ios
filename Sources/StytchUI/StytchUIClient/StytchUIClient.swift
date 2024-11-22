@@ -28,7 +28,7 @@ public enum StytchUIClient {
     public static func configure(publicToken: String, config: Configuration, hostUrl: URL? = nil) {
         StytchClient.configure(publicToken: publicToken, hostUrl: hostUrl)
         Self.config = config
-        loadFonts()
+        FontLoader.loadFonts()
     }
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.

@@ -2,8 +2,7 @@ import CoreText
 import UIKit
 
 // swiftlint:disable indentation_width legacy_objc_type opening_brace
-
-public extension StytchUIClient {
+public enum FontLoader {
     static var fontsLoaded = false
 
     static func loadFonts() {
