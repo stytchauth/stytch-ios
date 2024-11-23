@@ -47,14 +47,16 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
 
     func loginWithEmail(email: String) async throws {
-        guard let magicLink = state.config.magicLink else { return }
+        guard state.config.supportsMagicLink else { return }
+        let magicLink = state.config.magicLinkOptions
         let params = params(email: email, magicLink: magicLink)
         _ = try await magicLinksClient.loginOrCreate(parameters: params)
         try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
     }
 
     func forgotPassword(email: String) async throws {
-        guard let password = state.config.password else { return }
+        guard state.config.supportsPassword else { return }
+        let password = state.config.passwordOptions
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
         _ = try await passwordClient.resetByEmailStart(parameters: params)
@@ -77,29 +79,29 @@ struct PasswordState {
 
 extension PasswordViewModel {
     var sessionDuration: Minutes {
-        state.config.session?.sessionDuration ?? .defaultSessionDuration
+        state.config.sessionDurationMinutes
     }
 
-    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+    func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: password.loginURL,
-            loginExpiration: password.loginExpiration,
-            resetPasswordUrl: password.resetPasswordURL,
-            resetPasswordExpiration: password.resetPasswordExpiration,
-            resetPasswordTemplateId: password.resetPasswordTemplateId
+            loginUrl: state.config.redirectUrl,
+            loginExpiration: password?.loginExpiration,
+            resetPasswordUrl: state.config.redirectUrl,
+            resetPasswordExpiration: password?.resetPasswordExpiration,
+            resetPasswordTemplateId: password?.resetPasswordTemplateId
         )
     }
 
-    func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
+    func params(email: String, magicLink: StytchUIClient.MagicLinkOptions?) -> StytchClient.MagicLinks.Email.Parameters {
         .init(
             email: email,
-            loginMagicLinkUrl: magicLink.loginMagicLinkUrl,
-            loginExpiration: magicLink.loginExpiration,
-            loginTemplateId: magicLink.loginTemplateId,
-            signupMagicLinkUrl: magicLink.signupMagicLinkUrl,
-            signupExpiration: magicLink.signupExpiration,
-            signupTemplateId: magicLink.signupTemplateId
+            loginMagicLinkUrl: state.config.redirectUrl,
+            loginExpiration: magicLink?.loginExpiration,
+            loginTemplateId: magicLink?.loginTemplateId,
+            signupMagicLinkUrl: state.config.redirectUrl,
+            signupExpiration: magicLink?.signupExpiration,
+            signupTemplateId: magicLink?.signupTemplateId
         )
     }
 }

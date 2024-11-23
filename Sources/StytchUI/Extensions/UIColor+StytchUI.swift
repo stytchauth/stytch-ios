@@ -26,32 +26,32 @@ public extension UIColor {
 }
 
 extension UIColor {
-    static let background: UIColor = .init { StytchUIClient.config.theme.background.get(style: $0.userInterfaceStyle) }
+    static let background: UIColor = .init { StytchUIClient.configuration.theme.background.get(style: $0.userInterfaceStyle) }
 
-    static let primaryText: UIColor = .init { StytchUIClient.config.theme.primaryText.get(style: $0.userInterfaceStyle) }
-    static let placeholderText: UIColor = .init { StytchUIClient.config.theme.placeholderText.get(style: $0.userInterfaceStyle) }
-    static let disabledText: UIColor = .init { StytchUIClient.config.theme.disabledText.get(style: $0.userInterfaceStyle) }
-    static let secondaryText: UIColor = .init { StytchUIClient.config.theme.secondaryText.get(style: $0.userInterfaceStyle) }
-    static let dangerText: UIColor = .init { StytchUIClient.config.theme.dangerText.get(style: $0.userInterfaceStyle) }
+    static let primaryText: UIColor = .init { StytchUIClient.configuration.theme.primaryText.get(style: $0.userInterfaceStyle) }
+    static let placeholderText: UIColor = .init { StytchUIClient.configuration.theme.placeholderText.get(style: $0.userInterfaceStyle) }
+    static let disabledText: UIColor = .init { StytchUIClient.configuration.theme.disabledText.get(style: $0.userInterfaceStyle) }
+    static let secondaryText: UIColor = .init { StytchUIClient.configuration.theme.secondaryText.get(style: $0.userInterfaceStyle) }
+    static let dangerText: UIColor = .init { StytchUIClient.configuration.theme.dangerText.get(style: $0.userInterfaceStyle) }
 
-    static let borderActive: UIColor = .init { StytchUIClient.config.theme.borderActive.get(style: $0.userInterfaceStyle) }
+    static let borderActive: UIColor = .init { StytchUIClient.configuration.theme.borderActive.get(style: $0.userInterfaceStyle) }
 
-    static let primaryButton: UIColor = .init { StytchUIClient.config.theme.primaryButton.get(style: $0.userInterfaceStyle) }
-    static let primaryButtonText: UIColor = .init { StytchUIClient.config.theme.primaryButtonText.get(style: $0.userInterfaceStyle) }
-    static let primaryButtonDisabled: UIColor = .init { StytchUIClient.config.theme.primaryButtonDisabled.get(style: $0.userInterfaceStyle) }
-    static let primaryButtonTextDisabled: UIColor = .init { StytchUIClient.config.theme.primaryButtonTextDisabled.get(style: $0.userInterfaceStyle) }
+    static let primaryButton: UIColor = .init { StytchUIClient.configuration.theme.primaryButton.get(style: $0.userInterfaceStyle) }
+    static let primaryButtonText: UIColor = .init { StytchUIClient.configuration.theme.primaryButtonText.get(style: $0.userInterfaceStyle) }
+    static let primaryButtonDisabled: UIColor = .init { StytchUIClient.configuration.theme.primaryButtonDisabled.get(style: $0.userInterfaceStyle) }
+    static let primaryButtonTextDisabled: UIColor = .init { StytchUIClient.configuration.theme.primaryButtonTextDisabled.get(style: $0.userInterfaceStyle) }
 
-    static let secondaryButton: UIColor = .init { StytchUIClient.config.theme.secondaryButton.get(style: $0.userInterfaceStyle) }
-    static let secondaryButtonText: UIColor = .init { StytchUIClient.config.theme.secondaryButtonText.get(style: $0.userInterfaceStyle) }
+    static let secondaryButton: UIColor = .init { StytchUIClient.configuration.theme.secondaryButton.get(style: $0.userInterfaceStyle) }
+    static let secondaryButtonText: UIColor = .init { StytchUIClient.configuration.theme.secondaryButtonText.get(style: $0.userInterfaceStyle) }
 
-    static let tertiaryButton: UIColor = .init { StytchUIClient.config.theme.tertiaryButton.get(style: $0.userInterfaceStyle) }
+    static let tertiaryButton: UIColor = .init { StytchUIClient.configuration.theme.tertiaryButton.get(style: $0.userInterfaceStyle) }
 
-    static let textfieldDisabled: UIColor = .init { StytchUIClient.config.theme.textfieldDisabled.get(style: $0.userInterfaceStyle) }
-    static let textfieldDisabledBorder: UIColor = .init { StytchUIClient.config.theme.textfieldDisabledBorder.get(style: $0.userInterfaceStyle) }
+    static let textfieldDisabled: UIColor = .init { StytchUIClient.configuration.theme.textfieldDisabled.get(style: $0.userInterfaceStyle) }
+    static let textfieldDisabledBorder: UIColor = .init { StytchUIClient.configuration.theme.textfieldDisabledBorder.get(style: $0.userInterfaceStyle) }
 
-    static let progressDefault: UIColor = .init { StytchUIClient.config.theme.progressDefault.get(style: $0.userInterfaceStyle) }
-    static let progressSuccess: UIColor = .init { StytchUIClient.config.theme.progressSuccess.get(style: $0.userInterfaceStyle) }
-    static let progressDanger: UIColor = .init { StytchUIClient.config.theme.progressDanger.get(style: $0.userInterfaceStyle) }
+    static let progressDefault: UIColor = .init { StytchUIClient.configuration.theme.progressDefault.get(style: $0.userInterfaceStyle) }
+    static let progressSuccess: UIColor = .init { StytchUIClient.configuration.theme.progressSuccess.get(style: $0.userInterfaceStyle) }
+    static let progressDanger: UIColor = .init { StytchUIClient.configuration.theme.progressDanger.get(style: $0.userInterfaceStyle) }
 }
 
 extension UIColor {
@@ -59,7 +59,7 @@ extension UIColor {
         size: CGSize? = nil,
         cornerRadius: CGFloat? = nil
     ) -> UIImage {
-        let cornerRadius: CGFloat = cornerRadius ?? StytchUIClient.config.theme.cornerRadius
+        let cornerRadius: CGFloat = cornerRadius ?? StytchUIClient.configuration.theme.cornerRadius
         let size: CGSize = size ?? CGSize(width: 2 * cornerRadius, height: 2 * cornerRadius)
         return UIGraphicsImageRenderer(size: size)
             .image { context in

@@ -42,10 +42,10 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
     private lazy var inputs: [Input] = {
         var inputs: [Input] = []
-        if viewModel.state.config.magicLink != nil || viewModel.state.config.password != nil {
+        if viewModel.state.config.supportsMagicLink || viewModel.state.config.supportsPassword {
             inputs.append(.email)
         }
-        if let otpMethods = viewModel.state.config.otp?.methods {
+        if let otpMethods = viewModel.state.config.otpOptions?.methods {
             if otpMethods.contains(.email), !inputs.contains(.email) {
                 inputs.append(.email)
             }
@@ -204,7 +204,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         let intent = try await viewModel.getUserIntent(email: email)
         if let intent = intent {
             DispatchQueue.main.async {
-                self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.magicLink != nil)
+                self.launchPassword(intent: intent, email: email, magicLinksEnabled: self.viewModel.state.config.supportsMagicLink)
             }
         } else {
             try await viewModel.resetPassword(email: email)
@@ -236,11 +236,11 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                 switch activeInput {
                 case .email:
                     if let email = self.emailInput.text {
-                        if viewModel.state.config.magicLink != nil, viewModel.state.config.password != nil {
+                        if viewModel.state.config.supportsMagicLink, viewModel.state.config.supportsPassword {
                             try await launchMagicLinkPassword(email: email)
-                        } else if viewModel.state.config.magicLink != nil {
+                        } else if viewModel.state.config.supportsMagicLink {
                             try await launchMagicLinkOnly(email: email)
-                        } else if viewModel.state.config.otp != nil {
+                        } else if viewModel.state.config.supportsOTP {
                             let (result, expiry) = try await viewModel.continueWithEmail(email: email)
                             DispatchQueue.main.async {
                                 self.launchOTP(input: email, formattedInput: email, otpMethod: .email, result: result, expiry: expiry)
@@ -281,7 +281,7 @@ protocol AuthInputViewModelDelegate: AnyObject {
     func launchCheckYourEmailResetReturning(email: String)
     func launchPassword(intent: PasswordState.Intent, email: String, magicLinksEnabled: Bool)
     func launchCheckYourEmail(email: String)
-    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.Configuration.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date)
+    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date)
 }
 
 extension AuthInputViewController: AuthInputViewModelDelegate {
@@ -310,7 +310,7 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.Configuration.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date) {
+    func launchOTP(input: String, formattedInput: String, otpMethod: StytchUIClient.OTPMethod, result: StytchClient.OTP.OTPResponse, expiry: Date) {
         let controller = OTPCodeViewController(
             state: .init(
                 config: viewModel.state.config,
@@ -319,7 +319,7 @@ extension AuthInputViewController: AuthInputViewModelDelegate {
                 formattedInput: formattedInput,
                 methodId: result.methodId,
                 codeExpiry: expiry,
-                passwordsEnabled: viewModel.state.config.password != nil
+                passwordsEnabled: viewModel.state.config.supportsPassword
             )
         )
         navigationController?.pushViewController(controller, animated: true)

@@ -18,7 +18,8 @@ final class OTPCodeViewModelTest: BaseTestCase {
     func testResendCodeCallsLoginOrCreateAndUpdatesState() async throws {
         let state: OTPCodeState = .init(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: [.otp]
             ),
             otpMethod: .sms,
             input: "",
@@ -38,7 +39,8 @@ final class OTPCodeViewModelTest: BaseTestCase {
     func testEnterCodeCallsAuthenticateAndReportsToUICallback() async throws {
         let state: OTPCodeState = .init(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: [.otp]
             ),
             otpMethod: .sms,
             input: "",

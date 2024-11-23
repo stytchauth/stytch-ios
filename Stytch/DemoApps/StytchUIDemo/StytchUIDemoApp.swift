@@ -5,46 +5,33 @@ import SwiftUI
 struct StytchUIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(config: StytchUIDemoApp.realisticStytchUIConfig)
+            ContentView(configuration: StytchUIDemoApp.realisticStytchUIConfiguration)
         }
     }
 
-    static let magicLinkStytchUIConfig: StytchUIClient.Configuration = .init(
-        products: .init(
-            magicLink: .init()
-        )
+    static var publicToken: String {
+        "your_public_token"
+    }
+
+    static let magicLinkStytchUIConfiguration: StytchUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks]
     )
 
-    static let passwordStytchUIConfig: StytchUIClient.Configuration = .init(
-        products: .init(
-            password: .init()
-        )
+    static let passwordStytchUIConfiguration: StytchUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.passwords]
     )
 
-    static let magicLinkPasswordStytchUIConfig: StytchUIClient.Configuration = .init(
-        products: .init(
-            password: .init(),
-            magicLink: .init()
-        )
+    static let magicLinkPasswordStytchUIConfiguration: StytchUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.passwords, .emailMagicLinks]
     )
 
-    static let realisticStytchUIConfig: StytchUIClient.Configuration = .init(
-        products: .init(
-            oauth: .init(
-                providers: [.apple, .thirdParty(.google)],
-                loginRedirectUrl: .init(string: "stytch-demo://auth")!,
-                signupRedirectUrl: .init(string: "stytch-demo://auth")!
-            ),
-            password: .init(),
-            magicLink: .init(),
-            otp: .init(methods: [.sms])
-        )
-    )
-
-    static let invalidEmailStytchUIConfig: StytchUIClient.Configuration = .init(
-        products: .init(
-            magicLink: .init(),
-            otp: .init(methods: [.email])
-        )
+    static let realisticStytchUIConfiguration: StytchUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        oauthProviders: [.apple, .thirdParty(.google)],
+        otpOptions: .init(methods: [.sms])
     )
 }

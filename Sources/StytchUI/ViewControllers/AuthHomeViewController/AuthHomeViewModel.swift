@@ -25,7 +25,7 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
     }
 
     func checkValidConfig() throws {
-        if state.config.magicLink != nil, let otp = state.config.otp, otp.methods.contains(.email) {
+        if state.config.supportsMagicLink, let otp = state.config.otpOptions, otp.methods.contains(.email) {
             throw StytchSDKError.uiEmlAndOtpInvalid
         }
     }

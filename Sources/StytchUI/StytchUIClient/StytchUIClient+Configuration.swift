@@ -6,73 +6,172 @@ import UIKit
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        static let empty = Configuration(products: .init())
+        static let empty = Configuration(publicToken: "", products: [])
 
+        let publicToken: String
+        let hostUrl: URL?
+        let products: [Products]
         let navigation: Navigation?
-        let products: Products
-        let session: Session?
+        let sessionDurationMinutes: Minutes
+        let oauthProviders: [OAuthProvider]
+        let passwordOptions: PasswordOptions?
+        let magicLinkOptions: MagicLinkOptions?
+        let otpOptions: OTPOptions?
         let theme: StytchTheme
 
         var inputProductsEnabled: Bool {
-            password != nil || magicLink != nil || otp != nil
+            products.contains(.passwords) || products.contains(.emailMagicLinks) || products.contains(.otp)
         }
 
-        var oauth: OAuth? {
-            products.oauth
+        var redirectUrl: URL? {
+            URL(string: "stytchui-\(publicToken)://deeplink")
         }
 
-        var password: Password? {
-            products.password
+        var supportsOauth: Bool {
+            products.contains(.oauth) && !oauthProviders.isEmpty
         }
 
-        var magicLink: MagicLink? {
-            products.magicLink
+        var supportsMagicLink: Bool {
+            products.contains(.emailMagicLinks)
         }
 
-        var otp: OTP? {
-            products.otp
+        var supportsOTP: Bool {
+            products.contains(.otp)
+        }
+
+        var supportsPassword: Bool {
+            products.contains(.passwords)
         }
 
         public init(
+            publicToken: String,
+            hostUrl: URL? = nil,
+            products: [Products],
             navigation: Navigation? = nil,
-            products: Products,
-            session: Session? = nil,
+            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            oauthProviders: [OAuthProvider] = [],
+            passwordOptions: PasswordOptions? = nil,
+            magicLinkOptions: MagicLinkOptions? = nil,
+            otpOptions: OTPOptions? = nil,
             theme: StytchTheme = StytchTheme()
         ) {
-            self.navigation = navigation
+            self.publicToken = publicToken
+            self.hostUrl = hostUrl
             self.products = products
-            self.session = session
+            self.navigation = navigation
+            self.sessionDurationMinutes = sessionDurationMinutes
+            self.oauthProviders = oauthProviders
+            self.passwordOptions = passwordOptions
+            self.magicLinkOptions = magicLinkOptions
+            self.otpOptions = otpOptions
             self.theme = theme
         }
+    }
 
-        /// A struct defining the configuration of our sessions product. This configuration is used for all authentication flows.
-        /// `sessionDuration` The length of time a new session should be valid for. This must be less than or equal to the maximum time allowed in your Stytch Dashboard
-        public struct Session: Codable {
-            let sessionDuration: Minutes?
+    enum Products: String, Codable {
+        case emailMagicLinks
+        case oauth
+        case passwords
+        case otp
+    }
 
-            public init(sessionDuration: Minutes? = nil) {
-                self.sessionDuration = sessionDuration
-            }
+    struct Navigation: Codable {
+        let closeButtonStyle: CloseButtonStyle?
+
+        /// - Parameter closeButtonStyle: Determines the type of close button used on the root view as well as its position.
+        public init(closeButtonStyle: CloseButtonStyle? = .close(.right)) {
+            self.closeButtonStyle = closeButtonStyle
         }
 
-        public struct Navigation: Codable {
-            let closeButtonStyle: CloseButtonStyle?
-
-            /// - Parameter closeButtonStyle: Determines the type of close button used on the root view as well as its position.
-            public init(closeButtonStyle: CloseButtonStyle? = .close(.right)) {
-                self.closeButtonStyle = closeButtonStyle
-            }
-
-            public enum CloseButtonStyle: Codable {
-                case cancel(BarButtonPosition = .right)
-                case close(BarButtonPosition = .right)
-                case done(BarButtonPosition = .right)
-            }
-
-            public enum BarButtonPosition: Codable {
-                case left
-                case right
-            }
+        public enum CloseButtonStyle: Codable {
+            case cancel(BarButtonPosition = .right)
+            case close(BarButtonPosition = .right)
+            case done(BarButtonPosition = .right)
         }
+
+        public enum BarButtonPosition: Codable {
+            case left
+            case right
+        }
+    }
+
+    enum OAuthProvider: Codable {
+        case apple
+        case thirdParty(StytchClient.OAuth.ThirdParty.Provider)
+    }
+
+    /// A struct defining the configuration of the Email Magic Links product. If you do not provide a value for a property in this configuration, it will use the defaults that are configured in your Stytch Dashboard
+    /// `loginExpiration` is the number of minutes that a login link is valid for
+    /// `loginTemplateId` is the ID of the custom login template you have created in your Stytch Dashboard
+    /// `signupExpiration` is the number of minutes that a signup link is valid for
+    /// `signupTemplateId` is the ID of the custom signup template you have created in your Stytch Dashboard
+    struct MagicLinkOptions: Codable {
+        let loginExpiration: Minutes?
+        let loginTemplateId: String?
+        let signupExpiration: Minutes?
+        let signupTemplateId: String?
+
+        public init(
+            loginExpiration: Minutes? = nil,
+            loginTemplateId: String? = nil,
+            signupExpiration: Minutes? = nil,
+            signupTemplateId: String? = nil
+        ) {
+            self.loginExpiration = loginExpiration
+            self.loginTemplateId = loginTemplateId
+            self.signupExpiration = signupExpiration
+            self.signupTemplateId = signupTemplateId
+        }
+    }
+
+    /// A struct defining the configuration of the Passwords product. If you do not provide a value for a property in this configuration, it will use the defaults that are configured in your Stytch Dashboard
+    /// `loginExpiration` is the number of minutes that a login link is valid for
+    /// `resetPasswordExpiration` is the number of minutes that a reset password link is valid for
+    /// `resetPasswordTemplateId` is the ID of the custom password reset template you have created in your Stytch Dashboard
+    struct PasswordOptions: Codable {
+        let loginExpiration: Minutes?
+        let resetPasswordExpiration: Minutes?
+        let resetPasswordTemplateId: String?
+
+        public init(
+            loginExpiration: Minutes? = nil,
+            resetPasswordExpiration: Minutes? = nil,
+            resetPasswordTemplateId: String? = nil
+        ) {
+            self.loginExpiration = loginExpiration
+            self.resetPasswordExpiration = resetPasswordExpiration
+            self.resetPasswordTemplateId = resetPasswordTemplateId
+        }
+    }
+
+    /// A struct defining the configuration of the One Time Passcode (OTP) product. Leaving the optional fields `nil` will use the defaults from your Stytch Dashboard
+    /// `methods` specifies the OTP methods that should be enabled
+    /// `expiration` is the number of minutes that an OTP code is valid for
+    /// `loginTemplateId` is the ID of the custom login template you have created in your Stytch Dashboard. This is only used for Email OTP.
+    /// `signupTemplateId` is the ID of the custom signup template you have created in your Stytch Dashboard. This is only used for Email OTP.
+    struct OTPOptions: Codable {
+        let methods: Set<OTPMethod>
+        let expiration: Minutes?
+        let loginTemplateId: String?
+        let signupTemplateId: String?
+
+        public init(
+            methods: Set<OTPMethod>,
+            expiration: Minutes? = nil,
+            loginTemplateId: String? = nil,
+            signupTemplateId: String? = nil
+        ) {
+            self.methods = methods
+            self.expiration = expiration
+            self.loginTemplateId = loginTemplateId
+            self.signupTemplateId = signupTemplateId
+        }
+    }
+
+    /// The OTP methods that are available
+    enum OTPMethod: Codable {
+        case sms
+        case email
+        case whatsapp
     }
 }

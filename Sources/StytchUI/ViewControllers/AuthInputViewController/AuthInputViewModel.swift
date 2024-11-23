@@ -32,19 +32,19 @@ final class AuthInputViewModel {
 
 extension AuthInputViewModel: AuthInputViewModelProtocol {
     func sendMagicLink(email: String) async throws {
-        if let magicLink = state.config.magicLink {
-            let params = params(email: email, magicLink: magicLink)
-            _ = try await magicLinksClient.loginOrCreate(parameters: params)
-            try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
-        }
+        guard state.config.supportsMagicLink else { return }
+        let magicLink = state.config.magicLinkOptions
+        let params = params(email: email, magicLink: magicLink)
+        _ = try await magicLinksClient.loginOrCreate(parameters: params)
+        try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "login_or_create_eml"]))
     }
 
     func resetPassword(email: String) async throws {
-        if let password = state.config.password {
-            let params = params(email: email, password: password)
-            _ = try await passwordClient.resetByEmailStart(parameters: params)
-            try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
-        }
+        guard state.config.supportsPassword else { return }
+        let password = state.config.passwordOptions
+        let params = params(email: email, password: password)
+        _ = try await passwordClient.resetByEmailStart(parameters: params)
+        try? await EventsClient.logEvent(parameters: .init(eventName: "email_sent", details: ["email": email, "type": "reset_password"]))
     }
 
     func getUserIntent(email: String) async throws -> PasswordState.Intent? {
@@ -54,44 +54,44 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
 
     func continueWithEmail(email: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: email, loginTemplateId: state.config.otp?.loginTemplateId, signupTemplateId: state.config.otp?.signupTemplateId), expiration: state.config.otp?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: email, loginTemplateId: state.config.otpOptions?.loginTemplateId, signupTemplateId: state.config.otpOptions?.signupTemplateId), expiration: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 
     func continueWithPhone(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.otp?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 
     func continueWithWhatsApp(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: phone), expiration: state.config.otp?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: phone), expiration: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 }
 
 extension AuthInputViewModel {
-    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+    func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: password.loginURL,
-            loginExpiration: password.loginExpiration,
-            resetPasswordUrl: password.resetPasswordURL,
-            resetPasswordExpiration: password.resetPasswordExpiration,
-            resetPasswordTemplateId: password.resetPasswordTemplateId
+            loginUrl: state.config.redirectUrl,
+            loginExpiration: password?.loginExpiration,
+            resetPasswordUrl: state.config.redirectUrl,
+            resetPasswordExpiration: password?.resetPasswordExpiration,
+            resetPasswordTemplateId: password?.resetPasswordTemplateId
         )
     }
 
-    func params(email: String, magicLink: StytchUIClient.Configuration.MagicLink) -> StytchClient.MagicLinks.Email.Parameters {
+    func params(email: String, magicLink: StytchUIClient.MagicLinkOptions?) -> StytchClient.MagicLinks.Email.Parameters {
         .init(
             email: email,
-            loginMagicLinkUrl: magicLink.loginMagicLinkUrl,
-            loginExpiration: magicLink.loginExpiration,
-            loginTemplateId: magicLink.loginTemplateId,
-            signupMagicLinkUrl: magicLink.signupMagicLinkUrl,
-            signupExpiration: magicLink.signupExpiration,
-            signupTemplateId: magicLink.signupTemplateId
+            loginMagicLinkUrl: state.config.redirectUrl,
+            loginExpiration: magicLink?.loginExpiration,
+            loginTemplateId: magicLink?.loginTemplateId,
+            signupMagicLinkUrl: state.config.redirectUrl,
+            signupExpiration: magicLink?.signupExpiration,
+            signupTemplateId: magicLink?.signupTemplateId
         )
     }
 }

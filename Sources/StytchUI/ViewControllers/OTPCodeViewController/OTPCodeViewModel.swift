@@ -21,7 +21,8 @@ final class OTPCodeViewModel {
 
 extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     func forgotPassword(email: String) async throws {
-        guard let password = state.config.password else { return }
+        guard state.config.supportsPassword else { return }
+        let password = state.config.passwordOptions
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
         _ = try await passwordClient.resetByEmailStart(parameters: params)
@@ -35,7 +36,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
         case .sms:
             result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: input)))
         case .email:
-            result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: input, loginTemplateId: state.config.otp?.loginTemplateId, signupTemplateId: state.config.otp?.signupTemplateId)))
+            result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: input, loginTemplateId: state.config.otpOptions?.loginTemplateId, signupTemplateId: state.config.otpOptions?.signupTemplateId)))
         case .whatsapp:
             result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: input)))
         }
@@ -59,7 +60,7 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
 
 struct OTPCodeState {
     let config: StytchUIClient.Configuration
-    let otpMethod: StytchUIClient.Configuration.OTPMethod
+    let otpMethod: StytchUIClient.OTPMethod
     let input: String
     let formattedInput: String
     let methodId: String
@@ -69,17 +70,17 @@ struct OTPCodeState {
 
 extension OTPCodeViewModel {
     var sessionDuration: Minutes {
-        state.config.session?.sessionDuration ?? .defaultSessionDuration
+        state.config.sessionDurationMinutes
     }
 
-    func params(email: String, password: StytchUIClient.Configuration.Password) -> StytchClient.Passwords.ResetByEmailStartParameters {
+    func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: password.loginURL,
-            loginExpiration: password.loginExpiration,
-            resetPasswordUrl: password.resetPasswordURL,
-            resetPasswordExpiration: password.resetPasswordExpiration,
-            resetPasswordTemplateId: password.resetPasswordTemplateId
+            loginUrl: state.config.redirectUrl,
+            loginExpiration: password?.loginExpiration,
+            resetPasswordUrl: state.config.redirectUrl,
+            resetPasswordExpiration: password?.resetPasswordExpiration,
+            resetPasswordTemplateId: password?.resetPasswordTemplateId
         )
     }
 }

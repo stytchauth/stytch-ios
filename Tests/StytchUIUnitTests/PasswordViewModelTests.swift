@@ -19,8 +19,9 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = PasswordState(
             config: .init(
-                products: .init(),
-                session: .init(sessionDuration: 123)
+                publicToken: "publicToken",
+                products: [],
+                sessionDurationMinutes: 123
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -33,7 +34,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -44,17 +46,18 @@ final class PasswordViewModelTests: BaseTestCase {
     }
 
     func testCreatesCorrectResetByEmailStartParams() {
-        let passwordConfig: StytchUIClient.Configuration.Password = .init(
-            loginURL: .init(string: "myapp://test-login"),
+        let passwordOptions: StytchUIClient.PasswordOptions = .init(
             loginExpiration: 123,
-            resetPasswordURL: .init(string: "myapp://test-reset"),
             resetPasswordExpiration: 456,
             resetPasswordTemplateId: "reset-password-template-id"
         )
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [],
+            passwordOptions: passwordOptions
+        )
         let state = PasswordState(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             intent: PasswordState.Intent.login,
             email: "",
             magicLinksEnabled: true
@@ -62,29 +65,30 @@ final class PasswordViewModelTests: BaseTestCase {
         let viewModel = PasswordViewModel(state: state)
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
-            loginUrl: passwordConfig.loginURL,
-            loginExpiration: passwordConfig.loginExpiration,
-            resetPasswordUrl: passwordConfig.resetPasswordURL,
-            resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
-            resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
+            loginUrl: config.redirectUrl,
+            loginExpiration: passwordOptions.loginExpiration,
+            resetPasswordUrl: config.redirectUrl,
+            resetPasswordExpiration: passwordOptions.resetPasswordExpiration,
+            resetPasswordTemplateId: passwordOptions.resetPasswordTemplateId
         )
-        let result = viewModel.params(email: "test@stytch.com", password: passwordConfig)
+        let result = viewModel.params(email: "test@stytch.com", password: passwordOptions)
         XCTAssert(result == expected)
     }
 
     func testCreatesCorrectMagicLinkParams() {
-        let magicLinkConfig: StytchUIClient.Configuration.MagicLink = .init(
-            loginMagicLinkUrl: .init(string: "myapp://test-login"),
+        let magicLinkOptions: StytchUIClient.MagicLinkOptions = .init(
             loginExpiration: 123,
             loginTemplateId: "login-template-id",
-            signupMagicLinkUrl: .init(string: "myapp://test-signup"),
             signupExpiration: 456,
             signupTemplateId: "signup-template-id"
         )
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [],
+            magicLinkOptions: magicLinkOptions
+        )
         let state = PasswordState(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             intent: PasswordState.Intent.login,
             email: "",
             magicLinksEnabled: true
@@ -92,21 +96,22 @@ final class PasswordViewModelTests: BaseTestCase {
         let viewModel = PasswordViewModel(state: state)
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
-            loginMagicLinkUrl: magicLinkConfig.loginMagicLinkUrl,
-            loginExpiration: magicLinkConfig.loginExpiration,
-            loginTemplateId: magicLinkConfig.loginTemplateId,
-            signupMagicLinkUrl: magicLinkConfig.signupMagicLinkUrl,
-            signupExpiration: magicLinkConfig.signupExpiration,
-            signupTemplateId: magicLinkConfig.signupTemplateId
+            loginMagicLinkUrl: config.redirectUrl,
+            loginExpiration: magicLinkOptions.loginExpiration,
+            loginTemplateId: magicLinkOptions.loginTemplateId,
+            signupMagicLinkUrl: config.redirectUrl,
+            signupExpiration: magicLinkOptions.signupExpiration,
+            signupTemplateId: magicLinkOptions.signupTemplateId
         )
-        let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkConfig)
+        let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkOptions)
         XCTAssert(result == expected)
     }
 
     func testCheckStrengthCallsStrengthCheck() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -121,7 +126,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSetPasswordCallsResetByEmailAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -141,7 +147,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSignupCallsCreateAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -161,7 +168,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginCallsAuthenticateAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -181,7 +189,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginWithEmailExitsEarlyWhenEMLProductIsNotConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -196,9 +205,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginWithEmailCallsLoginOrCreateWhenEMLProductIsConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init(
-                    magicLink: .init()
-                )
+                publicToken: "publicToken",
+                products: [.emailMagicLinks]
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -213,7 +221,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testForgotPasswordExitsEarlyWhenPasswordProductIsNotConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             ),
             intent: PasswordState.Intent.login,
             email: "",
@@ -229,9 +238,8 @@ final class PasswordViewModelTests: BaseTestCase {
     func testForgotPasswordCallsResetByEmailStartAndSetsPendingResetEmailWhenPasswordProductIsConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                products: .init(
-                    password: .init()
-                )
+                publicToken: "publicToken",
+                products: [.passwords]
             ),
             intent: PasswordState.Intent.login,
             email: "",
