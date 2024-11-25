@@ -3,19 +3,42 @@ import StytchCore
 import SwiftUI
 import UIKit
 
+// swiftlint:disable modifier_order
+
+public typealias B2BAuthenticateCallback = (B2BAuthenticateResponseType) -> Void
+
 public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     static var configuration: Configuration = .empty
-
+    static var onB2BAuthCallback: AuthCallback?
     private static var cancellable: AnyCancellable?
+    fileprivate weak static var currentController: B2BAuthRootViewController?
 
-    /// Configures the `StytchB2BUIClient`, setting the `publicToken`, `config` and `hostUrl` for StytchB2BClient.
+    /// Configures the `StytchB2BUIClient`.
     /// - Parameters:
     ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
     public static func configure(configuration: Configuration) {
         StytchB2BClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl)
         FontLoader.loadFonts()
         Self.configuration = configuration
+    }
+
+    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
+    public static func presentController(
+        controller: UIViewController,
+        onAuthCallback: AuthCallback? = nil
+    ) {
+        Self.onB2BAuthCallback = { response in
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+            }
+            onAuthCallback?(response)
+        }
+        let rootController = B2BAuthRootViewController(configuration: Self.configuration)
+        currentController = rootController
+        setUpMemberSessionChangeListener()
+        let navigationController = UINavigationController(rootViewController: rootController)
+        controller.present(navigationController, animated: true)
     }
 
     /// Use this function to handle incoming deeplinks for password resets.
@@ -48,7 +71,7 @@ public enum StytchB2BUIClient {
         return StytchB2BClient.canHandle(url: url)
     }
 
-    static func setUpSessionChangeListener() {
+    static func setUpMemberSessionChangeListener() {
         cancellable = StytchB2BClient.sessions.onMemberSessionChange
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
@@ -56,4 +79,36 @@ public enum StytchB2BUIClient {
                 Self.cancellable = nil
             }
     }
+}
+
+public extension View {
+    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchB2BClient.sessions.onMemberSessionChange` to observe auth changes.
+    func b2bAuthenticationSheet(
+        isPresented: Binding<Bool>,
+        onB2BAuthCallback: AuthCallback? = nil
+    ) -> some View {
+        sheet(isPresented: isPresented) {
+            StytchB2BUIClient.onB2BAuthCallback = { response in
+                Task {
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
+                }
+                onB2BAuthCallback?(response)
+            }
+            return B2BAuthenticationView()
+                .background(Color(.background).edgesIgnoringSafeArea(.all))
+        }
+    }
+}
+
+struct B2BAuthenticationView: UIViewControllerRepresentable {
+    typealias UIViewControllerType = UIViewController
+
+    func makeUIViewController(context _: Context) -> UIViewController {
+        let controller = B2BAuthRootViewController(configuration: StytchB2BUIClient.configuration)
+        StytchB2BUIClient.currentController = controller
+        StytchB2BUIClient.setUpMemberSessionChangeListener()
+        return UINavigationController(rootViewController: controller)
+    }
+
+    func updateUIViewController(_: UIViewController, context _: Context) {}
 }
