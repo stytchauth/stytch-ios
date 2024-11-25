@@ -4,7 +4,8 @@ import XCTest
 
 final class ActionableInfoStateTests: BaseTestCase {
     let config: StytchUIClient.Configuration = .init(
-        products: .init()
+        publicToken: "publicToken",
+        products: [.emailMagicLinks]
     )
 
     func testActionableInfoForgotPasswordStateMethodsGenerateExpectedState() async throws {

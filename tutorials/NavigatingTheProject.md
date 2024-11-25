@@ -24,7 +24,8 @@ Bundle ID: `com.stytch.StytchDemo`
 
 * **StytchUIDemo**  
 Bundle ID: `com.stytch.StytchUIDemo`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/f5a1fed4f54708fd7bc089340cccb3b2c3ab2d96/Stytch/DemoApps/StytchUIDemo/ContentView.swift#L33)  
+[Configure the public token](TODO)
+[Configure the URL Scheme](TODO)
 
 * **ConsumerWorkbench**  
 Bundle ID: `com.stytch.ConsumerWorkbench`  

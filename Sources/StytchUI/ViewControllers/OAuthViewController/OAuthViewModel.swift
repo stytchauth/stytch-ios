@@ -2,7 +2,7 @@ import StytchCore
 
 protocol OAuthViewModelProtocol {
     func startOAuth(
-        provider: StytchUIClient.Configuration.OAuth.Provider,
+        provider: StytchUIClient.OAuthProvider,
         thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol? // this param is only used for testing
     ) async throws
 }
@@ -25,21 +25,20 @@ final class OAuthViewModel {
 
 extension OAuthViewModel: OAuthViewModelProtocol {
     func startOAuth(
-        provider: StytchUIClient.Configuration.OAuth.Provider,
+        provider: StytchUIClient.OAuthProvider,
         thirdPartyClientForTesting: ThirdPartyOAuthProviderProtocol? = nil
     ) async throws {
+        guard state.config.supportsOauth else { return }
         switch provider {
         case .apple:
             let response = try await appleOauthProvider.start(parameters: .init(sessionDuration: sessionDuration))
             StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
-            if let oauth = state.config.oauth {
-                let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
-                    configuration: .init(loginRedirectUrl: oauth.loginRedirectUrl, signupRedirectUrl: oauth.signupRedirectUrl)
-                )
-                let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
-                StytchUIClient.onAuthCallback?(response)
-            }
+            let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
+                configuration: .init(loginRedirectUrl: state.config.redirectUrl, signupRedirectUrl: state.config.redirectUrl)
+            )
+            let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))
+            StytchUIClient.onAuthCallback?(response)
         }
     }
 }
@@ -50,7 +49,7 @@ struct OAuthState {
 
 extension OAuthViewModel {
     var sessionDuration: Minutes {
-        state.config.session?.sessionDuration ?? .defaultSessionDuration
+        state.config.sessionDurationMinutes
     }
 }
 

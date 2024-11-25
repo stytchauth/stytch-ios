@@ -79,7 +79,7 @@ final class AuthRootViewController: UIViewController {
     }
 }
 
-private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
+private extension StytchUIClient.Navigation.CloseButtonStyle {
     var barButtonSystemItem: UIBarButtonItem.SystemItem {
         switch self {
         case .cancel:
@@ -91,7 +91,7 @@ private extension StytchUIClient.Configuration.Navigation.CloseButtonStyle {
         }
     }
 
-    var position: StytchUIClient.Configuration.Navigation.BarButtonPosition {
+    var position: StytchUIClient.Navigation.BarButtonPosition {
         switch self {
         case let .cancel(position), let .close(position), let .done(position):
             return position

@@ -4,7 +4,7 @@ import StytchUI
 import SwiftUI
 
 struct ContentView: View {
-    var config: StytchUIClient.Configuration
+    var configuration: StytchUIClient.Configuration
     @State private var shouldPresentAuth = false
     @State var subscriptions: Set<AnyCancellable> = []
 
@@ -28,7 +28,7 @@ struct ContentView: View {
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
             }
         }.task {
-            StytchUIClient.configure(publicToken: "public-token", config: config)
+            StytchUIClient.configure(configuration: configuration)
             setUpObservations()
         }
     }
@@ -59,5 +59,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(config: StytchUIDemoApp.realisticStytchUIConfig)
+    ContentView(configuration: StytchUIDemoApp.realisticStytchUIConfiguration)
 }

@@ -12,7 +12,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
 
         view.layoutMargins = .zero
 
-        viewModel.state.config.oauth?.providers.enumerated().forEach { index, provider in
+        viewModel.state.config.oauthProviders.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
@@ -27,7 +27,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
-        guard let (_, provider) = viewModel.state.config.oauth?.providers.enumerated().first(where: { $0.offset == sender.tag }) else { return }
+        guard let (_, provider) = viewModel.state.config.oauthProviders.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         Task {
             do {
                 try await viewModel.startOAuth(provider: provider)
@@ -44,7 +44,7 @@ protocol OAuthViewModelDelegate: AnyObject {}
 extension OAuthViewController: OAuthViewModelDelegate {}
 
 private extension OAuthViewController {
-    static func makeOauthButton(provider: StytchUIClient.Configuration.OAuth.Provider) -> UIControl {
+    static func makeOauthButton(provider: StytchUIClient.OAuthProvider) -> UIControl {
         switch provider {
         case .apple:
             return makeAppleButton()

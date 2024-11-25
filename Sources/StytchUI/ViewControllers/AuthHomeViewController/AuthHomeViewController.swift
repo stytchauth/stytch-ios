@@ -18,7 +18,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     }()
 
     private var showOrSeparator: Bool {
-        guard let oauth = viewModel.state.config.oauth, !oauth.providers.isEmpty else { return false }
+        guard !viewModel.state.config.oauthProviders.isEmpty else { return false }
         return viewModel.state.config.inputProductsEnabled
     }
 
@@ -66,7 +66,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []
-        if let config = viewModel.state.config.oauth, !config.providers.isEmpty {
+        if !viewModel.state.config.oauthProviders.isEmpty {
             let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
             addChild(oauthController)
             stackView.addArrangedSubview(oauthController.view)

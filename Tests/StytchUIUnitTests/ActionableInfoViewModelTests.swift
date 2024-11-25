@@ -5,19 +5,15 @@ import XCTest
 final class ActionableInfoViewModelTests: BaseTestCase {
     var calledMethod: CalledMethod?
 
-    let magicLinkConfig: StytchUIClient.Configuration.MagicLink = .init(
-        loginMagicLinkUrl: .init(string: "myapp://test-login"),
+    let magicLinkConfig: StytchUIClient.MagicLinkOptions = .init(
         loginExpiration: 123,
         loginTemplateId: "login-template-id",
-        signupMagicLinkUrl: .init(string: "myapp://test-signup"),
         signupExpiration: 456,
         signupTemplateId: "signup-template-id"
     )
 
-    let passwordConfig: StytchUIClient.Configuration.Password = .init(
-        loginURL: .init(string: "myapp://test-login"),
+    let passwordConfig: StytchUIClient.PasswordOptions = .init(
         loginExpiration: 123,
-        resetPasswordURL: .init(string: "myapp://test-reset"),
         resetPasswordExpiration: 456,
         resetPasswordTemplateId: "reset-password-template-id"
     )
@@ -33,11 +29,14 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testSessionDurationMinutesReadsFromConfig() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            sessionDurationMinutes: 123
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init(),
-                session: .init(sessionDuration: 123)
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -53,10 +52,13 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks]
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -72,10 +74,14 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testCreatesCorrectResetByEmailStartParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords],
+            passwordOptions: passwordConfig
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -89,9 +95,9 @@ final class ActionableInfoViewModelTests: BaseTestCase {
         )
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
-            loginUrl: passwordConfig.loginURL,
+            loginUrl: config.redirectUrl,
             loginExpiration: passwordConfig.loginExpiration,
-            resetPasswordUrl: passwordConfig.resetPasswordURL,
+            resetPasswordUrl: config.redirectUrl,
             resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
             resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
         )
@@ -100,10 +106,14 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testCreatesCorrectMagicLinkParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            magicLinkOptions: magicLinkConfig
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -117,10 +127,10 @@ final class ActionableInfoViewModelTests: BaseTestCase {
         )
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
-            loginMagicLinkUrl: magicLinkConfig.loginMagicLinkUrl,
+            loginMagicLinkUrl: config.redirectUrl,
             loginExpiration: magicLinkConfig.loginExpiration,
             loginTemplateId: magicLinkConfig.loginTemplateId,
-            signupMagicLinkUrl: magicLinkConfig.signupMagicLinkUrl,
+            signupMagicLinkUrl: config.redirectUrl,
             signupExpiration: magicLinkConfig.signupExpiration,
             signupTemplateId: magicLinkConfig.signupTemplateId
         )
@@ -129,10 +139,13 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testLoginWithoutPasswordDoesNothingIfMagicLinksAreNotConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: []
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -149,12 +162,14 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testLoginWithoutPasswordCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            magicLinkOptions: magicLinkConfig
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init(
-                    magicLink: .init()
-                )
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -171,10 +186,13 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testForgotPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: []
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init()
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],
@@ -191,12 +209,15 @@ final class ActionableInfoViewModelTests: BaseTestCase {
     }
 
     func testForgotPasswordCallsPasswordResetByEmailStartAndSetsPendingEmailIfPasswordsAreConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords, .emailMagicLinks],
+            passwordOptions: passwordConfig,
+            magicLinkOptions: magicLinkConfig
+        )
+
         let state: ActionableInfoState = .init(
-            config: .init(
-                products: .init(
-                    password: .init()
-                )
-            ),
+            config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
             infoComponents: [],

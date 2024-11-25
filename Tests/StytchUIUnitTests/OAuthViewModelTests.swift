@@ -18,8 +18,9 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = OAuthState(
             config: .init(
-                products: .init(),
-                session: .init(sessionDuration: 123)
+                publicToken: "publicToken",
+                products: [],
+                sessionDurationMinutes: 123
             )
         )
         let viewModel = OAuthViewModel(state: state)
@@ -29,7 +30,8 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state = OAuthState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             )
         )
         let viewModel = OAuthViewModel(state: state)
@@ -39,7 +41,9 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsAppleProviderAndCallsAuthCallbackWhenProviderIsApple() async throws {
         let state = OAuthState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: [.oauth],
+                oauthProviders: [.apple]
             )
         )
         let appleSpy = AppleSpy(callback: calledMethodCallback)
@@ -57,7 +61,9 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthDoesNothingIfOAuthIsNotConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: [],
+                oauthProviders: []
             )
         )
         let appleSpy = AppleSpy(callback: calledMethodCallback)
@@ -76,15 +82,9 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsThirdPartyStartAndAuthenticateFlowAndReportsToUIIfOAuthIsConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                products: .init(
-                    oauth: .init(
-                        providers: [.thirdParty(.amazon)],
-                        // swiftlint:disable:next force_unwrapping
-                        loginRedirectUrl: .init(string: "oauth://login")!,
-                        // swiftlint:disable:next force_unwrapping
-                        signupRedirectUrl: .init(string: "oauth://signup")!
-                    )
-                )
+                publicToken: "publicToken",
+                products: [.oauth],
+                oauthProviders: [.thirdParty(.amazon)]
             )
         )
         let appleSpy = AppleSpy(callback: calledMethodCallback)

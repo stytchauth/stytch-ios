@@ -5,19 +5,15 @@ import XCTest
 final class AuthInputViewModelTests: BaseTestCase {
     var calledMethod: CalledMethod?
 
-    let magicLinkConfig: StytchUIClient.Configuration.MagicLink = .init(
-        loginMagicLinkUrl: .init(string: "myapp://test-login"),
+    let magicLinkConfig: StytchUIClient.MagicLinkOptions = .init(
         loginExpiration: 123,
         loginTemplateId: "login-template-id",
-        signupMagicLinkUrl: .init(string: "myapp://test-signup"),
         signupExpiration: 456,
         signupTemplateId: "signup-template-id"
     )
 
-    let passwordConfig: StytchUIClient.Configuration.Password = .init(
-        loginURL: .init(string: "myapp://test-login"),
+    let passwordConfig: StytchUIClient.PasswordOptions = .init(
         loginExpiration: 123,
-        resetPasswordURL: .init(string: "myapp://test-reset"),
         resetPasswordExpiration: 456,
         resetPasswordTemplateId: "reset-password-template-id"
     )
@@ -33,17 +29,20 @@ final class AuthInputViewModelTests: BaseTestCase {
     }
 
     func testCreatesCorrectResetByEmailStartParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords],
+            passwordOptions: passwordConfig
+        )
         let state = AuthInputState(
-            config: .init(
-                products: .init()
-            )
+            config: config
         )
         let viewModel = AuthInputViewModel(state: state)
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
-            loginUrl: passwordConfig.loginURL,
+            loginUrl: config.redirectUrl,
             loginExpiration: passwordConfig.loginExpiration,
-            resetPasswordUrl: passwordConfig.resetPasswordURL,
+            resetPasswordUrl: config.redirectUrl,
             resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
             resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
         )
@@ -52,18 +51,21 @@ final class AuthInputViewModelTests: BaseTestCase {
     }
 
     func testCreatesCorrectMagicLinkParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords],
+            passwordOptions: passwordConfig
+        )
         let state = AuthInputState(
-            config: .init(
-                products: .init()
-            )
+            config: config
         )
         let viewModel = AuthInputViewModel(state: state)
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
-            loginMagicLinkUrl: magicLinkConfig.loginMagicLinkUrl,
+            loginMagicLinkUrl: config.redirectUrl,
             loginExpiration: magicLinkConfig.loginExpiration,
             loginTemplateId: magicLinkConfig.loginTemplateId,
-            signupMagicLinkUrl: magicLinkConfig.signupMagicLinkUrl,
+            signupMagicLinkUrl: config.redirectUrl,
             signupExpiration: magicLinkConfig.signupExpiration,
             signupTemplateId: magicLinkConfig.signupTemplateId
         )
@@ -74,7 +76,8 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             )
         )
         let magicLinksSpy = MagicLinksSpy(callback: calledMethodCallback)
@@ -89,9 +92,9 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                products: .init(
-                    magicLink: .init()
-                )
+                publicToken: "publicToken",
+                products: [.emailMagicLinks],
+                magicLinkOptions: magicLinkConfig
             )
         )
         let viewModel = AuthInputViewModel(
@@ -105,7 +108,8 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             )
         )
         let viewModel = AuthInputViewModel(
@@ -119,9 +123,9 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordCallsPasswordsResetByEmailStartIfPasswordsAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                products: .init(
-                    password: .init()
-                )
+                publicToken: "publicToken",
+                products: [.passwords],
+                passwordOptions: passwordConfig
             )
         )
         let viewModel = AuthInputViewModel(
@@ -135,7 +139,8 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testContinueWithPhoneCallsOTPLoginOrCreate() async throws {
         let state = AuthInputState(
             config: .init(
-                products: .init()
+                publicToken: "publicToken",
+                products: []
             )
         )
         let viewModel = AuthInputViewModel(
