@@ -100,7 +100,7 @@ public extension StytchB2BClient {
     }
 
     // Information about an active SSO connection
-    struct SSOActiveConnection: Codable, Sendable {
+    struct SSOActiveConnection: Codable, Sendable, Equatable {
         let connectionId: String
         let displayName: String
 
@@ -137,6 +137,32 @@ public extension StytchB2BClient {
         public let details: JSON?
         /// The member.
         public let member: Member
+    }
+
+    struct SCIMActiveConnection: Codable, Sendable, Equatable {
+        /// The unique identifier of the SCIM connection.
+        public let connectionId: String
+        /// The human-readable display name of the SCIM connection.
+        public let displayName: String
+    }
+
+    enum OauthTenantJitProvisioning: String, Codable, Sendable {
+        /// Only members from allowed OAuth tenants are allowed to JIT provision.
+        case restricted = "RESTRICTED"
+        /// JIT provisioning via OAuth is not allowed.
+        case notAllowed = "NOT_ALLOWED"
+    }
+
+    enum B2BAllowedAuthMethods: String, Codable, Sendable {
+        case sso
+        case magicLink = "magic_link"
+        case password
+        case googleOAuth = "google_oauth"
+        case microsoftOAuth = "microsoft_oauth"
+        case hubspotOAuth = "hubspot_oauth"
+        case slackOAuth = "slack_oauth"
+        case githubOAuth = "github_oauth"
+        case emailOtp = "email_otp"
     }
 }
 

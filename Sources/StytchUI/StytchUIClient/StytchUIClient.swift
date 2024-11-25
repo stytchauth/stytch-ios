@@ -22,7 +22,7 @@ public enum StytchUIClient {
 
     /// Configures the `StytchUIClient`
     /// - Parameters:
-    ///   - configuration: xyz
+    ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
     public static func configure(configuration: Configuration) {
         StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl)
         Self.configuration = configuration
@@ -90,7 +90,7 @@ public enum StytchUIClient {
 }
 
 public extension View {
-    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
+    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onSessionChange` to observe auth changes.
     func authenticationSheet(
         isPresented: Binding<Bool>,
         onAuthCallback: AuthCallback? = nil

@@ -270,12 +270,29 @@ extension MemberSession {
     }()
 }
 
-extension Organization {
+public extension Organization {
     static let mock: Self = .init(
         name: "I am Org",
         slug: "org_slug",
         logoUrl: nil,
         trustedMetadata: [:],
-        organizationId: "org_123"
+        organizationId: "org_123",
+        ssoDefaultConnectionId: nil,
+        ssoJitProvisioning: .ALL_ALLOWED,
+        ssoJitProvisioningAllowedConnections: nil,
+        ssoActiveConnections: [
+            StytchB2BClient.SSOActiveConnection(connectionId: "sso_conn_1", displayName: "Google SSO"),
+        ],
+        scimActiveConnection: StytchB2BClient.SCIMActiveConnection(connectionId: "scim_conn_1", displayName: "SCIM Connection"),
+        emailAllowedDomains: ["example.com"],
+        emailJitProvisioning: .RESTRICTED,
+        emailInvites: .ALL_ALLOWED,
+        oauthTenantJitProvisioning: .notAllowed,
+        allowedOAuthTenants: ["google": ["tenant_123"]],
+        authMethods: .RESTRICTED,
+        allowedAuthMethods: [.magicLink, .password],
+        mfaMethods: .ALL_ALLOWED,
+        allowedMfaMethods: [.SMS],
+        mfaPolicy: .OPTIONAL
     )
 }

@@ -21,13 +21,14 @@ public extension StytchB2BUIClient {
         let disableCreateOrganization: Bool?
         let mfaProductOrder: [B2BMFAProducts]?
         let mfaProductInclude: [B2BMFAProducts]?
+        let navigation: Navigation?
         let theme: StytchTheme
 
         var redirectUrl: String? {
             "stytchui-\(publicToken)://deeplink"
         }
 
-        init(
+        public init(
             publicToken: String,
             hostUrl: URL? = nil,
             products: [B2BProducts],
@@ -41,6 +42,7 @@ public extension StytchB2BUIClient {
             disableCreateOrganization: Bool? = nil,
             mfaProductOrder: [B2BMFAProducts]? = nil,
             mfaProductInclude: [B2BMFAProducts]? = nil,
+            navigation: Navigation? = nil,
             theme: StytchTheme = StytchTheme()
         ) {
             self.publicToken = publicToken
@@ -56,6 +58,7 @@ public extension StytchB2BUIClient {
             self.disableCreateOrganization = disableCreateOrganization
             self.mfaProductOrder = mfaProductOrder
             self.mfaProductInclude = mfaProductInclude
+            self.navigation = navigation
             self.theme = theme
         }
     }
@@ -68,10 +71,10 @@ public extension StytchB2BUIClient {
         case oauth
     }
 
-    enum AuthFlowType: String {
-        case discovery = "Discovery"
-        case organization = "Organization"
-        case passwordReset = "PasswordReset"
+    enum AuthFlowType {
+        case discovery
+        case organization(slug: String)
+        case passwordReset
     }
 
     struct B2BEmailMagicLinksOptions {
