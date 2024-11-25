@@ -83,6 +83,8 @@ public extension StytchB2BClient.OTP.Email {
         public let memberAuthenticated: Bool
         /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
         public let mfaRequired: MFARequired?
+        /// Information about the primary authentication requirements of the Organization.
+        public let primaryRequired: PrimaryRequired?
         /// The ID of the email used to send an OTP.
         public let methodId: String
     }
