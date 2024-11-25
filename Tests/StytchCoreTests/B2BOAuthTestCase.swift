@@ -101,6 +101,7 @@ extension StytchB2BClient.OAuth.OAuthAuthenticateResponse {
             intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
             memberAuthenticated: false,
             mfaRequired: nil,
+            primaryRequired: nil,
             providerValues: .mock
         )
     )

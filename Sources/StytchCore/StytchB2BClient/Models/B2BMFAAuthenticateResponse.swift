@@ -26,6 +26,8 @@ public struct B2BMFAAuthenticateResponseData: Codable, Sendable, B2BMFAAuthentic
     public let memberAuthenticated: Bool
     /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
     public let mfaRequired: MFARequired?
+    /// Information about the primary authentication requirements of the Organization.
+    public let primaryRequired: PrimaryRequired?
 }
 
 /// The interface which a data type must conform to for all underlying data in B2B MFA `authenticate` responses.
@@ -48,12 +50,21 @@ public protocol B2BMFAAuthenticateResponseDataType {
     var memberAuthenticated: Bool { get }
     /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
     var mfaRequired: MFARequired? { get }
+    /// Information about the primary authentication requirements of the Organization.
+    var primaryRequired: PrimaryRequired? { get }
 }
 
 /// The interface which a data type must conform to for all discovery flows that return a non optional intermediate session token
 public protocol DiscoveryIntermediateSessionTokenDataType {
     /// The non optional intermediate session token returned by discovery flows separate from multi factor authentication
     var intermediateSessionToken: String { get }
+}
+
+public struct PrimaryRequired: Codable, Sendable {
+    // Details the auth method that the member must also complete to fulfill the primary authentication requirements of the Organization.
+    // For example, a value of [magic_link] indicates that the Member must also complete a magic link authentication step.
+    // If you have an intermediate session token, you must pass it into that primary authentication step.
+    var allowedAuthMethods: [String]
 }
 
 public struct MFARequired: Codable, Sendable {

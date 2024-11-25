@@ -205,7 +205,8 @@ extension B2BMFAAuthenticateResponse {
             sessionJwt: "i'mvalidjson",
             intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
             memberAuthenticated: false,
-            mfaRequired: nil
+            mfaRequired: nil,
+            primaryRequired: nil
         )
     )
 }

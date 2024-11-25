@@ -250,6 +250,7 @@ extension StytchB2BClient.OTP.Email.AuthenticateResponse {
             intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
             memberAuthenticated: false,
             mfaRequired: nil,
+            primaryRequired: nil,
             methodId: ""
         )
     )
