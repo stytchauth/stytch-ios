@@ -164,6 +164,37 @@ public extension StytchB2BClient {
         case githubOAuth = "github_oauth"
         case emailOtp = "email_otp"
     }
+
+    /// A struct representing a retired email address associated with a member.
+    struct RetiredEmailAddress: Codable, Sendable, Equatable {
+        /// The unique ID of the retired email (optional).
+        public let emailId: String?
+        /// The retired email address (optional).
+        public let emailAddress: String?
+    }
+
+    /// A type representing a specific SSO registration.
+    struct SSORegistration: Codable, Equatable, Sendable {
+        public typealias ID = Identifier<Self, String>
+
+        /// The unique ID of an SSO Registration.
+        public var id: ID { registrationId }
+        /// Globally unique UUID that identifies a specific SSO connection_id for a Member.
+        public let connectionId: String
+        /// The ID of the member given by the identity provider.
+        public let externalId: String
+        /// An object for storing SSO attributes brought over from the identity provider.
+        public let ssoAttributes: JSON
+
+        let registrationId: ID
+
+        public static func == (lhs: SSORegistration, rhs: SSORegistration) -> Bool {
+            lhs.id == rhs.id &&
+                lhs.connectionId == rhs.connectionId &&
+                lhs.externalId == rhs.externalId &&
+                lhs.ssoAttributes == rhs.ssoAttributes
+        }
+    }
 }
 
 public extension StytchB2BClient {

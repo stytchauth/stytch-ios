@@ -25,7 +25,7 @@ case "$1" in
             "$contents_path" \
             > .coverage/lcov.info
 
-        genhtml .coverage/lcov.info --output-directory .coverage/
+        genhtml .coverage/lcov.info --output-directory .coverage/ --ignore-errors inconsistent,corrupt
         ;;
     generate-json)
         llvm-cov export \

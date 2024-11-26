@@ -217,10 +217,28 @@ extension Member {
         emailAddress: "email@example.com",
         status: .active,
         name: "First Middle Last",
-        ssoRegistrations: [],
-        trustedMetadata: [:],
-        untrustedMetadata: [:],
-        memberPasswordId: "",
+        ssoRegistrations: [
+            StytchB2BClient.SSORegistration(
+                connectionId: "conn_1234",
+                externalId: "ext_5678",
+                ssoAttributes: ["attribute_key": "attribute_value"],
+                registrationId: "reg_91011"
+            ),
+        ],
+        trustedMetadata: ["role": "admin"],
+        untrustedMetadata: ["preferred_theme": "dark"],
+        memberPasswordId: "password_123",
+        emailAddressVerified: true,
+        retiredEmailAddresses: [
+            StytchB2BClient.RetiredEmailAddress(emailId: "email_001", emailAddress: "old@example.com"),
+            StytchB2BClient.RetiredEmailAddress(emailId: "email_002", emailAddress: "older@example.com"),
+        ],
+        isBreakglass: false,
+        mfaEnrolled: true,
+        mfaPhoneNumber: "+1234567890",
+        mfaPhoneNumberVerified: true,
+        defaultMfaMethod: "sms",
+        totpRegistrationId: "totp_98765",
         memberId: "member_1234"
     )
 }
