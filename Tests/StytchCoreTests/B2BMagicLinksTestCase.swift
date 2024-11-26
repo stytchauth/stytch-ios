@@ -217,10 +217,28 @@ extension Member {
         emailAddress: "email@example.com",
         status: .active,
         name: "First Middle Last",
-        ssoRegistrations: [],
-        trustedMetadata: [:],
-        untrustedMetadata: [:],
-        memberPasswordId: "",
+        ssoRegistrations: [
+            StytchB2BClient.SSORegistration(
+                connectionId: "conn_1234",
+                externalId: "ext_5678",
+                ssoAttributes: ["attribute_key": "attribute_value"],
+                registrationId: "reg_91011"
+            ),
+        ],
+        trustedMetadata: ["role": "admin"],
+        untrustedMetadata: ["preferred_theme": "dark"],
+        memberPasswordId: "password_123",
+        emailAddressVerified: true,
+        retiredEmailAddresses: [
+            StytchB2BClient.RetiredEmailAddress(emailId: "email_001", emailAddress: "old@example.com"),
+            StytchB2BClient.RetiredEmailAddress(emailId: "email_002", emailAddress: "older@example.com"),
+        ],
+        isBreakglass: false,
+        mfaEnrolled: true,
+        mfaPhoneNumber: "+1234567890",
+        mfaPhoneNumberVerified: true,
+        defaultMfaMethod: "sms",
+        totpRegistrationId: "totp_98765",
         memberId: "member_1234"
     )
 }
@@ -271,12 +289,29 @@ extension MemberSession {
     }()
 }
 
-extension Organization {
+public extension Organization {
     static let mock: Self = .init(
         name: "I am Org",
         slug: "org_slug",
         logoUrl: nil,
         trustedMetadata: [:],
-        organizationId: "org_123"
+        organizationId: "org_123",
+        ssoDefaultConnectionId: nil,
+        ssoJitProvisioning: .ALL_ALLOWED,
+        ssoJitProvisioningAllowedConnections: nil,
+        ssoActiveConnections: [
+            StytchB2BClient.SSOActiveConnection(connectionId: "sso_conn_1", displayName: "Google SSO"),
+        ],
+        scimActiveConnection: StytchB2BClient.SCIMActiveConnection(connectionId: "scim_conn_1", displayName: "SCIM Connection"),
+        emailAllowedDomains: ["example.com"],
+        emailJitProvisioning: .RESTRICTED,
+        emailInvites: .ALL_ALLOWED,
+        oauthTenantJitProvisioning: .notAllowed,
+        allowedOAuthTenants: ["google": ["tenant_123"]],
+        authMethods: .RESTRICTED,
+        allowedAuthMethods: [.magicLink, .password],
+        mfaMethods: .ALL_ALLOWED,
+        allowedMfaMethods: [.SMS],
+        mfaPolicy: .OPTIONAL
     )
 }

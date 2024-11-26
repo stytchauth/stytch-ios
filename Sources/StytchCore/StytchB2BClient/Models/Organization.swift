@@ -11,6 +11,21 @@ public struct Organization: Codable, Sendable {
         case slug = "organizationSlug"
         case logoUrl = "organizationLogoUrl"
         case trustedMetadata
+        case ssoDefaultConnectionId
+        case ssoJitProvisioning
+        case ssoJitProvisioningAllowedConnections
+        case ssoActiveConnections
+        case scimActiveConnection
+        case emailAllowedDomains
+        case emailJitProvisioning
+        case emailInvites
+        case oauthTenantJitProvisioning
+        case allowedOAuthTenants
+        case authMethods
+        case allowedAuthMethods
+        case mfaMethods
+        case allowedMfaMethods
+        case mfaPolicy
     }
 
     /// Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on an Organization, so be sure to preserve this value.
@@ -21,9 +36,39 @@ public struct Organization: Codable, Sendable {
     public let slug: String
     /// The image URL of the Organization logo.
     public let logoUrl: URL?
-    /// An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+    /// Arbitrary JSON for storing application-specific or identity-provider-specific data.
     public let trustedMetadata: JSON
     let organizationId: ID
+    /// Default connection used for SSO when there are multiple active connections.
+    public let ssoDefaultConnectionId: String?
+    /// JIT provisioning setting for SSO.
+    public let ssoJitProvisioning: StytchB2BClient.SsoJitProvisioning?
+    /// Array of allowed connections for restricted SSO JIT provisioning.
+    public let ssoJitProvisioningAllowedConnections: [String]?
+    /// Array of active SSO connections.
+    public let ssoActiveConnections: [StytchB2BClient.SSOActiveConnection]?
+    /// Active SCIM connection.
+    public let scimActiveConnection: StytchB2BClient.SCIMActiveConnection?
+    /// List of domains that allow invites or JIT provisioning.
+    public let emailAllowedDomains: [String]?
+    /// JIT provisioning setting for Email Magic Link.
+    public let emailJitProvisioning: StytchB2BClient.EmailJitProvisioning?
+    /// Email invite setting for the organization.
+    public let emailInvites: StytchB2BClient.EmailInvites?
+    /// JIT provisioning setting for OAuth tenants.
+    public let oauthTenantJitProvisioning: StytchB2BClient.OauthTenantJitProvisioning?
+    /// JSON object of allowed OAuth tenants.
+    public let allowedOAuthTenants: [String: [String]]?
+    /// Authentication methods setting for the organization.
+    public let authMethods: StytchB2BClient.AuthMethods?
+    /// List of allowed authentication methods when restricted.
+    public let allowedAuthMethods: [StytchB2BClient.B2BAllowedAuthMethods]?
+    /// MFA methods setting for the organization.
+    public let mfaMethods: StytchB2BClient.MfaMethods?
+    /// List of allowed MFA methods when restricted.
+    public let allowedMfaMethods: [StytchB2BClient.MfaMethod]?
+    /// MFA policy for the organization.
+    public let mfaPolicy: StytchB2BClient.MfaPolicy?
 }
 
 extension Organization: Equatable {
@@ -32,7 +77,22 @@ extension Organization: Equatable {
             lhs.name == rhs.name &&
             lhs.slug == rhs.slug &&
             lhs.logoUrl == rhs.logoUrl &&
-            lhs.trustedMetadata == rhs.trustedMetadata
+            lhs.trustedMetadata == rhs.trustedMetadata &&
+            lhs.ssoDefaultConnectionId == rhs.ssoDefaultConnectionId &&
+            lhs.ssoJitProvisioning == rhs.ssoJitProvisioning &&
+            lhs.ssoJitProvisioningAllowedConnections == rhs.ssoJitProvisioningAllowedConnections &&
+            lhs.ssoActiveConnections == rhs.ssoActiveConnections &&
+            lhs.scimActiveConnection == rhs.scimActiveConnection &&
+            lhs.emailAllowedDomains == rhs.emailAllowedDomains &&
+            lhs.emailJitProvisioning == rhs.emailJitProvisioning &&
+            lhs.emailInvites == rhs.emailInvites &&
+            lhs.oauthTenantJitProvisioning == rhs.oauthTenantJitProvisioning &&
+            lhs.allowedOAuthTenants == rhs.allowedOAuthTenants &&
+            lhs.authMethods == rhs.authMethods &&
+            lhs.allowedAuthMethods == rhs.allowedAuthMethods &&
+            lhs.mfaMethods == rhs.mfaMethods &&
+            lhs.allowedMfaMethods == rhs.allowedMfaMethods &&
+            lhs.mfaPolicy == rhs.mfaPolicy
     }
 }
 
@@ -44,6 +104,21 @@ public extension Organization {
         slug = try container.decode(String.self, forKey: .slug)
         logoUrl = try? container.decodeIfPresent(URL.self, forKey: .logoUrl)
         trustedMetadata = try container.decode(JSON.self, forKey: .trustedMetadata)
+        ssoDefaultConnectionId = try container.decodeIfPresent(String.self, forKey: .ssoDefaultConnectionId)
+        ssoJitProvisioning = try container.decodeIfPresent(StytchB2BClient.SsoJitProvisioning.self, forKey: .ssoJitProvisioning)
+        ssoJitProvisioningAllowedConnections = try container.decodeIfPresent([String].self, forKey: .ssoJitProvisioningAllowedConnections)
+        ssoActiveConnections = try container.decodeIfPresent([StytchB2BClient.SSOActiveConnection].self, forKey: .ssoActiveConnections)
+        scimActiveConnection = try container.decodeIfPresent(StytchB2BClient.SCIMActiveConnection.self, forKey: .scimActiveConnection)
+        emailAllowedDomains = try container.decodeIfPresent([String].self, forKey: .emailAllowedDomains)
+        emailJitProvisioning = try container.decodeIfPresent(StytchB2BClient.EmailJitProvisioning.self, forKey: .emailJitProvisioning)
+        emailInvites = try container.decodeIfPresent(StytchB2BClient.EmailInvites.self, forKey: .emailInvites)
+        oauthTenantJitProvisioning = try container.decodeIfPresent(StytchB2BClient.OauthTenantJitProvisioning.self, forKey: .oauthTenantJitProvisioning)
+        allowedOAuthTenants = try container.decodeIfPresent([String: [String]].self, forKey: .allowedOAuthTenants)
+        authMethods = try container.decodeIfPresent(StytchB2BClient.AuthMethods.self, forKey: .authMethods)
+        allowedAuthMethods = try container.decodeIfPresent([StytchB2BClient.B2BAllowedAuthMethods].self, forKey: .allowedAuthMethods)
+        mfaMethods = try container.decodeIfPresent(StytchB2BClient.MfaMethods.self, forKey: .mfaMethods)
+        allowedMfaMethods = try container.decodeIfPresent([StytchB2BClient.MfaMethod].self, forKey: .allowedMfaMethods)
+        mfaPolicy = try container.decodeIfPresent(StytchB2BClient.MfaPolicy.self, forKey: .mfaPolicy)
     }
 }
 

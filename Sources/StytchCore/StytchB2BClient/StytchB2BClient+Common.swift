@@ -100,7 +100,7 @@ public extension StytchB2BClient {
     }
 
     // Information about an active SSO connection
-    struct SSOActiveConnection: Codable, Sendable {
+    struct SSOActiveConnection: Codable, Sendable, Equatable {
         let connectionId: String
         let displayName: String
 
@@ -137,6 +137,63 @@ public extension StytchB2BClient {
         public let details: JSON?
         /// The member.
         public let member: Member
+    }
+
+    struct SCIMActiveConnection: Codable, Sendable, Equatable {
+        /// The unique identifier of the SCIM connection.
+        public let connectionId: String
+        /// The human-readable display name of the SCIM connection.
+        public let displayName: String
+    }
+
+    enum OauthTenantJitProvisioning: String, Codable, Sendable {
+        /// Only members from allowed OAuth tenants are allowed to JIT provision.
+        case restricted = "RESTRICTED"
+        /// JIT provisioning via OAuth is not allowed.
+        case notAllowed = "NOT_ALLOWED"
+    }
+
+    enum B2BAllowedAuthMethods: String, Codable, Sendable {
+        case sso
+        case magicLink = "magic_link"
+        case password
+        case googleOAuth = "google_oauth"
+        case microsoftOAuth = "microsoft_oauth"
+        case hubspotOAuth = "hubspot_oauth"
+        case slackOAuth = "slack_oauth"
+        case githubOAuth = "github_oauth"
+        case emailOtp = "email_otp"
+    }
+
+    /// A struct representing a retired email address associated with a member.
+    struct RetiredEmailAddress: Codable, Sendable, Equatable {
+        /// The unique ID of the retired email (optional).
+        public let emailId: String?
+        /// The retired email address (optional).
+        public let emailAddress: String?
+    }
+
+    /// A type representing a specific SSO registration.
+    struct SSORegistration: Codable, Equatable, Sendable {
+        public typealias ID = Identifier<Self, String>
+
+        /// The unique ID of an SSO Registration.
+        public var id: ID { registrationId }
+        /// Globally unique UUID that identifies a specific SSO connection_id for a Member.
+        public let connectionId: String
+        /// The ID of the member given by the identity provider.
+        public let externalId: String
+        /// An object for storing SSO attributes brought over from the identity provider.
+        public let ssoAttributes: JSON
+
+        let registrationId: ID
+
+        public static func == (lhs: SSORegistration, rhs: SSORegistration) -> Bool {
+            lhs.id == rhs.id &&
+                lhs.connectionId == rhs.connectionId &&
+                lhs.externalId == rhs.externalId &&
+                lhs.ssoAttributes == rhs.ssoAttributes
+        }
     }
 }
 
