@@ -41,11 +41,15 @@ public extension StytchB2BClient {
 
     /// An array of allowed authentication methods. This list is enforced when auth_methods is set to RESTRICTED. The list's accepted values are: sso, magic_link, password, google_oauth, and microsoft_oauth.
     enum AllowedAuthMethods: String, Codable, Sendable {
-        case SSO = "sso"
-        case MAGIC_LINK = "magic_link"
-        case PASSWORD = "password"
-        case GOOGLE_OAUTH = "google_oauth"
-        case MICROSOFT_OAUTH = "microsoft_oauth"
+        case sso
+        case magicLink = "magic_link"
+        case password
+        case googleOAuth = "google_oauth"
+        case microsoftOAuth = "microsoft_oauth"
+        case hubspotOAuth = "hubspot_oauth"
+        case slackOAuth = "slack_oauth"
+        case githubOAuth = "github_oauth"
+        case emailOtp = "email_otp"
     }
 
     /// The setting that controls which MFA methods can be used by Members of an Organization.
@@ -84,7 +88,7 @@ public extension StytchB2BClient {
     /// Implicit role assignments based off of email domains.
     /// For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the associated Role, regardless of their login method.
     /// See the RBAC guide for more information about role assignment (https://stytch.com/docs/b2b/guides/rbac/role-assignment).
-    struct RBACEmailImplicitRoleAssignments: Codable, Sendable {
+    struct RBACEmailImplicitRoleAssignments: Codable, Sendable, Equatable {
         let roleId: String
         let domain: String
 
@@ -151,18 +155,6 @@ public extension StytchB2BClient {
         case restricted = "RESTRICTED"
         /// JIT provisioning via OAuth is not allowed.
         case notAllowed = "NOT_ALLOWED"
-    }
-
-    enum B2BAllowedAuthMethods: String, Codable, Sendable {
-        case sso
-        case magicLink = "magic_link"
-        case password
-        case googleOAuth = "google_oauth"
-        case microsoftOAuth = "microsoft_oauth"
-        case hubspotOAuth = "hubspot_oauth"
-        case slackOAuth = "slack_oauth"
-        case githubOAuth = "github_oauth"
-        case emailOtp = "email_otp"
     }
 
     /// A struct representing a retired email address associated with a member.
