@@ -58,6 +58,7 @@ final class AuthRootViewController: UIViewController {
         let homeController = AuthHomeViewController(
             state: .init(config: config)
         )
+
         if let closeButton = config.navigation?.closeButtonStyle {
             let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
             switch closeButton.position {
@@ -68,6 +69,7 @@ final class AuthRootViewController: UIViewController {
             }
             homeController[keyPath: keyPath] = .init(barButtonSystemItem: closeButton.barButtonSystemItem, target: self, action: #selector(dismissAuth))
         }
+
         let navigationController = UINavigationController(rootViewController: homeController)
         navigationController.navigationBar.tintColor = .primaryText
         navigationController.navigationBar.barTintColor = .background

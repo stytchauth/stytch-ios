@@ -32,7 +32,7 @@ final class AuthInputViewModel {
 
 extension AuthInputViewModel: AuthInputViewModelProtocol {
     func sendMagicLink(email: String) async throws {
-        guard state.config.supportsMagicLink else { return }
+        guard state.config.supportsEmailMagicLinks else { return }
         let magicLink = state.config.magicLinkOptions
         let params = params(email: email, magicLink: magicLink)
         _ = try await magicLinksClient.loginOrCreate(parameters: params)
@@ -40,7 +40,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
     }
 
     func resetPassword(email: String) async throws {
-        guard state.config.supportsPassword else { return }
+        guard state.config.supportsPasswords else { return }
         let password = state.config.passwordOptions
         let params = params(email: email, password: password)
         _ = try await passwordClient.resetByEmailStart(parameters: params)

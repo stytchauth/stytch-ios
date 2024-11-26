@@ -62,7 +62,7 @@ public struct Organization: Codable, Sendable {
     /// Authentication methods setting for the organization.
     public let authMethods: StytchB2BClient.AuthMethods?
     /// List of allowed authentication methods when restricted.
-    public let allowedAuthMethods: [StytchB2BClient.B2BAllowedAuthMethods]?
+    public let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
     /// MFA methods setting for the organization.
     public let mfaMethods: StytchB2BClient.MfaMethods?
     /// List of allowed MFA methods when restricted.
@@ -115,7 +115,7 @@ public extension Organization {
         oauthTenantJitProvisioning = try container.decodeIfPresent(StytchB2BClient.OauthTenantJitProvisioning.self, forKey: .oauthTenantJitProvisioning)
         allowedOAuthTenants = try container.decodeIfPresent([String: [String]].self, forKey: .allowedOAuthTenants)
         authMethods = try container.decodeIfPresent(StytchB2BClient.AuthMethods.self, forKey: .authMethods)
-        allowedAuthMethods = try container.decodeIfPresent([StytchB2BClient.B2BAllowedAuthMethods].self, forKey: .allowedAuthMethods)
+        allowedAuthMethods = try container.decodeIfPresent([StytchB2BClient.AllowedAuthMethods].self, forKey: .allowedAuthMethods)
         mfaMethods = try container.decodeIfPresent(StytchB2BClient.MfaMethods.self, forKey: .mfaMethods)
         allowedMfaMethods = try container.decodeIfPresent([StytchB2BClient.MfaMethod].self, forKey: .allowedMfaMethods)
         mfaPolicy = try container.decodeIfPresent(StytchB2BClient.MfaPolicy.self, forKey: .mfaPolicy)

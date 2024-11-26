@@ -5,7 +5,7 @@ import SwiftUI
 import UIKit
 
 public extension StytchB2BUIClient {
-    struct Configuration {
+    struct Configuration: Codable {
         static let empty = Configuration(publicToken: "", products: [], authFlowType: .discovery)
 
         let publicToken: String
@@ -15,7 +15,7 @@ public extension StytchB2BUIClient {
         let sessionDurationMinutes: Minutes
         let emailMagicLinksOptions: B2BEmailMagicLinksOptions?
         let passwordOptions: B2BPasswordOptions?
-        let oauthProviders: [B2BOAuthProviderConfig]?
+        let oauthProviders: [B2BOAuthProviderOptions]
         let emailOtpOptions: B2BEmailOTPOptions?
         let directLoginForSingleMembership: DirectLoginForSingleMembershipConfig?
         let disableCreateOrganization: Bool?
@@ -28,6 +28,26 @@ public extension StytchB2BUIClient {
             "stytchui-\(publicToken)://deeplink"
         }
 
+        var supportsEmailMagicLinks: Bool {
+            products.contains(.emailMagicLinks)
+        }
+
+        var supportsEmailOTP: Bool {
+            products.contains(.emailOtp)
+        }
+
+        var supportsSSO: Bool {
+            products.contains(.sso)
+        }
+
+        var supportsPasswords: Bool {
+            products.contains(.passwords)
+        }
+
+        var supportsOauth: Bool {
+            products.contains(.oauth) && !oauthProviders.isEmpty
+        }
+
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
@@ -36,7 +56,7 @@ public extension StytchB2BUIClient {
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
             emailMagicLinksOptions: B2BEmailMagicLinksOptions? = nil,
             passwordOptions: B2BPasswordOptions? = nil,
-            oauthProviders: [B2BOAuthProviderConfig]? = nil,
+            oauthProviders: [B2BOAuthProviderOptions] = [],
             emailOtpOptions: B2BEmailOTPOptions? = nil,
             directLoginForSingleMembership: DirectLoginForSingleMembershipConfig? = nil,
             disableCreateOrganization: Bool? = nil,
@@ -63,7 +83,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    enum B2BProducts: String {
+    enum B2BProducts: String, Codable {
         case emailMagicLinks
         case emailOtp
         case sso
@@ -71,13 +91,13 @@ public extension StytchB2BUIClient {
         case oauth
     }
 
-    enum AuthFlowType {
+    enum AuthFlowType: Codable, Equatable {
         case discovery
         case organization(slug: String)
         case passwordReset
     }
 
-    struct B2BEmailMagicLinksOptions {
+    struct B2BEmailMagicLinksOptions: Codable {
         let loginTemplateId: String?
         let signupTemplateId: String?
         let domainHint: String?
@@ -93,7 +113,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    struct B2BPasswordOptions {
+    struct B2BPasswordOptions: Codable {
         let resetPasswordExpirationMinutes: Int?
         let resetPasswordTemplateId: String?
 
@@ -106,7 +126,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    struct B2BOAuthProviderConfig {
+    struct B2BOAuthProviderOptions: Codable {
         let type: B2BOAuthProviders
         let customScopes: [String]?
         let providerParams: [String: String]?
@@ -118,7 +138,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    enum B2BOAuthProviders: String {
+    enum B2BOAuthProviders: String, Codable {
         case google
         case microsoft
         case hubspot
@@ -126,7 +146,7 @@ public extension StytchB2BUIClient {
         case github
     }
 
-    struct B2BEmailOTPOptions {
+    struct B2BEmailOTPOptions: Codable {
         let loginTemplateId: String?
         let signupTemplateId: String?
 
@@ -136,7 +156,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    struct DirectLoginForSingleMembershipConfig {
+    struct DirectLoginForSingleMembershipConfig: Codable {
         let status: Bool
         let ignoreInvites: Bool
         let ignoreJitProvisioning: Bool
@@ -148,7 +168,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    enum B2BMFAProducts: String {
+    enum B2BMFAProducts: String, Codable {
         case smsOtp
         case totp
     }
