@@ -45,9 +45,9 @@ public struct Member: Codable, Sendable {
     var mfaMethod: StytchB2BClient.MfaMethod? {
         switch defaultMfaMethod {
         case "sms_otp":
-            return .SMS
+            return .sms
         case "totp":
-            return .TOTP
+            return .totp
         default:
             return nil
         }

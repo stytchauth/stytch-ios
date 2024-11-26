@@ -1,42 +1,41 @@
 import Foundation
 @preconcurrency import SwiftyJSON
-// swiftlint:disable identifier_name
 
 public extension StytchB2BClient {
     /// The authentication setting that controls the JIT provisioning of Members when authenticating via SSO.
     enum SsoJitProvisioning: String, Codable, Sendable {
         /// New Members will be automatically provisioned upon successful authentication via any of the Organization's sso_active_connections.
-        case ALL_ALLOWED
+        case allAllowed = "ALL_ALLOWED"
         /// Only new Members with SSO logins that comply with sso_jit_provisioning_allowed_connections can be provisioned upon authentication.
-        case RESTRICTED
+        case restricted = "RESTRICTED"
         /// Disable JIT provisioning via SSO.
-        case NOT_ALLOWED
+        case notAllowed = "NOT_ALLOWED"
     }
 
     /// The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or OAuth.
     enum EmailJitProvisioning: String, Codable, Sendable {
         /// Only new Members with verified emails that comply with email_allowed_domains can be provisioned upon authentication via Email Magic Link or OAuth.
-        case RESTRICTED
+        case restricted = "RESTRICTED"
         /// Disable JIT provisioning via Email Magic Link and OAuth.
-        case NOT_ALLOWED
+        case notAllowed = "NOT_ALLOWED"
     }
 
     /// The authentication setting that controls how a new Member can be invited to an organization by email.
     enum EmailInvites: String, Codable, Sendable {
         /// Any new Member can be invited to join via email.
-        case ALL_ALLOWED
+        case allAllowed = "ALL_ALLOWED"
         /// Only new Members with verified emails that comply with email_allowed_domains can be invited via email.
-        case RESTRICTED
+        case restricted = "RESTRICTED"
         /// Disable email invites.
-        case NOT_ALLOWED
+        case notAllowed = "NOT_ALLOWED"
     }
 
     /// The setting that controls which authentication methods can be used by Members of an Organization.
     enum AuthMethods: String, Codable, Sendable {
         /// The default setting which allows all authentication methods to be used.
-        case ALL_ALLOWED
+        case allAllowed = "ALL_ALLOWED"
         /// Only methods that comply with allowed_auth_methods can be used for authentication. This setting does not apply to Members with is_breakglass set to true.
-        case RESTRICTED
+        case restricted = "RESTRICTED"
     }
 
     /// An array of allowed authentication methods. This list is enforced when auth_methods is set to RESTRICTED. The list's accepted values are: sso, magic_link, password, google_oauth, and microsoft_oauth.
@@ -55,24 +54,24 @@ public extension StytchB2BClient {
     /// The setting that controls which MFA methods can be used by Members of an Organization.
     enum MfaMethods: String, Codable, Sendable {
         /// The default setting which allows all authentication methods to be used.
-        case ALL_ALLOWED
+        case allAllowed = "ALL_ALLOWED"
         /// Only methods that comply with allowed_mfa_methods can be used for authentication. This setting does not apply to Members with is_breakglass set to true.
-        case RESTRICTED
+        case restricted = "RESTRICTED"
     }
 
     /// An array of allowed MFA authentication methods. This list is enforced when mfa_methods is set to RESTRICTED. The list's accepted values are: sms_otp and totp.
     /// If this field is provided and a session header is passed into the request, the Member Session must have permission to perform the update.settings.allowed-mfa-methods action on the stytch.organization Resource.
     enum MfaMethod: String, Codable, Sendable {
-        case SMS = "sms_otp"
-        case TOTP = "totp"
+        case sms = "sms_otp"
+        case totp
     }
 
     /// The setting that controls the MFA policy for all Members in the Organization.
     enum MfaPolicy: String, Codable, Sendable {
         /// All Members within the Organization will be required to complete MFA every time they wish to log in. However, any active Session that existed prior to this setting change will remain valid.
-        case REQUIRED_FOR_ALL
+        case requiredForAll = "REQUIRED_FOR_ALL"
         /// The default value. The Organization does not require MFA by default for all Members. Members will be required to complete MFA only if their mfa_enrolled status is set to true.
-        case OPTIONAL
+        case optional = "OPTIONAL"
     }
 
     /// Sets the Member’s MFA enrollment status upon a successful authentication.

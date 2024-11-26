@@ -24,7 +24,7 @@ final class ActionableInfoViewModel {
 
 extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
     func loginWithoutPassword(email: String) async throws {
-        guard state.config.supportsMagicLink else { return }
+        guard state.config.supportsEmailMagicLinks else { return }
         let magicLink = state.config.magicLinkOptions
         let params = params(email: email, magicLink: magicLink)
         _ = try await magicLinksClient.loginOrCreate(parameters: params)
@@ -32,7 +32,7 @@ extension ActionableInfoViewModel: ActionableInfoViewModelProtocol {
     }
 
     func forgotPassword(email: String) async throws {
-        guard state.config.supportsPassword else { return }
+        guard state.config.supportsPasswords else { return }
         let password = state.config.passwordOptions
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)

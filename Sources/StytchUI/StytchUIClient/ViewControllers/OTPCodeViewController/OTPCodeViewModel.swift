@@ -21,7 +21,7 @@ final class OTPCodeViewModel {
 
 extension OTPCodeViewModel: OTPCodeViewModelProtocol {
     func forgotPassword(email: String) async throws {
-        guard state.config.supportsPassword else { return }
+        guard state.config.supportsPasswords else { return }
         let password = state.config.passwordOptions
         StytchUIClient.pendingResetEmail = email
         let params = params(email: email, password: password)
