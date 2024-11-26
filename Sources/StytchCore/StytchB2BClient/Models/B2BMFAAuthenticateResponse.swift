@@ -64,7 +64,7 @@ public struct PrimaryRequired: Codable, Sendable {
     // Details the auth method that the member must also complete to fulfill the primary authentication requirements of the Organization.
     // For example, a value of [magic_link] indicates that the Member must also complete a magic link authentication step.
     // If you have an intermediate session token, you must pass it into that primary authentication step.
-    var allowedAuthMethods: [String]
+    var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]
 }
 
 public struct MFARequired: Codable, Sendable {
