@@ -312,6 +312,7 @@ public extension Organization {
         allowedAuthMethods: [.magicLink, .password],
         mfaMethods: .ALL_ALLOWED,
         allowedMfaMethods: [.SMS],
-        mfaPolicy: .OPTIONAL
+        mfaPolicy: .OPTIONAL,
+        rbacEmailImplicitRoleAssignments: []
     )
 }

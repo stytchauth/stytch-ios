@@ -66,7 +66,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
                 emailJitProvisioning: .NOT_ALLOWED,
                 emailInvites: .RESTRICTED,
                 authMethods: .ALL_ALLOWED,
-                allowedAuthMethods: [.MAGIC_LINK, .PASSWORD]
+                allowedAuthMethods: [.magicLink, .password]
             )
         )
 
