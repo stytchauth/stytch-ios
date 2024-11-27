@@ -26,6 +26,7 @@ public struct Organization: Codable, Sendable {
         case mfaMethods
         case allowedMfaMethods
         case mfaPolicy
+        case rbacEmailImplicitRoleAssignments
     }
 
     /// Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on an Organization, so be sure to preserve this value.
@@ -69,6 +70,8 @@ public struct Organization: Codable, Sendable {
     public let allowedMfaMethods: [StytchB2BClient.MfaMethod]?
     /// MFA policy for the organization.
     public let mfaPolicy: StytchB2BClient.MfaPolicy?
+    /// An array of implicit role assignments granted to members in this organization whose emails match the domain. See our {@link https://stytch.com/docs/b2b/guides/rbac/role-assignment RBAC guide} for more information about role assignment.
+    public let rbacEmailImplicitRoleAssignments: [StytchB2BClient.RBACEmailImplicitRoleAssignments]?
 }
 
 extension Organization: Equatable {
@@ -92,7 +95,8 @@ extension Organization: Equatable {
             lhs.allowedAuthMethods == rhs.allowedAuthMethods &&
             lhs.mfaMethods == rhs.mfaMethods &&
             lhs.allowedMfaMethods == rhs.allowedMfaMethods &&
-            lhs.mfaPolicy == rhs.mfaPolicy
+            lhs.mfaPolicy == rhs.mfaPolicy &&
+            lhs.rbacEmailImplicitRoleAssignments == rhs.rbacEmailImplicitRoleAssignments
     }
 }
 
@@ -119,6 +123,7 @@ public extension Organization {
         mfaMethods = try container.decodeIfPresent(StytchB2BClient.MfaMethods.self, forKey: .mfaMethods)
         allowedMfaMethods = try container.decodeIfPresent([StytchB2BClient.MfaMethod].self, forKey: .allowedMfaMethods)
         mfaPolicy = try container.decodeIfPresent(StytchB2BClient.MfaPolicy.self, forKey: .mfaPolicy)
+        rbacEmailImplicitRoleAssignments = try container.decodeIfPresent([StytchB2BClient.RBACEmailImplicitRoleAssignments].self, forKey: .rbacEmailImplicitRoleAssignments)
     }
 }
 

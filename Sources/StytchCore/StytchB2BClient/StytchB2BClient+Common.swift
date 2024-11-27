@@ -1,6 +1,5 @@
 import Foundation
 @preconcurrency import SwiftyJSON
-// swiftlint:disable identifier_name
 
 public extension StytchB2BClient {
     /// The authentication setting that controls the JIT provisioning of Members when authenticating via SSO.
@@ -88,7 +87,7 @@ public extension StytchB2BClient {
     /// Implicit role assignments based off of email domains.
     /// For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the associated Role, regardless of their login method.
     /// See the RBAC guide for more information about role assignment (https://stytch.com/docs/b2b/guides/rbac/role-assignment).
-    struct RBACEmailImplicitRoleAssignments: Codable, Sendable {
+    struct RBACEmailImplicitRoleAssignments: Codable, Sendable, Equatable {
         let roleId: String
         let domain: String
 
