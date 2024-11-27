@@ -13,10 +13,6 @@ public extension StytchB2BUIClient {
         let products: [B2BProducts]
         let authFlowType: AuthFlowType
         let sessionDurationMinutes: Minutes
-        let emailMagicLinksOptions: B2BEmailMagicLinksOptions?
-        let passwordOptions: B2BPasswordOptions?
-        let oauthProviders: [B2BOAuthProviderOptions]
-        let emailOtpOptions: B2BEmailOTPOptions?
         let directLoginForSingleMembership: DirectLoginForSingleMembershipConfig?
         let disableCreateOrganization: Bool?
         let mfaProductOrder: [B2BMFAProducts]?
@@ -29,23 +25,52 @@ public extension StytchB2BUIClient {
         }
 
         var supportsEmailMagicLinks: Bool {
-            products.contains(.emailMagicLinks)
+            products.contains {
+                if case .emailMagicLinks = $0 {
+                    return true
+                }
+                return false
+            }
         }
 
         var supportsEmailOTP: Bool {
-            products.contains(.emailOtp)
+            products.contains {
+                if case .emailOtp = $0 {
+                    return true
+                }
+                return false
+            }
         }
 
         var supportsSSO: Bool {
-            products.contains(.sso)
+            products.contains {
+                if case .sso = $0 {
+                    return true
+                }
+                return false
+            }
         }
 
         var supportsPasswords: Bool {
-            products.contains(.passwords)
+            products.contains {
+                if case .passwords = $0 {
+                    return true
+                }
+                return false
+            }
         }
 
         var supportsOauth: Bool {
-            products.contains(.oauth) && !oauthProviders.isEmpty
+            products.contains {
+                if case .oauth = $0 {
+                    return true
+                }
+                return false
+            }
+        }
+
+        var supportsEmailMagicLinksAndPasswords: Bool {
+            supportsEmailMagicLinks && supportsPasswords
         }
 
         public init(
@@ -54,10 +79,6 @@ public extension StytchB2BUIClient {
             products: [B2BProducts],
             authFlowType: AuthFlowType,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
-            emailMagicLinksOptions: B2BEmailMagicLinksOptions? = nil,
-            passwordOptions: B2BPasswordOptions? = nil,
-            oauthProviders: [B2BOAuthProviderOptions] = [],
-            emailOtpOptions: B2BEmailOTPOptions? = nil,
             directLoginForSingleMembership: DirectLoginForSingleMembershipConfig? = nil,
             disableCreateOrganization: Bool? = nil,
             mfaProductOrder: [B2BMFAProducts]? = nil,
@@ -70,10 +91,6 @@ public extension StytchB2BUIClient {
             self.products = products
             self.authFlowType = authFlowType
             self.sessionDurationMinutes = sessionDurationMinutes
-            self.emailMagicLinksOptions = emailMagicLinksOptions
-            self.passwordOptions = passwordOptions
-            self.oauthProviders = oauthProviders
-            self.emailOtpOptions = emailOtpOptions
             self.directLoginForSingleMembership = directLoginForSingleMembership
             self.disableCreateOrganization = disableCreateOrganization
             self.mfaProductOrder = mfaProductOrder
@@ -83,12 +100,29 @@ public extension StytchB2BUIClient {
         }
     }
 
-    enum B2BProducts: String, Codable {
-        case emailMagicLinks
-        case emailOtp
+    enum B2BProducts: Codable, Equatable {
+        case emailMagicLinks(emailMagicLinksOptions: B2BEmailMagicLinksOptions?)
+        case emailOtp(emailOtpOptions: B2BEmailOTPOptions?)
         case sso
-        case passwords
-        case oauth
+        case passwords(passwordOptions: B2BPasswordOptions?)
+        case oauth(oauthProviders: [B2BOAuthProviderOptions])
+
+        public static func == (lhs: B2BProducts, rhs: B2BProducts) -> Bool {
+            switch (lhs, rhs) {
+            case (.emailMagicLinks, .emailMagicLinks):
+                return true
+            case (.emailOtp, .emailOtp):
+                return true
+            case (.sso, .sso):
+                return true
+            case (.passwords, .passwords):
+                return true
+            case (.oauth, .oauth):
+                return true
+            default:
+                return false
+            }
+        }
     }
 
     enum AuthFlowType: Codable, Equatable {

@@ -10,16 +10,27 @@ extension StytchB2BUIClient {
         //
         if let allowedAuthMethods = primaryRequired?.allowedAuthMethods {
             //
-            let intersection = allowedB2BProducts(allowedAuthMethods: allowedAuthMethods, b2bProducts: configuration.products)
+            let intersection = allowedAuthMethods.allowedB2BProducts(from: configuration.products)
 
             //
             if intersection.isEmpty {
                 if organization.authMethods == .allAllowed {
-                    return [.emailMagicLinks]
-                } else {
-                    return allowedAuthMethods.compactMap { authMethod in
-                        authMethod.correspondingB2BProduct
+                    // Show magic links, try to the find the one with the options.
+                    let magiclinkOptions = [StytchB2BClient.AllowedAuthMethods.magicLink].allowedB2BProducts(from: configuration.products)
+                    if !magiclinkOptions.isEmpty {
+                        return magiclinkOptions
+                    } else {
+                        return [.emailMagicLinks(emailMagicLinksOptions: nil)]
                     }
+                } else {
+                    // Show all the allowedAuthMethods
+                    return allowedAuthMethods.allowedB2BProducts(from: [
+                        .emailMagicLinks(emailMagicLinksOptions: nil),
+                        .emailOtp(emailOtpOptions: nil),
+                        .oauth(oauthProviders: []),
+                        .sso,
+                        .passwords(passwordOptions: nil),
+                    ])
                 }
             } else {
                 return intersection
@@ -28,24 +39,10 @@ extension StytchB2BUIClient {
 
         //
         if let allowedAuthMethods = organization.allowedAuthMethods, organization.authMethods == .restricted {
-            return allowedB2BProducts(allowedAuthMethods: allowedAuthMethods, b2bProducts: configuration.products)
+            return allowedAuthMethods.allowedB2BProducts(from: configuration.products)
         } else {
             return configuration.products
         }
-    }
-
-    //
-    static func allowedB2BProducts(
-        allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods],
-        b2bProducts: [StytchB2BUIClient.B2BProducts]
-    ) -> [StytchB2BUIClient.B2BProducts] {
-        // Map AllowedAuthMethods to corresponding B2BProducts
-        let allowedB2BProducts: [StytchB2BUIClient.B2BProducts] = allowedAuthMethods.compactMap { authMethod in
-            authMethod.correspondingB2BProduct
-        }
-
-        // Filter B2BProducts based on the allowed list
-        return b2bProducts.filter { allowedB2BProducts.contains($0) }
     }
 }
 
@@ -56,13 +53,26 @@ extension StytchB2BClient.AllowedAuthMethods {
         case .sso:
             return .sso
         case .magicLink:
-            return .emailMagicLinks
+            return .emailMagicLinks(emailMagicLinksOptions: nil)
         case .password:
-            return .passwords
+            return .passwords(passwordOptions: nil)
         case .googleOAuth, .microsoftOAuth, .hubspotOAuth, .slackOAuth, .githubOAuth:
-            return .oauth
+            return .oauth(oauthProviders: [])
         case .emailOtp:
-            return .emailOtp
+            return .emailOtp(emailOtpOptions: nil)
+        }
+    }
+}
+
+extension Array where Element == StytchB2BClient.AllowedAuthMethods {
+    func allowedB2BProducts(from b2bProducts: [StytchB2BUIClient.B2BProducts]) -> [StytchB2BUIClient.B2BProducts] {
+        // Iterate over `self` (AllowedAuthMethods array) and match with the provided B2B products
+        compactMap { authMethod in
+            authMethod.correspondingB2BProduct
+        }.flatMap { allowedProduct in
+            b2bProducts.filter { product in
+                product == allowedProduct
+            }
         }
     }
 }

@@ -27,13 +27,12 @@ extension StytchB2BUIClient {
     ) -> [ProductComponent] {
         let configurationProducts = configuration.products
         let authFlowType = configuration.authFlowType
-        let displayEmlAndPasswordsTogether = configurationProducts.contains(.emailMagicLinks) && configurationProducts.contains(.passwords)
 
         var productComponents = [ProductComponent]()
         for product in configurationProducts {
             switch product {
             case .emailMagicLinks:
-                if displayEmlAndPasswordsTogether == false {
+                if configuration.supportsEmailMagicLinksAndPasswords == false {
                     if case .organization = authFlowType {
                         productComponents.append(.magicLinkEmailForm)
                     } else {
@@ -49,7 +48,7 @@ extension StytchB2BUIClient {
                     productComponents.append(.ssoButtons)
                 }
             case .passwords:
-                if displayEmlAndPasswordsTogether == false {
+                if configuration.supportsEmailMagicLinksAndPasswords == false {
                     productComponents.append(.passwordsEmailForm)
                 }
             case .oauth:
@@ -58,10 +57,10 @@ extension StytchB2BUIClient {
         }
 
         // If we're displaying both email magic links and passwords, we need to display them together
-        if displayEmlAndPasswordsTogether {
+        if configuration.supportsEmailMagicLinksAndPasswords {
             // Get the first index of either email magic links or passwords
-            let passwordIndex = configurationProducts.firstIndex(of: .passwords) ?? Int.max
-            let emlIndex = configurationProducts.firstIndex(of: .emailMagicLinks) ?? Int.max
+            let passwordIndex = configurationProducts.firstIndex(of: .passwords(passwordOptions: nil)) ?? Int.max
+            let emlIndex = configurationProducts.firstIndex(of: .emailMagicLinks(emailMagicLinksOptions: nil)) ?? Int.max
             let firstProductIndex = min(passwordIndex, emlIndex)
 
             // Determine the combined component
@@ -78,8 +77,7 @@ extension StytchB2BUIClient {
 
         // If we have both buttons and input, we want to display a divider between the last 2 elements
         let hasButtons = productComponents.contains(.oAuthButtons) || productComponents.contains(.ssoButtons)
-        let hasInput = configurationProducts.contains(.emailMagicLinks) || configurationProducts.contains(.passwords)
-        let showDivider = hasButtons && hasInput
+        let showDivider = hasButtons && configuration.supportsEmailMagicLinksAndPasswords
 
         if productComponents.count > 1, showDivider {
             productComponents.insert(.divider, at: productComponents.count - 1)

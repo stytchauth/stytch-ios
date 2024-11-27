@@ -12,7 +12,7 @@ struct StytchB2BUIDemoApp: App {
 
     static let realisticStytchUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: "public-token",
-        products: [.emailMagicLinks],
+        products: [.emailMagicLinks(emailMagicLinksOptions: nil)],
         authFlowType: .organization(slug: "1234")
     )
 }
