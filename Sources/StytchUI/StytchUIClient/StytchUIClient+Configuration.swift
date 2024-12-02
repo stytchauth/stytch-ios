@@ -31,7 +31,7 @@ public extension StytchUIClient {
             products.contains(.oauth) && !oauthProviders.isEmpty
         }
 
-        var supportsMagicLink: Bool {
+        var supportsEmailMagicLinks: Bool {
             products.contains(.emailMagicLinks)
         }
 
@@ -39,7 +39,7 @@ public extension StytchUIClient {
             products.contains(.otp)
         }
 
-        var supportsPassword: Bool {
+        var supportsPasswords: Bool {
             products.contains(.passwords)
         }
 
