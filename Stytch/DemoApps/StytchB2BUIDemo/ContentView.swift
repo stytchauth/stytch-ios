@@ -21,14 +21,15 @@ struct ContentView: View {
                 }.font(.title).bold()
             }
             .padding()
-            .b2bAuthenticationSheet(isPresented: $shouldPresentAuth, onB2BAuthCallback: { authenticateResponseType in
-                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
+            .b2bAuthenticationSheet(isPresented: $shouldPresentAuth, onB2BAuthCallback: {
+                print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
             }).onOpenURL { url in
                 let didHandle = StytchB2BUIClient.handle(url: url)
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
             }
         }.task {
             StytchB2BUIClient.configure(configuration: configuration)
+            print(configuration.redirectUrl)
             setUpObservations()
         }
     }
@@ -59,5 +60,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(configuration: StytchB2BUIDemoApp.realisticStytchUIConfig)
+    ContentView(configuration: StytchB2BUIDemoApp.oauthStytchB2BUIConfig)
 }

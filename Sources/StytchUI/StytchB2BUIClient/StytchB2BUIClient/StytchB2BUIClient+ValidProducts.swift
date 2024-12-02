@@ -2,8 +2,9 @@ import Foundation
 import StytchCore
 
 extension StytchB2BUIClient {
-    static func productsForHomeScreen(
-        organization: Organization,
+    static func validProducts(
+        organizationAllowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?,
+        organizationAuthMethods: StytchB2BClient.AuthMethods?,
         primaryRequired: PrimaryRequired?,
         configuration: StytchB2BUIClient.Configuration
     ) -> [StytchB2BUIClient.B2BProducts] {
@@ -14,7 +15,7 @@ extension StytchB2BUIClient {
             // If the intersection is empty and the organization allows all auth methods we will show the user magic links.
             // if there are restrictions on the auth methods allowed we will show the auth methods specified in primaryRequired?.allowedAuthMethods.
             if intersection.isEmpty {
-                if organization.authMethods == .allAllowed {
+                if organizationAuthMethods == .allAllowed {
                     return [.emailMagicLinks]
                 } else {
                     return allowedAuthMethods.compactMap { authMethod in
@@ -29,7 +30,7 @@ extension StytchB2BUIClient {
         // If primaryRequired?.allowedAuthMethods is empty the we can simply take the intersection of the
         // organization.allowedAuthMethods and the and the products supplied by the application developer.
         // If that returns an empty array we allow that to be shown assuming user error and a misconfigured UI with their dashboard set up.
-        if let allowedAuthMethods = organization.allowedAuthMethods, organization.authMethods == .restricted {
+        if let allowedAuthMethods = organizationAllowedAuthMethods, organizationAuthMethods == .restricted {
             return allowedB2BProducts(allowedAuthMethods: allowedAuthMethods, b2bProducts: configuration.products)
         } else {
             return configuration.products

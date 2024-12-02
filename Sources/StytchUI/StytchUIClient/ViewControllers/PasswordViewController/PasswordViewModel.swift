@@ -32,17 +32,17 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
 
     func setPassword(token: String, password: String) async throws {
-        let response = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: state.config.sessionDurationMinutes))
         StytchUIClient.onAuthCallback?(response)
     }
 
     func signup(email: String, password: String) async throws {
-        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: state.config.sessionDurationMinutes))
         StytchUIClient.onAuthCallback?(response)
     }
 
     func login(email: String, password: String) async throws {
-        let response = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDuration: sessionDuration))
+        let response = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDuration: state.config.sessionDurationMinutes))
         StytchUIClient.onAuthCallback?(response)
     }
 
@@ -78,10 +78,6 @@ struct PasswordState {
 }
 
 extension PasswordViewModel {
-    var sessionDuration: Minutes {
-        state.config.sessionDurationMinutes
-    }
-
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,

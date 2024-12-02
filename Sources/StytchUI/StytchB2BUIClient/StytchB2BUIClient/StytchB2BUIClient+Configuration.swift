@@ -8,48 +8,57 @@ public extension StytchB2BUIClient {
     struct Configuration: Codable {
         static let empty = Configuration(publicToken: "", products: [], authFlowType: .discovery)
 
-        let publicToken: String
-        let hostUrl: URL?
-        let products: [B2BProducts]
-        let authFlowType: AuthFlowType
-        let sessionDurationMinutes: Minutes
-        let emailMagicLinksOptions: B2BEmailMagicLinksOptions?
-        let passwordOptions: B2BPasswordOptions?
-        let oauthProviders: [B2BOAuthProviderOptions]
-        let emailOtpOptions: B2BEmailOTPOptions?
-        let directLoginForSingleMembership: DirectLoginForSingleMembershipConfig?
-        let disableCreateOrganization: Bool?
-        let mfaProductOrder: [B2BMFAProducts]?
-        let mfaProductInclude: [B2BMFAProducts]?
-        let navigation: Navigation?
-        let theme: StytchTheme
+        public let publicToken: String
+        public let hostUrl: URL?
+        public let products: [B2BProducts]
+        public let authFlowType: AuthFlowType
+        public let sessionDurationMinutes: Minutes
+        public let emailMagicLinksOptions: B2BEmailMagicLinksOptions?
+        public let passwordOptions: B2BPasswordOptions?
+        public let oauthProviders: [B2BOAuthProviderOptions]
+        public let emailOtpOptions: B2BEmailOTPOptions?
+        public let directLoginForSingleMembership: DirectLoginForSingleMembershipConfig?
+        public let disableCreateOrganization: Bool?
+        public let mfaProductOrder: [B2BMFAProducts]?
+        public let mfaProductInclude: [B2BMFAProducts]?
+        public let navigation: Navigation?
+        public let theme: StytchTheme
 
-        var redirectUrl: String? {
-            "stytchui-\(publicToken)://deeplink"
+        public var redirectUrl: URL? {
+            URL(string: "stytchui-\(publicToken)://deeplink")
         }
 
-        var supportsEmailMagicLinks: Bool {
+        public var supportsEmailMagicLinks: Bool {
             products.contains(.emailMagicLinks)
         }
 
-        var supportsEmailOTP: Bool {
+        public var supportsEmailOTP: Bool {
             products.contains(.emailOtp)
         }
 
-        var supportsSSO: Bool {
+        public var supportsSSO: Bool {
             products.contains(.sso)
         }
 
-        var supportsPasswords: Bool {
+        public var supportsPasswords: Bool {
             products.contains(.passwords)
         }
 
-        var supportsOauth: Bool {
+        public var supportsOauth: Bool {
             products.contains(.oauth) && !oauthProviders.isEmpty
         }
 
-        var supportsEmailMagicLinksAndPasswords: Bool {
+        public var supportsEmailMagicLinksAndPasswords: Bool {
             supportsEmailMagicLinks && supportsPasswords
+        }
+
+        public var organizationSlug: String? {
+            switch authFlowType {
+            case let .organization(slug: slug):
+                return slug
+            default:
+                return nil
+            }
         }
 
         public init(
@@ -102,11 +111,11 @@ public extension StytchB2BUIClient {
     }
 
     struct B2BEmailMagicLinksOptions: Codable {
-        let loginTemplateId: String?
-        let signupTemplateId: String?
-        let domainHint: String?
+        public let loginTemplateId: String?
+        public let signupTemplateId: String?
+        public let domainHint: String?
 
-        init(
+        public init(
             loginTemplateId: String? = nil,
             signupTemplateId: String? = nil,
             domainHint: String? = nil
@@ -118,10 +127,10 @@ public extension StytchB2BUIClient {
     }
 
     struct B2BPasswordOptions: Codable {
-        let resetPasswordExpirationMinutes: Int?
-        let resetPasswordTemplateId: String?
+        public let resetPasswordExpirationMinutes: Int?
+        public let resetPasswordTemplateId: String?
 
-        init(
+        public init(
             resetPasswordExpirationMinutes: Int? = nil,
             resetPasswordTemplateId: String? = nil
         ) {
@@ -131,41 +140,33 @@ public extension StytchB2BUIClient {
     }
 
     struct B2BOAuthProviderOptions: Codable {
-        let type: B2BOAuthProviders
-        let customScopes: [String]?
-        let providerParams: [String: String]?
+        public let provider: StytchB2BClient.OAuth.ThirdParty.Provider
+        public let customScopes: [String]?
+        public let providerParams: [String: String]?
 
-        init(type: B2BOAuthProviders, customScopes: [String]? = nil, providerParams: [String: String]? = nil) {
-            self.type = type
+        public init(provider: StytchB2BClient.OAuth.ThirdParty.Provider, customScopes: [String]? = nil, providerParams: [String: String]? = nil) {
+            self.provider = provider
             self.customScopes = customScopes
             self.providerParams = providerParams
         }
     }
 
-    enum B2BOAuthProviders: String, Codable {
-        case google
-        case microsoft
-        case hubspot
-        case slack
-        case github
-    }
-
     struct B2BEmailOTPOptions: Codable {
-        let loginTemplateId: String?
-        let signupTemplateId: String?
+        public let loginTemplateId: String?
+        public let signupTemplateId: String?
 
-        init(loginTemplateId: String? = nil, signupTemplateId: String? = nil) {
+        public init(loginTemplateId: String? = nil, signupTemplateId: String? = nil) {
             self.loginTemplateId = loginTemplateId
             self.signupTemplateId = signupTemplateId
         }
     }
 
     struct DirectLoginForSingleMembershipConfig: Codable {
-        let status: Bool
-        let ignoreInvites: Bool
-        let ignoreJitProvisioning: Bool
+        public let status: Bool
+        public let ignoreInvites: Bool
+        public let ignoreJitProvisioning: Bool
 
-        init(status: Bool, ignoreInvites: Bool, ignoreJitProvisioning: Bool) {
+        public init(status: Bool, ignoreInvites: Bool, ignoreJitProvisioning: Bool) {
             self.status = status
             self.ignoreInvites = ignoreInvites
             self.ignoreJitProvisioning = ignoreJitProvisioning

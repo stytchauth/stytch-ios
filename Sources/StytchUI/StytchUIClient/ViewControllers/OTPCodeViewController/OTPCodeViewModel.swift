@@ -69,10 +69,6 @@ struct OTPCodeState {
 }
 
 extension OTPCodeViewModel {
-    var sessionDuration: Minutes {
-        state.config.sessionDurationMinutes
-    }
-
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,

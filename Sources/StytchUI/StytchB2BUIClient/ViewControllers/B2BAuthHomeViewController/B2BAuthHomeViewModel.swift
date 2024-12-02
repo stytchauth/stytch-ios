@@ -22,6 +22,43 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
             )
         )
     }
+
+    func loadProducts(
+        completion: @escaping ([StytchB2BUIClient.ProductComponent]) -> Void
+    ) {
+        Task {
+            switch state.configuration.authFlowType {
+            case .discovery:
+                let products = StytchB2BUIClient.productComponentsOrdering(
+                    validProducts: state.configuration.products,
+                    configuration: state.configuration,
+                    hasSSOActiveConnections: false // can you do discovery via sso?
+                )
+                completion(products)
+            case let .organization(slug):
+                do {
+                    try await OrganizationManager.getOrganizationBySlug(organizationSlug: slug)
+                    let validProducts = StytchB2BUIClient.validProducts(
+                        organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
+                        organizationAuthMethods: OrganizationManager.authMethods,
+                        primaryRequired: B2BAuthenticationManager.primaryRequired,
+                        configuration: state.configuration
+                    )
+                    let products = StytchB2BUIClient.productComponentsOrdering(
+                        validProducts: validProducts,
+                        configuration: state.configuration,
+                        hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
+                    )
+                    completion(products)
+                } catch {
+                    print(error.errorInfo)
+                    completion([])
+                }
+            case .passwordReset:
+                completion([])
+            }
+        }
+    }
 }
 
 struct B2BAuthHomeState {

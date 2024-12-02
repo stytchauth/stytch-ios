@@ -147,10 +147,6 @@ enum ActionableInfoAction: Equatable {
 }
 
 internal extension ActionableInfoViewModel {
-    var sessionDuration: Minutes {
-        state.config.sessionDurationMinutes
-    }
-
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,

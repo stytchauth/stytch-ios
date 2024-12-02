@@ -48,7 +48,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
         )
-        XCTAssert(viewModel.sessionDuration.rawValue == 123)
+        XCTAssert(state.config.sessionDurationMinutes == 123)
     }
 
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
@@ -70,7 +70,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
         )
-        XCTAssert(viewModel.sessionDuration == Minutes.defaultSessionDuration)
+        XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
     }
 
     func testCreatesCorrectResetByEmailStartParams() {

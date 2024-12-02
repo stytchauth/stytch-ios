@@ -37,7 +37,14 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
     override func configureView() {
         super.configureView()
+        viewModel.loadProducts { [weak self] productComponents in
+            Task { @MainActor in
+                self?.configureView(productComponents: productComponents)
+            }
+        }
+    }
 
+    func configureView(productComponents: [StytchB2BUIClient.ProductComponent]) {
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
         scrollView.clipsToBounds = false
@@ -54,7 +61,28 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         stackView.addArrangedSubview(titleLabel)
 
-        let constraints: [NSLayoutConstraint] = []
+        var constraints: [NSLayoutConstraint] = []
+
+        for productComponent in productComponents {
+            switch productComponent {
+            case .emailMagicLink:
+                break
+            case .emailMagicLinkAndPasswords:
+                break
+            case .password:
+                break
+            case .oAuthButtons:
+                let oauthController = B2BOAuthViewController(state: .init(configuration: viewModel.state.configuration), delegate: self)
+                addChild(oauthController)
+                stackView.addArrangedSubview(oauthController.view)
+                constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
+            case .ssoButtons:
+                break
+            case .divider:
+                stackView.addArrangedSubview(separatorView)
+                constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
+            }
+        }
 
         if StytchClient.disableSdkWatermark == false {
             stackView.addArrangedSubview(poweredByStytch)
@@ -70,6 +98,8 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
     }
 }
 
-protocol B2BAuthHomeViewModelDelegate: AnyObject {}
-
-extension B2BAuthHomeViewController: B2BAuthHomeViewModelDelegate {}
+extension B2BAuthHomeViewController: B2BOAuthViewControllerDelegate {
+    func oauthDidAuthenticatie() {
+        startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+    }
+}
