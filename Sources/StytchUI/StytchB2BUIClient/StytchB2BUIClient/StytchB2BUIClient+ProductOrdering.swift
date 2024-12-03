@@ -22,62 +22,43 @@ extension StytchB2BUIClient {
        and what order to render them in as of 6/21/23.
      */
     static func productComponentsOrdering(
+        validProducts: [StytchB2BUIClient.B2BProducts],
         configuration: StytchB2BUIClient.Configuration,
-        organization: Organization
+        hasSSOActiveConnections: Bool?
     ) -> [ProductComponent] {
-        let configurationProducts = configuration.products
-        let authFlowType = configuration.authFlowType
-
         var productComponents = [ProductComponent]()
-        for product in configurationProducts {
+        for product in validProducts {
             switch product {
             case .emailMagicLinks:
-                if configuration.supportsEmailMagicLinksAndPasswords == false {
-                    if case .organization = authFlowType {
-                        productComponents.append(.magicLinkEmailForm)
-                    } else {
-                        productComponents.append(.magicLinkEmailDiscoveryForm)
-                    }
+                if case .discovery = configuration.authFlowType {
+                    productComponents.append(.emailMagicLink)
+                } else if configuration.supportsEmailMagicLinksAndPasswords == true {
+                    productComponents.append(.emailMagicLinkAndPasswords)
+                } else {
+                    productComponents.append(.emailMagicLink)
                 }
             case .emailOtp:
                 break
             case .sso:
-                // We only need to render a component if we have a valid SSO connection
-                let isSsoValid = (organization.ssoActiveConnections?.count ?? 0) > 0
-                if case .organization = authFlowType, isSsoValid {
+                if case .organization = configuration.authFlowType, hasSSOActiveConnections == true {
                     productComponents.append(.ssoButtons)
                 }
             case .passwords:
-                if configuration.supportsEmailMagicLinksAndPasswords == false {
-                    productComponents.append(.passwordsEmailForm)
+                if case .organization = configuration.authFlowType {
+                    if configuration.supportsEmailMagicLinksAndPasswords == true {
+                        productComponents.append(.emailMagicLinkAndPasswords)
+                    } else {
+                        productComponents.append(.password)
+                    }
                 }
             case .oauth:
                 productComponents.append(.oAuthButtons)
             }
         }
 
-        // If we're displaying both email magic links and passwords, we need to display them together
-        if configuration.supportsEmailMagicLinksAndPasswords {
-            // Get the first index of either email magic links or passwords
-            let passwordIndex = configurationProducts.firstIndex(of: .passwords) ?? Int.max
-            let emlIndex = configurationProducts.firstIndex(of: .emailMagicLinks) ?? Int.max
-            let firstProductIndex = min(passwordIndex, emlIndex)
-
-            // Determine the combined component
-            let combinedComponent: ProductComponent
-            if case .organization = authFlowType {
-                combinedComponent = .passwordEMLCombined
-            } else {
-                combinedComponent = .magicLinkEmailDiscoveryForm
-            }
-
-            // Insert combined component into the first index of either email magic links or passwords
-            productComponents.insert(combinedComponent, at: firstProductIndex)
-        }
-
         // If we have both buttons and input, we want to display a divider between the last 2 elements
         let hasButtons = productComponents.contains(.oAuthButtons) || productComponents.contains(.ssoButtons)
-        let showDivider = hasButtons && configuration.supportsEmailMagicLinksAndPasswords
+        let showDivider = hasButtons && (configuration.supportsEmailMagicLinks || configuration.supportsPasswords)
 
         if productComponents.count > 1, showDivider {
             productComponents.insert(.divider, at: productComponents.count - 1)
@@ -89,12 +70,11 @@ extension StytchB2BUIClient {
 
 extension StytchB2BUIClient {
     enum ProductComponent: String {
-        case magicLinkEmailForm
-        case magicLinkEmailDiscoveryForm
+        case emailMagicLink
+        case emailMagicLinkAndPasswords
+        case password
         case oAuthButtons
         case ssoButtons
-        case passwordsEmailForm
-        case passwordEMLCombined
         case divider
     }
 }

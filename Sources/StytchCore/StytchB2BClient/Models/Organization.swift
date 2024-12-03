@@ -2,7 +2,7 @@ import Foundation
 @preconcurrency import SwiftyJSON
 
 /// A data type representing an organization of which a member may belong to.
-public struct Organization: Codable, Sendable {
+public struct Organization: OrganizationType {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
@@ -39,7 +39,8 @@ public struct Organization: Codable, Sendable {
     public let logoUrl: URL?
     /// Arbitrary JSON for storing application-specific or identity-provider-specific data.
     public let trustedMetadata: JSON
-    let organizationId: ID
+    /// Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on an Organization, so be sure to preserve this value.
+    public let organizationId: ID
     /// Default connection used for SSO when there are multiple active connections.
     public let ssoDefaultConnectionId: String?
     /// JIT provisioning setting for SSO.
@@ -76,11 +77,11 @@ public struct Organization: Codable, Sendable {
 
 extension Organization: Equatable {
     public static func == (lhs: Organization, rhs: Organization) -> Bool {
-        lhs.id == rhs.id &&
-            lhs.name == rhs.name &&
+        lhs.name == rhs.name &&
             lhs.slug == rhs.slug &&
             lhs.logoUrl == rhs.logoUrl &&
             lhs.trustedMetadata == rhs.trustedMetadata &&
+            lhs.organizationId == rhs.organizationId &&
             lhs.ssoDefaultConnectionId == rhs.ssoDefaultConnectionId &&
             lhs.ssoJitProvisioning == rhs.ssoJitProvisioning &&
             lhs.ssoJitProvisioningAllowedConnections == rhs.ssoJitProvisioningAllowedConnections &&
@@ -133,5 +134,22 @@ public extension Organization {
         case totp(memberId: String)
         case phoneNumber(memberId: String)
         case password(passwordId: String)
+    }
+}
+
+public extension Organization {
+    var usesSMSMFAOnly: Bool {
+        guard let allowedMfaMethods else { return false }
+        return allowedMfaMethods.count == 1 && allowedMfaMethods.contains(.sms)
+    }
+
+    var usesTOTPMFAOnly: Bool {
+        guard let allowedMfaMethods else { return false }
+        return allowedMfaMethods.count == 1 && allowedMfaMethods.contains(.totp)
+    }
+
+    var usesSMSAndTOTPMFA: Bool {
+        guard let allowedMfaMethods else { return false }
+        return allowedMfaMethods.count == 2 && allowedMfaMethods.contains(.totp) && allowedMfaMethods.contains(.sms)
     }
 }

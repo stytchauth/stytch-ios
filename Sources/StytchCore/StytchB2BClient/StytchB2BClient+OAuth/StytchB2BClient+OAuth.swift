@@ -1,5 +1,9 @@
 import Foundation
 
+public protocol B2BOAuthProviderProtocol {
+    func authenticate(parameters: StytchB2BClient.OAuth.AuthenticateParameters) async throws -> StytchB2BClient.OAuth.OAuthAuthenticateResponse
+}
+
 public extension StytchB2BClient {
     /// The interface for interacting with OAuth products.
     static var oauth: OAuth {
@@ -10,7 +14,7 @@ public extension StytchB2BClient {
 }
 
 public extension StytchB2BClient {
-    struct OAuth {
+    struct OAuth: B2BOAuthProviderProtocol {
         let router: NetworkingRouter<StytchB2BClient.OAuthRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager

@@ -94,7 +94,3 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         }
     }
 }
-
-protocol AuthHomeViewModelDelegate: AnyObject {}
-
-extension AuthHomeViewController: AuthHomeViewModelDelegate {}

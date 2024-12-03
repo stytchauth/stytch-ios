@@ -39,10 +39,6 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     }
 }
 
-protocol OAuthViewModelDelegate: AnyObject {}
-
-extension OAuthViewController: OAuthViewModelDelegate {}
-
 private extension OAuthViewController {
     static func makeOauthButton(provider: StytchUIClient.OAuthProvider) -> UIControl {
         switch provider {

@@ -5,12 +5,12 @@ import UIKit
 
 // swiftlint:disable modifier_order
 
-public typealias B2BAuthenticateCallback = (B2BAuthenticateResponseType) -> Void
+public typealias B2BAuthenticateCallback = () -> Void
 
 public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     static var configuration: Configuration = .empty
-    static var onB2BAuthCallback: AuthCallback?
+    static var onB2BAuthCallback: B2BAuthenticateCallback?
     private static var cancellable: AnyCancellable?
     fileprivate weak static var currentController: B2BAuthRootViewController?
 
@@ -26,13 +26,13 @@ public enum StytchB2BUIClient {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
     public static func presentController(
         controller: UIViewController,
-        onAuthCallback: AuthCallback? = nil
+        onB2BAuthCallback: B2BAuthenticateCallback? = nil
     ) {
-        Self.onB2BAuthCallback = { response in
+        Self.onB2BAuthCallback = {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
             }
-            onAuthCallback?(response)
+            onB2BAuthCallback?()
         }
         let rootController = B2BAuthRootViewController(configuration: Self.configuration)
         currentController = rootController
@@ -85,14 +85,14 @@ public extension View {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchB2BClient.sessions.onMemberSessionChange` to observe auth changes.
     func b2bAuthenticationSheet(
         isPresented: Binding<Bool>,
-        onB2BAuthCallback: AuthCallback? = nil
+        onB2BAuthCallback: B2BAuthenticateCallback? = nil
     ) -> some View {
         sheet(isPresented: isPresented) {
-            StytchB2BUIClient.onB2BAuthCallback = { response in
+            StytchB2BUIClient.onB2BAuthCallback = {
                 Task {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
                 }
-                onB2BAuthCallback?(response)
+                onB2BAuthCallback?()
             }
             return B2BAuthenticationView()
                 .background(Color(.background).edgesIgnoringSafeArea(.all))

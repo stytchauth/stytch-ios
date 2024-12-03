@@ -47,7 +47,7 @@ public extension StytchB2BClient.SearchManager {
 
     struct SearchMemberResponseData: Codable, Sendable {
         /// The matching member.
-        public let member: MemberSearchResponse
+        public let member: MemberSearchResponse?
     }
 
     struct MemberSearchResponse: Codable, Sendable {
@@ -76,9 +76,9 @@ public extension StytchB2BClient.SearchManager {
         public let organization: OrganizationSearchResponse
     }
 
-    struct OrganizationSearchResponse: Codable, Sendable {
+    struct OrganizationSearchResponse: OrganizationType {
         /// Globally unique UUID that identifies an organization in the Stytch API.
-        public let organizationId: String
+        public let organizationId: Organization.ID
         /// The name of the organization.
         public let organizationName: String
         /// A URL of the organization's logo.
