@@ -219,11 +219,22 @@ public extension StytchSDKError {
             errorType: "json_data_not_convertible_to_string"
         )
     )
-
     static let startupClientNotConfiguredForClientType = StytchSDKError(
         message: "You must call `startupClient.start(clientType:)` before calling `startupClient.start()`.",
         options: .init(
-            errorType: "missing clientType"
+            errorType: "missing_client_type"
+        )
+    )
+    static let noOrganziationId = StytchSDKError(
+        message: "No Organziation Id Configured",
+        options: .init(
+            errorType: "no_organziation_id"
+        )
+    )
+    static let emailNotEligibleForJitProvioning = StytchSDKError(
+        message: "Email Not Eligible For Jit Provioning",
+        options: .init(
+            errorType: "email_not_eligible_for_jit_provioning"
         )
     )
 }

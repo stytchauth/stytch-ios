@@ -10,6 +10,8 @@ final class B2BAuthRootViewController: UIViewController {
 
     private var onB2BAuthCallback: AuthCallback?
 
+    private var homeController: B2BAuthHomeViewController?
+
     init(configuration: StytchB2BUIClient.Configuration, onB2BAuthCallback: AuthCallback? = nil) {
         self.configuration = configuration
         self.onB2BAuthCallback = onB2BAuthCallback
@@ -68,5 +70,11 @@ final class B2BAuthRootViewController: UIViewController {
         addChild(navigationController)
         view.addSubview(navigationController.view)
         navigationController.view.frame = view.bounds
+
+        self.homeController = homeController
+    }
+
+    func startMfaFlowIfNeeded() {
+        homeController?.startMFAFlowIfNeeded(configuration: configuration)
     }
 }

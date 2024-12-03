@@ -8,6 +8,29 @@ final class B2BEmailMagicLinksViewModel {
     ) {
         self.state = state
     }
+
+    func sendEmailMagicLink(
+        emailAddress: String,
+        completion: @escaping (Error?) -> Void
+    ) {
+        Task {
+            guard let organizationId = OrganizationManager.organizationId else {
+                completion(StytchSDKError.noOrganziationId)
+                return
+            }
+
+            do {
+                try await AuthenticationOperations.sendEmailMagicLink(
+                    emailAddress: emailAddress,
+                    organizationId: organizationId,
+                    redirectUrl: state.configuration.redirectUrl
+                )
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
+    }
 }
 
 struct B2BEmailMagicLinksState {

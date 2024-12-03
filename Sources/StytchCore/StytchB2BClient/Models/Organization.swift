@@ -139,17 +139,20 @@ public extension Organization {
 
 public extension Organization {
     var usesSMSMFAOnly: Bool {
-        guard let allowedMfaMethods else { return false }
+        guard mfaMethods == .restricted, let allowedMfaMethods else {
+            return false
+        }
         return allowedMfaMethods.count == 1 && allowedMfaMethods.contains(.sms)
     }
 
     var usesTOTPMFAOnly: Bool {
-        guard let allowedMfaMethods else { return false }
+        guard mfaMethods == .restricted, let allowedMfaMethods else {
+            return false
+        }
         return allowedMfaMethods.count == 1 && allowedMfaMethods.contains(.totp)
     }
 
-    var usesSMSAndTOTPMFA: Bool {
-        guard let allowedMfaMethods else { return false }
-        return allowedMfaMethods.count == 2 && allowedMfaMethods.contains(.totp) && allowedMfaMethods.contains(.sms)
+    var allMFAMethodsAllowed: Bool {
+        mfaMethods == .allAllowed
     }
 }

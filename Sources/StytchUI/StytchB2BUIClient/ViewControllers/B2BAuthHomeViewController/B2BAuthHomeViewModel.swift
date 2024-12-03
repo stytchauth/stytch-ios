@@ -54,8 +54,6 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
                     print(error.errorInfo)
                     completion([])
                 }
-            case .passwordReset:
-                completion([])
             }
         }
     }

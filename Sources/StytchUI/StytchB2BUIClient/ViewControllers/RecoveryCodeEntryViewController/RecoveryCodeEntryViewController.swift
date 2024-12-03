@@ -2,13 +2,13 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class DiscoveryViewController: BaseViewController<DiscoveryState, DiscoveryViewModel> {
+final class RecoveryCodeEntryViewController: BaseViewController<RecoveryCodeEntryState, RecoveryCodeEntryViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchDiscoveryTitle", value: "Select an organization to continue", comment: "")
+        text: NSLocalizedString("stytchRecoveryCodeEntryTitle", value: "Enter backup code", comment: "")
     )
 
-    init(state: DiscoveryState) {
-        super.init(viewModel: DiscoveryViewModel(state: state))
+    init(state: RecoveryCodeEntryState) {
+        super.init(viewModel: RecoveryCodeEntryViewModel(state: state))
     }
 
     override func configureView() {

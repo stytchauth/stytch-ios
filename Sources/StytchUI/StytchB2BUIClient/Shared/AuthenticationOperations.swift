@@ -1,7 +1,7 @@
 import Foundation
 import StytchCore
 
-struct PasswordAuthenticateResetManager {
+struct AuthenticationOperations {
     static func emailEligibleForJITProvisioning(
         emailAddress: String,
         emailAllowedDomains: [String]?,
@@ -39,37 +39,25 @@ struct PasswordAuthenticateResetManager {
         }
     }
 
-    static func authenticatePassword(emailAddress: String, organizationId: String, password: String, redirectUrl: URL?) async throws {
-        let member = try await searchMember(emailAddress: emailAddress, organizationId: organizationId)
-        if member?.memberPasswordId != nil {
-            let parameters = StytchB2BClient.Passwords.AuthenticateParameters(
-                organizationId: Organization.ID(rawValue: organizationId),
-                emailAddress: emailAddress,
-                password: password,
-                locale: .en
-            )
-            let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)
-            B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
-        } else {
-            try await sendEmailMagicLinkIfPossible(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: redirectUrl)
-        }
-    }
-
     static func sendEmailMagicLinkIfPossible(emailAddress: String, organizationId: String, redirectUrl: URL?) async throws {
         let emailAllowedDomains = OrganizationManager.emailAllowedDomains
         let emailJitProvisioning = OrganizationManager.emailJitProvisioning
         let emailEligibleForJITProvisioning = emailEligibleForJITProvisioning(emailAddress: emailAddress, emailAllowedDomains: emailAllowedDomains, emailJitProvisioning: emailJitProvisioning)
         if emailEligibleForJITProvisioning {
-            let parameters = StytchB2BClient.MagicLinks.Email.Parameters(
-                organizationId: Organization.ID(rawValue: organizationId),
-                emailAddress: emailAddress,
-                loginRedirectUrl: redirectUrl,
-                signupRedirectUrl: redirectUrl,
-                locale: .en
-            )
-            _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
+            try await sendEmailMagicLink(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: redirectUrl)
         } else {
-            // show an error from here somehow
+            throw StytchSDKError.emailNotEligibleForJitProvioning
         }
+    }
+
+    static func sendEmailMagicLink(emailAddress: String, organizationId: String, redirectUrl: URL?) async throws {
+        let parameters = StytchB2BClient.MagicLinks.Email.Parameters(
+            organizationId: Organization.ID(rawValue: organizationId),
+            emailAddress: emailAddress,
+            loginRedirectUrl: redirectUrl,
+            signupRedirectUrl: redirectUrl,
+            locale: .en
+        )
+        _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
     }
 }
