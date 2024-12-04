@@ -12,7 +12,15 @@ final class B2BDiscoveryTestCase: BaseTestCase {
                 statusCode: 200,
                 wrapped: .init(
                     emailAddress: "blah@gmail.com",
-                    discoveredOrganizations: [.init(organization: .mock, membership: .init(kind: "somethign", details: nil, member: .mock), memberAuthenticated: false)]
+                    discoveredOrganizations: [
+                        .init(
+                            organization: .mock,
+                            membership: .init(kind: "somethign", details: nil, member: .mock),
+                            memberAuthenticated: false,
+                            mfaRequired: nil,
+                            primaryRequired: nil
+                        ),
+                    ]
                 )
             )
         }

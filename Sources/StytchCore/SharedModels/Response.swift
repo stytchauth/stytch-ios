@@ -94,8 +94,8 @@ extension Response: B2BMFAAuthenticateResponseDataType where Wrapped: B2BMFAAuth
     public var intermediateSessionToken: String? { wrapped.intermediateSessionToken }
     public var memberId: Member.ID { wrapped.memberId }
     public var memberAuthenticated: Bool { wrapped.memberAuthenticated }
-    public var mfaRequired: MFARequired? { wrapped.mfaRequired }
-    public var primaryRequired: PrimaryRequired? { wrapped.primaryRequired }
+    public var mfaRequired: StytchB2BClient.MFARequired? { wrapped.mfaRequired }
+    public var primaryRequired: StytchB2BClient.PrimaryRequired? { wrapped.primaryRequired }
 }
 
 extension Response: DiscoveryIntermediateSessionTokenDataType where Wrapped: DiscoveryIntermediateSessionTokenDataType {
