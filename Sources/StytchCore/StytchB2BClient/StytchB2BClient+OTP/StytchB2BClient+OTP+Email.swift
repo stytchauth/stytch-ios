@@ -82,9 +82,9 @@ public extension StytchB2BClient.OTP.Email {
         /// Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to the Organization.
         public let memberAuthenticated: Bool
         /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
-        public let mfaRequired: MFARequired?
+        public let mfaRequired: StytchB2BClient.MFARequired?
         /// Information about the primary authentication requirements of the Organization.
-        public let primaryRequired: PrimaryRequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
         /// The ID of the email used to send an OTP.
         public let methodId: String
     }

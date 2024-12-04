@@ -114,7 +114,7 @@ final class OrganizationViewController: UIViewController {
                     emailJitProvisioning: .NOT_ALLOWED,
                     emailInvites: .ALL_ALLOWED,
                     authMethods: .ALL_ALLOWED,
-                    allowedAuthMethods: [.GOOGLE_OAUTH, .PASSWORD],
+                    allowedAuthMethods: [.googleOAuth, .password],
                     mfaMethods: .ALL_ALLOWED,
                     allowedMfaMethods: [.SMS],
                     mfaPolicy: .OPTIONAL,
