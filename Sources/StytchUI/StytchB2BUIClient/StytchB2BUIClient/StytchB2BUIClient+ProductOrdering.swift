@@ -32,7 +32,7 @@ extension StytchB2BUIClient {
             case .emailMagicLinks:
                 if case .discovery = configuration.authFlowType {
                     productComponents.append(.emailMagicLink)
-                } else if configuration.supportsEmailMagicLinksAndPasswords == true {
+                } else if configuration.supportsEmailMagicLinksAndPasswords == true, productComponents.contains(.emailMagicLinkAndPasswords) == false {
                     productComponents.append(.emailMagicLinkAndPasswords)
                 } else {
                     productComponents.append(.emailMagicLink)
@@ -45,9 +45,9 @@ extension StytchB2BUIClient {
                 }
             case .passwords:
                 if case .organization = configuration.authFlowType {
-                    if configuration.supportsEmailMagicLinksAndPasswords == true {
+                    if configuration.supportsEmailMagicLinksAndPasswords == true, productComponents.contains(.emailMagicLinkAndPasswords) == false {
                         productComponents.append(.emailMagicLinkAndPasswords)
-                    } else {
+                    } else if configuration.supportsPasswordsWithoutEmailMagiclinks {
                         productComponents.append(.password)
                     }
                 }

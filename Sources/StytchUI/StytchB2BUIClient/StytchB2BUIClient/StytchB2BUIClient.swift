@@ -53,9 +53,11 @@ public enum StytchB2BUIClient {
                 case let .auth(response):
                     print(response)
                 case let .mfauth(response):
-                    print(response)
+                    B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+                    currentController?.startMfaFlowIfNeeded()
                 case let .mfaOAuth(response):
-                    print(response)
+                    B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+                    currentController?.startMfaFlowIfNeeded()
                 case let .discovery(response):
                     print(response)
                 case let .discoveryOauth(response):

@@ -32,6 +32,10 @@ public extension StytchB2BUIClient {
             products.contains(.emailMagicLinks)
         }
 
+        public var supportsEmailMagicLinksWithoutPasswrods: Bool {
+            supportsEmailMagicLinks && !supportsPasswords
+        }
+
         public var supportsEmailOTP: Bool {
             products.contains(.emailOtp)
         }
@@ -42,6 +46,10 @@ public extension StytchB2BUIClient {
 
         public var supportsPasswords: Bool {
             products.contains(.passwords)
+        }
+
+        public var supportsPasswordsWithoutEmailMagiclinks: Bool {
+            !supportsEmailMagicLinks && supportsPasswords
         }
 
         public var supportsOauth: Bool {
@@ -107,7 +115,6 @@ public extension StytchB2BUIClient {
     enum AuthFlowType: Codable, Equatable {
         case discovery
         case organization(slug: String)
-        case passwordReset
     }
 
     struct B2BEmailMagicLinksOptions: Codable {

@@ -24,4 +24,12 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
     }
+
+    func showSMSOTPEnrollment() {
+        navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+    }
+
+    func showTOTPEnrollment() {
+        navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+    }
 }

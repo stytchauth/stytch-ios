@@ -2,6 +2,10 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
+protocol B2BOAuthViewControllerDelegate: AnyObject {
+    func oauthDidAuthenticatie()
+}
+
 final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthViewModel> {
     weak var delegate: B2BOAuthViewControllerDelegate?
 
@@ -41,10 +45,6 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
             }
         }
     }
-}
-
-protocol B2BOAuthViewControllerDelegate: AnyObject {
-    func oauthDidAuthenticatie()
 }
 
 private extension B2BOAuthViewController {

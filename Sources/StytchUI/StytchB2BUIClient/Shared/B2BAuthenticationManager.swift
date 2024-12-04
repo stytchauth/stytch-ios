@@ -16,6 +16,7 @@ enum B2BAuthenticationManager {
 
     static func handleMFAReponse(b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType) {
         Self.b2bMFAAuthenticateResponse = b2bMFAAuthenticateResponse
+        OrganizationManager.updateOrganization(newOrganization: b2bMFAAuthenticateResponse.organization)
     }
 
     static func handleSecondaryReponse(b2bAuthenticateResponse: B2BAuthenticateResponseDataType) {
@@ -42,7 +43,7 @@ extension BaseViewController {
         let b2bMFAAuthenticateResponse = B2BAuthenticationManager.b2bMFAAuthenticateResponse
 
         if b2bMFAAuthenticateResponse?.primaryRequired != nil {
-            // not sure what happens here yet
+            viewController = B2BAuthHomeViewController(state: .init(configuration: configuration))
         } else if b2bMFAAuthenticateResponse?.member.mfaEnrolled == true {
             if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.mfaPhoneNumber != nil {
                 viewController = SMSOTPEntryViewController(state: .init(configuration: configuration))
@@ -50,7 +51,7 @@ extension BaseViewController {
                 viewController = TOTPEntryViewController(state: .init(configuration: configuration))
             }
         } else {
-            if b2bMFAAuthenticateResponse?.organization.usesSMSAndTOTPMFA == true {
+            if b2bMFAAuthenticateResponse?.organization.allMFAMethodsAllowed == true {
                 viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
             } else if b2bMFAAuthenticateResponse?.organization.usesSMSMFAOnly == true {
                 viewController = SMSOTPEnrollmentViewController(state: .init(configuration: configuration))
