@@ -25,9 +25,10 @@ extension B2BOAuthViewModel: B2BOAuthViewModelProtocol {
         options: StytchB2BUIClient.B2BOAuthProviderOptions,
         thirdPartyClientForTesting: ThirdPartyB2BOAuthProviderProtocol? = nil
     ) async throws {
-        guard state.configuration.supportsOauth else { return }
+        guard state.configuration.supportsOauth else {
+            return
+        }
 
-        let client = thirdPartyClientForTesting ?? options.provider.client
         let webAuthenticationConfiguration = StytchB2BClient.OAuth.ThirdParty.WebAuthenticationConfiguration(
             loginRedirectUrl: state.configuration.redirectUrl,
             signupRedirectUrl: state.configuration.redirectUrl,
@@ -35,6 +36,7 @@ extension B2BOAuthViewModel: B2BOAuthViewModelProtocol {
             customScopes: options.customScopes,
             providerParams: options.providerParams
         )
+        let client = thirdPartyClientForTesting ?? options.provider.client
         let (token, _) = try await client.start(configuration: webAuthenticationConfiguration)
 
         let authenticateParameters = StytchB2BClient.OAuth.AuthenticateParameters(
@@ -42,6 +44,7 @@ extension B2BOAuthViewModel: B2BOAuthViewModelProtocol {
             sessionDurationMinutes: state.configuration.sessionDurationMinutes
         )
         let response = try await oAuthProvider.authenticate(parameters: authenticateParameters)
+
         B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
     }
 }

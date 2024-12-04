@@ -28,6 +28,13 @@ struct StytchB2BUIDemoApp: App {
         oauthProviders: [.init(provider: .google)]
     )
 
+    static let ssoAndEmailMagicLinksStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso],
+        authFlowType: .organization(slug: "no-mfa"),
+        oauthProviders: [.init(provider: .google)]
+    )
+
     static let oauthAndPasswrodsStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: publicToken,
         products: [.passwords, .oauth],

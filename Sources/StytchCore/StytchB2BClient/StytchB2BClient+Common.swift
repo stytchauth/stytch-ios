@@ -104,8 +104,8 @@ public extension StytchB2BClient {
 
     // Information about an active SSO connection
     struct SSOActiveConnection: Codable, Sendable, Equatable {
-        let connectionId: String
-        let displayName: String
+        public let connectionId: String
+        public let displayName: String
 
         /// - Parameters:
         ///   - connectionId: The id of the connection.
