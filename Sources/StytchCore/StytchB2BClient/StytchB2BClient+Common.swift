@@ -125,6 +125,10 @@ public extension StytchB2BClient {
         public let membership: Membership
         /// Indicates whether the Member has all of the factors needed to fully authenticate to this Organization. If false, the Member may need to complete an MFA step or complete a different primary authentication flow. See the primary_required and mfa_required fields for more details on each.
         public let memberAuthenticated: Bool
+        /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        /// Information about the primary authentication requirements of the Organization.
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
     }
 
     /// A struct describing a membership and its details.
@@ -186,6 +190,29 @@ public extension StytchB2BClient {
                 lhs.externalId == rhs.externalId &&
                 lhs.ssoAttributes == rhs.ssoAttributes
         }
+    }
+
+    struct PrimaryRequired: Codable, Sendable {
+        // Details the auth method that the member must also complete to fulfill the primary authentication requirements of the Organization.
+        // For example, a value of [magic_link] indicates that the Member must also complete a magic link authentication step.
+        // If you have an intermediate session token, you must pass it into that primary authentication step.
+        public let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]
+    }
+
+    struct MFARequired: Codable, Sendable {
+        /// Information about the Member's options for completing MFA.
+        public let memberOptions: MemberOptions?
+        /// If null, indicates that no secondary authentication has been initiated.
+        /// If equal to "sms_otp", indicates that the Member has a phone number, and a one time passcode has been sent to the Member's phone number.
+        /// No secondary authentication will be initiated during calls to the discovery authenticate or list organizations endpoints, even if the Member has a phone number.
+        public let secondaryAuthInitiated: String?
+    }
+
+    struct MemberOptions: Codable, Sendable {
+        /// The Member's MFA phone number.
+        public let mfaPhoneNumber: String
+        /// The Member's MFA TOTP registration ID.
+        public let totpRegistrationId: String
     }
 }
 

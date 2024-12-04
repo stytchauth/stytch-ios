@@ -25,9 +25,9 @@ public struct B2BMFAAuthenticateResponseData: Codable, Sendable, B2BMFAAuthentic
     /// Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to the Organization.
     public let memberAuthenticated: Bool
     /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
-    public let mfaRequired: MFARequired?
+    public let mfaRequired: StytchB2BClient.MFARequired?
     /// Information about the primary authentication requirements of the Organization.
-    public let primaryRequired: PrimaryRequired?
+    public let primaryRequired: StytchB2BClient.PrimaryRequired?
 }
 
 /// The interface which a data type must conform to for all underlying data in B2B MFA `authenticate` responses.
@@ -49,36 +49,13 @@ public protocol B2BMFAAuthenticateResponseDataType {
     /// Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to the Organization.
     var memberAuthenticated: Bool { get }
     /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
-    var mfaRequired: MFARequired? { get }
+    var mfaRequired: StytchB2BClient.MFARequired? { get }
     /// Information about the primary authentication requirements of the Organization.
-    var primaryRequired: PrimaryRequired? { get }
+    var primaryRequired: StytchB2BClient.PrimaryRequired? { get }
 }
 
 /// The interface which a data type must conform to for all discovery flows that return a non optional intermediate session token
 public protocol DiscoveryIntermediateSessionTokenDataType {
     /// The non optional intermediate session token returned by discovery flows separate from multi factor authentication
     var intermediateSessionToken: String { get }
-}
-
-public struct PrimaryRequired: Codable, Sendable {
-    // Details the auth method that the member must also complete to fulfill the primary authentication requirements of the Organization.
-    // For example, a value of [magic_link] indicates that the Member must also complete a magic link authentication step.
-    // If you have an intermediate session token, you must pass it into that primary authentication step.
-    public let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]
-}
-
-public struct MFARequired: Codable, Sendable {
-    /// Information about the Member's options for completing MFA.
-    public let memberOptions: MemberOptions?
-    /// If null, indicates that no secondary authentication has been initiated.
-    /// If equal to "sms_otp", indicates that the Member has a phone number, and a one time passcode has been sent to the Member's phone number.
-    /// No secondary authentication will be initiated during calls to the discovery authenticate or list organizations endpoints, even if the Member has a phone number.
-    public let secondaryAuthInitiated: String?
-}
-
-public struct MemberOptions: Codable, Sendable {
-    /// The Member's MFA phone number.
-    public let mfaPhoneNumber: String
-    /// The Member's MFA TOTP registration ID.
-    public let totpRegistrationId: String
 }

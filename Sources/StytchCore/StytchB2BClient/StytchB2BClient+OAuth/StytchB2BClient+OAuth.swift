@@ -103,9 +103,9 @@ public extension StytchB2BClient.OAuth {
         /// Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to the Organization.
         public let memberAuthenticated: Bool
         /// Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
-        public let mfaRequired: MFARequired?
+        public let mfaRequired: StytchB2BClient.MFARequired?
         /// Information about the primary authentication requirements of the Organization.
-        public let primaryRequired: PrimaryRequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
         /// The provider_values object lists relevant identifiers, values, and scopes for a given OAuth provider.
         /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
         /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.
