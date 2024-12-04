@@ -5,7 +5,7 @@ extension StytchB2BUIClient {
     static func validProducts(
         organizationAllowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?,
         organizationAuthMethods: StytchB2BClient.AuthMethods?,
-        primaryRequired: PrimaryRequired?,
+        primaryRequired: StytchB2BClient.PrimaryRequired?,
         configuration: StytchB2BUIClient.Configuration
     ) -> [StytchB2BUIClient.B2BProducts] {
         // If primaryRequired supplies a valid list of allowedAuthMethods we must use it.

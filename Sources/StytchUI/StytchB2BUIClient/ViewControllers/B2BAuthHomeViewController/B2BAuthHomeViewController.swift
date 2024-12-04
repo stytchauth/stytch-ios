@@ -105,13 +105,16 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
                 stackView.addArrangedSubview(oauthController.view)
                 constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
             case .ssoButtons:
-                let ssoViewController = B2BSSOViewController(
-                    state: .init(configuration: viewModel.state.configuration),
-                    delegate: self
-                )
-                addChild(ssoViewController)
-                stackView.addArrangedSubview(ssoViewController.view)
-                constraints.append(ssoViewController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
+                if let ssoActiveConnections = OrganizationManager.ssoActiveConnections {
+                    let ssoViewController = B2BSSOViewController(
+                        state: .init(configuration: viewModel.state.configuration),
+                        delegate: self,
+                        ssoActiveConnections: ssoActiveConnections
+                    )
+                    addChild(ssoViewController)
+                    stackView.addArrangedSubview(ssoViewController.view)
+                    constraints.append(ssoViewController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
+                }
             case .divider:
                 stackView.addArrangedSubview(separatorView)
                 constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))

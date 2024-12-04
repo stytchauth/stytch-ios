@@ -5,7 +5,7 @@ import UIKit
 enum B2BAuthenticationManager {
     /// Values from the B2BMFAAuthenticateResponseDataType
     static var b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType?
-    static var primaryRequired: PrimaryRequired? {
+    static var primaryRequired: StytchB2BClient.PrimaryRequired? {
         b2bMFAAuthenticateResponse?.primaryRequired
     }
 
