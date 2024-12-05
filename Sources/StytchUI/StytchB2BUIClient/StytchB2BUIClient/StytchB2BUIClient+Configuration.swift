@@ -17,7 +17,7 @@ public extension StytchB2BUIClient {
         public let passwordOptions: B2BPasswordOptions?
         public let oauthProviders: [B2BOAuthProviderOptions]
         public let emailOtpOptions: B2BEmailOTPOptions?
-        public let directLoginForSingleMembership: DirectLoginForSingleMembershipConfig?
+        public let directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions?
         public let disableCreateOrganization: Bool?
         public let mfaProductOrder: [B2BMFAProducts]?
         public let mfaProductInclude: [B2BMFAProducts]?
@@ -79,7 +79,7 @@ public extension StytchB2BUIClient {
             passwordOptions: B2BPasswordOptions? = nil,
             oauthProviders: [B2BOAuthProviderOptions] = [],
             emailOtpOptions: B2BEmailOTPOptions? = nil,
-            directLoginForSingleMembership: DirectLoginForSingleMembershipConfig? = nil,
+            directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions? = nil,
             disableCreateOrganization: Bool? = nil,
             mfaProductOrder: [B2BMFAProducts]? = nil,
             mfaProductInclude: [B2BMFAProducts]? = nil,
@@ -95,7 +95,7 @@ public extension StytchB2BUIClient {
             self.passwordOptions = passwordOptions
             self.oauthProviders = oauthProviders
             self.emailOtpOptions = emailOtpOptions
-            self.directLoginForSingleMembership = directLoginForSingleMembership
+            self.directLoginForSingleMembershipOptions = directLoginForSingleMembershipOptions
             self.disableCreateOrganization = disableCreateOrganization
             self.mfaProductOrder = mfaProductOrder
             self.mfaProductInclude = mfaProductInclude
@@ -168,7 +168,7 @@ public extension StytchB2BUIClient {
         }
     }
 
-    struct DirectLoginForSingleMembershipConfig: Codable {
+    struct DirectLoginForSingleMembershipOptions: Codable {
         public let status: Bool
         public let ignoreInvites: Bool
         public let ignoreJitProvisioning: Bool

@@ -18,10 +18,22 @@ final class DiscoveryViewController: BaseViewController<DiscoveryState, Discover
 
         stackView.addArrangedSubview(titleLabel)
 
+        let discoveredOrganizationsViewController = DiscoveredOrganizationsViewController(discoveredOrganizations: DiscoveryManager.discoveredOrganizations)
+        discoveredOrganizationsViewController.delegate = self
+        addChild(discoveredOrganizationsViewController)
+        stackView.addArrangedSubview(discoveredOrganizationsViewController.view)
+        discoveredOrganizationsViewController.didMove(toParent: self)
+
         attachStackView(within: view)
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+    }
+}
+
+extension DiscoveryViewController: DiscoveredOrganizationsViewControllerDelegate {
+    func didSelectDiscoveredOrganization(discoveredOrganization: StytchCore.StytchB2BClient.DiscoveredOrganization) {
+        selectDiscoveredOrganization(configuration: viewModel.state.configuration, discoveredOrganization: discoveredOrganization)
     }
 }

@@ -1,29 +1,18 @@
 import StytchCore
 
-protocol B2BOAuthViewModelProtocol {
-    func startOAuth(
-        options: StytchB2BUIClient.B2BOAuthProviderOptions,
-        thirdPartyClientForTesting: ThirdPartyB2BOAuthProviderProtocol? // this param is only used for testing
-    ) async throws
-}
-
 final class B2BOAuthViewModel {
     let state: B2BOAuthState
-    let oAuthProvider: B2BOAuthProviderProtocol
 
     init(
-        state: B2BOAuthState,
-        oAuthProvider: B2BOAuthProviderProtocol = StytchB2BClient.oauth
+        state: B2BOAuthState
     ) {
         self.state = state
-        self.oAuthProvider = oAuthProvider
     }
 }
 
-extension B2BOAuthViewModel: B2BOAuthViewModelProtocol {
+extension B2BOAuthViewModel {
     func startOAuth(
-        options: StytchB2BUIClient.B2BOAuthProviderOptions,
-        thirdPartyClientForTesting: ThirdPartyB2BOAuthProviderProtocol? = nil
+        options: StytchB2BUIClient.B2BOAuthProviderOptions
     ) async throws {
         guard state.configuration.supportsOauth else {
             return
@@ -36,16 +25,35 @@ extension B2BOAuthViewModel: B2BOAuthViewModelProtocol {
             customScopes: options.customScopes,
             providerParams: options.providerParams
         )
-        let client = thirdPartyClientForTesting ?? options.provider.client
-        let (token, _) = try await client.start(configuration: webAuthenticationConfiguration)
+        let (token, _) = try await options.provider.client.start(configuration: webAuthenticationConfiguration)
 
         let authenticateParameters = StytchB2BClient.OAuth.AuthenticateParameters(
             oauthToken: token,
             sessionDurationMinutes: state.configuration.sessionDurationMinutes
         )
-        let response = try await oAuthProvider.authenticate(parameters: authenticateParameters)
+        let response = try await StytchB2BClient.oauth.authenticate(parameters: authenticateParameters)
 
         B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+    }
+
+    func startDiscoveryOAuth(
+        options: StytchB2BUIClient.B2BOAuthProviderOptions
+    ) async throws {
+        guard state.configuration.supportsOauth else {
+            return
+        }
+
+        let webAuthenticationConfiguration = StytchB2BClient.OAuth.ThirdParty.Discovery.WebAuthenticationConfiguration(
+            discoveryRedirectUrl: state.configuration.redirectUrl,
+            customScopes: options.customScopes,
+            providerParams: options.providerParams
+        )
+        let (token, _) = try await options.provider.client.discovery.start(configuration: webAuthenticationConfiguration)
+
+        let authenticateParameters = StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateParameters(discoveryOauthToken: token)
+        let response = try await StytchB2BClient.oauth.discovery.authenticate(parameters: authenticateParameters)
+
+        DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
     }
 }
 

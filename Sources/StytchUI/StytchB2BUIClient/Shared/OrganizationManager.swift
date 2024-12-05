@@ -41,7 +41,11 @@ struct OrganizationManager {
         organization = response.organization
     }
 
-    static func updateOrganization(newOrganization: Organization) {
+    static func updateOrganization(_ newOrganization: Organization) {
         organization = newOrganization
+    }
+
+    static func reset() {
+        organization = nil
     }
 }

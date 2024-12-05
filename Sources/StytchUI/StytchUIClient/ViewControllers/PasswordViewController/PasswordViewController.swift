@@ -18,7 +18,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchCheckYourEmail(email: email)
                 }
             } catch {
-                self?.presentAlert(error: error)
+                self?.presentErrorAlert(error: error)
             }
         }
     }
@@ -87,7 +87,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchForgotPassword(email: email)
                 }
             } catch {
-                self?.presentAlert(error: error)
+                self?.presentErrorAlert(error: error)
             }
         }
     }
@@ -105,7 +105,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchCheckYourEmail(email: email)
                 }
             } catch {
-                self?.presentAlert(error: error)
+                self?.presentErrorAlert(error: error)
             }
         }
     }
@@ -244,7 +244,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.setPassword(token: token, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                    presentAlert(error: error)
+                    presentErrorAlert(error: error)
                 }
             }
         case .login:
@@ -253,7 +253,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.login(email: email, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                    presentAlert(error: error)
+                    presentErrorAlert(error: error)
                 }
             }
         case .signup:
@@ -262,7 +262,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.signup(email: email, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                    presentAlert(error: error)
+                    presentErrorAlert(error: error)
                 }
             }
         }
@@ -309,7 +309,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 }
                 passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
             } catch {
-                presentAlert(error: error)
+                presentErrorAlert(error: error)
             }
         }
     }

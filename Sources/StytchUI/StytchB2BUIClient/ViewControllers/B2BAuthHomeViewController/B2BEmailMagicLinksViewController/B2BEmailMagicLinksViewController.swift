@@ -84,7 +84,7 @@ final class B2BEmailMagicLinksViewController: BaseViewController<B2BEmailMagicLi
         if let emailAddress = emailInput.text {
             viewModel.sendEmailMagicLink(emailAddress: emailAddress) { [weak self] error in
                 if let error {
-                    self?.presentAlert(error: error)
+                    self?.presentErrorAlert(error: error)
                 } else {
                     self?.delegate?.emailMagicLinkSent()
                 }

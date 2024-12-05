@@ -46,7 +46,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         do {
             try viewModel.checkValidConfig()
         } catch {
-            presentAlert(error: error)
+            presentErrorAlert(error: error)
             return
         }
 

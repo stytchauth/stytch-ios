@@ -36,7 +36,6 @@ public enum StytchB2BUIClient {
         }
         let rootController = B2BAuthRootViewController(configuration: Self.configuration)
         currentController = rootController
-        setUpMemberSessionChangeListener()
         let navigationController = UINavigationController(rootViewController: rootController)
         controller.present(navigationController, animated: true)
     }
@@ -50,8 +49,6 @@ public enum StytchB2BUIClient {
             switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
             case let .handled(responseData):
                 switch responseData {
-                case let .auth(response):
-                    print(response)
                 case let .mfauth(response):
                     B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
                     currentController?.startMfaFlowIfNeeded()
@@ -59,9 +56,11 @@ public enum StytchB2BUIClient {
                     B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
                     currentController?.startMfaFlowIfNeeded()
                 case let .discovery(response):
-                    print(response)
+                    DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
+                    currentController?.startDiscoveryFlowIfNeeded()
                 case let .discoveryOauth(response):
-                    print(response)
+                    DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
+                    currentController?.startDiscoveryFlowIfNeeded()
                 }
             case .notHandled:
                 break
@@ -73,13 +72,16 @@ public enum StytchB2BUIClient {
         return StytchB2BClient.canHandle(url: url)
     }
 
-    static func setUpMemberSessionChangeListener() {
-        cancellable = StytchB2BClient.sessions.onMemberSessionChange
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                Self.cancellable = nil
-            }
+    static func reset() {
+        B2BAuthenticationManager.reset()
+        DiscoveryManager.reset()
+        MemberManager.reset()
+        OrganizationManager.reset()
+    }
+
+    static func dismissAuth() {
+        reset()
+        currentController?.dismissAuth()
     }
 }
 
@@ -108,7 +110,6 @@ struct B2BAuthenticationView: UIViewControllerRepresentable {
     func makeUIViewController(context _: Context) -> UIViewController {
         let controller = B2BAuthRootViewController(configuration: StytchB2BUIClient.configuration)
         StytchB2BUIClient.currentController = controller
-        StytchB2BUIClient.setUpMemberSessionChangeListener()
         return UINavigationController(rootViewController: controller)
     }
 

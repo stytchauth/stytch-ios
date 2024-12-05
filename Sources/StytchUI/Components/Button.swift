@@ -127,4 +127,38 @@ extension Button {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         return button
     }
+
+    static func createTextButton(
+        withPlainText plainText: String,
+        boldText: String? = nil,
+        fontSize: CGFloat = 16,
+        action: Selector,
+        target: Any
+    ) -> Button {
+        // Create the button
+        let button = Button(type: .system)
+
+        // Create attributed text
+        let attributedText = NSMutableAttributedString(string: plainText, attributes: [
+            .font: UIFont.systemFont(ofSize: fontSize),
+            .foregroundColor: UIColor.black,
+        ])
+
+        // If boldText is provided, append it with bold style
+        if let boldText = boldText {
+            let boldAttributedText = NSAttributedString(string: " \(boldText)", attributes: [
+                .font: UIFont.boldSystemFont(ofSize: fontSize),
+                .foregroundColor: UIColor.black,
+            ])
+            attributedText.append(boldAttributedText)
+        }
+
+        // Set the attributed title to the button
+        button.setAttributedTitle(attributedText, for: .normal)
+
+        // Add the action to the button
+        button.addTarget(target, action: action, for: .touchUpInside)
+
+        return button
+    }
 }

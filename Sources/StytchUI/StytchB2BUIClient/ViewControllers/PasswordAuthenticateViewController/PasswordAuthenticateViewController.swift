@@ -33,6 +33,6 @@ extension PasswordAuthenticateViewController: B2BPasswordsViewModelDelegate {
     func didSendEmailMagicLink() {}
 
     func didError(error: any Error) {
-        presentAlert(error: error)
+        presentErrorAlert(error: error)
     }
 }

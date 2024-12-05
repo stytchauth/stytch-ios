@@ -17,6 +17,11 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
         stackView.spacing = .spacingRegular
 
         stackView.addArrangedSubview(titleLabel)
+        let otpView = OTPCodeEntryView(frame: .zero)
+        otpView.delegate = self
+        stackView.addArrangedSubview(otpView)
+
+        stackView.addArrangedSubview(SpacerView())
 
         attachStackView(within: view)
 
@@ -24,4 +29,8 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
     }
+}
+
+extension SMSOTPEntryViewController: OTPCodeEntryViewDelegate {
+    func didEnterOTPCode(_: String) {}
 }

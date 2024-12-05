@@ -7,6 +7,10 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         text: NSLocalizedString("stytchMfaEnrollmentTitle", value: "Set up Multi-Factor Authentication", comment: "")
     )
 
+    private let subtitleLabel: UILabel = .makeSubtitleLabel(
+        text: NSLocalizedString("stytchMfaEnrollmentSubtitle", value: "Add an additional form of verification to make your account more secure.", comment: "")
+    )
+
     init(state: MFAEnrollmentSelectionState) {
         super.init(viewModel: MFAEnrollmentSelectionViewModel(state: state))
     }
@@ -17,6 +21,13 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         stackView.spacing = .spacingRegular
 
         stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
+
+        let mfaMethodSelectionViewController = MFAMethodSelectionViewController(mfaMethods: [.sms, .totp])
+        mfaMethodSelectionViewController.delegate = self
+        addChild(mfaMethodSelectionViewController)
+        stackView.addArrangedSubview(mfaMethodSelectionViewController.view)
+        mfaMethodSelectionViewController.didMove(toParent: self)
 
         attachStackView(within: view)
 
@@ -24,12 +35,15 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
     }
+}
 
-    func showSMSOTPEnrollment() {
-        navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
-    }
-
-    func showTOTPEnrollment() {
-        navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+extension MFAEnrollmentSelectionViewController: MFAMethodSelectionViewControllerDelegate {
+    func didSelectMFAMethod(mfaMethod: StytchCore.StytchB2BClient.MfaMethod) {
+        switch mfaMethod {
+        case .sms:
+            handleSMSOTPEnrollment(configuration: viewModel.state.configuration)
+        case .totp:
+            handleTOTPEnrollment(configuration: viewModel.state.configuration)
+        }
     }
 }

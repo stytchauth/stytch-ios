@@ -13,18 +13,28 @@ final class B2BEmailMagicLinksViewModel {
         emailAddress: String,
         completion: @escaping (Error?) -> Void
     ) {
+        MemberManager.updateMemberEmailAddress(emailAddress)
         Task {
-            guard let organizationId = OrganizationManager.organizationId else {
-                completion(StytchSDKError.noOrganziationId)
-                return
-            }
-
             do {
-                try await AuthenticationOperations.sendEmailMagicLink(
-                    emailAddress: emailAddress,
-                    organizationId: organizationId,
-                    redirectUrl: state.configuration.redirectUrl
-                )
+                if state.configuration.authFlowType == .discovery {
+                    let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
+                        emailAddress: emailAddress,
+                        discoveryRedirectUrl: state.configuration.redirectUrl,
+                        locale: .en
+                    )
+                    _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
+                } else {
+                    guard let organizationId = OrganizationManager.organizationId else {
+                        completion(StytchSDKError.noOrganziationId)
+                        return
+                    }
+
+                    try await AuthenticationOperations.sendEmailMagicLink(
+                        emailAddress: emailAddress,
+                        organizationId: organizationId,
+                        redirectUrl: state.configuration.redirectUrl
+                    )
+                }
                 completion(nil)
             } catch {
                 completion(error)

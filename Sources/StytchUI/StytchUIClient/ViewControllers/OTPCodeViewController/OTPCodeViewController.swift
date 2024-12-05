@@ -51,7 +51,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                     self?.launchPassword(email: email)
                 }
             } catch {
-                self?.presentAlert(error: error)
+                self?.presentErrorAlert(error: error)
             }
         }
     }
@@ -93,7 +93,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                     }
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                    self.presentAlert(error: error)
+                    self.presentErrorAlert(error: error)
                 }
             }
         }
@@ -108,7 +108,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                         self.showInvalidCode()
                     }
                 } catch {
-                    self.presentAlert(error: error)
+                    self.presentErrorAlert(error: error)
                 }
             }
         }
@@ -162,7 +162,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             do {
                 try await viewModel.resendCode(input: viewModel.state.input)
             } catch {
-                presentAlert(error: error)
+                presentErrorAlert(error: error)
             }
         }
     }
