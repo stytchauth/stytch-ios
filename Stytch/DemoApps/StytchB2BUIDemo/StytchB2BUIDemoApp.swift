@@ -6,7 +6,7 @@ import SwiftUI
 struct StytchB2BUIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(configuration: StytchB2BUIDemoApp.discoveryStytchB2BUIConfig)
+            ContentView(configuration: StytchB2BUIDemoApp.allStytchB2BUIConfig)
         }
     }
 
@@ -52,7 +52,7 @@ struct StytchB2BUIDemoApp: App {
     static let allStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: publicToken,
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "no-mfa"),
+        authFlowType: .organization(slug: "mfa-required"),
         oauthProviders: [.init(provider: .google)]
     )
 
