@@ -1,20 +1,13 @@
 import SwiftUI
 
-// swiftlint:disable force_unwrapping
 struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
-                products: .init(
-                    oauth: .init(
-                        providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
-                        loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                        signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                    ),
-                    magicLink: .init(),
-                    otp: .init(methods: [.sms, .email, .whatsapp])
-                ),
-                session: .init()
+                publicToken: "",
+                products: [.oauth, .emailMagicLinks, .otp],
+                oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                otpOptions: .init(methods: [.sms, .email, .whatsapp])
             )
         )
         .toControllerView()
@@ -23,16 +16,10 @@ struct StytchUI_Previews: PreviewProvider {
         ActionableInfoViewController(
             state: .forgotPassword(
                 config: .init(
-                    products: .init(
-                        oauth: .init(
-                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
-                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                        ),
-                        magicLink: .init(),
-                        otp: .init(methods: [.sms, .email, .whatsapp])
-                    ),
-                    session: .init()
+                    publicToken: "",
+                    products: [.oauth, .emailMagicLinks, .otp],
+                    oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                    otpOptions: .init(methods: [.sms, .email, .whatsapp])
                 ),
                 email: "dan@stytch.com"
             ) {}
@@ -44,16 +31,10 @@ struct StytchUI_Previews: PreviewProvider {
         PasswordViewController(
             state: .init(
                 config: .init(
-                    products: .init(
-                        oauth: .init(
-                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
-                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                        ),
-                        magicLink: .init(),
-                        otp: .init(methods: [.sms, .email, .whatsapp])
-                    ),
-                    session: .init()
+                    publicToken: "",
+                    products: [.oauth, .emailMagicLinks, .otp],
+                    oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                    otpOptions: .init(methods: [.sms, .email, .whatsapp])
                 ),
                 intent: .enterNewPassword(token: ""),
                 email: "dan.loman@gmail.com",
@@ -67,16 +48,10 @@ struct StytchUI_Previews: PreviewProvider {
         OTPCodeViewController(
             state: .init(
                 config: .init(
-                    products: .init(
-                        oauth: .init(
-                            providers: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
-                            loginRedirectUrl: .init(string: "stytch-auth://login")!,
-                            signupRedirectUrl: .init(string: "stytch-auth://signup")!
-                        ),
-                        magicLink: .init(),
-                        otp: .init(methods: [.sms, .email, .whatsapp])
-                    ),
-                    session: .init()
+                    publicToken: "",
+                    products: [.oauth, .emailMagicLinks, .otp],
+                    oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
+                    otpOptions: .init(methods: [.sms, .email, .whatsapp])
                 ),
                 otpMethod: .sms,
                 input: "888-888-8888",
