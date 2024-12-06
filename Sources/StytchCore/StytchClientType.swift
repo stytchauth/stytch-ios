@@ -51,7 +51,7 @@ extension StytchClientType {
     var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
 
     // swiftlint:disable:next type_contents_order
-    mutating func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+    mutating func configure(publicToken: String, hostUrl: URL?, dfppaDomain: String?) {
         configuration = .init(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
 
         updateNetworkingClient()
