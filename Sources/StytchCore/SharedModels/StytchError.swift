@@ -231,6 +231,12 @@ public extension StytchSDKError {
             errorType: "no_organziation_id"
         )
     )
+    static let noMemberId = StytchSDKError(
+        message: "No Member Id Configured",
+        options: .init(
+            errorType: "no_member_id"
+        )
+    )
     static let emailNotEligibleForJitProvioning = StytchSDKError(
         message: "Email Not Eligible For Jit Provioning",
         options: .init(

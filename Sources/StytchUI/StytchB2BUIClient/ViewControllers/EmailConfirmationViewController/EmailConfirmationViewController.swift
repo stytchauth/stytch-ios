@@ -3,10 +3,6 @@ import StytchCore
 import UIKit
 
 final class EmailConfirmationViewController: BaseViewController<EmailConfirmationState, EmailConfirmationViewModel> {
-    private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchEmailConfirmationTitle", value: "Check your email!", comment: "")
-    )
-
     init(state: EmailConfirmationState) {
         super.init(viewModel: EmailConfirmationViewModel(state: state))
     }
@@ -16,12 +12,43 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
 
         stackView.spacing = .spacingRegular
 
+        let titleLabel: UILabel = .makeTitleLabel(text: viewModel.title)
         stackView.addArrangedSubview(titleLabel)
+
+        let emailConfirmationLabel = UILabel.makeComboLabel(
+            withPlainText: viewModel.message,
+            boldText: MemberManager.emailAddress,
+            fontSize: 18,
+            alignment: .left
+        )
+        stackView.addArrangedSubview(emailConfirmationLabel)
+
+        let tryAgainButton = Button.createTextButton(
+            withPlainText: viewModel.primarySubtext,
+            boldText: viewModel.secondaryBoldSubtext,
+            action: #selector(buttonTapped),
+            target: self
+        )
+        tryAgainButton.contentHorizontalAlignment = .leading
+        stackView.addArrangedSubview(tryAgainButton)
+
+        stackView.addArrangedSubview(SpacerView())
 
         attachStackView(within: view)
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+    }
+
+    @objc func buttonTapped() {
+        switch viewModel.state.type {
+        case .emailConfirmation:
+            navigationController?.popToRootViewController(animated: true)
+        case .passwordSetNew:
+            break
+        case .passwordResetVerify:
+            break
+        }
     }
 }

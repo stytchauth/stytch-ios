@@ -1,3 +1,5 @@
+import StytchCore
+import StytchUI
 import UIKit
 
 final class AuthHomeViewController: UIViewController {
@@ -59,6 +61,13 @@ final class AuthHomeViewController: UIViewController {
         self?.navigationController?.pushViewController(SCIMViewController(), animated: true)
     })
 
+    lazy var b2bUIButton: UIButton = .init(title: "B2B UI", primaryAction: .init { [weak self] _ in
+        StytchB2BUIClient.configure(configuration: Self.allStytchB2BUIConfig)
+        if let strongSelf = self {
+            StytchB2BUIClient.presentController(controller: strongSelf)
+        }
+    })
+
     func saveOrgID() {
         UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
     }
@@ -92,6 +101,7 @@ final class AuthHomeViewController: UIViewController {
         stackView.addArrangedSubview(recoveryCodesButton)
         stackView.addArrangedSubview(oauthButton)
         stackView.addArrangedSubview(scimButton)
+        stackView.addArrangedSubview(b2bUIButton)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -102,6 +112,24 @@ final class AuthHomeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         saveOrgID()
+    }
+
+    static var allStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        authFlowType: .organization(slug: "no-mfa"),
+        oauthProviders: [.init(provider: .google)]
+    )
+
+    static var discoveryStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        authFlowType: .discovery,
+        oauthProviders: [.init(provider: .google)]
+    )
+
+    static var publicToken: String {
+        UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey) ?? ""
     }
 }
 

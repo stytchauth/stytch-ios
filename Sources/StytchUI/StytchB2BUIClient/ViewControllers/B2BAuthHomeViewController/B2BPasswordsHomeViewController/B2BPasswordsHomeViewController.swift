@@ -103,6 +103,6 @@ extension B2BPasswordsHomeViewController: B2BPasswordsViewModelDelegate {
     }
 
     func didError(error: any Error) {
-        presentAlert(error: error)
+        presentErrorAlert(error: error)
     }
 }

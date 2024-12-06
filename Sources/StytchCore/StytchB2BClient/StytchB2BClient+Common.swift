@@ -132,18 +132,20 @@ public extension StytchB2BClient {
 
     /// A struct describing a membership and its details.
     struct Membership: Codable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case kind = "type"
-            case details
-            case member
-        }
-
         /// The kind of membership.
-        public let kind: String
+        public let type: MembershipType
         /// The details of the membership.
         public let details: JSON?
         /// The member.
         public let member: Member
+    }
+
+    enum MembershipType: String, Sendable, Codable {
+        case activeMember = "active_member"
+        case pendingMember = "pending_member"
+        case invitedMember = "invited_member"
+        case eligibleToJoinByEmailDomain = "eligible_to_join_by_email_domain"
+        case eligibleToJoinByOauthTenant = "eligible_to_join_by_oauth_tenant"
     }
 
     struct SCIMActiveConnection: Codable, Sendable, Equatable {

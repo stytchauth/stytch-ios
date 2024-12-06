@@ -4,6 +4,7 @@ import UIKit
 
 protocol B2BOAuthViewControllerDelegate: AnyObject {
     func oauthDidAuthenticatie()
+    func oauthDiscoveryDidAuthenticatie()
 }
 
 final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthViewModel> {
@@ -37,11 +38,16 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
         guard let (_, options) = viewModel.state.configuration.oauthProviders.enumerated().first(where: { $0.offset == sender.tag }) else { return }
         Task {
             do {
-                try await viewModel.startOAuth(options: options)
-                delegate?.oauthDidAuthenticatie()
+                if viewModel.state.configuration.authFlowType == .discovery {
+                    try await viewModel.startDiscoveryOAuth(options: options)
+                    delegate?.oauthDiscoveryDidAuthenticatie()
+                } else {
+                    try await viewModel.startOAuth(options: options)
+                    delegate?.oauthDidAuthenticatie()
+                }
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                presentAlert(error: error)
+                presentErrorAlert(error: error)
             }
         }
     }

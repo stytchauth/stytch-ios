@@ -95,7 +95,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                         self.launchForgotPassword(email: email)
                     }
                 } catch {
-                    presentAlert(error: error)
+                    presentErrorAlert(error: error)
                 }
             }
         case let .didTapLoginWithoutPassword(email: email):
@@ -106,7 +106,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                         self.launchCheckYourEmail(email: email)
                     }
                 } catch {
-                    presentAlert(error: error)
+                    presentErrorAlert(error: error)
                 }
             }
         }

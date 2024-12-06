@@ -12,4 +12,5 @@ final class TOTPEnrollmentViewModel {
 
 struct TOTPEnrollmentState {
     let configuration: StytchB2BUIClient.Configuration
+    let secret: String
 }

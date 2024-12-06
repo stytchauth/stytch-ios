@@ -2,13 +2,16 @@ import StytchCore
 import UIKit
 
 extension UIViewController {
-    func presentAlert(error: Error) {
+    func presentErrorAlert(error: Error) {
+        presentAlert(
+            title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
+            message: (error as? StytchError)?.message ?? error.localizedDescription
+        )
+    }
+
+    func presentAlert(title: String?, message: String?) {
         Task { @MainActor in
-            let alertController = UIAlertController(
-                title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
-                message: (error as? StytchError)?.message ?? error.localizedDescription,
-                preferredStyle: .alert
-            )
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.view.tintColor = .primaryText
             alertController.addAction(.init(title: NSLocalizedString("stytch.vcOK", value: "OK", comment: ""), style: .default))
             present(alertController, animated: true)

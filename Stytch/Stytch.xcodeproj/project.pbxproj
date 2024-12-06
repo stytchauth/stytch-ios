@@ -70,6 +70,7 @@
 		745BAB7E2C88D2B300771497 /* LoggedInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB7D2C88D2B300771497 /* LoggedInView.swift */; };
 		745BAB802C88E09E00771497 /* OTPAuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB7F2C88E09E00771497 /* OTPAuthenticationManager.swift */; };
 		745BAB822C89FBA800771497 /* User.Name+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB812C89FBA800771497 /* User.Name+Helpers.swift */; };
+		7462DACB2D0236F100329553 /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7462DACA2D0236F100329553 /* StytchUI */; };
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
 		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
@@ -180,6 +181,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7462DACB2D0236F100329553 /* StytchUI in Frameworks */,
 				74234D512C21EB770001DA69 /* SwiftOTP in Frameworks */,
 				2231532D299EE5E700BA9126 /* StytchCore in Frameworks */,
 			);
@@ -455,6 +457,7 @@
 			packageProductDependencies = (
 				2231532C299EE5E700BA9126 /* StytchCore */,
 				74234D502C21EB770001DA69 /* SwiftOTP */,
+				7462DACA2D0236F100329553 /* StytchUI */,
 			);
 			productName = B2BWorkbench;
 			productReference = 22315318299EE16D00BA9126 /* B2BWorkbench.app */;
@@ -1490,6 +1493,10 @@
 		745BAB782C88C96800771497 /* StytchCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StytchCore;
+		};
+		7462DACA2D0236F100329553 /* StytchUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

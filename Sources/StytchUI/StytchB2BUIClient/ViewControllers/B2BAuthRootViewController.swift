@@ -77,4 +77,8 @@ final class B2BAuthRootViewController: UIViewController {
     func startMfaFlowIfNeeded() {
         homeController?.startMFAFlowIfNeeded(configuration: configuration)
     }
+
+    func startDiscoveryFlowIfNeeded() {
+        homeController?.startDiscoveryFlowIfNeeded(configuration: configuration)
+    }
 }

@@ -15,7 +15,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
                     discoveredOrganizations: [
                         .init(
                             organization: .mock,
-                            membership: .init(kind: "somethign", details: nil, member: .mock),
+                            membership: .init(type: .activeMember, details: nil, member: .mock),
                             memberAuthenticated: false,
                             mfaRequired: nil,
                             primaryRequired: nil

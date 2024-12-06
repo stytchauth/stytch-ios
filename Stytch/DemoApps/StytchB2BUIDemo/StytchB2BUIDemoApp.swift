@@ -6,7 +6,7 @@ import SwiftUI
 struct StytchB2BUIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(configuration: StytchB2BUIDemoApp.oauthAndPasswrodsStytchB2BUIConfig)
+            ContentView(configuration: StytchB2BUIDemoApp.discoveryStytchB2BUIConfig)
         }
     }
 

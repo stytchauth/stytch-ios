@@ -16,7 +16,8 @@ enum B2BAuthenticationManager {
 
     static func handleMFAReponse(b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType) {
         Self.b2bMFAAuthenticateResponse = b2bMFAAuthenticateResponse
-        OrganizationManager.updateOrganization(newOrganization: b2bMFAAuthenticateResponse.organization)
+        OrganizationManager.updateOrganization(b2bMFAAuthenticateResponse.organization)
+        MemberManager.updateMember(b2bMFAAuthenticateResponse.member)
     }
 
     static func handleSecondaryReponse(b2bAuthenticateResponse: B2BAuthenticateResponseDataType) {
@@ -33,35 +34,5 @@ enum B2BAuthenticationManager {
         secret = nil
         recoveryCodes = nil
         didSaveRecoveryCodes = false
-    }
-}
-
-extension BaseViewController {
-    func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
-        var viewController: UIViewController?
-
-        let b2bMFAAuthenticateResponse = B2BAuthenticationManager.b2bMFAAuthenticateResponse
-
-        if b2bMFAAuthenticateResponse?.primaryRequired != nil {
-            viewController = B2BAuthHomeViewController(state: .init(configuration: configuration))
-        } else if b2bMFAAuthenticateResponse?.member.mfaEnrolled == true {
-            if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.mfaPhoneNumber != nil {
-                viewController = SMSOTPEntryViewController(state: .init(configuration: configuration))
-            } else if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.totpRegistrationId == nil {
-                viewController = TOTPEntryViewController(state: .init(configuration: configuration))
-            }
-        } else {
-            if b2bMFAAuthenticateResponse?.organization.allMFAMethodsAllowed == true {
-                viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
-            } else if b2bMFAAuthenticateResponse?.organization.usesSMSMFAOnly == true {
-                viewController = SMSOTPEnrollmentViewController(state: .init(configuration: configuration))
-            } else if b2bMFAAuthenticateResponse?.organization.usesTOTPMFAOnly == true {
-                viewController = TOTPEnrollmentViewController(state: .init(configuration: configuration))
-            }
-        }
-
-        if let viewController {
-            navigationController?.pushViewController(viewController, animated: true)
-        }
     }
 }

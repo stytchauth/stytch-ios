@@ -46,7 +46,7 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
                 delegate?.ssoDidAuthenticatie()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                presentAlert(error: error)
+                presentErrorAlert(error: error)
             }
         }
     }

@@ -132,7 +132,7 @@ public extension StytchClient.OAuth.ThirdParty {
 }
 
 public extension StytchClient.OAuth.ThirdParty.Provider {
-    var client: ThirdPartyOAuthProviderProtocol {
+    var client: StytchClient.OAuth.ThirdParty {
         switch self {
         case .amazon:
             return StytchClient.oauth.amazon

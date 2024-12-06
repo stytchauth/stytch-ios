@@ -22,6 +22,8 @@ final class B2BPasswordsViewModel {
         emailAddress: String,
         password: String
     ) {
+        MemberManager.updateMemberEmailAddress(emailAddress)
+
         guard let organizationId = OrganizationManager.organizationId else {
             delegate?.didError(error: StytchSDKError.noOrganziationId)
             return

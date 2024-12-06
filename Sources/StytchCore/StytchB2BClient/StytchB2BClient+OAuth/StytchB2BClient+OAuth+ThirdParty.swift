@@ -153,7 +153,7 @@ public extension StytchB2BClient.OAuth.ThirdParty {
 }
 
 public extension StytchB2BClient.OAuth.ThirdParty.Provider {
-    var client: ThirdPartyB2BOAuthProviderProtocol {
+    var client: StytchB2BClient.OAuth.ThirdParty {
         switch self {
         case .google:
             return StytchB2BClient.oauth.google

@@ -137,7 +137,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
     func showEmaiilConfirmation() {
         Task { @MainActor in
-            let emailConfirmationViewController = EmailConfirmationViewController(state: .init(configuration: viewModel.state.configuration))
+            let emailConfirmationViewController = EmailConfirmationViewController(state: .init(configuration: viewModel.state.configuration, type: .emailConfirmation))
             navigationController?.pushViewController(emailConfirmationViewController, animated: true)
         }
     }
@@ -146,6 +146,10 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 extension B2BAuthHomeViewController: B2BOAuthViewControllerDelegate {
     func oauthDidAuthenticatie() {
         continueAuthenticationFlowIfNeeded()
+    }
+
+    func oauthDiscoveryDidAuthenticatie() {
+        startDiscoveryFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 }
 
