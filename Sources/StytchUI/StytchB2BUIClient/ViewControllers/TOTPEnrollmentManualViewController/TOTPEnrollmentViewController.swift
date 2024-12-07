@@ -3,6 +3,10 @@ import StytchCore
 import UIKit
 
 final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState, TOTPEnrollmentViewModel> {
+    let totpSecretView = TOTPSecretView(secret: "---")
+
+    var error: Error?
+
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytchTOTPEnrollmentTitle", value: "Copy the code below to link your authenticator app", comment: "")
     )
@@ -21,21 +25,22 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
         super.init(viewModel: TOTPEnrollmentViewModel(state: state))
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        createTOTP()
+    }
+
     override func configureView() {
         super.configureView()
 
         stackView.spacing = .spacingRegular
+        totpSecretView.delegate = self
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
-
-        let totpSecretView = TOTPSecretView(secret: viewModel.state.secret)
-        totpSecretView.delegate = self
         stackView.addArrangedSubview(totpSecretView)
-
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
-
         attachStackView(within: view)
 
         NSLayoutConstraint.activate(
@@ -44,7 +49,30 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
     }
 
     private func continueWithTOTP() {
-        navigationController?.pushViewController(TOTPEntryViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+        if error != nil {
+            createTOTP()
+        } else {
+            navigationController?.pushViewController(TOTPEntryViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+        }
+    }
+
+    @objc func createTOTP() {
+        Task { [weak self] in
+            do {
+                let secret = try await self?.viewModel.createTOTP()
+                Task { @MainActor in
+                    self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: ""), for: .normal)
+                    self?.totpSecretView.configure(with: secret ?? "")
+                    self?.error = nil
+                }
+            } catch {
+                Task { @MainActor in
+                    self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTryAgainTitle", value: "Try Again", comment: ""), for: .normal)
+                    self?.presentErrorAlert(error: error)
+                    self?.error = error
+                }
+            }
+        }
     }
 }
 
