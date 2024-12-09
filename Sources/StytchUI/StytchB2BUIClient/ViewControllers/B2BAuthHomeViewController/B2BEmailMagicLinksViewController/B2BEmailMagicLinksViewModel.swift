@@ -14,12 +14,12 @@ final class B2BEmailMagicLinksViewModel {
         completion: @escaping (Error?) -> Void
     ) {
         MemberManager.updateMemberEmailAddress(emailAddress)
-        Task {
+        Task { [weak self] in
             do {
-                if state.configuration.authFlowType == .discovery {
+                if self?.state.configuration.authFlowType == .discovery {
                     let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
                         emailAddress: emailAddress,
-                        discoveryRedirectUrl: state.configuration.redirectUrl,
+                        discoveryRedirectUrl: self?.state.configuration.redirectUrl,
                         locale: .en
                     )
                     _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
@@ -32,7 +32,7 @@ final class B2BEmailMagicLinksViewModel {
                     try await AuthenticationOperations.sendEmailMagicLink(
                         emailAddress: emailAddress,
                         organizationId: organizationId,
-                        redirectUrl: state.configuration.redirectUrl
+                        redirectUrl: self?.state.configuration.redirectUrl
                     )
                 }
                 completion(nil)

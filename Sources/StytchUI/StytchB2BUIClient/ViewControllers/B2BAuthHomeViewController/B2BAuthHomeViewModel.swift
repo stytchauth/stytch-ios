@@ -26,13 +26,17 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
     func loadProducts(
         completion: @escaping ([StytchB2BUIClient.ProductComponent]) -> Void
     ) {
-        Task {
-            switch state.configuration.authFlowType {
+        Task { [weak self] in
+            guard let configuration = self?.state.configuration else {
+                return
+            }
+
+            switch configuration.authFlowType {
             case .discovery:
                 let products = StytchB2BUIClient.productComponentsOrdering(
-                    validProducts: state.configuration.products,
-                    configuration: state.configuration,
-                    hasSSOActiveConnections: false // can you do discovery via sso?
+                    validProducts: configuration.products,
+                    configuration: configuration,
+                    hasSSOActiveConnections: false
                 )
                 completion(products)
             case let .organization(slug):
@@ -42,11 +46,11 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
                         organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
                         organizationAuthMethods: OrganizationManager.authMethods,
                         primaryRequired: B2BAuthenticationManager.primaryRequired,
-                        configuration: state.configuration
+                        configuration: configuration
                     )
                     let products = StytchB2BUIClient.productComponentsOrdering(
                         validProducts: validProducts,
-                        configuration: state.configuration,
+                        configuration: configuration,
                         hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
                     )
                     completion(products)

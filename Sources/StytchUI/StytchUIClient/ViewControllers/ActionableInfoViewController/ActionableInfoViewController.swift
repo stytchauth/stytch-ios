@@ -76,7 +76,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         )
         controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
         controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 try await self?.viewModel.state.retryAction()
             }
         })

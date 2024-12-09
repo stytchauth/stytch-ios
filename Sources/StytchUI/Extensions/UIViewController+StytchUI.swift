@@ -10,11 +10,11 @@ extension UIViewController {
     }
 
     func presentAlert(title: String?, message: String?) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.view.tintColor = .primaryText
             alertController.addAction(.init(title: NSLocalizedString("stytch.vcOK", value: "OK", comment: ""), style: .default))
-            present(alertController, animated: true)
+            self?.present(alertController, animated: true)
         }
     }
 }
