@@ -35,19 +35,22 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
+        StytchB2BUIClient.startLoading()
         guard let (_, options) = viewModel.state.configuration.oauthProviders.enumerated().first(where: { $0.offset == sender.tag }) else { return }
-        Task {
+        Task { [weak self] in
             do {
-                if viewModel.state.configuration.authFlowType == .discovery {
-                    try await viewModel.startDiscoveryOAuth(options: options)
-                    delegate?.oauthDiscoveryDidAuthenticatie()
+                if self?.viewModel.state.configuration.authFlowType == .discovery {
+                    try await self?.viewModel.startDiscoveryOAuth(options: options)
+                    self?.delegate?.oauthDiscoveryDidAuthenticatie()
                 } else {
-                    try await viewModel.startOAuth(options: options)
-                    delegate?.oauthDidAuthenticatie()
+                    try await self?.viewModel.startOAuth(options: options)
+                    self?.delegate?.oauthDidAuthenticatie()
                 }
+                StytchB2BUIClient.stopLoading()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                presentErrorAlert(error: error)
+                self?.presentErrorAlert(error: error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }

@@ -57,6 +57,7 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
     }
 
     @objc func createTOTP() {
+        StytchB2BUIClient.startLoading()
         Task { [weak self] in
             do {
                 let secret = try await self?.viewModel.createTOTP()
@@ -64,12 +65,14 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
                     self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: ""), for: .normal)
                     self?.totpSecretView.configure(with: secret ?? "")
                     self?.error = nil
+                    StytchB2BUIClient.stopLoading()
                 }
             } catch {
                 Task { @MainActor in
                     self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTryAgainTitle", value: "Try Again", comment: ""), for: .normal)
                     self?.presentErrorAlert(error: error)
                     self?.error = error
+                    StytchB2BUIClient.stopLoading()
                 }
             }
         }

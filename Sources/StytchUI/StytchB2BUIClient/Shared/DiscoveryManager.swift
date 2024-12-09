@@ -24,12 +24,14 @@ struct DiscoveryManager {
 
 extension BaseViewController {
     func startDiscoveryFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
-        let discoveredOrganizations = DiscoveryManager.discoveredOrganizations
-        if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
-            selectDiscoveredOrganization(configuration: configuration, discoveredOrganization: singleDiscoveredOrganization)
-        } else {
-            let discoveryViewController = DiscoveryViewController(state: .init(configuration: configuration))
-            navigationController?.pushViewController(discoveryViewController, animated: true)
+        Task { @MainActor in
+            let discoveredOrganizations = DiscoveryManager.discoveredOrganizations
+            if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
+                selectDiscoveredOrganization(configuration: configuration, discoveredOrganization: singleDiscoveredOrganization)
+            } else {
+                let discoveryViewController = DiscoveryViewController(state: .init(configuration: configuration))
+                navigationController?.pushViewController(discoveryViewController, animated: true)
+            }
         }
     }
 
@@ -40,9 +42,7 @@ extension BaseViewController {
                     configuration: configuration,
                     discoveredOrganization: discoveredOrganization
                 )
-                Task { @MainActor in
-                    startMFAFlowIfNeeded(configuration: configuration)
-                }
+                startMFAFlowIfNeeded(configuration: configuration)
             } catch {
                 presentErrorAlert(error: error)
             }

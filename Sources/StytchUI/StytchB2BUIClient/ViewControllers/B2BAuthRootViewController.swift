@@ -6,11 +6,12 @@ import UIKit
 final class B2BAuthRootViewController: UIViewController {
     private let configuration: StytchB2BUIClient.Configuration
 
-    private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
-
     private var onB2BAuthCallback: AuthCallback?
 
     private var homeController: B2BAuthHomeViewController?
+
+    private var loadingView: UIView?
+    private var activityIndicator: UIActivityIndicatorView?
 
     init(configuration: StytchB2BUIClient.Configuration, onB2BAuthCallback: AuthCallback? = nil) {
         self.configuration = configuration
@@ -25,22 +26,13 @@ final class B2BAuthRootViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemPink // .background
-
-        activityIndicator.hidesWhenStopped = true
-
-        view.addSubview(activityIndicator)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-
         render()
     }
 
-    func handlePasswordReset(token _: String, email _: String, animated _: Bool = true) {}
+    func handlePasswordReset(token: String, email: String, animated: Bool = true) {
+        let state = PasswordResetState(configuration: configuration, token: token, email: email)
+        navigationController?.pushViewController(PasswordResetViewController(state: state), animated: animated)
+    }
 
     @objc func dismissAuth() {
         presentingViewController?.dismiss(animated: true)
@@ -80,5 +72,48 @@ final class B2BAuthRootViewController: UIViewController {
 
     func startDiscoveryFlowIfNeeded() {
         homeController?.startDiscoveryFlowIfNeeded(configuration: configuration)
+    }
+}
+
+extension B2BAuthRootViewController {
+    func startLoading() {
+        Task { @MainActor in
+            guard loadingView == nil else {
+                return
+            }
+
+            let loadingView = UIView()
+            // swiftlint:disable:next object_literal
+            loadingView.backgroundColor = UIColor(white: 1.0, alpha: 0.8)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+
+            let activityIndicator = UIActivityIndicatorView(style: .large)
+            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+            activityIndicator.startAnimating()
+
+            loadingView.addSubview(activityIndicator)
+            view.addSubview(loadingView)
+
+            NSLayoutConstraint.activate([
+                loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                loadingView.topAnchor.constraint(equalTo: view.topAnchor),
+                loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                activityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor),
+                activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor),
+            ])
+
+            self.loadingView = loadingView
+            self.activityIndicator = activityIndicator
+        }
+    }
+
+    func stopLoading() {
+        Task { @MainActor in
+            loadingView?.removeFromSuperview()
+            loadingView = nil
+            activityIndicator?.stopAnimating()
+            activityIndicator = nil
+        }
     }
 }

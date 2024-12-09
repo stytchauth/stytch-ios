@@ -83,6 +83,14 @@ public enum StytchB2BUIClient {
         reset()
         currentController?.dismissAuth()
     }
+
+    static func startLoading() {
+        currentController?.startLoading()
+    }
+
+    static func stopLoading() {
+        currentController?.stopLoading()
+    }
 }
 
 public extension View {
