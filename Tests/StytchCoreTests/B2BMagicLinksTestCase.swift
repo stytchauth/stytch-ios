@@ -141,13 +141,13 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
     func testDiscoveryAuthenticate() async throws {
         networkInterceptor.responses {
-            StytchB2BClient.MagicLinks.DiscoveryAuthenticateResponse(
+            StytchB2BClient.DiscoveryAuthenticateResponse(
                 requestId: "123",
                 statusCode: 200,
                 wrapped: .init(
-                    discoveredOrganizations: [],
                     intermediateSessionToken: "IMS",
-                    emailAddress: "1@2.3"
+                    emailAddress: "1@2.3",
+                    discoveredOrganizations: []
                 )
             )
         }
@@ -297,22 +297,22 @@ public extension Organization {
         trustedMetadata: [:],
         organizationId: "org_123",
         ssoDefaultConnectionId: nil,
-        ssoJitProvisioning: .ALL_ALLOWED,
+        ssoJitProvisioning: .allAllowed,
         ssoJitProvisioningAllowedConnections: nil,
         ssoActiveConnections: [
             StytchB2BClient.SSOActiveConnection(connectionId: "sso_conn_1", displayName: "Google SSO"),
         ],
         scimActiveConnection: StytchB2BClient.SCIMActiveConnection(connectionId: "scim_conn_1", displayName: "SCIM Connection"),
         emailAllowedDomains: ["example.com"],
-        emailJitProvisioning: .RESTRICTED,
-        emailInvites: .ALL_ALLOWED,
+        emailJitProvisioning: .restricted,
+        emailInvites: .allAllowed,
         oauthTenantJitProvisioning: .notAllowed,
         allowedOAuthTenants: ["google": ["tenant_123"]],
-        authMethods: .RESTRICTED,
+        authMethods: .restricted,
         allowedAuthMethods: [.magicLink, .password],
-        mfaMethods: .ALL_ALLOWED,
-        allowedMfaMethods: [.SMS],
-        mfaPolicy: .OPTIONAL,
+        mfaMethods: .allAllowed,
+        allowedMfaMethods: [.sms],
+        mfaPolicy: .optional,
         rbacEmailImplicitRoleAssignments: []
     )
 }

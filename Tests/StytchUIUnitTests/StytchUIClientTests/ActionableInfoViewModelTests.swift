@@ -1,0 +1,236 @@
+import XCTest
+@testable import StytchCore
+@testable import StytchUI
+
+final class ActionableInfoViewModelTests: BaseTestCase {
+    var calledMethod: CalledMethod?
+
+    let magicLinkConfig: StytchUIClient.MagicLinkOptions = .init(
+        loginExpiration: 123,
+        loginTemplateId: "login-template-id",
+        signupExpiration: 456,
+        signupTemplateId: "signup-template-id"
+    )
+
+    let passwordConfig: StytchUIClient.PasswordOptions = .init(
+        loginExpiration: 123,
+        resetPasswordExpiration: 456,
+        resetPasswordTemplateId: "reset-password-template-id"
+    )
+
+    func calledMethodCallback(method: CalledMethod) {
+        calledMethod = method
+    }
+
+    override func setUp() async throws {
+        try await super.setUp()
+        calledMethod = nil
+        StytchUIClient.pendingResetEmail = nil
+    }
+
+    func testSessionDurationMinutesReadsFromConfig() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            sessionDurationMinutes: 123
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        XCTAssert(state.config.sessionDurationMinutes == 123)
+    }
+
+    func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks]
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
+    }
+
+    func testCreatesCorrectResetByEmailStartParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords],
+            passwordOptions: passwordConfig
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
+            email: "test@stytch.com",
+            loginUrl: config.redirectUrl,
+            loginExpiration: passwordConfig.loginExpiration,
+            resetPasswordUrl: config.redirectUrl,
+            resetPasswordExpiration: passwordConfig.resetPasswordExpiration,
+            resetPasswordTemplateId: passwordConfig.resetPasswordTemplateId
+        )
+        let result = viewModel.params(email: "test@stytch.com", password: passwordConfig)
+        XCTAssert(result == expected)
+    }
+
+    func testCreatesCorrectMagicLinkParams() {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            magicLinkOptions: magicLinkConfig
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        let expected: StytchClient.MagicLinks.Email.Parameters = .init(
+            email: "test@stytch.com",
+            loginMagicLinkUrl: config.redirectUrl,
+            loginExpiration: magicLinkConfig.loginExpiration,
+            loginTemplateId: magicLinkConfig.loginTemplateId,
+            signupMagicLinkUrl: config.redirectUrl,
+            signupExpiration: magicLinkConfig.signupExpiration,
+            signupTemplateId: magicLinkConfig.signupTemplateId
+        )
+        let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkConfig)
+        XCTAssert(result == expected)
+    }
+
+    func testLoginWithoutPasswordDoesNothingIfMagicLinksAreNotConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: []
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        try await viewModel.loginWithoutPassword(email: "")
+        XCTAssert(calledMethod == nil)
+    }
+
+    func testLoginWithoutPasswordCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.emailMagicLinks],
+            magicLinkOptions: magicLinkConfig
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        try await viewModel.loginWithoutPassword(email: "")
+        XCTAssert(calledMethod == .magicLinksLoginOrCreate)
+    }
+
+    func testForgotPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: []
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        try await viewModel.forgotPassword(email: "test@stytch.com")
+        XCTAssert(calledMethod == nil)
+    }
+
+    func testForgotPasswordCallsPasswordResetByEmailStartAndSetsPendingEmailIfPasswordsAreConfigured() async throws {
+        let config: StytchUIClient.Configuration = .init(
+            publicToken: "publicToken",
+            products: [.passwords, .emailMagicLinks],
+            passwordOptions: passwordConfig,
+            magicLinkOptions: magicLinkConfig
+        )
+
+        let state: ActionableInfoState = .init(
+            config: config,
+            email: "test@stytch.com",
+            title: "Some ATitle",
+            infoComponents: [],
+            actionComponents: [],
+            secondaryAction: nil
+        ) {}
+        let viewModel = ActionableInfoViewModel(
+            state: state,
+            passwordClient: PasswordsSpy(callback: calledMethodCallback),
+            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
+        )
+        try await viewModel.forgotPassword(email: "test@stytch.com")
+        XCTAssert(calledMethod == .passwordsResetByEmailStart)
+        XCTAssert(StytchUIClient.pendingResetEmail == "test@stytch.com")
+    }
+}
