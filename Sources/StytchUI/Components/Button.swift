@@ -141,14 +141,14 @@ extension Button {
         // Create attributed text
         let attributedText = NSMutableAttributedString(string: plainText, attributes: [
             .font: UIFont.systemFont(ofSize: fontSize),
-            .foregroundColor: UIColor.black,
+            .foregroundColor: UIColor.primaryText,
         ])
 
         // If boldText is provided, append it with bold style
         if let boldText = boldText {
             let boldAttributedText = NSAttributedString(string: " \(boldText)", attributes: [
                 .font: UIFont.boldSystemFont(ofSize: fontSize),
-                .foregroundColor: UIColor.black,
+                .foregroundColor: UIColor.primaryText,
             ])
             attributedText.append(boldAttributedText)
         }

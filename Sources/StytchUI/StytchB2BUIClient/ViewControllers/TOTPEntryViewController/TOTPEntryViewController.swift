@@ -53,12 +53,15 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
 
 extension TOTPEntryViewController: OTPCodeEntryViewDelegate {
     func didEnterOTPCode(_ code: String) {
+        StytchB2BUIClient.startLoading()
         Task { [weak self] in
             do {
                 try await self?.viewModel.authenticateTOTP(code: code)
                 self?.continueWithTOTP()
+                StytchB2BUIClient.stopLoading()
             } catch {
                 self?.presentErrorAlert(error: error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }

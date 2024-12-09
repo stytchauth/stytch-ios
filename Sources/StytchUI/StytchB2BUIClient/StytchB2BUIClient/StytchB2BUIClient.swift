@@ -36,6 +36,7 @@ public enum StytchB2BUIClient {
         }
         let rootController = B2BAuthRootViewController(configuration: Self.configuration)
         currentController = rootController
+        Self.setUpDismissAuthListener()
         let navigationController = UINavigationController(rootViewController: rootController)
         controller.present(navigationController, animated: true)
     }
@@ -44,16 +45,17 @@ public enum StytchB2BUIClient {
     /// If presenting from SwiftUI, ensure the sheet is presented before calling this handler.
     /// You can use `StytchB2BClient.canHandle(url:)` to determine if you should present the SwiftUI sheet before calling this handler.
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
+        startLoading()
         print(controller as Any)
         Task { @MainActor in
             switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
             case let .handled(responseData):
                 switch responseData {
                 case let .mfauth(response):
-                    B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+                    B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
                     currentController?.startMfaFlowIfNeeded()
                 case let .mfaOAuth(response):
-                    B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+                    B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
                     currentController?.startMfaFlowIfNeeded()
                 case let .discovery(response):
                     DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
@@ -68,8 +70,19 @@ public enum StytchB2BUIClient {
                 print(tokenType)
                 print(token)
             }
+            stopLoading()
         }
         return StytchB2BClient.canHandle(url: url)
+    }
+
+    static func setUpDismissAuthListener() {
+        cancellable = B2BAuthenticationManager.dismissUI
+            .receive(on: DispatchQueue.main)
+            .sink { [weak currentController] in
+                currentController?.dismissAuth()
+                Self.cancellable = nil
+                Self.reset()
+            }
     }
 
     static func reset() {
@@ -77,11 +90,6 @@ public enum StytchB2BUIClient {
         DiscoveryManager.reset()
         MemberManager.reset()
         OrganizationManager.reset()
-    }
-
-    static func dismissAuth() {
-        reset()
-        currentController?.dismissAuth()
     }
 
     static func startLoading() {
@@ -118,6 +126,7 @@ struct B2BAuthenticationView: UIViewControllerRepresentable {
     func makeUIViewController(context _: Context) -> UIViewController {
         let controller = B2BAuthRootViewController(configuration: StytchB2BUIClient.configuration)
         StytchB2BUIClient.currentController = controller
+        StytchB2BUIClient.setUpDismissAuthListener()
         return UINavigationController(rootViewController: controller)
     }
 

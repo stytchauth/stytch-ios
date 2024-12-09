@@ -33,7 +33,7 @@ extension B2BOAuthViewModel {
         )
         let response = try await StytchB2BClient.oauth.authenticate(parameters: authenticateParameters)
 
-        B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
     }
 
     func startDiscoveryOAuth(

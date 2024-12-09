@@ -14,7 +14,7 @@ struct DiscoveryManager {
                 sessionDuration: configuration.sessionDurationMinutes
             )
         )
-        B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
     }
 
     static func reset() {

@@ -93,7 +93,7 @@ public class StytchTheme: Codable {
     let progressDanger: UIColorPair
     /// A `CGFloat` describing the radius of corners where applied. Defaults to 4
     let cornerRadius: CGFloat
-    /// A `CGFloat` describing the vertical margins where applied. Defaults to 64
+    /// A `CGFloat` describing the vertical margins where applied. Defaults to 32
     let verticalMargin: CGFloat
     /// A `CGFloat` describing the horizontal margins where applied. Defaults to 32
     let horizontalMargin: CGFloat
@@ -129,7 +129,7 @@ public class StytchTheme: Codable {
         progressSuccess: UIColorPair = .init(dark: .mint, light: .pine),
         progressDanger: UIColorPair = .init(dark: .peach, light: .maroon),
         cornerRadius: CGFloat = 4,
-        verticalMargin: CGFloat = 64,
+        verticalMargin: CGFloat = 32,
         horizontalMargin: CGFloat = 32,
         buttonHeight: CGFloat = 45,
         spacingTiny: CGFloat = 4,
