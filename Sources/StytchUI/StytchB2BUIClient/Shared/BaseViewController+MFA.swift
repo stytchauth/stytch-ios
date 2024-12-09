@@ -20,9 +20,9 @@ extension BaseViewController {
             if b2bMFAAuthenticateResponse?.organization.allMFAMethodsAllowed == true {
                 viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
             } else if b2bMFAAuthenticateResponse?.organization.usesSMSMFAOnly == true {
-                handleSMSOTPEnrollment(configuration: configuration)
+                navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: configuration)), animated: true)
             } else if b2bMFAAuthenticateResponse?.organization.usesTOTPMFAOnly == true {
-                handleTOTPEnrollment(configuration: configuration)
+                navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: configuration)), animated: true)
             }
         }
 
@@ -30,28 +30,4 @@ extension BaseViewController {
             navigationController?.pushViewController(viewController, animated: true)
         }
     }
-}
-
-extension BaseViewController {
-    func handleTOTPEnrollment(configuration: StytchB2BUIClient.Configuration) {
-        Task { [weak self] in
-            do {
-                let secret = try await AuthenticationOperations.createTOTP()
-                self?.showTOTPEnrollment(configuration: configuration, secret: secret)
-            } catch {
-                self?.presentErrorAlert(error: error)
-            }
-        }
-    }
-
-    func showTOTPEnrollment(configuration: StytchB2BUIClient.Configuration, secret: String) {
-        let state = TOTPEnrollmentState(configuration: configuration, secret: secret)
-        Task { @MainActor in
-            navigationController?.pushViewController(TOTPEnrollmentViewController(state: state), animated: true)
-        }
-    }
-}
-
-extension BaseViewController {
-    func handleSMSOTPEnrollment(configuration _: StytchB2BUIClient.Configuration) {}
 }

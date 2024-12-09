@@ -41,9 +41,9 @@ extension MFAEnrollmentSelectionViewController: MFAMethodSelectionViewController
     func didSelectMFAMethod(mfaMethod: StytchCore.StytchB2BClient.MfaMethod) {
         switch mfaMethod {
         case .sms:
-            handleSMSOTPEnrollment(configuration: viewModel.state.configuration)
+            navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
         case .totp:
-            handleTOTPEnrollment(configuration: viewModel.state.configuration)
+            navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
         }
     }
 }
