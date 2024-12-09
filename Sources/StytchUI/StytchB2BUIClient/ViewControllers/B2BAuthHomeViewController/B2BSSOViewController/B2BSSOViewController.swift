@@ -40,13 +40,13 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
             return
         }
 
-        Task {
+        Task { [weak self] in
             do {
                 try await viewModel.startSSO(connectionId: ssoActiveConnection.connectionId)
-                delegate?.ssoDidAuthenticatie()
+                self?.delegate?.ssoDidAuthenticatie()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                presentErrorAlert(error: error)
+                self?.presentErrorAlert(error: error)
             }
         }
     }

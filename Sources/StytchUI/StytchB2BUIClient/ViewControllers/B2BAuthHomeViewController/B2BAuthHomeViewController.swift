@@ -38,7 +38,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
     override func configureView() {
         super.configureView()
         viewModel.loadProducts { [weak self] productComponents in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 self?.configureView(productComponents: productComponents)
             }
         }
@@ -69,8 +69,8 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         stackView.addArrangedSubview(SpacerView())
 
-        Task {
-            try await viewModel.logRenderScreen()
+        Task { [weak self] in
+            try await self?.viewModel.logRenderScreen()
         }
     }
 
@@ -125,20 +125,28 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
     }
 
     func continueAuthenticationFlowIfNeeded() {
-        Task { @MainActor in
-            if viewModel.state.configuration.authFlowType == .discovery {
-                let discoveryViewController = DiscoveryViewController(state: .init(configuration: viewModel.state.configuration))
-                navigationController?.pushViewController(discoveryViewController, animated: true)
+        Task { @MainActor [weak self] in
+            guard let configuration = self?.viewModel.state.configuration else {
+                return
+            }
+
+            if self?.viewModel.state.configuration.authFlowType == .discovery {
+                let discoveryViewController = DiscoveryViewController(state: .init(configuration: configuration))
+                self?.navigationController?.pushViewController(discoveryViewController, animated: true)
             } else {
-                startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+                self?.startMFAFlowIfNeeded(configuration: configuration)
             }
         }
     }
 
     func showEmaiilConfirmation() {
-        Task { @MainActor in
-            let emailConfirmationViewController = EmailConfirmationViewController(state: .init(configuration: viewModel.state.configuration, type: .emailConfirmation))
-            navigationController?.pushViewController(emailConfirmationViewController, animated: true)
+        Task { @MainActor [weak self] in
+            guard let configuration = self?.viewModel.state.configuration else {
+                return
+            }
+
+            let emailConfirmationViewController = EmailConfirmationViewController(state: .init(configuration: configuration, type: .emailConfirmation))
+            self?.navigationController?.pushViewController(emailConfirmationViewController, animated: true)
         }
     }
 }
@@ -159,9 +167,13 @@ extension B2BAuthHomeViewController: B2BEmailMagicLinksViewControllerDelegate {
     }
 
     func usePasswordInstead() {
-        Task { @MainActor in
-            let passwordAuthenticateViewController = PasswordAuthenticateViewController(state: .init(configuration: viewModel.state.configuration))
-            navigationController?.pushViewController(passwordAuthenticateViewController, animated: true)
+        Task { @MainActor [weak self] in
+            guard let configuration = self?.viewModel.state.configuration else {
+                return
+            }
+
+            let passwordAuthenticateViewController = PasswordAuthenticateViewController(state: .init(configuration: configuration))
+            self?.navigationController?.pushViewController(passwordAuthenticateViewController, animated: true)
         }
     }
 }

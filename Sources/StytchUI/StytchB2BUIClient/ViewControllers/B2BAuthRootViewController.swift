@@ -77,8 +77,12 @@ final class B2BAuthRootViewController: UIViewController {
 
 extension B2BAuthRootViewController {
     func startLoading() {
-        Task { @MainActor in
-            guard loadingView == nil else {
+        Task { @MainActor [weak self] in
+            guard self?.loadingView == nil else {
+                return
+            }
+
+            guard let view = self?.view else {
                 return
             }
 
@@ -103,17 +107,17 @@ extension B2BAuthRootViewController {
                 activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor),
             ])
 
-            self.loadingView = loadingView
-            self.activityIndicator = activityIndicator
+            self?.loadingView = loadingView
+            self?.activityIndicator = activityIndicator
         }
     }
 
     func stopLoading() {
-        Task { @MainActor in
-            loadingView?.removeFromSuperview()
-            loadingView = nil
-            activityIndicator?.stopAnimating()
-            activityIndicator = nil
+        Task { @MainActor [weak self] in
+            self?.loadingView?.removeFromSuperview()
+            self?.loadingView = nil
+            self?.activityIndicator?.stopAnimating()
+            self?.activityIndicator = nil
         }
     }
 }

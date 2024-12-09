@@ -4,7 +4,7 @@ import UIKit
 
 extension BaseViewController {
     func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
             var viewController: UIViewController?
 
             let b2bMFAAuthenticateResponse = B2BAuthenticationManager.b2bMFAAuthenticateResponse
@@ -21,14 +21,14 @@ extension BaseViewController {
                 if b2bMFAAuthenticateResponse?.organization.allMFAMethodsAllowed == true {
                     viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
                 } else if b2bMFAAuthenticateResponse?.organization.usesSMSMFAOnly == true {
-                    navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: configuration)), animated: true)
+                    viewController = SMSOTPEnrollmentViewController(state: .init(configuration: configuration))
                 } else if b2bMFAAuthenticateResponse?.organization.usesTOTPMFAOnly == true {
-                    navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: configuration)), animated: true)
+                    viewController = TOTPEnrollmentViewController(state: .init(configuration: configuration))
                 }
             }
 
             if let viewController {
-                navigationController?.pushViewController(viewController, animated: true)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             }
         }
     }

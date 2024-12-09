@@ -29,7 +29,7 @@ final class B2BPasswordsViewModel {
             return
         }
 
-        Task {
+        Task { [weak self] in
             do {
                 let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress, organizationId: organizationId)
                 if member?.memberPasswordId != nil {
@@ -41,13 +41,17 @@ final class B2BPasswordsViewModel {
                     )
                     let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)
                     B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
-                    delegate?.didAuthenticateWithPassword()
+                    self?.delegate?.didAuthenticateWithPassword()
                 } else {
-                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: state.configuration.redirectUrl)
-                    delegate?.didSendEmailMagicLink()
+                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
+                        emailAddress: emailAddress,
+                        organizationId: organizationId,
+                        redirectUrl: self?.state.configuration.redirectUrl
+                    )
+                    self?.delegate?.didSendEmailMagicLink()
                 }
             } catch {
-                delegate?.didError(error: error)
+                self?.delegate?.didError(error: error)
             }
         }
     }
