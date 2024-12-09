@@ -31,6 +31,7 @@ struct MemberManager {
 
     static func updateMemberEmailAddress(_ emailAddress: String) {
         _emailAddress = emailAddress
+        member = nil
     }
 
     static func updateMemberPhoneNumber(_ phoneNumber: String) {

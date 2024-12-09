@@ -72,7 +72,7 @@ struct AuthenticationOperations {
 
         let parameters = StytchB2BClient.TOTP.CreateParameters(organizationId: organizationId, memberId: memberId, expirationMinutes: 30)
         let response = try await StytchB2BClient.totp.create(parameters: parameters)
-        B2BAuthenticationManager.updateTotpState(totpResponse: response.wrapped)
+        B2BAuthenticationManager.handleTOTPResponse(totpResponse: response.wrapped)
         return response.wrapped.secret
     }
 }
