@@ -45,4 +45,22 @@ struct AuthenticationOperations {
         )
         _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
     }
+
+    static func smsSend(phoneNumberE164: String) async throws {
+        guard let organizationId = OrganizationManager.organizationId else {
+            throw StytchSDKError.noOrganziationId
+        }
+
+        guard let memberId = MemberManager.memberId else {
+            throw StytchSDKError.noMemberId
+        }
+
+        let parameters = StytchB2BClient.OTP.SMS.SendParameters(
+            organizationId: organizationId,
+            memberId: memberId,
+            mfaPhoneNumber: phoneNumberE164,
+            locale: nil
+        )
+        _ = try await StytchB2BClient.otp.sms.send(parameters: parameters)
+    }
 }
