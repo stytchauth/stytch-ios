@@ -13,6 +13,8 @@ public extension StytchB2BClient {
     struct RecoveryCodes {
         let router: NetworkingRouter<StytchB2BClient.RecoveryCodesRoute>
 
+        @Dependency(\.sessionManager) private var sessionManager
+
         // sourcery: AsyncVariants
         /// Get the recovery codes for an authenticated member
         public func get() async throws -> RecoveryCodesResponse {
@@ -28,7 +30,14 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants
         /// Consume a recovery code for a member
         public func recover(parameters: RecoveryCodesRecoverParameters) async throws -> RecoveryCodesRecoverResponse {
-            try await router.post(to: .recover, parameters: parameters, useDFPPA: true)
+            try await router.post(
+                to: .recover,
+                parameters: IntermediateSessionTokenParameters(
+                    intermediateSessionToken: sessionManager.intermediateSessionToken,
+                    wrapped: parameters
+                ),
+                useDFPPA: true
+            )
         }
     }
 }
@@ -74,7 +83,17 @@ public extension StytchB2BClient.RecoveryCodes {
 public extension StytchB2BClient.RecoveryCodes {
     typealias RecoveryCodesRecoverResponse = Response<RecoveryCodesRecoverResponseData>
 
-    struct RecoveryCodesRecoverResponseData: Codable, Sendable {
+    struct RecoveryCodesRecoverResponseData: B2BAuthenticateResponseDataType, Codable, Sendable {
+        /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
+        public let memberSession: MemberSession
+        /// The current member object.
+        public let member: Member
+        /// The current organization object.
+        public let organization: Organization
+        /// The opaque token for the session. Can be used by your server to verify the validity of your session by confirming with Stytch's servers on each request.
+        public let sessionToken: String
+        /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
+        public let sessionJwt: String
         /// Number of recovery codes remaining for the member.
         public let recoveryCodesRemaining: Int
     }
