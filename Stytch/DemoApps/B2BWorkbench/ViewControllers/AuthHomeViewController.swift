@@ -117,7 +117,7 @@ final class AuthHomeViewController: UIViewController {
     static var allStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: publicToken,
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "no-mfa"),
+        authFlowType: .organization(slug: "mfa-required"),
         oauthProviders: [.init(provider: .google)]
     )
 

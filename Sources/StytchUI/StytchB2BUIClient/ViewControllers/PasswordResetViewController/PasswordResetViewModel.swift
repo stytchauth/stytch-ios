@@ -8,6 +8,17 @@ final class PasswordResetViewModel {
     ) {
         self.state = state
     }
+
+    func resetPassword(newPassword: String) async throws {
+        let response = try await StytchB2BClient.passwords.resetByEmail(
+            parameters: .init(
+                token: state.token,
+                password: newPassword,
+                locale: .en
+            )
+        )
+        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
+    }
 }
 
 struct PasswordResetState {

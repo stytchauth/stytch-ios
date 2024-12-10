@@ -66,9 +66,17 @@ public enum StytchB2BUIClient {
                 }
             case .notHandled:
                 break
-            case let .manualHandlingRequired(tokenType, token):
-                print(tokenType)
-                print(token)
+            case let .manualHandlingRequired(_, token):
+                let email = MemberManager.emailAddress ?? .redactedEmail
+                if let currentController {
+                    currentController.handlePasswordReset(token: token, email: email)
+                } else {
+                    let rootController = B2BAuthRootViewController(configuration: configuration)
+                    currentController = rootController
+                    setUpDismissAuthListener()
+                    controller?.present(UINavigationController(rootViewController: rootController), animated: true)
+                    rootController.handlePasswordReset(token: token, email: email, animated: false)
+                }
             }
             stopLoading()
         }

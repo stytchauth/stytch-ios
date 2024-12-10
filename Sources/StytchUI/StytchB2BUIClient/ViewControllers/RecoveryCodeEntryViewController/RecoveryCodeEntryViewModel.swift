@@ -25,6 +25,7 @@ final class RecoveryCodeEntryViewModel {
             recoveryCode: recoveryCode
         )
         let response = try await StytchB2BClient.recoveryCodes.recover(parameters: parameters)
+        B2BAuthenticationManager.handleSecondaryReponse(b2bAuthenticateResponse: response)
     }
 }
 
