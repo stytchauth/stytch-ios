@@ -12,9 +12,9 @@ extension BaseViewController {
             if b2bMFAAuthenticateResponse?.primaryRequired != nil {
                 viewController = B2BAuthHomeViewController(state: .init(configuration: configuration))
             } else if b2bMFAAuthenticateResponse?.member.mfaEnrolled == true {
-                if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.mfaPhoneNumber != nil {
+                if b2bMFAAuthenticateResponse?.mfaRequired?.secondaryAuthInitiated == "sms_otp" {
                     viewController = SMSOTPEntryViewController(state: .init(configuration: configuration))
-                } else if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.totpRegistrationId == nil {
+                } else if b2bMFAAuthenticateResponse?.mfaRequired?.memberOptions?.totpRegistrationId != nil {
                     viewController = TOTPEntryViewController(state: .init(configuration: configuration))
                 }
             } else {

@@ -14,6 +14,7 @@ final class B2BEmailMagicLinksViewModel {
         completion: @escaping (Error?) -> Void
     ) {
         MemberManager.updateMemberEmailAddress(emailAddress)
+        StytchB2BUIClient.startLoading()
         Task {
             do {
                 if state.configuration.authFlowType == .discovery {
@@ -36,8 +37,10 @@ final class B2BEmailMagicLinksViewModel {
                     )
                 }
                 completion(nil)
+                StytchB2BUIClient.stopLoading()
             } catch {
                 completion(error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }

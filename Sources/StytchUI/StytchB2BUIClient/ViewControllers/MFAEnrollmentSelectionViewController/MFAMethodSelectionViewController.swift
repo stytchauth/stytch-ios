@@ -22,7 +22,7 @@ class MFAMethodSelectionViewController: UIViewController, UITableViewDataSource,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
 
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)

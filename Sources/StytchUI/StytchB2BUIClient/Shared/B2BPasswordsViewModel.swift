@@ -29,6 +29,8 @@ final class B2BPasswordsViewModel {
             return
         }
 
+        StytchB2BUIClient.startLoading()
+
         Task {
             do {
                 let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress, organizationId: organizationId)
@@ -40,14 +42,16 @@ final class B2BPasswordsViewModel {
                         locale: .en
                     )
                     let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)
-                    B2BAuthenticationManager.handleMFAReponse(b2bMFAAuthenticateResponse: response)
+                    B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
                     delegate?.didAuthenticateWithPassword()
                 } else {
                     try await AuthenticationOperations.sendEmailMagicLinkIfPossible(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: state.configuration.redirectUrl)
                     delegate?.didSendEmailMagicLink()
                 }
+                StytchB2BUIClient.stopLoading()
             } catch {
                 delegate?.didError(error: error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }

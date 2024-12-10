@@ -34,6 +34,8 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        view.backgroundColor = .background
     }
 }
 
