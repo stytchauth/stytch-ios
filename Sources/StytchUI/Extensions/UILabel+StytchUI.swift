@@ -28,6 +28,22 @@ extension UILabel {
         return label
     }
 
+    static func makeEmailInputLabel() -> UILabel {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .secondaryText
+        label.text = NSLocalizedString("stytch.emailInputLabel", value: "Email", comment: "")
+        return label
+    }
+
+    static func makePasswordInputLabel() -> UILabel {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .secondaryText
+        label.text = NSLocalizedString("stytch.passwordInputLabel", value: "Password", comment: "")
+        return label
+    }
+
     static func makeComboLabel(
         withPlainText plainText: String,
         boldText: String? = nil,

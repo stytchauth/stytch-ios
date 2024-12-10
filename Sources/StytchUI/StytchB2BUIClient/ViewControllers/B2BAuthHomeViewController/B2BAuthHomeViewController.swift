@@ -124,28 +124,12 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
         NSLayoutConstraint.activate(constraints)
     }
 
-    func continueAuthenticationFlowIfNeeded() {
-        Task { @MainActor in
-            if viewModel.state.configuration.authFlowType == .discovery {
-                let discoveryViewController = DiscoveryViewController(state: .init(configuration: viewModel.state.configuration))
-                navigationController?.pushViewController(discoveryViewController, animated: true)
-            } else {
-                startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
-            }
-        }
-    }
-
-    func showEmaiilConfirmation() {
-        Task { @MainActor in
-            let emailConfirmationViewController = EmailConfirmationViewController(state: .init(configuration: viewModel.state.configuration, type: .emailConfirmation))
-            navigationController?.pushViewController(emailConfirmationViewController, animated: true)
-        }
-    }
+    func continueAuthenticationFlowIfNeeded() {}
 }
 
 extension B2BAuthHomeViewController: B2BOAuthViewControllerDelegate {
     func oauthDidAuthenticatie() {
-        continueAuthenticationFlowIfNeeded()
+        startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 
     func oauthDiscoveryDidAuthenticatie() {
@@ -155,7 +139,7 @@ extension B2BAuthHomeViewController: B2BOAuthViewControllerDelegate {
 
 extension B2BAuthHomeViewController: B2BEmailMagicLinksViewControllerDelegate {
     func emailMagicLinkSent() {
-        showEmaiilConfirmation()
+        showEmailConfirmation(configuration: viewModel.state.configuration, type: .emailConfirmation)
     }
 
     func usePasswordInstead() {
@@ -168,16 +152,16 @@ extension B2BAuthHomeViewController: B2BEmailMagicLinksViewControllerDelegate {
 
 extension B2BAuthHomeViewController: B2BPasswordsHomeViewControllerDelegate {
     func didAuthenticateWithPassword() {
-        continueAuthenticationFlowIfNeeded()
+        startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 
     func didSendEmailMagicLink() {
-        showEmaiilConfirmation()
+        showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordResetVerify)
     }
 }
 
 extension B2BAuthHomeViewController: B2BSSOViewControllerDelegate {
     func ssoDidAuthenticatie() {
-        continueAuthenticationFlowIfNeeded()
+        startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 }

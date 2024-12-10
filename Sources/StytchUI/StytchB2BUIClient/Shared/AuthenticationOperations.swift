@@ -24,21 +24,6 @@ struct AuthenticationOperations {
         return response.member
     }
 
-    static func resetPassword(emailAddress: String, organizationId: String, redirectUrl: URL?) async throws {
-        let member = try await searchMember(emailAddress: emailAddress, organizationId: organizationId)
-        if member?.memberPasswordId != nil {
-            let parameters = StytchB2BClient.Passwords.ResetByEmailStartParameters(
-                organizationId: Organization.ID(rawValue: organizationId),
-                emailAddress: emailAddress,
-                resetPasswordUrl: redirectUrl,
-                locale: .en
-            )
-            _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
-        } else {
-            try await sendEmailMagicLinkIfPossible(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: redirectUrl)
-        }
-    }
-
     static func sendEmailMagicLinkIfPossible(emailAddress: String, organizationId: String, redirectUrl: URL?) async throws {
         let emailAllowedDomains = OrganizationManager.emailAllowedDomains
         let emailJitProvisioning = OrganizationManager.emailJitProvisioning
@@ -59,20 +44,5 @@ struct AuthenticationOperations {
             locale: .en
         )
         _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
-    }
-
-    static func createTOTP() async throws -> String {
-        guard let organizationId = OrganizationManager.organizationId else {
-            throw StytchSDKError.noOrganziationId
-        }
-
-        guard let memberId = MemberManager.memberId else {
-            throw StytchSDKError.noMemberId
-        }
-
-        let parameters = StytchB2BClient.TOTP.CreateParameters(organizationId: organizationId, memberId: memberId, expirationMinutes: 30)
-        let response = try await StytchB2BClient.totp.create(parameters: parameters)
-        B2BAuthenticationManager.handleTOTPResponse(totpResponse: response.wrapped)
-        return response.wrapped.secret
     }
 }

@@ -34,23 +34,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         return label
     }()
 
-    private let emailInputLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .secondaryText
-        label.text = NSLocalizedString("stytch.emailInputLabel", value: "Email", comment: "")
-        return label
-    }()
+    private let emailInputLabel = UILabel.makeEmailInputLabel()
 
     private lazy var emailInput: EmailInput = .init()
 
-    private let passwordInputLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .secondaryText
-        label.text = NSLocalizedString("stytch.passwordInputLabel", value: "Password", comment: "")
-        return label
-    }()
+    private let passwordInputLabel = UILabel.makePasswordInputLabel()
 
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)

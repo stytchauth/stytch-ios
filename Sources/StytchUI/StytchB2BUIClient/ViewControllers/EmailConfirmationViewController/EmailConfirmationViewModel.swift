@@ -8,6 +8,20 @@ final class EmailConfirmationViewModel {
     ) {
         self.state = state
     }
+
+    func resetByEmailStart(emailAddress: String) async throws {
+        guard let organizationId = OrganizationManager.organizationId else {
+            throw StytchSDKError.noOrganziationId
+        }
+
+        let parameters = StytchB2BClient.Passwords.ResetByEmailStartParameters(
+            organizationId: Organization.ID(rawValue: organizationId),
+            emailAddress: emailAddress,
+            resetPasswordUrl: state.configuration.redirectUrl,
+            locale: .en
+        )
+        _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
+    }
 }
 
 extension EmailConfirmationViewModel {

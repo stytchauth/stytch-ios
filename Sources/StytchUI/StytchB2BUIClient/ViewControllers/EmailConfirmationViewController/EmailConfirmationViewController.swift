@@ -46,9 +46,24 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
         case .emailConfirmation:
             navigationController?.popToRootViewController(animated: true)
         case .passwordSetNew:
-            break
+            resetByEmailStart()
         case .passwordResetVerify:
-            break
+            navigationController?.popToRootViewController(animated: true)
+        }
+    }
+
+    func resetByEmailStart() {
+        guard let emailAddress = MemberManager.emailAddress else {
+            return
+        }
+
+        Task {
+            do {
+                try await viewModel.resetByEmailStart(emailAddress: emailAddress)
+                presentAlert(title: "Email Sent!")
+            } catch {
+                presentErrorAlert(error: error)
+            }
         }
     }
 }
