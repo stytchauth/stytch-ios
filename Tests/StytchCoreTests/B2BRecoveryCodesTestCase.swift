@@ -46,9 +46,13 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
             )
         }
 
+        Current.timer = { _, _, _ in .init() }
+
         let organizationId = "orgid1234"
         let memberId = "memberid1234"
         let recoveryCode = "recoveryCode1234"
+
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         let parameters = StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverParameters(
             sessionDurationMinutes: .defaultSessionDuration,
@@ -63,6 +67,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/recovery_codes/recover",
             method: .post([
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "session_duration_minutes": JSON(integerLiteral: 5),
                 "organization_id": JSON(stringLiteral: organizationId),
                 "member_id": JSON(stringLiteral: memberId),
@@ -80,6 +85,13 @@ extension StytchB2BClient.RecoveryCodes.RecoveryCodesResponseData {
 
 extension StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverResponseData {
     static var mock: Self {
-        .init(recoveryCodesRemaining: 99)
+        .init(
+            memberSession: .mock,
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            recoveryCodesRemaining: 99
+        )
     }
 }
