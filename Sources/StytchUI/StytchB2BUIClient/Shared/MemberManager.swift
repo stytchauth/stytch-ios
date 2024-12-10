@@ -30,6 +30,7 @@ struct MemberManager {
     }
 
     static func updateMemberEmailAddress(_ emailAddress: String) {
+        StytchB2BUIClient.reset()
         _emailAddress = emailAddress
     }
 
