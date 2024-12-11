@@ -1,5 +1,5 @@
 import UIKit
 
 extension UIFont {
-    static let title: UIFont = .systemFont(ofSize: 24)
+    static let title: UIFont = .IBMPlexSansRegular(size: 24)
 }

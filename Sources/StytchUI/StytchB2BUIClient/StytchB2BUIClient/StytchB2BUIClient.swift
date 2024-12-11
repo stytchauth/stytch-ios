@@ -58,9 +58,11 @@ public enum StytchB2BUIClient {
                     B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
                     currentController?.startMfaFlowIfNeeded()
                 case let .discovery(response):
+                    MemberManager.updateMemberEmailAddress(response.emailAddress)
                     DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
                     currentController?.startDiscoveryFlowIfNeeded()
                 case let .discoveryOauth(response):
+                    MemberManager.updateMemberEmailAddress(response.emailAddress)
                     DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
                     currentController?.startDiscoveryFlowIfNeeded()
                 }
