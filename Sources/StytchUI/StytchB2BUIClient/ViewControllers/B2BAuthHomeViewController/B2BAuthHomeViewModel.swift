@@ -42,7 +42,8 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
                         organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
                         organizationAuthMethods: OrganizationManager.authMethods,
                         primaryRequired: B2BAuthenticationManager.primaryRequired,
-                        configuration: state.configuration
+                        configurationProducts: state.configuration.products,
+                        oauthProviders: state.configuration.oauthProviders
                     )
                     let products = StytchB2BUIClient.productComponentsOrdering(
                         validProducts: validProducts,
