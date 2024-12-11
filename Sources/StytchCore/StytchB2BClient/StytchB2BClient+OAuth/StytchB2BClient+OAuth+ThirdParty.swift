@@ -2,7 +2,7 @@ import AuthenticationServices
 import Foundation
 
 #if !os(watchOS)
-protocol ThirdPartyB2BOAuthProviderProtocol {
+public protocol ThirdPartyB2BOAuthProviderProtocol {
     @available(tvOS 16.0, *)
     func start(configuration: StytchB2BClient.OAuth.ThirdParty.WebAuthenticationConfiguration) async throws -> (token: String, url: URL)
 }
@@ -142,7 +142,7 @@ public extension StytchB2BClient.OAuth.ThirdParty {
     }
 }
 
-extension StytchB2BClient.OAuth.ThirdParty {
+public extension StytchB2BClient.OAuth.ThirdParty {
     enum Provider: String, CaseIterable, Codable, Sendable {
         case google
         case microsoft
@@ -151,4 +151,37 @@ extension StytchB2BClient.OAuth.ThirdParty {
         case github
     }
 }
+
+public extension StytchB2BClient.OAuth.ThirdParty.Provider {
+    var client: StytchB2BClient.OAuth.ThirdParty {
+        switch self {
+        case .google:
+            return StytchB2BClient.oauth.google
+        case .microsoft:
+            return StytchB2BClient.oauth.microsoft
+        case .hubspot:
+            return StytchB2BClient.oauth.hubspot
+        case .slack:
+            return StytchB2BClient.oauth.slack
+        case .github:
+            return StytchB2BClient.oauth.github
+        }
+    }
+
+    var allowedAuthMethodType: StytchB2BClient.AllowedAuthMethods {
+        switch self {
+        case .google:
+            return .googleOAuth
+        case .microsoft:
+            return .microsoftOAuth
+        case .hubspot:
+            return .hubspotOAuth
+        case .slack:
+            return .slackOAuth
+        case .github:
+            return .githubOAuth
+        }
+    }
+}
+
 #endif

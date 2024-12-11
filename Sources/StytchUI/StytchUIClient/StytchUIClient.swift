@@ -14,21 +14,19 @@ public enum StytchUIClient {
     fileprivate static weak var currentController: AuthRootViewController?
 
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    static var config: Configuration = .empty
+    static var configuration: Configuration = .empty
 
     static var onAuthCallback: AuthCallback?
 
     private static var cancellable: AnyCancellable?
 
-    /// Configures the `StytchUIClient`, setting the `publicToken`, `config` and `hostUrl`.
+    /// Configures the `StytchUIClient`
     /// - Parameters:
-    ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
-    ///   - config: The UI configuration to determine which kinds of auth are needed, defaults to empty
-    ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
-    public static func configure(publicToken: String, config: Configuration, hostUrl: URL? = nil) {
-        StytchClient.configure(publicToken: publicToken, hostUrl: hostUrl)
-        Self.config = config
-        loadFonts()
+    ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
+    public static func configure(configuration: Configuration) {
+        StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl)
+        Self.configuration = configuration
+        FontLoader.loadFonts()
     }
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
@@ -42,7 +40,7 @@ public enum StytchUIClient {
             }
             onAuthCallback?(response)
         }
-        let rootController = AuthRootViewController(config: Self.config)
+        let rootController = AuthRootViewController(config: Self.configuration)
         currentController = rootController
         setUpSessionChangeListener()
         let navigationController = UINavigationController(rootViewController: rootController)
@@ -69,7 +67,7 @@ public enum StytchUIClient {
                 if let currentController {
                     currentController.handlePasswordReset(token: token, email: email)
                 } else {
-                    let rootController = AuthRootViewController(config: config)
+                    let rootController = AuthRootViewController(config: configuration)
                     currentController = rootController
                     setUpSessionChangeListener()
                     controller?.present(UINavigationController(rootViewController: rootController), animated: true)
@@ -92,7 +90,7 @@ public enum StytchUIClient {
 }
 
 public extension View {
-    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
+    /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onSessionChange` to observe auth changes.
     func authenticationSheet(
         isPresented: Binding<Bool>,
         onAuthCallback: AuthCallback? = nil
@@ -114,7 +112,7 @@ struct AuthenticationView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
 
     func makeUIViewController(context _: Context) -> UIViewController {
-        let controller = AuthRootViewController(config: StytchUIClient.config)
+        let controller = AuthRootViewController(config: StytchUIClient.configuration)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
         return UINavigationController(rootViewController: controller)
