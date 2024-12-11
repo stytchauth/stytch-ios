@@ -21,12 +21,11 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
         view.layoutMargins = .zero
 
         viewModel.state.configuration.oauthProviders.enumerated().forEach { index, provider in
-            if StytchB2BUIClient.isAllowedOAuthProvider(allowedAuthMethods: OrganizationManager.allowedAuthMethods ?? [], oauthProviderOptions: provider) == true {
-                let button = Self.makeOauthButton(provider: provider.provider)
-                button.tag = index
-                button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
-                stackView.addArrangedSubview(button)
-            }
+            // TODO: FILTER BY ALLOWED AUTH METHOD - ALSO WHAT TO DO IN DISCOVERY???
+            let button = Self.makeOauthButton(provider: provider.provider)
+            button.tag = index
+            button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
+            stackView.addArrangedSubview(button)
         }
 
         attachStackView(within: view)

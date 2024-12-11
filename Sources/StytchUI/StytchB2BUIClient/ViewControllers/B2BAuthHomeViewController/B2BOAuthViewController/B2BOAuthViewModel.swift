@@ -53,6 +53,7 @@ extension B2BOAuthViewModel {
         let authenticateParameters = StytchB2BClient.OAuth.Discovery.DiscoveryAuthenticateParameters(discoveryOauthToken: token)
         let response = try await StytchB2BClient.oauth.discovery.authenticate(parameters: authenticateParameters)
 
+        MemberManager.updateMemberEmailAddress(response.emailAddress)
         DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
     }
 }

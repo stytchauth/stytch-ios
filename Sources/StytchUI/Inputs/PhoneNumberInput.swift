@@ -58,7 +58,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
     fileprivate lazy var countrySelectorButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitleColor(.label, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18)
+        button.titleLabel?.font = .IBMPlexSansRegular(size: 18)
         button.contentEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
         button.layer.borderColor = UIColor.placeholderText.cgColor
         button.layer.borderWidth = 1

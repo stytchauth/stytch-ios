@@ -16,6 +16,14 @@ public struct StytchB2BClient: StytchClientType {
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
     public static var isInitialized: AnyPublisher<Bool, Never> { StartupClient.isInitialized }
 
+    public static var createOrganizationEnabled: Bool {
+        Current.localStorage.bootstrapData?.createOrganizationEnabled ?? false
+    }
+
+    public static var disableSdkWatermark: Bool {
+        Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
+    }
+
     private init() {
         #if os(iOS)
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in

@@ -9,7 +9,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     private let inputLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18)
+        label.font = .IBMPlexSansRegular(size: 18)
         label.textColor = .primaryText
         label.accessibilityLabel = "inputLabel"
         return label
@@ -103,7 +103,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
             string: viewModel.state.formattedInput,
-            attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold)]
+            attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 18)]
         )
         attributedText.append(attributedPhone)
         attributedText.append(.init(string: "."))

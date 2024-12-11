@@ -1,38 +1,38 @@
 import StytchCore
 import UIKit
 
-protocol DiscoveredOrganizationsViewControllerDelegate: AnyObject {
-    func didSelectDiscoveredOrganization(discoveredOrganization: StytchB2BClient.DiscoveredOrganization)
-}
+class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrganizationsState, DiscoveredOrganizationsViewModel>, UITableViewDataSource, UITableViewDelegate {
+    private let titleLabel: UILabel = .makeTitleLabel(
+        text: NSLocalizedString("stytchDiscoveredOrganizationsTitle", value: "Select an organization to continue", comment: "")
+    )
 
-class DiscoveredOrganizationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let tableView = UITableView()
     private let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
-    weak var delegate: DiscoveredOrganizationsViewControllerDelegate?
 
-    init(discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]) {
+    init(state: DiscoveredOrganizationsState, discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]) {
         self.discoveredOrganizations = discoveredOrganizations
-        super.init(nibName: nil, bundle: nil)
+        super.init(viewModel: DiscoveredOrganizationsViewModel(state: state))
     }
 
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func configureView() {
+        super.configureView()
+
+        view.backgroundColor = .background
+        stackView.spacing = .spacingRegular
+
+        stackView.addArrangedSubview(titleLabel)
+        configureTableView()
+
+        attachStackView(within: view)
+
+        NSLayoutConstraint.activate(
+            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+        )
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-
+    func configureTableView() {
+        tableView.backgroundColor = .background
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
 
         tableView.register(DiscoveredOrganizationTableViewCell.self, forCellReuseIdentifier: "DiscoveredOrganizationTableViewCell")
         tableView.dataSource = self
@@ -41,6 +41,8 @@ class DiscoveredOrganizationsViewController: UIViewController, UITableViewDataSo
         tableView.separatorInset = UIEdgeInsets.zero
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.cellLayoutMarginsFollowReadableWidth = false
+
+        stackView.addArrangedSubview(tableView)
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -56,7 +58,7 @@ class DiscoveredOrganizationsViewController: UIViewController, UITableViewDataSo
         cell.layoutMargins = UIEdgeInsets.zero
 
         let discoveredOrganization = discoveredOrganizations[indexPath.row]
-        cell.configure(with: discoveredOrganization, image: nil)
+        cell.configure(with: discoveredOrganization)
         return cell
     }
 
@@ -65,8 +67,11 @@ class DiscoveredOrganizationsViewController: UIViewController, UITableViewDataSo
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let discoveredOrganization = discoveredOrganizations[indexPath.row]
-        delegate?.didSelectDiscoveredOrganization(discoveredOrganization: discoveredOrganization)
         tableView.deselectRow(at: indexPath, animated: true)
+        let discoveredOrganization = discoveredOrganizations[indexPath.row]
+        selectDiscoveredOrganization(
+            configuration: viewModel.state.configuration,
+            discoveredOrganization: discoveredOrganization
+        )
     }
 }

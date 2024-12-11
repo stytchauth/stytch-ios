@@ -18,7 +18,7 @@ final class ProductOrderingTests: B2BBaseTestCase {
             oauthProviders: [],
             emailOtpOptions: nil,
             directLoginForSingleMembershipOptions: nil,
-            disableCreateOrganization: nil,
+            allowCreateOrganization: false,
             mfaProductOrder: nil,
             mfaProductInclude: nil,
             navigation: nil,

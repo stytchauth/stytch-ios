@@ -58,7 +58,7 @@ extension RecoveryCodesListView {
             label.text = code
             label.textColor = .primaryText
             label.textAlignment = .center
-            label.font = UIFont.systemFont(ofSize: 16)
+            label.font = UIFont.IBMPlexSansRegular(size: 16)
             label.numberOfLines = 1 // Ensure single line per code
             stackView.addArrangedSubview(label)
         }
