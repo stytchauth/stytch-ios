@@ -1,7 +1,7 @@
 import StytchCore
 import UIKit
 
-final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel> {
+final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel>, OTPEntryViewControllerProtocol {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
     )
@@ -17,26 +17,13 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
     private let codeInput: CodeInput = .init()
 
-    private lazy var expiryButton: Button = {
-        let button = Button.tertiary(
-            title: ""
-        ) { [weak self] in
-            self?.presentCodeResetConfirmation()
-        }
-        button.setTitleColor(.secondaryText, for: .normal)
-        button.contentHorizontalAlignment = .leading
-        button.titleLabel?.numberOfLines = 0
-        button.accessibilityLabel = "expiryButton"
-        return button
-    }()
+    lazy var expiryButton: Button = makeExpiryButton()
 
-    private let dateFormatter: DateComponentsFormatter = {
-        let dateFormatter = DateComponentsFormatter()
-        dateFormatter.allowedUnits = [.minute, .second]
-        return dateFormatter
-    }()
+    var timer: Timer?
 
-    private var timer: Timer?
+    var expirationDate: Date {
+        viewModel.state.codeExpiry
+    }
 
     private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
 
@@ -129,23 +116,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }
 
     @objc private func updateExpiryText() {
-        guard
-            case let currentDate = Date(),
-            viewModel.state.codeExpiry > currentDate,
-            let dateString = dateFormatter.string(from: currentDate, to: viewModel.state.codeExpiry)
-        else {
-            expiryButton.setAttributedTitle(
-                expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
-                for: .normal
-            )
-            timer?.invalidate()
-            return
-        }
-
-        expiryButton.setAttributedTitle(
-            expiryAttributedText(initialSegment: .localizedStringWithFormat(NSLocalizedString("stytch.otpCodeExpiresIn", value: "Your code expires in %@.", comment: ""), dateString)),
-            for: .normal
-        )
+        updateExpirationText()
     }
 
     private func launchPassword(email: String) {
@@ -157,7 +128,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func resendCode() {
+    func resendCode() {
         Task {
             do {
                 try await viewModel.resendCode(input: viewModel.state.input)
@@ -167,27 +138,10 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         }
     }
 
-    private func presentCodeResetConfirmation() {
-        let controller = UIAlertController(
-            title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
-            message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedInput
-            ),
-            preferredStyle: .alert
-        )
-        controller.addAction(.init(title: NSLocalizedString("stytch.otpCancel", value: "Cancel", comment: ""), style: .default))
-        controller.addAction(.init(title: NSLocalizedString("stytch.otpConfirm", value: "Send code", comment: ""), style: .default) { [weak self] _ in
-            self?.resendCode()
-        })
-        controller.view.tintColor = .primaryText
-        present(controller, animated: true)
-    }
-
-    private func expiryAttributedText(initialSegment: String) -> NSAttributedString {
-        let attributedString = NSMutableAttributedString(string: initialSegment + NSLocalizedString("stytch.otpDidntGetIt", value: " Didn't get it?", comment: ""), attributes: [.font: UIFont.systemFont(ofSize: 16)])
-        let appendedAttributedString = NSAttributedString(string: NSLocalizedString("stytch.otpResendIt", value: " Resend it.", comment: ""), attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .semibold)])
-        attributedString.append(appendedAttributedString)
-        return attributedString
+    func presentCodeResetConfirmation() {
+        presentCodeResetConfirmation(message: .localizedStringWithFormat(
+            NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedInput
+        ))
     }
 }
 
