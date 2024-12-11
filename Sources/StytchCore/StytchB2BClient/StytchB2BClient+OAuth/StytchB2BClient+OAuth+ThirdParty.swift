@@ -167,6 +167,21 @@ public extension StytchB2BClient.OAuth.ThirdParty.Provider {
             return StytchB2BClient.oauth.github
         }
     }
+
+    var allowedAuthMethodType: StytchB2BClient.AllowedAuthMethods {
+        switch self {
+        case .google:
+            return .googleOAuth
+        case .microsoft:
+            return .microsoftOAuth
+        case .hubspot:
+            return .hubspotOAuth
+        case .slack:
+            return .slackOAuth
+        case .github:
+            return .githubOAuth
+        }
+    }
 }
 
 #endif
