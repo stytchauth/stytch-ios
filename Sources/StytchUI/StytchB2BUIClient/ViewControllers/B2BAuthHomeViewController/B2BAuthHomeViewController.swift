@@ -37,10 +37,12 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
     override func configureView() {
         super.configureView()
+        StytchB2BUIClient.startLoading()
         viewModel.loadProducts { [weak self] productComponents in
             Task { @MainActor in
                 self?.configureView(productComponents: productComponents)
             }
+            StytchB2BUIClient.stopLoading()
         }
     }
 
@@ -63,7 +65,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         layoutProductComponents(productComponents)
 
-        if StytchClient.disableSdkWatermark == false {
+        if StytchB2BClient.disableSdkWatermark == false {
             stackView.addArrangedSubview(poweredByStytch)
         }
 

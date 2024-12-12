@@ -10,6 +10,31 @@ protocol B2BOAuthViewControllerDelegate: AnyObject {
 final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthViewModel> {
     weak var delegate: B2BOAuthViewControllerDelegate?
 
+    var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] {
+        let configuration = viewModel.state.configuration
+        let oauthProviders = configuration.oauthProviders
+        switch configuration.authFlowType {
+        case .discovery:
+            // If we are in discovery just return what is passed in the UI config since we have no org set yet
+            return oauthProviders
+        case .organization(slug: _):
+            // If we are in the org flow we need to check if we are in restricted mode and we have allowedAuthMethods
+            // In that case we need to filter the oauth provider options by whatever is in the allowedAuthMethods
+            // Otherwise we just return the array as specific in the ui config
+            if let allowedAuthMethods = OrganizationManager.allowedAuthMethods, OrganizationManager.authMethods == .restricted {
+                var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] = []
+                for oauthProvider in oauthProviders {
+                    if allowedAuthMethods.contains(oauthProvider.provider.allowedAuthMethodType) {
+                        filteredOauthProviders.append(oauthProvider)
+                    }
+                }
+                return filteredOauthProviders
+            } else {
+                return oauthProviders
+            }
+        }
+    }
+
     init(state: B2BOAuthState, delegate: B2BOAuthViewControllerDelegate?) {
         super.init(viewModel: B2BOAuthViewModel(state: state))
         self.delegate = delegate
@@ -20,8 +45,7 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
 
         view.layoutMargins = .zero
 
-        viewModel.state.configuration.oauthProviders.enumerated().forEach { index, provider in
-            // TODO: FILTER BY ALLOWED AUTH METHOD - ALSO WHAT TO DO IN DISCOVERY???
+        filteredOauthProviders.enumerated().forEach { index, provider in
             let button = Self.makeOauthButton(provider: provider.provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)

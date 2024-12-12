@@ -63,4 +63,9 @@ struct AuthenticationOperations {
         )
         _ = try await StytchB2BClient.otp.sms.send(parameters: parameters)
     }
+
+    static func createOrganization() async throws {
+        let response = try await StytchB2BClient.discovery.createOrganization(parameters: .init())
+        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
+    }
 }

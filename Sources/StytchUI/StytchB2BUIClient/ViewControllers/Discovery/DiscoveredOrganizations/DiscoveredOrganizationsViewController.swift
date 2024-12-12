@@ -1,10 +1,16 @@
 import StytchCore
 import UIKit
 
-class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrganizationsState, DiscoveredOrganizationsViewModel>, UITableViewDataSource, UITableViewDelegate {
+class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrganizationsState, DiscoveredOrganizationsViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytchDiscoveredOrganizationsTitle", value: "Select an organization to continue", comment: "")
     )
+
+    private lazy var createOrganizationButton: Button = .primary(
+        title: NSLocalizedString("stytchDiscoveredOrganizationsCreateOrganizationButton", value: "Create an organization", comment: "")
+    ) { [weak self] in
+        self?.createOrganization()
+    }
 
     private let tableView = UITableView()
     private let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
@@ -43,8 +49,24 @@ class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrgani
         tableView.cellLayoutMarginsFollowReadableWidth = false
 
         stackView.addArrangedSubview(tableView)
+
+        if viewModel.state.configuration.allowCreateOrganization == true, StytchB2BClient.createOrganizationEnabled == true {
+            stackView.addArrangedSubview(createOrganizationButton)
+        }
     }
 
+    @objc func createOrganization() {
+        Task {
+            do {
+                try await AuthenticationOperations.createOrganization()
+            } catch {
+                presentErrorAlert(error: error)
+            }
+        }
+    }
+}
+
+extension DiscoveredOrganizationsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         discoveredOrganizations.count
     }

@@ -10,6 +10,7 @@ public extension StytchB2BUIClient {
 
         public let publicToken: String
         public let hostUrl: URL?
+        public let dfppaDomain: String?
         public let products: [B2BProducts]
         public let authFlowType: AuthFlowType
         public let sessionDurationMinutes: Minutes
@@ -19,8 +20,8 @@ public extension StytchB2BUIClient {
         public let emailOtpOptions: B2BEmailOTPOptions?
         public let directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions?
         public let allowCreateOrganization: Bool
-        public let mfaProductOrder: [B2BMFAProducts]?
-        public let mfaProductInclude: [B2BMFAProducts]?
+        public let mfaProductOrder: [StytchB2BClient.MfaMethod]?
+        public let mfaProductInclude: [StytchB2BClient.MfaMethod]?
         public let navigation: Navigation?
         public let theme: StytchTheme
 
@@ -32,7 +33,7 @@ public extension StytchB2BUIClient {
             products.contains(.emailMagicLinks)
         }
 
-        public var supportsEmailMagicLinksWithoutPasswrods: Bool {
+        public var supportsEmailMagicLinksWithoutPasswords: Bool {
             supportsEmailMagicLinks && !supportsPasswords
         }
 
@@ -72,6 +73,7 @@ public extension StytchB2BUIClient {
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
+            dfppaDomain: String? = nil,
             products: [B2BProducts],
             authFlowType: AuthFlowType,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
@@ -81,13 +83,14 @@ public extension StytchB2BUIClient {
             emailOtpOptions: B2BEmailOTPOptions? = nil,
             directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions? = nil,
             allowCreateOrganization: Bool = true,
-            mfaProductOrder: [B2BMFAProducts]? = nil,
-            mfaProductInclude: [B2BMFAProducts]? = nil,
+            mfaProductOrder: [StytchB2BClient.MfaMethod]? = nil,
+            mfaProductInclude: [StytchB2BClient.MfaMethod]? = nil,
             navigation: Navigation? = nil,
             theme: StytchTheme = StytchTheme()
         ) {
             self.publicToken = publicToken
             self.hostUrl = hostUrl
+            self.dfppaDomain = dfppaDomain
             self.products = products
             self.authFlowType = authFlowType
             self.sessionDurationMinutes = sessionDurationMinutes
@@ -178,10 +181,5 @@ public extension StytchB2BUIClient {
             self.ignoreInvites = ignoreInvites
             self.ignoreJitProvisioning = ignoreJitProvisioning
         }
-    }
-
-    enum B2BMFAProducts: String, Codable {
-        case smsOtp
-        case totp
     }
 }
