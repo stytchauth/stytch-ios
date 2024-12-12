@@ -62,3 +62,18 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         }
     }
 }
+
+extension UINavigationController {
+    func replaceLastViewController(with viewController: UIViewController, animated: Bool) {
+        var viewControllers = viewControllers
+
+        // Ensure there is at least one view controller in the stack
+        guard !viewControllers.isEmpty else { return }
+
+        // Replace the last view controller
+        viewControllers[viewControllers.count - 1] = viewController
+
+        // Set the modified stack
+        setViewControllers(viewControllers, animated: animated)
+    }
+}

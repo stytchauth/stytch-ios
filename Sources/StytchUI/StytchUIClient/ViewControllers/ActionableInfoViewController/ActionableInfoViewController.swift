@@ -6,7 +6,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     private let infoLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18)
+        label.font = .IBMPlexSansRegular(size: 18)
         label.textColor = .primaryText
         return label
     }()
@@ -24,7 +24,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     private lazy var secondaryActionButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitleColor(.label, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
+        button.titleLabel?.font = .IBMPlexSansMedium(size: 18)
         button.titleLabel?.numberOfLines = 0
         return button
     }()
@@ -117,9 +117,9 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
             components.reduce(into: NSMutableAttributedString(string: "")) { partial, next in
                 switch next {
                 case let .bold(.string(string)):
-                    partial.append(.init(string: string, attributes: [.font: UIFont.systemFont(ofSize: 16, weight: .semibold)]))
+                    partial.append(.init(string: string, attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)]))
                 case let .string(string):
-                    partial.append(.init(string: string, attributes: [.font: UIFont.systemFont(ofSize: 16)]))
+                    partial.append(.init(string: string, attributes: [.font: UIFont.IBMPlexSansRegular(size: 16)]))
                 default:
                     break
                 }

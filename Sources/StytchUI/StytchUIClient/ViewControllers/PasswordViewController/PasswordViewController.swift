@@ -28,7 +28,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     private lazy var finishCreatingLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18)
+        label.font = .IBMPlexSansRegular(size: 18)
         label.text = NSLocalizedString("stytch.pwFinishCreatingLabel", value: "Finish creating your account by setting a password.", comment: "")
         label.textColor = .primaryText
         return label

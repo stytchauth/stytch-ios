@@ -3,7 +3,7 @@ import StytchCore
 import UIKit
 
 extension BaseViewController {
-    func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
+    func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration, shouldReplaceEmailConfrimation: Bool = false) {
         Task { @MainActor in
             var viewController: UIViewController?
 
@@ -28,7 +28,11 @@ extension BaseViewController {
             }
 
             if let viewController {
-                navigationController?.pushViewController(viewController, animated: true)
+                if shouldReplaceEmailConfrimation {
+                    navigationController?.replaceLastViewController(with: viewController, animated: false)
+                } else {
+                    navigationController?.pushViewController(viewController, animated: true)
+                }
             }
         }
     }

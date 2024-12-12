@@ -5,7 +5,7 @@ extension UILabel {
         let label = UILabel()
         label.text = text
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 24, weight: .semibold)
+        label.font = .IBMPlexSansSemiBold(size: 24)
         label.textColor = .primaryText
         return label
     }
@@ -14,7 +14,7 @@ extension UILabel {
         let label = UILabel()
         label.text = text
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.font = .IBMPlexSansSemiBold(size: 18)
         label.textColor = .secondaryText
         return label
     }
@@ -23,14 +23,14 @@ extension UILabel {
         let label = UILabel()
         label.text = text
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 14, weight: .regular)
+        label.font = .IBMPlexSansRegular(size: 14)
         label.textColor = .secondaryText
         return label
     }
 
     static func makeEmailInputLabel() -> UILabel {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
+        label.font = .IBMPlexSansRegular(size: 14)
         label.textColor = .secondaryText
         label.text = NSLocalizedString("stytch.emailInputLabel", value: "Email", comment: "")
         return label
@@ -38,7 +38,7 @@ extension UILabel {
 
     static func makePasswordInputLabel() -> UILabel {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
+        label.font = .IBMPlexSansRegular(size: 14)
         label.textColor = .secondaryText
         label.text = NSLocalizedString("stytch.passwordInputLabel", value: "Password", comment: "")
         return label
@@ -57,13 +57,13 @@ extension UILabel {
 
         // Create attributed text
         let attributedText = NSMutableAttributedString(string: plainText, attributes: [
-            .font: UIFont.systemFont(ofSize: fontSize),
+            .font: UIFont.IBMPlexSansRegular(size: fontSize),
         ])
 
         // If boldText is provided, append it with bold style
         if let boldText = boldText {
             let boldAttributedText = NSAttributedString(string: " \(boldText)", attributes: [
-                .font: UIFont.boldSystemFont(ofSize: fontSize),
+                .font: UIFont.IBMPlexSansBold(size: fontSize),
             ])
             attributedText.append(boldAttributedText)
         }

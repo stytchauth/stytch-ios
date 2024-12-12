@@ -1,4 +1,5 @@
 import StytchCore
+import UIKit
 
 struct DiscoveryManager {
     static var discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization] = []
@@ -23,14 +24,29 @@ struct DiscoveryManager {
 }
 
 extension BaseViewController {
-    func startDiscoveryFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
+    func startDiscoveryFlowIfNeeded(configuration: StytchB2BUIClient.Configuration, shouldReplaceEmailConfrimation: Bool = false) {
         Task { @MainActor in
             let discoveredOrganizations = DiscoveryManager.discoveredOrganizations
             if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
                 selectDiscoveredOrganization(configuration: configuration, discoveredOrganization: singleDiscoveredOrganization)
             } else {
-                let discoveryViewController = DiscoveryViewController(state: .init(configuration: configuration))
-                navigationController?.pushViewController(discoveryViewController, animated: true)
+                navigationController?.popViewController(animated: false)
+                let viewController: UIViewController
+                if DiscoveryManager.discoveredOrganizations.isEmpty {
+                    if configuration.allowCreateOrganization == true, StytchB2BClient.createOrganizationEnabled == true {
+                        viewController = CreateOrganizationViewController(state: .init(configuration: configuration))
+                    } else {
+                        viewController = NoDiscoveredOrganizationsViewController(state: .init(configuration: configuration))
+                    }
+                } else {
+                    viewController = DiscoveredOrganizationsViewController(state: .init(configuration: configuration), discoveredOrganizations: DiscoveryManager.discoveredOrganizations)
+                }
+
+                if shouldReplaceEmailConfrimation {
+                    navigationController?.replaceLastViewController(with: viewController, animated: false)
+                } else {
+                    navigationController?.pushViewController(viewController, animated: true)
+                }
             }
         }
     }

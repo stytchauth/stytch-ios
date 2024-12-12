@@ -67,11 +67,11 @@ final class B2BAuthRootViewController: UIViewController {
     }
 
     func startMfaFlowIfNeeded() {
-        homeController?.startMFAFlowIfNeeded(configuration: configuration)
+        homeController?.startMFAFlowIfNeeded(configuration: configuration, shouldReplaceEmailConfrimation: true)
     }
 
     func startDiscoveryFlowIfNeeded() {
-        homeController?.startDiscoveryFlowIfNeeded(configuration: configuration)
+        homeController?.startDiscoveryFlowIfNeeded(configuration: configuration, shouldReplaceEmailConfrimation: true)
     }
 }
 
