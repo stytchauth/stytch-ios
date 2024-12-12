@@ -25,6 +25,7 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
     private func setupUI() {
         // Configure hidden text field
         hiddenTextField.keyboardType = .numberPad
+        hiddenTextField.textContentType = .oneTimeCode
         hiddenTextField.delegate = self
         hiddenTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         addSubview(hiddenTextField)
@@ -41,7 +42,7 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
             label.textAlignment = .center
             label.layer.borderWidth = 1
             label.layer.borderColor = UIColor.gray.cgColor
-            label.font = UIFont.systemFont(ofSize: 24)
+            label.font = UIFont.IBMPlexSansRegular(size: 24)
             label.text = ""
             label.layer.cornerRadius = 8
             label.clipsToBounds = true
@@ -64,11 +65,20 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
         addGestureRecognizer(tapGesture)
     }
 
-    @objc private func startEditing() {
+    func fillCode(code: String) {
+        hiddenTextField.text = code
+        updateLabels()
+    }
+
+    @objc func startEditing() {
         hiddenTextField.becomeFirstResponder()
     }
 
     @objc private func textFieldDidChange() {
+        updateLabels()
+    }
+
+    func updateLabels() {
         guard let text = hiddenTextField.text, text.count <= numberOfBoxes else {
             hiddenTextField.text = String(hiddenTextField.text?.prefix(numberOfBoxes) ?? "")
             return
@@ -97,5 +107,12 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
         for label in digitLabels {
             label.text = ""
         }
+    }
+}
+
+extension String {
+    var isNumber: Bool {
+        let characters = CharacterSet.decimalDigits
+        return CharacterSet(charactersIn: self).isSubset(of: characters)
     }
 }

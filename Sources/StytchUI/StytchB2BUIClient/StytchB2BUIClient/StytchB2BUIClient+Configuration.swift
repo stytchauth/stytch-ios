@@ -18,7 +18,7 @@ public extension StytchB2BUIClient {
         public let oauthProviders: [B2BOAuthProviderOptions]
         public let emailOtpOptions: B2BEmailOTPOptions?
         public let directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions?
-        public let disableCreateOrganization: Bool?
+        public let allowCreateOrganization: Bool
         public let mfaProductOrder: [B2BMFAProducts]?
         public let mfaProductInclude: [B2BMFAProducts]?
         public let navigation: Navigation?
@@ -80,7 +80,7 @@ public extension StytchB2BUIClient {
             oauthProviders: [B2BOAuthProviderOptions] = [],
             emailOtpOptions: B2BEmailOTPOptions? = nil,
             directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions? = nil,
-            disableCreateOrganization: Bool? = nil,
+            allowCreateOrganization: Bool = true,
             mfaProductOrder: [B2BMFAProducts]? = nil,
             mfaProductInclude: [B2BMFAProducts]? = nil,
             navigation: Navigation? = nil,
@@ -96,7 +96,7 @@ public extension StytchB2BUIClient {
             self.oauthProviders = oauthProviders
             self.emailOtpOptions = emailOtpOptions
             self.directLoginForSingleMembershipOptions = directLoginForSingleMembershipOptions
-            self.disableCreateOrganization = disableCreateOrganization
+            self.allowCreateOrganization = allowCreateOrganization
             self.mfaProductOrder = mfaProductOrder
             self.mfaProductInclude = mfaProductInclude
             self.navigation = navigation

@@ -3,6 +3,8 @@ import StytchCore
 import UIKit
 
 final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntryViewModel> {
+    let otpView = OTPCodeEntryView(frame: .zero)
+
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytchTOTPEntryTitle", value: "Enter verification code", comment: "")
     )
@@ -19,6 +21,15 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         super.init(viewModel: TOTPEntryViewModel(state: state))
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let pasteboardText = UIPasteboard.general.string, pasteboardText.isNumber, pasteboardText.count == 6 {
+            otpView.fillCode(code: pasteboardText)
+        } else {
+            otpView.startEditing()
+        }
+    }
+
     override func configureView() {
         super.configureView()
 
@@ -27,7 +38,6 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
 
-        let otpView = OTPCodeEntryView(frame: .zero)
         otpView.delegate = self
         stackView.addArrangedSubview(otpView)
 
