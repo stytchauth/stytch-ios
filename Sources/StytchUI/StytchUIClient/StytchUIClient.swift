@@ -24,7 +24,7 @@ public enum StytchUIClient {
     /// - Parameters:
     ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
     public static func configure(configuration: Configuration) {
-        StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl)
+        StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
         Self.configuration = configuration
         FontLoader.loadFonts()
     }
@@ -108,17 +108,17 @@ public extension View {
     }
 }
 
-struct AuthenticationView: UIViewControllerRepresentable {
-    typealias UIViewControllerType = UIViewController
+public struct AuthenticationView: UIViewControllerRepresentable {
+    public typealias UIViewControllerType = UIViewController
 
-    func makeUIViewController(context _: Context) -> UIViewController {
+    public func makeUIViewController(context _: Context) -> UIViewController {
         let controller = AuthRootViewController(config: StytchUIClient.configuration)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()
         return UINavigationController(rootViewController: controller)
     }
 
-    func updateUIViewController(_: UIViewController, context _: Context) {}
+    public func updateUIViewController(_: UIViewController, context _: Context) {}
 }
 
 extension String {
