@@ -11,24 +11,23 @@ extension BaseViewController {
 
             if b2bMFAAuthenticateResponse?.primaryRequired != nil {
                 viewController = B2BAuthHomeViewController(state: .init(configuration: configuration))
-            } else if let entryMethod = b2bMFAAuthenticateResponse?.entryMethod {
+            } else if let entryMethod = b2bMFAAuthenticateResponse?.mfaEntryMethod {
                 switch entryMethod {
                 case .sms:
                     viewController = SMSOTPEntryViewController(state: .init(configuration: configuration, didSendCode: b2bMFAAuthenticateResponse?.smsImplicitlySent ?? false))
                 case .totp:
                     viewController = TOTPEntryViewController(state: .init(configuration: configuration))
                 }
-            } else if let enrollmentMethods = b2bMFAAuthenticateResponse?.enrollmentMethods(configuration: configuration) {
-                if enrollmentMethods.count == 2 {
-                    viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
-                } else if enrollmentMethods.contains(.sms) {
-                    viewController = SMSOTPEnrollmentViewController(state: .init(configuration: configuration))
-                } else if enrollmentMethods.contains(.totp) {
-                    viewController = TOTPEnrollmentViewController(state: .init(configuration: configuration))
-                }
             } else {
-                // This should never happen, but just in case, we go to the selection screen
-                viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
+                let enrollmentMethods = configuration.mfaEnrollmentMethods
+                if enrollmentMethods.count == 1, enrollmentMethods.contains(.sms) {
+                    viewController = SMSOTPEnrollmentViewController(state: .init(configuration: configuration))
+                }
+                if enrollmentMethods.count == 1, enrollmentMethods.contains(.totp) {
+                    viewController = TOTPEnrollmentViewController(state: .init(configuration: configuration))
+                } else {
+                    viewController = MFAEnrollmentSelectionViewController(state: .init(configuration: configuration))
+                }
             }
 
             if let viewController {
@@ -49,6 +48,24 @@ extension BaseViewController {
             let emailConfirmationViewController = ErrorViewController(state: .init(configuration: configuration, type: type))
             navigationController?.pushViewController(emailConfirmationViewController, animated: true)
         }
+    }
+}
+
+extension StytchB2BUIClient.Configuration {
+    var mfaEnrollmentMethods: [StytchB2BClient.MfaMethod] {
+        var enrollmentMethods: [StytchB2BClient.MfaMethod] = []
+        if OrganizationManager.allMFAMethodsAllowed == false {
+            if OrganizationManager.usesSMSMFAOnly == true {
+                enrollmentMethods.append(.sms)
+            } else if OrganizationManager.usesTOTPMFAOnly == true {
+                enrollmentMethods.append(.totp)
+            }
+        } else if let mfaProductInclude = mfaProductInclude {
+            enrollmentMethods = mfaProductInclude
+        } else {
+            enrollmentMethods = [.sms, .totp]
+        }
+        return enrollmentMethods
     }
 }
 
@@ -99,7 +116,7 @@ extension B2BMFAAuthenticateResponseDataType {
         }
     }
 
-    var entryMethod: StytchB2BClient.MfaMethod? {
+    var mfaEntryMethod: StytchB2BClient.MfaMethod? {
         var entryMethod: StytchB2BClient.MfaMethod?
 
         if smsImplicitlySent == true {
@@ -116,21 +133,5 @@ extension B2BMFAAuthenticateResponseDataType {
         }
 
         return entryMethod
-    }
-
-    func enrollmentMethods(configuration: StytchB2BUIClient.Configuration) -> [StytchB2BClient.MfaMethod] {
-        var enrollmentMethods: [StytchB2BClient.MfaMethod] = []
-        if organization.allMFAMethodsAllowed == false {
-            if organization.usesSMSMFAOnly {
-                enrollmentMethods.append(.sms)
-            } else if organization.usesTOTPMFAOnly {
-                enrollmentMethods.append(.totp)
-            }
-        } else if let mfaProductInclude = configuration.mfaProductInclude {
-            enrollmentMethods = mfaProductInclude
-        } else {
-            enrollmentMethods = [.sms, .totp]
-        }
-        return enrollmentMethods
     }
 }
