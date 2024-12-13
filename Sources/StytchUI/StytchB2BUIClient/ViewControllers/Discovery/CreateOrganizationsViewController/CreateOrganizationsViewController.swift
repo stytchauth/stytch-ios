@@ -5,7 +5,7 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
     private lazy var createOrganizationButton: Button = .primary(
         title: NSLocalizedString("stytchCreateOrganizationCreateOrganizationButton", value: "Try a different email address", comment: "")
     ) { [weak self] in
-        self?.createCreateOrganization()
+        self?.createOrganization()
     }
 
     init(state: CreateOrganizationsState) {
@@ -41,10 +41,10 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
         )
     }
 
-    @objc func createCreateOrganization() {
+    @objc func createOrganization() {
         Task {
             do {
-                try await viewModel.createOrganization()
+                try await AuthenticationOperations.createOrganization()
             } catch {
                 presentErrorAlert(error: error)
             }

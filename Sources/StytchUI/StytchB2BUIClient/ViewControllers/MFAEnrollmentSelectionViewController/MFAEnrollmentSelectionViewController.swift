@@ -23,7 +23,14 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
 
-        let mfaMethodSelectionViewController = MFAMethodSelectionViewController(mfaMethods: [.sms, .totp])
+        // TODO: Make sure not use the ordering as filtering
+        // used to order the mfa methods
+        var mfaMethods: [StytchB2BClient.MfaMethod] = [.sms, .totp]
+        if let mfaProductOrder = viewModel.state.configuration.mfaProductOrder {
+            mfaMethods = mfaProductOrder
+        }
+
+        let mfaMethodSelectionViewController = MFAMethodSelectionViewController(mfaMethods: mfaMethods)
         mfaMethodSelectionViewController.delegate = self
         addChild(mfaMethodSelectionViewController)
         stackView.addArrangedSubview(mfaMethodSelectionViewController.view)

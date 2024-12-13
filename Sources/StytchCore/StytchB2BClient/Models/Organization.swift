@@ -155,4 +155,14 @@ public extension Organization {
     var allMFAMethodsAllowed: Bool {
         mfaMethods == .allAllowed
     }
+
+    func isMFAMethodAllowed(_ mfaMethod: StytchB2BClient.MfaMethod) -> Bool {
+        if mfaMethods == .allAllowed {
+            return true
+        } else if let allowedMfaMethods = allowedMfaMethods {
+            return allowedMfaMethods.contains(mfaMethod)
+        } else {
+            return false
+        }
+    }
 }

@@ -18,6 +18,8 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
     override func configureView() {
         super.configureView()
 
+        // TODO: if b2bMFAAuthenticateResponse?.mfaRequired?.secondaryAuthInitiated == "sms_otp" is not true we need to send a code
+
         stackView.spacing = .spacingRegular
 
         stackView.addArrangedSubview(titleLabel)
@@ -64,6 +66,7 @@ extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
                 if let phoneNumberE164 = MemberManager.phoneNumber {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
                 }
+                // TODO: Reset time here
             } catch {
                 presentErrorAlert(error: error)
             }

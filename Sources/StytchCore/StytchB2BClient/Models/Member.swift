@@ -42,7 +42,7 @@ public struct Member: Codable, Sendable {
 
     let memberId: ID
 
-    var mfaMethod: StytchB2BClient.MfaMethod? {
+    public var mfaMethod: StytchB2BClient.MfaMethod? {
         switch defaultMfaMethod {
         case "sms_otp":
             return .sms

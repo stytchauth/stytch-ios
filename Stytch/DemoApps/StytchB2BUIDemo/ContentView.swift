@@ -4,53 +4,49 @@ import StytchUI
 import SwiftUI
 
 struct ContentView: View {
-    var configuration: StytchB2BUIClient.Configuration
-    @State private var shouldPresentAuth = false
-    @State var subscriptions: Set<AnyCancellable> = []
+    @StateObject var viewModel = ContentViewModel()
+    var cancellables = Set<AnyCancellable>()
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("You have logged in with Stytch!")
-                    .font(.largeTitle)
-                    .bold()
-                    .multilineTextAlignment(.center)
+        VStack(spacing: 20) {
+            Button("Show No MFA") {
+                viewModel.showNoMFA = true
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.noMFAStytchB2BUIConfig, isPresented: $viewModel.showNoMFA, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
 
+            Button("Show MFA") {
+                viewModel.showMFA = true
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.mfaRequiredStytchB2BUIConfig, isPresented: $viewModel.showMFA, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
+
+            Button("Show Discovery") {
+                viewModel.showDiscovery = true
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.discoveryStytchB2BUIConfig, isPresented: $viewModel.showDiscovery, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
+
+            if viewModel.isAuthenticated {
                 Button("Log Out") {
                     logOut()
                 }.font(.title).bold()
             }
-            .padding()
-            .b2bAuthenticationSheet(isPresented: $shouldPresentAuth, onB2BAuthCallback: {
-                print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-            }).onOpenURL { url in
-                let didHandle = StytchB2BUIClient.handle(url: url)
-                print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
-            }
-        }.task {
-            StytchB2BUIClient.configure(configuration: configuration)
-            print(configuration.redirectUrl)
-            setUpObservations()
         }
-    }
-
-    func setUpObservations() {
-        StytchB2BClient.sessions.onMemberSessionChange.sink { sessionInfo in
-            switch sessionInfo {
-            case let .available(session, lastValidatedAtDate):
-                print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                shouldPresentAuth = false
-            case .unavailable:
-                print("Session Unavailable\n")
-                shouldPresentAuth = true
-            }
-        }.store(in: &subscriptions)
+        .padding()
+        .onOpenURL { url in
+            let didHandle = StytchB2BUIClient.handle(url: url)
+            print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
+        }
     }
 
     func logOut() {
         Task {
             do {
-                let response = try await StytchB2BClient.sessions.revoke()
+                let response = try await StytchB2BClient.sessions.revoke(parameters: .init(forceClear: true))
                 print("log out response: \(response)")
             } catch {
                 print("log out error: \(error.errorInfo)")
@@ -59,6 +55,67 @@ struct ContentView: View {
     }
 }
 
+class ContentViewModel: ObservableObject {
+    @Published var showNoMFA: Bool = false
+    @Published var showMFA: Bool = false
+    @Published var showDiscovery: Bool = false
+    @Published var isAuthenticated: Bool = false
+
+    let dismissSubject = PassthroughSubject<Void, Never>()
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        StytchB2BUIClient.dismissUI
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.showNoMFA = false
+                self?.showMFA = false
+                self?.showDiscovery = false
+            }
+            .store(in: &cancellables)
+
+        StytchB2BClient.sessions.onMemberSessionChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessionInfo in
+                switch sessionInfo {
+                case let .available(session, lastValidatedAtDate):
+                    print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                    self?.isAuthenticated = true
+                case .unavailable:
+                    print("Session Unavailable\n")
+                    self?.isAuthenticated = false
+                }
+            }.store(in: &cancellables)
+    }
+}
+
+extension ContentView {
+    static var publicToken: String {
+        "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf"
+    }
+
+    static let noMFAStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        authFlowType: .organization(slug: "no-mfa"),
+        oauthProviders: [.init(provider: .google)]
+    )
+
+    static let mfaRequiredStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        authFlowType: .organization(slug: "mfa-required"),
+        oauthProviders: [.init(provider: .google)]
+    )
+
+    static let discoveryStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: publicToken,
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        authFlowType: .discovery,
+        oauthProviders: [.init(provider: .google)]
+    )
+}
+
 #Preview {
-    ContentView(configuration: StytchB2BUIDemoApp.oauthStytchB2BUIConfig)
+    ContentView()
 }

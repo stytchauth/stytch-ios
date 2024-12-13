@@ -62,9 +62,8 @@ final class AuthHomeViewController: UIViewController {
     })
 
     lazy var b2bUIButton: UIButton = .init(title: "B2B UI", primaryAction: .init { [weak self] _ in
-        StytchB2BUIClient.configure(configuration: Self.allStytchB2BUIConfig)
         if let strongSelf = self {
-            StytchB2BUIClient.presentController(controller: strongSelf)
+            StytchB2BUIClient.presentController(configuration: Self.allStytchB2BUIConfig, controller: strongSelf)
         }
     })
 
