@@ -4,10 +4,6 @@ import UIKit
 final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BAuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
-    private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
-    )
-
     private let separatorView: LabelSeparatorView = .orSeparator()
 
     private lazy var poweredByStytch: UIImageView = {
@@ -38,9 +34,13 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
     override func configureView() {
         super.configureView()
         StytchB2BUIClient.startLoading()
-        viewModel.loadProducts { [weak self] productComponents in
+        viewModel.loadProducts { productComponents, error in
             Task { @MainActor in
-                self?.configureView(productComponents: productComponents)
+                if error != nil || productComponents.count == 0 {
+                    self.showError(configuration: self.viewModel.state.configuration, type: .noOrganziationFound)
+                } else {
+                    self.configureView(productComponents: productComponents)
+                }
             }
             StytchB2BUIClient.stopLoading()
         }
@@ -61,6 +61,18 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
 
+        var titleText = NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
+        if let primaryRequired = B2BAuthenticationManager.primaryRequired {
+            titleText = "Verify Your Email"
+            let subtitleLabel = UILabel.makeSubtitleLabel(text: "Confirm your email address with one of the following")
+            stackView.addArrangedSubview(subtitleLabel)
+            
+            if primaryRequired.allowedAuthMethods.isEmpty == true {
+                showError(configuration: viewModel.state.configuration, type: .noPrimaryAuthMethods)
+            }
+        }
+            
+        let titleLabel = UILabel.makeTitleLabel(text: titleText)
         stackView.addArrangedSubview(titleLabel)
 
         layoutProductComponents(productComponents)

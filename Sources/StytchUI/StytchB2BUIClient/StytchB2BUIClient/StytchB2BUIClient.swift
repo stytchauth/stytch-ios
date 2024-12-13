@@ -52,41 +52,43 @@ public enum StytchB2BUIClient {
     /// You can use `StytchB2BClient.canHandle(url:)` to determine if you should present the SwiftUI sheet before calling this handler.
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         startLoading()
+        currentController?.popToRootViewController(animated: false)
         print(controller as Any)
         Task { @MainActor in
-            switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
-            case let .handled(responseData):
-                switch responseData {
-                case let .mfauth(response):
-                    B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
-                    currentController?.startMfaFlowIfNeeded()
-                case let .mfaOAuth(response):
-                    B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
-                    currentController?.startMfaFlowIfNeeded()
-                case let .discovery(response):
-                    MemberManager.updateMemberEmailAddress(response.emailAddress)
-                    DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
-                    currentController?.startDiscoveryFlowIfNeeded()
-                case let .discoveryOauth(response):
-                    MemberManager.updateMemberEmailAddress(response.emailAddress)
-                    DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
-                    currentController?.startDiscoveryFlowIfNeeded()
+            do {
+                switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
+                case let .handled(responseData):
+                    switch responseData {
+                    case let .mfauth(response):
+                        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
+                        currentController?.startMfaFlowIfNeeded()
+                    case let .mfaOAuth(response):
+                        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
+                        currentController?.startMfaFlowIfNeeded()
+                    case let .discovery(response), let .discoveryOauth(response):
+                        MemberManager.updateMemberEmailAddress(response.emailAddress)
+                        DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
+                        currentController?.startDiscoveryFlowIfNeeded()
+                    }
+                case .notHandled:
+                    break
+                case let .manualHandlingRequired(_, token):
+                    let email = MemberManager.emailAddress ?? .redactedEmail
+                    if let currentController {
+                        currentController.handlePasswordReset(token: token, email: email)
+                    } else {
+                        let rootController = B2BAuthRootViewController(configuration: configuration)
+                        currentController = rootController
+                        setUpDismissAuthListener()
+                        controller?.present(UINavigationController(rootViewController: rootController), animated: true)
+                        rootController.handlePasswordReset(token: token, email: email, animated: false)
+                    }
                 }
-            case .notHandled:
-                break
-            case let .manualHandlingRequired(_, token):
-                let email = MemberManager.emailAddress ?? .redactedEmail
-                if let currentController {
-                    currentController.handlePasswordReset(token: token, email: email)
-                } else {
-                    let rootController = B2BAuthRootViewController(configuration: configuration)
-                    currentController = rootController
-                    setUpDismissAuthListener()
-                    controller?.present(UINavigationController(rootViewController: rootController), animated: true)
-                    rootController.handlePasswordReset(token: token, email: email, animated: false)
-                }
+                stopLoading()
+            } catch {
+                currentController?.showErrorScreen()
+                stopLoading()
             }
-            stopLoading()
         }
         return StytchB2BClient.canHandle(url: url)
     }
