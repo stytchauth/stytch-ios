@@ -19,6 +19,10 @@ final class PasswordResetViewModel {
         )
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
     }
+
+    func checkStrength(emailAddress: String?, password: String) async throws -> StytchB2BClient.Passwords.StrengthCheckResponse {
+        try await StytchB2BClient.passwords.strengthCheck(parameters: .init(emailAddress: emailAddress, password: password))
+    }
 }
 
 struct PasswordResetState {

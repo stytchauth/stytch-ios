@@ -3,7 +3,7 @@ import StytchCore
 import UIKit
 
 final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> {
-    private let imageView: UIImageView = {
+    let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit

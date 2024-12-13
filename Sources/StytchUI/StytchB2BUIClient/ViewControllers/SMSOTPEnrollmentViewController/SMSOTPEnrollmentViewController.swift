@@ -78,7 +78,7 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
             Task {
                 do {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
-                    navigationController?.pushViewController(SMSOTPEntryViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+                    navigationController?.pushViewController(SMSOTPEntryViewController(state: .init(configuration: viewModel.state.configuration, didSendCode: true)), animated: true)
                 } catch {
                     presentErrorAlert(error: error)
                 }

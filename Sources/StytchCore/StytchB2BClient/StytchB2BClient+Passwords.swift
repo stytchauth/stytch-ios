@@ -345,7 +345,7 @@ public extension StytchB2BClient.Passwords {
         /// Returns true if the password has been breached. Powered by HaveIBeenPwned (https://haveibeenpwned.com).
         public let breachedPassword: Bool
         /// The strength policy type enforced, either zxcvbn or luds.
-        public let strengthPolicy: String
+        public let strengthPolicy: StytchB2BClient.PasswordStrengthPolicy
         /// Will return true if breach detection will be evaluated. By default this option is enabled. This option can be disabled by contacting support@stytch.com. If this value is false then breached_password will always be false as well.
         public let breachDetectionOnCreate: Bool
         /// Feedback for how to improve the password's strength using zxcvbn.

@@ -45,7 +45,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                     validPassword: false,
                     score: 20,
                     breachedPassword: true,
-                    strengthPolicy: "something",
+                    strengthPolicy: .zxcvbn,
                     breachDetectionOnCreate: true,
                     zxcvbnFeedback: .init(suggestions: [], warning: "meh. do something."),
                     ludsFeedback: nil

@@ -9,6 +9,8 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
 
     private let passwordInputLabel = UILabel.makePasswordInputLabel()
 
+    private var strengthCheckWorkItem: DispatchWorkItem?
+
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
         input.textInput.textContentType = .password
@@ -55,6 +57,11 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        passwordInput.onTextChanged = { [weak self] isValid in
+            self?.setNeedsStrengthCheck()
+            self?.continueButton.isEnabled = isValid
+        }
     }
 
     @objc private func toggleSecureEntry(sender _: UIButton) {
@@ -70,6 +77,62 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
             do {
                 try await viewModel.resetPassword(newPassword: password)
                 startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+            } catch {
+                presentErrorAlert(error: error)
+            }
+        }
+    }
+
+    private func setNeedsStrengthCheck() {
+        guard passwordInput.isValid else {
+            passwordInput.setFeedback(nil)
+            return
+        }
+        strengthCheckWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            DispatchQueue.main.async {
+                self?.checkStrength()
+            }
+        }
+
+        strengthCheckWorkItem = workItem
+
+        DispatchQueue.global().asyncAfter(
+            deadline: .now().advanced(by: .milliseconds(250)),
+            execute: workItem
+        )
+    }
+
+    private func checkStrength() {
+        guard let password = passwordInput.text, password.isEmpty == false else {
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let email = MemberManager.emailAddress
+                let response = try await viewModel.checkStrength(emailAddress: email, password: password)
+
+                // TODO: Create proper password feedback component
+                switch response.strengthPolicy {
+                case .zxcvbn:
+                    if let zxcvbnFeedback = response.zxcvbnFeedback {
+                        let warning = zxcvbnFeedback.warning
+                        if warning.isEmpty == false {
+                            passwordInput.setFeedback(.error(warning))
+                        } else if let feedback = zxcvbnFeedback.suggestions.first {
+                            passwordInput.setFeedback(.normal(feedback))
+                        } else {
+                            passwordInput.setFeedback(nil)
+                        }
+                    }
+                case .luds:
+                    if let ludsFeedback = response.ludsFeedback {
+                        print(ludsFeedback)
+                    }
+                }
+                passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
             } catch {
                 presentErrorAlert(error: error)
             }
