@@ -14,7 +14,7 @@ extension BaseViewController {
             } else if let entryMethod = b2bMFAAuthenticateResponse?.entryMethod {
                 switch entryMethod {
                 case .sms:
-                    viewController = SMSOTPEntryViewController(state: .init(configuration: configuration))
+                    viewController = SMSOTPEntryViewController(state: .init(configuration: configuration, didSendCode: b2bMFAAuthenticateResponse?.smsImplicitlySent ?? false))
                 case .totp:
                     viewController = TOTPEntryViewController(state: .init(configuration: configuration))
                 }

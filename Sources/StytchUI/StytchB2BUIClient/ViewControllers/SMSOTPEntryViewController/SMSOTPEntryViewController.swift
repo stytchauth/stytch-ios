@@ -9,6 +9,8 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
     var timer: Timer?
 
+    var expirationDate = Date().addingTimeInterval(120)
+
     lazy var expiryButton: Button = makeExpiryButton()
 
     init(state: SMSOTPEntryState) {
@@ -17,8 +19,6 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
     override func configureView() {
         super.configureView()
-
-        // TODO: if b2bMFAAuthenticateResponse?.mfaRequired?.secondaryAuthInitiated == "sms_otp" is not true we need to send a code
 
         stackView.spacing = .spacingRegular
 
@@ -42,9 +42,6 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
         attachStackView(within: view)
 
-        updateExpiryText()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
-
         NSLayoutConstraint.activate([
             otpView.heightAnchor.constraint(equalToConstant: 50),
         ])
@@ -52,21 +49,37 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        if viewModel.state.didSendCode == false {
+            expiryButton.setTitle("", for: .normal)
+            timer?.invalidate()
+            resendCode()
+        } else {
+            startTimer()
+        }
+    }
+
+    func startTimer() {
+        resetExpirationDate()
+        timer?.invalidate()
+        updateExpiryText()
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
+    }
+
+    func resetExpirationDate() {
+        expirationDate = Date().addingTimeInterval(121)
     }
 }
 
 extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
-    var expirationDate: Date {
-        viewModel.state.expirationDate
-    }
-
     func resendCode() {
         Task {
             do {
+                print("MemberManager.phoneNumber: \(String(describing: MemberManager.phoneNumber))")
                 if let phoneNumberE164 = MemberManager.phoneNumber {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
                 }
-                // TODO: Reset time here
+                startTimer()
             } catch {
                 presentErrorAlert(error: error)
             }
