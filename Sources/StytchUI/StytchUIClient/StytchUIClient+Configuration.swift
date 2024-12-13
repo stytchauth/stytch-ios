@@ -8,44 +8,46 @@ public extension StytchUIClient {
     struct Configuration: Codable {
         static let empty = Configuration(publicToken: "", products: [])
 
-        let publicToken: String
-        let hostUrl: URL?
-        let products: [Products]
-        let navigation: Navigation?
-        let sessionDurationMinutes: Minutes
-        let oauthProviders: [OAuthProvider]
-        let passwordOptions: PasswordOptions?
-        let magicLinkOptions: MagicLinkOptions?
-        let otpOptions: OTPOptions?
-        let theme: StytchTheme
+        public let publicToken: String
+        public let hostUrl: URL?
+        public let dfppaDomain: String?
+        public let products: [Products]
+        public let navigation: Navigation?
+        public let sessionDurationMinutes: Minutes
+        public let oauthProviders: [OAuthProvider]
+        public let passwordOptions: PasswordOptions?
+        public let magicLinkOptions: MagicLinkOptions?
+        public let otpOptions: OTPOptions?
+        public let theme: StytchTheme
 
-        var inputProductsEnabled: Bool {
+        public var inputProductsEnabled: Bool {
             products.contains(.passwords) || products.contains(.emailMagicLinks) || products.contains(.otp)
         }
 
-        var redirectUrl: URL? {
+        public var redirectUrl: URL? {
             URL(string: "stytchui-\(publicToken)://deeplink")
         }
 
-        var supportsOauth: Bool {
+        public var supportsOauth: Bool {
             products.contains(.oauth) && !oauthProviders.isEmpty
         }
 
-        var supportsEmailMagicLinks: Bool {
+        public var supportsEmailMagicLinks: Bool {
             products.contains(.emailMagicLinks)
         }
 
-        var supportsOTP: Bool {
+        public var supportsOTP: Bool {
             products.contains(.otp)
         }
 
-        var supportsPasswords: Bool {
+        public var supportsPasswords: Bool {
             products.contains(.passwords)
         }
 
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
+            dfppaDomain: String? = nil,
             products: [Products],
             navigation: Navigation? = nil,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
@@ -57,6 +59,7 @@ public extension StytchUIClient {
         ) {
             self.publicToken = publicToken
             self.hostUrl = hostUrl
+            self.dfppaDomain = dfppaDomain
             self.products = products
             self.navigation = navigation
             self.sessionDurationMinutes = sessionDurationMinutes

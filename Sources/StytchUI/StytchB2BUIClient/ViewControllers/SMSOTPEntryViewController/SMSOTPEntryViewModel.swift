@@ -33,5 +33,5 @@ final class SMSOTPEntryViewModel {
 
 struct SMSOTPEntryState {
     let configuration: StytchB2BUIClient.Configuration
-    let expirationDate = Date().addingTimeInterval(120)
+    let didSendCode: Bool
 }

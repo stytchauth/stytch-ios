@@ -215,6 +215,11 @@ public extension StytchB2BClient {
         /// The Member's MFA TOTP registration ID.
         public let totpRegistrationId: String
     }
+
+    enum PasswordStrengthPolicy: String, Codable, Sendable {
+        case zxcvbn
+        case luds
+    }
 }
 
 public extension StytchB2BClient {
