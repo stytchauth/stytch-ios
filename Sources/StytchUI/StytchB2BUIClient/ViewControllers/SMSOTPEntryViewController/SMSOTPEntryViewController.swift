@@ -75,11 +75,10 @@ extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
     func resendCode() {
         Task {
             do {
-                print("MemberManager.phoneNumber: \(String(describing: MemberManager.phoneNumber))")
                 if let phoneNumberE164 = MemberManager.phoneNumber {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
+                    startTimer()
                 }
-                startTimer()
             } catch {
                 presentErrorAlert(error: error)
             }
