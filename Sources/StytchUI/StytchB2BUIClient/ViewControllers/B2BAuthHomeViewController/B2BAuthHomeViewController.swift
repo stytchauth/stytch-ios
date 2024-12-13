@@ -36,7 +36,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
         StytchB2BUIClient.startLoading()
         viewModel.loadProducts { productComponents, error in
             Task { @MainActor in
-                if error != nil || productComponents.count == 0 {
+                if error != nil || productComponents.isEmpty {
                     self.showError(configuration: self.viewModel.state.configuration, type: .noOrganziationFound)
                 } else {
                     self.configureView(productComponents: productComponents)
@@ -66,12 +66,12 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
             titleText = "Verify Your Email"
             let subtitleLabel = UILabel.makeSubtitleLabel(text: "Confirm your email address with one of the following")
             stackView.addArrangedSubview(subtitleLabel)
-            
+
             if primaryRequired.allowedAuthMethods.isEmpty == true {
                 showError(configuration: viewModel.state.configuration, type: .noPrimaryAuthMethods)
             }
         }
-            
+
         let titleLabel = UILabel.makeTitleLabel(text: titleText)
         stackView.addArrangedSubview(titleLabel)
 

@@ -10,7 +10,7 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
         imageView.image = UIImage(named: "error", in: .module, compatibleWith: nil)
         return imageView
     }()
-    
+
     init(state: ErrorState) {
         super.init(viewModel: ErrorViewModel(state: state))
     }
@@ -22,17 +22,17 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
 
         let titleLabel = UILabel.makeTitleLabel(text: viewModel.title)
         let subtitleLabel = UILabel.makeSubtitleLabel(text: viewModel.subtitle)
-        
+
         titleLabel.textAlignment = .center
         subtitleLabel.textAlignment = .center
-        
+
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(imageView)
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(SpacerView())
 
         attachStackView(within: view)
-        
+
         NSLayoutConstraint.activate([
             titleLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),
             subtitleLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),

@@ -8,7 +8,7 @@ final class ErrorViewModel {
     ) {
         self.state = state
     }
-    
+
     var title: String {
         "Looks like there was an error!"
     }

@@ -73,11 +73,11 @@ final class B2BAuthRootViewController: UIViewController {
     func startDiscoveryFlowIfNeeded() {
         homeController?.startDiscoveryFlowIfNeeded(configuration: configuration)
     }
-    
+
     func showErrorScreen() {
         homeController?.showError(configuration: configuration, type: .emailAuthFailed)
     }
-    
+
     func popToRootViewController(animated: Bool) {
         homeController?.navigationController?.popToRootViewController(animated: animated)
     }
