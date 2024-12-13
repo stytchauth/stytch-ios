@@ -63,7 +63,7 @@ public enum StytchUIClient {
             case .notHandled:
                 break
             case let .manualHandlingRequired(_, token):
-                let email = pendingResetEmail ?? .redactedEmail
+                let email = pendingResetEmail
                 if let currentController {
                     currentController.handlePasswordReset(token: token, email: email)
                 } else {
@@ -119,8 +119,4 @@ public struct AuthenticationView: UIViewControllerRepresentable {
     }
 
     public func updateUIViewController(_: UIViewController, context _: Context) {}
-}
-
-extension String {
-    static let redactedEmail = "*****@*****"
 }

@@ -38,7 +38,7 @@ final class AuthRootViewController: UIViewController {
         render()
     }
 
-    func handlePasswordReset(token: String, email: String, animated: Bool = true) {
+    func handlePasswordReset(token: String, email: String?, animated: Bool = true) {
         let controller = PasswordViewController(
             state: .init(
                 config: config,

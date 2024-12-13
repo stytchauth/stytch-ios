@@ -75,11 +75,14 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
 
     @objc func continueWithSMSOTP() {
         if let phoneNumberE164 = phoneNumberInput.phoneNumberE164 {
+            StytchB2BUIClient.startLoading()
             Task {
                 do {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
+                    StytchB2BUIClient.stopLoading()
                     navigationController?.pushViewController(SMSOTPEntryViewController(state: .init(configuration: viewModel.state.configuration, didSendCode: true)), animated: true)
                 } catch {
+                    StytchB2BUIClient.stopLoading()
                     presentErrorAlert(error: error)
                 }
             }

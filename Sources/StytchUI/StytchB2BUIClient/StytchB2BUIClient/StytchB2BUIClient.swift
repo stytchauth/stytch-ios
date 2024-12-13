@@ -53,7 +53,6 @@ public enum StytchB2BUIClient {
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         startLoading()
         currentController?.popToRootViewController(animated: false)
-        print(controller as Any)
         Task { @MainActor in
             do {
                 switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
@@ -73,7 +72,7 @@ public enum StytchB2BUIClient {
                 case .notHandled:
                     break
                 case let .manualHandlingRequired(_, token):
-                    let email = MemberManager.emailAddress ?? .redactedEmail
+                    let email = MemberManager.emailAddress
                     if let currentController {
                         currentController.handlePasswordReset(token: token, email: email)
                     } else {

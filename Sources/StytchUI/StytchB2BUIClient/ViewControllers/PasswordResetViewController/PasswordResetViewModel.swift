@@ -28,5 +28,5 @@ final class PasswordResetViewModel {
 struct PasswordResetState {
     let configuration: StytchB2BUIClient.Configuration
     let token: String
-    let email: String
+    let email: String?
 }

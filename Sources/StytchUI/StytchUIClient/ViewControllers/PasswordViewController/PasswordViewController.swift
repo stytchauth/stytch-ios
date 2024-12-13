@@ -286,7 +286,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
 
         Task { @MainActor in
             do {
-                let email = emailInput.text == .redactedEmail ? nil : emailInput.text
+                let email = emailInput.text
                 let response = try await viewModel.checkStrength(email: email, password: password)
                 if let warning = response.feedback?.warning, !warning.isEmpty {
                     passwordInput.setFeedback(.error(warning))

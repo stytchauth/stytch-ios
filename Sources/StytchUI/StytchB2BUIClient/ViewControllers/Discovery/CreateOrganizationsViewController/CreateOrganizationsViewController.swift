@@ -42,11 +42,14 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
     }
 
     @objc func createOrganization() {
+        StytchB2BUIClient.startLoading()
         Task {
             do {
                 try await AuthenticationOperations.createOrganization()
+                StytchB2BUIClient.stopLoading()
             } catch {
                 presentErrorAlert(error: error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }
