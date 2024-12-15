@@ -288,7 +288,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             do {
                 let email = emailInput.text == .redactedEmail ? nil : emailInput.text
                 let response = try await viewModel.checkStrength(email: email, password: password)
-                
+
                 if let luds = response.feedback?.ludsRequirements {
                     passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.passwordConfig)
                 } else if let warning = response.feedback?.warning, let suggestions = response.feedback?.suggestions {
@@ -297,7 +297,6 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     passwordInput.feedback.isHidden = true
                     passwordInput.setFeedback(nil)
                 }
-                
             } catch {
                 presentErrorAlert(error: error)
             }

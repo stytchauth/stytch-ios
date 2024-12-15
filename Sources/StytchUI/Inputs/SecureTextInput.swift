@@ -1,6 +1,6 @@
-import UIKit
-import SwiftUI
 import StytchCore
+import SwiftUI
+import UIKit
 
 final class SecureTextInput: TextInputView<SecureTextField> {
     private(set) lazy var feedback: UIStackView = {
@@ -9,15 +9,12 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         view.spacing = 2
         return view
     }()
-    
+
     private let zxcvbnIndicator = ZXCVBNIndicator(state: ZXCVBNState())
-    private lazy var zxcvbnIndicatorView: UIView = {
-        UIHostingController(rootView: self.zxcvbnIndicator).view
-    }()
+    private lazy var zxcvbnIndicatorView: UIView = UIHostingController(rootView: self.zxcvbnIndicator).view
+
     private let ludsIndicator = LUDSIndicator(state: LUDSFeedbackState())
-    private lazy var ludsIndicatorView: UIView = {
-        UIHostingController(rootView: self.ludsIndicator).view
-    }()
+    private lazy var ludsIndicatorView: UIView = UIHostingController(rootView: self.ludsIndicator).view
 
     var text: String? { textInput.text }
 
@@ -35,7 +32,7 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         feedback.isHidden = true
         textInput.delegate = self
     }
-    
+
     func setZXCVBNFeedback(suggestions: [String]?, warning: String?, score: Int) {
         feedback.isHidden = false
         zxcvbnIndicatorView.isHidden = false
@@ -43,7 +40,7 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         zxcvbnIndicator.setFeedback(suggestions: suggestions, warning: warning, score: score)
         didSetFeedback()
     }
-    
+
     func setLUDSFeedback(ludsRequirement: LudsRequirement, breached: Bool = false, passwordConfig: PasswordConfig? = nil) {
         feedback.isHidden = false
         zxcvbnIndicatorView.isHidden = true
