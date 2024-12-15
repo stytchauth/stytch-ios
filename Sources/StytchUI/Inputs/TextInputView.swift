@@ -113,6 +113,10 @@ class TextInputView<TextInput: TextInputType>: UIView {
             feedbackLabel.text = nil
         }
         feedbackLabel.isHidden = feedback == nil
+        didSetFeedback()
+    }
+    
+    final func didSetFeedback() {
         update()
         invalidateIntrinsicContentSize()
     }

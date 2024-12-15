@@ -22,6 +22,9 @@ public struct StytchClient: StytchClientType {
     public static var disableSdkWatermark: Bool {
         Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
     }
+    public static var passwordConfig: PasswordConfig? {
+        Current.localStorage.bootstrapData?.passwordConfig ?? nil
+    }
 
     private init() {
         #if os(iOS)

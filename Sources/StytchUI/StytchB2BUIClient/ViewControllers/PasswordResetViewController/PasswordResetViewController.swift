@@ -49,6 +49,7 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(passwordInputLabel)
         stackView.addArrangedSubview(passwordInput)
+        stackView.addArrangedSubview(secureEntryToggleButton)
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
 
@@ -85,7 +86,6 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
 
     private func setNeedsStrengthCheck() {
         guard passwordInput.isValid else {
-            passwordInput.setFeedback(nil)
             return
         }
         strengthCheckWorkItem?.cancel()
@@ -114,25 +114,24 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
                 let email = MemberManager.emailAddress
                 let response = try await viewModel.checkStrength(emailAddress: email, password: password)
 
-                // TODO: Create proper password feedback component
                 switch response.strengthPolicy {
                 case .zxcvbn:
                     if let zxcvbnFeedback = response.zxcvbnFeedback {
-                        let warning = zxcvbnFeedback.warning
-                        if warning.isEmpty == false {
-                            passwordInput.setFeedback(.error(warning))
-                        } else if let feedback = zxcvbnFeedback.suggestions.first {
-                            passwordInput.setFeedback(.normal(feedback))
-                        } else {
-                            passwordInput.setFeedback(nil)
-                        }
+                        passwordInput.setZXCVBNFeedback(
+                            suggestions: zxcvbnFeedback.suggestions,
+                            warning: zxcvbnFeedback.warning,
+                            score: Int(response.score)
+                        )
+                    } else {
+                        passwordInput.setFeedback(nil)
                     }
                 case .luds:
                     if let ludsFeedback = response.ludsFeedback {
-                        print(ludsFeedback)
+                        passwordInput.setLUDSFeedback(ludsRequirement: ludsFeedback, breached: response.breachedPassword, passwordConfig: StytchB2BClient.passwordConfig)
+                    } else {
+                        passwordInput.setFeedback(nil)
                     }
                 }
-                passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
             } catch {
                 presentErrorAlert(error: error)
             }
