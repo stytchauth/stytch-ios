@@ -23,6 +23,10 @@ public struct StytchClient: StytchClientType {
         Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
     }
 
+    public static var passwordConfig: PasswordConfig? {
+        Current.localStorage.bootstrapData?.passwordConfig
+    }
+
     private init() {
         #if os(iOS)
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
