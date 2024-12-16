@@ -61,9 +61,9 @@ extension BootstrapResponseData {
     }
 }
 
-struct PasswordConfig: Codable {
-    let ludsComplexity: Int
-    let ludsMinimumCount: Int
+public struct PasswordConfig: Codable {
+    public let ludsComplexity: Int
+    public let ludsMinimumCount: Int
 }
 
 struct CaptchaSettings: Codable {

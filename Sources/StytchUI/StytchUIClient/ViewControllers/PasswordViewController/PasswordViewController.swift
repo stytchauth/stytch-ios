@@ -138,7 +138,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         lowerSeparator.isHidden = true
         emailLoginLinkTertiaryButton.isHidden = true
         emailLoginLinkPrimaryButton.isHidden = true
-        passwordInput.progressBar.isHidden = true
+        passwordInput.feedback.isHidden = true
 
         emailInput.textInput.text = viewModel.state.email
         emailInput.isEnabled = true
@@ -158,9 +158,9 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             } else {
                 titleLabel.text = NSLocalizedString("stytch.pwCreateAccount", value: "Create account", comment: "")
             }
-            passwordInput.progressBar.isHidden = false
+            passwordInput.feedback.isHidden = false
         case .enterNewPassword:
-            passwordInput.progressBar.isHidden = false
+            passwordInput.feedback.isHidden = false
             emailInput.isEnabled = false
             titleLabel.text = NSLocalizedString("stytch.pwSetNewPW", value: "Set a new password", comment: "")
         case .login:
@@ -288,14 +288,15 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             do {
                 let email = emailInput.text == .redactedEmail ? nil : emailInput.text
                 let response = try await viewModel.checkStrength(email: email, password: password)
-                if let warning = response.feedback?.warning, !warning.isEmpty {
-                    passwordInput.setFeedback(.error(warning))
-                } else if let feedback = response.feedback?.suggestions.first {
-                    passwordInput.setFeedback(.normal(feedback))
+
+                if let luds = response.feedback?.ludsRequirements {
+                    passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.passwordConfig)
+                } else if let warning = response.feedback?.warning, let suggestions = response.feedback?.suggestions {
+                    passwordInput.setZXCVBNFeedback(suggestions: suggestions, warning: warning, score: Int(response.score))
                 } else {
+                    passwordInput.feedback.isHidden = true
                     passwordInput.setFeedback(nil)
                 }
-                passwordInput.progressBar.progress = .init(rawValue: Int(response.score) - 1)
             } catch {
                 presentErrorAlert(error: error)
             }
