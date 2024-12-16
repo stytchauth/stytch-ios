@@ -8,8 +8,8 @@ struct LUDSIndicator: View {
         if let feedback = state.feedback {
             let validLength = feedback.missingCharacters == 0
             let validComplexity = feedback.missingComplexity == 0
-            let lengthColor = if validLength { Color(.progressSuccess) } else { Color(.dangerText) }
-            let complexityColor = if validComplexity { Color(.progressSuccess) } else { Color(.dangerText) }
+            let lengthColor = validLength ? Color(.progressSuccess) : Color(.dangerText)
+            let complexityColor = validComplexity ? Color(.progressSuccess) : Color(.dangerText)
             VStack(alignment: .leading) {
                 HStack(alignment: .center, spacing: 4) {
                     if validLength {
