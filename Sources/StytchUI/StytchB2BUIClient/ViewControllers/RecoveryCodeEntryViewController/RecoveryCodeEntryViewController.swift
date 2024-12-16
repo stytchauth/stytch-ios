@@ -39,6 +39,12 @@ final class RecoveryCodeEntryViewController: BaseViewController<RecoveryCodeEntr
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        recoveryCodeInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.recoveryCodeEntered()
+            }
+        }
     }
 
     @objc func recoveryCodeEntered() {

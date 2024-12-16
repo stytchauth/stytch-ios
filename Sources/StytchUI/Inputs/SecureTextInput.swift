@@ -31,6 +31,7 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         supplementaryView = feedback
         feedback.isHidden = true
         textInput.delegate = self
+        textInput.returnKeyType = .done
     }
 
     func setZXCVBNFeedback(suggestions: [String]?, warning: String?, score: Int) {
@@ -47,6 +48,14 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         ludsIndicatorView.isHidden = false
         ludsIndicator.setFeedback(feedback: ludsRequirement, breached: breached, passwordConfig: passwordConfig)
         didSetFeedback()
+    }
+
+    func setReturnKeyType(returnKeyType: UIReturnKeyType) {
+        textInput.returnKeyType = returnKeyType
+    }
+
+    func assignFirstResponder() {
+        textInput.becomeFirstResponder()
     }
 }
 

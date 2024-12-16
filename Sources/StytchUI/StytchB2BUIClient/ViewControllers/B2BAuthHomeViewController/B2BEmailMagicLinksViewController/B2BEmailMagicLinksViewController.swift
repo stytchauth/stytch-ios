@@ -14,14 +14,14 @@ final class B2BEmailMagicLinksViewController: BaseViewController<B2BEmailMagicLi
     private lazy var emailInput: EmailInput = .init()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue With Email", comment: "")
+        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue with email", comment: "")
     ) { [weak self] in
         self?.continueButtonTapped()
     }
 
     private lazy var usePasswordInsteadButton: Button = {
         let button = Button.tertiary(
-            title: NSLocalizedString("stytch.forgotPassword", value: "Use Password Instead", comment: "")
+            title: NSLocalizedString("stytch.forgotPassword", value: "Use password instead", comment: "")
         ) { [weak self] in
             self?.usePasswordInsteadButtonTapped()
         }
@@ -78,19 +78,21 @@ final class B2BEmailMagicLinksViewController: BaseViewController<B2BEmailMagicLi
                 break
             }
         }
+
+        input.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.continueButtonTapped()
+            }
+        }
     }
 
     private func continueButtonTapped() {
-        if let emailAddress = emailInput.text {
-            viewModel.sendEmailMagicLink(emailAddress: emailAddress) { [weak self] error in
-                if let error {
-                    self?.presentErrorAlert(error: error)
-                } else {
-                    self?.delegate?.emailMagicLinkSent()
-                }
+        viewModel.sendEmailMagicLink(emailAddress: emailInput.text ?? "") { [weak self] error in
+            if let error {
+                self?.presentErrorAlert(error: error)
+            } else {
+                self?.delegate?.emailMagicLinkSent()
             }
-        } else {
-            // Show Error??
         }
     }
 

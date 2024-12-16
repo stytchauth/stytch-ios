@@ -71,10 +71,17 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
                 break
             }
         }
+
+        phoneNumberInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.continueWithSMSOTP()
+            }
+        }
     }
 
     @objc func continueWithSMSOTP() {
         if let phoneNumberE164 = phoneNumberInput.phoneNumberE164 {
+            MemberManager.updateMemberPhoneNumber(phoneNumberE164)
             StytchB2BUIClient.startLoading()
             Task {
                 do {

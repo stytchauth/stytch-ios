@@ -3,6 +3,8 @@ import StytchCore
 import UIKit
 
 final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSOTPEntryViewModel> {
+    let otpView = OTPCodeEntryView(frame: .zero)
+
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytchSMSOTPEntryTitle", value: "Enter passcode", comment: "")
     )
@@ -26,13 +28,12 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
         let smsConfirmationLabel = UILabel.makeComboLabel(
             withPlainText: "A 6-digit passcode was sent to you at",
-            boldText: MemberManager.phoneNumber,
+            boldText: MemberManager.formattedPhoneNumber,
             fontSize: 18,
             alignment: .left
         )
         stackView.addArrangedSubview(smsConfirmationLabel)
 
-        let otpView = OTPCodeEntryView(frame: .zero)
         otpView.delegate = self
         stackView.addArrangedSubview(otpView)
 
@@ -56,6 +57,10 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
             resendCode()
         } else {
             startTimer()
+        }
+
+        if MemberManager.member?.mfaPhoneNumberVerified == true {
+            hideBackButton()
         }
     }
 
@@ -111,6 +116,7 @@ extension SMSOTPEntryViewController: OTPCodeEntryViewDelegate {
                 try await viewModel.smsAuthenticate(code: code)
                 StytchB2BUIClient.stopLoading()
             } catch {
+                otpView.clear()
                 presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }

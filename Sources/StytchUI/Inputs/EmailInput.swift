@@ -1,6 +1,8 @@
 import UIKit
 
 final class EmailInput: TextInputView<EmailTextField> {
+    var onReturn: (Bool) -> Void = { _ in }
+
     var isEnabled: Bool {
         get { textInput.isEnabled }
         set {
@@ -18,6 +20,23 @@ final class EmailInput: TextInputView<EmailTextField> {
             guard let self else { return }
             self.onTextChanged(self.isValid)
         }
+        textInput.delegate = self
+        textInput.returnKeyType = .done
+    }
+
+    func setReturnKeyType(returnKeyType: UIReturnKeyType) {
+        textInput.returnKeyType = returnKeyType
+    }
+
+    func assignFirstResponder() {
+        textInput.becomeFirstResponder()
+    }
+}
+
+extension EmailInput: UITextFieldDelegate {
+    func textFieldShouldReturn(_: UITextField) -> Bool {
+        onReturn(isValid)
+        return true
     }
 }
 

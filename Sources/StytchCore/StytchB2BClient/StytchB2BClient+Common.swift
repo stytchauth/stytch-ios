@@ -137,7 +137,7 @@ public extension StytchB2BClient {
         /// The details of the membership.
         public let details: JSON?
         /// The member.
-        public let member: Member
+        public let member: Member?
     }
 
     enum MembershipType: String, Sendable, Codable {

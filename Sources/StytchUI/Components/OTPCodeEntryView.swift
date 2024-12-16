@@ -5,12 +5,12 @@ protocol OTPCodeEntryViewDelegate: AnyObject {
     func didEnterOTPCode(_ code: String)
 }
 
-class OTPCodeEntryView: UIView, UITextFieldDelegate {
+class OTPCodeEntryView: UIView, UITextFieldDelegate, BackspaceDetectingTextFieldDelegate {
     weak var delegate: OTPCodeEntryViewDelegate?
 
-    private let hiddenTextField = UITextField()
-    private var digitLabels: [UILabel] = []
+    private var textFields: [BackspaceDetectingTextField] = []
     private let numberOfBoxes = 6
+    private var currentIndex: Int = 0 // Tracks the current index being edited
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,31 +23,35 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
     }
 
     private func setupUI() {
-        // Configure hidden text field
-        hiddenTextField.keyboardType = .numberPad
-        hiddenTextField.textContentType = .oneTimeCode
-        hiddenTextField.delegate = self
-        hiddenTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        addSubview(hiddenTextField)
-
-        // Create a stack view for digit boxes
+        // Create a stack view for text fields
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 8
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        for _ in 0..<numberOfBoxes {
-            let label = UILabel()
-            label.textAlignment = .center
-            label.layer.borderWidth = 1
-            label.layer.borderColor = UIColor.gray.cgColor
-            label.font = UIFont.IBMPlexSansRegular(size: 24)
-            label.text = ""
-            label.layer.cornerRadius = 8
-            label.clipsToBounds = true
-            digitLabels.append(label)
-            stackView.addArrangedSubview(label)
+        for index in 0..<numberOfBoxes {
+            let textField = BackspaceDetectingTextField()
+            textField.delegate = self
+            textField.backspaceDelegate = self
+            textField.textAlignment = .center
+            textField.keyboardType = .numberPad
+            textField.layer.borderWidth = 1
+            textField.layer.borderColor = UIColor.gray.cgColor
+            textField.font = UIFont.systemFont(ofSize: 24)
+            textField.layer.cornerRadius = 8
+            textField.clipsToBounds = true
+            textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+
+            textField.tag = index // Assign an index for identification
+
+            // Add tap gesture to ensure rightmost empty box is focused
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTextFieldTap))
+            textField.addGestureRecognizer(tapGesture)
+            textField.isUserInteractionEnabled = true
+
+            textFields.append(textField)
+            stackView.addArrangedSubview(textField)
         }
 
         addSubview(stackView)
@@ -60,59 +64,113 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        // Add tap gesture to bring up the keyboard
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(startEditing))
-        addGestureRecognizer(tapGesture)
+        // Set the first text field as the initial responder
+        textFields.first?.becomeFirstResponder()
     }
 
-    func fillCode(code: String) {
-        hiddenTextField.text = code
-        updateLabels()
+    @objc private func handleTextFieldTap() {
+        if let firstEmptyIndex = textFields.firstIndex(where: { $0.text?.isEmpty ?? true }) {
+            currentIndex = firstEmptyIndex
+            textFields[firstEmptyIndex].becomeFirstResponder()
+        } else {
+            currentIndex = numberOfBoxes - 1
+            textFields.last?.becomeFirstResponder()
+        }
     }
 
-    @objc func startEditing() {
-        hiddenTextField.becomeFirstResponder()
-    }
-
-    @objc private func textFieldDidChange() {
-        updateLabels()
-    }
-
-    func updateLabels() {
-        guard let text = hiddenTextField.text, text.count <= numberOfBoxes else {
-            hiddenTextField.text = String(hiddenTextField.text?.prefix(numberOfBoxes) ?? "")
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        guard let textField = textField as? BackspaceDetectingTextField else {
             return
         }
 
-        // Update each label with the corresponding digit
-        for boxIndex in 0..<numberOfBoxes {
-            if boxIndex < text.count {
-                let index = text.index(text.startIndex, offsetBy: boxIndex)
-                digitLabels[boxIndex].text = String(text[index])
-            } else {
-                digitLabels[boxIndex].text = ""
+        guard let text = textField.text, text.count <= 1 else {
+            textField.text = String(textField.text?.prefix(1) ?? "")
+            return
+        }
+
+        if let index = textFields.firstIndex(of: textField) {
+            currentIndex = index
+
+            if text.isEmpty == false, currentIndex < numberOfBoxes - 1 {
+                currentIndex += 1
+                textFields[currentIndex].becomeFirstResponder()
             }
         }
 
-        // Notify delegate when all digits are entered
-        if text.count == numberOfBoxes {
-            delegate?.didEnterOTPCode(text)
-            hiddenTextField.resignFirstResponder()
+        // Check if all fields are filled and notify delegate
+        let code = textFields.map { $0.text ?? "" }.joined()
+        if code.count == numberOfBoxes {
+            delegate?.didEnterOTPCode(code)
+            // Do not resignFirstResponder, allow deletions
         }
     }
 
-    /// Clears all entered digits
+    // MARK: BackspaceDetectingTextFieldDelegate
+
+    func textFieldDidDeleteBackward(_ textField: BackspaceDetectingTextField) {
+        if let index = textFields.firstIndex(of: textField) {
+            currentIndex = index
+            textFields[currentIndex].text = ""
+            if currentIndex > 0 {
+                currentIndex -= 1
+                textFields[currentIndex].text = ""
+                textFields[currentIndex].becomeFirstResponder()
+            }
+        }
+    }
+
+    // MARK: UITextFieldDelegate
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn _: NSRange, replacementString string: String) -> Bool {
+        guard let textField = textField as? BackspaceDetectingTextField else {
+            return false
+        }
+
+        // Handle pasting
+        if string.count > 1 {
+            // Validate that the string is a 6-digit number
+            guard string.count == numberOfBoxes, string.allSatisfy(\.isNumber) else {
+                return false
+            }
+
+            // Process the valid 6-digit number
+            for (index, char) in string.enumerated() {
+                textFields[index].text = String(char)
+            }
+
+            currentIndex = numberOfBoxes - 1
+            delegate?.didEnterOTPCode(string)
+            return false
+        }
+
+        // Allow input only if the current box is empty
+        if textField.text?.isEmpty == false {
+            return false
+        }
+
+        return string.count == 1
+    }
+
     func clear() {
-        hiddenTextField.text = ""
-        for label in digitLabels {
-            label.text = ""
+        Task { @MainActor in
+            for textField in textFields {
+                textField.text = ""
+            }
+            currentIndex = 0
+            textFields.first?.becomeFirstResponder()
         }
     }
 }
 
-extension String {
-    var isNumber: Bool {
-        let characters = CharacterSet.decimalDigits
-        return CharacterSet(charactersIn: self).isSubset(of: characters)
+class BackspaceDetectingTextField: UITextField {
+    weak var backspaceDelegate: BackspaceDetectingTextFieldDelegate?
+
+    override func deleteBackward() {
+        super.deleteBackward()
+        backspaceDelegate?.textFieldDidDeleteBackward(self)
     }
+}
+
+protocol BackspaceDetectingTextFieldDelegate: AnyObject {
+    func textFieldDidDeleteBackward(_ textField: BackspaceDetectingTextField)
 }

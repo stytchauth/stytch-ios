@@ -23,11 +23,6 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let pasteboardText = UIPasteboard.general.string, pasteboardText.isNumber, pasteboardText.count == 6 {
-            otpView.fillCode(code: pasteboardText)
-        } else {
-            otpView.startEditing()
-        }
     }
 
     override func configureView() {
@@ -54,6 +49,10 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        if let totpRegistrationId = MemberManager.member?.totpRegistrationId, totpRegistrationId.isEmpty == false {
+            hideBackButton()
+        }
     }
 
     private func continueWithTOTP() {
@@ -64,13 +63,14 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
 extension TOTPEntryViewController: OTPCodeEntryViewDelegate {
     func didEnterOTPCode(_ code: String) {
         StytchB2BUIClient.startLoading()
-        Task { [weak self] in
+        Task {
             do {
-                try await self?.viewModel.authenticateTOTP(code: code)
-                self?.continueWithTOTP()
+                try await viewModel.authenticateTOTP(code: code)
                 StytchB2BUIClient.stopLoading()
+                continueWithTOTP()
             } catch {
-                self?.presentErrorAlert(error: error)
+                otpView.clear()
+                presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }
         }

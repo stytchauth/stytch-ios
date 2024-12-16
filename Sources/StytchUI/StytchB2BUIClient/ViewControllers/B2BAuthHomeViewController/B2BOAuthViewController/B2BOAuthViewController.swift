@@ -13,6 +13,7 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
     var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] {
         let configuration = viewModel.state.configuration
         let oauthProviders = configuration.oauthProviders
+
         switch configuration.authFlowType {
         case .discovery:
             // If we are in discovery just return what is passed in the UI config since we have no org set yet
@@ -21,7 +22,14 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
             // If we are in the org flow we need to check if we are in restricted mode and we have allowedAuthMethods
             // In that case we need to filter the oauth provider options by whatever is in the allowedAuthMethods
             // Otherwise we just return the array as specific in the ui config
-            if let allowedAuthMethods = OrganizationManager.allowedAuthMethods, OrganizationManager.authMethods == .restricted {
+            var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods] = []
+            if let primaryRequiredAllowedAuthMethods = B2BAuthenticationManager.primaryRequired?.allowedAuthMethods {
+                allowedAuthMethods = primaryRequiredAllowedAuthMethods
+            } else if let organizationAllowedAuthMethods = OrganizationManager.allowedAuthMethods, OrganizationManager.authMethods == .restricted {
+                allowedAuthMethods = organizationAllowedAuthMethods
+            }
+
+            if allowedAuthMethods.isEmpty == false {
                 var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] = []
                 for oauthProvider in oauthProviders {
                     if allowedAuthMethods.contains(oauthProvider.provider.allowedAuthMethodType) {
