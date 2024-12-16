@@ -8,24 +8,12 @@ struct ZXCVBNIndicator: View {
 
     var body: some View {
         let emptyColor = UIColor.progressDefault
-        let filledColor = if state.score < MAXSCORE {
-            UIColor.progressDanger
-        } else {
-            UIColor.progressSuccess
-        }
-        let text = if state.score < MAXSCORE {
-            (state.suggestions ?? []).joined(separator: ", ")
-        } else {
-            "Great job! This is a strong password."
-        }
+        let filledColor: UIColor = state.score < MAXSCORE ? UIColor.progressDanger : UIColor.progressSuccess
+        let text = state.score < MAXSCORE ? (state.suggestions ?? []).joined(separator: ", ") : "Great job! This is a strong password."
         VStack(alignment: .leading) {
             HStack(alignment: .center) {
                 ForEach(0...MAXSCORE, id: \.self) { index in
-                    let color = if state.score >= index {
-                        filledColor
-                    } else {
-                        emptyColor
-                    }
+                    let color = state.score >= index ? filledColor : emptyColor
                     Rectangle().fill(Color(color)).frame(height: 4)
                 }
             }

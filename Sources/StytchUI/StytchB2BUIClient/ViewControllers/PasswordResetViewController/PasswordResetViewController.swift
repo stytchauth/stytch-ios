@@ -49,7 +49,6 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(passwordInputLabel)
         stackView.addArrangedSubview(passwordInput)
-        stackView.addArrangedSubview(secureEntryToggleButton)
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
 
