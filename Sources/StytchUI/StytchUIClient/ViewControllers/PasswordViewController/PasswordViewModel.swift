@@ -73,7 +73,7 @@ struct PasswordState {
 
     let config: StytchUIClient.Configuration
     let intent: Intent
-    let email: String
+    let email: String?
     let magicLinksEnabled: Bool
 }
 

@@ -39,7 +39,7 @@ class TOTPSecretView: UIView {
         containerView.addSubview(textLabel)
 
         // Copy button
-        copyButton.setImage(UIImage(systemName: "doc.on.doc"), for: .normal)
+        copyButton.setImage(UIImage(named: "copy", in: .module, compatibleWith: nil), for: .normal)
         copyButton.tintColor = .systemGray
         copyButton.translatesAutoresizingMaskIntoConstraints = false
         copyButton.addTarget(self, action: #selector(copyToClipboard), for: .touchUpInside)

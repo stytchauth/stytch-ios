@@ -73,13 +73,16 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
 extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
     func resendCode() {
+        StytchB2BUIClient.startLoading()
         Task {
             do {
                 if let phoneNumberE164 = MemberManager.phoneNumber {
                     try await AuthenticationOperations.smsSend(phoneNumberE164: phoneNumberE164)
                     startTimer()
                 }
+                StytchB2BUIClient.stopLoading()
             } catch {
+                StytchB2BUIClient.stopLoading()
                 presentErrorAlert(error: error)
             }
         }
@@ -102,11 +105,14 @@ extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
 
 extension SMSOTPEntryViewController: OTPCodeEntryViewDelegate {
     func didEnterOTPCode(_ code: String) {
+        StytchB2BUIClient.startLoading()
         Task {
             do {
                 try await viewModel.smsAuthenticate(code: code)
+                StytchB2BUIClient.stopLoading()
             } catch {
                 presentErrorAlert(error: error)
+                StytchB2BUIClient.stopLoading()
             }
         }
     }

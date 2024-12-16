@@ -61,4 +61,8 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
             ])
         }
     }
+
+    func hideBackButton() {
+        navigationItem.hidesBackButton = true
+    }
 }

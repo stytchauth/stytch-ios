@@ -1,19 +1,13 @@
 import Foundation
 import StytchCore
 
-protocol B2BAuthHomeViewModelProtocol {
-    func logRenderScreen() async throws
-}
-
 final class B2BAuthHomeViewModel {
     let state: B2BAuthHomeState
 
     init(state: B2BAuthHomeState) {
         self.state = state
     }
-}
 
-extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
     func logRenderScreen() async throws {
         try await EventsClient.logEvent(
             parameters: .init(
@@ -24,7 +18,7 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
     }
 
     func loadProducts(
-        completion: @escaping ([StytchB2BUIClient.ProductComponent]) -> Void
+        completion: @escaping ([StytchB2BUIClient.ProductComponent], Error?) -> Void
     ) {
         Task {
             switch state.configuration.authFlowType {
@@ -34,29 +28,32 @@ extension B2BAuthHomeViewModel: B2BAuthHomeViewModelProtocol {
                     configuration: state.configuration,
                     hasSSOActiveConnections: false // can you do discovery via sso?
                 )
-                completion(products)
+                completion(products, nil)
             case let .organization(slug):
                 do {
                     try await OrganizationManager.getOrganizationBySlug(organizationSlug: slug)
-                    let validProducts = StytchB2BUIClient.validProducts(
-                        organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
-                        organizationAuthMethods: OrganizationManager.authMethods,
-                        primaryRequired: B2BAuthenticationManager.primaryRequired,
-                        configurationProducts: state.configuration.products,
-                        oauthProviders: state.configuration.oauthProviders
-                    )
-                    let products = StytchB2BUIClient.productComponentsOrdering(
-                        validProducts: validProducts,
-                        configuration: state.configuration,
-                        hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
-                    )
-                    completion(products)
+                    completion(products(), nil)
                 } catch {
-                    print(error.errorInfo)
-                    completion([])
+                    completion([], error)
                 }
             }
         }
+    }
+
+    func products() -> [StytchB2BUIClient.ProductComponent] {
+        let validProducts = StytchB2BUIClient.validProducts(
+            organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
+            organizationAuthMethods: OrganizationManager.authMethods,
+            primaryRequired: B2BAuthenticationManager.primaryRequired,
+            configurationProducts: state.configuration.products,
+            oauthProviders: state.configuration.oauthProviders
+        )
+        let products = StytchB2BUIClient.productComponentsOrdering(
+            validProducts: validProducts,
+            configuration: state.configuration,
+            hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
+        )
+        return products
     }
 }
 

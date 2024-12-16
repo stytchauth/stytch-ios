@@ -29,7 +29,7 @@ final class B2BAuthRootViewController: UIViewController {
         render()
     }
 
-    func handlePasswordReset(token: String, email: String, animated: Bool = true) {
+    func handlePasswordReset(token: String, email: String?, animated: Bool = true) {
         let state = PasswordResetState(configuration: configuration, token: token, email: email)
         navigationController?.pushViewController(PasswordResetViewController(state: state), animated: animated)
     }
@@ -72,6 +72,14 @@ final class B2BAuthRootViewController: UIViewController {
 
     func startDiscoveryFlowIfNeeded() {
         homeController?.startDiscoveryFlowIfNeeded(configuration: configuration)
+    }
+
+    func showErrorScreen() {
+        homeController?.showError(configuration: configuration, type: .emailAuthFailed)
+    }
+
+    func popToRootViewController(animated: Bool) {
+        homeController?.navigationController?.popToRootViewController(animated: animated)
     }
 }
 

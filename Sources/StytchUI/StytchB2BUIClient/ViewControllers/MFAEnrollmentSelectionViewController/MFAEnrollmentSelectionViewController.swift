@@ -27,7 +27,10 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         // used to order the mfa methods
         var mfaMethods: [StytchB2BClient.MfaMethod] = [.sms, .totp]
         if let mfaProductOrder = viewModel.state.configuration.mfaProductOrder {
-            mfaMethods = mfaProductOrder
+            mfaMethods = reorderMfaEnrollmentMethods(
+                mfaProductOrder: mfaProductOrder,
+                mfaEnrollmentMethods: viewModel.state.configuration.mfaEnrollmentMethods
+            )
         }
 
         let mfaMethodSelectionViewController = MFAMethodSelectionViewController(mfaMethods: mfaMethods)
@@ -43,6 +46,31 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         )
 
         view.backgroundColor = .background
+    }
+
+    func reorderMfaEnrollmentMethods(
+        mfaProductOrder: [StytchB2BClient.MfaMethod],
+        mfaEnrollmentMethods: [StytchB2BClient.MfaMethod]
+    ) -> [StytchB2BClient.MfaMethod] {
+        guard let primaryMethod = mfaProductOrder.first else {
+            return mfaEnrollmentMethods
+        }
+
+        var orderedMethods: [StytchB2BClient.MfaMethod] = []
+
+        if mfaEnrollmentMethods.contains(primaryMethod) {
+            orderedMethods.append(primaryMethod)
+        }
+
+        // Add the other method if present in mfaEnrollmentMethods and not already added
+        for method in mfaEnrollmentMethods {
+            if method != primaryMethod, !orderedMethods.contains(method) {
+                orderedMethods.append(method)
+                break // Stop after adding one extra method
+            }
+        }
+
+        return orderedMethods
     }
 }
 

@@ -35,6 +35,38 @@ struct OrganizationManager {
         organization?.allowedAuthMethods
     }
 
+    static var usesSMSMFAOnly: Bool? {
+        if let org = organization as? Organization {
+            return org.usesSMSMFAOnly
+        } else {
+            return nil
+        }
+    }
+
+    static var usesTOTPMFAOnly: Bool? {
+        if let org = organization as? Organization {
+            return org.usesTOTPMFAOnly
+        } else {
+            return nil
+        }
+    }
+
+    static var allMFAMethodsAllowed: Bool? {
+        if let org = organization as? Organization {
+            return org.allMFAMethodsAllowed
+        } else {
+            return nil
+        }
+    }
+
+    static var organizationName: String? {
+        if let org = organization as? Organization {
+            return org.name
+        } else {
+            return nil
+        }
+    }
+
     static func getOrganizationBySlug(organizationSlug: String) async throws {
         let parameters = StytchB2BClient.SearchManager.SearchOrganizationParameters(organizationSlug: organizationSlug)
         let response = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
