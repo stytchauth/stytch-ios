@@ -13,9 +13,9 @@ struct LUDSIndicator: View {
             VStack(alignment: .leading) {
                 HStack(alignment: .center, spacing: 4) {
                     if validLength {
-                        Image(.checkIcon).frame(width: 16, height: 16, alignment: .center)
+                        Image("checkIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     } else {
-                        Image(.crossIcon).frame(width: 16, height: 16, alignment: .center)
+                        Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     }
                     Text("Must be at least \(state.passwordConfig?.ludsMinimumCount ?? 0) characters long")
                         .fixedSize(horizontal: false, vertical: true)
@@ -25,9 +25,9 @@ struct LUDSIndicator: View {
                 }
                 HStack(alignment: .center, spacing: 4) {
                     if validComplexity {
-                        Image(.checkIcon).frame(width: 16, height: 16, alignment: .center)
+                        Image("checkIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     } else {
-                        Image(.crossIcon).frame(width: 16, height: 16, alignment: .center)
+                        Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     }
                     Text("Must contain \(state.passwordConfig?.ludsComplexity ?? 0) of the following: uppercase letter, lowercase letter, number, symbol")
                         .fixedSize(horizontal: false, vertical: true)
@@ -36,7 +36,7 @@ struct LUDSIndicator: View {
                         .foregroundColor(complexityColor)
                 }
                 if state.breached {
-                    Image(.crossIcon).frame(width: 16, height: 16, alignment: .center)
+                    Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     HStack(alignment: .center, spacing: 4) {
                         Text("This password may have been used on a different site that experienced a security issue. Please choose another password.")
                             .fixedSize(horizontal: false, vertical: true)
