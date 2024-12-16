@@ -32,24 +32,28 @@ final class B2BAuthHomeViewModel {
             case let .organization(slug):
                 do {
                     try await OrganizationManager.getOrganizationBySlug(organizationSlug: slug)
-                    let validProducts = StytchB2BUIClient.validProducts(
-                        organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
-                        organizationAuthMethods: OrganizationManager.authMethods,
-                        primaryRequired: B2BAuthenticationManager.primaryRequired,
-                        configurationProducts: state.configuration.products,
-                        oauthProviders: state.configuration.oauthProviders
-                    )
-                    let products = StytchB2BUIClient.productComponentsOrdering(
-                        validProducts: validProducts,
-                        configuration: state.configuration,
-                        hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
-                    )
-                    completion(products, nil)
+                    completion(products(), nil)
                 } catch {
                     completion([], error)
                 }
             }
         }
+    }
+
+    func products() -> [StytchB2BUIClient.ProductComponent] {
+        let validProducts = StytchB2BUIClient.validProducts(
+            organizationAllowedAuthMethods: OrganizationManager.allowedAuthMethods,
+            organizationAuthMethods: OrganizationManager.authMethods,
+            primaryRequired: B2BAuthenticationManager.primaryRequired,
+            configurationProducts: state.configuration.products,
+            oauthProviders: state.configuration.oauthProviders
+        )
+        let products = StytchB2BUIClient.productComponentsOrdering(
+            validProducts: validProducts,
+            configuration: state.configuration,
+            hasSSOActiveConnections: (OrganizationManager.ssoActiveConnections?.count ?? 0) > 0
+        )
+        return products
     }
 }
 

@@ -59,6 +59,14 @@ struct OrganizationManager {
         }
     }
 
+    static var organizationName: String? {
+        if let org = organization as? Organization {
+            return org.name
+        } else {
+            return nil
+        }
+    }
+
     static func getOrganizationBySlug(organizationSlug: String) async throws {
         let parameters = StytchB2BClient.SearchManager.SearchOrganizationParameters(organizationSlug: organizationSlug)
         let response = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
