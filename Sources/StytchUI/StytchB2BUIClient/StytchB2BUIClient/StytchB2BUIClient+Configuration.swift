@@ -62,7 +62,7 @@ public extension StytchB2BUIClient {
         }
 
         public var organizationSlug: String? {
-            switch authFlowType {
+            switch computedAuthFlowType {
             case let .organization(slug: slug):
                 return slug
             default:
@@ -180,6 +180,69 @@ public extension StytchB2BUIClient {
             self.status = status
             self.ignoreInvites = ignoreInvites
             self.ignoreJitProvisioning = ignoreJitProvisioning
+        }
+    }
+}
+
+// Variables in this extension are for internal logic to the B2B UI
+extension StytchB2BUIClient.Configuration {
+    var mfaEnrollmentMethods: [StytchB2BClient.MfaMethod] {
+        var enrollmentMethods: [StytchB2BClient.MfaMethod] = []
+        if OrganizationManager.allMFAMethodsAllowed == false {
+            if OrganizationManager.usesSMSMFAOnly == true {
+                enrollmentMethods.append(.sms)
+            } else if OrganizationManager.usesTOTPMFAOnly == true {
+                enrollmentMethods.append(.totp)
+            }
+        } else if let mfaProductInclude = mfaProductInclude {
+            enrollmentMethods = mfaProductInclude
+        } else {
+            enrollmentMethods = [.sms, .totp]
+        }
+        return enrollmentMethods
+    }
+
+    var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] {
+        switch computedAuthFlowType {
+        case .discovery:
+            // If we are in discovery just return what is passed in the UI config since we have no org set yet
+            return oauthProviders
+        case .organization(slug: _):
+            // If a valid primaryRequired object exists, prioritize its allowed auth methods.
+            // Otherwise check the current org for if restricted mode is enabled and if so use its allowedAuthMethods.
+            // If so, filter the OAuth provider options based on allowedAuthMethods, giving preference to primaryRequired.
+            // Otherwise, return the array specified in the UI config.
+            var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods] = []
+            if let primaryRequiredAllowedAuthMethods = B2BAuthenticationManager.primaryRequired?.allowedAuthMethods {
+                allowedAuthMethods = primaryRequiredAllowedAuthMethods
+            } else if let organizationAllowedAuthMethods = OrganizationManager.allowedAuthMethods, OrganizationManager.authMethods == .restricted {
+                allowedAuthMethods = organizationAllowedAuthMethods
+            }
+
+            if allowedAuthMethods.isEmpty == false {
+                var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] = []
+                for oauthProvider in oauthProviders {
+                    if allowedAuthMethods.contains(oauthProvider.provider.allowedAuthMethodType) {
+                        filteredOauthProviders.append(oauthProvider)
+                    }
+                }
+                return filteredOauthProviders
+            } else {
+                return oauthProviders
+            }
+        }
+    }
+
+    var computedAuthFlowType: StytchB2BUIClient.AuthFlowType {
+        switch authFlowType {
+        case .discovery:
+            if B2BAuthenticationManager.primaryRequired != nil, let organizationSlug = OrganizationManager.organizationSlug {
+                return .organization(slug: organizationSlug)
+            } else {
+                return .discovery
+            }
+        case let .organization(slug: slug):
+            return .organization(slug: slug)
         }
     }
 }

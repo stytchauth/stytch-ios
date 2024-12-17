@@ -152,7 +152,7 @@ extension B2BAuthHomeViewController {
         if B2BAuthenticationManager.primaryRequired != nil {
             return "Verify Your Email"
         } else {
-            switch viewModel.state.configuration.authFlowType {
+            switch viewModel.state.configuration.computedAuthFlowType {
             case .discovery:
                 return "Sign up or log in"
             case .organization(slug: _):

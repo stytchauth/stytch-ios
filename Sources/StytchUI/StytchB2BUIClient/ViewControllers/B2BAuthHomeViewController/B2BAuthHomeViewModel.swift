@@ -21,7 +21,7 @@ final class B2BAuthHomeViewModel {
         completion: @escaping ([StytchB2BUIClient.ProductComponent], Error?) -> Void
     ) {
         Task {
-            switch state.configuration.authFlowType {
+            switch state.configuration.computedAuthFlowType {
             case .discovery:
                 let products = StytchB2BUIClient.productComponentsOrdering(
                     validProducts: state.configuration.products,
@@ -31,7 +31,9 @@ final class B2BAuthHomeViewModel {
                 completion(products, nil)
             case let .organization(slug):
                 do {
-                    try await OrganizationManager.getOrganizationBySlug(organizationSlug: slug)
+                    if OrganizationManager.organizationId == nil {
+                        try await OrganizationManager.getOrganizationBySlug(organizationSlug: slug)
+                    }
                     completion(products(), nil)
                 } catch {
                     completion([], error)

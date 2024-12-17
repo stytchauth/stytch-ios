@@ -23,7 +23,7 @@ public enum StytchUIClient {
     /// Configures the `StytchUIClient`
     /// - Parameters:
     ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
-    public static func configure(configuration: Configuration) {
+    static func configure(configuration: Configuration) {
         StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
         Self.configuration = configuration
         FontLoader.loadFonts()
@@ -31,9 +31,11 @@ public enum StytchUIClient {
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
     public static func presentController(
+        configuration: Configuration,
         controller: UIViewController,
         onAuthCallback: AuthCallback? = nil
     ) {
+        configure(configuration: configuration)
         Self.onAuthCallback = { response in
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
@@ -80,11 +82,15 @@ public enum StytchUIClient {
 
     static func setUpSessionChangeListener() {
         cancellable = StytchClient.sessions.onSessionChange
-            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak currentController] _ in
-                currentController?.dismissAuth()
-                Self.cancellable = nil
+            .sink { [weak currentController] sessionInfo in
+                switch sessionInfo {
+                case .available:
+                    currentController?.dismissAuth()
+                    Self.cancellable = nil
+                case .unavailable:
+                    break
+                }
             }
     }
 }
@@ -92,6 +98,7 @@ public enum StytchUIClient {
 public extension View {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onSessionChange` to observe auth changes.
     func authenticationSheet(
+        configuration: StytchUIClient.Configuration,
         isPresented: Binding<Bool>,
         onAuthCallback: AuthCallback? = nil
     ) -> some View {
@@ -102,7 +109,7 @@ public extension View {
                 }
                 onAuthCallback?(response)
             }
-            return AuthenticationView()
+            return AuthenticationView(configuration)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }
@@ -111,7 +118,14 @@ public extension View {
 public struct AuthenticationView: UIViewControllerRepresentable {
     public typealias UIViewControllerType = UIViewController
 
+    public let configuration: StytchUIClient.Configuration
+
+    public init(_ configuration: StytchUIClient.Configuration) {
+        self.configuration = configuration
+    }
+
     public func makeUIViewController(context _: Context) -> UIViewController {
+        StytchUIClient.configure(configuration: configuration)
         let controller = AuthRootViewController(config: StytchUIClient.configuration)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpSessionChangeListener()

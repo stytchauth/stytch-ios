@@ -51,24 +51,6 @@ extension BaseViewController {
     }
 }
 
-extension StytchB2BUIClient.Configuration {
-    var mfaEnrollmentMethods: [StytchB2BClient.MfaMethod] {
-        var enrollmentMethods: [StytchB2BClient.MfaMethod] = []
-        if OrganizationManager.allMFAMethodsAllowed == false {
-            if OrganizationManager.usesSMSMFAOnly == true {
-                enrollmentMethods.append(.sms)
-            } else if OrganizationManager.usesTOTPMFAOnly == true {
-                enrollmentMethods.append(.totp)
-            }
-        } else if let mfaProductInclude = mfaProductInclude {
-            enrollmentMethods = mfaProductInclude
-        } else {
-            enrollmentMethods = [.sms, .totp]
-        }
-        return enrollmentMethods
-    }
-}
-
 extension B2BMFAAuthenticateResponseDataType {
     var smsImplicitlySent: Bool {
         mfaRequired?.secondaryAuthInitiated == "sms_otp"
