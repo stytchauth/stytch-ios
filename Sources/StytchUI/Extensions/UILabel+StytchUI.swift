@@ -14,7 +14,7 @@ extension UILabel {
         let label = UILabel()
         label.text = text
         label.numberOfLines = 0
-        label.font = .IBMPlexSansSemiBold(size: 18)
+        label.font = .IBMPlexSansRegular(size: 18)
         label.textColor = .secondaryText
         return label
     }

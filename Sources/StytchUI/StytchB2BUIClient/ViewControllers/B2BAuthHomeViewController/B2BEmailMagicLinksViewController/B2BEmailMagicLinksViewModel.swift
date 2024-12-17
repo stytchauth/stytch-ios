@@ -17,7 +17,7 @@ final class B2BEmailMagicLinksViewModel {
         StytchB2BUIClient.startLoading()
         Task {
             do {
-                if state.configuration.authFlowType == .discovery {
+                if state.configuration.computedAuthFlowType == .discovery {
                     let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
                         emailAddress: emailAddress,
                         discoveryRedirectUrl: state.configuration.redirectUrl,

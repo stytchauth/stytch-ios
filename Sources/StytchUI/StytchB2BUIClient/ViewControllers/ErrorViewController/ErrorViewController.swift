@@ -39,5 +39,9 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
             imageView.widthAnchor.constraint(equalToConstant: 300),
             imageView.heightAnchor.constraint(equalToConstant: 300),
         ])
+
+        if viewModel.state.type == .noOrganziationFound {
+            hideBackButton()
+        }
     }
 }

@@ -45,7 +45,7 @@ final class B2BEmailMagicLinksViewController: BaseViewController<B2BEmailMagicLi
         stackView.addArrangedSubview(emailInput)
         stackView.addArrangedSubview(continueButton)
 
-        let isDicoveryFlow = viewModel.state.configuration.authFlowType == .discovery
+        let isDicoveryFlow = viewModel.state.configuration.computedAuthFlowType == .discovery
         if showsUsePasswordButton == true, isDicoveryFlow == false {
             stackView.addArrangedSubview(usePasswordInsteadButton)
         }

@@ -15,7 +15,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         return label
     }()
 
-    private let codeInput: CodeInput = .init()
+    private let otpView = OTPCodeEntryView(frame: .zero)
 
     lazy var expiryButton: Button = makeExpiryButton()
 
@@ -47,7 +47,6 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         super.init(viewModel: OTPCodeViewModel(state: state))
     }
 
-    // swiftlint:disable:next function_body_length
     override func configureView() {
         super.configureView()
 
@@ -55,7 +54,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(inputLabel)
-        stackView.addArrangedSubview(codeInput)
+        stackView.addArrangedSubview(otpView)
         stackView.addArrangedSubview(expiryButton)
         stackView.addArrangedSubview(lowerSeparator)
         stackView.addArrangedSubview(passwordTertiaryButton)
@@ -69,36 +68,9 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        codeInput.onTextChanged = { [weak self] isValid in
-            guard let self, let code = self.codeInput.text, isValid else { return }
-            Task {
-                do {
-                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
-                } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
-                    DispatchQueue.main.async {
-                        self.showInvalidCode()
-                    }
-                } catch {
-                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                    self.presentErrorAlert(error: error)
-                }
-            }
-        }
-
-        codeInput.onReturn = { [weak self] isValid in
-            guard let self, let code = self.codeInput.text, isValid else { return }
-            Task {
-                do {
-                    try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
-                } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
-                    DispatchQueue.main.async {
-                        self.showInvalidCode()
-                    }
-                } catch {
-                    self.presentErrorAlert(error: error)
-                }
-            }
-        }
+        NSLayoutConstraint.activate([
+            otpView.heightAnchor.constraint(equalToConstant: 50),
+        ])
 
         let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
         let attributedPhone = NSAttributedString(
@@ -113,6 +85,8 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
         lowerSeparator.isHidden = !viewModel.state.passwordsEnabled
         passwordTertiaryButton.isHidden = !viewModel.state.passwordsEnabled
+
+        otpView.delegate = self
     }
 
     @objc private func updateExpiryText() {
@@ -145,17 +119,22 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }
 }
 
-protocol OTPCodeViewModelDelegate: AnyObject {
-    func showInvalidCode()
-}
-
-extension OTPCodeViewController: OTPCodeViewModelDelegate {
-    func showInvalidCode() {
-        codeInput.setFeedback(
-            .error(
-                NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: "")
-            )
-        )
+extension OTPCodeViewController: OTPCodeEntryViewDelegate {
+    func didEnterOTPCode(_ code: String) {
+        Task {
+            do {
+                try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+            } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
+                DispatchQueue.main.async {
+                    self.presentAlert(title: NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: ""))
+                }
+                self.otpView.clear()
+            } catch {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                self.presentErrorAlert(error: error)
+                self.otpView.clear()
+            }
+        }
     }
 }
 

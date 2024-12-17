@@ -5,7 +5,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
-    var cancellables = Set<AnyCancellable>()
 
     var body: some View {
         VStack(spacing: 20) {
@@ -61,7 +60,6 @@ class ContentViewModel: ObservableObject {
     @Published var showDiscovery: Bool = false
     @Published var isAuthenticated: Bool = false
 
-    let dismissSubject = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -98,21 +96,21 @@ extension ContentView {
         publicToken: publicToken,
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
         authFlowType: .organization(slug: "no-mfa"),
-        oauthProviders: [.init(provider: .google)]
+        oauthProviders: [.init(provider: .google), .init(provider: .github)]
     )
 
     static let mfaRequiredStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: publicToken,
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
         authFlowType: .organization(slug: "mfa-required"),
-        oauthProviders: [.init(provider: .google)]
+        oauthProviders: [.init(provider: .google), .init(provider: .github)]
     )
 
     static let discoveryStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: publicToken,
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
         authFlowType: .discovery,
-        oauthProviders: [.init(provider: .google)]
+        oauthProviders: [.init(provider: .google), .init(provider: .github)]
     )
 }
 

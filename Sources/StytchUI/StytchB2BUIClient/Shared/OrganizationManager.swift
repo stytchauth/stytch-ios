@@ -35,6 +35,23 @@ struct OrganizationManager {
         organization?.allowedAuthMethods
     }
 
+    static func getOrganizationBySlug(organizationSlug: String) async throws {
+        let parameters = StytchB2BClient.SearchManager.SearchOrganizationParameters(organizationSlug: organizationSlug)
+        let response = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
+        organization = response.organization
+    }
+
+    static func updateOrganization(_ newOrganization: Organization) {
+        organization = newOrganization
+    }
+
+    static func reset() {
+        organization = nil
+    }
+}
+
+// All variables in this extension assume the organization object is of type "Organization," not the generic "OrganizationType."
+extension OrganizationManager {
     static var usesSMSMFAOnly: Bool? {
         if let org = organization as? Organization {
             return org.usesSMSMFAOnly
@@ -67,17 +84,11 @@ struct OrganizationManager {
         }
     }
 
-    static func getOrganizationBySlug(organizationSlug: String) async throws {
-        let parameters = StytchB2BClient.SearchManager.SearchOrganizationParameters(organizationSlug: organizationSlug)
-        let response = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
-        organization = response.organization
-    }
-
-    static func updateOrganization(_ newOrganization: Organization) {
-        organization = newOrganization
-    }
-
-    static func reset() {
-        organization = nil
+    static var organizationSlug: String? {
+        if let org = organization as? Organization {
+            return org.slug
+        } else {
+            return nil
+        }
     }
 }
