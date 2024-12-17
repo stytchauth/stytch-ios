@@ -56,6 +56,11 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
     }
 
     func configureView(productComponents: [StytchB2BUIClient.ProductComponent]) {
+        guard !productComponents.isEmpty else {
+            showError(configuration: viewModel.state.configuration, type: .invlaidProductConfiguration)
+            return
+        }
+
         view.addSubview(scrollView)
         scrollView.showsVerticalScrollIndicator = false
         scrollView.clipsToBounds = false

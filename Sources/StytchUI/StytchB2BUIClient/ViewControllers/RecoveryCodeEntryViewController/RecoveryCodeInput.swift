@@ -14,6 +14,7 @@ final class RecoveryCodeInput: TextInputView<RecoveryCodeTextField> {
         textInput.textContentType = .none
         textInput.delegate = self
         textInput.accessibilityLabel = "recoveryCodeEntry"
+        textInput.returnKeyType = .done
     }
 }
 

@@ -62,6 +62,12 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
             self?.setNeedsStrengthCheck()
             self?.continueButton.isEnabled = isValid
         }
+
+        passwordInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.continueWithPasswordResetIfPossible()
+            }
+        }
     }
 
     @objc private func toggleSecureEntry(sender _: UIButton) {

@@ -113,7 +113,7 @@ final class SessionManager {
 
         // If there is no session, it means that we are in MFA and all we need is the IST
         guard let sessionType else {
-            clearTokensCachedObjectsPolling()
+            resetSession()
             return
         }
 
@@ -146,14 +146,7 @@ final class SessionManager {
         sessionJwt = tokens.jwt
     }
 
-    // clear everything including the IST
     func resetSession() {
-        clearTokensCachedObjectsPolling()
-        intermediateSessionToken = nil
-    }
-
-    // clear everything but the IST
-    func clearTokensCachedObjectsPolling() {
         sessionStorage.update(nil)
         memberSessionStorage.update(nil)
         userStorage.update(nil)

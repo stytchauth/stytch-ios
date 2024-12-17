@@ -66,6 +66,12 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
                 break
             }
         }
+
+        emailInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.continueWithPasswordResetIfPossible()
+            }
+        }
     }
 
     @objc private func continueWithPasswordResetIfPossible() {

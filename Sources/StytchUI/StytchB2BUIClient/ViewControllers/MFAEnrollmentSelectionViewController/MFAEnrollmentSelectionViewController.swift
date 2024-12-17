@@ -46,6 +46,8 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         )
 
         view.backgroundColor = .background
+
+        hideBackButton()
     }
 
     func reorderMfaEnrollmentMethods(

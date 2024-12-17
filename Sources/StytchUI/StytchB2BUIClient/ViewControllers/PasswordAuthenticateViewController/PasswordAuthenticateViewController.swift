@@ -70,6 +70,24 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
+
+        emailInput.setReturnKeyType(returnKeyType: .next)
+
+        emailInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.passwordInput.assignFirstResponder()
+            }
+        }
+
+        passwordInput.onReturn = { [weak self] isValid in
+            if isValid == true {
+                self?.submit()
+            }
+        }
     }
 
     @objc private func toggleSecureEntry(sender _: UIButton) {

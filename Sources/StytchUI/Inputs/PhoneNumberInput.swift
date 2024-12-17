@@ -4,6 +4,8 @@ import UIKit
 final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
     var onButtonPressed: (PhoneNumberKit) -> Void = { _ in }
 
+    var onReturn: (Bool) -> Void = { _ in }
+
     var phoneNumberE164: String? {
         isValid ? textField.phoneNumber.map { "+\($0.countryCode)\($0.nationalNumber)" } : nil
     }
@@ -25,10 +27,27 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
 
         textInput.countrySelectorButton.addTarget(self, action: #selector(didTapButton(sender:)), for: .primaryActionTriggered)
         PhoneNumberKit.CountryCodePicker.forceModalPresentation = true
+        textInput.textField.delegate = self
+        textInput.textField.returnKeyType = .done
     }
 
     @objc private func didTapButton(sender _: UIButton) {
         onButtonPressed(textField.phoneNumberKit)
+    }
+
+    func setReturnKeyType(returnKeyType: UIReturnKeyType) {
+        textInput.textField.returnKeyType = returnKeyType
+    }
+
+    func assignFirstResponder() {
+        textInput.textField.becomeFirstResponder()
+    }
+}
+
+extension PhoneNumberInput: UITextFieldDelegate {
+    func textFieldShouldReturn(_: UITextField) -> Bool {
+        onReturn(isValid)
+        return true
     }
 }
 

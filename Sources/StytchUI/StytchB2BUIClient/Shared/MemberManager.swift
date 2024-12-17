@@ -1,3 +1,4 @@
+import PhoneNumberKit
 import StytchCore
 
 struct MemberManager {
@@ -18,11 +19,25 @@ struct MemberManager {
     }
 
     static var phoneNumber: String? {
-        if let memberPhoneNumber = member?.mfaPhoneNumber {
+        if let memberPhoneNumber = member?.mfaPhoneNumber, memberPhoneNumber.isEmpty == false {
             return memberPhoneNumber
         } else {
             return _phoneNumber
         }
+    }
+
+    static var formattedPhoneNumber: String {
+        let phoneNumberKit = PhoneNumberKit()
+        guard let memberPhoneNumber = phoneNumber else {
+            return ""
+        }
+
+        guard let parsedPhoneNumber = try? phoneNumberKit.parse(memberPhoneNumber) else {
+            return memberPhoneNumber
+        }
+
+        let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .international)
+        return formattedPhoneNumber
     }
 
     static func updateMember(_ member: Member) {

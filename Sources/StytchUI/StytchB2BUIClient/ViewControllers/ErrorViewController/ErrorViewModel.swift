@@ -25,6 +25,8 @@ extension ErrorViewModel {
             return "Something went wrong. Your login link may have expired, been revoked, or been used more than once. Request a new login link to try again, or contact your admin for help."
         case .generic:
             return "Something went wrong. Try again later or contact your admin for help."
+        case .invlaidProductConfiguration:
+            return "Invalid product configuration detected"
         }
     }
 }
@@ -38,5 +40,6 @@ enum ErrorScreenType: Error {
     case noOrganziationFound
     case noPrimaryAuthMethods
     case emailAuthFailed
+    case invlaidProductConfiguration
     case generic
 }

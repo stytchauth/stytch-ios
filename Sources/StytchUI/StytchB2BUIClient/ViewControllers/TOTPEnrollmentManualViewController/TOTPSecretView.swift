@@ -62,6 +62,8 @@ class TOTPSecretView: UIView {
             copyButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -15),
             copyButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             copyButton.leadingAnchor.constraint(greaterThanOrEqualTo: textLabel.trailingAnchor, constant: 10),
+            copyButton.widthAnchor.constraint(equalToConstant: 30),
+            copyButton.heightAnchor.constraint(equalToConstant: 30),
         ])
     }
 
