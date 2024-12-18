@@ -156,7 +156,7 @@ extension B2BAuthHomeViewController {
             case .discovery:
                 return "Sign up or log in"
             case .organization(slug: _):
-                return "Continue to \(OrganizationManager.organizationName ?? "...")"
+                return "Continue to \(OrganizationManager.name ?? "...")"
             }
         }
     }

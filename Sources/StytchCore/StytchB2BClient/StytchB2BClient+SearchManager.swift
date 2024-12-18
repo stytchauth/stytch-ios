@@ -99,5 +99,17 @@ public extension StytchB2BClient.SearchManager {
         public let authMethods: StytchB2BClient.AuthMethods?
         /// An array of allowed authentication methods. This list is enforced when auth_methods is set to RESTRICTED.
         public let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
+
+        public var name: String {
+            organizationName
+        }
+
+        public var logoUrl: URL? {
+            if let organizationLogoUrl {
+                return URL(string: organizationLogoUrl)
+            } else {
+                return nil
+            }
+        }
     }
 }
