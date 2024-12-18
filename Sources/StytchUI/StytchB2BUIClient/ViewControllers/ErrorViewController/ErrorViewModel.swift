@@ -20,7 +20,7 @@ extension ErrorViewModel {
         case .noOrganziationFound:
             return "The organization you are looking for could not be found. If you think this is a mistake, contact your admin."
         case .noPrimaryAuthMethods:
-            return "Unable to join due to \(OrganizationManager.organizationName ?? "the organization")'s authentication policy. Please contact your admin for more information."
+            return "Unable to join due to \(OrganizationManager.name ?? "the organization")'s authentication policy. Please contact your admin for more information."
         case .emailAuthFailed:
             return "Something went wrong. Your login link may have expired, been revoked, or been used more than once. Request a new login link to try again, or contact your admin for help."
         case .generic:

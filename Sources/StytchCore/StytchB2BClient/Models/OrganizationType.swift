@@ -20,4 +20,8 @@ public protocol OrganizationType: Codable, Sendable {
     var authMethods: StytchB2BClient.AuthMethods? { get }
     /// An array of allowed authentication methods. This list is enforced when auth_methods is set to RESTRICTED.
     var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]? { get }
+    /// The name of the Organization. Must be between 1 and 128 characters in length.
+    var name: String { get }
+    /// The image URL of the Organization logo.
+    var logoUrl: URL? { get }
 }

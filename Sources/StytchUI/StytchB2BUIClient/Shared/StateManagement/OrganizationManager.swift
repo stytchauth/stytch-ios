@@ -1,3 +1,4 @@
+import Foundation
 import StytchCore
 
 struct OrganizationManager {
@@ -33,6 +34,14 @@ struct OrganizationManager {
 
     static var allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]? {
         organization?.allowedAuthMethods
+    }
+
+    static var name: String? {
+        organization?.name
+    }
+
+    static var logoUrl: URL? {
+        organization?.logoUrl
     }
 
     static func getOrganizationBySlug(organizationSlug: String) async throws {
@@ -71,14 +80,6 @@ extension OrganizationManager {
     static var allMFAMethodsAllowed: Bool? {
         if let org = organization as? Organization {
             return org.allMFAMethodsAllowed
-        } else {
-            return nil
-        }
-    }
-
-    static var organizationName: String? {
-        if let org = organization as? Organization {
-            return org.name
         } else {
             return nil
         }
