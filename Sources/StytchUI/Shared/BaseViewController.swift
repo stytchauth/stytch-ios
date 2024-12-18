@@ -32,12 +32,30 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupHideKeyboardOnTap()
         configureView()
     }
 
     func configureView() {
         view.backgroundColor = .background
         view.layoutMargins = .default
+    }
+
+    func attachStackViewToScrollView() {
+        let scrollView: UIScrollView = .init()
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
     }
 
     final func attachStackView(within superview: UIView, usingLayoutMarginsGuide: Bool = true) {
@@ -64,5 +82,16 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
 
     func hideBackButton() {
         navigationItem.hidesBackButton = true
+    }
+
+    private func setupHideKeyboardOnTap() {
+        view.addGestureRecognizer(endEditingRecognizer())
+        navigationController?.navigationBar.addGestureRecognizer(endEditingRecognizer())
+    }
+
+    private func endEditingRecognizer() -> UIGestureRecognizer {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(view.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        return tap
     }
 }

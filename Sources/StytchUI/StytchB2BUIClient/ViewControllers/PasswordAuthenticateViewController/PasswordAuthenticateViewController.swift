@@ -65,7 +65,7 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
         stackView.addArrangedSubview(signUpOrResetPasswordButton)
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        attachStackViewToScrollView()
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
@@ -76,6 +76,7 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
         ])
 
         emailInput.setReturnKeyType(returnKeyType: .next)
+        emailInput.shouldResignFirstResponderOnReturn = false
 
         emailInput.onReturn = { [weak self] isValid in
             if isValid == true {
@@ -117,6 +118,6 @@ extension PasswordAuthenticateViewController: B2BPasswordsViewModelDelegate {
     }
 
     func didError(error: any Error) {
-        presentErrorAlert(error: error)
+        showEmailNotEligibleForJitProvioningErrorIfPossible(error)
     }
 }

@@ -11,20 +11,20 @@ public enum FontLoader {
         }
 
         let fonts = [
-            "IBMPlexSans-Bold",
-            "IBMPlexSans-BoldItalic",
+            "IBMPlexSans-Regular",
+            "IBMPlexSans-Italic",
+            "IBMPlexSans-Thin",
+            "IBMPlexSans-ThinItalic",
             "IBMPlexSans-ExtraLight",
             "IBMPlexSans-ExtraLightItalic",
-            "IBMPlexSans-Italic",
             "IBMPlexSans-Light",
             "IBMPlexSans-LightItalic",
             "IBMPlexSans-Medium",
             "IBMPlexSans-MediumItalic",
-            "IBMPlexSans-MediumItalic",
             "IBMPlexSans-SemiBold",
             "IBMPlexSans-SemiBoldItalic",
-            "IBMPlexSans-Thin",
-            "IBMPlexSans-ThinItalic",
+            "IBMPlexSans-Bold",
+            "IBMPlexSans-BoldItalic",
         ]
 
         for fontName in fonts {

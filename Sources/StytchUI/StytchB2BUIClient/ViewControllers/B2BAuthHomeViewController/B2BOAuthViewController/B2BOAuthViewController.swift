@@ -48,8 +48,12 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
                 }
                 StytchB2BUIClient.stopLoading()
             } catch {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
-                self?.presentErrorAlert(error: error)
+                if let error = error as? ASWebAuthenticationSessionError, error.code == .canceledLogin {
+                    // do nothing
+                } else {
+                    self?.presentErrorAlert(error: error)
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                }
                 StytchB2BUIClient.stopLoading()
             }
         }

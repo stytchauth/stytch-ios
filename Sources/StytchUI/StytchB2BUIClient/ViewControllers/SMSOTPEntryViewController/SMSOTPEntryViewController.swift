@@ -41,7 +41,7 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
 
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        attachStackViewToScrollView()
 
         NSLayoutConstraint.activate([
             otpView.heightAnchor.constraint(equalToConstant: 50),

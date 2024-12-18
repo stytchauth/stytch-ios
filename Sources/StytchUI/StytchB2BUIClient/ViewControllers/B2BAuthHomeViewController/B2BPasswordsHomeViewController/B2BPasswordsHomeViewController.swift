@@ -72,6 +72,7 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
         ])
 
         emailInput.setReturnKeyType(returnKeyType: .next)
+        emailInput.shouldResignFirstResponderOnReturn = false
 
         emailInput.onReturn = { [weak self] isValid in
             if isValid == true {
@@ -109,6 +110,6 @@ extension B2BPasswordsHomeViewController: B2BPasswordsViewModelDelegate {
     }
 
     func didError(error: any Error) {
-        presentErrorAlert(error: error)
+        showEmailNotEligibleForJitProvioningErrorIfPossible(error)
     }
 }

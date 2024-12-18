@@ -35,7 +35,7 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        attachStackViewToScrollView()
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
