@@ -26,7 +26,6 @@ final class B2BAuthRootViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupHideKeyboardOnTap()
         render()
     }
 
@@ -81,17 +80,6 @@ final class B2BAuthRootViewController: UIViewController {
 
     func popToRootViewController(animated: Bool) {
         homeController?.navigationController?.popToRootViewController(animated: animated)
-    }
-
-    private func setupHideKeyboardOnTap() {
-        self.view.addGestureRecognizer(self.endEditingRecognizer())
-        self.navigationController?.navigationBar.addGestureRecognizer(self.endEditingRecognizer())
-    }
-
-    private func endEditingRecognizer() -> UIGestureRecognizer {
-        let tap = UITapGestureRecognizer(target: self.view, action: #selector(self.view.endEditing(_:)))
-        tap.cancelsTouchesInView = false
-        return tap
     }
 }
 
