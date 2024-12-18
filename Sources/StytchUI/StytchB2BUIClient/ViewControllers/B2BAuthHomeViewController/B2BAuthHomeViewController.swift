@@ -19,7 +19,6 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         if navigationItem.leftBarButtonItem == nil, navigationItem.rightBarButtonItem == nil {
             navigationController?.setNavigationBarHidden(true, animated: animated)
         }
@@ -27,7 +26,6 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
@@ -61,19 +59,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
             return
         }
 
-        view.addSubview(scrollView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.clipsToBounds = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-        ])
-
-        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
+        configureViewForScrollView()
 
         let titleLabel = UILabel.makeTitleLabel(text: titleText)
         stackView.addArrangedSubview(titleLabel)

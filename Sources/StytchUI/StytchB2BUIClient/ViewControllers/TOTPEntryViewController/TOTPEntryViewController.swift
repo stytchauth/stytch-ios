@@ -32,15 +32,12 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
-
-        otpView.delegate = self
         stackView.addArrangedSubview(otpView)
-
         stackView.addArrangedSubview(footerLabel)
-
         stackView.addArrangedSubview(SpacerView())
+        otpView.delegate = self
 
-        attachStackView(within: view)
+        configureViewForScrollView()
 
         NSLayoutConstraint.activate([
             otpView.heightAnchor.constraint(equalToConstant: 50),
@@ -56,7 +53,10 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
     }
 
     private func continueWithTOTP() {
-        navigationController?.pushViewController(RecoveryCodeSaveViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+        // We only want to show the RecoveryCodeSaveViewController if we have a totp response with recovery codes
+        if B2BAuthenticationManager.totpResponse != nil {
+            navigationController?.pushViewController(RecoveryCodeSaveViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+        }
     }
 }
 

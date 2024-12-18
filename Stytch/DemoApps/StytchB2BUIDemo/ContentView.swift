@@ -8,34 +8,34 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            Button("Show No MFA") {
+                viewModel.showNoMFA = true
+                viewModel.saveState()
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.noMFAStytchB2BUIConfig, isPresented: $viewModel.showNoMFA, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
+
+            Button("Show MFA") {
+                viewModel.showMFA = true
+                viewModel.saveState()
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.mfaRequiredStytchB2BUIConfig, isPresented: $viewModel.showMFA, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
+
+            Button("Show Discovery") {
+                viewModel.showDiscovery = true
+                viewModel.saveState()
+            }.font(.title).bold()
+                .b2bAuthenticationSheet(configuration: Self.discoveryStytchB2BUIConfig, isPresented: $viewModel.showDiscovery, onB2BAuthCallback: {
+                    print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+                })
+
             if viewModel.isAuthenticated {
                 Button("Log Out") {
                     logOut()
                 }.font(.title).bold()
-            } else {
-                Button("Show No MFA") {
-                    viewModel.showNoMFA = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.noMFAStytchB2BUIConfig, isPresented: $viewModel.showNoMFA, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
-
-                Button("Show MFA") {
-                    viewModel.showMFA = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.mfaRequiredStytchB2BUIConfig, isPresented: $viewModel.showMFA, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
-
-                Button("Show Discovery") {
-                    viewModel.showDiscovery = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.discoveryStytchB2BUIConfig, isPresented: $viewModel.showDiscovery, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
             }
         }
         .padding()

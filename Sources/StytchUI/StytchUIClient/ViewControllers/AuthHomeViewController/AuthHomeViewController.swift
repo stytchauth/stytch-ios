@@ -50,19 +50,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
             return
         }
 
-        view.addSubview(scrollView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.clipsToBounds = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-        ])
-
-        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
+        configureViewForScrollView()
 
         stackView.addArrangedSubview(titleLabel)
         var constraints: [NSLayoutConstraint] = []

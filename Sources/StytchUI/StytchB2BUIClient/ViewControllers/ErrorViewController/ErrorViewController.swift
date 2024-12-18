@@ -31,7 +31,7 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        configureViewForScrollView()
 
         NSLayoutConstraint.activate([
             titleLabel.widthAnchor.constraint(equalTo: stackView.widthAnchor),

@@ -7,6 +7,7 @@ protocol BaseViewControllerProtocol {
     var viewModel: ViewModel { get }
 
     func configureView()
+    func configureViewForScrollView()
 }
 
 class BaseViewController<State, ViewModel>: UIViewController, BaseViewControllerProtocol {
@@ -38,6 +39,23 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
     func configureView() {
         view.backgroundColor = .background
         view.layoutMargins = .default
+    }
+
+    func configureViewForScrollView() {
+        let scrollView: UIScrollView = .init()
+        view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.clipsToBounds = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
+        ])
+
+        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
     }
 
     final func attachStackView(within superview: UIView, usingLayoutMarginsGuide: Bool = true) {

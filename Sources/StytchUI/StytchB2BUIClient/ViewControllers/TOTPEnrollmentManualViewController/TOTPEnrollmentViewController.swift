@@ -41,7 +41,7 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
         stackView.addArrangedSubview(totpSecretView)
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
-        attachStackView(within: view)
+        configureViewForScrollView()
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
