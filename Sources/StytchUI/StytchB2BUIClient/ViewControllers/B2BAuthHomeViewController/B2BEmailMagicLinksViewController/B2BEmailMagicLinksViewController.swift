@@ -56,6 +56,8 @@ final class B2BEmailMagicLinksViewController: BaseViewController<B2BEmailMagicLi
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
+        continueButton.isEnabled = false
+
         setupEmailInput(input: emailInput)
     }
 

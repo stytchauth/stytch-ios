@@ -3,6 +3,10 @@ import UIKit
 
 extension BaseViewController {
     func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
+        guard B2BAuthenticationManager.isAuthenticated == false else {
+            return
+        }
+
         Task { @MainActor in
             var viewController: UIViewController?
 

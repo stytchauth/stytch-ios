@@ -27,6 +27,10 @@ enum B2BAuthenticationManager {
     /// Values from the secondary B2BAuthenticateResponseDataType
     static var b2bAuthenticateResponse: B2BAuthenticateResponseDataType?
 
+    static var isAuthenticated: Bool {
+        b2bAuthenticateResponse?.memberSession != nil || b2bMFAAuthenticateResponse?.memberSession != nil
+    }
+
     static func handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType) {
         Self.b2bMFAAuthenticateResponse = b2bMFAAuthenticateResponse
         OrganizationManager.updateOrganization(b2bMFAAuthenticateResponse.organization)
