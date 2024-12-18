@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchB2BClient.Discovery {
     /// Wraps Stytch's [exchange intermediate session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-    func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters, completion: @escaping Completion<B2BMFAAuthenticateResponseData>) {
+    func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters, completion: @escaping Completion<B2BMFAAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await exchangeIntermediateSession(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.Discovery {
     }
 
     /// Wraps Stytch's [exchange intermediate session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-    func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) -> AnyPublisher<B2BMFAAuthenticateResponseData, Error> {
+    func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) -> AnyPublisher<B2BMFAAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

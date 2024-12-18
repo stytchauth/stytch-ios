@@ -62,7 +62,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// The Authenticate Discovery Magic Link method wraps the [authenticate](https://stytch.com/docs/b2b/api/send-discovery-email) discovery magic link API endpoint, which validates the discovery magic link token passed in.
-        public func discoveryAuthenticate(parameters: DiscoveryAuthenticateParameters) async throws -> DiscoveryAuthenticateResponse {
+        public func discoveryAuthenticate(parameters: DiscoveryAuthenticateParameters) async throws -> StytchB2BClient.DiscoveryAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -186,13 +186,13 @@ public extension StytchB2BClient.MagicLinks.Email {
         /**
          Initializes the parameters struct
          - Parameters:
-           - organizationId: The ID of the intended organization.
-           - emailAddress: The email of the member to send the invite magic link to.
-           - loginRedirectUrl: The url the member clicks from the login email magic link. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
-           - signupRedirectUrl: The url the member clicks from the sign-up email magic link. This should be a url that your app receives and parses and subsequently send an api request to authenticate the magic link and sign-up the user. If this value is not passed, the default sign-up redirect URL that you set in your Dashboard is used. If you have not set a default sign-up redirect URL, an error is returned.
-           - loginTemplateId: Use a custom template for login emails. Your default email template will be used if omitted. The template must be a template using our built-in customizations or a custom HTML email for Magic links - Login.
-           - signupTemplateId: Use a custom template for sign-up emails. Your default email template will be used if omitted. The template must be a template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
-           - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
+         - organizationId: The ID of the intended organization.
+         - emailAddress: The email of the member to send the invite magic link to.
+         - loginRedirectUrl: The url the member clicks from the login email magic link. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
+         - signupRedirectUrl: The url the member clicks from the sign-up email magic link. This should be a url that your app receives and parses and subsequently send an api request to authenticate the magic link and sign-up the user. If this value is not passed, the default sign-up redirect URL that you set in your Dashboard is used. If you have not set a default sign-up redirect URL, an error is returned.
+         - loginTemplateId: Use a custom template for login emails. Your default email template will be used if omitted. The template must be a template using our built-in customizations or a custom HTML email for Magic links - Login.
+         - signupTemplateId: Use a custom template for sign-up emails. Your default email template will be used if omitted. The template must be a template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
          */
         public init(
             organizationId: Organization.ID,
@@ -273,20 +273,5 @@ public extension StytchB2BClient.MagicLinks.Email {
             self.locale = locale
             self.roles = roles
         }
-    }
-}
-
-public extension StytchB2BClient.MagicLinks {
-    /// The response type for discovery authentciate calls.
-    typealias DiscoveryAuthenticateResponse = Response<DiscoveryAuthenticateResponseData>
-
-    /// The underlying data for the DiscoveryAuthenticateResponse type.
-    struct DiscoveryAuthenticateResponseData: DiscoveryIntermediateSessionTokenDataType, Codable, Sendable {
-        /// The discovered organizations.
-        public let discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]
-        /// The intermediate session token.
-        public let intermediateSessionToken: String
-        /// The member's email address.
-        public let emailAddress: String
     }
 }

@@ -28,8 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 case let .handled(response):
                     // Handled via RootVC onAuthChange publisher
                     switch response {
-                    case .auth:
-                        print("auth response: \(response)")
                     case let .discovery(authResponse):
                         print("discovery auth response: \(authResponse)")
                     case let .discoveryOauth(authResponse):
