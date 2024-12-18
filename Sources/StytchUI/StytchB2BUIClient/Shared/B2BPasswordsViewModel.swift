@@ -1,6 +1,6 @@
 import StytchCore
 
-// B2BPasswordsViewModel and B2BPasswordsViewModelDelegate are shared between the home screen passwords form and the passwords authenticate screen
+// B2BPasswordsViewModel and B2BPasswordsViewModelDelegate are shared between the home screen passwords form and the authentication screen.
 
 protocol B2BPasswordsViewModelDelegate: AnyObject {
     func didAuthenticateWithPassword()

@@ -41,6 +41,10 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
+
         setupPhoneNumberInput(input: phoneNumberInput)
     }
 

@@ -40,6 +40,10 @@ final class RecoveryCodeEntryViewController: BaseViewController<RecoveryCodeEntr
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
+
         recoveryCodeInput.onReturn = { [weak self] isValid in
             if isValid == true {
                 self?.recoveryCodeEntered()

@@ -46,6 +46,10 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
+
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
     }
 
     private func continueWithTOTP() {
