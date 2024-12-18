@@ -44,7 +44,8 @@ extension RecoveryCodeInput: UITextFieldDelegate {
         true
     }
 
-    func textFieldShouldReturn(_: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         onReturn(isValid)
         return true
     }
