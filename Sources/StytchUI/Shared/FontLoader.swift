@@ -25,6 +25,9 @@ public enum FontLoader {
             "IBMPlexSans-SemiBoldItalic",
             "IBMPlexSans-Bold",
             "IBMPlexSans-BoldItalic",
+            "IBMPlexSans-Thin",
+            "IBMPlexSans-ThinItalic",
+            "IBMPlexSans-Regular",
         ]
 
         for fontName in fonts {
