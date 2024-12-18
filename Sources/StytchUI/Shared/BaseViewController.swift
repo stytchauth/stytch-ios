@@ -33,7 +33,7 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupHideKeyboardOnTap()
+        setupHideKeyboardOnTap()
         configureView()
     }
 
@@ -86,12 +86,12 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
     }
 
     private func setupHideKeyboardOnTap() {
-        self.view.addGestureRecognizer(self.endEditingRecognizer())
-        self.navigationController?.navigationBar.addGestureRecognizer(self.endEditingRecognizer())
+        view.addGestureRecognizer(endEditingRecognizer())
+        navigationController?.navigationBar.addGestureRecognizer(endEditingRecognizer())
     }
 
     private func endEditingRecognizer() -> UIGestureRecognizer {
-        let tap = UITapGestureRecognizer(target: self.view, action: #selector(self.view.endEditing(_:)))
+        let tap = UITapGestureRecognizer(target: view, action: #selector(view.endEditing(_:)))
         tap.cancelsTouchesInView = false
         return tap
     }
