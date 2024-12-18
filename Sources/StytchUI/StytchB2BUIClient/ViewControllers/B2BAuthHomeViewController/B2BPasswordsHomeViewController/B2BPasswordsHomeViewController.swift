@@ -67,6 +67,10 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
+
         emailInput.setReturnKeyType(returnKeyType: .next)
 
         emailInput.onReturn = { [weak self] isValid in

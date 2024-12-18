@@ -58,6 +58,10 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
+        NSLayoutConstraint.activate([
+            continueButton.heightAnchor.constraint(equalToConstant: .buttonHeight),
+        ])
+
         passwordInput.onTextChanged = { [weak self] isValid in
             self?.setNeedsStrengthCheck()
             self?.continueButton.isEnabled = isValid

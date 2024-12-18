@@ -11,7 +11,7 @@ struct MemberManager {
     }
 
     static var emailAddress: String? {
-        if let memberEmailAddress = member?.emailAddress {
+        if let memberEmailAddress = member?.emailAddress, memberEmailAddress.isEmpty == false {
             return memberEmailAddress
         } else {
             return _emailAddress
@@ -45,9 +45,15 @@ struct MemberManager {
     }
 
     static func updateMemberEmailAddress(_ emailAddress: String) {
-        B2BAuthenticationManager.reset()
-        DiscoveryManager.reset()
-        reset()
+        // If updating the member email and not in the primary required state,
+        // reset all state except the organization. This assumes the login flow is being initiated for a new user.
+        // The primary required state is for verifying the email, not for starting a new user's flow.
+        if B2BAuthenticationManager.primaryRequired == nil {
+            B2BAuthenticationManager.reset()
+            DiscoveryManager.reset()
+            reset()
+        }
+
         _emailAddress = emailAddress
     }
 

@@ -1,6 +1,7 @@
 import Foundation
 import StytchCore
 
+// Common operations in the B2B UI used for authentication.
 struct AuthenticationOperations {
     static func emailEligibleForJITProvisioning(
         emailAddress: String,
