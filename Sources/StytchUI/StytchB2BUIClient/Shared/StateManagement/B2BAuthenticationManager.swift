@@ -11,21 +11,21 @@ enum B2BAuthenticationManager {
     private static let dismissUIPublisher = PassthroughSubject<Void, Never>()
 
     /// Values from the primary B2BMFAAuthenticateResponseDataType
-    static var b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType?
+    private(set) static var b2bMFAAuthenticateResponse: B2BMFAAuthenticateResponseDataType?
     static var primaryRequired: StytchB2BClient.PrimaryRequired? {
         b2bMFAAuthenticateResponse?.primaryRequired
     }
 
     /// totp related fields
-    static var totpResponse: StytchB2BClient.TOTP.CreateResponseData?
+    private(set) static var totpResponse: StytchB2BClient.TOTP.CreateResponseData?
     static var recoveryCodes: [String] {
         totpResponse?.recoveryCodes ?? []
     }
 
-    fileprivate static var didSaveRecoveryCodes: Bool = false
+    fileprivate private(set) static var didSaveRecoveryCodes: Bool = false
 
     /// Values from the secondary B2BAuthenticateResponseDataType
-    static var b2bAuthenticateResponse: B2BAuthenticateResponseDataType?
+    private(set) static var b2bAuthenticateResponse: B2BAuthenticateResponseDataType?
 
     static var isAuthenticated: Bool {
         b2bAuthenticateResponse?.memberSession != nil || b2bMFAAuthenticateResponse?.memberSession != nil

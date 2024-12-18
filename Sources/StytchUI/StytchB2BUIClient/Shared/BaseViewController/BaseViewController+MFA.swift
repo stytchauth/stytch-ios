@@ -3,10 +3,6 @@ import UIKit
 
 extension BaseViewController {
     func startMFAFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
-        guard B2BAuthenticationManager.isAuthenticated == false else {
-            return
-        }
-
         Task { @MainActor in
             var viewController: UIViewController?
 
@@ -33,7 +29,7 @@ extension BaseViewController {
                 }
             }
 
-            if let viewController {
+            if let viewController, B2BAuthenticationManager.isAuthenticated == false {
                 navigationController?.pushViewController(viewController, animated: true)
             }
         }

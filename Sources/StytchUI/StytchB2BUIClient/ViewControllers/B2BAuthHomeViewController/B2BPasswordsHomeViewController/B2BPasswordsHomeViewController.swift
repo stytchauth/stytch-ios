@@ -72,6 +72,7 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
         ])
 
         emailInput.setReturnKeyType(returnKeyType: .next)
+        emailInput.shouldResignFirstResponderOnReturn = false
 
         emailInput.onReturn = { [weak self] isValid in
             if isValid == true {

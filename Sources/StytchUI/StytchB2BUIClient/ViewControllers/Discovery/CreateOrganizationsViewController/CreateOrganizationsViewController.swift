@@ -34,7 +34,7 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        attachStackViewToScrollView()
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }

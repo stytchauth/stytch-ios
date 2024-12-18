@@ -92,7 +92,8 @@ For further information and tutorials on some of our more common implementations
 * [OAuth](./tutorials/OAuth.md)
 * [Passwords](./tutorials/Passwords.md)
 * [Sessions](./tutorials/Sessions.md)
-* [StytchUI](./tutorials/UI.md)
+* [Stytch UI - Consumer](./tutorials/UI.md)
+* [Stytch UI - B2B](./tutorials/B2B-UI.md)
 
 ## Further Reading
 

@@ -2,6 +2,7 @@ import UIKit
 
 final class EmailInput: TextInputView<EmailTextField> {
     var onReturn: (Bool) -> Void = { _ in }
+    var shouldResignFirstResponderOnReturn = true
 
     var isEnabled: Bool {
         get { textInput.isEnabled }
@@ -34,7 +35,10 @@ final class EmailInput: TextInputView<EmailTextField> {
 }
 
 extension EmailInput: UITextFieldDelegate {
-    func textFieldShouldReturn(_: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if shouldResignFirstResponderOnReturn == true {
+            textField.resignFirstResponder()
+        }
         onReturn(isValid)
         return true
     }
