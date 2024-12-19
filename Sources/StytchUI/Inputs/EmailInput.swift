@@ -25,6 +25,10 @@ final class EmailInput: TextInputView<EmailTextField> {
         textInput.returnKeyType = .done
     }
 
+    func updateText(_ text: String) {
+        textInput.text = text
+    }
+
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
         textInput.returnKeyType = returnKeyType
     }

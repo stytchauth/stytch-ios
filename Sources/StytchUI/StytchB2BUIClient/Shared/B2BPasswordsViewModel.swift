@@ -39,13 +39,18 @@ final class B2BPasswordsViewModel {
                         organizationId: Organization.ID(rawValue: organizationId),
                         emailAddress: emailAddress,
                         password: password,
-                        locale: .en
+                        sessionDuration: state.configuration.sessionDurationMinutes
                     )
                     let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)
                     B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
                     delegate?.didAuthenticateWithPassword()
                 } else {
-                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(emailAddress: emailAddress, organizationId: organizationId, redirectUrl: state.configuration.redirectUrl)
+                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
+                        configuration: state.configuration,
+                        emailAddress: emailAddress,
+                        organizationId: organizationId,
+                        redirectUrl: state.configuration.redirectUrl
+                    )
                     delegate?.didSendEmailMagicLink()
                 }
                 StytchB2BUIClient.stopLoading()

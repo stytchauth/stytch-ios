@@ -78,16 +78,12 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
         emailInput.setReturnKeyType(returnKeyType: .next)
         emailInput.shouldResignFirstResponderOnReturn = false
 
-        emailInput.onReturn = { [weak self] isValid in
-            if isValid == true {
-                self?.passwordInput.assignFirstResponder()
-            }
+        emailInput.onReturn = { [weak self] _ in
+            self?.passwordInput.assignFirstResponder()
         }
 
-        passwordInput.onReturn = { [weak self] isValid in
-            if isValid == true {
-                self?.submit()
-            }
+        passwordInput.onReturn = { [weak self] _ in
+            self?.submit()
         }
     }
 
@@ -96,6 +92,10 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
     }
 
     @objc private func signUpOrResetPasswordButtonTapped() {
+        if emailInput.isValid, let emailAddress = emailInput.text {
+            MemberManager.updateMemberEmailAddress(emailAddress)
+        }
+
         navigationController?.pushViewController(PasswordForgotViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
     }
 

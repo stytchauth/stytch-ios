@@ -29,6 +29,10 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
     override func configureView() {
         super.configureView()
 
+        if let emailAddress = MemberManager.emailAddress {
+            emailInput.updateText(emailAddress)
+        }
+
         stackView.spacing = .spacingRegular
 
         stackView.addArrangedSubview(titleLabel)

@@ -23,8 +23,7 @@ final class SSOViewModel {
 
         let authenticateParameters = StytchB2BClient.SSO.AuthenticateParameters(
             token: token,
-            sessionDuration: state.configuration.sessionDurationMinutes,
-            locale: .en
+            sessionDuration: state.configuration.sessionDurationMinutes
         )
         let response = try await StytchB2BClient.sso.authenticate(parameters: authenticateParameters)
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
