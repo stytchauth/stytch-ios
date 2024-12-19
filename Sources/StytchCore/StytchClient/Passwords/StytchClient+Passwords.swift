@@ -311,19 +311,19 @@ public extension StytchClient.Passwords {
             public let warning: String
             public let ludsRequirements: LudsRequirement?
         }
-
-        /// An explanation of how a given password passes or fails a LUDS check
-        public struct LudsRequirement: Codable, Sendable {
-            public let hasLowerCase: Bool
-            public let hasUpperCase: Bool
-            public let hasDigit: Bool
-            public let hasSymbol: Bool
-            public let missingComplexity: Int
-            public let missingCharacters: Int
-        }
     }
 }
 
 #if DEBUG
 extension StytchClient.Passwords.CreateResponseData: Encodable {}
 #endif
+
+/// An explanation of how a given password passes or fails a LUDS check
+public struct LudsRequirement: Codable, Sendable {
+    public let hasLowerCase: Bool
+    public let hasUpperCase: Bool
+    public let hasDigit: Bool
+    public let hasSymbol: Bool
+    public let missingComplexity: Int
+    public let missingCharacters: Int
+}

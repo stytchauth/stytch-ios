@@ -47,7 +47,7 @@ public extension StytchB2BClient.SearchManager {
 
     struct SearchMemberResponseData: Codable, Sendable {
         /// The matching member.
-        public let member: MemberSearchResponse
+        public let member: MemberSearchResponse?
     }
 
     struct MemberSearchResponse: Codable, Sendable {
@@ -76,9 +76,9 @@ public extension StytchB2BClient.SearchManager {
         public let organization: OrganizationSearchResponse
     }
 
-    struct OrganizationSearchResponse: Codable, Sendable {
+    struct OrganizationSearchResponse: OrganizationType {
         /// Globally unique UUID that identifies an organization in the Stytch API.
-        public let organizationId: String
+        public let organizationId: Organization.ID
         /// The name of the organization.
         public let organizationName: String
         /// A URL of the organization's logo.
@@ -99,5 +99,17 @@ public extension StytchB2BClient.SearchManager {
         public let authMethods: StytchB2BClient.AuthMethods?
         /// An array of allowed authentication methods. This list is enforced when auth_methods is set to RESTRICTED.
         public let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
+
+        public var name: String {
+            organizationName
+        }
+
+        public var logoUrl: URL? {
+            if let organizationLogoUrl {
+                return URL(string: organizationLogoUrl)
+            } else {
+                return nil
+            }
+        }
     }
 }

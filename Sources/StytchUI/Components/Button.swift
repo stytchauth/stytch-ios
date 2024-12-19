@@ -90,7 +90,7 @@ extension Button {
         button.kind = .primary
         button.onTap = onTap
         button.setTitle(title, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.titleLabel?.font = .IBMPlexSansSemiBold(size: 18)
         return button
     }
 
@@ -108,7 +108,7 @@ extension Button {
                 string: title,
                 attributes: [
                     .foregroundColor: UIColor.primaryText,
-                    .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+                    .font: UIFont.IBMPlexSansMedium(size: 18),
                 ]
             ),
             for: .normal
@@ -124,7 +124,41 @@ extension Button {
         button.kind = .tertiary
         button.onTap = onTap
         button.setTitle(title, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        button.titleLabel?.font = .IBMPlexSansSemiBold(size: 18)
+        return button
+    }
+
+    static func createTextButton(
+        withPlainText plainText: String,
+        boldText: String? = nil,
+        fontSize: CGFloat = 16,
+        action: Selector,
+        target: Any
+    ) -> Button {
+        // Create the button
+        let button = Button(type: .system)
+
+        // Create attributed text
+        let attributedText = NSMutableAttributedString(string: plainText, attributes: [
+            .font: UIFont.IBMPlexSansRegular(size: fontSize),
+            .foregroundColor: UIColor.primaryText,
+        ])
+
+        // If boldText is provided, append it with bold style
+        if let boldText = boldText {
+            let boldAttributedText = NSAttributedString(string: " \(boldText)", attributes: [
+                .font: UIFont.IBMPlexSansBold(size: fontSize),
+                .foregroundColor: UIColor.primaryText,
+            ])
+            attributedText.append(boldAttributedText)
+        }
+
+        // Set the attributed title to the button
+        button.setAttributedTitle(attributedText, for: .normal)
+
+        // Add the action to the button
+        button.addTarget(target, action: action, for: .touchUpInside)
+
         return button
     }
 }

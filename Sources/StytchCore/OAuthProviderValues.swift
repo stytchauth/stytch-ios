@@ -5,7 +5,7 @@ public struct OAuthProviderValues: Codable, Sendable {
     public let accessToken: String
     /// The id_token returned by the OAuth provider. ID Tokens are JWTs that contain structured information about a user. The exact content of each ID Token varies from provider to provider.
     /// ID Tokens are returned from OAuth providers that conform to the OpenID Connect specification, which is based on OAuth.
-    public let idToken: String
+    public let idToken: String?
     /// The refresh_token that you may use to obtain a new access_token for the User within the provider's API.
     public let refreshToken: String?
     /// The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by default and how to add custom scopes.

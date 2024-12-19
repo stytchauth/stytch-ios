@@ -19,7 +19,8 @@ public extension StytchB2BClient {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
             #if os(iOS)
-            return await dfpClient.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain)
+            let telemetryId = await dfpClient.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain)
+            return telemetryId
             #else
             return ""
             #endif

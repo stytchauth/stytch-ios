@@ -4,6 +4,8 @@ import UIKit
 final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
     var onButtonPressed: (PhoneNumberKit) -> Void = { _ in }
 
+    var onReturn: (Bool) -> Void = { _ in }
+
     var phoneNumberE164: String? {
         isValid ? textField.phoneNumber.map { "+\($0.countryCode)\($0.nationalNumber)" } : nil
     }
@@ -25,10 +27,28 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
 
         textInput.countrySelectorButton.addTarget(self, action: #selector(didTapButton(sender:)), for: .primaryActionTriggered)
         PhoneNumberKit.CountryCodePicker.forceModalPresentation = true
+        textInput.textField.delegate = self
+        textInput.textField.returnKeyType = .done
     }
 
     @objc private func didTapButton(sender _: UIButton) {
         onButtonPressed(textField.phoneNumberKit)
+    }
+
+    func setReturnKeyType(returnKeyType: UIReturnKeyType) {
+        textInput.textField.returnKeyType = returnKeyType
+    }
+
+    func assignFirstResponder() {
+        textInput.textField.becomeFirstResponder()
+    }
+}
+
+extension PhoneNumberInput: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        onReturn(isValid)
+        return true
     }
 }
 
@@ -58,7 +78,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
     fileprivate lazy var countrySelectorButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitleColor(.label, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 18)
+        button.titleLabel?.font = .IBMPlexSansRegular(size: 18)
         button.contentEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
         button.layer.borderColor = UIColor.placeholderText.cgColor
         button.layer.borderWidth = 1

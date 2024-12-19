@@ -4,52 +4,43 @@ import StytchUI
 import SwiftUI
 
 struct ContentView: View {
-    var config: StytchUIClient.Configuration
-    @State private var shouldPresentAuth = false
-    @State var subscriptions: Set<AnyCancellable> = []
+    @StateObject var viewModel = ContentViewModel()
+
+    var configuration: StytchUIClient.Configuration
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("You have logged in with Stytch!")
-                    .font(.largeTitle)
-                    .bold()
-                    .multilineTextAlignment(.center)
+                if viewModel.isAuthenticated {
+                    Text("You have logged in with Stytch!")
+                        .font(.largeTitle)
+                        .bold()
+                        .multilineTextAlignment(.center)
 
-                Button("Log Out") {
-                    logOut()
-                }.font(.title).bold()
+                    Button("Log Out") {
+                        logOut()
+                    }.font(.title).bold()
+                } else {
+                    Button("Log In With Stytch!") {
+                        viewModel.shouldPresentAuth = true
+                    }.font(.title).bold()
+                        .authenticationSheet(configuration: configuration, isPresented: $viewModel.shouldPresentAuth, onAuthCallback: { authenticateResponseType in
+                            print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
+                        })
+                }
             }
             .padding()
-            .authenticationSheet(isPresented: $shouldPresentAuth, onAuthCallback: { authenticateResponseType in
-                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
-            }).onOpenURL { url in
+            .onOpenURL { url in
                 let didHandle = StytchUIClient.handle(url: url)
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
             }
-        }.task {
-            StytchUIClient.configure(publicToken: "public-token", config: config)
-            setUpObservations()
         }
-    }
-
-    func setUpObservations() {
-        StytchClient.sessions.onSessionChange.sink { sessionInfo in
-            switch sessionInfo {
-            case let .available(session, lastValidatedAtDate):
-                print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                shouldPresentAuth = false
-            case .unavailable:
-                print("Session Unavailable\n")
-                shouldPresentAuth = true
-            }
-        }.store(in: &subscriptions)
     }
 
     func logOut() {
         Task {
             do {
-                let response = try await StytchClient.sessions.revoke()
+                let response = try await StytchClient.sessions.revoke(parameters: .init(forceClear: true))
                 print("log out response: \(response)")
             } catch {
                 print("log out error: \(error.errorInfo)")
@@ -58,6 +49,29 @@ struct ContentView: View {
     }
 }
 
+class ContentViewModel: ObservableObject {
+    @Published var isAuthenticated: Bool = false
+    @Published var shouldPresentAuth: Bool = false
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        StytchClient.sessions.onSessionChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] sessionInfo in
+                switch sessionInfo {
+                case let .available(session, lastValidatedAtDate):
+                    print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                    self?.isAuthenticated = true
+                    self?.shouldPresentAuth = false
+                case .unavailable:
+                    print("Session Unavailable\n")
+                    self?.isAuthenticated = false
+                    self?.shouldPresentAuth = true
+                }
+            }.store(in: &cancellables)
+    }
+}
+
 #Preview {
-    ContentView(config: StytchUIDemoApp.realisticStytchUIConfig)
+    ContentView(configuration: StytchUIDemoApp.realisticStytchUIConfiguration)
 }
