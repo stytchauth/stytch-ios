@@ -20,8 +20,7 @@ final class B2BEmailMagicLinksViewModel {
                 if state.configuration.computedAuthFlowType == .discovery {
                     let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
                         emailAddress: emailAddress,
-                        discoveryRedirectUrl: state.configuration.redirectUrl,
-                        locale: .en
+                        discoveryRedirectUrl: state.configuration.redirectUrl
                     )
                     _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
                 } else {
@@ -31,6 +30,7 @@ final class B2BEmailMagicLinksViewModel {
                     }
 
                     try await AuthenticationOperations.sendEmailMagicLink(
+                        configuration: state.configuration,
                         emailAddress: emailAddress,
                         organizationId: organizationId,
                         redirectUrl: state.configuration.redirectUrl

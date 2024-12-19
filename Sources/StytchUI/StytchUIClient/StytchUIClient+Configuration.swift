@@ -44,6 +44,19 @@ public extension StytchUIClient {
             products.contains(.passwords)
         }
 
+        /// - Parameters:
+        ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
+        ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
+        ///     This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
+        ///   - dfppaDomain: The domain that should be used for DFPPA
+        ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
+        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
+        ///   - sessionDurationMinutes: The session duration you would like the authentication endpoints to use.
+        ///   - oauthProviders: The array of OAuth providers. If you have .oauth in your products array you must specify the list of providers.
+        ///   - passwordOptions: The password options to use if you have a custom configuration.
+        ///   - magicLinkOptions: The email magic link options to use if you have a custom configuration.
+        ///   - otpOptions: The otp options to use if you have a custom configuration.
+        ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         public init(
             publicToken: String,
             hostUrl: URL? = nil,

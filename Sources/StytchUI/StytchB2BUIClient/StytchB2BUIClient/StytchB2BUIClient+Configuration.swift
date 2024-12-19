@@ -70,6 +70,28 @@ public extension StytchB2BUIClient {
             }
         }
 
+        /// - Parameters:
+        ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
+        ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
+        ///     This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
+        ///   - dfppaDomain: The domain that should be used for DFPPA
+        ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
+        ///     The order of the products that you include here will also be the order in which they appear in the login form.
+        ///   - authFlowType: The type of authentication flow you would like to begin with, either organization as specified by slug or discovery.
+        ///   - sessionDurationMinutes: The session duration you would like the authentication endpoints to use.
+        ///   - emailMagicLinksOptions: The email magic link options to use if you have a custom configuration.
+        ///   - passwordOptions: The password options to use if you have a custom configuration.
+        ///   - oauthProviders: The array of OAuth providers. If you have .oauth in your products array you must specify the list of providers.
+        ///   - emailOtpOptions: The email otp options to use if you have a custom configuration.
+        ///   - directLoginForSingleMembershipOptions: An optional config that allows you to skip the discover flow and log a member in directly only if they are a member of a single organization.
+        ///   - allowCreateOrganization: Whether to allow users who are not members of any organization from creating a new organization during the discovery flow.
+        ///     This has no effect if the ability to create organizations from the frontend SDK is disabled in the Stytch dashboard. Defaults to `false`.
+        ///   - mfaProductOrder: The order to present MFA products to a member when multiple choices are available, such as during enrollment.
+        ///   - mfaProductInclude: MFA products to include in the UI. If specified, the list of available products will be limited to those included. Defaults to all available products.
+        ///     Note that if an organization restricts the available MFA methods, the organization's settings will take precedence.
+        ///     In addition, if a member is enrolled in MFA compatible with their organization's policies, their enrolled methods will always be made available.
+        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
+        ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
@@ -137,11 +159,11 @@ public extension StytchB2BUIClient {
     }
 
     struct B2BPasswordOptions: Codable {
-        public let resetPasswordExpirationMinutes: Int?
+        public let resetPasswordExpirationMinutes: Minutes?
         public let resetPasswordTemplateId: String?
 
         public init(
-            resetPasswordExpirationMinutes: Int? = nil,
+            resetPasswordExpirationMinutes: Minutes? = nil,
             resetPasswordTemplateId: String? = nil
         ) {
             self.resetPasswordExpirationMinutes = resetPasswordExpirationMinutes

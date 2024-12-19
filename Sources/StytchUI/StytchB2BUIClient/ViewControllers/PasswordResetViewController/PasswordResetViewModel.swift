@@ -14,7 +14,7 @@ final class PasswordResetViewModel {
             parameters: .init(
                 token: state.token,
                 password: newPassword,
-                locale: .en
+                sessionDuration: state.configuration.sessionDurationMinutes
             )
         )
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
