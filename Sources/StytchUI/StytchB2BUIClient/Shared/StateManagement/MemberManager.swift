@@ -2,9 +2,9 @@ import PhoneNumberKit
 import StytchCore
 
 struct MemberManager {
-    static var member: Member?
-    fileprivate static var _emailAddress: String?
-    fileprivate static var _phoneNumber: String?
+    private(set) static var member: Member?
+    fileprivate private(set) static var _emailAddress: String?
+    fileprivate private(set) static var _phoneNumber: String?
 
     static var memberId: String? {
         member?.id.rawValue

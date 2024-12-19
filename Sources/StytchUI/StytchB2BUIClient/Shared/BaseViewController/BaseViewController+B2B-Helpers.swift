@@ -15,4 +15,15 @@ extension BaseViewController {
             navigationController?.pushViewController(emailConfirmationViewController, animated: true)
         }
     }
+
+    func showEmailNotEligibleForJitProvioningErrorIfPossible(_ error: any Error) {
+        if let error = error as? StytchSDKError, error == .emailNotEligibleForJitProvioning {
+            presentAlert(
+                title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
+                message: "\(MemberManager.emailAddress ?? "This email") does not have access to \(OrganizationManager.name ?? "this organization"). If you think this is a mistake, contact your admin."
+            )
+        } else {
+            presentErrorAlert(error: error)
+        }
+    }
 }

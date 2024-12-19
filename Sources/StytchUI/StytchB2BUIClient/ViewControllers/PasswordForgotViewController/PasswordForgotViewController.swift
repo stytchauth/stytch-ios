@@ -38,7 +38,7 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
         stackView.addArrangedSubview(continueButton)
         stackView.addArrangedSubview(SpacerView())
 
-        attachStackView(within: view)
+        attachStackViewToScrollView()
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
@@ -100,7 +100,7 @@ extension PasswordForgotViewController: PasswordForgotViewModelDelegate {
     }
 
     func didError(error: any Error) {
+        showEmailNotEligibleForJitProvioningErrorIfPossible(error)
         StytchB2BUIClient.stopLoading()
-        presentErrorAlert(error: error)
     }
 }
