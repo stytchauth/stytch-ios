@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 struct DiscoveryManager {
-    static var discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization] = []
+    private(set) static var discoveredOrganizations: [StytchB2BClient.DiscoveredOrganization] = []
 
     static func updateDiscoveredOrganizations(newDiscoveredOrganizations: [StytchB2BClient.DiscoveredOrganization]) {
         discoveredOrganizations = newDiscoveredOrganizations

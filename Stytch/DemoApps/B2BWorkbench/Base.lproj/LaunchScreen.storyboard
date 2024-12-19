@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="b2b-Wordmark-light-mode" translatesAutoresizingMaskIntoConstraints="NO" id="47Q-Qs-gXw">
-                                <rect key="frame" x="0.0" y="346" width="393.00000000000006" height="160"/>
+                                <rect key="frame" x="0.0" y="346" width="393" height="160"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="B2B Workbench" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCe-DR-3EE">
-                                <rect key="frame" x="16" y="768" width="361" height="50"/>
+                                <rect key="frame" x="16" y="668" width="361" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="o0j-X9-TDm"/>
                                 </constraints>
@@ -37,7 +37,7 @@
                             <constraint firstItem="XCe-DR-3EE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="RUe-Xg-hLK"/>
                             <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="UvN-vE-ccl"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="XCe-DR-3EE" secondAttribute="trailing" constant="16" id="W4s-V4-YAJ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XCe-DR-3EE" secondAttribute="bottom" id="WnF-mx-ZTJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="XCe-DR-3EE" secondAttribute="bottom" constant="100" id="WnF-mx-ZTJ"/>
                             <constraint firstItem="47Q-Qs-gXw" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="XZd-zG-fZC"/>
                             <constraint firstItem="47Q-Qs-gXw" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="yBF-dN-JTO"/>
                         </constraints>

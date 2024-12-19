@@ -6,40 +6,32 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
 
+    let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf",
+        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        // authFlowType: .organization(slug: "org-slug"),
+        authFlowType: .discovery,
+        oauthProviders: [.init(provider: .google), .init(provider: .github)]
+    )
+
     var body: some View {
         VStack(spacing: 20) {
+            Button("Log In With Stytch B2B UI!") {
+                viewModel.isShowingB2BUI = true
+            }.font(.title).bold()
+
             if viewModel.isAuthenticated {
                 Button("Log Out") {
                     logOut()
                 }.font(.title).bold()
-            } else {
-                Button("Show No MFA") {
-                    viewModel.showNoMFA = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.noMFAStytchB2BUIConfig, isPresented: $viewModel.showNoMFA, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
-
-                Button("Show MFA") {
-                    viewModel.showMFA = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.mfaRequiredStytchB2BUIConfig, isPresented: $viewModel.showMFA, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
-
-                Button("Show Discovery") {
-                    viewModel.showDiscovery = true
-                    viewModel.saveState()
-                }.font(.title).bold()
-                    .b2bAuthenticationSheet(configuration: Self.discoveryStytchB2BUIConfig, isPresented: $viewModel.showDiscovery, onB2BAuthCallback: {
-                        print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-                    })
             }
         }
+        .b2bAuthenticationSheet(configuration: stytchB2BUIConfig, isPresented: $viewModel.isShowingB2BUI, onB2BAuthCallback: {
+            print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
+        })
         .padding()
         .onOpenURL { url in
+            viewModel.isShowingB2BUI = true
             let didHandle = StytchB2BUIClient.handle(url: url)
             print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
         }
@@ -58,23 +50,16 @@ struct ContentView: View {
 }
 
 class ContentViewModel: ObservableObject {
-    @Published var showNoMFA: Bool = false
-    @Published var showMFA: Bool = false
-    @Published var showDiscovery: Bool = false
+    @Published var isShowingB2BUI: Bool = false
     @Published var isAuthenticated: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        restoreState()
-
         StytchB2BUIClient.dismissUI
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.showNoMFA = false
-                self?.showMFA = false
-                self?.showDiscovery = false
-                self?.saveState()
+                self?.isShowingB2BUI = false
             }
             .store(in: &cancellables)
 
@@ -91,53 +76,6 @@ class ContentViewModel: ObservableObject {
                 }
             }.store(in: &cancellables)
     }
-
-    // saveState() and restoreState() help us keep track of what flow we were in between launches
-    // This will help us handle a deeplink if the app was in a cold state
-    func saveState() {
-        UserDefaults.standard.setValue(showNoMFA, forKey: UserDefaultsKeys.showNoMFA.rawValue)
-        UserDefaults.standard.setValue(showMFA, forKey: UserDefaultsKeys.showMFA.rawValue)
-        UserDefaults.standard.setValue(showDiscovery, forKey: UserDefaultsKeys.showDiscovery.rawValue)
-    }
-
-    func restoreState() {
-        showNoMFA = UserDefaults.standard.bool(forKey: UserDefaultsKeys.showNoMFA.rawValue)
-        showMFA = UserDefaults.standard.bool(forKey: UserDefaultsKeys.showMFA.rawValue)
-        showDiscovery = UserDefaults.standard.bool(forKey: UserDefaultsKeys.showDiscovery.rawValue)
-    }
-
-    enum UserDefaultsKeys: String {
-        case showNoMFA
-        case showMFA
-        case showDiscovery
-    }
-}
-
-extension ContentView {
-    static var publicToken: String {
-        "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf"
-    }
-
-    static let noMFAStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: publicToken,
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "no-mfa"),
-        oauthProviders: [.init(provider: .google), .init(provider: .github)]
-    )
-
-    static let mfaRequiredStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: publicToken,
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "mfa-required"),
-        oauthProviders: [.init(provider: .google), .init(provider: .github)]
-    )
-
-    static let discoveryStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: publicToken,
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .discovery,
-        oauthProviders: [.init(provider: .google), .init(provider: .github)]
-    )
 }
 
 #Preview {
