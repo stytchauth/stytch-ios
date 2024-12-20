@@ -20,25 +20,25 @@ For each app you would like to run you must first ensure you have added your [pu
 
 * **StytchDemo**    
 Bundle ID: `com.stytch.StytchDemo`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/f5a1fed4f54708fd7bc089340cccb3b2c3ab2d96/Stytch/DemoApps/StytchDemo/ContentView.swift#L21)    
+[Configure the public token](../Stytch/DemoApps/StytchDemo/ContentView.swift#L24)    
 
 * **StytchUIDemo**  
 Bundle ID: `com.stytch.StytchUIDemo`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchUIDemo/ContentView.swift#L10)  
-[Configure the URL Scheme](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchUIDemo/Info.plist#L14)  
+[Configure the public token](../Stytch/DemoApps/StytchUIDemo/ContentView.swift#L10)  
+[Configure the URL Scheme](../Stytch/DemoApps/StytchUIDemo/Info.plist#L14)  
 
 * **StytchB2BUIDemo**  
 Bundle ID: `com.stytch.StytchB2BUIDemo`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L10)  
-[Configure the URL Scheme](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchB2BUIDemo/Info.plist#L12)  
+[Configure the public token](../Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L10)  
+[Configure the URL Scheme](../Stytch/DemoApps/StytchB2BUIDemo/Info.plist#L12)  
 
 * **ConsumerWorkbench**  
 Bundle ID: `com.stytch.ConsumerWorkbench`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/f5a1fed4f54708fd7bc089340cccb3b2c3ab2d96/Stytch/DemoApps/ConsumerWorkbench/Shared/StytchDemoApp.swift#L6)  
+[Configure the public token](../Stytch/DemoApps/ConsumerWorkbench/Shared/StytchDemoApp.swift#L6)  
 
 * **B2BWorkbench**  
 Bundle ID: `com.stytch.B2BWorkbench`  
-[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/0d0bb69237a69f266530f831eca3ef8c2b7a91c5/Stytch/DemoApps/B2BWorkbench/ViewControllers/RootViewController.swift#L43)  
+[Configure the public token](../Stytch/DemoApps/B2BWorkbench/ViewControllers/RootViewController.swift#L43)  
 
 ## 5. Running the Sample Apps
 

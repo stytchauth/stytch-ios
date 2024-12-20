@@ -29,7 +29,7 @@ class B2BUIViewController: UIViewController {
     }
 
     let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf",
+        publicToken: "your-public-token",
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
         authFlowType: .organization(slug: "no-mfa"),
         // authFlowType: .discovery,
