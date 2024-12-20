@@ -63,7 +63,7 @@ final class AuthHomeViewController: UIViewController {
 
     lazy var b2bUIButton: UIButton = .init(title: "B2B UI", primaryAction: .init { [weak self] _ in
         if let strongSelf = self {
-            StytchB2BUIClient.presentController(configuration: Self.allStytchB2BUIConfig, controller: strongSelf)
+            StytchB2BUIClient.presentController(configuration: strongSelf.stytchB2BUIConfig, controller: strongSelf)
         }
     })
 
@@ -113,18 +113,12 @@ final class AuthHomeViewController: UIViewController {
         saveOrgID()
     }
 
-    static var allStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: publicToken,
+    let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+        publicToken: "your-public-token",
         products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "mfa-required"),
-        oauthProviders: [.init(provider: .google)]
-    )
-
-    static var discoveryStytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: publicToken,
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        // authFlowType: .organization(slug: "org-slug"),
         authFlowType: .discovery,
-        oauthProviders: [.init(provider: .google)]
+        oauthProviders: [.init(provider: .google), .init(provider: .github)]
     )
 
     static var publicToken: String {

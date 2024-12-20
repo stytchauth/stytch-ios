@@ -7,6 +7,9 @@ When using `StytchUI` you must still [configure deeplinks for your application.]
 
 Full reference documentation is available for [StytchCore](https://stytchauth.github.io/stytch-ios/main/StytchCore/documentation/stytchcore/) and [StytchUI](https://stytchauth.github.io/stytch-ios/main/StytchUI/documentation/stytchui/).
 
+## SwiftUI
+[SwiftUI Example For Consumer](https://github.com/stytchauth/stytch-ios/blob/main/Stytch/DemoApps/StytchUIDemo/ContentView.swift)
+
 ## UIKit
 ```swift
 import Combine
@@ -67,68 +70,5 @@ func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
     }
     let didHandle = StytchUIClient.handle(url: url)
     print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
-}
-```
-
-## SwiftUI
-```swift
-import Combine
-import StytchCore
-import StytchUI
-import SwiftUI
-
-struct ContentView: View {
-    @State private var shouldPresentAuth = false
-    @State var subscriptions: Set<AnyCancellable> = []
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                Text("You have logged in with Stytch!")
-                    .font(.largeTitle)
-                    .bold()
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-            .authenticationSheet(isPresented: $shouldPresentAuth, onAuthCallback: { authenticateResponseType in
-                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
-            }).onOpenURL { url in
-                let didHandle = StytchUIClient.handle(url: url)
-                print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
-            }
-        }.task {
-            StytchUIClient.configure(configuration: configuration)
-            setUpObservations()
-        }
-    }
-
-    func setUpObservations() {
-        StytchClient.isInitialized.sink { isInitialized in
-            shouldPresentAuth = !isAuthenticated
-        }.store(in: &subscriptions)
-
-        StytchClient.sessions.onAuthChange.sink { token in
-            shouldPresentAuth = !isAuthenticated
-        }.store(in: &subscriptions)
-    }
-    
-    var isAuthenticated: Bool {
-        if StytchClient.sessions.session != nil, StytchClient.user.getSync() != nil {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    let configuration: StytchUIClient.Configuration = .init(
-        publicToken: "publicToken",
-        products: [.passwords, .emailMagicLinks, .otp, .oauth],
-        oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms])
-    )
-}
-
-#Preview {
-    ContentView()
 }
 ```
