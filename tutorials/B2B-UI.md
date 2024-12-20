@@ -12,10 +12,20 @@ Full reference documentation is available for [StytchCore](https://stytchauth.gi
 
 ## UIKit
 ```swift
-import Combine
-import StytchCore
 import StytchUI
 import UIKit
+
+func showStytchB2BUI() {
+    StytchB2BUIClient.presentController(configuration: stytchB2BUIConfig, controller: self)
+}
+
+let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+    publicToken: "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf",
+    products: [.emailMagicLinks, .sso, .passwords, .oauth],
+    authFlowType: .organization(slug: "no-mfa"),
+    //authFlowType: .discovery,
+    oauthProviders: [.init(provider: .google), .init(provider: .github)]
+)
 ```
 
 In your `SceneDelegate` file add the following code to handle deeplinks.

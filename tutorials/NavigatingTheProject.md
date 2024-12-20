@@ -24,13 +24,13 @@ Bundle ID: `com.stytch.StytchDemo`
 
 * **StytchUIDemo**  
 Bundle ID: `com.stytch.StytchUIDemo`  
-[Configure the public token](TODO)
-[Configure the URL Scheme](TODO)
+[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchUIDemo/ContentView.swift#L10)  
+[Configure the URL Scheme](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchUIDemo/Info.plist#L14)  
 
 * **StytchB2BUIDemo**  
 Bundle ID: `com.stytch.StytchB2BUIDemo`  
-[Configure the public token](TODO)
-[Configure the URL Scheme](TODO)
+[Configure the public token](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L10)  
+[Configure the URL Scheme](https://github.com/stytchauth/stytch-ios/blob/21d940ffed919e983c4396b91099e844f886c38a/Stytch/DemoApps/StytchB2BUIDemo/Info.plist#L12)  
 
 * **ConsumerWorkbench**  
 Bundle ID: `com.stytch.ConsumerWorkbench`  
