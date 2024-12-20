@@ -71,6 +71,7 @@
 		745BAB802C88E09E00771497 /* OTPAuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB7F2C88E09E00771497 /* OTPAuthenticationManager.swift */; };
 		745BAB822C89FBA800771497 /* User.Name+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB812C89FBA800771497 /* User.Name+Helpers.swift */; };
 		7462DACB2D0236F100329553 /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7462DACA2D0236F100329553 /* StytchUI */; };
+		74707A342D15C8F700CCCDC8 /* B2BUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74707A332D15C8F700CCCDC8 /* B2BUIViewController.swift */; };
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* Extensions.swift */; };
 		749F88862BFBD63E00D7F386 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 749F88852BFBD63E00D7F386 /* Launch Screen.storyboard */; };
@@ -162,6 +163,7 @@
 		745BAB7D2C88D2B300771497 /* LoggedInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInView.swift; sourceTree = "<group>"; };
 		745BAB7F2C88E09E00771497 /* OTPAuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPAuthenticationManager.swift; sourceTree = "<group>"; };
 		745BAB812C89FBA800771497 /* User.Name+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User.Name+Helpers.swift"; sourceTree = "<group>"; };
+		74707A332D15C8F700CCCDC8 /* B2BUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = B2BUIViewController.swift; sourceTree = "<group>"; };
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		748FE40A2C54127D0026F2A2 /* ConsumerWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ConsumerWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				74234D4B2C21E1240001DA69 /* SearchManagerViewController.swift */,
 				2254779B29A05D4E003DF229 /* SessionsViewController.swift */,
 				74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */,
+				74707A332D15C8F700CCCDC8 /* B2BUIViewController.swift */,
 			);
 			path = AuthMethodControllers;
 			sourceTree = "<group>";
@@ -705,6 +708,7 @@
 				2254779629A05C93003DF229 /* Constants.swift in Sources */,
 				74F0088D2C24C05100E0F863 /* RecoveryCodesViewController.swift in Sources */,
 				74DD38CB2C2A2ABA00BEB0DD /* OAuthViewController.swift in Sources */,
+				74707A342D15C8F700CCCDC8 /* B2BUIViewController.swift in Sources */,
 				2231531D299EE16D00BA9126 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

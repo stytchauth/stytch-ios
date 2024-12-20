@@ -12,52 +12,19 @@ Full reference documentation is available for [StytchCore](https://stytchauth.gi
 
 ## UIKit
 ```swift
-import Combine
-import StytchCore
 import StytchUI
 import UIKit
 
-class ViewController: UIViewController {
-    var subscriptions: Set<AnyCancellable> = []
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        StytchUIClient.configure(configuration: configuration)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        showStytchUI()
-    }
-    
-    func showStytchUI() {
-        guard isAuthenticated == false else {
-            return
-        }
-        
-        StytchUIClient.presentController(controller: self) { authenticateResponseType in
-            print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
-            DispatchQueue.main.async {
-                // Show confirmation of authentication
-            }
-        }
-    }
-    
-    var isAuthenticated: Bool {
-        if StytchClient.sessions.session != nil, StytchClient.user.getSync() != nil {
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    static let configuration: StytchUIClient.Configuration = .init(
-        publicToken: "publicToken",
-        products: [.passwords, .emailMagicLinks, .otp, .oauth],
-        oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms])
-    )
+func showStytchConsumerUI() {
+    StytchUIClient.presentController(configuration: stytchConsumerUIConfig, controller: self)
 }
+
+let stytchConsumerUIConfig: StytchUIClient.Configuration = .init(
+    publicToken: "public-token-test-728f8b82-2a20-4926-b077-a8ca7d67e1b2",
+    products: [.passwords, .emailMagicLinks, .otp, .oauth],
+    oauthProviders: [.apple, .thirdParty(.google)],
+    otpOptions: .init(methods: [.sms])
+)
 ```
 
 In your `SceneDelegate` file add the following code to handle deeplinks.

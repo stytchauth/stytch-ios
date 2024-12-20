@@ -62,9 +62,7 @@ final class AuthHomeViewController: UIViewController {
     })
 
     lazy var b2bUIButton: UIButton = .init(title: "B2B UI", primaryAction: .init { [weak self] _ in
-        if let strongSelf = self {
-            StytchB2BUIClient.presentController(configuration: strongSelf.stytchB2BUIConfig, controller: strongSelf)
-        }
+        self?.navigationController?.pushViewController(B2BUIViewController(), animated: true)
     })
 
     func saveOrgID() {
@@ -112,14 +110,6 @@ final class AuthHomeViewController: UIViewController {
         super.viewWillDisappear(animated)
         saveOrgID()
     }
-
-    let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: "your-public-token",
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        // authFlowType: .organization(slug: "org-slug"),
-        authFlowType: .discovery,
-        oauthProviders: [.init(provider: .google), .init(provider: .github)]
-    )
 
     static var publicToken: String {
         UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey) ?? ""
