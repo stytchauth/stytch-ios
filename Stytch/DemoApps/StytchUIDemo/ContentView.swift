@@ -6,12 +6,21 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
 
-    var configuration: StytchUIClient.Configuration
+    let configuration: StytchUIClient.Configuration = .init(
+        publicToken: "your-public-token",
+        products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        oauthProviders: [.apple, .thirdParty(.google)],
+        otpOptions: .init(methods: [.sms])
+    )
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                if viewModel.isAuthenticated {
+                Button("Log In With Stytch!") {
+                    viewModel.shouldShowB2CUI = true
+                }.font(.title).bold()
+
+                if viewModel.shouldShowB2CUI == false {
                     Text("You have logged in with Stytch!")
                         .font(.largeTitle)
                         .bold()
@@ -20,17 +29,14 @@ struct ContentView: View {
                     Button("Log Out") {
                         logOut()
                     }.font(.title).bold()
-                } else {
-                    Button("Log In With Stytch!") {
-                        viewModel.shouldPresentAuth = true
-                    }.font(.title).bold()
-                        .authenticationSheet(configuration: configuration, isPresented: $viewModel.shouldPresentAuth, onAuthCallback: { authenticateResponseType in
-                            print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
-                        })
                 }
             }
+            .authenticationSheet(configuration: configuration, isPresented: $viewModel.shouldShowB2CUI, onAuthCallback: { authenticateResponseType in
+                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
+            })
             .padding()
             .onOpenURL { url in
+                viewModel.shouldShowB2CUI = true
                 let didHandle = StytchUIClient.handle(url: url)
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
             }
@@ -50,8 +56,7 @@ struct ContentView: View {
 }
 
 class ContentViewModel: ObservableObject {
-    @Published var isAuthenticated: Bool = false
-    @Published var shouldPresentAuth: Bool = false
+    @Published var shouldShowB2CUI: Bool = false
     private var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -61,17 +66,15 @@ class ContentViewModel: ObservableObject {
                 switch sessionInfo {
                 case let .available(session, lastValidatedAtDate):
                     print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                    self?.isAuthenticated = true
-                    self?.shouldPresentAuth = false
+                    self?.shouldShowB2CUI = false
                 case .unavailable:
                     print("Session Unavailable\n")
-                    self?.isAuthenticated = false
-                    self?.shouldPresentAuth = true
+                    self?.shouldShowB2CUI = true
                 }
             }.store(in: &cancellables)
     }
 }
 
 #Preview {
-    ContentView(configuration: StytchUIDemoApp.realisticStytchUIConfiguration)
+    ContentView()
 }

@@ -11,7 +11,7 @@
 			<string>com.stytch.StytchUIDemo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>stytch-demo</string>
+				<string>your-public-token</string>
 			</array>
 		</dict>
 	</array>
