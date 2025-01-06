@@ -74,6 +74,11 @@ public extension StytchClient {
                 throw StytchSDKError.noCurrentSession
             }
 
+            // Attempt to remove the current registration if it exists.
+            // If we don't remove the current one before creating a new one, the user record will retain an unused biometric registration indefinitely.
+            // The error thrown here can be safely ignored. If it fails, we don't want to prevent the creation of the new biometric registration.
+            try? await removeRegistration()
+
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
 
             let startResponse: RegisterStartResponse = try await router.post(
@@ -123,16 +128,49 @@ public extension StytchClient {
                 parameters: AuthenticateStartParameters(publicKey: publicKey)
             )
 
+            let authenticateCompleteParameters = AuthenticateCompleteParameters(
+                signature: try cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
+                biometricRegistrationId: startResponse.biometricRegistrationId,
+                sessionDurationMinutes: parameters.sessionDuration
+            )
+
             // NOTE: - We could return separate concrete type which deserializes/contains biometric_registration_id, but this doesn't currently add much value
-            return try await router.post(
+            let authenticateResponse: AuthenticateResponse = try await router.post(
                 to: .authenticate(.complete),
-                parameters: AuthenticateCompleteParameters(
-                    signature: cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
-                    biometricRegistrationId: startResponse.biometricRegistrationId,
-                    sessionDurationMinutes: parameters.sessionDuration
-                ),
+                parameters: authenticateCompleteParameters,
                 useDFPPA: true
             )
+            return authenticateResponse
+        }
+
+        func cleanupPotentiallyOrphanedBiometricRegistrations() {
+            guard let user = StytchClient.user.getSync() else {
+                return
+            }
+
+            // if we have a local biometric registration that doesn't exist on the user object, delete the local
+            if user.biometricRegistrations.isEmpty {
+                try? keychainClient.removeItem(.privateKeyRegistration)
+            } else if !user.biometricRegistrations.isEmpty {
+                let queryResult = try? keychainClient.get(.privateKeyRegistration).first
+                cleanupBiometricRegistrationIfOrphaned(queryResult: queryResult, user: user)
+            }
+        }
+
+        private func cleanupBiometricRegistrationIfOrphaned(
+            queryResult: KeychainClient.QueryResult?,
+            user: User
+        ) {
+            // Decode the biometric registration ID from the query result
+            let biometricRegistrationId = try? queryResult?.generic.map {
+                try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0)
+            }
+
+            // Check if the user's biometric registrations contain the ID
+            if user.biometricRegistrations.map(\.id).contains(biometricRegistrationId?.registrationId) == false {
+                // Remove the orphaned biometric registration
+                try? keychainClient.removeItem(.privateKeyRegistration)
+            }
         }
     }
 }
