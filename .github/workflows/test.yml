@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+      - "[0-9]+.[0-9]+.[0-9]+"
   pull_request:
 
 env:
@@ -51,33 +51,33 @@ jobs:
       matrix: ${{ fromJSON(needs.set-matrix.outputs.matrix) }}
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Bootstrap
-      uses: ./.github/actions/bootstrap
+      - name: Bootstrap
+        uses: ./.github/actions/bootstrap
 
-    - name: Codegen
-      run: |
-        make codegen
-        if [[ ! -z $(git status --porcelain | grep -Ev 'Brewfile.lock.json|Gemfile.lock') ]]; then
-          echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
-          exit 1
-        fi
+      - name: Codegen
+        run: |
+          make codegen
+          if [[ ! -z $(git status --porcelain | grep -Ev 'Brewfile.lock.json|Gemfile.lock') ]]; then
+            echo 'Codegen produced uncommitted changes. Commit changes and re-push.'
+            exit 1
+          fi
 
-    - name: Lint
-      run: make lint
+      - name: Lint
+        run: make lint
 
-    - name: Test
-      run: make test-${{ matrix.test-os }}
+      - name: Test
+        run: make test-${{ matrix.test-os }}
 
-    - name: Coverage
-      if: matrix.test-os == 'macos'
-      run: |
-        make coverage
-        Scripts/generate-coverage-summary .coverage/lcov.json >> $GITHUB_STEP_SUMMARY
+      - name: Coverage
+        if: matrix.test-os == 'macos'
+        run: |
+          make coverage
+          Scripts/generate-coverage-summary .coverage/lcov.json >> $GITHUB_STEP_SUMMARY
 
-    - uses: actions/upload-artifact@v3
-      if: matrix.test-os == 'macos'
-      with:
-        name: Coverage
-        path: .coverage/
+      - uses: actions/upload-artifact@v3
+        if: matrix.test-os == 'macos'
+        with:
+          name: Coverage
+          path: .coverage/
