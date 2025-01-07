@@ -59,7 +59,10 @@ extension KeychainClient {
 }
 
 extension KeychainClient.Item {
+    // The private key registration is central to biometric authentication, and this item should be protected by biometrics unless explicitly specified otherwise by the caller.
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
+    // This was introduced in version 0.54.0 to store the biometric registration ID in a keychain item that is not protected by biometrics.
+    static let biometricKeyRegistration: Self = .init(kind: .object, name: "stytch_biometric_key_registration")
 
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)

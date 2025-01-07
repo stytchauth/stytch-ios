@@ -68,11 +68,23 @@ class ViewController: UIViewController {
         }
     }
 
-    func clearAllBiometricRegistrations(user: User?) {
+    @IBAction func deleteRegistrationsTapped(_: Any) {
+        clearAllBiometricRegistrations(user: StytchClient.user.getSync())
         Task {
             do {
-                guard let biometricRegistrations = user?.biometricRegistrations else { return }
-                for registration in biometricRegistrations {
+                let user = try await StytchClient.user.get().wrapped
+                logBiometricRegistrations(user: user, identifier: "delete registrations")
+            } catch {
+                print(error.errorInfo)
+            }
+        }
+    }
+
+    func clearAllBiometricRegistrations(user: User?) {
+        guard let user else { return }
+        Task {
+            do {
+                for registration in user.biometricRegistrations {
                     _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: registration.id))
                 }
             } catch {

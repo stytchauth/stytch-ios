@@ -9,6 +9,11 @@ public extension StytchClient.Biometrics {
         case availableRegistered
     }
 }
+
+public extension StytchClient {
+    /// The interface for interacting with biometrics products.
+    static var biometrics: Biometrics { .init(router: router.scopedRouter { $0.biometrics }) }
+}
 #endif
 
 public extension StytchClient {
@@ -29,7 +34,7 @@ public extension StytchClient {
 
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
-            keychainClient.valueExistsForItem(.privateKeyRegistration)
+            keychainClient.valueExistsForItem(.biometricKeyRegistration)
         }
 
         #if !os(tvOS) && !os(watchOS)
@@ -51,17 +56,17 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Removes the current device's existing biometric registration from both the device itself and from the server.
         public func removeRegistration() async throws {
-            guard let queryResult: KeychainClient.QueryResult = try? keychainClient.get(.privateKeyRegistration).first else {
+            guard let queryResult = try? keychainClient.get(.biometricKeyRegistration).first else {
                 return
             }
 
             // Delete registration from backend
-            if let registration = try queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
-                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: registration.registrationId))
+            if let biometricRegistrationId = queryResult.stringValue {
+                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: User.BiometricRegistration.ID(stringLiteral: biometricRegistrationId)))
             }
 
-            // Remove local registration
-            try keychainClient.removeItem(.privateKeyRegistration)
+            // Remove local registrations
+            try clearBiometricRegistrations()
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -104,11 +109,15 @@ public extension StytchClient {
                 registrationId: finishResponse.biometricRegistrationId
             )
 
+            // Set the .privateKeyRegistration
             try keychainClient.set(
                 key: privateKey,
                 registration: registration,
                 accessPolicy: parameters.accessPolicy.keychainValue
             )
+
+            // Set the .biometricKeyRegistration
+            try keychainClient.set(registration.registrationId.rawValue, for: .biometricKeyRegistration)
 
             return finishResponse
         }
@@ -116,11 +125,13 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let queryResult: KeychainClient.QueryResult = try keychainClient.get(.privateKeyRegistration).first else {
+            guard let privateKeyRegistrationQueryResult: KeychainClient.QueryResult = try keychainClient.get(.privateKeyRegistration).first else {
                 throw StytchSDKError.noBiometricRegistration
             }
 
-            let privateKey = queryResult.data
+            try copyBiometricRegistrationIDToKeychainIfNeeded(privateKeyRegistrationQueryResult)
+
+            let privateKey = privateKeyRegistrationQueryResult.data
             let publicKey = try cryptoClient.publicKeyForPrivateKey(privateKey)
 
             let startResponse: AuthenticateStartResponse = try await router.post(
@@ -143,44 +154,52 @@ public extension StytchClient {
             return authenticateResponse
         }
 
+        // Clear both the .privateKeyRegistration and the .biometricKeyRegistration
+        func clearBiometricRegistrations() throws {
+            try keychainClient.removeItem(.privateKeyRegistration)
+            try keychainClient.removeItem(.biometricKeyRegistration)
+        }
+
+        // if we have a local biometric registration that doesn't exist on the user object, delete the local
         func cleanupPotentiallyOrphanedBiometricRegistrations() {
             guard let user = StytchClient.user.getSync() else {
                 return
             }
 
-            // if we have a local biometric registration that doesn't exist on the user object, delete the local
             if user.biometricRegistrations.isEmpty {
-                try? keychainClient.removeItem(.privateKeyRegistration)
-            } else if !user.biometricRegistrations.isEmpty {
-                let queryResult = try? keychainClient.get(.privateKeyRegistration).first
-                cleanupBiometricRegistrationIfOrphaned(queryResult: queryResult, user: user)
+                try? clearBiometricRegistrations()
+            } else {
+                let queryResult = try? keychainClient.get(.biometricKeyRegistration).first
+
+                // Check if the user's biometric registrations contain the ID
+                var userBiometricRegistrationIds = [String]()
+                for biometricRegistration in user.biometricRegistrations {
+                    userBiometricRegistrationIds.append(biometricRegistration.biometricRegistrationId.rawValue)
+                }
+
+                if let biometricRegistrationId = queryResult?.stringValue, userBiometricRegistrationIds.contains(biometricRegistrationId) == false {
+                    // Remove the orphaned biometric registration
+                    try? clearBiometricRegistrations()
+                }
             }
         }
 
-        private func cleanupBiometricRegistrationIfOrphaned(
-            queryResult: KeychainClient.QueryResult?,
-            user: User
-        ) {
-            // Decode the biometric registration ID from the query result
-            let biometricRegistrationId = try? queryResult?.generic.map {
-                try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0)
-            }
-
-            // Check if the user's biometric registrations contain the ID
-            if user.biometricRegistrations.map(\.id).contains(biometricRegistrationId?.registrationId) == false {
-                // Remove the orphaned biometric registration
-                try? keychainClient.removeItem(.privateKeyRegistration)
+        /*
+         After introducing the .biometricKeyRegistration keychain item in version 0.54.0, we needed a way for versions prior to 0.54.0
+         to copy the value stored in the biometrically protected .privateKeyRegistration keychain item into the non-biometric
+         .biometricKeyRegistration keychain item without triggering unnecessary Face ID prompts. Since a Face ID prompt is already
+         being shown here for authentication, we decided to use this as an opportunity to perform the migration by copying the
+         registration ID into the .biometricKeyRegistration keychain item. For versions after 0.54.0, this action occurs during
+         registration, and it should only happen here if the .biometricKeyRegistration keychain item is empty.
+         */
+        func copyBiometricRegistrationIDToKeychainIfNeeded(_ queryResult: KeychainClient.QueryResult) throws {
+            let biometricKeyRegistration = try? keychainClient.get(.biometricKeyRegistration).first
+            if biometricKeyRegistration == nil, let registration = try queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
+                try keychainClient.set(registration.registrationId.rawValue, for: .biometricKeyRegistration)
             }
         }
     }
 }
-
-#if !os(tvOS) && !os(watchOS)
-public extension StytchClient {
-    /// The interface for interacting with biometrics products.
-    static var biometrics: Biometrics { .init(router: router.scopedRouter { $0.biometrics }) }
-}
-#endif
 
 public extension StytchClient.Biometrics {
     typealias RegisterCompleteResponse = Response<RegisterCompleteResponseData>

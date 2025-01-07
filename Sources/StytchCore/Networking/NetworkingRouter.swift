@@ -139,7 +139,9 @@ public extension NetworkingRouter {
                     hostUrl: configuration.hostUrl
                 )
                 userStorage.update(sessionResponse.user)
+                #if !os(tvOS) && !os(watchOS)
                 StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+                #endif
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionManager.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
