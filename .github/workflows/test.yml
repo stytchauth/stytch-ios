@@ -75,9 +75,3 @@ jobs:
         run: |
           make coverage
           Scripts/generate-coverage-summary .coverage/lcov.json >> $GITHUB_STEP_SUMMARY
-
-      - uses: actions/upload-artifact@v3
-        if: matrix.test-os == 'macos'
-        with:
-          name: Coverage
-          path: .coverage/
