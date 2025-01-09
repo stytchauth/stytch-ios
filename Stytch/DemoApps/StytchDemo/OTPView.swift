@@ -22,6 +22,7 @@ struct OTPView: View {
 
             TextField(textFieldText, text: $inputText)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.numberPad)
                 .padding()
 
             HStack {
@@ -49,6 +50,15 @@ struct OTPView: View {
                 .foregroundColor(.white)
                 .cornerRadius(10)
             }
+
+            Button("Generate Alot of Telemtery Ids") {
+                otpAuthenticationManager.getAlotOfTelemetrtIds()
+            }
+            .padding()
+            .frame(height: 40.0)
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
         }
         .padding()
         .alert("Error", isPresented: $showAlert) {
@@ -67,6 +77,7 @@ struct OTPView: View {
                 textFieldText = "Enter The One Time Code"
                 inputText = ""
             } catch {
+                print(error.errorInfo)
                 showErrorAlert(error)
             }
         }
@@ -79,6 +90,7 @@ struct OTPView: View {
                 textFieldText = "Enter The One Time Code"
                 inputText = ""
             } catch {
+                print(error.errorInfo)
                 showErrorAlert(error)
             }
         }
@@ -89,6 +101,7 @@ struct OTPView: View {
             do {
                 try await otpAuthenticationManager.authenticateOTP(code: inputText)
             } catch {
+                print(error.errorInfo)
                 showErrorAlert(error)
             }
         }

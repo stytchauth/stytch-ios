@@ -43,7 +43,7 @@ final class DFPClient: DFPProvider, Sendable {
     }
 }
 
-private final class MessageHandler: NSObject, WKScriptMessageHandler, Sendable {
+private final class MessageHandler: NSObject, WKScriptMessageHandler, Sendable, WKUIDelegate, WKNavigationDelegate {
     var continuations: [CheckedContinuation<String, Never>] = []
     var webviews: [WKWebView] = []
 
@@ -52,6 +52,10 @@ private final class MessageHandler: NSObject, WKScriptMessageHandler, Sendable {
     }
 
     func addWebView(_ webview: WKWebView) {
+        webview.uiDelegate = self
+        webview.allowsBackForwardNavigationGestures = true
+        webview.allowsLinkPreview = true
+        webview.navigationDelegate = self
         webviews.append(webview)
     }
 

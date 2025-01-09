@@ -15,7 +15,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        StytchClient.configure(publicToken: "")
+        StytchClient.configure(publicToken: "your-public-token")
 
         StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
