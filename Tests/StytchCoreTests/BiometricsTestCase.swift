@@ -54,11 +54,15 @@ final class BiometricsTestCase: BaseTestCase {
             .init((0..<challenge.count).map { UInt8($0) })
         }
 
+        // Set the .privateKeyRegistration
         try Current.keychainClient.set(
             key: privateKey.rawRepresentation,
             registration: .init(userId: userId, userLabel: email, registrationId: regId),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
+
+        // Set the .biometricKeyRegistration
+        try Current.keychainClient.set(regId.rawValue, for: .biometricKeyRegistration)
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
@@ -95,11 +99,15 @@ final class BiometricsTestCase: BaseTestCase {
             .init((0..<challenge.count).map { UInt8($0) })
         }
 
+        // Set the .privateKeyRegistration
         try Current.keychainClient.set(
             key: privateKey.rawRepresentation,
             registration: .init(userId: userId, userLabel: email, registrationId: regId),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
+
+        // Set the .biometricKeyRegistration
+        try Current.keychainClient.set(regId.rawValue, for: .biometricKeyRegistration)
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 

@@ -117,13 +117,6 @@ public extension NetworkingRouter {
         }
     }
 
-    private func cleanupPotentiallyOrphanedBiometricRegistrations(_ user: User) {
-        // if we have a local biometric registration that doesn't exist on the user object, delete the local
-        if let queryResult: KeychainClient.QueryResult = try? keychainClient.get(.privateKeyRegistration).first, let biometricRegistrationId = try? queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }), !user.biometricRegistrations.map(\.id).contains(biometricRegistrationId.registrationId) {
-            try? keychainClient.removeItem(.privateKeyRegistration)
-        }
-    }
-
     // swiftlint:disable:next function_body_length
     private func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method,
@@ -146,7 +139,9 @@ public extension NetworkingRouter {
                     hostUrl: configuration.hostUrl
                 )
                 userStorage.update(sessionResponse.user)
-                cleanupPotentiallyOrphanedBiometricRegistrations(sessionResponse.user)
+                #if !os(tvOS) && !os(watchOS)
+                StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+                #endif
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionManager.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
