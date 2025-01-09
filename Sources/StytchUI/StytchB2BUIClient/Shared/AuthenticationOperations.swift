@@ -48,6 +48,51 @@ struct AuthenticationOperations {
         _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
     }
 
+    static func sendEmailMagicLinkForAuthFlowType(configuration: StytchB2BUIClient.Configuration, emailAddress: String) async throws {
+        if configuration.computedAuthFlowType == .discovery {
+            let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
+                emailAddress: emailAddress,
+                discoveryRedirectUrl: configuration.redirectUrl
+            )
+            _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
+        } else {
+            guard let organizationId = OrganizationManager.organizationId else {
+                throw StytchSDKError.noOrganziationId
+            }
+
+            try await sendEmailMagicLink(
+                configuration: configuration,
+                emailAddress: emailAddress,
+                organizationId: organizationId,
+                redirectUrl: configuration.redirectUrl
+            )
+        }
+    }
+
+    static func sendEmailOTPForAuthFlowType(configuration: StytchB2BUIClient.Configuration, emailAddress: String) async throws {
+        if configuration.computedAuthFlowType == .discovery {
+            let parameters = StytchB2BClient.OTP.Email.Discovery.SendParameters(
+                emailAddress: emailAddress,
+                loginTemplateId: configuration.emailOtpOptions?.loginTemplateId,
+                locale: nil
+            )
+            _ = try await StytchB2BClient.otp.email.discovery.send(parameters: parameters)
+        } else {
+            guard let organizationId = OrganizationManager.organizationId else {
+                throw StytchSDKError.noOrganziationId
+            }
+
+            let parameters = StytchB2BClient.OTP.Email.LoginOrSignupParameters(
+                organizationId: organizationId,
+                emailAddress: emailAddress,
+                loginTemplateId: configuration.emailOtpOptions?.loginTemplateId,
+                signupTemplateId: configuration.emailOtpOptions?.signupTemplateId,
+                locale: nil
+            )
+            _ = try await StytchB2BClient.otp.email.loginOrSignup(parameters: parameters)
+        }
+    }
+
     static func smsSend(phoneNumberE164: String) async throws {
         guard let organizationId = OrganizationManager.organizationId else {
             throw StytchSDKError.noOrganziationId

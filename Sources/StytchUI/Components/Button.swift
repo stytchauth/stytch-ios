@@ -156,6 +156,15 @@ extension Button {
         // Set the attributed title to the button
         button.setAttributedTitle(attributedText, for: .normal)
 
+        // Allow the button's title to wrap
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.titleLabel?.textAlignment = .center // Optional, based on desired alignment
+
+        // Enable flexible width and height
+        button.contentHorizontalAlignment = .center
+        button.contentVerticalAlignment = .center
+
         // Add the action to the button
         button.addTarget(target, action: action, for: .touchUpInside)
 

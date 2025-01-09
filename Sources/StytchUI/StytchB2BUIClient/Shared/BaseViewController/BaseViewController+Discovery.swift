@@ -8,7 +8,6 @@ extension BaseViewController {
             if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
                 selectDiscoveredOrganization(configuration: configuration, discoveredOrganization: singleDiscoveredOrganization)
             } else {
-                navigationController?.popToRootViewController(animated: false)
                 let viewController: UIViewController
                 if DiscoveryManager.discoveredOrganizations.isEmpty {
                     if configuration.allowCreateOrganization == true, StytchB2BClient.createOrganizationEnabled == true {
@@ -20,7 +19,11 @@ extension BaseViewController {
                     viewController = DiscoveredOrganizationsViewController(state: .init(configuration: configuration), discoveredOrganizations: DiscoveryManager.discoveredOrganizations)
                 }
 
-                navigationController?.pushViewController(viewController, animated: true)
+                // Reset the view controller stack to include only the home view controller and one of the discovery view controllers.
+                // This ensures that if the user navigates back, they must restart the flow from the beginning.
+                if let homeViewController = navigationController?.viewControllers.first {
+                    navigationController?.setViewControllers([homeViewController, viewController], animated: true)
+                }
             }
         }
     }

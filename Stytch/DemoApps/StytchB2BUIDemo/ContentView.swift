@@ -8,7 +8,7 @@ struct ContentView: View {
 
     let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
         publicToken: "your-public-token",
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
+        products: [.emailMagicLinks, .emailOtp, .sso, .passwords, .oauth],
         // authFlowType: .organization(slug: "org-slug"),
         authFlowType: .discovery,
         oauthProviders: [.init(provider: .google), .init(provider: .github)]

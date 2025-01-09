@@ -33,7 +33,21 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(otpView)
-        stackView.addArrangedSubview(footerLabel)
+
+        // If the totpResponse is not nil, it means we are actively enrolling in TOTP, and we cannot use a recovery code yet.
+        if B2BAuthenticationManager.totpResponse != nil {
+            stackView.addArrangedSubview(footerLabel)
+        } else {
+            let useRecoveryCodeButton = Button.createTextButton(
+                withPlainText: "Can't access your authenticator app?",
+                boldText: "Use a backup code.",
+                action: #selector(useRecoveryCodeButtonTapped),
+                target: self
+            )
+            useRecoveryCodeButton.contentHorizontalAlignment = .leading
+            stackView.addArrangedSubview(useRecoveryCodeButton)
+        }
+
         stackView.addArrangedSubview(SpacerView())
         otpView.delegate = self
 
@@ -57,6 +71,10 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         if B2BAuthenticationManager.totpResponse != nil {
             navigationController?.pushViewController(RecoveryCodeSaveViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
         }
+    }
+
+    @objc func useRecoveryCodeButtonTapped() {
+        navigationController?.pushViewController(RecoveryCodeEntryViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
     }
 }
 
