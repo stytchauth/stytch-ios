@@ -79,11 +79,6 @@ public extension StytchClient {
                 throw StytchSDKError.noCurrentSession
             }
 
-            // Attempt to remove the current registration if it exists.
-            // If we don't remove the current one before creating a new one, the user record will retain an unused biometric registration indefinitely.
-            // The error thrown here can be safely ignored. If it fails, we don't want to prevent the creation of the new biometric registration.
-            try? await removeRegistration()
-
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
 
             let startResponse: RegisterStartResponse = try await router.post(
