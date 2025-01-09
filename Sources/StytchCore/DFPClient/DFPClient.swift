@@ -7,28 +7,31 @@ internal protocol DFPProvider {
     func getTelemetryId(publicToken: String, dfppaDomain: String) async -> String
 }
 
-final actor DFPClient: DFPProvider {
+final class DFPClient: DFPProvider, Sendable {
+    private let messageHandler = MessageHandler()
+
     func getTelemetryId(publicToken: String, dfppaDomain: String) async -> String {
         guard let dfpFileUrl = getResource(myBundle: Bundle(for: Self.self), name: "dfp", ext: "html") else {
             return "Unable to load DFP file"
         }
-        return await withCheckedContinuation { continuation in
+        return await withCheckedContinuation { [weak self] continuation in
             DispatchQueue.main.async {
                 if let rootViewController = UIApplication.shared.rootViewController {
-                    let messageHandler = MessageHandler()
-                    messageHandler.addContinuation(continuation)
+                    self?.messageHandler.addContinuation(continuation)
 
                     let userScript = WKUserScript(source: "fetchTelemetryId('\(publicToken)', 'https://\(dfppaDomain)/submit');", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
                     let userContentController = WKUserContentController()
 
                     userContentController.addUserScript(userScript)
-                    userContentController.add(messageHandler, name: "StytchDFP")
+                    if let messageHandler = self?.messageHandler {
+                        userContentController.add(messageHandler, name: "StytchDFP")
+                    }
 
                     let configuration = WKWebViewConfiguration()
                     configuration.userContentController = userContentController
 
                     let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
-                    messageHandler.addWebView(webView)
+                    self?.messageHandler.addWebView(webView)
 
                     rootViewController.view.addSubview(webView)
                     webView.loadFileURL(dfpFileUrl, allowingReadAccessTo: dfpFileUrl)
@@ -40,7 +43,7 @@ final actor DFPClient: DFPProvider {
     }
 }
 
-private final class MessageHandler: NSObject, WKScriptMessageHandler {
+private final class MessageHandler: NSObject, WKScriptMessageHandler, Sendable {
     var continuations: [CheckedContinuation<String, Never>] = []
     var webviews: [WKWebView] = []
 
