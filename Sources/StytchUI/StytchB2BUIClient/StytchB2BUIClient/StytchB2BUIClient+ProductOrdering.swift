@@ -29,25 +29,27 @@ extension StytchB2BUIClient {
         var productComponents = [ProductComponent]()
         for product in validProducts {
             switch product {
-            case .emailMagicLinks:
+            case .emailMagicLinks, .emailOtp:
                 if case .discovery = configuration.computedAuthFlowType {
-                    productComponents.append(.emailMagicLink)
-                } else if configuration.supportsEmailMagicLinksAndPasswords == true, productComponents.contains(.emailMagicLinkAndPasswords) == false {
-                    productComponents.append(.emailMagicLinkAndPasswords)
-                } else {
-                    productComponents.append(.emailMagicLink)
+                    if productComponents.contains(.email) == false {
+                        productComponents.append(.email)
+                    }
+                } else if configuration.supportsEmailAndPasswords == true {
+                    if productComponents.contains(.emailAndPasswords) == false {
+                        productComponents.append(.emailAndPasswords)
+                    }
+                } else if productComponents.contains(.email) == false {
+                    productComponents.append(.email)
                 }
-            case .emailOtp:
-                break
             case .sso:
                 if case .organization = configuration.computedAuthFlowType, hasSSOActiveConnections == true {
                     productComponents.append(.ssoButtons)
                 }
             case .passwords:
                 if case .organization = configuration.computedAuthFlowType {
-                    if configuration.supportsEmailMagicLinksAndPasswords == true, productComponents.contains(.emailMagicLinkAndPasswords) == false {
-                        productComponents.append(.emailMagicLinkAndPasswords)
-                    } else if configuration.supportsPasswordsWithoutEmailMagiclinks {
+                    if configuration.supportsEmailAndPasswords == true, productComponents.contains(.emailAndPasswords) == false {
+                        productComponents.append(.emailAndPasswords)
+                    } else if configuration.supportsPasswordsWithoutEmail {
                         productComponents.append(.password)
                     }
                 }
@@ -58,7 +60,7 @@ extension StytchB2BUIClient {
 
         // If we have both buttons and input, we want to display a divider between the last 2 elements
         let hasButtons = productComponents.contains(.oAuthButtons) || productComponents.contains(.ssoButtons)
-        let showDivider = hasButtons && (configuration.supportsEmailMagicLinks || configuration.supportsPasswords)
+        let showDivider = hasButtons && (configuration.supportsEmail || configuration.supportsPasswords)
 
         if productComponents.count > 1, showDivider {
             productComponents.insert(.divider, at: productComponents.count - 1)
@@ -70,8 +72,8 @@ extension StytchB2BUIClient {
 
 extension StytchB2BUIClient {
     enum ProductComponent: String {
-        case emailMagicLink
-        case emailMagicLinkAndPasswords
+        case email
+        case emailAndPasswords
         case password
         case oAuthButtons
         case ssoButtons

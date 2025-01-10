@@ -1,17 +1,17 @@
 import StytchCore
 import UIKit
 
-protocol MFAMethodSelectionViewControllerDelegate: AnyObject {
-    func didSelectMFAMethod(mfaMethod: StytchB2BClient.MfaMethod)
+protocol SelectionViewControllerDelegate: AnyObject {
+    func didSelectCell(label: String)
 }
 
-class MFAMethodSelectionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SelectionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     private let tableView = UITableView()
-    private let mfaMethods: [StytchB2BClient.MfaMethod]
-    weak var delegate: MFAMethodSelectionViewControllerDelegate?
+    private let labels: [String]
+    weak var delegate: SelectionViewControllerDelegate?
 
-    init(mfaMethods: [StytchB2BClient.MfaMethod]) {
-        self.mfaMethods = mfaMethods
+    init(labels: [String]) {
+        self.labels = labels
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -35,7 +35,7 @@ class MFAMethodSelectionViewController: UIViewController, UITableViewDataSource,
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
-        tableView.register(MFAEnrollmentSelectionTableViewCell.self, forCellReuseIdentifier: "MFAEnrollmentSelectionTableViewCell")
+        tableView.register(SelectionTableViewCell.self, forCellReuseIdentifier: "SelectionTableViewCell")
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -45,19 +45,17 @@ class MFAMethodSelectionViewController: UIViewController, UITableViewDataSource,
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        mfaMethods.count
+        labels.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MFAEnrollmentSelectionTableViewCell", for: indexPath) as? MFAEnrollmentSelectionTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SelectionTableViewCell", for: indexPath) as? SelectionTableViewCell else {
             return UITableViewCell()
         }
 
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.zero
-
-        let mfaMethod = mfaMethods[indexPath.row]
-        cell.configure(with: mfaMethod, image: nil)
+        cell.configure(with: labels[indexPath.row])
         return cell
     }
 
@@ -66,8 +64,7 @@ class MFAMethodSelectionViewController: UIViewController, UITableViewDataSource,
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let mfaMethod = mfaMethods[indexPath.row]
-        delegate?.didSelectMFAMethod(mfaMethod: mfaMethod)
+        delegate?.didSelectCell(label: labels[indexPath.row])
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

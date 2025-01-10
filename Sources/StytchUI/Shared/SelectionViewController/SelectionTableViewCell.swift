@@ -1,7 +1,7 @@
 import StytchCore
 import UIKit
 
-class MFAEnrollmentSelectionTableViewCell: UITableViewCell {
+class SelectionTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -47,11 +47,7 @@ class MFAEnrollmentSelectionTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with mfaMethod: StytchB2BClient.MfaMethod, image _: UIImage?) {
-        if mfaMethod == .sms {
-            descriptionLabel.text = "Text me a code"
-        } else {
-            descriptionLabel.text = "Use an authenticator app"
-        }
+    func configure(with label: String) {
+        descriptionLabel.text = label
     }
 }

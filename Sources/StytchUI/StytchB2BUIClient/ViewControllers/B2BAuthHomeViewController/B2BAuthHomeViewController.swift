@@ -87,10 +87,10 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         for productComponent in productComponents {
             switch productComponent {
-            case .emailMagicLink, .emailMagicLinkAndPasswords:
-                let emailMagicLinksViewController = B2BEmailMagicLinksViewController(
+            case .email, .emailAndPasswords:
+                let emailMagicLinksViewController = B2BEmailViewController(
                     state: .init(configuration: viewModel.state.configuration),
-                    showsUsePasswordButton: productComponent == .emailMagicLinkAndPasswords,
+                    showsUsePasswordButton: productComponent == .emailAndPasswords,
                     delegate: self
                 )
                 addChild(emailMagicLinksViewController)
@@ -158,9 +158,23 @@ extension B2BAuthHomeViewController: B2BOAuthViewControllerDelegate {
     }
 }
 
-extension B2BAuthHomeViewController: B2BEmailMagicLinksViewControllerDelegate {
+extension B2BAuthHomeViewController: B2BEmailViewControllerDelegate {
+    func emailOTPSent() {
+        Task { @MainActor in
+            let emailOTPEntryViewController = EmailOTPEntryViewController(state: .init(configuration: viewModel.state.configuration, didSendCode: true))
+            navigationController?.pushViewController(emailOTPEntryViewController, animated: true)
+        }
+    }
+
     func emailMagicLinkSent() {
         showEmailConfirmation(configuration: viewModel.state.configuration, type: .emailConfirmation)
+    }
+
+    func showEmailMethodSelection() {
+        Task { @MainActor in
+            let emailMethodSelectionViewController = EmailMethodSelectionViewController(state: .init(configuration: viewModel.state.configuration))
+            navigationController?.pushViewController(emailMethodSelectionViewController, animated: true)
+        }
     }
 
     func usePasswordInstead() {

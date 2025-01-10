@@ -33,10 +33,6 @@ public extension StytchB2BUIClient {
             products.contains(.emailMagicLinks)
         }
 
-        public var supportsEmailMagicLinksWithoutPasswords: Bool {
-            supportsEmailMagicLinks && !supportsPasswords
-        }
-
         public var supportsEmailOTP: Bool {
             products.contains(.emailOtp)
         }
@@ -49,16 +45,28 @@ public extension StytchB2BUIClient {
             products.contains(.passwords)
         }
 
-        public var supportsPasswordsWithoutEmailMagiclinks: Bool {
-            !supportsEmailMagicLinks && supportsPasswords
-        }
-
         public var supportsOauth: Bool {
             products.contains(.oauth) && !oauthProviders.isEmpty
         }
 
-        public var supportsEmailMagicLinksAndPasswords: Bool {
-            supportsEmailMagicLinks && supportsPasswords
+        public var supportsEmail: Bool {
+            supportsEmailMagicLinks || supportsEmailOTP
+        }
+
+        public var supportsEmailMagicLinksAndEmailOTP: Bool {
+            supportsEmailMagicLinks && supportsEmailOTP
+        }
+
+        public var supportsEmailAndPasswords: Bool {
+            supportsEmail && supportsPasswords
+        }
+
+        public var supportsEmailWithoutPasswords: Bool {
+            supportsEmail && !supportsPasswords
+        }
+
+        public var supportsPasswordsWithoutEmail: Bool {
+            !supportsEmail && supportsPasswords
         }
 
         public var organizationSlug: String? {

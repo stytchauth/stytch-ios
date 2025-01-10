@@ -23,8 +23,6 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
 
-        // TODO: Make sure not use the ordering as filtering
-        // used to order the mfa methods
         var mfaMethods: [StytchB2BClient.MfaMethod] = [.sms, .totp]
         if let mfaProductOrder = viewModel.state.configuration.mfaProductOrder {
             mfaMethods = reorderMfaEnrollmentMethods(
@@ -33,7 +31,7 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
             )
         }
 
-        let mfaMethodSelectionViewController = MFAMethodSelectionViewController(mfaMethods: mfaMethods)
+        let mfaMethodSelectionViewController = SelectionViewController(labels: mfaMethods.map(\.descriptionText))
         mfaMethodSelectionViewController.delegate = self
         addChild(mfaMethodSelectionViewController)
         stackView.addArrangedSubview(mfaMethodSelectionViewController.view)
@@ -76,13 +74,23 @@ final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollme
     }
 }
 
-extension MFAEnrollmentSelectionViewController: MFAMethodSelectionViewControllerDelegate {
-    func didSelectMFAMethod(mfaMethod: StytchCore.StytchB2BClient.MfaMethod) {
-        switch mfaMethod {
-        case .sms:
+extension MFAEnrollmentSelectionViewController: SelectionViewControllerDelegate {
+    func didSelectCell(label: String) {
+        if label == StytchB2BClient.MfaMethod.sms.descriptionText {
             navigationController?.pushViewController(SMSOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
-        case .totp:
+        } else if label == StytchB2BClient.MfaMethod.totp.descriptionText {
             navigationController?.pushViewController(TOTPEnrollmentViewController(state: .init(configuration: viewModel.state.configuration)), animated: true)
+        }
+    }
+}
+
+extension StytchB2BClient.MfaMethod {
+    var descriptionText: String {
+        switch self {
+        case .sms:
+            return "Text me a code"
+        case .totp:
+            return "Use an authenticator app"
         }
     }
 }
