@@ -6,7 +6,7 @@ import UIKit
 
 public extension StytchB2BUIClient {
     struct Configuration: Codable {
-        static let empty = Configuration(publicToken: "", products: [], authFlowType: .discovery)
+        public static let empty = Configuration(publicToken: "", products: [], authFlowType: .discovery)
 
         public let publicToken: String
         public let hostUrl: URL?
