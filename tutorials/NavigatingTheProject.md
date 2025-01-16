@@ -29,7 +29,7 @@ Bundle ID: `com.stytch.StytchUIDemo`
 
 * **StytchB2BUIDemo**  
 Bundle ID: `com.stytch.StytchB2BUIDemo`  
-[Configure the public token](../Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L10)  
+[Configure the public token](../Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L53)  
 [Configure the URL Scheme](../Stytch/DemoApps/StytchB2BUIDemo/Info.plist#L12)  
 
 * **ConsumerWorkbench**  

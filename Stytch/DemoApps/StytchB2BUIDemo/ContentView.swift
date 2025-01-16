@@ -49,8 +49,10 @@ struct ContentView: View {
 }
 
 class ContentViewModel: ObservableObject {
-    @Published var publicToken: String = "your-public-token"
+    // To hard-code the publicToken or orgSlug instead of inputting it through the UI, set it here.
+    @Published var publicToken: String = ""
     @Published var orgSlug: String = ""
+
     @Published var isShowingB2BUI: Bool = false
     @Published var isAuthenticated: Bool = false
     @Published var stytchB2BUIConfig: StytchB2BUIClient.Configuration = .empty
@@ -80,8 +82,13 @@ class ContentViewModel: ObservableObject {
     }
 
     func loadFromUserDefaults() {
-        publicToken = UserDefaults.standard.string(forKey: "publicToken") ?? "your-public-token"
-        orgSlug = UserDefaults.standard.string(forKey: "orgSlug") ?? ""
+        if publicToken.isEmpty == true {
+            publicToken = UserDefaults.standard.string(forKey: "publicToken") ?? ""
+        }
+
+        if orgSlug.isEmpty == true {
+            orgSlug = UserDefaults.standard.string(forKey: "orgSlug") ?? ""
+        }
     }
 
     func saveToUserDefaults() {
