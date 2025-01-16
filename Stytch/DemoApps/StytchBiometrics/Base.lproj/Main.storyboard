@@ -76,26 +76,55 @@
                                     <action selector="deleteRegistrationsTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HjC-Qh-k2i"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SUV-k8-6JA">
+                                <rect key="frame" x="16" y="553" width="361" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Mo2-fV-R5a"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YCt-me-0YR">
+                                <rect key="frame" x="71.666666666666686" y="493" width="250" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="M2x-C2-T0i"/>
+                                    <constraint firstAttribute="width" constant="250" id="f6u-TO-3uT"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Log Out"/>
+                                <connections>
+                                    <action selector="logOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="53P-gj-qTD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="SUV-k8-6JA" firstAttribute="top" secondItem="YCt-me-0YR" secondAttribute="bottom" constant="16" id="AlM-NM-Tdh"/>
+                            <constraint firstItem="YCt-me-0YR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GnT-D9-W2y"/>
                             <constraint firstItem="o5j-Hf-UlQ" firstAttribute="top" secondItem="NSS-yR-4kA" secondAttribute="bottom" constant="16" id="H9h-yE-V0K"/>
                             <constraint firstItem="NSS-yR-4kA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KE2-75-zfD"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SUV-k8-6JA" secondAttribute="trailing" constant="16" id="PlL-9j-4Nc"/>
+                            <constraint firstItem="SUV-k8-6JA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="TUu-oj-IfB"/>
                             <constraint firstItem="Z8n-4O-9aK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TpE-1F-BQX"/>
                             <constraint firstItem="Y0i-2o-kvb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Xtd-4b-HJC"/>
                             <constraint firstItem="NSS-yR-4kA" firstAttribute="top" secondItem="Z8n-4O-9aK" secondAttribute="bottom" constant="16" id="YiG-Oq-E3S"/>
                             <constraint firstItem="2xr-u3-24A" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bu9-mF-yLw"/>
                             <constraint firstItem="Y0i-2o-kvb" firstAttribute="top" secondItem="2xr-u3-24A" secondAttribute="bottom" constant="50" id="ezs-TN-mbV"/>
+                            <constraint firstItem="YCt-me-0YR" firstAttribute="top" secondItem="o5j-Hf-UlQ" secondAttribute="bottom" constant="16" id="fsT-Tf-s7A"/>
                             <constraint firstItem="2xr-u3-24A" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="hWt-qx-X3u"/>
                             <constraint firstItem="Z8n-4O-9aK" firstAttribute="top" secondItem="Y0i-2o-kvb" secondAttribute="bottom" constant="16" id="kLx-k0-BQh"/>
                             <constraint firstItem="o5j-Hf-UlQ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y8Z-rQ-8cR"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="sessionLabel" destination="SUV-k8-6JA" id="mDd-fR-hG6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384" y="-26"/>
+            <point key="canvasLocation" x="-385.49618320610688" y="-26.056338028169016"/>
         </scene>
     </scenes>
     <resources>
