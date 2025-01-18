@@ -241,6 +241,7 @@ extension StytchB2BClient {
         case resetBySession
         case authenticate
         case strengthCheck
+        case discovery(DiscoveryRoute)
 
         var path: Path {
             switch self {
@@ -254,6 +255,25 @@ extension StytchB2BClient {
                 return "authenticate"
             case .strengthCheck:
                 return "strength_check"
+            case let .discovery(route):
+                return "discovery".appendingPath(route.path)
+            }
+        }
+
+        enum DiscoveryRoute: RouteType {
+            case resetByEmailStart
+            case resetByEmail
+            case authenticate
+
+            var path: Path {
+                switch self {
+                case .resetByEmailStart:
+                    return "reset/start"
+                case .resetByEmail:
+                    return "reset"
+                case .authenticate:
+                    return "authenticate"
+                }
             }
         }
     }

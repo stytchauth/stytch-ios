@@ -188,4 +188,86 @@ final class B2BPasswordsTestCase: BaseTestCase {
             ])
         )
     }
+
+    func testDiscoveryResetByEmail() async throws {
+        // Assert error is thrown when PKCE is missing
+        await XCTAssertThrowsErrorAsync(
+            try await client.discovery.resetByEmail(parameters: .init(passwordResetToken: "12345", password: "newPassword123")),
+            StytchSDKError.missingPKCE
+        )
+
+        // Mock responses for resetByEmailStart and resetByEmail
+        networkInterceptor.responses {
+            BasicResponse(requestId: "123", statusCode: 200)
+            StytchB2BClient.DiscoveryAuthenticateResponseData.mock
+        }
+
+        // Call resetByEmailStart
+        _ = try await client.discovery.resetByEmailStart(
+            parameters: .init(
+                emailAddress: "user@example.com",
+                discoveryRedirectUrl: XCTUnwrap(URL(string: "https://example.com/discovery-redirect")),
+                resetPasswordRedirectUrl: XCTUnwrap(URL(string: "https://example.com/reset-password")),
+                resetPasswordExpirationMinutes: 15,
+                resetPasswordTemplateId: "template123"
+            )
+        )
+
+        // Verify request for resetByEmailStart
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/discovery/reset/start",
+            method: .post([
+                "email_address": "user@example.com",
+                "discovery_redirect_url": "https://example.com/discovery-redirect",
+                "reset_password_redirect_url": "https://example.com/reset-password",
+                "reset_password_expiration_minutes": 15,
+                "reset_password_template_id": "template123",
+                "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+            ])
+        )
+
+        Current.timer = { _, _, _ in .init() }
+        XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
+
+        // Call resetByEmail
+        _ = try await client.discovery.resetByEmail(
+            parameters: .init(passwordResetToken: "12345", password: "newPassword123")
+        )
+
+        // Verify request for resetByEmail
+        try XCTAssertRequest(
+            networkInterceptor.requests[1],
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/discovery/reset",
+            method: .post([
+                "password_reset_token": "12345",
+                "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+                "password": "newPassword123",
+            ])
+        )
+
+        XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+    }
+
+    func testDiscoveryAuthenticate() async throws {
+        let authParams = StytchB2BClient.Passwords.Discovery.AuthenticateParameters(
+            emailAddress: "user@example.com",
+            password: "password123"
+        )
+
+        networkInterceptor.responses {
+            StytchB2BClient.DiscoveryAuthenticateResponseData.mock
+        }
+
+        _ = try await client.discovery.authenticate(parameters: authParams)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/discovery/authenticate",
+            method: .post([
+                "email_address": "user@example.com",
+                "password": "password123",
+            ])
+        )
+    }
 }

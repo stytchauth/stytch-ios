@@ -112,6 +112,7 @@ public extension StytchB2BClient {
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
+        print("handle(url: URL, sessionDuration: Minutes): \(url)")
         guard let (tokenType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
