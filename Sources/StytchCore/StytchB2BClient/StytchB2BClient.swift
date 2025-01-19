@@ -50,10 +50,12 @@ public struct StytchB2BClient: StytchClientType {
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
-    public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
-        guard let (type, token) = try _tokenValues(for: url) else { return nil }
+    // swiftlint:disable:next large_tuple
+    public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, DeeplinkRedirectType, String)? {
+        guard let (type, redirectTypeString, token) = try _tokenValues(for: url) else { return nil }
         guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchSDKError.deeplinkUnknownTokenType }
-        return (tokenType, token)
+        let redirectType = DeeplinkRedirectType(redirectTypeString)
+        return (tokenType, redirectType, token)
     }
 
     /// Retrieve the most recently created PKCE code pair from the device, if available
@@ -88,6 +90,20 @@ public extension StytchB2BClient {
         #endif
     }
 
+    enum DeeplinkRedirectType: String, Sendable {
+        case login
+        case resetPassword = "reset_password"
+        case unknown
+
+        init(_ string: String?) {
+            if let value = string, let type = DeeplinkRedirectType(rawValue: value) {
+                self = type
+            } else {
+                self = .unknown
+            }
+        }
+    }
+
     /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
     enum DeeplinkResponse: Sendable {
         case mfauth(B2BMFAAuthenticateResponse)
@@ -111,9 +127,9 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
-        print("handle(url: URL, sessionDuration: Minutes): \(url)")
-        guard let (tokenType, token) = try tokenValues(for: url) else {
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
+        print("handle(url: URL, sessionDuration: Minutes): \(url)\n\n")
+        guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
             }
@@ -122,10 +138,18 @@ public extension StytchB2BClient {
 
         switch tokenType {
         case .discovery:
-            Task {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+            switch redirectType {
+            case .resetPassword:
+                Task {
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+                }
+                return .manualHandlingRequired(.discovery, redirectType, token: token)
+            case .login, .unknown:
+                Task {
+                    try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
+                }
+                return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
             }
-            return try await .handled(response: .discovery(magicLinks.discoveryAuthenticate(parameters: .init(token: token))))
         case .multiTenantMagicLinks:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
@@ -135,7 +159,7 @@ public extension StytchB2BClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return .manualHandlingRequired(.multiTenantPasswords, token: token)
+            return .manualHandlingRequired(.multiTenantPasswords, redirectType, token: token)
         #if !os(watchOS)
         case .sso:
             Task {

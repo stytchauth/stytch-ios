@@ -72,7 +72,7 @@ public enum StytchB2BUIClient {
                     }
                 case .notHandled:
                     break
-                case let .manualHandlingRequired(_, token):
+                case let .manualHandlingRequired(_, _, token):
                     let email = MemberManager.emailAddress
                     if let currentController {
                         currentController.handlePasswordReset(token: token, email: email)

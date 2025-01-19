@@ -64,7 +64,7 @@ public enum StytchUIClient {
                 }
             case .notHandled:
                 break
-            case let .manualHandlingRequired(_, token):
+            case let .manualHandlingRequired(_, _, token):
                 let email = pendingResetEmail
                 if let currentController {
                     currentController.handlePasswordReset(token: token, email: email)

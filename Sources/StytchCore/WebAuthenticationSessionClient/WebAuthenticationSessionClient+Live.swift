@@ -16,13 +16,13 @@ extension WebAuthenticationSessionClient {
                 }
                 do {
                     if parameters.clientType == ClientType.consumer {
-                        guard let token = try StytchClient.tokenValues(for: url)?.1 else {
+                        guard let token = try StytchClient.tokenValues(for: url)?.2 else {
                             continuation.resume(throwing: StytchSDKError.deeplinkMissingToken)
                             return
                         }
                         continuation.resume(returning: (token, url))
                     } else {
-                        guard let token = try StytchB2BClient.tokenValues(for: url)?.1 else {
+                        guard let token = try StytchB2BClient.tokenValues(for: url)?.2 else {
                             continuation.resume(throwing: StytchSDKError.deeplinkMissingToken)
                             return
                         }

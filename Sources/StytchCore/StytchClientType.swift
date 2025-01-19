@@ -4,12 +4,13 @@ import Foundation
 protocol StytchClientType {
     associatedtype DeeplinkResponse
     associatedtype DeeplinkTokenType
+    associatedtype DeeplinkRedirectType
 
     static var instance: Self { get set }
 
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
-    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType>
+    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>
 
     func start()
 }
@@ -63,17 +64,18 @@ extension StytchClientType {
         }
     }
 
-    // swiftlint:disable:next identifier_name
-    static func _tokenValues(for url: URL) throws -> (tokenType: String, token: String)? {
+    // swiftlint:disable:next identifier_name large_tuple
+    static func _tokenValues(for url: URL) throws -> (tokenType: String, redirectType: String?, token: String)? {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
             let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }), let type = typeQuery.value,
+            let redirectTypeQuery = queryItems.first(where: { $0.name == "stytch_redirect_type" }), let redirectType = redirectTypeQuery.value,
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
             return nil
         }
-        return (tokenType: type, token)
+        return (tokenType: type, redirectType, token)
     }
 
     // To be called after configuration

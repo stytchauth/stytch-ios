@@ -45,6 +45,7 @@ public extension StytchB2BClient.Passwords {
             return try await router.post(
                 to: .resetByEmail,
                 parameters: CodeVerifierParameters(
+                    codingPrefix: .pkce,
                     codeVerifier: pkcePair.codeVerifier,
                     wrapped: parameters
                 ),
