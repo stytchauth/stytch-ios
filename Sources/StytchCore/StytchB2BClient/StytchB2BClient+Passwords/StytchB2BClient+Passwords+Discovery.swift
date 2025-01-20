@@ -14,6 +14,7 @@ public extension StytchB2BClient.Passwords {
         let router: NetworkingRouter<StytchB2BClient.PasswordsRoute.DiscoveryRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         ///
@@ -42,13 +43,18 @@ public extension StytchB2BClient.Passwords {
                 throw StytchSDKError.missingPKCE
             }
 
-            return try await router.post(
-                to: .resetByEmail,
-                parameters: CodeVerifierParameters(
+            let intermediateSessionTokenParameters = IntermediateSessionTokenParameters(
+                intermediateSessionToken: sessionManager.intermediateSessionToken,
+                wrapped: CodeVerifierParameters(
                     codingPrefix: .pkce,
                     codeVerifier: pkcePair.codeVerifier,
                     wrapped: parameters
-                ),
+                )
+            )
+
+            return try await router.post(
+                to: .resetByEmail,
+                parameters: intermediateSessionTokenParameters,
                 useDFPPA: true
             )
         }
@@ -70,7 +76,7 @@ public extension StytchB2BClient.Passwords.Discovery {
         let emailAddress: String
         let discoveryRedirectUrl: URL?
         let resetPasswordRedirectUrl: URL?
-        let resetPasswordExpirationMinutes: Int?
+        let resetPasswordExpirationMinutes: Minutes?
         let resetPasswordTemplateId: String?
 
         /// - Parameters:
@@ -95,7 +101,7 @@ public extension StytchB2BClient.Passwords.Discovery {
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,
             resetPasswordRedirectUrl: URL? = nil,
-            resetPasswordExpirationMinutes: Int? = nil,
+            resetPasswordExpirationMinutes: Minutes = .defaultSessionDuration,
             resetPasswordTemplateId: String? = nil
         ) {
             self.emailAddress = emailAddress

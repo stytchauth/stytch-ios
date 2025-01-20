@@ -88,7 +88,11 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
             do {
                 try await viewModel.resetPassword(newPassword: password)
                 StytchB2BUIClient.stopLoading()
-                startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+                if viewModel.state.configuration.computedAuthFlowType == .discovery {
+                    startDiscoveryFlowIfNeeded(configuration: viewModel.state.configuration)
+                } else {
+                    startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+                }
             } catch {
                 StytchB2BUIClient.stopLoading()
                 presentErrorAlert(error: error)

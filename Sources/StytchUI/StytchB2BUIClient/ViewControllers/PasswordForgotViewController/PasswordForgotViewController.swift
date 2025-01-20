@@ -98,6 +98,11 @@ extension PasswordForgotViewController: PasswordForgotViewModelDelegate {
         showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordSetNew)
     }
 
+    func didSendDiscoveryResetByEmailStart() {
+        StytchB2BUIClient.stopLoading()
+        showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordSetNew)
+    }
+
     func didSendEmailMagicLink() {
         StytchB2BUIClient.stopLoading()
         showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordResetVerify)

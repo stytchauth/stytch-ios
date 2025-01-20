@@ -196,6 +196,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
 
+        Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
+
         // Mock responses for resetByEmailStart and resetByEmail
         networkInterceptor.responses {
             BasicResponse(requestId: "123", statusCode: 200)
@@ -243,6 +245,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "password_reset_token": "12345",
                 "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "password": "newPassword123",
+                "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
             ])
         )
 

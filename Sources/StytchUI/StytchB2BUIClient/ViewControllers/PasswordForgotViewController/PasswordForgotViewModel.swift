@@ -2,6 +2,7 @@ import StytchCore
 
 protocol PasswordForgotViewModelDelegate: AnyObject {
     func didSendResetByEmailStart()
+    func didSendDiscoveryResetByEmailStart()
     func didSendEmailMagicLink()
     func didError(error: Error)
 }
@@ -18,7 +19,14 @@ final class PasswordForgotViewModel {
 
     func resetPassword(emailAddress: String) {
         MemberManager.updateMemberEmailAddress(emailAddress)
+        if state.configuration.computedAuthFlowType == .discovery {
+            discoveryResetPasswordByEmail(emailAddress)
+        } else {
+            organizationResetPasswordByEmail(emailAddress)
+        }
+    }
 
+    func organizationResetPasswordByEmail(_ emailAddress: String) {
         guard let organizationId = OrganizationManager.organizationId else {
             delegate?.didError(error: StytchSDKError.noOrganziationId)
             return
@@ -47,6 +55,24 @@ final class PasswordForgotViewModel {
                     )
                     delegate?.didSendEmailMagicLink()
                 }
+            } catch {
+                delegate?.didError(error: error)
+            }
+        }
+    }
+
+    func discoveryResetPasswordByEmail(_ emailAddress: String) {
+        Task {
+            do {
+                let parameters = StytchB2BClient.Passwords.Discovery.ResetByEmailStartParameters(
+                    emailAddress: emailAddress,
+                    discoveryRedirectUrl: state.configuration.redirectUrl,
+                    resetPasswordRedirectUrl: state.configuration.redirectUrl,
+                    resetPasswordExpirationMinutes: state.configuration.sessionDurationMinutes,
+                    resetPasswordTemplateId: state.configuration.passwordOptions?.resetPasswordTemplateId
+                )
+                _ = try await StytchB2BClient.passwords.discovery.resetByEmailStart(parameters: parameters)
+                delegate?.didSendDiscoveryResetByEmailStart()
             } catch {
                 delegate?.didError(error: error)
             }

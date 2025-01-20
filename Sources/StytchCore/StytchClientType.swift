@@ -70,11 +70,16 @@ extension StytchClientType {
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
             let queryItems = components.queryItems,
             let typeQuery = queryItems.first(where: { $0.name == "stytch_token_type" }), let type = typeQuery.value,
-            let redirectTypeQuery = queryItems.first(where: { $0.name == "stytch_redirect_type" }), let redirectType = redirectTypeQuery.value,
             let tokenQuery = queryItems.first(where: { $0.name == "token" }), let token = tokenQuery.value
         else {
             return nil
         }
+
+        var redirectType: String?
+        if let redirectTypeQuery = queryItems.first(where: { $0.name == "stytch_redirect_type" }) {
+            redirectType = redirectTypeQuery.value
+        }
+
         return (tokenType: type, redirectType, token)
     }
 

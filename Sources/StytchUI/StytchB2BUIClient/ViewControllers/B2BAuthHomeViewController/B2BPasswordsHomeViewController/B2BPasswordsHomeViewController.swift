@@ -4,6 +4,7 @@ import UIKit
 
 protocol B2BPasswordsHomeViewControllerDelegate: AnyObject {
     func didAuthenticateWithPassword()
+    func didDiscoveryAuthenticateWithPassword()
     func didSendEmailMagicLink()
 }
 
@@ -97,8 +98,12 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
 }
 
 extension B2BPasswordsHomeViewController: B2BPasswordsViewModelDelegate {
-    func didAuthenticateWithPassword() {
+    func didAuthenticate() {
         delegate?.didAuthenticateWithPassword()
+    }
+
+    func didDiscoveryAuthenticate() {
+        delegate?.didDiscoveryAuthenticateWithPassword()
     }
 
     func didSendEmailMagicLink() {

@@ -3,7 +3,8 @@ import StytchCore
 // B2BPasswordsViewModel and B2BPasswordsViewModelDelegate are shared between the home screen passwords form and the authentication screen.
 
 protocol B2BPasswordsViewModelDelegate: AnyObject {
-    func didAuthenticateWithPassword()
+    func didAuthenticate()
+    func didDiscoveryAuthenticate()
     func didSendEmailMagicLink()
     func didError(error: Error)
 }
@@ -23,7 +24,36 @@ final class B2BPasswordsViewModel {
         password: String
     ) {
         MemberManager.updateMemberEmailAddress(emailAddress)
+        if state.configuration.computedAuthFlowType == .discovery {
+            discoveryAuthenticateWithPasswordIfPossible(emailAddress: emailAddress, password: password)
+        } else {
+            organizationAuthenticateWithPasswordIfPossible(emailAddress: emailAddress, password: password)
+        }
+    }
 
+    func discoveryAuthenticateWithPasswordIfPossible(
+        emailAddress: String,
+        password: String
+    ) {
+        StytchB2BUIClient.startLoading()
+        Task {
+            do {
+                let parameters = StytchB2BClient.Passwords.Discovery.AuthenticateParameters(emailAddress: emailAddress, password: password)
+                let response = try await StytchB2BClient.passwords.discovery.authenticate(parameters: parameters)
+                DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)
+                delegate?.didDiscoveryAuthenticate()
+                StytchB2BUIClient.stopLoading()
+            } catch {
+                delegate?.didError(error: error)
+                StytchB2BUIClient.stopLoading()
+            }
+        }
+    }
+
+    func organizationAuthenticateWithPasswordIfPossible(
+        emailAddress: String,
+        password: String
+    ) {
         guard let organizationId = OrganizationManager.organizationId else {
             delegate?.didError(error: StytchSDKError.noOrganziationId)
             return
@@ -43,7 +73,7 @@ final class B2BPasswordsViewModel {
                     )
                     let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)
                     B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
-                    delegate?.didAuthenticateWithPassword()
+                    delegate?.didAuthenticate()
                 } else {
                     try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
                         configuration: state.configuration,

@@ -109,8 +109,12 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
 }
 
 extension PasswordAuthenticateViewController: B2BPasswordsViewModelDelegate {
-    func didAuthenticateWithPassword() {
+    func didAuthenticate() {
         startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+    }
+
+    func didDiscoveryAuthenticate() {
+        startDiscoveryFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 
     func didSendEmailMagicLink() {
