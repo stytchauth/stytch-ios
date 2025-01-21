@@ -243,7 +243,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/b2b/passwords/discovery/reset",
             method: .post([
                 "password_reset_token": "12345",
-                "code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
+                "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "password": "newPassword123",
                 "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
             ])

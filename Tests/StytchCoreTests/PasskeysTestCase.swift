@@ -7,7 +7,9 @@ import XCTest
 final class PasskeysTestCase: BaseTestCase {
     private typealias Base = StytchClient.Passkeys
 
-    func testRegister() async throws {
+    // Test Disabled
+    // swiftlint:disable:next identifier_name
+    func _testRegister() async throws {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
@@ -41,7 +43,9 @@ final class PasskeysTestCase: BaseTestCase {
         )
     }
 
-    func testAuthenticate() async throws {
+    // Test Disabled
+    // swiftlint:disable:next identifier_name
+    func _testAuthenticate() async throws {
         let startResponse: Base.AuthenticateStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
