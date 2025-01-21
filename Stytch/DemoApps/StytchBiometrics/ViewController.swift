@@ -1,10 +1,32 @@
+import Combine
 import StytchCore
 import UIKit
 
 class ViewController: UIViewController {
+    var subscriptions: Set<AnyCancellable> = []
+    @IBOutlet var sessionLabel: UILabel!
+
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .long
+        return dateFormatter
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        StytchClient.configure(publicToken: "public-token-test-728f8b82-2a20-4926-b077-a8ca7d67e1b2")
+        StytchClient.configure(publicToken: "")
+
+        StytchClient.sessions.onSessionChange
+            .receive(on: DispatchQueue.main)
+            .sink { sessionInfo in
+                switch sessionInfo {
+                case let .available(session, _):
+                    self.sessionLabel.text = "Session Available!\nExpires:\n\(self.dateFormatter.string(from: session.expiresAt))"
+                case .unavailable:
+                    self.sessionLabel.text = "Session Unavailable"
+                }
+            }.store(in: &subscriptions)
     }
 
     @IBAction func sendAndAuthenticateOTPTapped(_: Any) {
@@ -76,6 +98,17 @@ class ViewController: UIViewController {
                 logBiometricRegistrations(user: user, identifier: "delete registrations")
             } catch {
                 print(error.errorInfo)
+            }
+        }
+    }
+
+    @IBAction func logOut(_: Any) {
+        Task {
+            do {
+                let response = try await StytchB2BClient.sessions.revoke(parameters: .init(forceClear: true))
+                print("log out response: \(response)")
+            } catch {
+                print("log out error: \(error.errorInfo)")
             }
         }
     }

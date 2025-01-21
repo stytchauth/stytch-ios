@@ -38,7 +38,11 @@ Bundle ID: `com.stytch.ConsumerWorkbench`
 
 * **B2BWorkbench**  
 Bundle ID: `com.stytch.B2BWorkbench`  
-[Configure the public token](../Stytch/DemoApps/B2BWorkbench/ViewControllers/RootViewController.swift#L43)  
+[Configure the public token](../Stytch/DemoApps/B2BWorkbench/ViewControllers/RootViewController.swift#L43)
+
+* **StytchBiometrics**  
+Bundle ID: `com.stytch.StytchBiometrics`  
+[Configure the public token](../Stytch/DemoApps/StytchBiometrics/ViewController.swift#L18)  
 
 ## 5. Running the Sample Apps
 
