@@ -4,7 +4,8 @@ import Combine
 import Foundation
 
 public extension StytchB2BClient.Passwords.Discovery {
-    /// 
+    /// Reset the password associated with an email and start an intermediate session.
+    /// This endpoint checks that the password reset token is valid, hasn’t expired, or already been used.
     func resetByEmail(parameters: ResetByEmailParameters, completion: @escaping Completion<StytchB2BClient.DiscoveryAuthenticateResponse>) {
         Task {
             do {
@@ -15,7 +16,8 @@ public extension StytchB2BClient.Passwords.Discovery {
         }
     }
 
-    /// 
+    /// Reset the password associated with an email and start an intermediate session.
+    /// This endpoint checks that the password reset token is valid, hasn’t expired, or already been used.
     func resetByEmail(parameters: ResetByEmailParameters) -> AnyPublisher<StytchB2BClient.DiscoveryAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in

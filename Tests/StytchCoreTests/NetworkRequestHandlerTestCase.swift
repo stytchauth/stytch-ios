@@ -61,7 +61,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(!hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPDisabled(session: URLSession(), request: URLRequest(url: url), captcha: captcha, requestHandler: requestHandler)
+        _ = try await handler.handleDFPDisabled(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, requestHandler: requestHandler)
     }
 
     func testHandleDFPDisabledWithCaptcha() async throws {
@@ -76,7 +76,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPDisabled(session: URLSession(), request: URLRequest(url: url), captcha: captcha, requestHandler: requestHandler)
+        _ = try await handler.handleDFPDisabled(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, requestHandler: requestHandler)
     }
 
     func testHandleDFPObservationModeNoCaptcha() async throws {
@@ -91,7 +91,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(!hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPObservationModeWithCaptcha() async throws {
@@ -106,7 +106,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        try await handler.handleDFPObservationMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPDecisioningMode() async throws {
@@ -132,7 +132,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
                 return (Data(), HTTPURLResponse())
             }
         }
-        try await handler.handleDFPDecisioningMode(session: URLSession(), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPDecisioningMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 }
 #endif

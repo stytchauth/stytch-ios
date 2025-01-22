@@ -4,7 +4,8 @@ import Combine
 import Foundation
 
 public extension StytchB2BClient.Passwords.Discovery {
-    /// 
+    /// Authenticate an email/password combination in the discovery flow.
+    /// This authenticate flow is only valid for cross-org passwords use cases, and is not tied to a specific organization.
     func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<StytchB2BClient.DiscoveryAuthenticateResponse>) {
         Task {
             do {
@@ -15,7 +16,8 @@ public extension StytchB2BClient.Passwords.Discovery {
         }
     }
 
-    /// 
+    /// Authenticate an email/password combination in the discovery flow.
+    /// This authenticate flow is only valid for cross-org passwords use cases, and is not tied to a specific organization.
     func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<StytchB2BClient.DiscoveryAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in

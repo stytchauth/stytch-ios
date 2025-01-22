@@ -17,7 +17,8 @@ public extension StytchB2BClient.Passwords {
         @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        ///
+        /// Initiates a password reset for the email address provided, when cross-org passwords are enabled.
+        /// This will trigger an email to be sent to the address, containing a magic link that will allow them to set a new password and authenticate.
         public func resetByEmailStart(parameters: ResetByEmailStartParameters) async throws -> BasicResponse {
             let pkcePair = try pkcePairManager.generateAndReturnPKCECodePair()
             return try await router.post(
@@ -33,7 +34,8 @@ public extension StytchB2BClient.Passwords {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        ///
+        /// Reset the password associated with an email and start an intermediate session.
+        /// This endpoint checks that the password reset token is valid, hasn’t expired, or already been used.
         public func resetByEmail(parameters: ResetByEmailParameters) async throws -> StytchB2BClient.DiscoveryAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
@@ -60,7 +62,8 @@ public extension StytchB2BClient.Passwords {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        ///
+        /// Authenticate an email/password combination in the discovery flow.
+        /// This authenticate flow is only valid for cross-org passwords use cases, and is not tied to a specific organization.
         public func authenticate(parameters: AuthenticateParameters) async throws -> StytchB2BClient.DiscoveryAuthenticateResponse {
             try await router.post(
                 to: .authenticate,
