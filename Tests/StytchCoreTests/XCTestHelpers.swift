@@ -28,12 +28,58 @@ func XCTAssertRequest(
     let request = try XCTUnwrap(request)
     XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
     XCTAssertEqual(request.httpMethod, method.stringValue, file: file, line: line)
+
     if let expectedBody = method.body {
         let bodyJSON = try JSONDecoder().decode(JSON.self, from: XCTUnwrap(request.httpBody))
         XCTAssertEqualJSON(bodyJSON, expectedBody, file: file, line: line)
     }
+
     if let expectedHeaders = expectedHeaders {
-        XCTAssertEqual(request.allHTTPHeaderFields, expectedHeaders, file: file, line: line)
+        // Compare headers with special handling for `X-SDK-Client`
+        for (key, expectedValue) in expectedHeaders {
+            guard let actualValue = request.allHTTPHeaderFields?[key] else {
+                XCTFail("Missing header: \(key)", file: file, line: line)
+                continue
+            }
+
+            if key == "X-SDK-Client" {
+                XCTAssertEqualBase64JSONStrings(actualValue, expectedValue, file: file, line: line)
+            } else {
+                XCTAssertEqual(actualValue, expectedValue, file: file, line: line)
+            }
+        }
+    }
+}
+
+/// Helper to compare JSON strings
+func XCTAssertEqualBase64JSONStrings(
+    _ base64String1: String,
+    _ base64String2: String,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    do {
+        // Decode Base64 Strings
+        guard let data1 = Data(base64Encoded: base64String1),
+              let data2 = Data(base64Encoded: base64String2)
+        else {
+            XCTFail("Failed to decode Base64 strings", file: file, line: line)
+            return
+        }
+
+        // Convert Data to JSON Objects
+        let jsonObject1 = try JSONSerialization.jsonObject(with: data1, options: []) as? [String: Any]
+        let jsonObject2 = try JSONSerialization.jsonObject(with: data2, options: []) as? [String: Any]
+
+        // Compare JSON Objects
+        XCTAssertTrue(
+            NSDictionary(dictionary: jsonObject1 ?? [:]).isEqual(to: jsonObject2 ?? [:]),
+            "JSON objects are not equal",
+            file: file,
+            line: line
+        )
+    } catch {
+        XCTFail("Failed to decode JSON: \(error.localizedDescription)", file: file, line: line)
     }
 }
 

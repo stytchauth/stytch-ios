@@ -2,9 +2,7 @@ import XCTest
 @testable import StytchCore
 
 final class StytchClientTestCase: BaseTestCase {
-    // Test Disabled
-    // swiftlint:disable:next identifier_name
-    func _testGet() async throws {
+    func testGet() async throws {
         networkInterceptor.responses { "Hello, World!" }
         // Configure the client after setting the networking client, so the headers are passed to the request
         StytchClient.configure(publicToken: "xyz", hostUrl: try XCTUnwrap(URL(string: "https://myapp.com")))
