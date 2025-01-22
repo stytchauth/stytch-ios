@@ -55,19 +55,27 @@ test-all: codegen
 
 .PHONY: test tests test-macos
 test tests test-macos: codegen
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
 	$(TEST) macosx14.0 -destination "OS=14.0,platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
 	$(TEST) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
 	$(UI_UNIT_TESTS) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
 	$(TEST) appletvsimulator17.0 -destination "OS=17.0,name=Apple TV" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
 	$(TEST) watchsimulator10.0 -destination "OS=10.0,name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 .PHONY: tools

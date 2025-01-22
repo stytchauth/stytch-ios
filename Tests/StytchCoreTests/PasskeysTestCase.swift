@@ -7,9 +7,7 @@ import XCTest
 final class PasskeysTestCase: BaseTestCase {
     private typealias Base = StytchClient.Passkeys
 
-    // Test Disabled
-    // swiftlint:disable:next identifier_name
-    func _testRegister() async throws {
+    func testRegister() async throws {
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
@@ -34,7 +32,7 @@ final class PasskeysTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
-        try XCTAssertRequest(
+        try XCTAssertRequestWithPublicKeyCredential(
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register",
             method: .post([
@@ -43,9 +41,7 @@ final class PasskeysTestCase: BaseTestCase {
         )
     }
 
-    // Test Disabled
-    // swiftlint:disable:next identifier_name
-    func _testAuthenticate() async throws {
+    func testAuthenticate() async throws {
         let startResponse: Base.AuthenticateStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32)
@@ -86,7 +82,7 @@ final class PasskeysTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
-        try XCTAssertRequest(
+        try XCTAssertRequestWithPublicKeyCredential(
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate",
             method: .post([
