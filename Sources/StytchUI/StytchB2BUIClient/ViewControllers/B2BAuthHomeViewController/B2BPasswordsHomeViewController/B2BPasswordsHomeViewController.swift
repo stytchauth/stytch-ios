@@ -33,7 +33,6 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
         button.tintColor = .secondaryText
         button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([button.heightAnchor.constraint(equalToConstant: 12.5)])
         return button
     }()
 
@@ -89,10 +88,8 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
     }
 
     private func submit() {
-        guard let emailAddress = emailInput.text, let password = passwordInput.text else {
-            // show error
-            return
-        }
+        let emailAddress = emailInput.text ?? ""
+        let password = passwordInput.text ?? ""
         viewModel.authenticateWithPasswordIfPossible(emailAddress: emailAddress, password: password)
     }
 }
@@ -112,5 +109,6 @@ extension B2BPasswordsHomeViewController: B2BPasswordsViewModelDelegate {
 
     func didError(error: any Error) {
         showEmailNotEligibleForJitProvioningErrorIfPossible(error)
+        passwordInput.updateText("")
     }
 }
