@@ -88,7 +88,7 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
         }
 
         StytchB2BUIClient.startLoading()
-        viewModel.resetPassword(emailAddress: emailAddress)
+        viewModel.resetPasswordByEmailIfPossible(emailAddress: emailAddress)
     }
 }
 

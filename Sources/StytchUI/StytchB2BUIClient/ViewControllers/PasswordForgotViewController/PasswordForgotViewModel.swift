@@ -17,42 +17,24 @@ final class PasswordForgotViewModel {
         self.state = state
     }
 
-    func resetPassword(emailAddress: String) {
+    func resetPasswordByEmailIfPossible(emailAddress: String) {
         MemberManager.updateMemberEmailAddress(emailAddress)
         if state.configuration.computedAuthFlowType == .discovery {
-            discoveryResetPasswordByEmail(emailAddress)
+            discoveryResetPasswordByEmailStart(emailAddress)
         } else {
             organizationResetPasswordByEmail(emailAddress)
         }
     }
 
     func organizationResetPasswordByEmail(_ emailAddress: String) {
-        guard let organizationId = OrganizationManager.organizationId else {
-            delegate?.didError(error: StytchSDKError.noOrganziationId)
-            return
-        }
-
         Task {
             do {
-                let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress, organizationId: organizationId)
+                let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
                 if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
-                    let parameters = StytchB2BClient.Passwords.ResetByEmailStartParameters(
-                        organizationId: Organization.ID(rawValue: organizationId),
-                        emailAddress: emailAddress,
-                        loginUrl: state.configuration.redirectUrl,
-                        resetPasswordUrl: state.configuration.redirectUrl,
-                        resetPasswordExpiration: state.configuration.passwordOptions?.resetPasswordExpirationMinutes,
-                        resetPasswordTemplateId: state.configuration.passwordOptions?.resetPasswordTemplateId
-                    )
-                    _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
+                    try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
                     delegate?.didSendResetByEmailStart()
                 } else {
-                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
-                        configuration: state.configuration,
-                        emailAddress: emailAddress,
-                        organizationId: organizationId,
-                        redirectUrl: state.configuration.redirectUrl
-                    )
+                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(configuration: state.configuration, emailAddress: emailAddress)
                     delegate?.didSendEmailMagicLink()
                 }
             } catch {
@@ -61,17 +43,10 @@ final class PasswordForgotViewModel {
         }
     }
 
-    func discoveryResetPasswordByEmail(_ emailAddress: String) {
+    func discoveryResetPasswordByEmailStart(_ emailAddress: String) {
         Task {
             do {
-                let parameters = StytchB2BClient.Passwords.Discovery.ResetByEmailStartParameters(
-                    emailAddress: emailAddress,
-                    discoveryRedirectUrl: state.configuration.redirectUrl,
-                    resetPasswordRedirectUrl: state.configuration.redirectUrl,
-                    resetPasswordExpirationMinutes: state.configuration.sessionDurationMinutes,
-                    resetPasswordTemplateId: state.configuration.passwordOptions?.resetPasswordTemplateId
-                )
-                _ = try await StytchB2BClient.passwords.discovery.resetByEmailStart(parameters: parameters)
+                try await AuthenticationOperations.discoveryResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
                 delegate?.didSendDiscoveryResetByEmailStart()
             } catch {
                 delegate?.didError(error: error)

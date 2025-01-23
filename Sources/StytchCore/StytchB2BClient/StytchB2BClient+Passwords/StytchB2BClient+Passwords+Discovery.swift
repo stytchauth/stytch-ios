@@ -99,7 +99,6 @@ public extension StytchB2BClient.Passwords.Discovery {
         ///   - resetPasswordTemplateId: The email template ID to use for password reset. If not provided, your default email
         ///     template will be sent. If providing a template ID, it must be either a template using Stytch's customizations or a
         ///     Passwords reset custom HTML template.
-
         public init(
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,

@@ -63,7 +63,7 @@ final class B2BPasswordsViewModel {
 
         Task {
             do {
-                let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress, organizationId: organizationId)
+                let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress)
                 if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
                     let parameters = StytchB2BClient.Passwords.AuthenticateParameters(
                         organizationId: Organization.ID(rawValue: organizationId),
@@ -77,9 +77,7 @@ final class B2BPasswordsViewModel {
                 } else {
                     try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
                         configuration: state.configuration,
-                        emailAddress: emailAddress,
-                        organizationId: organizationId,
-                        redirectUrl: state.configuration.redirectUrl
+                        emailAddress: emailAddress
                     )
                     delegate?.didSendEmailMagicLink()
                 }

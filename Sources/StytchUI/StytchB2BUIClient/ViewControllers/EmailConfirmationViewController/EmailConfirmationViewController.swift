@@ -60,7 +60,7 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
         StytchB2BUIClient.startLoading()
         Task {
             do {
-                try await viewModel.resetByEmailStart(emailAddress: emailAddress)
+                try await viewModel.resendResetPasswordByEmailIfPossible(emailAddress: emailAddress)
                 StytchB2BUIClient.stopLoading()
                 presentAlert(title: "Email Sent!")
             } catch {
