@@ -88,12 +88,17 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
         }
 
         StytchB2BUIClient.startLoading()
-        viewModel.resetPassword(emailAddress: emailAddress)
+        viewModel.resetPasswordByEmailIfPossible(emailAddress: emailAddress)
     }
 }
 
 extension PasswordForgotViewController: PasswordForgotViewModelDelegate {
     func didSendResetByEmailStart() {
+        StytchB2BUIClient.stopLoading()
+        showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordSetNew)
+    }
+
+    func didSendDiscoveryResetByEmailStart() {
         StytchB2BUIClient.stopLoading()
         showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordSetNew)
     }

@@ -8,6 +8,8 @@ final class PasswordsViewController: UIViewController {
 
     lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: submitAction, keyboardType: .URL)
 
+    lazy var discoveryRedirectUrlTextField: UITextField = .init(title: "Discovery Redirect URL", primaryAction: submitAction, keyboardType: .URL)
+
     lazy var passwordTextField: UITextField = .init(title: "Password", primaryAction: submitAction, password: true)
 
     lazy var submitAction: UIAction = .init { [weak self] _ in
@@ -20,7 +22,7 @@ final class PasswordsViewController: UIViewController {
         self?.checkStrength()
     })
 
-    lazy var resetByEmailStartButton: UIButton = .init(title: "Reset by Email", primaryAction: .init { [weak self] _ in
+    lazy var resetByEmailStartButton: UIButton = .init(title: "Reset by Email Start", primaryAction: .init { [weak self] _ in
         self?.resetByEmailStart()
     })
 
@@ -30,6 +32,14 @@ final class PasswordsViewController: UIViewController {
 
     lazy var resetByExistingPasswordButton: UIButton = .init(title: "Reset by Existing Password", primaryAction: .init { [weak self] _ in
         self?.resetByExistingPassword()
+    })
+
+    lazy var discoveryAuthenticateButton: UIButton = .init(title: "Discovery Authenticate", primaryAction: .init { [weak self] _ in
+        self?.discoveryAuthenticate()
+    })
+
+    lazy var discoveryResetByEmailStartButton: UIButton = .init(title: "Discovery Reset by Email Start", primaryAction: .init { [weak self] _ in
+        self?.discoveryResetByEmailStart()
     })
 
     lazy var secureToggle: UISwitch = {
@@ -59,6 +69,7 @@ final class PasswordsViewController: UIViewController {
         toggleStackView.spacing = 8
 
         stackView.addArrangedSubview(emailTextField)
+        stackView.addArrangedSubview(discoveryRedirectUrlTextField)
         stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(toggleStackView)
@@ -67,9 +78,12 @@ final class PasswordsViewController: UIViewController {
         stackView.addArrangedSubview(resetByEmailStartButton)
         stackView.addArrangedSubview(resetBySessionButton)
         stackView.addArrangedSubview(resetByExistingPasswordButton)
+        stackView.addArrangedSubview(discoveryAuthenticateButton)
+        stackView.addArrangedSubview(discoveryResetByEmailStartButton)
 
         emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
         redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        discoveryRedirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.discoveryRedirectUrlDefaultsKey) ?? "b2bworkbench://auth"
 
         if StytchB2BClient.sessions.memberSession == nil {
             resetBySessionButton.isHidden = true
@@ -77,6 +91,7 @@ final class PasswordsViewController: UIViewController {
 
         emailTextField.delegate = self
         redirectUrlTextField.delegate = self
+        discoveryRedirectUrlTextField.delegate = self
         passwordTextField.delegate = self
     }
 
@@ -153,6 +168,23 @@ final class PasswordsViewController: UIViewController {
         }
     }
 
+    func resetByEmail(token: String, newPassword: String) {
+        Task {
+            do {
+                let response = try await StytchB2BClient.passwords.resetByEmail(
+                    parameters: .init(
+                        token: token,
+                        password: newPassword,
+                        locale: .en
+                    )
+                )
+                presentAlertAndLogMessage(description: "reset password success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "reset password error", object: error)
+            }
+        }
+    }
+
     func resetBySession() {
         guard let values = checkAndStoreTextFieldValues() else {
             presentAlertWithTitle(alertTitle: "Missing email, password or redirect url. Check missing fields and try again.")
@@ -203,44 +235,110 @@ final class PasswordsViewController: UIViewController {
         }
     }
 
-    func resetPassword(token: String) {
+    func discoveryAuthenticate() {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let password = passwordTextField.text, !password.isEmpty
+        else {
+            presentAlertWithTitle(alertTitle: "Missing email or password. Check the fields and try again.")
+            return
+        }
+
+        Task {
+            do {
+                let response = try await StytchB2BClient.passwords.discovery.authenticate(
+                    parameters: .init(
+                        emailAddress: email,
+                        password: password
+                    )
+                )
+                presentAlertAndLogMessage(description: "discovery authenticate success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "discovery authenticate error", object: error)
+            }
+        }
+    }
+
+    func discoveryResetByEmailStart() {
+        guard let email = emailTextField.text, !email.isEmpty,
+              let redirectUrl = discoveryRedirectUrlTextField.text.flatMap(URL.init(string:))
+        else {
+            presentAlertWithTitle(alertTitle: "Missing email or redirect URL. Check the fields and try again.")
+            return
+        }
+
+        Task {
+            do {
+                let response = try await StytchB2BClient.passwords.discovery.resetByEmailStart(
+                    parameters: .init(
+                        emailAddress: email,
+                        discoveryRedirectUrl: redirectUrl,
+                        resetPasswordRedirectUrl: redirectUrl,
+                        resetPasswordExpirationMinutes: nil,
+                        resetPasswordTemplateId: nil
+                    )
+                )
+                presentAlertAndLogMessage(description: "discovery reset by email success - check your email!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "discovery reset by email error", object: error)
+            }
+        }
+    }
+
+    func discoveryResetByEmail(token: String, newPassword: String) {
+        Task {
+            do {
+                let response = try await StytchB2BClient.passwords.discovery.resetByEmail(
+                    parameters: .init(
+                        passwordResetToken: token,
+                        password: newPassword
+                    )
+                )
+                presentAlertAndLogMessage(description: "discovery reset password success!", object: response)
+            } catch {
+                presentAlertAndLogMessage(description: "discovery reset password error", object: error)
+            }
+        }
+    }
+
+    func resetPassword(token: String, passwordDiscovery: Bool) {
         Task {
             do {
                 guard let newPassword = try await presentTextFieldAlertWithTitle(alertTitle: "Reset Password") else {
                     throw TextFieldAlertError.emptyString
                 }
 
-                let response = try await StytchB2BClient.passwords.resetByEmail(
-                    parameters: .init(
-                        token: token,
-                        password: newPassword,
-                        locale: .en
-                    )
-                )
-                presentAlertAndLogMessage(description: "reset password success!", object: response)
+                if passwordDiscovery == true {
+                    discoveryResetByEmail(token: token, newPassword: newPassword)
+                } else {
+                    resetByEmail(token: token, newPassword: newPassword)
+                }
             } catch {
                 presentAlertAndLogMessage(description: "reset password error", object: error)
             }
         }
     }
 
-    func checkAndStoreTextFieldValues() -> (orgId: Organization.ID, password: String, email: String, redirectUrl: URL?)? {
+    func checkAndStoreTextFieldValues() -> (orgId: Organization.ID, password: String, email: String, redirectUrl: URL?, discoveryRedirectUrl: URL?)? {
         var orgizationID = ""
         if let orgID = organizationId {
             orgizationID = orgID
         }
 
         let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:))
-
         if let redirectUrl {
             UserDefaults.standard.set(redirectUrl.absoluteString, forKey: Constants.redirectUrlDefaultsKey)
+        }
+
+        let discoveryRedirectUrl = discoveryRedirectUrlTextField.text.flatMap(URL.init(string:))
+        if let discoveryRedirectUrl {
+            UserDefaults.standard.set(discoveryRedirectUrl.absoluteString, forKey: Constants.discoveryRedirectUrlDefaultsKey)
         }
 
         if let email = emailTextField.text, !email.isEmpty {
             UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         }
 
-        return (.init(rawValue: orgizationID), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl)
+        return (.init(rawValue: orgizationID), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl, discoveryRedirectUrl)
     }
 }
 

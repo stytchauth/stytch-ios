@@ -61,7 +61,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
                 wrapped: .init(memberId: memberId)
             )
         }
-        let updateOrganizationMemberResponse = try await StytchB2BClient.organizations.members.delete(memberId: memberId)
+        _ = try await StytchB2BClient.organizations.members.delete(memberId: memberId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)",
@@ -82,7 +82,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
                 )
             )
         }
-        let reactivateOrganizationMemberResponse = try await StytchB2BClient.organizations.members.reactivate(memberId: memberId)
+        _ = try await StytchB2BClient.organizations.members.reactivate(memberId: memberId)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)/reactivate",

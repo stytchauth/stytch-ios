@@ -66,11 +66,11 @@ final class KeychainClientTestCase: BaseTestCase {
         )
         XCTAssertEqual(
             item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
-            ["v_Data": Data("value".utf8), "accc": expectedAccessControl] as CFDictionary
+            ["v_Data": Data("value".utf8), "accc": expectedAccessControl as Any] as CFDictionary
         )
         XCTAssertEqual(
             item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
-            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "accc": expectedAccessControl] as CFDictionary
+            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "accc": expectedAccessControl as Any] as CFDictionary
         )
     }
 

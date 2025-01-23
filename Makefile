@@ -55,20 +55,28 @@ test-all: codegen
 
 .PHONY: test tests test-macos
 test tests test-macos: codegen
-	$(TEST) macosx$(MACOS_VERSION) -destination "OS=$(MACOS_VERSION),platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
+	$(TEST) macosx14.0 -destination "OS=14.0,platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
-	$(TEST) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) iphonesimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=iPhone 14 Pro" | $(XCPRETTY)
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
+	$(TEST) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
-	$(TEST) appletvsimulator$(IOS_VERSION) -destination "OS=$(IOS_VERSION),name=Apple TV" | $(XCPRETTY)
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
+	$(TEST) appletvsimulator17.0 -destination "OS=17.0,name=Apple TV" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
-	$(TEST) watchsimulator$(WATCHOS_VERSION) -destination "OS=$(WATCHOS_VERSION),name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
+	@xcodebuild -showsdks
+	@xcrun simctl list devices
+	$(TEST) watchsimulator10.0 -destination "OS=10.0,name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:

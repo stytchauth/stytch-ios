@@ -23,7 +23,6 @@ extension NetworkingClient {
             } else {
                 return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
             }
-
             #endif
             return try await defaultRequestHandler(session: session, request: request)
         }

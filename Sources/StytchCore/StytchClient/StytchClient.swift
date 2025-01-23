@@ -49,10 +49,11 @@ public struct StytchClient: StytchClientType {
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
-    public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, String)? {
-        guard let (type, token) = try _tokenValues(for: url) else { return nil }
+    // swiftlint:disable:next large_tuple
+    public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, DeeplinkRedirectType, String)? {
+        guard let (type, _, token) = try _tokenValues(for: url) else { return nil }
         guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchSDKError.deeplinkUnknownTokenType }
-        return (tokenType, token)
+        return (tokenType, .unknown, token)
     }
 
     /// Retrieve the most recently created PKCE code pair from the device, if available
@@ -88,6 +89,10 @@ public extension StytchClient {
         case oauth(StytchClient.OAuth.OAuthAuthenticateResponse)
     }
 
+    enum DeeplinkRedirectType: Sendable {
+        case unknown
+    }
+
     /// A helper function for determining whether the deeplink is intended for Stytch. Useful in contexts where your application makes use of a deeplink coordinator/manager which requires a synchronous determination of whether a given handler can handle a given URL. Equivalent to checking for a nil return value from ``StytchClient/tokenValues(for:)``
     static func canHandle(url: URL) -> Bool {
         (try? tokenValues(for: url)) != nil
@@ -104,8 +109,8 @@ public extension StytchClient {
     static func handle(
         url: URL,
         sessionDuration: Minutes = .defaultSessionDuration
-    ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType> {
-        guard let (tokenType, token) = try tokenValues(for: url) else {
+    ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
+        guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
             }
@@ -127,7 +132,7 @@ public extension StytchClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return .manualHandlingRequired(tokenType, token: token)
+            return .manualHandlingRequired(tokenType, redirectType, token: token)
         }
     }
 }

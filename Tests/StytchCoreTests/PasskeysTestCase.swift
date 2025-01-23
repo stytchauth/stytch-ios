@@ -32,7 +32,7 @@ final class PasskeysTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
-        try XCTAssertRequest(
+        try XCTAssertRequestWithPublicKeyCredential(
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register",
             method: .post([
@@ -82,7 +82,7 @@ final class PasskeysTestCase: BaseTestCase {
             urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate/start/primary",
             method: .post(["domain": "something.blah.com", "return_passkey_credential_options": true])
         )
-        try XCTAssertRequest(
+        try XCTAssertRequestWithPublicKeyCredential(
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/authenticate",
             method: .post([

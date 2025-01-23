@@ -34,21 +34,7 @@ final class ProductOrderingTests: B2BBaseTestCase {
         )
 
         let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: false)
-        XCTAssertTrue(productComponents.contains(.email))
-        XCTAssertTrue(productComponents.count == 1, "\(productComponents)")
-    }
-
-    func testHasProductsNotValidInDiscovery() {
-        let products: [StytchB2BUIClient.B2BProducts] = [.emailOtp, .emailMagicLinks, .passwords, .sso]
-        let configuration = configuration(
-            products: products,
-            authFlowType: .discovery
-        )
-
-        // Currently in Discovery there are no passwords
-        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: false)
-        XCTAssertTrue(productComponents.contains(.email))
-        XCTAssertTrue(productComponents.count == 1, "\(productComponents)")
+        XCTAssertEqual(productComponents, [.email])
     }
 
     func testHasBothEmailProductsAndPasswordsInOrganization() {
@@ -59,8 +45,18 @@ final class ProductOrderingTests: B2BBaseTestCase {
         )
 
         let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: false)
-        XCTAssertTrue(productComponents.contains(.emailAndPasswords))
-        XCTAssertTrue(productComponents.count == 1, "\(productComponents)")
+        XCTAssertEqual(productComponents, [.emailAndPasswords])
+    }
+
+    func testHasBothEmailProductsAndPasswordsInDiscovery() {
+        let products: [StytchB2BUIClient.B2BProducts] = [.emailOtp, .emailMagicLinks, .passwords]
+        let configuration = configuration(
+            products: products,
+            authFlowType: .discovery
+        )
+
+        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: false)
+        XCTAssertEqual(productComponents, [.emailAndPasswords])
     }
 
     func testHasAllProductsInOrganization() {
@@ -71,11 +67,7 @@ final class ProductOrderingTests: B2BBaseTestCase {
         )
 
         let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: true)
-        XCTAssertTrue(productComponents.contains(.emailAndPasswords))
-        XCTAssertTrue(productComponents.contains(.ssoButtons))
-        XCTAssertTrue(productComponents.contains(.oAuthButtons))
-        XCTAssertTrue(productComponents.contains(.divider))
-        XCTAssertTrue(productComponents.count == 4, "\(productComponents)")
+        XCTAssertEqual(productComponents, [.emailAndPasswords, .divider, .ssoButtons, .oAuthButtons])
     }
 
     func testHasPasswordsWithoutEmailInOrganization() {
@@ -86,10 +78,38 @@ final class ProductOrderingTests: B2BBaseTestCase {
         )
 
         let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: true)
-        XCTAssertTrue(productComponents.contains(.password))
-        XCTAssertTrue(productComponents.contains(.ssoButtons))
-        XCTAssertTrue(productComponents.contains(.oAuthButtons))
-        XCTAssertTrue(productComponents.contains(.divider))
-        XCTAssertTrue(productComponents.count == 4, "\(productComponents)")
+        XCTAssertEqual(productComponents, [.password, .divider, .ssoButtons, .oAuthButtons])
+    }
+
+    func testRemovesDuplicateProducts() {
+        let products: [StytchB2BUIClient.B2BProducts] = [.emailOtp, .emailMagicLinks, .emailOtp, .passwords, .passwords, .passwords, .sso, .oauth, .sso, .oauth]
+        let configuration = configuration(
+            products: products,
+            authFlowType: .organization(slug: "123")
+        )
+        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: true)
+        XCTAssertEqual(productComponents, [.emailAndPasswords, .divider, .ssoButtons, .oAuthButtons])
+    }
+
+    func testSSOButtonFirst() {
+        let products: [StytchB2BUIClient.B2BProducts] = [.sso, .oauth, .emailOtp, .emailMagicLinks, .passwords]
+        let configuration = configuration(
+            products: products,
+            authFlowType: .organization(slug: "123")
+        )
+
+        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: true)
+        XCTAssertEqual(productComponents, [.ssoButtons, .oAuthButtons, .divider, .emailAndPasswords])
+    }
+
+    func testOAuthButtonFirstSSOButtonsLast() {
+        let products: [StytchB2BUIClient.B2BProducts] = [.oauth, .emailOtp, .emailMagicLinks, .passwords, .sso]
+        let configuration = configuration(
+            products: products,
+            authFlowType: .organization(slug: "123")
+        )
+
+        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: true)
+        XCTAssertEqual(productComponents, [.oAuthButtons, .divider, .emailAndPasswords, .divider, .ssoButtons])
     }
 }

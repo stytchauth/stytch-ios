@@ -50,6 +50,10 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         didSetFeedback()
     }
 
+    func updateText(_ text: String) {
+        textInput.text = text
+    }
+
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
         textInput.returnKeyType = returnKeyType
     }

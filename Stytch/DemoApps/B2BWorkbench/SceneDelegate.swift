@@ -37,13 +37,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case let .mfaOAuth(authResponse):
                         print("mfaOAuth response: \(authResponse)")
                     }
-                case let .manualHandlingRequired(_, token):
+                case let .manualHandlingRequired(tokenType, redirectType, token):
                     if let navigationController = window?.rootViewController as? UINavigationController,
                        let passwordsViewController = navigationController.viewControllers.last as? PasswordsViewController
                     {
-                        passwordsViewController.resetPassword(token: token)
+                        if tokenType == .multiTenantPasswords {
+                            passwordsViewController.resetPassword(token: token, passwordDiscovery: false)
+                        } else if tokenType == .discovery, redirectType == .resetPassword {
+                            passwordsViewController.resetPassword(token: token, passwordDiscovery: true)
+                        }
                     }
-
                 case .notHandled:
                     break
                 }

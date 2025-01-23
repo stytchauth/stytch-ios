@@ -3,6 +3,7 @@ import UIKit
 enum Constants {
     static let emailDefaultsKey = "StytchEmail"
     static let redirectUrlDefaultsKey = "StytchRedirectUrl"
+    static let discoveryRedirectUrlDefaultsKey = "StytchDiscoveryRedirectUrl"
     static let publicTokenDefaultsKey = "StytchPublicToken"
     static let ssoConnectionIdDefaultsKey = "ssoConnectionIdDefaultsKey"
     static let ssoRedirectURLDefaultsKey = "ssoRedirectURLDefaultsKey"

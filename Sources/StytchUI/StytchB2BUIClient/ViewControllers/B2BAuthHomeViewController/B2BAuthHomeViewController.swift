@@ -4,8 +4,6 @@ import UIKit
 final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BAuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
-    private let separatorView: LabelSeparatorView = .orSeparator()
-
     private lazy var poweredByStytch: UIImageView = {
         let view = UIImageView()
         view.image = ImageAsset.poweredByStytch.image
@@ -124,6 +122,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
                     constraints.append(ssoViewController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
                 }
             case .divider:
+                let separatorView = LabelSeparatorView.orSeparator()
                 stackView.addArrangedSubview(separatorView)
                 constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
             }
@@ -188,6 +187,10 @@ extension B2BAuthHomeViewController: B2BEmailViewControllerDelegate {
 extension B2BAuthHomeViewController: B2BPasswordsHomeViewControllerDelegate {
     func didAuthenticateWithPassword() {
         startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
+    }
+
+    func didDiscoveryAuthenticateWithPassword() {
+        startDiscoveryFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 
     func didSendEmailMagicLink() {

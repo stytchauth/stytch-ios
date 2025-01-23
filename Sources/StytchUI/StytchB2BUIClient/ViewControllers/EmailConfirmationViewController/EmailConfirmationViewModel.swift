@@ -9,20 +9,18 @@ final class EmailConfirmationViewModel {
         self.state = state
     }
 
-    func resetByEmailStart(emailAddress: String) async throws {
-        guard let organizationId = OrganizationManager.organizationId else {
-            throw StytchSDKError.noOrganziationId
+    func resendResetPasswordByEmailIfPossible(emailAddress: String) async throws {
+        MemberManager.updateMemberEmailAddress(emailAddress)
+        if state.configuration.computedAuthFlowType == .discovery {
+            try await AuthenticationOperations.discoveryResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
+        } else {
+            let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
+            if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
+                try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
+            } else {
+                try await AuthenticationOperations.sendEmailMagicLinkIfPossible(configuration: state.configuration, emailAddress: emailAddress)
+            }
         }
-
-        let parameters = StytchB2BClient.Passwords.ResetByEmailStartParameters(
-            organizationId: Organization.ID(rawValue: organizationId),
-            emailAddress: emailAddress,
-            loginUrl: state.configuration.redirectUrl,
-            resetPasswordUrl: state.configuration.redirectUrl,
-            resetPasswordExpiration: state.configuration.passwordOptions?.resetPasswordExpirationMinutes,
-            resetPasswordTemplateId: state.configuration.passwordOptions?.resetPasswordTemplateId
-        )
-        _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
     }
 }
 

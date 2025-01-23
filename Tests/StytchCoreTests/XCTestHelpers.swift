@@ -28,12 +28,104 @@ func XCTAssertRequest(
     let request = try XCTUnwrap(request)
     XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
     XCTAssertEqual(request.httpMethod, method.stringValue, file: file, line: line)
+
     if let expectedBody = method.body {
         let bodyJSON = try JSONDecoder().decode(JSON.self, from: XCTUnwrap(request.httpBody))
         XCTAssertEqualJSON(bodyJSON, expectedBody, file: file, line: line)
     }
+
     if let expectedHeaders = expectedHeaders {
-        XCTAssertEqual(request.allHTTPHeaderFields, expectedHeaders, file: file, line: line)
+        // Compare headers with special handling for `X-SDK-Client`
+        for (key, expectedValue) in expectedHeaders {
+            guard let actualValue = request.allHTTPHeaderFields?[key] else {
+                XCTFail("Missing header: \(key)", file: file, line: line)
+                continue
+            }
+
+            if key == "X-SDK-Client" {
+                XCTAssertEqualBase64JSONStrings(actualValue, expectedValue, file: file, line: line)
+            } else {
+                XCTAssertEqual(actualValue, expectedValue, file: file, line: line)
+            }
+        }
+    }
+}
+
+func XCTAssertRequestWithPublicKeyCredential(
+    _ request: URLRequest?,
+    urlString: String,
+    method: XCTHTTPMethod,
+    headers expectedHeaders: [String: String]? = nil,
+    line: UInt = #line,
+    file: StaticString = #file
+) throws {
+    let request = try XCTUnwrap(request)
+    XCTAssertEqual(request.url?.absoluteString, urlString, file: file, line: line)
+    XCTAssertEqual(request.httpMethod, method.stringValue, file: file, line: line)
+
+    if let expectedBody = method.body {
+        let bodyJSON = try JSON(data: XCTUnwrap(request.httpBody)) // Parse request body as JSON
+
+        // Check for `public_key_credential`
+        if let requestCredentialString = bodyJSON["public_key_credential"].string, let expectedCredentialString = expectedBody["public_key_credential"].string {
+            // Parse the nested JSON strings in `public_key_credential`
+            let requestCredentialJSON = JSON(parseJSON: requestCredentialString)
+            let expectedCredentialJSON = JSON(parseJSON: expectedCredentialString)
+
+            // Assert equality of the nested JSON objects
+            XCTAssertEqual(
+                requestCredentialJSON,
+                expectedCredentialJSON,
+                "The `public_key_credential` objects do not match",
+                file: file,
+                line: line
+            )
+        } else {
+            XCTFail("Missing or invalid `public_key_credential` in request body", file: file, line: line)
+        }
+    }
+
+    if let expectedHeaders = expectedHeaders {
+        // Compare headers with special handling for `X-SDK-Client`
+        for (key, expectedValue) in expectedHeaders {
+            guard let actualValue = request.allHTTPHeaderFields?[key] else {
+                XCTFail("Missing header: \(key)", file: file, line: line)
+                continue
+            }
+
+            if key == "X-SDK-Client" {
+                XCTAssertEqualBase64JSONStrings(actualValue, expectedValue, file: file, line: line)
+            } else {
+                XCTAssertEqual(actualValue, expectedValue, file: file, line: line)
+            }
+        }
+    }
+}
+
+/// Helper to compare JSON strings
+func XCTAssertEqualBase64JSONStrings(
+    _ base64String1: String,
+    _ base64String2: String,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    do {
+        // Decode Base64 Strings
+        guard let data1 = Data(base64Encoded: base64String1), let data2 = Data(base64Encoded: base64String2) else {
+            XCTFail("Failed to decode Base64 strings", file: file, line: line)
+            return
+        }
+
+        // Convert Data to JSON Objects
+        let jsonObject1 = try JSONSerialization.jsonObject(with: data1, options: []) as? [String: Any]
+        let jsonObject2 = try JSONSerialization.jsonObject(with: data2, options: []) as? [String: Any]
+
+        // Compare JSON Objects
+        // swiftlint:disable:next legacy_objc_type
+        let areDictionariesEqual = NSDictionary(dictionary: jsonObject1 ?? [:]).isEqual(to: jsonObject2 ?? [:])
+        XCTAssertTrue(areDictionariesEqual, "JSON objects are not equal", file: file, line: line)
+    } catch {
+        XCTFail("Failed to decode JSON: \(error.localizedDescription)", file: file, line: line)
     }
 }
 

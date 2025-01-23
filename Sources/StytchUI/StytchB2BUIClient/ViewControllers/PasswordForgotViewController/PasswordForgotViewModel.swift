@@ -2,6 +2,7 @@ import StytchCore
 
 protocol PasswordForgotViewModelDelegate: AnyObject {
     func didSendResetByEmailStart()
+    func didSendDiscoveryResetByEmailStart()
     func didSendEmailMagicLink()
     func didError(error: Error)
 }
@@ -16,37 +17,37 @@ final class PasswordForgotViewModel {
         self.state = state
     }
 
-    func resetPassword(emailAddress: String) {
+    func resetPasswordByEmailIfPossible(emailAddress: String) {
         MemberManager.updateMemberEmailAddress(emailAddress)
-
-        guard let organizationId = OrganizationManager.organizationId else {
-            delegate?.didError(error: StytchSDKError.noOrganziationId)
-            return
+        if state.configuration.computedAuthFlowType == .discovery {
+            discoveryResetPasswordByEmailStart(emailAddress)
+        } else {
+            organizationResetPasswordByEmail(emailAddress)
         }
+    }
 
+    func organizationResetPasswordByEmail(_ emailAddress: String) {
         Task {
             do {
-                let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress, organizationId: organizationId)
+                let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
                 if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
-                    let parameters = StytchB2BClient.Passwords.ResetByEmailStartParameters(
-                        organizationId: Organization.ID(rawValue: organizationId),
-                        emailAddress: emailAddress,
-                        loginUrl: state.configuration.redirectUrl,
-                        resetPasswordUrl: state.configuration.redirectUrl,
-                        resetPasswordExpiration: state.configuration.passwordOptions?.resetPasswordExpirationMinutes,
-                        resetPasswordTemplateId: state.configuration.passwordOptions?.resetPasswordTemplateId
-                    )
-                    _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
+                    try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
                     delegate?.didSendResetByEmailStart()
                 } else {
-                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(
-                        configuration: state.configuration,
-                        emailAddress: emailAddress,
-                        organizationId: organizationId,
-                        redirectUrl: state.configuration.redirectUrl
-                    )
+                    try await AuthenticationOperations.sendEmailMagicLinkIfPossible(configuration: state.configuration, emailAddress: emailAddress)
                     delegate?.didSendEmailMagicLink()
                 }
+            } catch {
+                delegate?.didError(error: error)
+            }
+        }
+    }
+
+    func discoveryResetPasswordByEmailStart(_ emailAddress: String) {
+        Task {
+            do {
+                try await AuthenticationOperations.discoveryResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
+                delegate?.didSendDiscoveryResetByEmailStart()
             } catch {
                 delegate?.didError(error: error)
             }
