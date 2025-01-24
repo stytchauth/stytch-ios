@@ -37,6 +37,23 @@ public class StytchAPIError: StytchError, Decodable {
         super.init(name: "StytchAPIError", message: errorMessage)
     }
 
+    public convenience init(unknownErrorWithStatusCode statusCode: Int, debugInfo: String) {
+        var message: String
+        if (500..<600).contains(statusCode) {
+            message = "Server networking error - "
+        } else {
+            message = "Client networking error - "
+        }
+
+        message.append("Debug info: \(debugInfo)")
+
+        self.init(
+            statusCode: statusCode,
+            errorType: .unknownError,
+            errorMessage: message
+        )
+    }
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try container.decode(Int.self, forKey: .statusCode)
