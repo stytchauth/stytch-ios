@@ -1,85 +1,5 @@
 import Foundation
 
-/// Base class representing an error within the Stytch ecosystem.
-public class StytchError: Error, Equatable {
-    public var name: String
-    public var message: String
-
-    init(
-        name: String,
-        message: String
-    ) {
-        self.name = name
-        self.message = message
-    }
-
-    public static func == (lhs: StytchError, rhs: StytchError) -> Bool {
-        lhs.name == rhs.name && lhs.message == rhs.message
-    }
-}
-
-/// Error class representing an error within the Stytch API.
-public class StytchAPIError: StytchError, Decodable {
-    private enum CodingKeys: CodingKey {
-        case statusCode
-        case requestId
-        case errorType
-        case errorMessage
-        case errorUrl
-    }
-
-    /// The HTTP status code associated with the error.
-    public let statusCode: Int
-    /// The id of the request.
-    public let requestId: String?
-    /// The type of the error.
-    public let errorType: String
-    /// The message associated with the error.
-    public let errorMessage: String
-    /// The url at which further information about the error can be found. Nil if no additional information available.
-    public var url: URL? { errorUrl }
-    private let errorUrl: URL?
-
-    init(
-        statusCode: Int,
-        requestId: String? = nil,
-        errorType: String,
-        errorMessage: String,
-        errorUrl: URL? = nil
-    ) {
-        self.statusCode = statusCode
-        self.requestId = requestId
-        self.errorType = errorType
-        self.errorMessage = errorMessage
-        self.errorUrl = errorUrl
-        super.init(name: "StytchAPIError", message: errorMessage)
-    }
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        statusCode = try container.decode(Int.self, forKey: .statusCode)
-        requestId = try container.decodeIfPresent(String.self, forKey: .requestId)
-        errorType = try container.decode(String.self, forKey: .errorType)
-        errorMessage = try container.decode(String.self, forKey: .errorMessage)
-        errorUrl = try? container.decodeIfPresent(URL.self, forKey: .errorUrl)
-        super.init(name: "StytchAPIError", message: errorMessage)
-    }
-}
-
-/// Error class representing when the Stytch SDK cannot reach the Stytch API.
-public class StytchAPIUnreachableError: StytchError {
-    init(message: String) {
-        super.init(name: "StytchAPIUnreachableError", message: message)
-    }
-}
-
-/// Error class representing a schema error within the Stytch API.
-public class StytchAPISchemaError: StytchError {
-    init(message: String) {
-        super.init(name: "StytchAPISchemaError", message: message)
-    }
-}
-
 public struct StytchSDKErrorOptions {
     let errorType: String
     var url: URL?
@@ -96,34 +16,6 @@ public class StytchSDKError: StytchError {
         super.init(name: "StytchSDKError", message: message)
     }
 }
-
-/// Error class representing invalid input within the Stytch SDK.
-public class StytchSDKUsageError: StytchError {
-    init(message: String) {
-        super.init(name: "StytchSDKUsageError", message: message)
-    }
-}
-
-public class StytchSDKNotConfiguredError: StytchSDKError {
-    let clientName: String
-
-    init(clientName: String) {
-        self.clientName = clientName
-        super.init(
-            message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
-            options: .init(
-                errorType: "sdk_not_configured",
-                url: .readmeUrl(withFragment: "configuration")
-            )
-        )
-    }
-}
-
-public class StytchUIError: StytchSDKError {}
-
-public class StytchUIInvalidConfiguration: StytchUIError {}
-
-public class StytchDeeplinkError: StytchSDKError {}
 
 public extension StytchSDKError {
     static let uiEmlAndOtpInvalid = StytchUIInvalidConfiguration(message: "You cannot have both Email Magic Links and Email OTP configured at the same time.")
@@ -244,6 +136,27 @@ public extension StytchSDKError {
         )
     )
 }
+
+public class StytchSDKNotConfiguredError: StytchSDKError {
+    let clientName: String
+
+    init(clientName: String) {
+        self.clientName = clientName
+        super.init(
+            message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
+            options: .init(
+                errorType: "sdk_not_configured",
+                url: .readmeUrl(withFragment: "configuration")
+            )
+        )
+    }
+}
+
+public class StytchUIError: StytchSDKError {}
+
+public class StytchUIInvalidConfiguration: StytchUIError {}
+
+public class StytchDeeplinkError: StytchSDKError {}
 
 private extension URL {
     static func readmeUrl(withFragment fragment: String) -> Self? {

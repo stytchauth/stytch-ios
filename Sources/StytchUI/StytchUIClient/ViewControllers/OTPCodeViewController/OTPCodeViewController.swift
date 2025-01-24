@@ -124,7 +124,7 @@ extension OTPCodeViewController: OTPCodeEntryViewDelegate {
         Task {
             do {
                 try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
-            } catch let error as StytchAPIError where error.errorType == "otp_code_not_found" {
+            } catch let error as StytchAPIError where error.errorType == .otpCodeNotFound {
                 DispatchQueue.main.async {
                     self.presentAlert(title: NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: ""))
                 }

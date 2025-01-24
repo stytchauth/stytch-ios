@@ -206,7 +206,7 @@ private extension HTTPURLResponse {
 
             error = StytchAPIError(
                 statusCode: statusCode,
-                errorType: "unknown_error",
+                errorType: .unknownError,
                 errorMessage: message
             )
         }
