@@ -5,6 +5,8 @@ public protocol RouteType {
     var path: Path { get }
 }
 
+protocol BaseRouteType: RouteType {}
+
 public struct NetworkingRouter<Route: RouteType> {
     private let getConfiguration: () -> Configuration?
 
@@ -108,7 +110,7 @@ public extension NetworkingRouter {
         )
 
         do {
-            try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
+            try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
         } catch let error as StytchAPIError where error.statusCode == 401 {
             sessionManager.resetSession()
             throw error
@@ -130,7 +132,7 @@ public extension NetworkingRouter {
         let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
 
         do {
-            try response.verifyStatus(data: data, jsonDecoder: jsonDecoder)
+            try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
             let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
             if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
                 sessionManager.updateSession(
@@ -179,8 +181,6 @@ public extension NetworkingRouter {
     }
 }
 
-protocol BaseRouteType: RouteType {}
-
 extension NetworkingRouter where Route: BaseRouteType {
     init(getConfiguration: @escaping () -> Configuration?) {
         self.init { $0.path } getConfiguration: { getConfiguration() }
@@ -188,27 +188,20 @@ extension NetworkingRouter where Route: BaseRouteType {
 }
 
 private extension HTTPURLResponse {
-    func verifyStatus(data: Data, jsonDecoder: JSONDecoder) throws {
-        guard (400..<600).contains(statusCode) else { return }
+    func verifyStatusCode(data: Data, jsonDecoder: JSONDecoder) throws {
+        let isErrorCode = (400..<600).contains(statusCode)
+        guard isErrorCode == true else {
+            return
+        }
 
         let error: Error
-
         do {
+            // Attempt to parse as a StytchAPIError
             error = try jsonDecoder.decode(StytchAPIError.self, from: data)
         } catch _ {
-            var message = (500..<600).contains(statusCode) ?
-                "Server networking error." :
-                "Client networking error."
-
-            String(data: data, encoding: .utf8).map { debugInfo in
-                message.append(" Debug info: \(debugInfo)")
-            }
-
-            error = StytchAPIError(
-                statusCode: statusCode,
-                errorType: .unknownError,
-                errorMessage: message
-            )
+            // If parsing fails create a StytchAPIError with an unknown error type and use the raw JSON string as the message if possible.
+            let debugInfo = String(data: data, encoding: .utf8) ?? "none"
+            error = StytchAPIError(unknownErrorWithStatusCode: statusCode, debugInfo: debugInfo)
         }
 
         throw error
