@@ -51,6 +51,12 @@ public extension StytchSDKError {
             errorType: "no_biometric_registration"
         )
     )
+    static let noBiometricRegistrationId = StytchSDKError(
+        message: "There is no biometric registration ID on the device.",
+        options: .init(
+            errorType: "no_biometric_registration_id"
+        )
+    )
     static let invalidAuthorizationCredential = StytchSDKError(
         message: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method.",
         options: .init(
