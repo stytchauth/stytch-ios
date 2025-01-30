@@ -26,6 +26,7 @@ class ViewController: UIViewController {
                 case .unavailable:
                     self.sessionLabel.text = "Session Unavailable"
                 }
+                self.logBiometricRegistrations(user: StytchClient.user.getSync(), identifier: "onSessionChange")
             }.store(in: &subscriptions)
     }
 
@@ -129,10 +130,12 @@ class ViewController: UIViewController {
     func logBiometricRegistrations(user: User?, identifier: String) {
         print(
             """
-            -------------------------------------------------------------------------
             \(identifier)
+            biometricsRegistrationAvailable: \(StytchClient.biometrics.registrationAvailable)
+            biometricRegistrationId: \(StytchClient.biometrics.biometricRegistrationId ?? "none")
             biometricRegistrations.count: \(user?.biometricRegistrations.count ?? 0)
-            biometricRegistrations: \(user?.biometricRegistrations.compactMap(\.id.rawValue).joined(separator: ", ") ?? "")
+            biometricRegistrations:             
+            \(user?.biometricRegistrations.compactMap(\.id.rawValue).joined(separator: "\n") ?? "")
             -------------------------------------------------------------------------
             """
         )

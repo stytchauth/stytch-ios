@@ -34,7 +34,14 @@ public extension StytchClient {
 
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
-            keychainClient.valueExistsForItem(.biometricKeyRegistration)
+            keychainClient.valueExistsForItem(.privateKeyRegistration)
+        }
+
+        public var biometricRegistrationId: String? {
+            guard let biometricKeyRegistrationQueryResult = try? keychainClient.get(.biometricKeyRegistration).first else {
+                return nil
+            }
+            return biometricKeyRegistrationQueryResult.stringValue
         }
 
         #if !os(tvOS) && !os(watchOS)
@@ -56,14 +63,14 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Removes the current device's existing biometric registration from both the device itself and from the server.
         public func removeRegistration() async throws {
-            guard let queryResult = try? keychainClient.get(.biometricKeyRegistration).first else {
-                return
+            // If the biometric registration ID exists in the keychain, we can use it to remove the auth factor therefore deleting the registration from backend.
+            // This requires authentication with all necessary factors.
+            // Otherwise, the API will return an "insufficient_factors" error when calling "deleteFactor".
+            guard let biometricRegistrationId = biometricRegistrationId else {
+                throw StytchSDKError.noBiometricRegistrationId
             }
 
-            // Delete registration from backend
-            if let biometricRegistrationId = queryResult.stringValue {
-                _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: User.BiometricRegistration.ID(stringLiteral: biometricRegistrationId)))
-            }
+            _ = try await StytchClient.user.deleteFactor(.biometricRegistration(id: User.BiometricRegistration.ID(stringLiteral: biometricRegistrationId)))
 
             // Remove local registrations
             try clearBiometricRegistrations()
@@ -164,15 +171,14 @@ public extension StytchClient {
             if user.biometricRegistrations.isEmpty {
                 try? clearBiometricRegistrations()
             } else {
-                let queryResult = try? keychainClient.get(.biometricKeyRegistration).first
-
-                // Check if the user's biometric registrations contain the ID
+                // Map the users biometricRegistrations to an array of strings
                 var userBiometricRegistrationIds = [String]()
                 for biometricRegistration in user.biometricRegistrations {
                     userBiometricRegistrationIds.append(biometricRegistration.biometricRegistrationId.rawValue)
                 }
 
-                if let biometricRegistrationId = queryResult?.stringValue, userBiometricRegistrationIds.contains(biometricRegistrationId) == false {
+                // Check if the user's biometric registrations contain the ID
+                if let biometricRegistrationId = biometricRegistrationId, userBiometricRegistrationIds.contains(biometricRegistrationId) == false {
                     // Remove the orphaned biometric registration
                     try? clearBiometricRegistrations()
                 }
@@ -186,11 +192,14 @@ public extension StytchClient {
          being shown here for authentication, we decided to use this as an opportunity to perform the migration by copying the
          registration ID into the .biometricKeyRegistration keychain item. For versions after 0.54.0, this action occurs during
          registration, and it should only happen here if the .biometricKeyRegistration keychain item is empty.
+
+         Keeping `biometricKeyRegistration` unprotected by biometrics was essential for performing cleanup and deletion operations
+         without prompting the user unnecessarily for biometric authentication.
          */
-        func copyBiometricRegistrationIDToKeychainIfNeeded(_ queryResult: KeychainClient.QueryResult) throws {
-            let biometricKeyRegistration = try? keychainClient.get(.biometricKeyRegistration).first
-            if biometricKeyRegistration == nil, let registration = try queryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
-                try keychainClient.set(registration.registrationId.rawValue, for: .biometricKeyRegistration)
+        func copyBiometricRegistrationIDToKeychainIfNeeded(_ privateKeyRegistrationQueryResult: KeychainClient.QueryResult) throws {
+            let biometricKeyRegistrationQueryResult = try? keychainClient.get(.biometricKeyRegistration).first
+            if biometricKeyRegistrationQueryResult == nil, let privateKeyRegistration = try privateKeyRegistrationQueryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
+                try keychainClient.set(privateKeyRegistration.registrationId.rawValue, for: .biometricKeyRegistration)
             }
         }
     }
