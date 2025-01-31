@@ -132,7 +132,9 @@ class ContentViewModel: ObservableObject {
             publicToken: publicToken,
             products: [.emailMagicLinks, .emailOtp, .sso, .passwords, .oauth],
             authFlowType: authFlowType,
-            oauthProviders: [.init(provider: .google), .init(provider: .github)]
+            oauthProviders: [.init(provider: .google), .init(provider: .github)],
+            allowCreateOrganization: true,
+            directCreateOrganizationForNoMembership: true
         )
     }
 }

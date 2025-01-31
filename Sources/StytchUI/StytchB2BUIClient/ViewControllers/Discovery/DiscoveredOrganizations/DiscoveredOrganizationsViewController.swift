@@ -50,21 +50,8 @@ class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrgani
 
         stackView.addArrangedSubview(tableView)
 
-        if viewModel.state.configuration.allowCreateOrganization == true, StytchB2BClient.createOrganizationEnabled == true {
+        if viewModel.state.configuration.allowsUserCreateOrganizations {
             stackView.addArrangedSubview(createOrganizationButton)
-        }
-    }
-
-    @objc func createOrganization() {
-        StytchB2BUIClient.startLoading()
-        Task {
-            do {
-                try await AuthenticationOperations.createOrganization()
-                StytchB2BUIClient.stopLoading()
-            } catch {
-                presentErrorAlert(error: error)
-                StytchB2BUIClient.stopLoading()
-            }
         }
     }
 }

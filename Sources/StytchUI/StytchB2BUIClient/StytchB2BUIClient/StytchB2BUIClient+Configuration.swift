@@ -20,6 +20,7 @@ public extension StytchB2BUIClient {
         public let emailOtpOptions: B2BEmailOTPOptions?
         public let directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions?
         public let allowCreateOrganization: Bool
+        public let directCreateOrganizationForNoMembership: Bool
         public let mfaProductOrder: [StytchB2BClient.MfaMethod]?
         public let mfaProductInclude: [StytchB2BClient.MfaMethod]?
         public let navigation: Navigation?
@@ -78,6 +79,15 @@ public extension StytchB2BUIClient {
             }
         }
 
+        // swiftlint:disable:next identifier_name
+        public var allowsDirectCreateOrganizationIfNoneExist: Bool {
+            StytchB2BClient.createOrganizationEnabled && directCreateOrganizationForNoMembership
+        }
+
+        public var allowsUserCreateOrganizations: Bool {
+            StytchB2BClient.createOrganizationEnabled && allowCreateOrganization
+        }
+
         /// - Parameters:
         ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
         ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
@@ -93,6 +103,8 @@ public extension StytchB2BUIClient {
         ///   - emailOtpOptions: The email otp options to use if you have a custom configuration.
         ///   - directLoginForSingleMembershipOptions: An optional config that allows you to skip the discover flow and log a member in directly only if they are a member of a single organization.
         ///   - allowCreateOrganization: Whether to allow users who are not members of any organization from creating a new organization during the discovery flow.
+        ///     This has no effect if the ability to create organizations from the frontend SDK is disabled in the Stytch dashboard. Defaults to `false`.
+        ///   - directCreateOrganizationForNoMembership: Whether or not an organization should be created directly when a user has no memberships, invitations, or organizations they could join via JIT provisioning.
         ///     This has no effect if the ability to create organizations from the frontend SDK is disabled in the Stytch dashboard. Defaults to `false`.
         ///   - mfaProductOrder: The order to present MFA products to a member when multiple choices are available, such as during enrollment.
         ///   - mfaProductInclude: MFA products to include in the UI. If specified, the list of available products will be limited to those included. Defaults to all available products.
@@ -113,6 +125,7 @@ public extension StytchB2BUIClient {
             emailOtpOptions: B2BEmailOTPOptions? = nil,
             directLoginForSingleMembershipOptions: DirectLoginForSingleMembershipOptions? = nil,
             allowCreateOrganization: Bool = true,
+            directCreateOrganizationForNoMembership: Bool = false,
             mfaProductOrder: [StytchB2BClient.MfaMethod]? = nil,
             mfaProductInclude: [StytchB2BClient.MfaMethod]? = nil,
             navigation: Navigation? = nil,
@@ -130,6 +143,7 @@ public extension StytchB2BUIClient {
             self.emailOtpOptions = emailOtpOptions
             self.directLoginForSingleMembershipOptions = directLoginForSingleMembershipOptions
             self.allowCreateOrganization = allowCreateOrganization
+            self.directCreateOrganizationForNoMembership = directCreateOrganizationForNoMembership
             self.mfaProductOrder = mfaProductOrder
             self.mfaProductInclude = mfaProductInclude
             self.navigation = navigation
@@ -263,6 +277,10 @@ extension StytchB2BUIClient.Configuration {
         }
     }
 
+    /// `computedAuthFlowType` serves as the primary source of truth for the current authentication state.
+    /// The `authFlowType` represents the initial authentication flow.
+    /// For example, you might pass in an `authFlowType` of `.discovery`, but once the user selects an organization,
+    /// the flow effectively transitions into an organization-based flow from the app's perspective.
     var computedAuthFlowType: StytchB2BUIClient.AuthFlowType {
         switch authFlowType {
         case .discovery:

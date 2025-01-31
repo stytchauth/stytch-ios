@@ -3,7 +3,7 @@ import UIKit
 
 class CreateOrganizationViewController: BaseViewController<CreateOrganizationsState, CreateOrganizationsViewModel> {
     private lazy var createOrganizationButton: Button = .primary(
-        title: NSLocalizedString("stytchCreateOrganizationCreateOrganizationButton", value: "Try a different email address", comment: "")
+        title: NSLocalizedString("stytchCreateOrganizationCreateOrganizationButton", value: "Create an organization", comment: "")
     ) { [weak self] in
         self?.createOrganization()
     }
@@ -39,18 +39,5 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
-    }
-
-    @objc func createOrganization() {
-        StytchB2BUIClient.startLoading()
-        Task {
-            do {
-                try await AuthenticationOperations.createOrganization()
-                StytchB2BUIClient.stopLoading()
-            } catch {
-                presentErrorAlert(error: error)
-                StytchB2BUIClient.stopLoading()
-            }
-        }
     }
 }

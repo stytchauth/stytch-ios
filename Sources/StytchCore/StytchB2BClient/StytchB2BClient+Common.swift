@@ -18,6 +18,8 @@ public extension StytchB2BClient {
         case restricted = "RESTRICTED"
         /// Disable JIT provisioning via Email Magic Link and OAuth.
         case notAllowed = "NOT_ALLOWED"
+        ///
+        case allAllowed = "ALL_ALLOWED"
     }
 
     /// The authentication setting that controls how a new Member can be invited to an organization by email.
@@ -160,6 +162,8 @@ public extension StytchB2BClient {
         case restricted = "RESTRICTED"
         /// JIT provisioning via OAuth is not allowed.
         case notAllowed = "NOT_ALLOWED"
+        ///
+        case allAllowed = "ALL_ALLOWED"
     }
 
     /// A struct representing a retired email address associated with a member.

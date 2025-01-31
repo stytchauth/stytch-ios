@@ -5,12 +5,15 @@ extension BaseViewController {
     func startDiscoveryFlowIfNeeded(configuration: StytchB2BUIClient.Configuration) {
         Task { @MainActor in
             let discoveredOrganizations = DiscoveryManager.discoveredOrganizations
-            if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
+
+            if discoveredOrganizations.isEmpty, configuration.allowsDirectCreateOrganizationIfNoneExist == true {
+                createOrganization()
+            } else if let singleDiscoveredOrganization = discoveredOrganizations.shouldAllowDirectLoginToOrganization(configuration.directLoginForSingleMembershipOptions) {
                 selectDiscoveredOrganization(configuration: configuration, discoveredOrganization: singleDiscoveredOrganization)
             } else {
                 let viewController: UIViewController
                 if DiscoveryManager.discoveredOrganizations.isEmpty {
-                    if configuration.allowCreateOrganization == true, StytchB2BClient.createOrganizationEnabled == true {
+                    if configuration.allowsUserCreateOrganizations == true {
                         viewController = CreateOrganizationViewController(state: .init(configuration: configuration))
                     } else {
                         viewController = NoDiscoveredOrganizationsViewController(state: .init(configuration: configuration))
@@ -24,6 +27,19 @@ extension BaseViewController {
                 if let homeViewController = navigationController?.viewControllers.first {
                     navigationController?.setViewControllers([homeViewController, viewController], animated: true)
                 }
+            }
+        }
+    }
+
+    func createOrganization() {
+        Task {
+            StytchB2BUIClient.startLoading()
+            do {
+                try await AuthenticationOperations.createOrganization()
+                StytchB2BUIClient.stopLoading()
+            } catch {
+                StytchB2BUIClient.stopLoading()
+                presentErrorAlert(error: error)
             }
         }
     }
