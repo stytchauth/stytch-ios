@@ -39,7 +39,7 @@ public class OTPAuthenticationManager: ObservableObject {
     // Send a OTP (one time passcode) via SMS
     func sendOTP(phoneNumber: String) async throws {
         let parameters = StytchClient.OTP.Parameters(deliveryMethod: .sms(phoneNumber: phoneNumber))
-        let response = try await StytchClient.otps.send(parameters: parameters)
+        let response = try await StytchClient.otps.loginOrCreate(parameters: parameters)
         // save the methodId for the subsequent authenticate call
         methodId = response.methodId
         self.phoneNumber = phoneNumber
@@ -54,6 +54,21 @@ public class OTPAuthenticationManager: ObservableObject {
         _ = try await StytchClient.otps.authenticate(parameters: parameters)
         DispatchQueue.main.async { [weak self] in
             self?.didAuthenticateOTP = true
+        }
+    }
+
+    func getAlotOfTelemetrtIds() {
+        Task {
+            do {
+                for index in 0..<100 {
+                    print("getTelemetryID about to be called \(index)")
+                    let telemetryID = try await StytchClient.dfp.getTelemetryID()
+                    print("telemetryID: \(telemetryID)")
+                    print("--------------------------------------------")
+                }
+            } catch {
+                print(error.errorInfo)
+            }
         }
     }
 }
