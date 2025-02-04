@@ -11,7 +11,7 @@ runs:
         bundler-cache: true
 
     - name: Cache Mint
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.mint
         key: ${{ runner.os }}-mint-v1-${{ hashFiles('Mintfile') }}
@@ -30,7 +30,7 @@ runs:
         echo 'EOF' >> $GITHUB_OUTPUT
 
     - name: Cache Brew
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ steps.brew-cache.outputs.paths }}
         key: ${{ runner.os }}-v1-${{ steps.brew-cache.outputs.cache-key }}
