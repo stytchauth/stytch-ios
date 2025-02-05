@@ -726,4 +726,3 @@ public enum StytchAPIErrorType: String, Codable {
     case wrongStackTest = "wrong_stack_test"
     case xmlValidationSamlUnknownError = "xml_validation_saml_unknown_error"
 }
-
