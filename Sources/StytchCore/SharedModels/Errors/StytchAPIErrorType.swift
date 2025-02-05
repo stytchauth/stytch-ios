@@ -2,7 +2,6 @@ import Foundation
 
 // swiftlint:disable identifier_name file_length type_body_length
 public enum StytchAPIErrorType: String, Codable {
-    case unknownError = "unknown_error"
     case actionAvailableOnlyForActiveMembers = "action_available_only_for_active_members"
     case activeScimConnectionExists = "active_scim_connection_exists"
     case activeTotpExists = "active_totp_exists"
@@ -62,6 +61,7 @@ public enum StytchAPIErrorType: String, Codable {
     case duplicateExternalSsoConnection = "duplicate_external_sso_connection"
     case duplicateM2mClientId = "duplicate_m2m_client_id"
     case duplicateMemberEmail = "duplicate_member_email"
+    case duplicateMemberExternalId = "duplicate_member_external_id"
     case duplicateMemberPhoneNumber = "duplicate_member_phone_number"
     case duplicateMemberPhoneNumberForMember = "duplicate_member_phone_number_for_member"
     case duplicateOrganization = "duplicate_organization"
@@ -72,6 +72,7 @@ public enum StytchAPIErrorType: String, Codable {
     case duplicateRedirectUrl = "duplicate_redirect_url"
     case duplicateSamlConnection = "duplicate_saml_connection"
     case duplicateSamlResponse = "duplicate_saml_response"
+    case duplicateUserExternalId = "duplicate_user_external_id"
     case duplicateWalletAddress = "duplicate_wallet_address"
     case duplicateWalletAddressForUser = "duplicate_wallet_address_for_user"
     case duplicateWebauthnRegistration = "duplicate_webauthn_registration"
@@ -539,6 +540,7 @@ public enum StytchAPIErrorType: String, Codable {
     case rbacDomainTooCommon = "rbac_domain_too_common"
     case rbacInvalidDomain = "rbac_invalid_domain"
     case rbacPermissionMissingActions = "rbac_permission_missing_actions"
+    case rbacReservedScope = "rbac_reserved_scope"
     case rbacResourceDuplicate = "rbac_resource_duplicate"
     case rbacResourceIdTooLong = "rbac_resource_id_too_long"
     case rbacResourceMissingActions = "rbac_resource_missing_actions"
@@ -601,6 +603,7 @@ public enum StytchAPIErrorType: String, Codable {
     case smsTemplateNotFound = "sms_template_not_found"
     case ssoConnectionNotFound = "sso_connection_not_found"
     case ssoConnectionOrganizationMismatch = "sso_connection_organization_mismatch"
+    case ssoDiscoveryIncompatibleWithSdkConfig = "sso_discovery_incompatible_with_sdk_config"
     case ssoTokenNotFound = "sso_token_not_found"
     case ssoVerificationKeyNotFound = "sso_verification_key_not_found"
     case staleFactors = "stale_factors"
@@ -661,6 +664,7 @@ public enum StytchAPIErrorType: String, Codable {
     case unauthorizedProjectIdLive = "unauthorized_project_id_live"
     case unauthorizedProjectIdTest = "unauthorized_project_id_test"
     case unavailableEndpoint = "unavailable_endpoint"
+    case unknown = "unknown"
     case unsolicitedOidcResponse = "unsolicited_oidc_response"
     case unsolicitedSamlResponse = "unsolicited_saml_response"
     case unsubscribedPhoneNumber = "unsubscribed_phone_number"
@@ -722,3 +726,4 @@ public enum StytchAPIErrorType: String, Codable {
     case wrongStackTest = "wrong_stack_test"
     case xmlValidationSamlUnknownError = "xml_validation_saml_unknown_error"
 }
+
