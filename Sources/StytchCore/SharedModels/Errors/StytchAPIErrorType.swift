@@ -664,7 +664,7 @@ public enum StytchAPIErrorType: String, Codable {
     case unauthorizedProjectIdLive = "unauthorized_project_id_live"
     case unauthorizedProjectIdTest = "unauthorized_project_id_test"
     case unavailableEndpoint = "unavailable_endpoint"
-    case unknown = "unknown"
+    case unknownError = "unknown_error"
     case unsolicitedOidcResponse = "unsolicited_oidc_response"
     case unsolicitedSamlResponse = "unsolicited_saml_response"
     case unsubscribedPhoneNumber = "unsubscribed_phone_number"
