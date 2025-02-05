@@ -95,8 +95,22 @@ final class KeychainClientTestCase: BaseTestCase {
         XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
         XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
         Current.defaults.removeObject(forKey: installIdKey)
-        StytchClient.configure(publicToken: "some public token")
+        StytchClient.configure(publicToken: "another public token")
         XCTAssertNil(try Current.keychainClient.get(.sessionToken))
         XCTAssertNil(try Current.keychainClient.get(.sessionJwt))
+    }
+
+    func testKeychainDoesNotResetWhenConfigureIsCalledAgainWithSamePublicToken() throws {
+        let installIdKey = "stytch_install_id_defaults_key"
+        Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
+        try Current.keychainClient.set("token", for: .sessionToken)
+        try Current.keychainClient.set("token_jwt", for: .sessionJwt)
+        StytchClient.configure(publicToken: "some public token")
+        XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
+        XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
+        Current.defaults.removeObject(forKey: installIdKey)
+        StytchClient.configure(publicToken: "some public token")
+        XCTAssertNotNil(try Current.keychainClient.get(.sessionToken))
+        XCTAssertNotNil(try Current.keychainClient.get(.sessionJwt))
     }
 }
