@@ -2,7 +2,7 @@ import Foundation
 
 // swiftlint:disable type_contents_order
 
-struct Configuration {
+struct Configuration: Equatable {
     private enum CodingKeys: String, CodingKey {
         case publicToken = "StytchPublicToken"
         case hostUrl = "StytchHostURL"

@@ -53,7 +53,13 @@ extension StytchClientType {
 
     // swiftlint:disable:next type_contents_order
     mutating func configure(publicToken: String, hostUrl: URL?, dfppaDomain: String?) {
-        configuration = .init(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
+        let newConfiguration = Configuration(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
+
+        guard newConfiguration != configuration else {
+            return
+        }
+
+        configuration = newConfiguration
 
         updateNetworkingClient()
         resetKeychainOnFreshInstall()
