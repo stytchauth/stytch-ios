@@ -226,6 +226,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "reset_password_expiration_minutes": 15,
                 "reset_password_template_id": "template123",
                 "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
+                "locale": "en",
             ])
         )
 
@@ -246,6 +247,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "pkce_code_verifier": "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741",
                 "password": "newPassword123",
                 "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
+                "locale": "en",
             ])
         )
 

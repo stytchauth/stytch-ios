@@ -136,7 +136,7 @@ public extension StytchB2BClient.Passwords {
         let emailAddress: String
         let password: String
         let sessionDuration: Minutes
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         ///  - Parameters:
         ///    - organizationId: The ID of the intended organization.
@@ -149,7 +149,7 @@ public extension StytchB2BClient.Passwords {
             emailAddress: String,
             password: String,
             sessionDuration: Minutes = .defaultSessionDuration,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
             self.emailAddress = emailAddress
@@ -179,7 +179,7 @@ public extension StytchB2BClient.Passwords {
         let resetPasswordUrl: URL?
         let resetPasswordExpiration: Minutes?
         let resetPasswordTemplateId: String?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
@@ -196,7 +196,7 @@ public extension StytchB2BClient.Passwords {
             resetPasswordUrl: URL? = nil,
             resetPasswordExpiration: Minutes? = nil,
             resetPasswordTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
             self.emailAddress = emailAddress
@@ -222,7 +222,7 @@ public extension StytchB2BClient.Passwords {
         let token: String
         let password: String
         let sessionDuration: Minutes
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
@@ -233,7 +233,7 @@ public extension StytchB2BClient.Passwords {
             token: String,
             password: String,
             sessionDuration: Minutes = .defaultSessionDuration,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.token = token
             self.password = password
@@ -260,7 +260,7 @@ public extension StytchB2BClient.Passwords {
         let existingPassword: String
         let newPassword: String
         let sessionDuration: Minutes
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
@@ -275,7 +275,7 @@ public extension StytchB2BClient.Passwords {
             existingPassword: String,
             newPassword: String,
             sessionDuration: Minutes = .defaultSessionDuration,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
             self.emailAddress = emailAddress
@@ -305,13 +305,13 @@ public extension StytchB2BClient.Passwords {
     struct ResetBySessionParameters: Encodable, Sendable {
         let organizationId: Organization.ID
         let password: String
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
         ///   - password: The members's new password.
         ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
-        public init(organizationId: Organization.ID, password: String, locale: StytchLocale? = nil) {
+        public init(organizationId: Organization.ID, password: String, locale: StytchLocale = .en) {
             self.organizationId = organizationId
             self.password = password
             self.locale = locale

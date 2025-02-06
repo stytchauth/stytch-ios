@@ -97,9 +97,9 @@ public extension StytchB2BClient.Sessions {
         /// The duration, in minutes, for the requested session. Defaults to 5 minutes.
         public let sessionDurationMinutes: Minutes
         /// The locale will be used if an OTP code is sent to the member's phone number as part of a secondary authentication requirement.
-        public let locale: StytchLocale?
+        public let locale: StytchLocale
 
-        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale? = nil) {
+        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
             self.organizationID = organizationID
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale

@@ -36,6 +36,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
                 "login_redirect_url": "https://myapp.com/login",
                 "login_template_id": "g'day",
                 "signup_template_id": "mate",
+                "locale": "en",
             ])
         )
     }

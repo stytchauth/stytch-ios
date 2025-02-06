@@ -62,7 +62,8 @@ extension AuthenticationOperations {
             loginRedirectUrl: configuration.redirectUrl,
             signupRedirectUrl: configuration.redirectUrl,
             loginTemplateId: configuration.emailMagicLinksOptions?.loginTemplateId,
-            signupTemplateId: configuration.emailMagicLinksOptions?.signupTemplateId
+            signupTemplateId: configuration.emailMagicLinksOptions?.signupTemplateId,
+            locale: configuration.locale
         )
         _ = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
     }
@@ -71,7 +72,8 @@ extension AuthenticationOperations {
         if configuration.computedAuthFlowType == .discovery {
             let parameters = StytchB2BClient.MagicLinks.Email.DiscoveryParameters(
                 emailAddress: emailAddress,
-                discoveryRedirectUrl: configuration.redirectUrl
+                discoveryRedirectUrl: configuration.redirectUrl,
+                locale: configuration.locale
             )
             _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
         } else {
@@ -87,7 +89,7 @@ extension AuthenticationOperations {
             let parameters = StytchB2BClient.OTP.Email.Discovery.SendParameters(
                 emailAddress: emailAddress,
                 loginTemplateId: configuration.emailOtpOptions?.loginTemplateId,
-                locale: nil
+                locale: configuration.locale
             )
             _ = try await StytchB2BClient.otp.email.discovery.send(parameters: parameters)
         } else {
@@ -100,13 +102,13 @@ extension AuthenticationOperations {
                 emailAddress: emailAddress,
                 loginTemplateId: configuration.emailOtpOptions?.loginTemplateId,
                 signupTemplateId: configuration.emailOtpOptions?.signupTemplateId,
-                locale: nil
+                locale: configuration.locale
             )
             _ = try await StytchB2BClient.otp.email.loginOrSignup(parameters: parameters)
         }
     }
 
-    static func smsSendOTP(phoneNumberE164: String) async throws {
+    static func smsSendOTP(configuration: StytchB2BUIClient.Configuration, phoneNumberE164: String) async throws {
         guard let organizationId = OrganizationManager.organizationId else {
             throw StytchSDKError.noOrganziationId
         }
@@ -119,7 +121,7 @@ extension AuthenticationOperations {
             organizationId: organizationId,
             memberId: memberId,
             mfaPhoneNumber: phoneNumberE164,
-            locale: nil
+            locale: configuration.locale
         )
         _ = try await StytchB2BClient.otp.sms.send(parameters: parameters)
     }
@@ -138,7 +140,8 @@ extension AuthenticationOperations {
             loginUrl: configuration.redirectUrl,
             resetPasswordUrl: configuration.redirectUrl,
             resetPasswordExpiration: configuration.passwordOptions?.resetPasswordExpirationMinutes,
-            resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId
+            resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId,
+            locale: configuration.locale
         )
         _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
     }
@@ -149,7 +152,8 @@ extension AuthenticationOperations {
             discoveryRedirectUrl: configuration.redirectUrl,
             resetPasswordRedirectUrl: configuration.redirectUrl,
             resetPasswordExpirationMinutes: configuration.sessionDurationMinutes,
-            resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId
+            resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId,
+            locale: configuration.locale
         )
         _ = try await StytchB2BClient.passwords.discovery.resetByEmailStart(parameters: parameters)
     }

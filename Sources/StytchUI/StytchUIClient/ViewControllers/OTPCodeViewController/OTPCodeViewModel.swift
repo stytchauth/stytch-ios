@@ -76,7 +76,8 @@ extension OTPCodeViewModel {
             loginExpiration: password?.loginExpiration,
             resetPasswordUrl: state.config.redirectUrl,
             resetPasswordExpiration: password?.resetPasswordExpiration,
-            resetPasswordTemplateId: password?.resetPasswordTemplateId
+            resetPasswordTemplateId: password?.resetPasswordTemplateId,
+            locale: state.config.locale
         )
     }
 }

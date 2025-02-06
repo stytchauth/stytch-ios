@@ -178,7 +178,7 @@ public extension StytchClient.Passwords {
         let resetPasswordUrl: URL?
         let resetPasswordExpiration: Minutes?
         let resetPasswordTemplateId: String?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - email: The user's email address.
@@ -195,7 +195,7 @@ public extension StytchClient.Passwords {
             resetPasswordUrl: URL? = nil,
             resetPasswordExpiration: Minutes? = nil,
             resetPasswordTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.email = email
             self.loginUrl = loginUrl

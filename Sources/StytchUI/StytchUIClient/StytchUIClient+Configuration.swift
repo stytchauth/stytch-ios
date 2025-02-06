@@ -19,6 +19,7 @@ public extension StytchUIClient {
         public let magicLinkOptions: MagicLinkOptions?
         public let otpOptions: OTPOptions?
         public let theme: StytchTheme
+        public let locale: StytchLocale
 
         public var inputProductsEnabled: Bool {
             products.contains(.passwords) || products.contains(.emailMagicLinks) || products.contains(.otp)
@@ -57,6 +58,7 @@ public extension StytchUIClient {
         ///   - magicLinkOptions: The email magic link options to use if you have a custom configuration.
         ///   - otpOptions: The otp options to use if you have a custom configuration.
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
+        ///   - locale: XYZ
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
@@ -68,7 +70,8 @@ public extension StytchUIClient {
             passwordOptions: PasswordOptions? = nil,
             magicLinkOptions: MagicLinkOptions? = nil,
             otpOptions: OTPOptions? = nil,
-            theme: StytchTheme = StytchTheme()
+            theme: StytchTheme = StytchTheme(),
+            locale: StytchLocale = .en
         ) {
             self.publicToken = publicToken
             self.hostUrl = hostUrl
@@ -81,6 +84,7 @@ public extension StytchUIClient {
             self.magicLinkOptions = magicLinkOptions
             self.otpOptions = otpOptions
             self.theme = theme
+            self.locale = locale
         }
     }
 

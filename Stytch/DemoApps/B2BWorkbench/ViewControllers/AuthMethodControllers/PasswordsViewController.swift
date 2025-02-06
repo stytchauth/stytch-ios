@@ -273,8 +273,9 @@ final class PasswordsViewController: UIViewController {
                         emailAddress: email,
                         discoveryRedirectUrl: redirectUrl,
                         resetPasswordRedirectUrl: redirectUrl,
-                        resetPasswordExpirationMinutes: nil,
-                        resetPasswordTemplateId: nil
+                        resetPasswordExpirationMinutes: .defaultSessionDuration,
+                        resetPasswordTemplateId: nil,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "discovery reset by email success - check your email!", object: response)
@@ -290,7 +291,8 @@ final class PasswordsViewController: UIViewController {
                 let response = try await StytchB2BClient.passwords.discovery.resetByEmail(
                     parameters: .init(
                         passwordResetToken: token,
-                        password: newPassword
+                        password: newPassword,
+                        locale: .en
                     )
                 )
                 presentAlertAndLogMessage(description: "discovery reset password success!", object: response)

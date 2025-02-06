@@ -36,12 +36,12 @@ public extension StytchB2BClient.OTP.Email.Discovery {
         let loginTemplateId: String?
         /// The locale is used to determine which language to use in the email. Parameter is a {@link https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag}, e.g. "en".
         /// Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         public init(
             emailAddress: String,
             loginTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.emailAddress = emailAddress
             self.loginTemplateId = loginTemplateId
