@@ -79,7 +79,8 @@ extension AuthInputViewModel {
             loginExpiration: password?.loginExpiration,
             resetPasswordUrl: state.config.redirectUrl,
             resetPasswordExpiration: password?.resetPasswordExpiration,
-            resetPasswordTemplateId: password?.resetPasswordTemplateId
+            resetPasswordTemplateId: password?.resetPasswordTemplateId,
+            locale: state.config.locale
         )
     }
 
@@ -91,7 +92,8 @@ extension AuthInputViewModel {
             loginTemplateId: magicLink?.loginTemplateId,
             signupMagicLinkUrl: state.config.redirectUrl,
             signupExpiration: magicLink?.signupExpiration,
-            signupTemplateId: magicLink?.signupTemplateId
+            signupTemplateId: magicLink?.signupTemplateId,
+            locale: state.config.locale
         )
     }
 }

@@ -86,6 +86,7 @@ final class B2BSessionsTestCase: BaseTestCase {
             method: .post([
                 "organization_id": JSON(stringLiteral: organizationID),
                 "session_duration_minutes": 5,
+                "locale": "en",
             ])
         )
     }

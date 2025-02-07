@@ -21,7 +21,7 @@ final class EmailOTPEntryViewModel {
             code: code,
             organizationId: organizationId,
             emailAddress: emailAddress,
-            locale: nil,
+            locale: state.configuration.locale,
             sessionDurationMinutes: state.configuration.sessionDurationMinutes
         )
         let response = try await StytchB2BClient.otp.email.authenticate(parameters: parameters)

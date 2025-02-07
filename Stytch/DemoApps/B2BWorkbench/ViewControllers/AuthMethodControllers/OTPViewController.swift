@@ -66,7 +66,7 @@ final class OTPViewController: UIViewController {
                     organizationId: organizationId,
                     memberId: memberId,
                     mfaPhoneNumber: phoneNumber,
-                    locale: nil
+                    locale: .en
                 )
                 let response = try await StytchB2BClient.otp.sms.send(parameters: parameters)
                 presentAlertAndLogMessage(description: "send otp success!", object: response)
@@ -120,7 +120,7 @@ final class OTPViewController: UIViewController {
                     emailAddress: emailAddress,
                     loginTemplateId: nil,
                     signupTemplateId: nil,
-                    locale: nil
+                    locale: .en
                 )
                 let response = try await StytchB2BClient.otp.email.loginOrSignup(parameters: parameters)
                 presentAlertAndLogMessage(description: "send otp email success!", object: response)
@@ -149,7 +149,7 @@ final class OTPViewController: UIViewController {
                     code: code,
                     organizationId: organizationId,
                     emailAddress: emailAddress,
-                    locale: nil,
+                    locale: .en,
                     sessionDurationMinutes: .defaultSessionDuration
                 )
                 let response = try await StytchB2BClient.otp.email.authenticate(parameters: parameters)
@@ -170,7 +170,7 @@ final class OTPViewController: UIViewController {
                 let parameters = StytchB2BClient.OTP.Email.Discovery.SendParameters(
                     emailAddress: emailAddress,
                     loginTemplateId: nil,
-                    locale: nil
+                    locale: .en
                 )
                 let response = try await StytchB2BClient.otp.email.discovery.send(parameters: parameters)
                 presentAlertAndLogMessage(description: "Discovery send success!", object: response)

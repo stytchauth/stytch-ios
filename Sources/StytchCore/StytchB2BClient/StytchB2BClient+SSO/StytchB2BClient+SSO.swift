@@ -151,13 +151,13 @@ public extension StytchB2BClient.SSO {
 
         let token: String
         let sessionDuration: Minutes
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - token: The token to authenticate.
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale? = nil) {
+        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
             self.token = token
             self.sessionDuration = sessionDuration
             self.locale = locale

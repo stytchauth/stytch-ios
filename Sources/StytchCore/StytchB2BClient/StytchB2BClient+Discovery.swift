@@ -80,13 +80,20 @@ public extension StytchB2BClient.Discovery {
 
         let organizationId: Organization.ID
         let sessionDuration: Minutes
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - organizationId: Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations on an Organization, so be sure to preserve this value.
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        public init(organizationId: Organization.ID, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - locale: XYZ
+        public init(
+            organizationId: Organization.ID,
+            sessionDuration: Minutes = .defaultSessionDuration,
+            locale: StytchLocale = .en
+        ) {
             self.organizationId = organizationId
             self.sessionDuration = sessionDuration
+            self.locale = locale
         }
     }
 }

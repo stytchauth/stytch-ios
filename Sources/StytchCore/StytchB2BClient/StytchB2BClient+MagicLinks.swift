@@ -91,7 +91,7 @@ public extension StytchB2BClient.MagicLinks {
 
         let token: String
         let sessionDuration: Minutes
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /**
          Initializes the parameters struct
@@ -100,7 +100,7 @@ public extension StytchB2BClient.MagicLinks {
            - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
            - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
          */
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale? = nil) {
+        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
             self.token = token
             self.sessionDuration = sessionDuration
             self.locale = locale
@@ -181,7 +181,7 @@ public extension StytchB2BClient.MagicLinks.Email {
         let signupRedirectUrl: URL?
         let loginTemplateId: String?
         let signupTemplateId: String?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /**
          Initializes the parameters struct
@@ -201,7 +201,7 @@ public extension StytchB2BClient.MagicLinks.Email {
             signupRedirectUrl: URL? = nil,
             loginTemplateId: String? = nil,
             signupTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
             self.emailAddress = emailAddress
@@ -218,7 +218,7 @@ public extension StytchB2BClient.MagicLinks.Email {
         let emailAddress: String
         let discoveryRedirectUrl: URL?
         let loginTemplateId: String?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - emailAddress: The email address to send the discovery Magic Link to.
@@ -229,7 +229,7 @@ public extension StytchB2BClient.MagicLinks.Email {
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,
             loginTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.emailAddress = emailAddress
             self.discoveryRedirectUrl = discoveryRedirectUrl
@@ -245,7 +245,7 @@ public extension StytchB2BClient.MagicLinks.Email {
         let inviteTemplateId: String?
         let name: String?
         let untrustedMetadata: JSON?
-        let locale: StytchLocale?
+        let locale: StytchLocale
         let roles: [String]?
 
         /// - Parameters:
@@ -262,7 +262,7 @@ public extension StytchB2BClient.MagicLinks.Email {
             inviteTemplateId: String? = nil,
             name: String? = nil,
             untrustedMetadata: JSON? = nil,
-            locale: StytchLocale? = nil,
+            locale: StytchLocale = .en,
             roles: [String]? = nil
         ) {
             self.emailAddress = emailAddress

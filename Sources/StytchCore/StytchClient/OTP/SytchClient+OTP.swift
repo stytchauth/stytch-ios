@@ -80,13 +80,13 @@ public extension StytchClient.OTP {
 
         let deliveryMethod: DeliveryMethod
         let expiration: Minutes?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - deliveryMethod: The mechanism used to deliver the one-time passcode.
         ///   - expiration: Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10 minutes. The default expiration is 2 minutes.
         ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
-        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil, locale: StytchLocale? = nil) {
+        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil, locale: StytchLocale = .en) {
             self.deliveryMethod = deliveryMethod
             self.expiration = expiration
             self.locale = locale

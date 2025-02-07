@@ -89,7 +89,10 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
             StytchB2BUIClient.startLoading()
             Task {
                 do {
-                    try await AuthenticationOperations.smsSendOTP(phoneNumberE164: phoneNumberE164)
+                    try await AuthenticationOperations.smsSendOTP(
+                        configuration: viewModel.state.configuration,
+                        phoneNumberE164: phoneNumberE164
+                    )
                     StytchB2BUIClient.stopLoading()
                     navigationController?.pushViewController(SMSOTPEntryViewController(state: .init(configuration: viewModel.state.configuration, didSendCode: true)), animated: true)
                 } catch {

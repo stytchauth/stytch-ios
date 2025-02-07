@@ -82,7 +82,10 @@ extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
         Task {
             do {
                 if let phoneNumberE164 = MemberManager.phoneNumber {
-                    try await AuthenticationOperations.smsSendOTP(phoneNumberE164: phoneNumberE164)
+                    try await AuthenticationOperations.smsSendOTP(
+                        configuration: viewModel.state.configuration,
+                        phoneNumberE164: phoneNumberE164
+                    )
                     startTimer()
                 }
                 StytchB2BUIClient.stopLoading()

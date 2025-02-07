@@ -67,7 +67,7 @@ public extension StytchClient.MagicLinks.Email {
         let signupMagicLinkUrl: URL?
         let signupExpiration: Minutes?
         let signupTemplateId: String?
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         /**
          Initializes the parameters struct
@@ -89,7 +89,7 @@ public extension StytchClient.MagicLinks.Email {
             signupMagicLinkUrl: URL? = nil,
             signupExpiration: Minutes? = nil,
             signupTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.email = email
             self.loginMagicLinkUrl = loginMagicLinkUrl

@@ -81,6 +81,7 @@ public extension StytchB2BClient.Passwords.Discovery {
         let resetPasswordRedirectUrl: URL?
         let resetPasswordExpirationMinutes: Minutes?
         let resetPasswordTemplateId: String?
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - emailAddress: The email that requested the password reset.
@@ -99,31 +100,41 @@ public extension StytchB2BClient.Passwords.Discovery {
         ///   - resetPasswordTemplateId: The email template ID to use for password reset. If not provided, your default email
         ///     template will be sent. If providing a template ID, it must be either a template using Stytch's customizations or a
         ///     Passwords reset custom HTML template.
+        ///   - locale: XYZ
         public init(
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,
             resetPasswordRedirectUrl: URL? = nil,
             resetPasswordExpirationMinutes: Minutes = .defaultSessionDuration,
-            resetPasswordTemplateId: String? = nil
+            resetPasswordTemplateId: String? = nil,
+            locale: StytchLocale = .en
         ) {
             self.emailAddress = emailAddress
             self.discoveryRedirectUrl = discoveryRedirectUrl
             self.resetPasswordRedirectUrl = resetPasswordRedirectUrl
             self.resetPasswordExpirationMinutes = resetPasswordExpirationMinutes
             self.resetPasswordTemplateId = resetPasswordTemplateId
+            self.locale = locale
         }
     }
 
     struct ResetByEmailParameters: Encodable, Sendable {
         let passwordResetToken: String
         let password: String
+        let locale: StytchLocale
 
         /// - Parameters:
         ///   - passwordResetToken: The token to authenticate.
         ///   - password: The new password for the Member.
-        public init(passwordResetToken: String, password: String) {
+        ///   - locale: XYZ
+        public init(
+            passwordResetToken: String,
+            password: String,
+            locale: StytchLocale = .en
+        ) {
             self.passwordResetToken = passwordResetToken
             self.password = password
+            self.locale = locale
         }
     }
 

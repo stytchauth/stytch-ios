@@ -25,6 +25,7 @@ public extension StytchB2BUIClient {
         public let mfaProductInclude: [StytchB2BClient.MfaMethod]?
         public let navigation: Navigation?
         public let theme: StytchTheme
+        public let locale: StytchLocale
 
         public var redirectUrl: URL? {
             URL(string: "stytchui-\(publicToken)://deeplink")
@@ -112,6 +113,7 @@ public extension StytchB2BUIClient {
         ///     In addition, if a member is enrolled in MFA compatible with their organization's policies, their enrolled methods will always be made available.
         ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
+        ///   - locale: XYZ
         public init(
             publicToken: String,
             hostUrl: URL? = nil,
@@ -129,7 +131,8 @@ public extension StytchB2BUIClient {
             mfaProductOrder: [StytchB2BClient.MfaMethod]? = nil,
             mfaProductInclude: [StytchB2BClient.MfaMethod]? = nil,
             navigation: Navigation? = nil,
-            theme: StytchTheme = StytchTheme()
+            theme: StytchTheme = StytchTheme(),
+            locale: StytchLocale = .en
         ) {
             self.publicToken = publicToken
             self.hostUrl = hostUrl
@@ -148,6 +151,7 @@ public extension StytchB2BUIClient {
             self.mfaProductInclude = mfaProductInclude
             self.navigation = navigation
             self.theme = theme
+            self.locale = locale
         }
     }
 

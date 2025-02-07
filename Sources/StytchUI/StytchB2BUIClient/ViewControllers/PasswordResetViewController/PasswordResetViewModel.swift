@@ -22,7 +22,8 @@ final class PasswordResetViewModel {
             parameters: .init(
                 token: state.token,
                 password: newPassword,
-                sessionDuration: state.configuration.sessionDurationMinutes
+                sessionDuration: state.configuration.sessionDurationMinutes,
+                locale: state.configuration.locale
             )
         )
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
@@ -32,7 +33,8 @@ final class PasswordResetViewModel {
         let response = try await StytchB2BClient.passwords.discovery.resetByEmail(
             parameters: .init(
                 passwordResetToken: state.token,
-                password: newPassword
+                password: newPassword,
+                locale: state.configuration.locale
             )
         )
         DiscoveryManager.updateDiscoveredOrganizations(newDiscoveredOrganizations: response.discoveredOrganizations)

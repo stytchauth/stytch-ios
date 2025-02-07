@@ -42,14 +42,14 @@ public extension StytchB2BClient.OTP.Email {
         let signupTemplateId: String?
         /// The locale is used to determine which language to use in the email. Parameter is a {@link https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag}, e.g. "en".
         /// Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
-        let locale: StytchLocale?
+        let locale: StytchLocale
 
         public init(
             organizationId: String,
             emailAddress: String,
             loginTemplateId: String? = nil,
             signupTemplateId: String? = nil,
-            locale: StytchLocale? = nil
+            locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
             self.emailAddress = emailAddress
@@ -97,7 +97,7 @@ public extension StytchB2BClient.OTP.Email {
         /// The email of the member we're attempting to authenticate the otp for.
         let emailAddress: String
         /// The locale will be used if an OTP code is sent to the member's phone number as part of a secondary authentication requirement.
-        let locale: StytchLocale?
+        let locale: StytchLocale
         /// This will return both an opaque `session_token` and `session_jwt` for this session, which will automatically be stored in the browser cookies.
         /// The `session_jwt` will have a fixed lifetime of five minutes regardless of the underlying session duration, and will be automatically refreshed by the SDK in the background over time.
         /// This value must be a minimum of 5 and may not exceed the maximum session duration minutes value set in the https://stytch.com/dashboard/sdk-configuration SDK Configuration page of the Stytch dashboard.
@@ -107,7 +107,7 @@ public extension StytchB2BClient.OTP.Email {
             code: String,
             organizationId: String,
             emailAddress: String,
-            locale: StytchLocale? = nil,
+            locale: StytchLocale = .en,
             sessionDurationMinutes: Minutes
         ) {
             self.code = code
