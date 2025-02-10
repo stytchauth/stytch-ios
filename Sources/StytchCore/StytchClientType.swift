@@ -18,7 +18,7 @@ protocol StytchClientType {
 extension StytchClientType {
     private static var keychainClient: KeychainClient { Current.keychainClient }
 
-    var configuration: Configuration? {
+    var configuration: StytchClientOptions? {
         get {
             localStorage.configuration
         }
@@ -52,9 +52,7 @@ extension StytchClientType {
     var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
 
     // swiftlint:disable:next type_contents_order
-    mutating func configure(publicToken: String, hostUrl: URL?, dfppaDomain: String?) {
-        let newConfiguration = Configuration(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
-
+    mutating func configure(newConfiguration: StytchClientOptions) {
         guard newConfiguration != configuration else {
             return
         }
