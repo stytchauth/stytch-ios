@@ -21,7 +21,7 @@ struct ContentView: View {
         .task {
             // Set up your observations before calling configure
             setUpObservations()
-            StytchClient.configure(publicToken: "your-public-token")
+            StytchClient.configure(configuration: .init(publicToken: "your-public-token"))
         }
     }
 
@@ -72,7 +72,7 @@ struct ContentView: View {
                     }
                 case .notHandled:
                     print("not handled")
-                case let .manualHandlingRequired(tokenType, token):
+                case let .manualHandlingRequired(tokenType, _, token):
                     print("manualHandlingRequired: tokenType: \(tokenType) - token: \(token)")
                 }
             } catch {

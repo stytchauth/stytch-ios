@@ -28,7 +28,7 @@ struct StytchApp: App {
                 .frame(minHeight: 250)
                 .task {
                     if configuration.publicToken.hasPrefix("public-token") == true {
-                        StytchClient.configure(publicToken: configuration.publicToken)
+                        StytchClient.configure(configuration: .init(publicToken: configuration.publicToken))
                     } else {
                         fatalError("Add you public token above.")
                     }
@@ -73,7 +73,7 @@ struct StytchApp: App {
                     }
                 case .notHandled:
                     print("not handled")
-                case let .manualHandlingRequired(tokenType, token):
+                case let .manualHandlingRequired(tokenType, _, token):
                     print("manualHandlingRequired: tokenType: \(tokenType) - token: \(token)")
                     if tokenType == .passwordReset {
                         self.resetPasswordToken = .init(token: token)
