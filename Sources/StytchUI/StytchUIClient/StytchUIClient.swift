@@ -24,7 +24,7 @@ public enum StytchUIClient {
     /// - Parameters:
     ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
     static func configure(configuration: Configuration) {
-        StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
+        StytchClient.configure(configuration: .init(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain))
         Self.configuration = configuration
         FontLoader.loadFonts()
     }

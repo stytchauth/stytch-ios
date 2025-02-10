@@ -8,7 +8,7 @@ public protocol RouteType {
 protocol BaseRouteType: RouteType {}
 
 public struct NetworkingRouter<Route: RouteType> {
-    private let getConfiguration: () -> Configuration?
+    private let getConfiguration: () -> StytchClientConfiguration?
 
     private let pathForRoute: (Route) -> Path
 
@@ -30,7 +30,7 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.keychainClient) private var keychainClient
 
-    private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> Configuration?) {
+    private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> StytchClientConfiguration?) {
         self.getConfiguration = getConfiguration
         self.pathForRoute = pathForRoute
     }
@@ -182,7 +182,7 @@ public extension NetworkingRouter {
 }
 
 extension NetworkingRouter where Route: BaseRouteType {
-    init(getConfiguration: @escaping () -> Configuration?) {
+    init(getConfiguration: @escaping () -> StytchClientConfiguration?) {
         self.init { $0.path } getConfiguration: { getConfiguration() }
     }
 }

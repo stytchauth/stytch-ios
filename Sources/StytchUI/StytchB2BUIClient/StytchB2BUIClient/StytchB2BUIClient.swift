@@ -23,7 +23,7 @@ public enum StytchB2BUIClient {
     ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
     static func configure(configuration: Configuration) {
         reset()
-        StytchB2BClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
+        StytchB2BClient.configure(configuration: .init(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain))
         FontLoader.loadFonts()
         Self.configuration = configuration
     }
