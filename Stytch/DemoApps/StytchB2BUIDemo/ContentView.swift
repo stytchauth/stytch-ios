@@ -129,7 +129,7 @@ class ContentViewModel: ObservableObject {
 
     private func createConfiguration(authFlowType: StytchB2BUIClient.AuthFlowType) -> StytchB2BUIClient.Configuration {
         .init(
-            publicToken: publicToken,
+            stytchClientConfiguration: .init(publicToken: publicToken),
             products: [.emailMagicLinks, .emailOtp, .sso, .passwords, .oauth],
             authFlowType: authFlowType,
             oauthProviders: [.init(provider: .google), .init(provider: .github)],

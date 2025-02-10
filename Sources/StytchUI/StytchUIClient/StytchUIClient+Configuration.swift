@@ -6,11 +6,9 @@ import UIKit
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        static let empty = Configuration(publicToken: "", products: [])
+        static let empty = Configuration(stytchClientConfiguration: .init(publicToken: ""), products: [])
 
-        public let publicToken: String
-        public let hostUrl: URL?
-        public let dfppaDomain: String?
+        public let stytchClientConfiguration: StytchClientConfiguration
         public let products: [Products]
         public let navigation: Navigation?
         public let sessionDurationMinutes: Minutes
@@ -26,7 +24,7 @@ public extension StytchUIClient {
         }
 
         public var redirectUrl: URL? {
-            URL(string: "stytchui-\(publicToken)://deeplink")
+            URL(string: "stytchui-\(stytchClientConfiguration.publicToken)://deeplink")
         }
 
         public var supportsOauth: Bool {
@@ -46,10 +44,7 @@ public extension StytchUIClient {
         }
 
         /// - Parameters:
-        ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
-        ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
-        ///     This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
-        ///   - dfppaDomain: The domain that should be used for DFPPA
+        ///   - stytchClientConfiguration: A flexible and extensible object used to configure the core `StychClient` requiring at least a public token, with optional additional settings.
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
         ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
         ///   - sessionDurationMinutes: The session duration you would like the authentication endpoints to use.
@@ -60,9 +55,7 @@ public extension StytchUIClient {
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         ///   - locale: XYZ
         public init(
-            publicToken: String,
-            hostUrl: URL? = nil,
-            dfppaDomain: String? = nil,
+            stytchClientConfiguration: StytchClientConfiguration,
             products: [Products],
             navigation: Navigation? = nil,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
@@ -73,9 +66,7 @@ public extension StytchUIClient {
             theme: StytchTheme = StytchTheme(),
             locale: StytchLocale = .en
         ) {
-            self.publicToken = publicToken
-            self.hostUrl = hostUrl
-            self.dfppaDomain = dfppaDomain
+            self.stytchClientConfiguration = stytchClientConfiguration
             self.products = products
             self.navigation = navigation
             self.sessionDurationMinutes = sessionDurationMinutes

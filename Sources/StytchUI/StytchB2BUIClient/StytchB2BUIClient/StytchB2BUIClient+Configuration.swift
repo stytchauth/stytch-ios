@@ -6,11 +6,9 @@ import UIKit
 
 public extension StytchB2BUIClient {
     struct Configuration: Codable {
-        public static let empty = Configuration(publicToken: "", products: [], authFlowType: .discovery)
+        public static let empty = Configuration(stytchClientConfiguration: .init(publicToken: ""), products: [], authFlowType: .discovery)
 
-        public let publicToken: String
-        public let hostUrl: URL?
-        public let dfppaDomain: String?
+        public let stytchClientConfiguration: StytchClientConfiguration
         public let products: [B2BProducts]
         public let authFlowType: AuthFlowType
         public let sessionDurationMinutes: Minutes
@@ -28,7 +26,7 @@ public extension StytchB2BUIClient {
         public let locale: StytchLocale
 
         public var redirectUrl: URL? {
-            URL(string: "stytchui-\(publicToken)://deeplink")
+            URL(string: "stytchui-\(stytchClientConfiguration.publicToken)://deeplink")
         }
 
         public var supportsEmailMagicLinks: Bool {
@@ -90,10 +88,7 @@ public extension StytchB2BUIClient {
         }
 
         /// - Parameters:
-        ///   - publicToken: Available via the Stytch dashboard in the `API keys` section
-        ///   - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
-        ///     This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
-        ///   - dfppaDomain: The domain that should be used for DFPPA
+        ///   - stytchClientConfiguration: A flexible and extensible object used to configure the core `StychB2BClient` requiring at least a public token, with optional additional settings.
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
         ///     The order of the products that you include here will also be the order in which they appear in the login form.
         ///   - authFlowType: The type of authentication flow you would like to begin with, either organization as specified by slug or discovery.
@@ -115,9 +110,7 @@ public extension StytchB2BUIClient {
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         ///   - locale: XYZ
         public init(
-            publicToken: String,
-            hostUrl: URL? = nil,
-            dfppaDomain: String? = nil,
+            stytchClientConfiguration: StytchClientConfiguration,
             products: [B2BProducts],
             authFlowType: AuthFlowType,
             sessionDurationMinutes: Minutes = .defaultSessionDuration,
@@ -134,9 +127,7 @@ public extension StytchB2BUIClient {
             theme: StytchTheme = StytchTheme(),
             locale: StytchLocale = .en
         ) {
-            self.publicToken = publicToken
-            self.hostUrl = hostUrl
-            self.dfppaDomain = dfppaDomain
+            self.stytchClientConfiguration = stytchClientConfiguration
             self.products = products
             self.authFlowType = authFlowType
             self.sessionDurationMinutes = sessionDurationMinutes

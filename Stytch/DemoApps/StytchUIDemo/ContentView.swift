@@ -7,7 +7,7 @@ struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
 
     let configuration: StytchUIClient.Configuration = .init(
-        publicToken: "your-public-token",
+        stytchClientConfiguration: .init(publicToken: "your-public-token"),
         products: [.passwords, .emailMagicLinks, .otp, .oauth],
         oauthProviders: [.apple, .thirdParty(.google)],
         otpOptions: .init(methods: [.sms])

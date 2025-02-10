@@ -18,7 +18,7 @@ final class OTPCodeViewModelTest: BaseTestCase {
     func testResendCodeCallsLoginOrCreateAndUpdatesState() async throws {
         let state: OTPCodeState = .init(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.otp]
             ),
             otpMethod: .sms,
@@ -39,7 +39,7 @@ final class OTPCodeViewModelTest: BaseTestCase {
     func testEnterCodeCallsAuthenticateAndReportsToUICallback() async throws {
         let state: OTPCodeState = .init(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.otp]
             ),
             otpMethod: .sms,

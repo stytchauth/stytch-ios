@@ -25,14 +25,16 @@ class B2BUIViewController: UIViewController {
     }
 
     func showStytchB2BUI() {
+        let publicToken = UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey) ?? ""
+
+        let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
+            stytchClientConfiguration: .init(publicToken: publicToken),
+            products: [.emailMagicLinks, .sso, .passwords, .oauth],
+            authFlowType: .organization(slug: "no-mfa"),
+            // authFlowType: .discovery,
+            oauthProviders: [.init(provider: .google), .init(provider: .github)]
+        )
+
         StytchB2BUIClient.presentController(configuration: stytchB2BUIConfig, controller: self)
     }
-
-    let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-        publicToken: "your-public-token",
-        products: [.emailMagicLinks, .sso, .passwords, .oauth],
-        authFlowType: .organization(slug: "no-mfa"),
-        // authFlowType: .discovery,
-        oauthProviders: [.init(provider: .google), .init(provider: .github)]
-    )
 }

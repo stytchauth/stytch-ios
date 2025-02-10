@@ -19,7 +19,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [],
                 sessionDurationMinutes: 123
             ),
@@ -34,7 +34,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -52,7 +52,7 @@ final class PasswordViewModelTests: BaseTestCase {
             resetPasswordTemplateId: "reset-password-template-id"
         )
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [],
             passwordOptions: passwordOptions
         )
@@ -83,7 +83,7 @@ final class PasswordViewModelTests: BaseTestCase {
             signupTemplateId: "signup-template-id"
         )
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [],
             magicLinkOptions: magicLinkOptions
         )
@@ -110,7 +110,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testCheckStrengthCallsStrengthCheck() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -126,7 +126,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSetPasswordCallsResetByEmailAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -147,7 +147,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testSignupCallsCreateAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -168,7 +168,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginCallsAuthenticateAndReportsToOnAuthCallback() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -189,7 +189,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginWithEmailExitsEarlyWhenEMLProductIsNotConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -205,7 +205,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testLoginWithEmailCallsLoginOrCreateWhenEMLProductIsConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.emailMagicLinks]
             ),
             intent: PasswordState.Intent.login,
@@ -221,7 +221,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testForgotPasswordExitsEarlyWhenPasswordProductIsNotConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             ),
             intent: PasswordState.Intent.login,
@@ -238,7 +238,7 @@ final class PasswordViewModelTests: BaseTestCase {
     func testForgotPasswordCallsResetByEmailStartAndSetsPendingResetEmailWhenPasswordProductIsConfigured() async throws {
         let state = PasswordState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.passwords]
             ),
             intent: PasswordState.Intent.login,

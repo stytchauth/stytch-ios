@@ -18,7 +18,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = OAuthState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [],
                 sessionDurationMinutes: 123
             )
@@ -30,7 +30,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let state = OAuthState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             )
         )
@@ -41,7 +41,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsAppleProviderAndCallsAuthCallbackWhenProviderIsApple() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.oauth],
                 oauthProviders: [.apple]
             )
@@ -61,7 +61,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthDoesNothingIfOAuthIsNotConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [],
                 oauthProviders: []
             )
@@ -82,7 +82,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsThirdPartyStartAndAuthenticateFlowAndReportsToUIIfOAuthIsConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.oauth],
                 oauthProviders: [.thirdParty(.amazon)]
             )

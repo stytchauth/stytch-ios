@@ -2,18 +2,25 @@ import Foundation
 
 // swiftlint:disable type_contents_order
 
-struct Configuration: Equatable {
+public struct StytchClientConfiguration: Equatable, Codable {
     private enum CodingKeys: String, CodingKey {
         case publicToken = "StytchPublicToken"
         case hostUrl = "StytchHostURL"
         case dfppaDomain = "StytchDfppaDomain"
     }
 
-    let publicToken: String
-    let hostUrl: URL?
-    let dfppaDomain: String
+    public let publicToken: String
+    public let hostUrl: URL?
+    public let dfppaDomain: String
 
-    internal init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+    /**
+     Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
+     - Parameters:
+       - publicToken: Available via the Stytch dashboard in the `API keys` section
+       - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
+       - dfppaDomain: The domain that should be used for DFPPA
+     */
+    public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
         self.publicToken = publicToken
         self.hostUrl = hostUrl
         if let dfppaDomain {
@@ -41,7 +48,7 @@ struct Configuration: Equatable {
     }
 }
 
-extension Configuration: Decodable {
+public extension StytchClientConfiguration {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         publicToken = try container.decode(key: .publicToken)

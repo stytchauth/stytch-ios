@@ -50,10 +50,10 @@ extension LocalStorage {
 
 extension LocalStorage {
     private enum ConfigurationStorageKey: LocalStorageKey {
-        typealias Value = Configuration
+        typealias Value = StytchClientConfiguration
     }
 
-    var configuration: Configuration? {
+    var configuration: StytchClientConfiguration? {
         get { self[ConfigurationStorageKey.self] }
         set { self[ConfigurationStorageKey.self] = newValue }
     }

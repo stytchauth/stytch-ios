@@ -3,6 +3,8 @@ import StytchCore
 import SwiftUI
 import UIKit
 
+// swiftlint:disable prefer_self_in_static_references
+
 public typealias AuthCallback = (AuthenticateResponseType) -> Void
 
 /// This type serves as the entry point for all usages of the Stytch authentication UI.
@@ -14,7 +16,7 @@ public enum StytchUIClient {
     fileprivate static weak var currentController: AuthRootViewController?
 
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    static var configuration: Configuration = .empty
+    static var configuration = StytchUIClient.Configuration.empty
 
     static var onAuthCallback: AuthCallback?
 
@@ -22,11 +24,13 @@ public enum StytchUIClient {
 
     /// Configures the `StytchUIClient`
     /// - Parameters:
-    ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
-    static func configure(configuration: Configuration) {
-        StytchClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
-        Self.configuration = configuration
+    ///   - configuration: Defines the configuration for `StytchConsumerUIClient`, including authentication methods, session settings,
+    ///     UI customization, and user experience options. This object controls how consumers authenticate,
+    ///     which authentication flows are available, and the overall look and feel of the Consumer UI.
+    static func configure(configuration: StytchUIClient.Configuration) {
+        StytchClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()
+        Self.configuration = configuration
     }
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.

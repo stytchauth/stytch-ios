@@ -75,7 +75,7 @@ final class RootViewController: UIViewController {
         guard let token = token, !token.isEmpty else { return }
 
         UserDefaults.standard.set(token, forKey: Constants.publicTokenDefaultsKey)
-        StytchB2BClient.configure(publicToken: token)
+        StytchB2BClient.configure(configuration: .init(publicToken: token))
 
         navigationController?.pushViewController(AuthHomeViewController(), animated: true)
     }

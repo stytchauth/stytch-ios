@@ -30,7 +30,7 @@ final class AuthInputViewModelTests: BaseTestCase {
 
     func testCreatesCorrectResetByEmailStartParams() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -52,7 +52,7 @@ final class AuthInputViewModelTests: BaseTestCase {
 
     func testCreatesCorrectMagicLinkParams() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -76,7 +76,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             )
         )
@@ -92,7 +92,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.emailMagicLinks],
                 magicLinkOptions: magicLinkConfig
             )
@@ -108,7 +108,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             )
         )
@@ -123,7 +123,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordCallsPasswordsResetByEmailStartIfPasswordsAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: [.passwords],
                 passwordOptions: passwordConfig
             )
@@ -139,7 +139,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testContinueWithPhoneCallsOTPLoginOrCreate() async throws {
         let state = AuthInputState(
             config: .init(
-                publicToken: "publicToken",
+                stytchClientConfiguration: .init(publicToken: "publicToken"),
                 products: []
             )
         )
