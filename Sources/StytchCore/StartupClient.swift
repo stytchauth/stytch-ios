@@ -38,7 +38,7 @@ struct StartupClient {
         #if os(iOS)
         Current.networkingClient.dfpEnabled = bootstrapResponseData.dfpProtectedAuthEnabled
         Current.networkingClient.dfpAuthMode = bootstrapResponseData.dfpProtectedAuthMode ?? DFPProtectedAuthMode.observation
-        if let siteKey = bootstrapResponseData.captchaSettings.siteKey {
+        if let siteKey = bootstrapResponseData.captchaSettings.siteKey, siteKey.isEmpty == false {
             await Current.captcha.setCaptchaClient(siteKey: siteKey)
         }
         #endif
