@@ -1,7 +1,7 @@
 <div align=center>
 
-![Stytch iOS SDK](Resources/Assets/Wordmark-dark-mode.png#gh-dark-mode-only)
-![Stytch iOS SDK](Resources/Assets/Wordmark-light-mode.png#gh-light-mode-only)
+![Stytch iOS SDK](Resources/Assets/stytch-dark.png#gh-dark-mode-only)
+![Stytch iOS SDK](Resources/Assets/stytch-light.png#gh-light-mode-only)
 
 ![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
 ![iOS](https://img.shields.io/badge/iOS-13.0-blue) ![macOS](https://img.shields.io/badge/macOS-10.15-green) ![tvOS](https://img.shields.io/badge/tvOS-13.0-orange)

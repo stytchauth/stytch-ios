@@ -16,10 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wordmark-light-mode.png" translatesAutoresizingMaskIntoConstraints="NO" id="TMc-Cj-3Xl">
-                                <rect key="frame" x="0.0" y="346" width="393" height="160"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stytch" translatesAutoresizingMaskIntoConstraints="NO" id="TMc-Cj-3Xl">
+                                <rect key="frame" x="0.0" y="388.66666666666669" width="393" height="75"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="160" id="bt7-kn-hQr"/>
+                                    <constraint firstAttribute="height" constant="75" id="bt7-kn-hQr"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -38,7 +38,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Wordmark-light-mode.png" width="425" height="80"/>
+        <image name="stytch" width="124" height="39"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

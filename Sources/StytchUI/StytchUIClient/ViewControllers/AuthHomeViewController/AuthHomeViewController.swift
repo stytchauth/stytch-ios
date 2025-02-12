@@ -10,13 +10,6 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
     private let separatorView: LabelSeparatorView = .orSeparator()
 
-    private lazy var poweredByStytch: UIImageView = {
-        let view = UIImageView()
-        view.image = ImageAsset.poweredByStytch.image
-        view.accessibilityLabel = "poweredByStytch"
-        return view
-    }()
-
     private var showOrSeparator: Bool {
         guard !viewModel.state.config.oauthProviders.isEmpty else { return false }
         return viewModel.state.config.inputProductsEnabled
@@ -71,7 +64,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
             constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
         }
         if StytchClient.disableSdkWatermark == false {
-            stackView.addArrangedSubview(poweredByStytch)
+            setupPoweredByStytchView()
         }
         stackView.addArrangedSubview(SpacerView())
 

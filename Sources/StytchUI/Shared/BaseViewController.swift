@@ -20,6 +20,31 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         return view
     }()
 
+    lazy var poweredByStytchView: UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        containerView.clipsToBounds = true
+
+        let imageView = UIImageView(image: ImageAsset.poweredByStytch.image)
+        imageView.accessibilityLabel = "poweredByStytch"
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        containerView.addSubview(imageView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            containerView.heightAnchor.constraint(equalToConstant: 35),
+
+            imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 19),
+            imageView.widthAnchor.constraint(equalToConstant: 142),
+        ])
+
+        return containerView
+    }()
+
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -82,6 +107,16 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
 
     func hideBackButton() {
         navigationItem.hidesBackButton = true
+    }
+
+    func setupPoweredByStytchView() {
+        view.addSubview(poweredByStytchView)
+
+        NSLayoutConstraint.activate([
+            poweredByStytchView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            poweredByStytchView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            poweredByStytchView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
     }
 
     private func setupHideKeyboardOnTap() {

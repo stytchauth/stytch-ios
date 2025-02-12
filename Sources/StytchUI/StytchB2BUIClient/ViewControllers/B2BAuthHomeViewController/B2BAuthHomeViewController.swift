@@ -4,13 +4,6 @@ import UIKit
 final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BAuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
-    private lazy var poweredByStytch: UIImageView = {
-        let view = UIImageView()
-        view.image = ImageAsset.poweredByStytch.image
-        view.accessibilityLabel = "poweredByStytch"
-        return view
-    }()
-
     init(state: B2BAuthHomeState) {
         super.init(viewModel: B2BAuthHomeViewModel(state: state))
     }
@@ -70,7 +63,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
         layoutProductComponents(productComponents)
 
         if StytchB2BClient.disableSdkWatermark == false {
-            stackView.addArrangedSubview(poweredByStytch)
+            setupPoweredByStytchView()
         }
 
         stackView.addArrangedSubview(SpacerView())
