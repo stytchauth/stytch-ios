@@ -38,7 +38,7 @@ struct StartupClient {
         #if os(iOS)
         Current.networkingClient.dfpEnabled = bootstrapResponseData.dfpProtectedAuthEnabled
         Current.networkingClient.dfpAuthMode = bootstrapResponseData.dfpProtectedAuthMode ?? DFPProtectedAuthMode.observation
-        if let siteKey = bootstrapResponseData.captchaSettings.siteKey {
+        if let siteKey = bootstrapResponseData.captchaSettings.siteKey, siteKey.isEmpty == false {
             await Current.captcha.setCaptchaClient(siteKey: siteKey)
         }
         #endif
@@ -59,12 +59,22 @@ struct StartupClient {
             throw StytchSDKError.consumerSDKNotConfigured
         }
 
-        // Assign the default bootstrap data, if the call to get the fresh bootstrap data succeeds then overwrite the default
-        var bootstrapResponseData = BootstrapResponseData.defaultBootstrapData
+        // Attempt to fetch the latest bootstrap data from the API using the provided public token.
+        // If the network request succeeds, extract and use the wrapped response data.
+        // If the network request fails, fall back to the locally stored bootstrap data.
+        // If no local data exists, use a predefined default bootstrap data.
+        let bootstrapResponseData: BootstrapResponseData
         if let bootstrapData = try? await router.get(route: .fetch(Path(rawValue: publicToken))) as BootstrapResponse {
             bootstrapResponseData = bootstrapData.wrapped
+        } else if let currentBootstrapData = Current.localStorage.bootstrapData {
+            bootstrapResponseData = currentBootstrapData
+        } else {
+            bootstrapResponseData = BootstrapResponseData.defaultBootstrapData
         }
+
+        // Update the local storage with the resolved bootstrap data before returning it.
         Current.localStorage.bootstrapData = bootstrapResponseData
+
         return bootstrapResponseData
     }
 }

@@ -27,14 +27,8 @@ public struct StytchClient: StytchClientType {
         Current.localStorage.bootstrapData?.passwordConfig
     }
 
-    private init() {
-        #if os(iOS)
-        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-            Task {
-                try await StartupClient.start(type: ClientType.consumer)
-            }
-        }
-        #endif
+    public static var clientType: ClientType {
+        .consumer
     }
 
     /**
@@ -59,19 +53,6 @@ public struct StytchClient: StytchClientType {
     /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
-    }
-}
-
-public extension StytchClient {
-    func start() {
-        Task {
-            do {
-                try await StartupClient.start(type: ClientType.consumer)
-                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
-            } catch {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
-            }
-        }
     }
 }
 
