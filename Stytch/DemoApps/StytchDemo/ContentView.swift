@@ -72,7 +72,7 @@ struct ContentView: View {
                     }
                 case .notHandled:
                     print("not handled")
-                case let .manualHandlingRequired(tokenType, token):
+                case let .manualHandlingRequired(tokenType, _, token):
                     print("manualHandlingRequired: tokenType: \(tokenType) - token: \(token)")
                 }
             } catch {

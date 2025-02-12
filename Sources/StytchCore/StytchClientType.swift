@@ -1,5 +1,8 @@
 import Combine
 import Foundation
+#if os(iOS)
+import UIKit
+#endif
 
 protocol StytchClientType {
     associatedtype DeeplinkResponse
@@ -7,12 +10,11 @@ protocol StytchClientType {
     associatedtype DeeplinkRedirectType
 
     static var instance: Self { get set }
+    static var clientType: ClientType { get }
 
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
     static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>
-
-    func start()
 }
 
 extension StytchClientType {
@@ -67,6 +69,29 @@ extension StytchClientType {
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
             // only run this in non-test environments
             start()
+        }
+    }
+
+    // swiftlint:disable:next type_contents_order
+    func start() {
+        #if os(iOS)
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
+            Task {
+                // Skip the startup sequence if offline, it will auto-start when connectivity is restored.
+                if Current.networkMonitor.isConnected == true {
+                    try await StartupClient.start(type: Self.clientType)
+                }
+            }
+        }
+        #endif
+
+        Task {
+            do {
+                try await StartupClient.start(type: Self.clientType)
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
+            } catch {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
+            }
         }
     }
 
