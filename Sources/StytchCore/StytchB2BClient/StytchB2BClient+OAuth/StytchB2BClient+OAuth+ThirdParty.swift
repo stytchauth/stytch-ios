@@ -113,8 +113,8 @@ public extension StytchB2BClient.OAuth.ThirdParty {
                 queryParameters["custom_scopes"] = customScopes
             }
 
-            if let providerParams = providerParams?.toURLParameters() {
-                queryParameters["provider_params"] = providerParams
+            if let providerParams {
+                queryParameters.merge(providerParams) { _, new in new }
             }
 
             if let loginRedirectUrl = loginRedirectUrl?.absoluteString {
