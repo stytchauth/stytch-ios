@@ -30,7 +30,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testSessionDurationMinutesReadsFromConfig() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.emailMagicLinks],
             sessionDurationMinutes: 123
         )
@@ -53,7 +53,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.emailMagicLinks]
         )
 
@@ -75,7 +75,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testCreatesCorrectResetByEmailStartParams() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -107,7 +107,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testCreatesCorrectMagicLinkParams() {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.emailMagicLinks],
             magicLinkOptions: magicLinkConfig
         )
@@ -140,7 +140,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testLoginWithoutPasswordDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: []
         )
 
@@ -163,7 +163,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testLoginWithoutPasswordCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.emailMagicLinks],
             magicLinkOptions: magicLinkConfig
         )
@@ -187,7 +187,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testForgotPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: []
         )
 
@@ -210,7 +210,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
 
     func testForgotPasswordCallsPasswordResetByEmailStartAndSetsPendingEmailIfPasswordsAreConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            publicToken: "publicToken",
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: [.passwords, .emailMagicLinks],
             passwordOptions: passwordConfig,
             magicLinkOptions: magicLinkConfig

@@ -37,10 +37,10 @@ class BaseTestCase: XCTestCase {
             Current.defaults.set(true, forKey: migrationName)
         }
 
-        StytchClient.configure(
+        StytchClient.configure(configuration: .init(
             publicToken: "xyz",
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
-        )
+        ))
 
         networkInterceptor.reset()
     }

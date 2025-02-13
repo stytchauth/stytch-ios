@@ -32,14 +32,12 @@ public struct StytchClient: StytchClientType {
     }
 
     /**
-     Configures the `StytchClient`, setting the `publicToken` and `hostUrl`.
+     Configures the `StytchClient`
      - Parameters:
-       - publicToken: Available via the Stytch dashboard in the `API keys` section
-       - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
-       - dfppaDomain: The domain that should be used for DFPPA
+       - configuration: A flexible and extensible object requiring at least a public token, with optional additional settings.
      */
-    public static func configure(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
-        instance.configure(publicToken: publicToken, hostUrl: hostUrl, dfppaDomain: dfppaDomain)
+    public static func configure(configuration: StytchClientConfiguration) {
+        instance.configure(newConfiguration: configuration)
     }
 
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink

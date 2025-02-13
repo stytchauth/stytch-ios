@@ -8,8 +8,7 @@ final class ProductOrderingTests: B2BBaseTestCase {
         authFlowType: StytchB2BUIClient.AuthFlowType
     ) -> StytchB2BUIClient.Configuration {
         .init(
-            publicToken: "public-token",
-            hostUrl: nil,
+            stytchClientConfiguration: .init(publicToken: "publicToken"),
             products: products,
             authFlowType: authFlowType,
             sessionDurationMinutes: .defaultSessionDuration,

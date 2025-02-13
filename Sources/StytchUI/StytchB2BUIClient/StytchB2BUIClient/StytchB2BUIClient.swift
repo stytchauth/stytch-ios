@@ -3,13 +3,13 @@ import StytchCore
 import SwiftUI
 import UIKit
 
-// swiftlint:disable modifier_order
+// swiftlint:disable modifier_order prefer_self_in_static_references
 
 public typealias B2BAuthenticateCallback = () -> Void
 
 public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    static var configuration: Configuration = .empty
+    static var configuration = StytchB2BUIClient.Configuration.empty
     static var onB2BAuthCallback: B2BAuthenticateCallback?
     private static var cancellable: AnyCancellable?
     fileprivate weak static var currentController: B2BAuthRootViewController?
@@ -20,10 +20,12 @@ public enum StytchB2BUIClient {
 
     /// Configures the `StytchB2BUIClient`.
     /// - Parameters:
-    ///   - configuration: The UI configuration to determine which kinds of auth are needed, defaults to empty
-    static func configure(configuration: Configuration) {
+    ///   - configuration: Defines the configuration for `StytchB2BUIClient`, including authentication methods, session settings,
+    ///     UI customization, and organizational options. This object controls how users authenticate,
+    ///     which authentication flows are available, and the overall user experience within the B2B UI.
+    static func configure(configuration: StytchB2BUIClient.Configuration) {
         reset()
-        StytchB2BClient.configure(publicToken: configuration.publicToken, hostUrl: configuration.hostUrl, dfppaDomain: configuration.dfppaDomain)
+        StytchB2BClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()
         Self.configuration = configuration
     }
@@ -93,7 +95,7 @@ public enum StytchB2BUIClient {
         return StytchB2BClient.canHandle(url: url)
     }
 
-    static func setUpDismissAuthListener() {
+    fileprivate static func setUpDismissAuthListener() {
         cancellable = dismissUI
             .receive(on: DispatchQueue.main)
             .sink { [weak currentController] in
@@ -103,7 +105,7 @@ public enum StytchB2BUIClient {
             }
     }
 
-    static func reset() {
+    private static func reset() {
         B2BAuthenticationManager.reset()
         DiscoveryManager.reset()
         MemberManager.reset()

@@ -4,7 +4,7 @@ import XCTest
 
 final class ActionableInfoStateTests: BaseTestCase {
     let config: StytchUIClient.Configuration = .init(
-        publicToken: "publicToken",
+        stytchClientConfiguration: .init(publicToken: "publicToken"),
         products: [.emailMagicLinks]
     )
 
