@@ -155,3 +155,18 @@ extension PollingClient {
         XCTFail("Shouldn't execute")
     }
 }
+
+extension XCTestCase {
+    func assertURLContainsParameters(_ url: URL, expectedParameters: [String: String], file: StaticString = #file, line: UInt = #line) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false), let queryItems = components.queryItems else {
+            XCTFail("Invalid URL or missing query parameters", file: file, line: line)
+            return
+        }
+
+        let queryDictionary = Dictionary(uniqueKeysWithValues: queryItems.map { ($0.name, $0.value ?? "") })
+
+        for (key, expectedValue) in expectedParameters {
+            XCTAssertEqual(queryDictionary[key], expectedValue, "URL missing expected query parameter: \(key)", file: file, line: line)
+        }
+    }
+}

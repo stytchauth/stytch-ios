@@ -72,10 +72,13 @@ extension OAuthTestCase {
         }
         var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
 
+        let providerParams = ["provider_prompt": "select_account"]
+
         let createConfiguration: (URL) -> StytchClient.OAuth.ThirdParty.WebAuthenticationConfiguration = { url in
             .init(
                 loginRedirectUrl: url.appendingPathComponent("/login"),
-                signupRedirectUrl: url.appendingPathComponent("/signup")
+                signupRedirectUrl: url.appendingPathComponent("/signup"),
+                providerParams: ["provider_prompt": "select_account"]
             )
         }
 
@@ -93,6 +96,12 @@ extension OAuthTestCase {
         let validStartParams = createConfiguration(baseUrl)
 
         try await StytchClient.OAuth.ThirdParty.Provider.allCases.asyncForEach { provider in
+            if let startUrl = try? validStartParams.startUrl(provider.rawValue) {
+                assertURLContainsParameters(startUrl, expectedParameters: providerParams)
+            } else {
+                XCTFail("Failed to create start URL")
+            }
+
             let (token, url) = try await provider.interface.start(configuration: validStartParams)
             XCTAssertEqual(token, "random-token")
             XCTAssertEqual(url.absoluteString, "custom-scheme://something")
