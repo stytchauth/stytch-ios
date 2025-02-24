@@ -72,13 +72,16 @@ extension OAuthTestCase {
         }
         var baseUrl = try XCTUnwrap(URL(string: "https://blah"))
 
-        let providerParams = ["provider_prompt": "select_account"]
+        // The internals prepend "provider_" to each key.
+        // For example, if the developer passes in ["foo": "bar"],
+        // the resulting dictionary will be:
+        let providerParams = ["provider_foo": "bar"]
 
         let createConfiguration: (URL) -> StytchClient.OAuth.ThirdParty.WebAuthenticationConfiguration = { url in
             .init(
                 loginRedirectUrl: url.appendingPathComponent("/login"),
                 signupRedirectUrl: url.appendingPathComponent("/signup"),
-                providerParams: ["provider_prompt": "select_account"]
+                providerParams: ["foo": "bar"]
             )
         }
 
