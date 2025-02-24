@@ -114,7 +114,8 @@ public extension StytchB2BClient.OAuth.ThirdParty {
             }
 
             if let providerParams {
-                queryParameters.merge(providerParams) { _, new in new }
+                let modifiedProviderParams = providerParams.appendingPrefix("provider")
+                queryParameters.merge(modifiedProviderParams) { _, new in new }
             }
 
             if let loginRedirectUrl = loginRedirectUrl?.absoluteString {
