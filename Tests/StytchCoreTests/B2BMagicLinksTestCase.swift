@@ -301,7 +301,7 @@ public extension Organization {
         ssoJitProvisioning: .allAllowed,
         ssoJitProvisioningAllowedConnections: nil,
         ssoActiveConnections: [
-            StytchB2BClient.SSOActiveConnection(connectionId: "sso_conn_1", displayName: "Google SSO"),
+            StytchB2BClient.SSOActiveConnection(connectionId: "sso_conn_1", displayName: "Google SSO", identityProvider: nil),
         ],
         scimActiveConnection: StytchB2BClient.SCIMActiveConnection(connectionId: "scim_conn_1", displayName: "SCIM Connection"),
         emailAllowedDomains: ["example.com"],

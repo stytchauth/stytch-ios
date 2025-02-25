@@ -279,7 +279,7 @@ extension StytchB2BUIClient.Configuration {
     var computedAuthFlowType: StytchB2BUIClient.AuthFlowType {
         switch authFlowType {
         case .discovery:
-            if B2BAuthenticationManager.primaryRequired != nil, let organizationSlug = OrganizationManager.organizationSlug {
+            if let organizationSlug = OrganizationManager.organizationSlug {
                 return .organization(slug: organizationSlug)
             } else {
                 return .discovery

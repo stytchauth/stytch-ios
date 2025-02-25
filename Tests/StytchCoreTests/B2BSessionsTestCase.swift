@@ -56,7 +56,9 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
     }
 
-    func testExternalSessionsUpdate() {
+    func testExternalSessionsUpdate() async {
+        _ = try? await StytchB2BClient.sessions.revoke(parameters: .init(forceClear: true))
+
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
         XCTAssertNil(StytchB2BClient.sessions.sessionJwt)
 

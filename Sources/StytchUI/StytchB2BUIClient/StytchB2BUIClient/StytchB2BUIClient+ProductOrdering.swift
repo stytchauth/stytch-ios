@@ -32,8 +32,13 @@ extension StytchB2BUIClient {
                     productComponents.appendIfNotPresent(.email)
                 }
             case .sso:
-                if case .organization = configuration.computedAuthFlowType, hasSSOActiveConnections == true {
+                switch configuration.computedAuthFlowType {
+                case .discovery:
                     productComponents.appendIfNotPresent(.ssoButtons)
+                case .organization(slug: _):
+                    if hasSSOActiveConnections == true {
+                        productComponents.appendIfNotPresent(.ssoButtons)
+                    }
                 }
             case .oauth:
                 productComponents.appendIfNotPresent(.oAuthButtons)
