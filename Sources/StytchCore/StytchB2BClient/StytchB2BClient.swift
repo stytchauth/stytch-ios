@@ -28,6 +28,10 @@ public struct StytchB2BClient: StytchClientType {
         Current.localStorage.bootstrapData?.passwordConfig
     }
 
+    public static var configuration: StytchClientConfiguration? {
+        instance.configuration
+    }
+
     public static var clientType: ClientType {
         .b2b
     }

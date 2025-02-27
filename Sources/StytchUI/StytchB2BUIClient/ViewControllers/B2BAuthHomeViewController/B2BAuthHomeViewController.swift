@@ -104,16 +104,14 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
                 stackView.addArrangedSubview(oauthController.view)
                 constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
             case .ssoButtons:
-                if let ssoActiveConnections = OrganizationManager.ssoActiveConnections {
-                    let ssoViewController = B2BSSOViewController(
-                        state: .init(configuration: viewModel.state.configuration),
-                        delegate: self,
-                        ssoActiveConnections: ssoActiveConnections
-                    )
-                    addChild(ssoViewController)
-                    stackView.addArrangedSubview(ssoViewController.view)
-                    constraints.append(ssoViewController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
-                }
+                let ssoViewController = B2BSSOViewController(
+                    state: .init(configuration: viewModel.state.configuration),
+                    delegate: self,
+                    ssoActiveConnections: OrganizationManager.ssoActiveConnections ?? []
+                )
+                addChild(ssoViewController)
+                stackView.addArrangedSubview(ssoViewController.view)
+                constraints.append(ssoViewController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
             case .divider:
                 let separatorView = LabelSeparatorView.orSeparator()
                 stackView.addArrangedSubview(separatorView)
@@ -192,6 +190,13 @@ extension B2BAuthHomeViewController: B2BPasswordsHomeViewControllerDelegate {
 }
 
 extension B2BAuthHomeViewController: B2BSSOViewControllerDelegate {
+    func didTapSSODiscovery() {
+        Task { @MainActor in
+            let ssoDiscoveryEmailViewController = SSODiscoveryEmailViewController(state: .init(configuration: viewModel.state.configuration))
+            navigationController?.pushViewController(ssoDiscoveryEmailViewController, animated: true)
+        }
+    }
+
     func ssoDidAuthenticatie() {
         startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
     }

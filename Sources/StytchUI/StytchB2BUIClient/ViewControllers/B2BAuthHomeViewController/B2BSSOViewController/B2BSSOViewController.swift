@@ -4,6 +4,7 @@ import UIKit
 
 protocol B2BSSOViewControllerDelegate: AnyObject {
     func ssoDidAuthenticatie()
+    func didTapSSODiscovery()
 }
 
 final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
@@ -21,11 +22,18 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
 
         view.layoutMargins = .zero
 
-        ssoActiveConnections.enumerated().forEach { index, ssoActiveConnection in
-            let button = Self.makeSSOButton(ssoActiveConnection: ssoActiveConnection)
-            button.tag = index
-            button.addTarget(self, action: #selector(didTapSSOButton(sender:)), for: .touchUpInside)
+        switch viewModel.state.configuration.computedAuthFlowType {
+        case .discovery:
+            let button = makeSSODiscoveryButton()
+            button.addTarget(self, action: #selector(didTapSSODiscoveryButton(sender:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
+        case .organization(slug: _):
+            ssoActiveConnections.enumerated().forEach { index, ssoActiveConnection in
+                let button = makeSSOButton(ssoActiveConnection: ssoActiveConnection)
+                button.tag = index
+                button.addTarget(self, action: #selector(didTapSSOButton(sender:)), for: .touchUpInside)
+                stackView.addArrangedSubview(button)
+            }
         }
 
         attachStackView(within: view)
@@ -35,15 +43,21 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
         )
     }
 
+    @objc private func didTapSSODiscoveryButton(sender _: UIControl) {
+        delegate?.didTapSSODiscovery()
+    }
+
     @objc private func didTapSSOButton(sender: UIControl) {
         guard let (_, ssoActiveConnection) = ssoActiveConnections.enumerated().first(where: { $0.offset == sender.tag }) else {
             return
         }
-
         StytchB2BUIClient.startLoading()
         Task {
             do {
-                try await viewModel.startSSO(connectionId: ssoActiveConnection.connectionId)
+                try await AuthenticationOperations.startSSO(
+                    configuration: viewModel.state.configuration,
+                    connectionId: ssoActiveConnection.connectionId
+                )
                 delegate?.ssoDidAuthenticatie()
                 StytchB2BUIClient.stopLoading()
             } catch {
@@ -52,19 +66,5 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
                 StytchB2BUIClient.stopLoading()
             }
         }
-    }
-}
-
-extension B2BSSOViewController {
-    static func makeSSOButton(ssoActiveConnection: StytchB2BClient.SSOActiveConnection) -> UIControl {
-        let button = Button.secondary(
-            image: nil,
-            title: .localizedStringWithFormat(
-                NSLocalizedString("stytch.ssoButtonTitle", value: "Continue with %@", comment: ""),
-                ssoActiveConnection.displayName
-            )
-        ) {}
-        button.removeTarget(nil, action: nil, for: .touchUpInside)
-        return button
     }
 }

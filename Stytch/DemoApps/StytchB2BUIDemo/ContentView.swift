@@ -50,7 +50,7 @@ struct ContentView: View {
 
 class ContentViewModel: ObservableObject {
     // To hard-code the publicToken or orgSlug instead of inputting it through the UI, set it here.
-    @Published var publicToken: String = ""
+    @Published var publicToken: String = "public-token-test-b6be6a68-d178-4a2d-ac98-9579020905bf"
     @Published var orgSlug: String = ""
 
     @Published var isShowingB2BUI: Bool = false
