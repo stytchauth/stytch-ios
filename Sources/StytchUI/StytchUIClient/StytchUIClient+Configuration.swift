@@ -141,13 +141,13 @@ public extension StytchUIClient {
     /// `loginTemplateId` is the ID of the custom login template you have created in your Stytch Dashboard. This is only used for Email OTP.
     /// `signupTemplateId` is the ID of the custom signup template you have created in your Stytch Dashboard. This is only used for Email OTP.
     struct OTPOptions: Codable {
-        let methods: Set<OTPMethod>
+        let methods: [OTPMethod]
         let expiration: Minutes?
         let loginTemplateId: String?
         let signupTemplateId: String?
 
         public init(
-            methods: Set<OTPMethod>,
+            methods: [OTPMethod],
             expiration: Minutes? = nil,
             loginTemplateId: String? = nil,
             signupTemplateId: String? = nil

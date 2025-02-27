@@ -10,52 +10,58 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 
     private lazy var segmentedControl: UISegmentedControl? = {
-        if inputs.count > 1 {
-            let segmentedControl = UISegmentedControl()
-            if inputs.contains(.whatsapp) {
-                segmentedControl.insertSegment(
-                    withTitle: NSLocalizedString("stytch.aivcWhatsApp", value: "WhatsApp", comment: ""),
-                    at: 0,
-                    animated: false
-                )
-            }
-            if inputs.contains(.phone) {
-                segmentedControl.insertSegment(
-                    withTitle: NSLocalizedString("stytch.aivcText", value: "Text", comment: ""),
-                    at: 0,
-                    animated: false
-                )
-            }
-            if inputs.contains(.email) {
+        guard inputs.count > 1 else { return nil }
+        let segmentedControl = UISegmentedControl()
+        for input in inputs {
+            switch input {
+            case .email:
                 segmentedControl.insertSegment(
                     withTitle: NSLocalizedString("stytch.aivcEmail", value: "Email", comment: ""),
-                    at: 0,
+                    at: segmentedControl.numberOfSegments,
+                    animated: false
+                )
+            case .phone:
+                segmentedControl.insertSegment(
+                    withTitle: NSLocalizedString("stytch.aivcText", value: "Text", comment: ""),
+                    at: segmentedControl.numberOfSegments,
+                    animated: false
+                )
+            case .whatsapp:
+                segmentedControl.insertSegment(
+                    withTitle: NSLocalizedString("stytch.aivcWhatsApp", value: "WhatsApp", comment: ""),
+                    at: segmentedControl.numberOfSegments,
                     animated: false
                 )
             }
-            segmentedControl.selectedSegmentIndex = 0
-            segmentedControl.accessibilityLabel = "emailTextSegmentedControl"
-            return segmentedControl
         }
-        return nil
+
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.accessibilityLabel = "emailTextSegmentedControl"
+        return segmentedControl
     }()
 
     private lazy var inputs: [Input] = {
         var inputs: [Input] = []
-        if viewModel.state.config.supportsEmailMagicLinks || viewModel.state.config.supportsPasswords {
-            inputs.append(.email)
-        }
+
         if let otpMethods = viewModel.state.config.otpOptions?.methods {
-            if otpMethods.contains(.email), !inputs.contains(.email) {
+            for method in otpMethods {
+                switch method {
+                case .sms:
+                    inputs.append(.phone)
+                case .email:
+                    inputs.append(.email)
+                case .whatsapp:
+                    inputs.append(.whatsapp)
+                }
+            }
+        }
+
+        if inputs.contains(.email) == false {
+            if viewModel.state.config.supportsEmailMagicLinks || viewModel.state.config.supportsPasswords {
                 inputs.append(.email)
             }
-            if otpMethods.contains(.sms) {
-                inputs.append(.phone)
-            }
-            if otpMethods.contains(.whatsapp) {
-                inputs.append(.whatsapp)
-            }
         }
+
         return inputs
     }()
 

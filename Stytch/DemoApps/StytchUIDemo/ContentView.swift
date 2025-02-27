@@ -10,7 +10,7 @@ struct ContentView: View {
         stytchClientConfiguration: .init(publicToken: "your-public-token"),
         products: [.passwords, .emailMagicLinks, .otp, .oauth],
         oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms])
+        otpOptions: .init(methods: [.sms, .whatsapp])
     )
 
     var body: some View {

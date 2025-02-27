@@ -46,29 +46,31 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         attachStackViewToScrollView()
 
         stackView.addArrangedSubview(titleLabel)
-        var constraints: [NSLayoutConstraint] = []
-        if !viewModel.state.config.oauthProviders.isEmpty {
-            let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
-            addChild(oauthController)
-            stackView.addArrangedSubview(oauthController.view)
-            constraints.append(oauthController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
+
+        for productComponent in viewModel.productComponents {
+            switch productComponent {
+            case .inputProducts:
+                let inputController = AuthInputViewController(state: .init(config: viewModel.state.config))
+                addChild(inputController)
+                stackView.addArrangedSubview(inputController.view)
+            case .oAuthButtons:
+                let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
+                addChild(oauthController)
+                stackView.addArrangedSubview(oauthController.view)
+            case .divider:
+                stackView.addArrangedSubview(separatorView)
+            }
         }
-        if showOrSeparator {
-            stackView.addArrangedSubview(separatorView)
-            constraints.append(separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor))
-        }
-        if viewModel.state.config.inputProductsEnabled {
-            let inputController = AuthInputViewController(state: .init(config: viewModel.state.config))
-            addChild(inputController)
-            stackView.addArrangedSubview(inputController.view)
-            constraints.append(inputController.view.widthAnchor.constraint(equalTo: stackView.widthAnchor))
-        }
+
         if StytchClient.disableSdkWatermark == false {
             setupPoweredByStytchView()
         }
+
         stackView.addArrangedSubview(SpacerView())
 
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate(
+            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+        )
 
         Task {
             try await viewModel.logRenderScreen()
