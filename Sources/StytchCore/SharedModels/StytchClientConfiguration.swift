@@ -30,7 +30,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
         }
     }
 
-    var baseUrl: URL {
+    public var baseUrl: URL {
         var urlComponents: URLComponents = .init()
         urlComponents.scheme = "https"
         urlComponents.path = "/sdk/v1/"

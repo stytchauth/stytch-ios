@@ -1,3 +1,4 @@
+import StytchCore
 import UIKit
 
 protocol BaseViewControllerProtocol {
@@ -128,5 +129,42 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         let tap = UITapGestureRecognizer(target: view, action: #selector(view.endEditing(_:)))
         tap.cancelsTouchesInView = false
         return tap
+    }
+}
+
+extension BaseViewController {
+    func makeSSOButton(ssoActiveConnection: StytchB2BClient.SSOActiveConnection) -> UIControl {
+        let button = Button.secondary(
+            image: ssoActiveConnection.imageAsset,
+            title: .localizedStringWithFormat(
+                NSLocalizedString("stytch.ssoButtonTitle", value: "Continue with %@", comment: ""),
+                ssoActiveConnection.displayName
+            )
+        ) {}
+        button.removeTarget(nil, action: nil, for: .touchUpInside)
+        return button
+    }
+
+    func makeSSODiscoveryButton() -> UIControl {
+        let button = Button.secondary(
+            image: .sso("sso"),
+            title: "Continue with SSO"
+        ) {}
+        button.removeTarget(nil, action: nil, for: .touchUpInside)
+        return button
+    }
+}
+
+extension StytchB2BClient.SSOActiveConnection {
+    var imageAsset: ImageAsset? {
+        if identityProvider == "google-workspace" {
+            return .sso("google")
+        } else if identityProvider == "microsoft-entra" {
+            return .sso("microsoft")
+        } else if identityProvider == "okta" {
+            return .sso("okta")
+        } else {
+            return .sso("sso")
+        }
     }
 }

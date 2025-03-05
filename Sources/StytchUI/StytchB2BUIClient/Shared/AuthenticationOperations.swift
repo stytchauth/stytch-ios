@@ -158,3 +158,27 @@ extension AuthenticationOperations {
         _ = try await StytchB2BClient.passwords.discovery.resetByEmailStart(parameters: parameters)
     }
 }
+
+// SSO specific operations
+extension AuthenticationOperations {
+    static func startSSO(configuration: StytchB2BUIClient.Configuration, connectionId: String?) async throws {
+        guard configuration.supportsSSO else {
+            return
+        }
+
+        let webAuthenticationConfiguration = StytchB2BClient.SSO.WebAuthenticationConfiguration(
+            connectionId: connectionId,
+            loginRedirectUrl: configuration.redirectUrl,
+            signupRedirectUrl: configuration.redirectUrl
+        )
+        let (token, _) = try await StytchB2BClient.sso.start(configuration: webAuthenticationConfiguration)
+
+        let authenticateParameters = StytchB2BClient.SSO.AuthenticateParameters(
+            token: token,
+            sessionDuration: configuration.sessionDurationMinutes,
+            locale: configuration.locale
+        )
+        let response = try await StytchB2BClient.sso.authenticate(parameters: authenticateParameters)
+        B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)
+    }
+}

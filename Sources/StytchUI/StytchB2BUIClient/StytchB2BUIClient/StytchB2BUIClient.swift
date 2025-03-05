@@ -110,6 +110,7 @@ public enum StytchB2BUIClient {
         DiscoveryManager.reset()
         MemberManager.reset()
         OrganizationManager.reset()
+        SSODiscoveryManager.reset()
     }
 
     static func startLoading() {

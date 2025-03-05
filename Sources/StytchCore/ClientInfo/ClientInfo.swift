@@ -7,17 +7,24 @@ import WatchKit
 import UIKit
 #endif
 
-struct ClientInfo: Encodable {
+public struct ClientInfo: Encodable {
     let app: App = .init()
     let sdk: SDK = .init()
     // swiftlint:disable:next identifier_name
     let os: OperatingSystem = .init()
     let device: Device = .init()
+
+    public init() {}
 }
 
-extension ClientInfo {
+public extension ClientInfo {
     struct App: Encodable {
         let identifier: String = Bundle.main.bundleIdentifier ?? "unknown_bundle_id"
+    }
+
+    struct SDK: Encodable {
+        let identifier: String = "stytch-ios"
+        let version: Version = .current
     }
 
     struct OperatingSystem: Encodable {
@@ -37,7 +44,7 @@ extension ClientInfo {
             #endif
         }
 
-        func encode(to encoder: Encoder) throws {
+        public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(identifier, forKey: .identifier)
             try container.encode(version, forKey: .version)
@@ -67,7 +74,7 @@ extension ClientInfo {
             #endif
         }
 
-        func encode(to encoder: Encoder) throws {
+        public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(model, forKey: .model)
             try container.encode("(\(screenSize.width),\(screenSize.height))", forKey: .screenSize)

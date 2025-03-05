@@ -101,7 +101,9 @@ final class SessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
     }
 
-    func testExternalSessionsUpdate() {
+    func testExternalSessionsUpdate() async {
+        _ = try? await StytchClient.sessions.revoke(parameters: .init(forceClear: true))
+
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
