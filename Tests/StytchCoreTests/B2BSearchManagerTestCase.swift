@@ -64,6 +64,7 @@ extension StytchB2BClient.SearchManager.OrganizationSearchResponse {
     static let mock: Self = .init(
         organizationId: "1234",
         organizationName: "org foo",
+        organizationSlug: "org slug foo",
         organizationLogoUrl: nil,
         ssoActiveConnections: nil,
         ssoDefaultConnectionId: nil,
