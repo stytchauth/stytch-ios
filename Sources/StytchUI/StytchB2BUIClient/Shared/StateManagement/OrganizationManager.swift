@@ -4,8 +4,6 @@ import StytchCore
 struct OrganizationManager {
     private static var organization: OrganizationType?
 
-    private static var _organizationSlug: String?
-
     static var organizationId: String? {
         organization?.organizationId.rawValue
     }
@@ -42,6 +40,10 @@ struct OrganizationManager {
         organization?.name
     }
 
+    static var slug: String? {
+        organization?.slug
+    }
+
     static var logoUrl: URL? {
         organization?.logoUrl
     }
@@ -49,7 +51,6 @@ struct OrganizationManager {
     static func getOrganizationBySlug(organizationSlug: String) async throws {
         let parameters = StytchB2BClient.SearchManager.SearchOrganizationParameters(organizationSlug: organizationSlug)
         let response = try await StytchB2BClient.searchManager.searchOrganization(searchOrganizationParameters: parameters)
-        _organizationSlug = organizationSlug
         organization = response.organization
     }
 
@@ -58,7 +59,6 @@ struct OrganizationManager {
     }
 
     static func reset() {
-        _organizationSlug = nil
         organization = nil
     }
 }
@@ -86,14 +86,6 @@ extension OrganizationManager {
             return org.allMFAMethodsAllowed
         } else {
             return nil
-        }
-    }
-
-    static var organizationSlug: String? {
-        if let org = organization as? Organization {
-            return org.slug
-        } else {
-            return _organizationSlug
         }
     }
 }

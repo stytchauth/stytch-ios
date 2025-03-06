@@ -4,6 +4,8 @@ import Foundation
 public protocol OrganizationType: Codable, Sendable {
     /// Globally unique UUID that identifies an organization in the Stytch API.
     var organizationId: Organization.ID { get }
+    /// The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. Must be between 2 and 128 characters in length.
+    var slug: String { get }
     /// An array of active SSO Connection references.
     var ssoActiveConnections: [StytchB2BClient.SSOActiveConnection]? { get }
     /// The default connection used for SSO when there are multiple active connections.

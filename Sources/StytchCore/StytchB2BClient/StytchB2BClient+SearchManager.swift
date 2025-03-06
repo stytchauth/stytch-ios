@@ -81,6 +81,8 @@ public extension StytchB2BClient.SearchManager {
         public let organizationId: Organization.ID
         /// The name of the organization.
         public let organizationName: String
+        /// The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. Must be between 2 and 128 characters in length.
+        public let organizationSlug: String
         /// A URL of the organization's logo.
         public let organizationLogoUrl: String?
         /// An array of active SSO Connection references.
@@ -102,6 +104,10 @@ public extension StytchB2BClient.SearchManager {
 
         public var name: String {
             organizationName
+        }
+
+        public var slug: String {
+            organizationSlug
         }
 
         public var logoUrl: URL? {
