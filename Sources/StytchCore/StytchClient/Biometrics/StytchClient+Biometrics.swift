@@ -86,6 +86,11 @@ public extension StytchClient {
                 throw StytchSDKError.noCurrentSession
             }
 
+            // Early return if the user is already enrolled in biometrics
+            guard registrationAvailable == false else {
+                throw StytchSDKError.biometricsAlreadyEnrolled
+            }
+
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
 
             let startResponse: RegisterStartResponse = try await router.post(
