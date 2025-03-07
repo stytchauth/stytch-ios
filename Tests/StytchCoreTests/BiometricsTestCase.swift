@@ -122,5 +122,22 @@ final class BiometricsTestCase: BaseTestCase {
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/users/biometric_registrations/bio_reg_123", method: .delete)
         XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
     }
+
+    func testRegisterThrowsErrorWhenPrivateKeyExists() async throws {
+        try Current.keychainClient.set("session_token_123", for: .sessionToken)
+
+        // Set the .privateKeyRegistration
+        try Current.keychainClient.set(
+            key: Curve25519.Signing.PrivateKey().rawRepresentation,
+            registration: .init(userId: "user_123", userLabel: "example@stytch.com", registrationId: "bio_reg_123"),
+            accessPolicy: .deviceOwnerAuthenticationWithBiometrics
+        )
+        XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
+
+        await XCTAssertThrowsErrorAsync(
+            _ = try await StytchClient.biometrics.register(parameters: .init(identifier: "example@stytch.com")),
+            StytchSDKError.biometricsAlreadyEnrolled
+        )
+    }
 }
 #endif

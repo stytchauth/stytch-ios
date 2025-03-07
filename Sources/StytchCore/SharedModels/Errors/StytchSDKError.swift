@@ -57,6 +57,12 @@ public extension StytchSDKError {
             errorType: "no_biometric_registration_id"
         )
     )
+    static let biometricsAlreadyEnrolled = StytchSDKError(
+        message: "There is already a biometric factor enrolled on this device. Fully authenticate with all factors and remove the existing registration before attempting to register again.",
+        options: .init(
+            errorType: "biometric_already_enrolled"
+        )
+    )
     static let invalidAuthorizationCredential = StytchSDKError(
         message: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method.",
         options: .init(
