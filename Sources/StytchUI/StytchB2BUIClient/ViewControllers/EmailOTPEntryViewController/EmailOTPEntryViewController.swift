@@ -10,8 +10,7 @@ final class EmailOTPEntryViewController: BaseViewController<EmailOTPEntryState, 
     )
 
     var timer: Timer?
-
-    var expirationDate = Date().addingTimeInterval(120)
+    var expirationDate = Date().addingTimeInterval(600)
 
     lazy var expiryButton: Button = makeExpiryButton()
 
@@ -68,7 +67,7 @@ final class EmailOTPEntryViewController: BaseViewController<EmailOTPEntryState, 
     }
 
     func resetExpirationDate() {
-        expirationDate = Date().addingTimeInterval(121)
+        expirationDate = Date().addingTimeInterval(600)
     }
 }
 
