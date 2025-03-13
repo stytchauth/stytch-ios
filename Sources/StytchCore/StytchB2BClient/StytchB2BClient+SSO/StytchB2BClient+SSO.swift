@@ -47,11 +47,15 @@ public extension StytchB2BClient {
                 )
             )
 
-            return try await router.post(
+            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: intermediateSessionTokenParameters,
                 useDFPPA: true
             )
+
+            sessionManager.b2bLastAuthMethodUsed = .sso
+
+            return mfaAuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

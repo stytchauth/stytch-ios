@@ -20,6 +20,8 @@ final class TOTPTestCase: BaseTestCase {
         _ = try await StytchClient.totps.authenticate(parameters: .init(totpCode: "test-code"))
 
         try XCTAssertRequest(networkInterceptor.requests[0], urlString: "https://api.stytch.com/sdk/v1/totps/authenticate", method: .post(["totp_code": "test-code", "session_duration_minutes": 5]))
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.totp)
     }
 
     func testRecover() async throws {

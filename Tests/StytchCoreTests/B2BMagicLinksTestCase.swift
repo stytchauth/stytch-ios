@@ -138,6 +138,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.emailMagicLinks)
     }
 
     func testDiscoveryAuthenticate() async throws {

@@ -34,6 +34,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "locale": "en",
             ])
         )
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.passwords)
     }
 
     func testStrengthCheck() async throws {
@@ -133,6 +135,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.passwords)
     }
 
     func testResetByExistingPassword() async throws {
@@ -164,6 +168,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "locale": "en",
             ])
         )
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.passwords)
     }
 
     func testResetBySession() async throws {

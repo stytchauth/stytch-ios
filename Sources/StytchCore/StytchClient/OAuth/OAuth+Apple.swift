@@ -11,8 +11,8 @@ public extension StytchClient.OAuth {
         let userRouter: NetworkingRouter<UsersRoute>
 
         @Dependency(\.cryptoClient) private var cryptoClient
-
         @Dependency(\.appleOAuthClient) private var appleOAuthClient
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Initiates the OAuth flow by using the included parameters to start a Sign In With Apple request. If the authentication is successful this method will return a new session object.
@@ -50,6 +50,9 @@ public extension StytchClient.OAuth {
                     ]
                 )
             )
+
+            sessionManager.consumerLastAuthMethodUsed = .oauthApple
+
             return authenticateResponse
         }
     }

@@ -4,6 +4,7 @@ public extension StytchClient {
     /// Time-based One-time Passcodes (TOTPs) are one-time passcodes that are generated based on a shared secret and the current time. TOTPs are also often referred to as Authenticator Apps and are a common form of secondary authentication. Creating a Stytch instance of a TOTP for a User creates a shared secret. This secret is shared by Stytch with the end user's authenticator application of choice (e.g. Google Authenticator). The authenticator app can then generate TOTPs that are valid for a specific amount of time (generally 30 seconds). The end user inputs the TOTP and the developer can use the authenticate method to verify that the TOTP is valid. To call these methods, TOTPs must be enabled in the [SDK Configuration page](https://stytch.com/dashboard/sdk-configuration) of the Stytch dashboard.
     struct TOTP {
         let router: NetworkingRouter<TOTPRoute>
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [create](https://stytch.com/docs/api/totp-create) endpoint. Call this method to create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR code or enter the secret.
@@ -14,7 +15,9 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            sessionManager.consumerLastAuthMethodUsed = .totp
+            return authenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

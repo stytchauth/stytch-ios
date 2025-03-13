@@ -12,6 +12,7 @@ public extension StytchB2BClient.OTP {
 public extension StytchB2BClient.OTP {
     struct Email {
         let router: NetworkingRouter<StytchB2BClient.OTPRoute.EmailRoute>
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants
         /// Send a one-time passcode (OTP) to a user using email address.
@@ -22,7 +23,9 @@ public extension StytchB2BClient.OTP {
         // sourcery: AsyncVariants
         /// Authenticate a one-time passcode (OTP) sent to a user via Email.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            sessionManager.b2bLastAuthMethodUsed = .emailOtp
+            return authenticateResponse
         }
     }
 }

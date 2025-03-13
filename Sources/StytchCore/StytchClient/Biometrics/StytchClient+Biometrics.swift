@@ -28,7 +28,7 @@ public extension StytchClient {
 
         @Dependency(\.keychainClient) private var keychainClient
 
-        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager) private var sessionManager
 
         @Dependency(\.jsonDecoder) private var jsonDecoder
 
@@ -82,7 +82,7 @@ public extension StytchClient {
         /// NOTE: - You should ensure the `accessPolicy` parameters match your particular needs, defaults to `deviceOwnerWithBiometrics`.
         public func register(parameters: RegisterParameters) async throws -> RegisterCompleteResponse {
             // Early out if not authenticated
-            guard activeSessionExists else {
+            guard sessionManager.persistedSessionIdentifiersExist else {
                 throw StytchSDKError.noCurrentSession
             }
 
@@ -158,6 +158,9 @@ public extension StytchClient {
                 parameters: authenticateCompleteParameters,
                 useDFPPA: true
             )
+
+            sessionManager.consumerLastAuthMethodUsed = .biometrics
+
             return authenticateResponse
         }
 

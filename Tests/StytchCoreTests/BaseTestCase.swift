@@ -43,6 +43,9 @@ class BaseTestCase: XCTestCase {
         ))
 
         networkInterceptor.reset()
+
+        Current.sessionManager.consumerLastAuthMethodUsed = StytchClient.ConsumerAuthMethod.unknown
+        Current.sessionManager.b2bLastAuthMethodUsed = StytchB2BClient.B2BAuthMethod.unknown
     }
 }
 

@@ -176,6 +176,8 @@ final class B2BOTPTestCase: BaseTestCase {
                 "session_duration_minutes": JSON(integerLiteral: 5),
             ])
         )
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.emailOtp)
     }
 
     func testDiscoverySend() async throws {

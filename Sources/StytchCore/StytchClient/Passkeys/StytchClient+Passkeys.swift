@@ -68,7 +68,7 @@ public extension StytchClient {
                 requestBehavior: parameters.requestBehavior
             )
 
-            return try await router.post(
+            let authenticateResponse: AuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: Credential<AssertionResponse>(
                     id: credential.credentialID,
@@ -82,6 +82,10 @@ public extension StytchClient {
                 ).wrapped(sessionDuration: parameters.sessionDuration),
                 useDFPPA: true
             )
+
+            sessionManager.consumerLastAuthMethodUsed = .passkeys
+
+            return authenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

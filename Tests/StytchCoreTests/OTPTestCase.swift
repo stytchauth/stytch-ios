@@ -169,5 +169,7 @@ final class OTPTestCase: BaseTestCase {
                 "session_duration_minutes": 20,
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.otp)
     }
 }

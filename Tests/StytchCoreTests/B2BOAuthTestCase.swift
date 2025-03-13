@@ -31,6 +31,8 @@ final class B2BOAuthTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.oauth)
     }
 
     func testAuthenticateFailsWithPKCE() async throws {

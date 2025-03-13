@@ -16,6 +16,10 @@ public struct StytchB2BClient: StytchClientType {
     static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
     public static var isInitialized: AnyPublisher<Bool, Never> { StartupClient.isInitialized }
 
+    public static var lastAuthMethodUsed: B2BAuthMethod {
+        Current.sessionManager.b2bLastAuthMethodUsed
+    }
+
     public static var createOrganizationEnabled: Bool {
         Current.localStorage.bootstrapData?.createOrganizationEnabled ?? false
     }
