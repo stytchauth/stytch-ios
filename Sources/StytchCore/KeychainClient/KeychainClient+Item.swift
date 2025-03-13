@@ -75,6 +75,9 @@ extension KeychainClient.Item {
     static let user: Self = .init(kind: .object, name: "stytch_user_object")
     static let member: Self = .init(kind: .object, name: "stytch_member_object")
     static let organization: Self = .init(kind: .object, name: "stytch_organization_object")
+
+    static let b2bLastAuthMethodUsed: Self = .init(kind: .object, name: "b2b_last_auth_method_used")
+    static let consumerLastAuthMethodUsed: Self = .init(kind: .object, name: "consumer_last_auth_method_used")
 }
 
 extension KeychainClient.Item {
@@ -92,6 +95,8 @@ extension KeychainClient.Item {
             .user,
             .member,
             .organization,
+            .b2bLastAuthMethodUsed,
+            .consumerLastAuthMethodUsed,
         ]
     }
 }

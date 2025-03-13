@@ -9,7 +9,7 @@ public extension StytchClient {
     struct OTP: OTPProtocol {
         let router: NetworkingRouter<OTPRoute>
 
-        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's OTP [sms/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-sms), [whatsapp/login_or_create](https://stytch.com/docs/api/whatsapp-login-or-create), and [email/login_or_create](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp) endpoints. Requests a one-time passcode for a user to log in or create an account depending on the presence and/or status current account.
@@ -25,7 +25,7 @@ public extension StytchClient {
         /// Wraps Stytch's OTP [sms/send](https://stytch.com/docs/api/send-otp-by-sms), [whatsapp/send](https://stytch.com/docs/api/whatsapp-send), and [email/send](https://stytch.com/docs/api/send-otp-by-email) endpoints. Requests a one-time passcode for an existing user to log in or attach the included factor to their current account.
         public func send(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(
-                to: activeSessionExists ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
+                to: sessionManager.persistedSessionIdentifiersExist ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
                 parameters: parameters,
                 useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
             )
@@ -34,7 +34,9 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            sessionManager.consumerLastAuthMethodUsed = .otp
+            return authenticateResponse
         }
     }
 }

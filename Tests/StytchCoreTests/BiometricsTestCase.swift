@@ -85,6 +85,8 @@ final class BiometricsTestCase: BaseTestCase {
             parameters.signature,
             try Current.cryptoClient.signChallengeWithPrivateKey(challenge, privateKey.rawRepresentation)
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.biometrics)
     }
 
     func testRegistrationRemoval() async throws {

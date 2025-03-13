@@ -4,6 +4,7 @@ public extension StytchClient {
         let router: NetworkingRouter<MagicLinksRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/api/authenticate-magic-link) API endpoint which validates the magic link token passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
@@ -16,10 +17,14 @@ public extension StytchClient {
                 throw StytchSDKError.missingPKCE
             }
 
-            return try await router.post(
+            let authenticateResponse: AuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
             )
+
+            sessionManager.consumerLastAuthMethodUsed = .emailMagicLinks
+
+            return authenticateResponse
         }
     }
 }

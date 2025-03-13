@@ -11,6 +11,7 @@ public extension StytchClient {
         let userRouter: NetworkingRouter<UsersRoute>
 
         @Dependency(\.pkcePairManager) private var pkcePairManager
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// After an identity provider confirms the identity of a user, this method authenticates the included token and returns a new session object.
@@ -25,12 +26,13 @@ public extension StytchClient {
             }
 
             do {
-                let result = try await router.post(
+                let oauthAuthenticateResponse = try await router.post(
                     to: .authenticate,
                     parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters)
                 ) as OAuthAuthenticateResponse
                 try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_success"))
-                return result
+                sessionManager.consumerLastAuthMethodUsed = .oauth
+                return oauthAuthenticateResponse
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "oauth_failure", error: error))
                 throw error

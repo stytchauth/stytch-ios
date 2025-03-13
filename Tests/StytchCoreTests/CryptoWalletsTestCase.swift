@@ -67,5 +67,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
                 "signature": "mock-signature",
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.crypto)
     }
 }

@@ -2,6 +2,8 @@ import AuthenticationServices
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable function_body_length
+
 #if !os(watchOS)
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 final class PasskeysTestCase: BaseTestCase {
@@ -90,6 +92,8 @@ final class PasskeysTestCase: BaseTestCase {
                 "session_duration_minutes": 5,
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.passkeys)
     }
 
     func testUpdate() async throws {

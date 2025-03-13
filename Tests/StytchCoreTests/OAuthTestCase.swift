@@ -32,6 +32,8 @@ final class OAuthTestCase: BaseTestCase {
                 "name": ["first_name": "user"],
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.oauthApple)
     }
 
     func testAuthenticate() async throws {
@@ -60,6 +62,8 @@ final class OAuthTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.oauth)
     }
 }
 

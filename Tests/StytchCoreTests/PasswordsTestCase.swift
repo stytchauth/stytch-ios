@@ -39,6 +39,8 @@ final class PasswordsTestCase: BaseTestCase {
                 "password": "password123",
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.passwords)
     }
 
     func testStrengthCheck() async throws {
@@ -122,6 +124,8 @@ final class PasswordsTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.passwords)
     }
 
     func testResetBySession() async throws {
@@ -137,6 +141,8 @@ final class PasswordsTestCase: BaseTestCase {
                 "password": "password123",
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.passwords)
     }
 
     func testResetByExistingPassword() async throws {
@@ -155,5 +161,7 @@ final class PasswordsTestCase: BaseTestCase {
                 "session_duration_minutes": 5,
             ])
         )
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.passwords)
     }
 }

@@ -41,15 +41,17 @@ public extension StytchB2BClient {
                         wrapped: parameters
                     )
                 )
-                return try await router.post(
+                let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                     to: .authenticate,
                     parameters: intermediateSessionTokenParameters,
                     useDFPPA: true
                 )
+                sessionManager.b2bLastAuthMethodUsed = .emailMagicLinks
+                return mfaAuthenticateResponse
             }
             // For authenticating if inviteSend was called, in which case we will not have a PKCE challenge code
             else {
-                return try await router.post(
+                let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                     to: .authenticate,
                     parameters: IntermediateSessionTokenParameters(
                         intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -57,6 +59,8 @@ public extension StytchB2BClient {
                     ),
                     useDFPPA: true
                 )
+                sessionManager.b2bLastAuthMethodUsed = .emailMagicLinks
+                return mfaAuthenticateResponse
             }
         }
 

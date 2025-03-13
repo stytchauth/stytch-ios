@@ -19,6 +19,10 @@ public struct StytchClient: StytchClientType {
     // swiftlint:disable:next identifier_name
     public static var _uiRouter: NetworkingRouter<UIRoute> { router.scopedRouter { $0.ui } }
 
+    public static var lastAuthMethodUsed: ConsumerAuthMethod {
+        Current.sessionManager.consumerLastAuthMethodUsed
+    }
+
     public static var disableSdkWatermark: Bool {
         Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
     }

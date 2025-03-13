@@ -146,5 +146,7 @@ final class MagicLinksTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchClient.lastAuthMethodUsed, StytchClient.ConsumerAuthMethod.emailMagicLinks)
     }
 }

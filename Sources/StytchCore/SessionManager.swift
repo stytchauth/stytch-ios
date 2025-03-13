@@ -93,6 +93,32 @@ final class SessionManager {
         }
     }
 
+    var b2bLastAuthMethodUsed: StytchB2BClient.B2BAuthMethod {
+        get {
+            if let string = try? keychainClient.get(.b2bLastAuthMethodUsed) {
+                return StytchB2BClient.B2BAuthMethod(rawValue: string) ?? .unknown
+            } else {
+                return StytchB2BClient.B2BAuthMethod.unknown
+            }
+        }
+        set {
+            try? keychainClient.set(newValue.rawValue, for: .b2bLastAuthMethodUsed)
+        }
+    }
+
+    var consumerLastAuthMethodUsed: StytchClient.ConsumerAuthMethod {
+        get {
+            if let string = try? keychainClient.get(.consumerLastAuthMethodUsed) {
+                return StytchClient.ConsumerAuthMethod(rawValue: string) ?? .unknown
+            } else {
+                return StytchClient.ConsumerAuthMethod.unknown
+            }
+        }
+        set {
+            try? keychainClient.set(newValue.rawValue, for: .consumerLastAuthMethodUsed)
+        }
+    }
+
     init() {
         NotificationCenter.default
             .addObserver(

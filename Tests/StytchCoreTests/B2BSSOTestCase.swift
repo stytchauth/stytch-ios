@@ -66,6 +66,8 @@ final class B2BSSOTestCase: BaseTestCase {
         )
 
         XCTAssertNil(Current.pkcePairManager.getPKCECodePair())
+
+        XCTAssertEqual(StytchB2BClient.lastAuthMethodUsed, StytchB2BClient.B2BAuthMethod.sso)
     }
 
     func testGetConnections() async throws {

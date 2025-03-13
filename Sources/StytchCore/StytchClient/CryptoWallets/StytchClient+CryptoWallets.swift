@@ -10,19 +10,21 @@ public extension StytchClient {
     struct CryptoWallets: CryptoWalletsProtocol {
         let router: NetworkingRouter<CryptoWalletsRoute>
 
-        @Dependency(\.sessionManager.persistedSessionIdentifiersExist) private var activeSessionExists
+        @Dependency(\.sessionManager) private var sessionManager
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate_start](https://stytch.com/docs/api/crypto-wallet-authenticate-start) endpoint. Call this method to load the challenge data. Pass this challenge to your user's wallet for signing.
         public func authenticateStart(parameters: AuthenticateStartParameters) async throws -> AuthenticateStartResponse {
-            let route: CryptoWalletsRoute = activeSessionExists ? .authenticateStartSecondary : .authenticateStartPrimary
+            let route: CryptoWalletsRoute = sessionManager.persistedSessionIdentifiersExist ? .authenticateStartSecondary : .authenticateStartPrimary
             return try await router.post(to: route, parameters: parameters)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate](https://stytch.com/docs/api/crypto-wallet-authenticate) endpoint. Call this method after the user signs the challenge to validate the signature.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+            sessionManager.consumerLastAuthMethodUsed = .crypto
+            return authenticateResponse
         }
     }
 }

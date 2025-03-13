@@ -25,7 +25,7 @@ public extension StytchB2BClient {
         /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
-            try await router.post(
+            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -33,6 +33,10 @@ public extension StytchB2BClient {
                 ),
                 useDFPPA: true
             )
+
+            sessionManager.b2bLastAuthMethodUsed = .passwords
+
+            return mfaAuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -72,13 +76,15 @@ public extension StytchB2BClient {
                 )
             )
 
-            let response: B2BMFAAuthenticateResponse = try await router.post(
+            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                 to: .resetByEmail(.complete),
                 parameters: intermediateSessionTokenParameters,
                 useDFPPA: true
             )
 
-            return response
+            sessionManager.b2bLastAuthMethodUsed = .passwords
+
+            return mfaAuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -86,7 +92,7 @@ public extension StytchB2BClient {
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
         public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BMFAAuthenticateResponse {
-            try await router.post(
+            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
                 to: .resetByExistingPassword,
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -94,6 +100,10 @@ public extension StytchB2BClient {
                 ),
                 useDFPPA: true
             )
+
+            sessionManager.b2bLastAuthMethodUsed = .passwords
+
+            return mfaAuthenticateResponse
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
