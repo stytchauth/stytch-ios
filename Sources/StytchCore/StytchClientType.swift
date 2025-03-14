@@ -64,6 +64,7 @@ extension StytchClientType {
         updateNetworkingClient()
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
+        sessionManager.clearEmptyTokens()
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
             // only run this in non-test environments
             start()
@@ -117,9 +118,18 @@ extension StytchClientType {
         let clientInfoString = try? clientInfo.base64EncodedString(encoder: jsonEncoder)
 
         networkingClient.headerProvider = { [weak localStorage, weak sessionManager] in
-            guard let configuration = localStorage?.configuration else { return [:] }
-            let sessionToken = sessionManager?.sessionToken?.value ?? configuration.publicToken
-            let authToken = "\(configuration.publicToken):\(sessionToken)".base64Encoded()
+            guard let configuration = localStorage?.configuration else {
+                return [:]
+            }
+
+            let publicToken = configuration.publicToken
+
+            let authToken: String
+            if let sessionToken = sessionManager?.sessionToken?.value, sessionToken.isEmpty == false {
+                authToken = "\(publicToken):\(sessionToken)".base64Encoded()
+            } else {
+                authToken = "\(publicToken):\(publicToken)".base64Encoded()
+            }
 
             return [
                 "Content-Type": "application/json",

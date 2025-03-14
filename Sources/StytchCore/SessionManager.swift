@@ -129,6 +129,16 @@ final class SessionManager {
             )
     }
 
+    func clearEmptyTokens() {
+        // Clear any successfully cached empty string on startup
+        if let value = sessionToken?.value, value.isEmpty == true {
+            sessionToken = nil
+        }
+        if let value = sessionJwt?.value, value.isEmpty == true {
+            sessionJwt = nil
+        }
+    }
+
     internal func updateSession(
         sessionType: SessionType? = nil,
         tokens: SessionTokens? = nil,

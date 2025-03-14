@@ -80,7 +80,11 @@ public struct SessionTokens: Sendable {
     ///   - jwt: An instance of `SessionToken` with a `type` of `.jwt`
     ///   - opaque: An instance of `SessionToken` with a `type` of `.opaque`
     public init?(jwt: SessionToken, opaque: SessionToken) {
-        if jwt.kind != .jwt, opaque.kind != .opaque {
+        if jwt.kind != .jwt, jwt.value.isEmpty == true {
+            return nil
+        }
+
+        if opaque.kind != .opaque, opaque.value.isEmpty == true {
             return nil
         }
 
