@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/google/interop-ios-for-google-sdks.git",
         "state": {
           "branch": null,
-          "revision": "2d12673670417654f08f5f90fdd62926dc3a2648",
-          "version": "100.0.0"
+          "revision": "040d087ac2267d2ddd4cca36c757d1c6a05fdbfe",
+          "version": "101.0.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk",
         "state": {
           "branch": null,
-          "revision": "30e4e28f2f87236372225c453140774f038302ad",
-          "version": "18.4.0"
+          "revision": "5ec74256124faa7e7814c574509723f49e1fccfb",
+          "version": "18.7.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "ff0f781cf7c6a22d52957e50b104f5768b50c779",
-          "version": "3.10.0"
+          "revision": "a6ce32a18b81b04ce7e897d1d98df6eb2da04786",
+          "version": "3.12.2"
         }
       },
       {
