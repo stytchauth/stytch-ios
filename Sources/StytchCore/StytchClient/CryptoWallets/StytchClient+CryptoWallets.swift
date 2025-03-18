@@ -15,7 +15,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate_start](https://stytch.com/docs/api/crypto-wallet-authenticate-start) endpoint. Call this method to load the challenge data. Pass this challenge to your user's wallet for signing.
         public func authenticateStart(parameters: AuthenticateStartParameters) async throws -> AuthenticateStartResponse {
-            let route: CryptoWalletsRoute = sessionManager.persistedSessionIdentifiersExist ? .authenticateStartSecondary : .authenticateStartPrimary
+            let route: CryptoWalletsRoute = sessionManager.hasValidSessionToken ? .authenticateStartSecondary : .authenticateStartPrimary
             return try await router.post(to: route, parameters: parameters)
         }
 

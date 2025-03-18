@@ -25,7 +25,7 @@ public extension StytchClient {
         /// Wraps Stytch's OTP [sms/send](https://stytch.com/docs/api/send-otp-by-sms), [whatsapp/send](https://stytch.com/docs/api/whatsapp-send), and [email/send](https://stytch.com/docs/api/send-otp-by-email) endpoints. Requests a one-time passcode for an existing user to log in or attach the included factor to their current account.
         public func send(parameters: Parameters) async throws -> OTPResponse {
             try await router.post(
-                to: sessionManager.persistedSessionIdentifiersExist ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
+                to: sessionManager.hasValidSessionToken ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
                 parameters: parameters,
                 useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
             )

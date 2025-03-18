@@ -7,7 +7,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
             StytchClient.CryptoWallets.AuthenticateStartResponse(requestId: "mock-request-id", statusCode: 200, wrapped: .init(challenge: "mock-challenge"))
         }
 
-        XCTAssertFalse(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertFalse(Current.sessionManager.hasValidSessionToken)
 
         _ = try await StytchClient.cryptoWallets.authenticateStart(parameters: .init(cryptoWalletType: .ethereum, cryptoWalletAddress: "mock-crypto-address"))
 
@@ -31,7 +31,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
 
         try Current.keychainClient.set("123", for: .sessionToken)
 
-        XCTAssertTrue(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
 
         _ = try await StytchClient.cryptoWallets.authenticateStart(parameters: .init(cryptoWalletType: .ethereum, cryptoWalletAddress: "mock-crypto-address"))
 

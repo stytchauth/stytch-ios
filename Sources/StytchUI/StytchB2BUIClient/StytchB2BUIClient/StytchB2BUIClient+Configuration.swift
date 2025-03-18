@@ -108,7 +108,8 @@ public extension StytchB2BUIClient {
         ///     In addition, if a member is enrolled in MFA compatible with their organization's policies, their enrolled methods will always be made available.
         ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
-        ///   - locale: XYZ
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             stytchClientConfiguration: StytchClientConfiguration,
             products: [B2BProducts],

@@ -1,21 +1,21 @@
 import Combine
 import Foundation
 
-final class SessionManager {
-    enum SessionType {
-        case member(MemberSession)
-        case user(Session)
+enum SessionType {
+    case member(MemberSession)
+    case user(Session)
 
-        var expiresAt: Date {
-            switch self {
-            case let .member(memberSession):
-                return memberSession.expiresAt
-            case let .user(session):
-                return session.expiresAt
-            }
+    var expiresAt: Date {
+        switch self {
+        case let .member(memberSession):
+            return memberSession.expiresAt
+        case let .user(session):
+            return session.expiresAt
         }
     }
+}
 
+class SessionManager {
     @Dependency(\.sessionStorage) private var sessionStorage
     @Dependency(\.memberSessionStorage) private var memberSessionStorage
     @Dependency(\.userStorage) private var userStorage
@@ -27,96 +27,16 @@ final class SessionManager {
     @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
     @Dependency(\.date) private var date
 
-    var persistedSessionIdentifiersExist: Bool {
-        (sessionJwt ?? sessionToken) != nil
+    var hasValidSessionToken: Bool {
+        sessionToken != nil && sessionToken?.value.isEmpty == false
     }
 
-    private(set) var sessionToken: SessionToken? {
-        get {
-            try? keychainClient.get(.sessionToken).map(SessionToken.opaque)
-        }
-        set {
-            let keychainItem: KeychainClient.Item = .sessionToken
-            if let newValue = newValue {
-                try? keychainClient.set(newValue.value, for: keychainItem)
-            } else {
-                try? keychainClient.removeItem(keychainItem)
-                cookieClient.deleteCookie(named: keychainItem.name)
-            }
-        }
+    var hasValidSessionJwt: Bool {
+        sessionJwt != nil && sessionJwt?.value.isEmpty == false
     }
 
-    private(set) var sessionJwt: SessionToken? {
-        get {
-            try? keychainClient.get(.sessionJwt).map(SessionToken.jwt)
-        }
-        set {
-            let keychainItem: KeychainClient.Item = .sessionJwt
-            if let newValue = newValue {
-                try? keychainClient.set(newValue.value, for: keychainItem)
-            } else {
-                try? keychainClient.removeItem(keychainItem)
-                cookieClient.deleteCookie(named: keychainItem.name)
-            }
-        }
-    }
-
-    private(set) var intermediateSessionToken: String? {
-        get {
-            let tenMinutes = 600.0
-            let keychainItem: KeychainClient.Item = .intermediateSessionToken
-
-            // If we have a valid IST stored in the keychain
-            // Check to see if it is less than 10 minutes old
-            // If it is less than 10 minutes, then return it
-            // If it is more than 10 minutes old then remove it from the keychain and cookie storage
-            if let intermediateSessionTokenQueryResult = try? keychainClient.getQueryResult(keychainItem) {
-                if abs(intermediateSessionTokenQueryResult.createdAt.timeIntervalSinceNow) < tenMinutes {
-                    return intermediateSessionTokenQueryResult.stringValue
-                } else {
-                    try? keychainClient.removeItem(keychainItem)
-                    cookieClient.deleteCookie(named: keychainItem.name)
-                    return nil
-                }
-            } else {
-                return nil
-            }
-        }
-        set {
-            let keychainItem: KeychainClient.Item = .intermediateSessionToken
-            if let newValue = newValue {
-                try? keychainClient.set(newValue, for: keychainItem)
-            } else {
-                try? keychainClient.removeItem(keychainItem)
-                cookieClient.deleteCookie(named: keychainItem.name)
-            }
-        }
-    }
-
-    var b2bLastAuthMethodUsed: StytchB2BClient.B2BAuthMethod {
-        get {
-            if let string = try? keychainClient.get(.b2bLastAuthMethodUsed) {
-                return StytchB2BClient.B2BAuthMethod(rawValue: string) ?? .unknown
-            } else {
-                return StytchB2BClient.B2BAuthMethod.unknown
-            }
-        }
-        set {
-            try? keychainClient.set(newValue.rawValue, for: .b2bLastAuthMethodUsed)
-        }
-    }
-
-    var consumerLastAuthMethodUsed: StytchClient.ConsumerAuthMethod {
-        get {
-            if let string = try? keychainClient.get(.consumerLastAuthMethodUsed) {
-                return StytchClient.ConsumerAuthMethod(rawValue: string) ?? .unknown
-            } else {
-                return StytchClient.ConsumerAuthMethod.unknown
-            }
-        }
-        set {
-            try? keychainClient.set(newValue.rawValue, for: .consumerLastAuthMethodUsed)
-        }
+    var hasValidIntermediateSessionToken: Bool {
+        intermediateSessionToken != nil && intermediateSessionToken?.isEmpty == false
     }
 
     init() {
@@ -129,17 +49,7 @@ final class SessionManager {
             )
     }
 
-    func clearEmptyTokens() {
-        // Clear any successfully cached empty string on startup
-        if let value = sessionToken?.value, value.isEmpty == true {
-            sessionToken = nil
-        }
-        if let value = sessionJwt?.value, value.isEmpty == true {
-            sessionJwt = nil
-        }
-    }
-
-    internal func updateSession(
+    func updateSession(
         sessionType: SessionType? = nil,
         tokens: SessionTokens? = nil,
         intermediateSessionToken: String? = nil,
@@ -196,6 +106,19 @@ final class SessionManager {
         memberSessionsPollingClient.stop()
     }
 
+    func clearEmptyTokens() {
+        // Clear any successfully cached empty string on startup
+        if let value = sessionToken?.value, value.isEmpty == true {
+            sessionToken = nil
+        }
+        if let value = sessionJwt?.value, value.isEmpty == true {
+            sessionJwt = nil
+        }
+        if let value = intermediateSessionToken, value.isEmpty == true {
+            intermediateSessionToken = nil
+        }
+    }
+
     @objc func cookiesDidUpdate(notification: Notification) {
         let storage = (notification.object as? HTTPCookieStorage) ?? .shared
 
@@ -205,6 +128,116 @@ final class SessionManager {
 
         if let opaqueCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.opaque.name, date: date()) {
             sessionToken = .opaque(opaqueCookieValue)
+        }
+    }
+}
+
+// Session Tokens
+extension SessionManager {
+    private(set) var sessionToken: SessionToken? {
+        get {
+            try? keychainClient.get(.sessionToken).map(SessionToken.opaque)
+        }
+        set {
+            let keychainItem: KeychainClient.Item = .sessionToken
+            if let newValue = newValue {
+                try? keychainClient.set(newValue.value, for: keychainItem)
+            } else {
+                try? keychainClient.removeItem(keychainItem)
+                cookieClient.deleteCookie(named: keychainItem.name)
+            }
+        }
+    }
+
+    private(set) var sessionJwt: SessionToken? {
+        get {
+            try? keychainClient.get(.sessionJwt).map(SessionToken.jwt)
+        }
+        set {
+            let keychainItem: KeychainClient.Item = .sessionJwt
+            if let newValue = newValue {
+                try? keychainClient.set(newValue.value, for: keychainItem)
+            } else {
+                try? keychainClient.removeItem(keychainItem)
+                cookieClient.deleteCookie(named: keychainItem.name)
+            }
+        }
+    }
+}
+
+// Intermediate Session Token
+extension SessionManager {
+    private(set) var intermediateSessionToken: String? {
+        get {
+            do {
+                // Retrieve the IST from the keychain and check its age.
+                // If it's less than 10 minutes old, return it.
+                // Otherwise, remove it from the keychain and cookie storage.
+                guard let result = try keychainClient.getQueryResult(.intermediateSessionToken) else {
+                    return nil
+                }
+
+                if isValidIntermediateSessionToken(result.createdAt), result.stringValue?.isEmpty == false {
+                    return result.stringValue
+                } else {
+                    removeIntermediateSessionToken()
+                    return nil
+                }
+            } catch {
+                print("Error getting IST: \(error)")
+                return nil
+            }
+        }
+        set {
+            do {
+                if let newIST = newValue, newIST.isEmpty == false {
+                    try keychainClient.set(newIST, for: .intermediateSessionToken)
+                } else {
+                    removeIntermediateSessionToken()
+                }
+            } catch {
+                print("Error setting IST: \(error)")
+            }
+        }
+    }
+
+    private func isValidIntermediateSessionToken(_ createdAt: Date) -> Bool {
+        let expirationTime: TimeInterval = 600.0 // the IST should expire after 10 minutes
+        return abs(createdAt.timeIntervalSinceNow) < expirationTime
+    }
+
+    private func removeIntermediateSessionToken() {
+        let keychainItem: KeychainClient.Item = .intermediateSessionToken
+        try? keychainClient.removeItem(keychainItem)
+        cookieClient.deleteCookie(named: keychainItem.name)
+    }
+}
+
+// Last Auth Method
+extension SessionManager {
+    var b2bLastAuthMethodUsed: StytchB2BClient.B2BAuthMethod {
+        get {
+            if let string = try? keychainClient.get(.b2bLastAuthMethodUsed) {
+                return StytchB2BClient.B2BAuthMethod(rawValue: string) ?? .unknown
+            } else {
+                return StytchB2BClient.B2BAuthMethod.unknown
+            }
+        }
+        set {
+            try? keychainClient.set(newValue.rawValue, for: .b2bLastAuthMethodUsed)
+        }
+    }
+
+    var consumerLastAuthMethodUsed: StytchClient.ConsumerAuthMethod {
+        get {
+            if let string = try? keychainClient.get(.consumerLastAuthMethodUsed) {
+                return StytchClient.ConsumerAuthMethod(rawValue: string) ?? .unknown
+            } else {
+                return StytchClient.ConsumerAuthMethod.unknown
+            }
+        }
+        set {
+            try? keychainClient.set(newValue.rawValue, for: .consumerLastAuthMethodUsed)
         }
     }
 }

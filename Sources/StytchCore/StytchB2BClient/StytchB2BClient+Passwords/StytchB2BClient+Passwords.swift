@@ -198,7 +198,8 @@ public extension StytchB2BClient.Passwords {
         ///   - resetPasswordUrl: The url that the member clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the member. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
         ///   - resetPasswordExpiration: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
         ///   - resetPasswordTemplateId: Use a custom template for password reset emails. If omitted, your default email template will be used. The template must be a template using our built-in customizations or a custom HTML email for Passwords - Password reset.
-        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             organizationId: Organization.ID,
             emailAddress: String,
@@ -238,7 +239,8 @@ public extension StytchB2BClient.Passwords {
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
         ///   - password: The members's updated password.
         ///   - sessionDuration: The duration of the requested session.
-        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             token: String,
             password: String,
@@ -278,7 +280,8 @@ public extension StytchB2BClient.Passwords {
         ///   - existingPassword: The members's existing password.
         ///   - newPassword: The members's new password.
         ///   - sessionDuration: The duration of the requested session.
-        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             organizationId: Organization.ID,
             emailAddress: String,
@@ -320,7 +323,8 @@ public extension StytchB2BClient.Passwords {
         /// - Parameters:
         ///   - organizationId: The ID of the intended organization.
         ///   - password: The members's new password.
-        ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(organizationId: Organization.ID, password: String, locale: StytchLocale = .en) {
             self.organizationId = organizationId
             self.password = password

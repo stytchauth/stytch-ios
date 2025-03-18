@@ -52,7 +52,7 @@ public extension StytchClient {
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             let destination: PasskeysRoute
-            if sessionManager.persistedSessionIdentifiersExist {
+            if sessionManager.hasValidSessionToken {
                 destination = .authenticateStartSecondary
             } else {
                 destination = .authenticateStartPrimary
