@@ -34,7 +34,7 @@ final class CaptchaClient: CaptchaProvider {
 
     func setCaptchaClient(siteKey: String) async {
         do {
-            recaptchaClient = try await Recaptcha.getClient(withSiteKey: siteKey)
+            recaptchaClient = try await Recaptcha.fetchClient(withSiteKey: siteKey)
         } catch let error as RecaptchaError {
             print("RecaptchaClient creation error: \(String(describing: error.errorMessage)).")
         } catch {

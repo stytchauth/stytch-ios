@@ -40,6 +40,7 @@ runs:
       env:
         HOMEBREW_NO_AUTO_UPDATE: 1
         HOMEBREW_NO_INSTALL_CLEANUP: 1
+        NO_BUNDLE: 1
       run: |
-        NO_BUNDLE=1 make setup
-        make tools
+        arch -arm64 make setup
+        arch -arm64 make tools

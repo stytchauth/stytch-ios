@@ -3,7 +3,7 @@ IOS_VERSION := $(shell xcodebuild -showsdks | grep -m 1 'sdk iphoneos' | sed 's/
 WATCHOS_VERSION := $(shell xcodebuild -showsdks | grep -m 1 'sdk watchos' | sed 's/\(.*watchos\)\(.*\)/\2/')
 
 IS_CI=$(shell [ ! -z "$$CI" ] && echo "1")
-ARCH=arch -$(shell [ $(IS_CI) ] && echo "x86_64" || echo "arm64")
+ARCH=arch -arm64
 PIPEFAIL=set -o pipefail
 XCPRETTY=bundle exec xcpretty
 TEST=$(PIPEFAIL) && $(ARCH) xcodebuild test -disableAutomaticPackageResolution -skipPackageUpdates -project Stytch/Stytch.xcodeproj -scheme StytchCoreTests -sdk
@@ -57,26 +57,26 @@ test-all: codegen
 test tests test-macos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) macosx14.0 -destination "OS=14.0,platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
+	$(TEST) macosx -destination "platform=macOS" -enableCodeCoverage YES -derivedDataPath .build | $(XCPRETTY)
 
 .PHONY: test-ios
 test-ios: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) iphonesimulator17.0 -destination "OS=17.2,name=iPhone 15 Pro" | $(XCPRETTY)
+	$(TEST) iphonesimulator18.2 -destination "OS=18.2,name=iPhone 16 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator18.2 -destination "OS=18.2,name=iPhone 16 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) appletvsimulator17.0 -destination "OS=17.0,name=Apple TV" | $(XCPRETTY)
+	$(TEST) appletvsimulator18.2 -destination "OS=18.2,name=Apple TV" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) watchsimulator10.0 -destination "OS=10.0,name=Apple Watch Ultra (49mm)" | $(XCPRETTY)
+	$(TEST) watchsimulator11.2 -destination "OS=11.1,name=Apple Watch Ultra 2 (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:

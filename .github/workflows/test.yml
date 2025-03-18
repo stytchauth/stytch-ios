@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref != 'refs/heads/main' || github.run_number }}
@@ -43,7 +43,7 @@ jobs:
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   test:
-    runs-on: macos-13
+    runs-on: macos-15
 
     needs: set-matrix
 
