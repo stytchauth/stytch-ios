@@ -40,16 +40,21 @@ public enum StytchUIClient {
         onAuthCallback: AuthCallback? = nil
     ) {
         configure(configuration: configuration)
+
         Self.onAuthCallback = { response in
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
             }
             onAuthCallback?(response)
         }
+
         let rootController = AuthRootViewController(config: Self.configuration)
         currentController = rootController
-        setUpSessionChangeListener()
+        setUpDismissAuthListener()
+
         let navigationController = UINavigationController(rootViewController: rootController)
+        navigationController.isModalInPresentation = true // Prevents swipe-down dismissal
+
         controller.present(navigationController, animated: true)
     }
 
@@ -75,7 +80,7 @@ public enum StytchUIClient {
                 } else {
                     let rootController = AuthRootViewController(config: configuration)
                     currentController = rootController
-                    setUpSessionChangeListener()
+                    setUpDismissAuthListener()
                     controller?.present(UINavigationController(rootViewController: rootController), animated: true)
                     rootController.handlePasswordReset(token: token, email: email, animated: false)
                 }
@@ -84,14 +89,18 @@ public enum StytchUIClient {
         return StytchClient.canHandle(url: url)
     }
 
-    static func setUpSessionChangeListener() {
+    public static func dismiss() {
+        currentController?.dismissAuth()
+        cancellable = nil
+    }
+
+    fileprivate static func setUpDismissAuthListener() {
         cancellable = StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
-            .sink { [weak currentController] sessionInfo in
+            .sink { sessionInfo in
                 switch sessionInfo {
                 case .available:
-                    currentController?.dismissAuth()
-                    Self.cancellable = nil
+                    dismiss()
                 case .unavailable:
                     break
                 }
@@ -114,6 +123,7 @@ public extension View {
                 onAuthCallback?(response)
             }
             return AuthenticationView(configuration)
+                .interactiveDismissDisabled(true)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }
@@ -132,7 +142,7 @@ public struct AuthenticationView: UIViewControllerRepresentable {
         StytchUIClient.configure(configuration: configuration)
         let controller = AuthRootViewController(config: StytchUIClient.configuration)
         StytchUIClient.currentController = controller
-        StytchUIClient.setUpSessionChangeListener()
+        StytchUIClient.setUpDismissAuthListener()
         return UINavigationController(rootViewController: controller)
     }
 

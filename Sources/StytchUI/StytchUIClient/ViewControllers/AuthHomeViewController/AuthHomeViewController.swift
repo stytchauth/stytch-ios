@@ -75,5 +75,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         Task {
             try await viewModel.logRenderScreen()
         }
+
+        configureCloseButton(viewModel.state.config.navigation)
     }
 }

@@ -37,16 +37,21 @@ public enum StytchB2BUIClient {
         onB2BAuthCallback: B2BAuthenticateCallback? = nil
     ) {
         configure(configuration: configuration)
+
         Self.onB2BAuthCallback = {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
             }
             onB2BAuthCallback?()
         }
+
         let rootController = B2BAuthRootViewController(configuration: configuration)
         currentController = rootController
         Self.setUpDismissAuthListener()
+
         let navigationController = UINavigationController(rootViewController: rootController)
+        navigationController.isModalInPresentation = true // Prevents swipe-down dismissal
+
         controller.present(navigationController, animated: true)
     }
 
@@ -95,13 +100,17 @@ public enum StytchB2BUIClient {
         return StytchB2BClient.canHandle(url: url)
     }
 
+    public static func dismiss() {
+        currentController?.dismissAuth()
+        cancellable = nil
+        reset()
+    }
+
     fileprivate static func setUpDismissAuthListener() {
         cancellable = dismissUI
             .receive(on: DispatchQueue.main)
-            .sink { [weak currentController] in
-                currentController?.dismissAuth()
-                Self.cancellable = nil
-                Self.reset()
+            .sink {
+                dismiss()
             }
     }
 
@@ -137,6 +146,7 @@ public extension View {
                 onB2BAuthCallback?()
             }
             return B2BAuthenticationView(configuration)
+                .interactiveDismissDisabled(true)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
     }

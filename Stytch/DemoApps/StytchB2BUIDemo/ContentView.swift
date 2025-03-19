@@ -134,7 +134,8 @@ class ContentViewModel: ObservableObject {
             authFlowType: authFlowType,
             oauthProviders: [.init(provider: .google), .init(provider: .github)],
             allowCreateOrganization: true,
-            directCreateOrganizationForNoMembership: true
+            directCreateOrganizationForNoMembership: true,
+            navigation: Navigation(closeButtonStyle: .close(.right))
         )
     }
 }

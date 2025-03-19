@@ -32,7 +32,8 @@ class B2BUIViewController: UIViewController {
             products: [.emailMagicLinks, .sso, .passwords, .oauth],
             authFlowType: .organization(slug: "no-mfa"),
             // authFlowType: .discovery,
-            oauthProviders: [.init(provider: .google), .init(provider: .github)]
+            oauthProviders: [.init(provider: .google), .init(provider: .github)],
+            navigation: Navigation(closeButtonStyle: .close(.right))
         )
 
         StytchB2BUIClient.presentController(configuration: stytchB2BUIConfig, controller: self)

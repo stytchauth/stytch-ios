@@ -9,6 +9,7 @@ struct ContentView: View {
     let configuration: StytchUIClient.Configuration = .init(
         stytchClientConfiguration: .init(publicToken: "your-public-token"),
         products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],
         otpOptions: .init(methods: [.sms, .whatsapp])
     )
