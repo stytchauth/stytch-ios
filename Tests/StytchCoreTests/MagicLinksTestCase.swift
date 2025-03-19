@@ -54,7 +54,7 @@ final class MagicLinksTestCase: BaseTestCase {
             locale: .en
         )
 
-        XCTAssertFalse(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertFalse(Current.sessionManager.hasValidSessionToken)
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
@@ -89,7 +89,7 @@ final class MagicLinksTestCase: BaseTestCase {
 
         try Current.keychainClient.set("123", for: .sessionToken)
 
-        XCTAssertTrue(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
         XCTAssertTrue(try Current.keychainClient.get(.codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)

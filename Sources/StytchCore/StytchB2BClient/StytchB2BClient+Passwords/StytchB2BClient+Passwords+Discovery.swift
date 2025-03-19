@@ -100,7 +100,8 @@ public extension StytchB2BClient.Passwords.Discovery {
         ///   - resetPasswordTemplateId: The email template ID to use for password reset. If not provided, your default email
         ///     template will be sent. If providing a template ID, it must be either a template using Stytch's customizations or a
         ///     Passwords reset custom HTML template.
-        ///   - locale: XYZ
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,
@@ -126,7 +127,8 @@ public extension StytchB2BClient.Passwords.Discovery {
         /// - Parameters:
         ///   - passwordResetToken: The token to authenticate.
         ///   - password: The new password for the Member.
-        ///   - locale: XYZ
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             passwordResetToken: String,
             password: String,

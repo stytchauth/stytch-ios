@@ -26,6 +26,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
         }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
+        XCTAssertTrue(Current.sessionManager.hasValidIntermediateSessionToken)
 
         _ = try await client.listOrganizations()
 
@@ -43,6 +44,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
+        XCTAssertTrue(Current.sessionManager.hasValidIntermediateSessionToken)
 
         _ = try await client.exchangeIntermediateSession(parameters: .init(organizationId: Organization.mock.id))
 
@@ -62,6 +64,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
+        XCTAssertTrue(Current.sessionManager.hasValidIntermediateSessionToken)
 
         _ = try await client.createOrganization(
             parameters: .init(

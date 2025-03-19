@@ -61,7 +61,7 @@ final class OTPTestCase: BaseTestCase {
             response
         }
 
-        XCTAssertFalse(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertFalse(Current.sessionManager.hasValidSessionToken)
 
         try await [
             ExpectedValues(
@@ -111,7 +111,7 @@ final class OTPTestCase: BaseTestCase {
 
         try Current.keychainClient.set("123", for: .sessionToken)
 
-        XCTAssertTrue(Current.sessionManager.persistedSessionIdentifiersExist)
+        XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
 
         try await [
             ExpectedValues(

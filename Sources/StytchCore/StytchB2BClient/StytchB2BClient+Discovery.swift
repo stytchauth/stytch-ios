@@ -85,7 +85,8 @@ public extension StytchB2BClient.Discovery {
         /// - Parameters:
         ///   - organizationId: Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations on an Organization, so be sure to preserve this value.
         ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        ///   - locale: XYZ
+        ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
+        ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             organizationId: Organization.ID,
             sessionDuration: Minutes = .defaultSessionDuration,

@@ -43,7 +43,7 @@ struct StartupClient {
         }
         #endif
 
-        if Current.sessionManager.persistedSessionIdentifiersExist {
+        if Current.sessionManager.hasValidSessionToken {
             if clientType == .consumer {
                 _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
             } else if clientType == .b2b {
