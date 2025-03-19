@@ -4,7 +4,7 @@
 ![Stytch iOS SDK](Resources/Assets/stytch-light.png#gh-light-mode-only)
 
 ![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
-![iOS](https://img.shields.io/badge/iOS-13.0-blue) ![macOS](https://img.shields.io/badge/macOS-10.15-green) ![tvOS](https://img.shields.io/badge/tvOS-13.0-orange)
+![iOS](https://img.shields.io/badge/iOS-15.0-blue) ![macOS](https://img.shields.io/badge/macOS-12.0-green) ![tvOS](https://img.shields.io/badge/tvOS-15.0-orange) ![watchOS](https://img.shields.io/badge/watchOS-8.0-purple)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
 
 </div>
