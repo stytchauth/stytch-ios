@@ -42,6 +42,8 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
                 StytchB2BUIClient.stopLoading()
             }
         }
+
+        configureCloseButton(viewModel.state.configuration.navigation)
     }
 
     func configureView(productComponents: [StytchB2BUIClient.ProductComponent]) {

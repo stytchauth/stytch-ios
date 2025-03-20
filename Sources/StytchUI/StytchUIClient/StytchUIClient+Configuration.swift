@@ -46,7 +46,8 @@ public extension StytchUIClient {
         /// - Parameters:
         ///   - stytchClientConfiguration: A flexible and extensible object used to configure the core `StychClient` requiring at least a public token, with optional additional settings.
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
-        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
+        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one.
+        ///     Without a navigation configuration the UI can only be dismissed by completing authentication or manually calling StytchUIClient.dismiss().
         ///   - sessionDurationMinutes: The session duration you would like the authentication endpoints to use.
         ///   - oauthProviders: The array of OAuth providers. If you have .oauth in your products array you must specify the list of providers.
         ///   - passwordOptions: The password options to use if you have a custom configuration.

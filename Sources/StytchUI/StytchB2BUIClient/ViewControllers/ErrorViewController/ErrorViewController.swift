@@ -43,5 +43,7 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
         if viewModel.state.type == .noOrganziationFound {
             hideBackButton()
         }
+
+        configureCloseButton(viewModel.state.configuration.navigation)
     }
 }

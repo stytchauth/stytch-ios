@@ -110,6 +110,28 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         navigationItem.hidesBackButton = true
     }
 
+    @objc func dismissAuth() {
+        presentingViewController?.dismiss(animated: true)
+    }
+
+    func configureCloseButton(_ navigation: Navigation?) {
+        guard let closeButton = navigation?.closeButtonStyle else {
+            return
+        }
+
+        let closeBarButton = UIBarButtonItem(
+            barButtonSystemItem: closeButton.barButtonSystemItem,
+            target: self,
+            action: #selector(dismissAuth)
+        )
+
+        if closeButton.position == .left {
+            navigationItem.leftBarButtonItem = closeBarButton
+        } else if closeButton.position == .right {
+            navigationItem.rightBarButtonItem = closeBarButton
+        }
+    }
+
     func setupPoweredByStytchView() {
         view.addSubview(poweredByStytchView)
 

@@ -59,17 +59,6 @@ final class AuthRootViewController: UIViewController {
             state: .init(config: config)
         )
 
-        if let closeButton = config.navigation?.closeButtonStyle {
-            let keyPath: ReferenceWritableKeyPath<UIViewController, UIBarButtonItem?>
-            switch closeButton.position {
-            case .left:
-                keyPath = \.navigationItem.leftBarButtonItem
-            case .right:
-                keyPath = \.navigationItem.rightBarButtonItem
-            }
-            homeController[keyPath: keyPath] = .init(barButtonSystemItem: closeButton.barButtonSystemItem, target: self, action: #selector(dismissAuth))
-        }
-
         let navigationController = UINavigationController(rootViewController: homeController)
         navigationController.navigationBar.tintColor = .primaryText
         navigationController.navigationBar.barTintColor = .background

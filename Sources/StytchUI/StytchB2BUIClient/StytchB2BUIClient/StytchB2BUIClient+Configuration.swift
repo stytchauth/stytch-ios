@@ -106,7 +106,8 @@ public extension StytchB2BUIClient {
         ///   - mfaProductInclude: MFA products to include in the UI. If specified, the list of available products will be limited to those included. Defaults to all available products.
         ///     Note that if an organization restricts the available MFA methods, the organization's settings will take precedence.
         ///     In addition, if a member is enrolled in MFA compatible with their organization's policies, their enrolled methods will always be made available.
-        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one
+        ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one.
+        ///     Without a navigation configuration the UI can only be dismissed by completing authentication or manually calling StytchB2BUIClient.dismiss().
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
