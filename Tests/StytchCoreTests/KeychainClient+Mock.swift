@@ -37,7 +37,7 @@ extension KeychainClient {
     }
 
     func resultsExistForItem(_ item: Item) -> Bool {
-        (try? get(item).map { !$0.isEmpty }) ?? false
+        (try? getStringValue(item).map { !$0.isEmpty }) ?? false
     }
 }
 

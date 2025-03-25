@@ -9,16 +9,16 @@ final class KeychainClientTestCase: BaseTestCase {
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
 
-        try Current.keychainClient.set("test test", for: item)
+        try Current.keychainClient.setStringValue("test test", for: item)
 
         XCTAssertTrue(Current.keychainClient.resultsExistForItem(item))
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
 
-        XCTAssertEqual(try Current.keychainClient.get(item), "test test")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(item), "test test")
 
-        try Current.keychainClient.set("test again", for: item)
+        try Current.keychainClient.setStringValue("test again", for: item)
 
-        XCTAssertEqual(try Current.keychainClient.get(item), "test again")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(item), "test again")
 
         try Current.keychainClient.removeItem(item)
 
@@ -76,12 +76,12 @@ final class KeychainClientTestCase: BaseTestCase {
 
     func testQueryResults() throws {
         let data = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
-        try Current.keychainClient.set(
+        try Current.keychainClient.setPrivateKeyRegistration(
             key: data,
             registration: .init(userId: "user_123", userLabel: "user@example.com", registrationId: "registration_123"),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
-        let results = try Current.keychainClient.get(.privateKeyRegistration)
+        let results = try Current.keychainClient.getQueryResults(.privateKeyRegistration)
         XCTAssertNil(results.first?.account)
         XCTAssertEqual(results.first?.label, "user@example.com")
     }
@@ -89,28 +89,28 @@ final class KeychainClientTestCase: BaseTestCase {
     func testKeychainReset() throws {
         let installIdKey = "stytch_install_id_defaults_key"
         Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
-        try Current.keychainClient.set("token", for: .sessionToken)
-        try Current.keychainClient.set("token_jwt", for: .sessionJwt)
+        try Current.keychainClient.setStringValue("token", for: .sessionToken)
+        try Current.keychainClient.setStringValue("token_jwt", for: .sessionJwt)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
-        XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionToken), "token")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionJwt), "token_jwt")
         Current.defaults.removeObject(forKey: installIdKey)
         StytchClient.configure(configuration: .init(publicToken: "another public token"))
-        XCTAssertNil(try Current.keychainClient.get(.sessionToken))
-        XCTAssertNil(try Current.keychainClient.get(.sessionJwt))
+        XCTAssertNil(try Current.keychainClient.getStringValue(.sessionToken))
+        XCTAssertNil(try Current.keychainClient.getStringValue(.sessionJwt))
     }
 
     func testKeychainDoesNotResetWhenConfigureIsCalledAgainWithSamePublicToken() throws {
         let installIdKey = "stytch_install_id_defaults_key"
         Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
-        try Current.keychainClient.set("token", for: .sessionToken)
-        try Current.keychainClient.set("token_jwt", for: .sessionJwt)
+        try Current.keychainClient.setStringValue("token", for: .sessionToken)
+        try Current.keychainClient.setStringValue("token_jwt", for: .sessionJwt)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertEqual(try Current.keychainClient.get(.sessionToken), "token")
-        XCTAssertEqual(try Current.keychainClient.get(.sessionJwt), "token_jwt")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionToken), "token")
+        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionJwt), "token_jwt")
         Current.defaults.removeObject(forKey: installIdKey)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertNotNil(try Current.keychainClient.get(.sessionToken))
-        XCTAssertNotNil(try Current.keychainClient.get(.sessionJwt))
+        XCTAssertNotNil(try Current.keychainClient.getStringValue(.sessionToken))
+        XCTAssertNotNil(try Current.keychainClient.getStringValue(.sessionJwt))
     }
 }

@@ -21,8 +21,8 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
 
-        try Current.keychainClient.set(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
-        try Current.keychainClient.set(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
+        try Current.keychainClient.setStringValue(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.keychainClient.setStringValue(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
         Current.timer = { _, _, _ in .init() }
 

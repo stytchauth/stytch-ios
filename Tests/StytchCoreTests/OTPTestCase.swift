@@ -109,7 +109,7 @@ final class OTPTestCase: BaseTestCase {
             response
         }
 
-        try Current.keychainClient.set("123", for: .sessionToken)
+        try Current.keychainClient.setStringValue("123", for: .sessionToken)
 
         XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
 

@@ -37,14 +37,14 @@ internal class PKCEPairManagerImpl: PKCEPairManager {
     func generateAndReturnPKCECodePair() throws -> PKCECodePair {
         let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
         let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
-        try keychainClient.set(codeVerifier, for: .codeVerifierPKCE)
-        try keychainClient.set(codeChallenge, for: .codeChallengePKCE)
+        try keychainClient.setStringValue(codeVerifier, for: .codeVerifierPKCE)
+        try keychainClient.setStringValue(codeChallenge, for: .codeChallengePKCE)
         return PKCECodePair(codeChallenge: codeChallenge, codeVerifier: codeVerifier)
     }
 
     func getPKCECodePair() -> PKCECodePair? {
-        let codeChallenge = try? keychainClient.get(.codeChallengePKCE)
-        let codeVerifier = try? keychainClient.get(.codeVerifierPKCE)
+        let codeChallenge = try? keychainClient.getStringValue(.codeChallengePKCE)
+        let codeVerifier = try? keychainClient.getStringValue(.codeVerifierPKCE)
         if let codeChallenge = codeChallenge, let codeVerifier = codeVerifier {
             return PKCECodePair(codeChallenge: codeChallenge, codeVerifier: codeVerifier)
         } else {
