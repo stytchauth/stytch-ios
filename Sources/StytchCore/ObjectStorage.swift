@@ -32,7 +32,7 @@ extension ObjectStorageWrapper {
     }
 
     var queryResult: KeychainClient.QueryResult? {
-        try? keychainClient.getQueryResult(keychainItem)
+        try? keychainClient.getFirstQueryResult(keychainItem)
     }
 }
 

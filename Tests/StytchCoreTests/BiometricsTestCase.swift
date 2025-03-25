@@ -12,7 +12,7 @@ final class BiometricsTestCase: BaseTestCase {
         let userId: User.ID = "user_123"
         let email = "example@stytch.com"
 
-        try Current.keychainClient.set(sessionToken, for: .sessionToken)
+        try Current.keychainClient.setStringValue(sessionToken, for: .sessionToken)
 
         let registerStartResponse = try StytchClient.Biometrics.RegisterStartResponse(
             biometricRegistrationId: regId,
@@ -38,7 +38,7 @@ final class BiometricsTestCase: BaseTestCase {
         _ = try await StytchClient.biometrics.register(parameters: .init(identifier: email))
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
-        XCTAssertEqual(try Current.keychainClient.get(.privateKeyRegistration).first?.label, email)
+        XCTAssertEqual(try Current.keychainClient.getQueryResults(.privateKeyRegistration).first?.label, email)
     }
 
     func testAuthenticate() async throws {
@@ -55,14 +55,14 @@ final class BiometricsTestCase: BaseTestCase {
         }
 
         // Set the .privateKeyRegistration
-        try Current.keychainClient.set(
+        try Current.keychainClient.setPrivateKeyRegistration(
             key: privateKey.rawRepresentation,
             registration: .init(userId: userId, userLabel: email, registrationId: regId),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
 
         // Set the .biometricKeyRegistration
-        try Current.keychainClient.set(regId.rawValue, for: .biometricKeyRegistration)
+        try Current.keychainClient.setStringValue(regId.rawValue, for: .biometricKeyRegistration)
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
@@ -102,14 +102,14 @@ final class BiometricsTestCase: BaseTestCase {
         }
 
         // Set the .privateKeyRegistration
-        try Current.keychainClient.set(
+        try Current.keychainClient.setPrivateKeyRegistration(
             key: privateKey.rawRepresentation,
             registration: .init(userId: userId, userLabel: email, registrationId: regId),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
 
         // Set the .biometricKeyRegistration
-        try Current.keychainClient.set(regId.rawValue, for: .biometricKeyRegistration)
+        try Current.keychainClient.setStringValue(regId.rawValue, for: .biometricKeyRegistration)
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
@@ -126,10 +126,10 @@ final class BiometricsTestCase: BaseTestCase {
     }
 
     func testRegisterThrowsErrorWhenPrivateKeyExists() async throws {
-        try Current.keychainClient.set("session_token_123", for: .sessionToken)
+        try Current.keychainClient.setStringValue("session_token_123", for: .sessionToken)
 
         // Set the .privateKeyRegistration
-        try Current.keychainClient.set(
+        try Current.keychainClient.setPrivateKeyRegistration(
             key: Curve25519.Signing.PrivateKey().rawRepresentation,
             registration: .init(userId: "user_123", userLabel: "example@stytch.com", registrationId: "bio_reg_123"),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics

@@ -136,12 +136,12 @@ class SessionManager {
 extension SessionManager {
     private(set) var sessionToken: SessionToken? {
         get {
-            try? keychainClient.get(.sessionToken).map(SessionToken.opaque)
+            try? keychainClient.getStringValue(.sessionToken).map(SessionToken.opaque)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionToken
             if let newValue = newValue {
-                try? keychainClient.set(newValue.value, for: keychainItem)
+                try? keychainClient.setStringValue(newValue.value, for: keychainItem)
             } else {
                 try? keychainClient.removeItem(keychainItem)
                 cookieClient.deleteCookie(named: keychainItem.name)
@@ -151,12 +151,12 @@ extension SessionManager {
 
     private(set) var sessionJwt: SessionToken? {
         get {
-            try? keychainClient.get(.sessionJwt).map(SessionToken.jwt)
+            try? keychainClient.getStringValue(.sessionJwt).map(SessionToken.jwt)
         }
         set {
             let keychainItem: KeychainClient.Item = .sessionJwt
             if let newValue = newValue {
-                try? keychainClient.set(newValue.value, for: keychainItem)
+                try? keychainClient.setStringValue(newValue.value, for: keychainItem)
             } else {
                 try? keychainClient.removeItem(keychainItem)
                 cookieClient.deleteCookie(named: keychainItem.name)
@@ -173,7 +173,7 @@ extension SessionManager {
                 // Retrieve the IST from the keychain and check its age.
                 // If it's less than 10 minutes old, return it.
                 // Otherwise, remove it from the keychain and cookie storage.
-                guard let result = try keychainClient.getQueryResult(.intermediateSessionToken) else {
+                guard let result = try keychainClient.getFirstQueryResult(.intermediateSessionToken) else {
                     return nil
                 }
 
@@ -191,7 +191,7 @@ extension SessionManager {
         set {
             do {
                 if let newIST = newValue, newIST.isEmpty == false {
-                    try keychainClient.set(newIST, for: .intermediateSessionToken)
+                    try keychainClient.setStringValue(newIST, for: .intermediateSessionToken)
                 } else {
                     removeIntermediateSessionToken()
                 }
@@ -217,27 +217,27 @@ extension SessionManager {
 extension SessionManager {
     var b2bLastAuthMethodUsed: StytchB2BClient.B2BAuthMethod {
         get {
-            if let string = try? keychainClient.get(.b2bLastAuthMethodUsed) {
+            if let string = try? keychainClient.getStringValue(.b2bLastAuthMethodUsed) {
                 return StytchB2BClient.B2BAuthMethod(rawValue: string) ?? .unknown
             } else {
                 return StytchB2BClient.B2BAuthMethod.unknown
             }
         }
         set {
-            try? keychainClient.set(newValue.rawValue, for: .b2bLastAuthMethodUsed)
+            try? keychainClient.setStringValue(newValue.rawValue, for: .b2bLastAuthMethodUsed)
         }
     }
 
     var consumerLastAuthMethodUsed: StytchClient.ConsumerAuthMethod {
         get {
-            if let string = try? keychainClient.get(.consumerLastAuthMethodUsed) {
+            if let string = try? keychainClient.getStringValue(.consumerLastAuthMethodUsed) {
                 return StytchClient.ConsumerAuthMethod(rawValue: string) ?? .unknown
             } else {
                 return StytchClient.ConsumerAuthMethod.unknown
             }
         }
         set {
-            try? keychainClient.set(newValue.rawValue, for: .consumerLastAuthMethodUsed)
+            try? keychainClient.setStringValue(newValue.rawValue, for: .consumerLastAuthMethodUsed)
         }
     }
 }

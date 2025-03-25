@@ -1,7 +1,7 @@
 import Security
 
 extension KeychainClient {
-    struct Migration3: KeychainMigration {
+    struct KeychainMigration3: KeychainMigration {
         static func run() throws {
             try [
                 KeychainClient.Item.privateKeyRegistration,

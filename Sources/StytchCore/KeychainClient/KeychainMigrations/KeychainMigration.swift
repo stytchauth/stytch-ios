@@ -1,3 +1,5 @@
+import Foundation
+
 protocol KeychainMigration {
     static func run() throws
 }
@@ -5,8 +7,8 @@ protocol KeychainMigration {
 extension KeychainClient {
     // Migrations must only be added to the bottom of this list so they are run in order
     static let migrations: [KeychainMigration.Type] = [
-        Migration1.self,
-        Migration2.self,
-        Migration3.self,
+        KeychainMigration1.self,
+        KeychainMigration2.self,
+        KeychainMigration3.self,
     ]
 }

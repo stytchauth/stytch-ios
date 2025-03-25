@@ -1,24 +1,21 @@
 import Foundation
 
 struct KeychainClient {
-    let get: (Item) throws -> [QueryResult]
-
+    let getQueryResults: (Item) throws -> [QueryResult]
     let valueExistsForItem: (Item) -> Bool
-
     let setValueForItem: (Item.Value, Item) throws -> Void
-
     let removeItem: (Item) throws -> Void
 
     @Dependency(\.jsonEncoder) var jsonEncoder
     @Dependency(\.jsonDecoder) var jsonDecoder
 
     init(
-        get: @escaping (Item) throws -> [QueryResult],
+        getQueryResults: @escaping (Item) throws -> [QueryResult],
         valueExistsForItem: @escaping (Item) -> Bool,
         setValueForItem: @escaping (Item.Value, Item) throws -> Void,
         removeItem: @escaping (Item) throws -> Void
     ) {
-        self.get = get
+        self.getQueryResults = getQueryResults
         self.valueExistsForItem = valueExistsForItem
         self.setValueForItem = setValueForItem
         self.removeItem = removeItem
@@ -26,20 +23,20 @@ struct KeychainClient {
 }
 
 extension KeychainClient {
-    func getQueryResult(_ item: Item) throws -> QueryResult? {
-        try get(item).first
+    func getFirstQueryResult(_ item: Item) throws -> QueryResult? {
+        try getQueryResults(item).first
     }
 }
 
 // String convenience methods
 extension KeychainClient {
-    func get(_ item: Item) throws -> String? {
-        try get(item)
+    func getStringValue(_ item: Item) throws -> String? {
+        try getQueryResults(item)
             .first
             .flatMap(\.stringValue)
     }
 
-    func set(_ value: String, for item: Item) throws {
+    func setStringValue(_ value: String, for item: Item) throws {
         try setValueForItem(
             .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil),
             item
@@ -49,7 +46,7 @@ extension KeychainClient {
 
 // Private key registration convenience methods
 extension KeychainClient {
-    func set(
+    func setPrivateKeyRegistration(
         key: Data,
         registration: KeyRegistration,
         accessPolicy: Item.AccessPolicy
@@ -64,35 +61,5 @@ extension KeychainClient {
             ),
             .privateKeyRegistration
         )
-    }
-}
-
-extension KeychainClient {
-    struct QueryResult {
-        let data: Data
-        let createdAt: Date
-        let modifiedAt: Date
-        let label: String?
-        let account: String?
-        let generic: Data?
-
-        var stringValue: String? {
-            String(data: data, encoding: .utf8)
-        }
-    }
-
-    struct KeyRegistration: Codable {
-        let userId: User.ID
-        let userLabel: String
-        let registrationId: User.BiometricRegistration.ID
-    }
-
-    enum KeychainError: Swift.Error {
-        case resultMissingAccount
-        case resultMissingDates
-        case resultNotArray
-        case resultNotData
-        case unableToCreateAccessControl
-        case unhandledError(status: OSStatus)
     }
 }

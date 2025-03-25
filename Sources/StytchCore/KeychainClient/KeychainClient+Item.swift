@@ -2,14 +2,7 @@ import Foundation
 
 extension KeychainClient {
     struct Item {
-        enum Kind {
-            case privateKey
-            case token
-            case object
-        }
-
         var kind: Kind
-
         var name: String
 
         var baseQuery: [CFString: Any] {
@@ -59,6 +52,68 @@ extension KeychainClient {
 }
 
 extension KeychainClient.Item {
+    enum Kind {
+        case privateKey
+        case token
+        case object
+    }
+}
+
+extension KeychainClient.Item {
+    struct Value {
+        let data: Data
+        let account: String?
+        let label: String?
+        let generic: Data?
+        let accessPolicy: AccessPolicy?
+    }
+}
+
+extension KeychainClient.Item {
+    enum AccessPolicy {
+        case deviceOwnerAuthentication
+        case deviceOwnerAuthenticationWithBiometrics
+        #if os(macOS)
+        // swiftlint:disable:next identifier_name
+        case deviceOwnerAuthenticationWithBiometricsOrWatch
+        #endif
+
+        var accessControl: SecAccessControl {
+            get throws {
+                var error: Unmanaged<CFError>?
+                defer { error?.release() }
+
+                let flags: SecAccessControlCreateFlags
+
+                switch self {
+                case .deviceOwnerAuthentication:
+                    flags = [.userPresence]
+                case .deviceOwnerAuthenticationWithBiometrics:
+                    flags = [.biometryCurrentSet]
+                #if os(macOS)
+                case .deviceOwnerAuthenticationWithBiometricsOrWatch:
+                    flags = [.biometryCurrentSet, .or, .watch]
+                #endif
+                }
+
+                guard
+                    let accessControl = SecAccessControlCreateWithFlags(
+                        nil,
+                        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+                        flags,
+                        &error
+                    )
+                else {
+                    throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
+                }
+
+                return accessControl
+            }
+        }
+    }
+}
+
+extension KeychainClient.Item {
     // The private key registration is central to biometric authentication, and this item should be protected by biometrics unless explicitly specified otherwise by the caller.
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
     // This was introduced in version 0.54.0 to store the biometric registration ID in a keychain item that is not protected by biometrics.
@@ -67,6 +122,7 @@ extension KeychainClient.Item {
     static let sessionToken: Self = .init(kind: .token, name: SessionToken.Kind.opaque.name)
     static let sessionJwt: Self = .init(kind: .token, name: SessionToken.Kind.jwt.name)
     static let intermediateSessionToken: Self = .init(kind: .token, name: "stytch_intermediate_session_token")
+
     static let codeVerifierPKCE: Self = .init(kind: .token, name: "stytch_code_verifier_pkce")
     static let codeChallengePKCE: Self = .init(kind: .token, name: "stytch_code_challenge_pkce")
 
@@ -78,13 +134,12 @@ extension KeychainClient.Item {
 
     static let b2bLastAuthMethodUsed: Self = .init(kind: .object, name: "b2b_last_auth_method_used")
     static let consumerLastAuthMethodUsed: Self = .init(kind: .object, name: "consumer_last_auth_method_used")
-}
 
-extension KeychainClient.Item {
     // TODO: - set up linting or codegen to ensure any new `KeychainClient.Item` added (this file or elsewhere) is added to this array
     static var allItems: [Self] {
         [
             .privateKeyRegistration,
+            .biometricKeyRegistration,
             .sessionToken,
             .sessionJwt,
             .intermediateSessionToken,
@@ -98,59 +153,5 @@ extension KeychainClient.Item {
             .b2bLastAuthMethodUsed,
             .consumerLastAuthMethodUsed,
         ]
-    }
-}
-
-extension KeychainClient.Item {
-    struct Value {
-        let data: Data
-        let account: String?
-        let label: String?
-        let generic: Data?
-        let accessPolicy: AccessPolicy?
-    }
-
-    enum AccessPolicy {
-        case deviceOwnerAuthentication
-        case deviceOwnerAuthenticationWithBiometrics
-        #if os(macOS)
-        // swiftlint:disable:next identifier_name
-        case deviceOwnerAuthenticationWithBiometricsOrWatch
-        #endif
-    }
-}
-
-private extension KeychainClient.Item.AccessPolicy {
-    var accessControl: SecAccessControl {
-        get throws {
-            var error: Unmanaged<CFError>?
-            defer { error?.release() }
-
-            let flags: SecAccessControlCreateFlags
-
-            switch self {
-            case .deviceOwnerAuthentication:
-                flags = [.userPresence]
-            case .deviceOwnerAuthenticationWithBiometrics:
-                flags = [.biometryCurrentSet]
-            #if os(macOS)
-            case .deviceOwnerAuthenticationWithBiometricsOrWatch:
-                flags = [.biometryCurrentSet, .or, .watch]
-            #endif
-            }
-
-            guard
-                let accessControl = SecAccessControlCreateWithFlags(
-                    nil,
-                    kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
-                    flags,
-                    &error
-                )
-            else {
-                throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
-            }
-
-            return accessControl
-        }
     }
 }

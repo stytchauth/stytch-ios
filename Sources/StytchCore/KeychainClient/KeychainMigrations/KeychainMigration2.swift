@@ -1,7 +1,7 @@
 import Security
 
 extension KeychainClient {
-    struct Migration2: KeychainMigration {
+    struct KeychainMigration2: KeychainMigration {
         static func run() throws {
             try [
                 KeychainClient.Item.sessionJwt,
