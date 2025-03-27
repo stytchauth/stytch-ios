@@ -79,6 +79,9 @@ class ContentViewModel: ObservableObject {
                     self?.isAuthenticated = false
                 }
             }.store(in: &cancellables)
+
+        // To start the underlying client’s observables before displaying the UI, call configure separately.
+        StytchB2BUIClient.configure(configuration: stytchB2BUIConfig)
     }
 
     func loadFromUserDefaults() {

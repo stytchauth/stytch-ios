@@ -34,11 +34,11 @@ public extension StytchClient {
 
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
-            keychainClient.valueExistsForItem(.privateKeyRegistration)
+            keychainClient.valueExistsForItem(item: .privateKeyRegistration)
         }
 
         public var biometricRegistrationId: String? {
-            guard let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(.biometricKeyRegistration).first else {
+            guard let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(item: .biometricKeyRegistration).first else {
                 return nil
             }
             return biometricKeyRegistrationQueryResult.stringValue
@@ -110,7 +110,7 @@ public extension StytchClient {
                 )
             )
 
-            let registration: KeychainClient.KeyRegistration = .init(
+            let registration: BiometricPrivateKeyRegistration = .init(
                 userId: finishResponse.user.id,
                 userLabel: parameters.identifier,
                 registrationId: finishResponse.biometricRegistrationId
@@ -132,7 +132,7 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            guard let privateKeyRegistrationQueryResult: KeychainClient.QueryResult = try keychainClient.getQueryResults(.privateKeyRegistration).first else {
+            guard let privateKeyRegistrationQueryResult: KeychainQueryResult = try keychainClient.getQueryResults(item: .privateKeyRegistration).first else {
                 throw StytchSDKError.noBiometricRegistration
             }
 
@@ -166,8 +166,8 @@ public extension StytchClient {
 
         // Clear both the .privateKeyRegistration and the .biometricKeyRegistration
         func clearBiometricRegistrations() throws {
-            try keychainClient.removeItem(.privateKeyRegistration)
-            try keychainClient.removeItem(.biometricKeyRegistration)
+            try keychainClient.removeItem(item: .privateKeyRegistration)
+            try keychainClient.removeItem(item: .biometricKeyRegistration)
         }
 
         // if we have a local biometric registration that doesn't exist on the user object, delete the local
@@ -204,9 +204,9 @@ public extension StytchClient {
          Keeping `biometricKeyRegistration` unprotected by biometrics was essential for performing cleanup and deletion operations
          without prompting the user unnecessarily for biometric authentication.
          */
-        func copyBiometricRegistrationIDToKeychainIfNeeded(_ privateKeyRegistrationQueryResult: KeychainClient.QueryResult) throws {
-            let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(.biometricKeyRegistration).first
-            if biometricKeyRegistrationQueryResult == nil, let privateKeyRegistration = try privateKeyRegistrationQueryResult.generic.map({ try jsonDecoder.decode(KeychainClient.KeyRegistration.self, from: $0) }) {
+        func copyBiometricRegistrationIDToKeychainIfNeeded(_ privateKeyRegistrationQueryResult: KeychainQueryResult) throws {
+            let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(item: .biometricKeyRegistration).first
+            if biometricKeyRegistrationQueryResult == nil, let privateKeyRegistration = try privateKeyRegistrationQueryResult.generic.map({ try jsonDecoder.decode(BiometricPrivateKeyRegistration.self, from: $0) }) {
                 try keychainClient.setStringValue(privateKeyRegistration.registrationId.rawValue, for: .biometricKeyRegistration)
             }
         }
@@ -270,7 +270,7 @@ public extension StytchClient.Biometrics.RegisterParameters {
         case deviceOwnerAuthenticationWithBiometricsOrWatch // swiftlint:disable:this identifier_name
         #endif
 
-        var keychainValue: KeychainClient.Item.AccessPolicy {
+        var keychainValue: KeychainItem.AccessPolicy {
             switch self {
             case .deviceOwnerAuthentication:
                 return .deviceOwnerAuthentication

@@ -3,8 +3,8 @@ import XCTest
 
 final class KeychainClientTestCase: BaseTestCase {
     func testKeychainClient() throws {
-        let item: KeychainClient.Item = .init(kind: .token, name: "item")
-        let otherItem: KeychainClient.Item = .init(kind: .token, name: "other_item")
+        let item: KeychainItem = .init(kind: .token, name: "item")
+        let otherItem: KeychainItem = .init(kind: .token, name: "other_item")
 
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
@@ -20,16 +20,16 @@ final class KeychainClientTestCase: BaseTestCase {
 
         XCTAssertEqual(try Current.keychainClient.getStringValue(item), "test again")
 
-        try Current.keychainClient.removeItem(item)
+        try Current.keychainClient.removeItem(item: item)
 
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
         XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
     }
 
     func testKeychainTokenItem() {
-        let item: KeychainClient.Item = .init(kind: .token, name: "item")
+        let item: KeychainItem = .init(kind: .token, name: "item")
 
-        let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
+        let itemValueForKey: (String) -> KeychainItem.Value = { value in
             .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil)
         }
 
@@ -48,9 +48,9 @@ final class KeychainClientTestCase: BaseTestCase {
     }
 
     func testKeychainPrivateKeyItem() {
-        let item: KeychainClient.Item = .init(kind: .privateKey, name: "item")
+        let item: KeychainItem = .init(kind: .privateKey, name: "item")
 
-        let itemValueForKey: (String) -> KeychainClient.Item.Value = { value in
+        let itemValueForKey: (String) -> KeychainItem.Value = { value in
             .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: .deviceOwnerAuthenticationWithBiometrics)
         }
         let expectedAccessControl = SecAccessControlCreateWithFlags(
@@ -81,7 +81,7 @@ final class KeychainClientTestCase: BaseTestCase {
             registration: .init(userId: "user_123", userLabel: "user@example.com", registrationId: "registration_123"),
             accessPolicy: .deviceOwnerAuthenticationWithBiometrics
         )
-        let results = try Current.keychainClient.getQueryResults(.privateKeyRegistration)
+        let results = try Current.keychainClient.getQueryResults(item: .privateKeyRegistration)
         XCTAssertNil(results.first?.account)
         XCTAssertEqual(results.first?.label, "user@example.com")
     }

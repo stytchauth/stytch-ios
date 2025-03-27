@@ -27,7 +27,7 @@ public enum StytchUIClient {
     ///   - configuration: Defines the configuration for `StytchConsumerUIClient`, including authentication methods, session settings,
     ///     UI customization, and user experience options. This object controls how consumers authenticate,
     ///     which authentication flows are available, and the overall look and feel of the Consumer UI.
-    static func configure(configuration: StytchUIClient.Configuration) {
+    public static func configure(configuration: StytchUIClient.Configuration) {
         StytchClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()
         Self.configuration = configuration

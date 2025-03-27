@@ -38,7 +38,7 @@ final class BiometricsTestCase: BaseTestCase {
         _ = try await StytchClient.biometrics.register(parameters: .init(identifier: email))
 
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
-        XCTAssertEqual(try Current.keychainClient.getQueryResults(.privateKeyRegistration).first?.label, email)
+        XCTAssertEqual(try Current.keychainClient.getQueryResults(item: .privateKeyRegistration).first?.label, email)
     }
 
     func testAuthenticate() async throws {

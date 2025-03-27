@@ -53,7 +53,7 @@ internal class PKCEPairManagerImpl: PKCEPairManager {
     }
 
     func clearPKCECodePair() throws {
-        try keychainClient.removeItem(.codeChallengePKCE)
-        try keychainClient.removeItem(.codeVerifierPKCE)
+        try keychainClient.removeItem(item: .codeChallengePKCE)
+        try keychainClient.removeItem(item: .codeVerifierPKCE)
     }
 }

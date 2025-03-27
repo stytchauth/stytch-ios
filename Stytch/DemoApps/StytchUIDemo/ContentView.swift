@@ -6,14 +6,6 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
 
-    let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "your-public-token"),
-        products: [.passwords, .emailMagicLinks, .otp, .oauth],
-        navigation: Navigation(closeButtonStyle: .close(.right)),
-        oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms, .whatsapp])
-    )
-
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
@@ -32,7 +24,7 @@ struct ContentView: View {
                     }.font(.title).bold()
                 }
             }
-            .authenticationSheet(configuration: configuration, isPresented: $viewModel.shouldShowB2CUI, onAuthCallback: { authenticateResponseType in
+            .authenticationSheet(configuration: viewModel.configuration, isPresented: $viewModel.shouldShowB2CUI, onAuthCallback: { authenticateResponseType in
                 print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
             })
             .padding()
@@ -73,7 +65,18 @@ class ContentViewModel: ObservableObject {
                     self?.shouldShowB2CUI = true
                 }
             }.store(in: &cancellables)
+
+        // To start the underlying client’s observables before displaying the UI, call configure separately.
+        StytchUIClient.configure(configuration: configuration)
     }
+
+    let configuration: StytchUIClient.Configuration = .init(
+        stytchClientConfiguration: .init(publicToken: "your-public-token"),
+        products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        navigation: Navigation(closeButtonStyle: .close(.right)),
+        oauthProviders: [.apple, .thirdParty(.google)],
+        otpOptions: .init(methods: [.sms, .whatsapp])
+    )
 }
 
 #Preview {

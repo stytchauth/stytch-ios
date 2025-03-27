@@ -65,7 +65,7 @@ struct Environment {
 
     var cookieClient: CookieClient = .live
 
-    var keychainClient: KeychainClient = .live
+    var keychainClient: KeychainClient = KeychainClientImplementation()
 
     var networkMonitor: NetworkMonitor = .init()
 

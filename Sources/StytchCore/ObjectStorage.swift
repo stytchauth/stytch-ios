@@ -21,7 +21,7 @@ public enum StytchObjectInfo<T: Equatable>: Equatable {
 protocol ObjectStorageWrapper {
     associatedtype ObjectType: Equatable
     var lastValidatedAtDate: Date? { get }
-    var keychainItem: KeychainClient.Item { get }
+    var keychainItem: KeychainItem { get }
     func setObject(object: ObjectType?)
     func getObject() -> ObjectType?
 }
@@ -31,8 +31,12 @@ extension ObjectStorageWrapper {
         Current.keychainClient
     }
 
-    var queryResult: KeychainClient.QueryResult? {
+    var queryResult: KeychainQueryResult? {
         try? keychainClient.getFirstQueryResult(keychainItem)
+    }
+
+    var lastValidatedAtDate: Date? {
+        queryResult?.modifiedAt
     }
 }
 
@@ -74,18 +78,14 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
 
 class SessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
-    let keychainItem = KeychainClient.Item.session
-
-    var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
-    }
+    let keychainItem = KeychainItem.session
 
     func setObject(object: Session?) {
-        try? keychainClient.setCodable(object, for: keychainItem)
+        try? keychainClient.setObject(object, for: keychainItem)
     }
 
     func getObject() -> Session? {
-        var sessionToReturn: Session? = queryResult?.session
+        var sessionToReturn: Session? = try? keychainClient.getObject(Session.self, for: keychainItem)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -96,18 +96,14 @@ class SessionStorageWrapper: ObjectStorageWrapper {
 
 class MemberSessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
-    let keychainItem = KeychainClient.Item.memberSession
-
-    var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
-    }
+    let keychainItem = KeychainItem.memberSession
 
     func setObject(object: MemberSession?) {
-        try? keychainClient.setCodable(object, for: keychainItem)
+        try? keychainClient.setObject(object, for: keychainItem)
     }
 
     func getObject() -> MemberSession? {
-        var sessionToReturn: MemberSession? = queryResult?.memberSession
+        var sessionToReturn: MemberSession? = try? keychainClient.getObject(MemberSession.self, for: keychainItem)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -117,50 +113,38 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
 }
 
 class UserStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainClient.Item.user
-
-    var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
-    }
+    let keychainItem = KeychainItem.user
 
     func setObject(object: User?) {
-        try? keychainClient.setCodable(object, for: keychainItem)
+        try? keychainClient.setObject(object, for: keychainItem)
     }
 
     func getObject() -> User? {
-        queryResult?.user
+        try? keychainClient.getObject(User.self, for: keychainItem)
     }
 }
 
 class MemberStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainClient.Item.member
-
-    var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
-    }
+    let keychainItem = KeychainItem.member
 
     func setObject(object: Member?) {
-        try? keychainClient.setCodable(object, for: keychainItem)
+        try? keychainClient.setObject(object, for: keychainItem)
     }
 
     func getObject() -> Member? {
-        queryResult?.member
+        try? keychainClient.getObject(Member.self, for: keychainItem)
     }
 }
 
 class OrganizationStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainClient.Item.organization
-
-    var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
-    }
+    let keychainItem = KeychainItem.organization
 
     func setObject(object: Organization?) {
-        try? keychainClient.setCodable(object, for: keychainItem)
+        try? keychainClient.setObject(object, for: keychainItem)
     }
 
     func getObject() -> Organization? {
-        queryResult?.organization
+        try? keychainClient.getObject(Organization.self, for: keychainItem)
     }
 }
 
