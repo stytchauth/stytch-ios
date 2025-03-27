@@ -6,9 +6,11 @@ protocol KeychainMigration {
 
 extension KeychainClient {
     // Migrations must only be added to the bottom of this list so they are run in order
-    static let migrations: [KeychainMigration.Type] = [
-        KeychainMigration1.self,
-        KeychainMigration2.self,
-        KeychainMigration3.self,
-    ]
+    func migrations() -> [KeychainMigration.Type] {
+        [
+            KeychainMigration1.self,
+            KeychainMigration2.self,
+            KeychainMigration3.self,
+        ]
+    }
 }

@@ -60,7 +60,7 @@ public extension StytchSDKError {
     static let biometricsAlreadyEnrolled = StytchSDKError(
         message: "There is already a biometric factor enrolled on this device. Fully authenticate with all factors and remove the existing registration before attempting to register again.",
         options: .init(
-            errorType: "biometric_already_enrolled"
+            errorType: "biometrics_already_enrolled"
         )
     )
     static let invalidAuthorizationCredential = StytchSDKError(

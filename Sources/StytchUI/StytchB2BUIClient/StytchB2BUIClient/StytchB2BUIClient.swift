@@ -23,7 +23,7 @@ public enum StytchB2BUIClient {
     ///   - configuration: Defines the configuration for `StytchB2BUIClient`, including authentication methods, session settings,
     ///     UI customization, and organizational options. This object controls how users authenticate,
     ///     which authentication flows are available, and the overall user experience within the B2B UI.
-    static func configure(configuration: StytchB2BUIClient.Configuration) {
+    public static func configure(configuration: StytchB2BUIClient.Configuration) {
         reset()
         StytchB2BClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()

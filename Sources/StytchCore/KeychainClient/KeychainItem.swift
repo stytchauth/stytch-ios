@@ -1,57 +1,55 @@
 import Foundation
 
-extension KeychainClient {
-    struct Item {
-        var kind: Kind
-        var name: String
+struct KeychainItem {
+    var kind: Kind
+    var name: String
 
-        var baseQuery: [CFString: Any] {
-            [
-                kSecClass: kSecClassGenericPassword,
-                kSecAttrService: name,
-                kSecUseDataProtectionKeychain: true,
-            ]
-        }
+    var baseQuery: [CFString: Any] {
+        [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: name,
+            kSecUseDataProtectionKeychain: true,
+        ]
+    }
 
-        var getQuery: [CFString: Any] {
-            baseQuery
-                .merging([
-                    kSecReturnData: true,
-                    kSecReturnAttributes: true,
-                    kSecMatchLimit: kSecMatchLimitAll,
-                    kSecAttrSynchronizable: kSecAttrSynchronizableAny,
-                ]) { $1 }
-        }
+    var getQuery: [CFString: Any] {
+        baseQuery
+            .merging([
+                kSecReturnData: true,
+                kSecReturnAttributes: true,
+                kSecMatchLimit: kSecMatchLimitAll,
+                kSecAttrSynchronizable: kSecAttrSynchronizableAny,
+            ]) { $1 }
+    }
 
-        func insertQuery(value: Value) -> CFDictionary {
-            baseQuery.merging(updateQuerySegment(for: value))
-        }
+    func insertQuery(value: Value) -> CFDictionary {
+        baseQuery.merging(updateQuerySegment(for: value))
+    }
 
-        func updateQuerySegment(for value: Value) -> [CFString: Any] {
-            var querySegment: [CFString: Any] = [
-                kSecValueData: value.data,
-            ]
-            if let account = value.account {
-                querySegment[kSecAttrAccount] = account
-            }
-            if let label = value.label {
-                querySegment[kSecAttrLabel] = label
-            }
-            if let generic = value.generic {
-                querySegment[kSecAttrGeneric] = generic
-            }
-            if let accessControl = try? value.accessPolicy?.accessControl {
-                querySegment[kSecAttrAccessControl] = accessControl
-            }
-            if kind == .token {
-                querySegment[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
-            }
-            return querySegment
+    func updateQuerySegment(for value: Value) -> [CFString: Any] {
+        var querySegment: [CFString: Any] = [
+            kSecValueData: value.data,
+        ]
+        if let account = value.account {
+            querySegment[kSecAttrAccount] = account
         }
+        if let label = value.label {
+            querySegment[kSecAttrLabel] = label
+        }
+        if let generic = value.generic {
+            querySegment[kSecAttrGeneric] = generic
+        }
+        if let accessControl = try? value.accessPolicy?.accessControl {
+            querySegment[kSecAttrAccessControl] = accessControl
+        }
+        if kind == .token {
+            querySegment[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
+        }
+        return querySegment
     }
 }
 
-extension KeychainClient.Item {
+extension KeychainItem {
     enum Kind {
         case privateKey
         case token
@@ -59,7 +57,7 @@ extension KeychainClient.Item {
     }
 }
 
-extension KeychainClient.Item {
+extension KeychainItem {
     struct Value {
         let data: Data
         let account: String?
@@ -69,7 +67,7 @@ extension KeychainClient.Item {
     }
 }
 
-extension KeychainClient.Item {
+extension KeychainItem {
     enum AccessPolicy {
         case deviceOwnerAuthentication
         case deviceOwnerAuthenticationWithBiometrics
@@ -81,7 +79,10 @@ extension KeychainClient.Item {
         var accessControl: SecAccessControl {
             get throws {
                 var error: Unmanaged<CFError>?
-                defer { error?.release() }
+
+                defer {
+                    error?.release()
+                }
 
                 let flags: SecAccessControlCreateFlags
 
@@ -96,24 +97,17 @@ extension KeychainClient.Item {
                 #endif
                 }
 
-                guard
-                    let accessControl = SecAccessControlCreateWithFlags(
-                        nil,
-                        kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
-                        flags,
-                        &error
-                    )
-                else {
-                    throw error.toError() ?? KeychainClient.KeychainError.unableToCreateAccessControl
+                if let accessControl = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, flags, &error) {
+                    return accessControl
+                } else {
+                    throw error.toError() ?? KeychainError.unableToCreateAccessControl
                 }
-
-                return accessControl
             }
         }
     }
 }
 
-extension KeychainClient.Item {
+extension KeychainItem {
     // The private key registration is central to biometric authentication, and this item should be protected by biometrics unless explicitly specified otherwise by the caller.
     static let privateKeyRegistration: Self = .init(kind: .privateKey, name: "stytch_private_key_registration")
     // This was introduced in version 0.54.0 to store the biometric registration ID in a keychain item that is not protected by biometrics.
@@ -135,7 +129,7 @@ extension KeychainClient.Item {
     static let b2bLastAuthMethodUsed: Self = .init(kind: .object, name: "b2b_last_auth_method_used")
     static let consumerLastAuthMethodUsed: Self = .init(kind: .object, name: "consumer_last_auth_method_used")
 
-    // TODO: - set up linting or codegen to ensure any new `KeychainClient.Item` added (this file or elsewhere) is added to this array
+    // TODO: - set up linting or codegen to ensure any new `KeychainItem` added (this file or elsewhere) is added to this array
     static var allItems: [Self] {
         [
             .privateKeyRegistration,

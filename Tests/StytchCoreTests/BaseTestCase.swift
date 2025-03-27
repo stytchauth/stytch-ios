@@ -15,7 +15,7 @@ class BaseTestCase: XCTestCase {
         Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest)
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
-        Current.keychainClient = .mock()
+        Current.keychainClient = KeychainClientMock()
         Current.cryptoClient = .live
         Current.localStorage = .init()
         Current.timer = { _, _, _ in
@@ -32,7 +32,7 @@ class BaseTestCase: XCTestCase {
 
         Current.defaults = .mock()
 
-        KeychainClient.migrations.forEach { migration in
+        Current.keychainClient.migrations().forEach { migration in
             let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
             Current.defaults.set(true, forKey: migrationName)
         }

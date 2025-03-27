@@ -4,39 +4,45 @@ import Foundation
 // used for testing the expiration of the IST
 public var keychainDateCreatedOffsetInMinutes = 0
 
-extension KeychainClient {
-    static func mock() -> Self {
-        let lock: NSLock = .init()
-        var keychainItems: [String: [KeychainClient.QueryResult]] = [:]
+class KeychainClientMock: KeychainClient {
+    let lock: NSLock = .init()
+    var keychainItems: [String: [KeychainQueryResult]] = [:]
 
-        return .init { item in
-            lock.withLock { keychainItems[item.name] ?? [] }
-        } valueExistsForItem: { item in
-            lock.withLock { keychainItems[item.name].map { !$0.isEmpty } ?? false }
-        } setValueForItem: { value, item in
-            lock.withLock {
-                let queryResult: KeychainClient.QueryResult = .init(
-                    data: value.data,
-                    createdAt: .init().minutesAgo(minutes: keychainDateCreatedOffsetInMinutes),
-                    modifiedAt: .init().minutesAgo(minutes: keychainDateCreatedOffsetInMinutes),
-                    label: value.label,
-                    account: value.account,
-                    generic: value.generic
-                )
-                var results = keychainItems[item.name, default: []]
-                if let index = results.firstIndex(where: { $0.label == queryResult.label && $0.account == queryResult.account }) {
-                    results[index] = queryResult
-                } else {
-                    results.append(queryResult)
-                }
-                keychainItems[item.name] = results
+    func getQueryResults(item: StytchCore.KeychainItem) throws -> [StytchCore.KeychainQueryResult] {
+        lock.withLock { keychainItems[item.name] ?? [] }
+    }
+
+    func valueExistsForItem(item: StytchCore.KeychainItem) -> Bool {
+        lock.withLock { keychainItems[item.name].map { !$0.isEmpty } ?? false }
+    }
+
+    func setValueForItem(value: StytchCore.KeychainItem.Value, item: StytchCore.KeychainItem) throws {
+        lock.withLock {
+            let queryResult: KeychainQueryResult = .init(
+                data: value.data,
+                createdAt: .init().minutesAgo(minutes: keychainDateCreatedOffsetInMinutes),
+                modifiedAt: .init().minutesAgo(minutes: keychainDateCreatedOffsetInMinutes),
+                label: value.label,
+                account: value.account,
+                generic: value.generic
+            )
+            var results = keychainItems[item.name, default: []]
+            if let index = results.firstIndex(where: { $0.label == queryResult.label && $0.account == queryResult.account }) {
+                results[index] = queryResult
+            } else {
+                results.append(queryResult)
             }
-        } removeItem: { item in
-            lock.withLock { keychainItems[item.name] = nil }
+            keychainItems[item.name] = results
         }
     }
 
-    func resultsExistForItem(_ item: Item) -> Bool {
+    func removeItem(item: StytchCore.KeychainItem) throws {
+        lock.withLock { keychainItems[item.name] = nil }
+    }
+}
+
+extension KeychainClient {
+    func resultsExistForItem(_ item: KeychainItem) -> Bool {
         (try? getStringValue(item).map { !$0.isEmpty }) ?? false
     }
 }

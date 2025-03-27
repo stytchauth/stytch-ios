@@ -17,7 +17,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             signupTemplateId: "mate"
         )
 
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(.codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
 
         let response = try await StytchB2BClient.magicLinks.email.loginOrSignup(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -53,7 +53,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             locale: .en
         )
 
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(.codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
 
         _ = try await StytchB2BClient.magicLinks.email.discoverySend(parameters: parameters)
 

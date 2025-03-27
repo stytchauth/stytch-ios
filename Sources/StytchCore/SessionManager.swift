@@ -139,11 +139,11 @@ extension SessionManager {
             try? keychainClient.getStringValue(.sessionToken).map(SessionToken.opaque)
         }
         set {
-            let keychainItem: KeychainClient.Item = .sessionToken
+            let keychainItem: KeychainItem = .sessionToken
             if let newValue = newValue {
                 try? keychainClient.setStringValue(newValue.value, for: keychainItem)
             } else {
-                try? keychainClient.removeItem(keychainItem)
+                try? keychainClient.removeItem(item: keychainItem)
                 cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
@@ -154,11 +154,11 @@ extension SessionManager {
             try? keychainClient.getStringValue(.sessionJwt).map(SessionToken.jwt)
         }
         set {
-            let keychainItem: KeychainClient.Item = .sessionJwt
+            let keychainItem: KeychainItem = .sessionJwt
             if let newValue = newValue {
                 try? keychainClient.setStringValue(newValue.value, for: keychainItem)
             } else {
-                try? keychainClient.removeItem(keychainItem)
+                try? keychainClient.removeItem(item: keychainItem)
                 cookieClient.deleteCookie(named: keychainItem.name)
             }
         }
@@ -207,8 +207,8 @@ extension SessionManager {
     }
 
     private func removeIntermediateSessionToken() {
-        let keychainItem: KeychainClient.Item = .intermediateSessionToken
-        try? keychainClient.removeItem(keychainItem)
+        let keychainItem: KeychainItem = .intermediateSessionToken
+        try? keychainClient.removeItem(item: keychainItem)
         cookieClient.deleteCookie(named: keychainItem.name)
     }
 }

@@ -27,10 +27,10 @@ final class SessionStorageTestCase: BaseTestCase {
     }
 
     func testIntermediateSessionTokenExpiresAfter11Minutes() {
-        let keychainItem: KeychainClient.Item = .intermediateSessionToken
+        let keychainItem: KeychainItem = .intermediateSessionToken
 
         // clear the IST
-        try? Current.keychainClient.removeItem(keychainItem)
+        try? Current.keychainClient.removeItem(item: keychainItem)
 
         // set the date created offset to 11 minutes so that the IST will be expired and return nil
         keychainDateCreatedOffsetInMinutes = 11
@@ -43,10 +43,10 @@ final class SessionStorageTestCase: BaseTestCase {
     }
 
     func testIntermediateSessionTokenIsStillValidAfter5Minutes() {
-        let keychainItem: KeychainClient.Item = .intermediateSessionToken
+        let keychainItem: KeychainItem = .intermediateSessionToken
 
         // clear the IST
-        try? Current.keychainClient.removeItem(keychainItem)
+        try? Current.keychainClient.removeItem(item: keychainItem)
 
         // set the date created offset to only 5 minutes so that the IST is still valid
         keychainDateCreatedOffsetInMinutes = 5

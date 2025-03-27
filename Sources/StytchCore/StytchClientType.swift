@@ -148,13 +148,13 @@ extension StytchClientType {
         else { return }
 
         defaults.set(uuid().uuidString, forKey: installIdDefaultsKey)
-        KeychainClient.Item.allItems.forEach { item in
-            try? keychainClient.removeItem(item)
+        KeychainItem.allItems.forEach { item in
+            try? keychainClient.removeItem(item: item)
         }
     }
 
     private func runKeychainMigrations() {
-        KeychainClient.migrations.forEach { migration in
+        keychainClient.migrations().forEach { migration in
             let migrationName = "stytch_keychain_migration_" + String(describing: migration.self)
             guard !defaults.bool(forKey: migrationName) else {
                 return

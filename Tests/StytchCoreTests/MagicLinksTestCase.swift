@@ -18,7 +18,7 @@ final class MagicLinksTestCase: BaseTestCase {
             locale: .en
         )
 
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(.codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -55,7 +55,7 @@ final class MagicLinksTestCase: BaseTestCase {
         )
 
         XCTAssertFalse(Current.sessionManager.hasValidSessionToken)
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(.codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
@@ -90,7 +90,7 @@ final class MagicLinksTestCase: BaseTestCase {
         try Current.keychainClient.setStringValue("123", for: .sessionToken)
 
         XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(.codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
 
         let response = try await StytchClient.magicLinks.email.send(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
