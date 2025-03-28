@@ -32,13 +32,11 @@ extension OAuthViewModel: OAuthViewModelProtocol {
         switch provider {
         case .apple:
             let response = try await appleOauthProvider.start(parameters: .init(sessionDuration: state.config.sessionDurationMinutes))
-            StytchUIClient.onAuthCallback?(response)
         case let .thirdParty(provider):
             let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
                 configuration: .init(loginRedirectUrl: state.config.redirectUrl, signupRedirectUrl: state.config.redirectUrl)
             )
             let response = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDuration: state.config.sessionDurationMinutes))
-            StytchUIClient.onAuthCallback?(response)
         }
     }
 }

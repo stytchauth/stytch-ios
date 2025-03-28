@@ -6,16 +6,13 @@ import UIKit
 final class B2BAuthRootViewController: UIViewController {
     private let configuration: StytchB2BUIClient.Configuration
 
-    private var onB2BAuthCallback: AuthCallback?
-
     private var homeController: B2BAuthHomeViewController?
 
     private var loadingView: UIView?
     private var activityIndicator: UIActivityIndicatorView?
 
-    init(configuration: StytchB2BUIClient.Configuration, onB2BAuthCallback: AuthCallback? = nil) {
+    init(configuration: StytchB2BUIClient.Configuration) {
         self.configuration = configuration
-        self.onB2BAuthCallback = onB2BAuthCallback
         super.init(nibName: nil, bundle: nil)
     }
 

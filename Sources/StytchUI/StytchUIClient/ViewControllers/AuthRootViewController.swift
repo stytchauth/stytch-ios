@@ -8,11 +8,8 @@ final class AuthRootViewController: UIViewController {
 
     private let activityIndicator: UIActivityIndicatorView = .init(style: .large)
 
-    private var onAuthCallback: AuthCallback?
-
-    init(config: StytchUIClient.Configuration, onAuthCallback: AuthCallback? = nil) {
+    init(config: StytchUIClient.Configuration) {
         self.config = config
-        self.onAuthCallback = onAuthCallback
         super.init(nibName: nil, bundle: nil)
     }
 

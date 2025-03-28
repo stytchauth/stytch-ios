@@ -24,9 +24,7 @@ struct ContentView: View {
                     }.font(.title).bold()
                 }
             }
-            .authenticationSheet(configuration: viewModel.configuration, isPresented: $viewModel.shouldShowB2CUI, onAuthCallback: { authenticateResponseType in
-                print("user: \(authenticateResponseType.user) - session: \(authenticateResponseType.session)")
-            })
+            .authenticationSheet(configuration: viewModel.configuration, isPresented: $viewModel.shouldShowB2CUI)
             .padding()
             .onOpenURL { url in
                 viewModel.shouldShowB2CUI = true
@@ -53,6 +51,7 @@ class ContentViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
+        // you can also observere: `StytchClient.user.onUserChange` if need be
         StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionInfo in
@@ -65,6 +64,14 @@ class ContentViewModel: ObservableObject {
                     self?.shouldShowB2CUI = true
                 }
             }.store(in: &cancellables)
+
+        StytchUIClient.errorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { error in
+                print("Error from StytchUIClient:")
+                print(error.errorInfo)
+            }
+            .store(in: &cancellables)
 
         // To start the underlying client’s observables before displaying the UI, call configure separately.
         StytchUIClient.configure(configuration: configuration)

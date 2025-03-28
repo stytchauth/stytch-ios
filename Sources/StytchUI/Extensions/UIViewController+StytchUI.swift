@@ -3,6 +3,7 @@ import UIKit
 
 extension UIViewController {
     func presentErrorAlert(error: Error) {
+        ErrorPublisher.publishError(error)
         presentAlert(
             title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
             message: (error as? StytchError)?.message ?? error.localizedDescription
