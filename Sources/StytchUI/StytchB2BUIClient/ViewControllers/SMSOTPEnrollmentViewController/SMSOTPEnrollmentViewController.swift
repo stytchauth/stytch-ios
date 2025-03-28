@@ -97,6 +97,7 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
                     navigationController?.pushViewController(SMSOTPEntryViewController(state: .init(configuration: viewModel.state.configuration, didSendCode: true)), animated: true)
                 } catch {
                     StytchB2BUIClient.stopLoading()
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }

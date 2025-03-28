@@ -105,6 +105,7 @@ final class B2BEmailViewController: BaseViewController<B2BEmailState, B2BEmailVi
     func sendEmailMagicLink() {
         viewModel.sendEmailMagicLink(emailAddress: emailInput.text ?? "") { [weak self] error in
             if let error {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             } else {
                 self?.delegate?.emailMagicLinkSent()
@@ -115,6 +116,7 @@ final class B2BEmailViewController: BaseViewController<B2BEmailState, B2BEmailVi
     func sendEmailOTP() {
         viewModel.sendEmailOTP(emailAddress: emailInput.text ?? "") { [weak self] error in
             if let error {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             } else {
                 self?.delegate?.emailOTPSent()

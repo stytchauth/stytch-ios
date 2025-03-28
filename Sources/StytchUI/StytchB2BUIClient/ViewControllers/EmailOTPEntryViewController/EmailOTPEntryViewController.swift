@@ -81,6 +81,7 @@ extension EmailOTPEntryViewController: OTPEntryViewControllerProtocol {
                 StytchB2BUIClient.stopLoading()
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }
@@ -116,6 +117,7 @@ extension EmailOTPEntryViewController: OTPCodeEntryViewDelegate {
                 StytchB2BUIClient.stopLoading()
             } catch {
                 otpView.clear()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }

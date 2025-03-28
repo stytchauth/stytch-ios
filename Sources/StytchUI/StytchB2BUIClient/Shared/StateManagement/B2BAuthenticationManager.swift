@@ -65,6 +65,7 @@ enum B2BAuthenticationManager {
         // So if the totp response is not nil we want to wait to dismiss the ui until the user has saved the recovery codes
         if memberSession != nil {
             if totpResponse == nil || (totpResponse != nil && didSaveRecoveryCodes == true) {
+                EventsClient.sendAuthenticationSuccessEvent()
                 dismissUIPublisher.send()
             }
         }

@@ -78,6 +78,7 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
                 }
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }
@@ -132,6 +133,7 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
                     }
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

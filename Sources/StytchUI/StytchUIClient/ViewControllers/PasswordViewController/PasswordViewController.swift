@@ -1,6 +1,8 @@
 import StytchCore
 import UIKit
 
+// swiftlint:disable type_body_length
+
 final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
@@ -17,6 +19,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchCheckYourEmail(email: email)
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             }
         }
@@ -61,6 +64,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchForgotPassword(email: email)
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             }
         }
@@ -79,6 +83,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     self?.launchCheckYourEmail(email: email)
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             }
         }
@@ -218,6 +223,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.setPassword(token: token, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }
@@ -227,6 +233,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.login(email: email, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }
@@ -236,6 +243,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     try await viewModel.signup(email: email, password: password)
                 } catch {
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }
@@ -280,6 +288,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                     passwordInput.setFeedback(nil)
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

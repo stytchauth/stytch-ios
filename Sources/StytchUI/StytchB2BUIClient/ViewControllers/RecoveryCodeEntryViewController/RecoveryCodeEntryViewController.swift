@@ -62,6 +62,7 @@ final class RecoveryCodeEntryViewController: BaseViewController<RecoveryCodeEntr
                 try await viewModel.recover(recoveryCode: recoveryCode)
                 StytchB2BUIClient.stopLoading()
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }

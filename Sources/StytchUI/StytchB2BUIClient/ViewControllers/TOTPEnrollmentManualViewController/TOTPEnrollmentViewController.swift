@@ -74,6 +74,7 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
             } catch {
                 Task { @MainActor in
                     self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTryAgainTitle", value: "Try Again", comment: ""), for: .normal)
+                    ErrorPublisher.publishError(error)
                     self?.presentErrorAlert(error: error)
                     self?.error = error
                     StytchB2BUIClient.stopLoading()

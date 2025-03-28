@@ -65,6 +65,7 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
                 presentAlert(title: "Email Sent!")
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }
