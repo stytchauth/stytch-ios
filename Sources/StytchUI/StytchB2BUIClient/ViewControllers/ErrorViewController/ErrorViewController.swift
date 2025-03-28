@@ -13,6 +13,7 @@ final class ErrorViewController: BaseViewController<ErrorState, ErrorViewModel> 
 
     init(state: ErrorState) {
         super.init(viewModel: ErrorViewModel(state: state))
+        ErrorPublisher.publishError(viewModel.state.type)
     }
 
     override func configureView() {

@@ -12,7 +12,6 @@ final class OTPCodeViewModelTest: BaseTestCase {
     override func setUp() async throws {
         try await super.setUp()
         calledMethod = nil
-        StytchUIClient.onAuthCallback = nil
     }
 
     func testResendCodeCallsLoginOrCreateAndUpdatesState() async throws {
@@ -51,12 +50,7 @@ final class OTPCodeViewModelTest: BaseTestCase {
         )
         let spy = OTPSpy(callback: calledMethodCallback)
         let viewModel: OTPCodeViewModel = .init(state: state, otpClient: spy)
-        var didCallUICallback = false
-        StytchUIClient.onAuthCallback = { _ in
-            didCallUICallback = true
-        }
         _ = try await viewModel.enterCode(code: "123456", methodId: "")
         XCTAssert(calledMethod == .otpAuthenticate)
-        XCTAssert(didCallUICallback)
     }
 }

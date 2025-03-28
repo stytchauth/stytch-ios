@@ -12,7 +12,6 @@ final class PasswordViewModelTests: BaseTestCase {
     override func setUp() async throws {
         try await super.setUp()
         calledMethod = nil
-        StytchUIClient.onAuthCallback = nil
         StytchUIClient.pendingResetEmail = nil
     }
 
@@ -135,13 +134,8 @@ final class PasswordViewModelTests: BaseTestCase {
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let viewModel = PasswordViewModel(state: state, passwordClient: spy)
-        var didCallUICallback = false
-        StytchUIClient.onAuthCallback = { _ in
-            didCallUICallback = true
-        }
         _ = try await viewModel.setPassword(token: "", password: "")
         XCTAssert(calledMethod == .passwordsResetByEmail)
-        XCTAssert(didCallUICallback)
     }
 
     func testSignupCallsCreateAndReportsToOnAuthCallback() async throws {
@@ -156,13 +150,8 @@ final class PasswordViewModelTests: BaseTestCase {
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let viewModel = PasswordViewModel(state: state, passwordClient: spy)
-        var didCallUICallback = false
-        StytchUIClient.onAuthCallback = { _ in
-            didCallUICallback = true
-        }
         _ = try await viewModel.signup(email: "", password: "")
         XCTAssert(calledMethod == .passwordsCreate)
-        XCTAssert(didCallUICallback)
     }
 
     func testLoginCallsAuthenticateAndReportsToOnAuthCallback() async throws {
@@ -177,13 +166,8 @@ final class PasswordViewModelTests: BaseTestCase {
         )
         let spy: PasswordsProtocol = PasswordsSpy(callback: calledMethodCallback)
         let viewModel = PasswordViewModel(state: state, passwordClient: spy)
-        var didCallUICallback = false
-        StytchUIClient.onAuthCallback = { _ in
-            didCallUICallback = true
-        }
         _ = try await viewModel.login(email: "", password: "")
         XCTAssert(calledMethod == .passwordsAuthenticate)
-        XCTAssert(didCallUICallback)
     }
 
     func testLoginWithEmailExitsEarlyWhenEMLProductIsNotConfigured() async throws {

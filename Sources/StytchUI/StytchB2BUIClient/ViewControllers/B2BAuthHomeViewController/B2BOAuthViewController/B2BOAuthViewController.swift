@@ -50,6 +50,7 @@ final class B2BOAuthViewController: BaseViewController<B2BOAuthState, B2BOAuthVi
             } catch {
                 if let error = error as? ASWebAuthenticationSessionError, error.code == .canceledLogin {
                     // do nothing
+                    ErrorPublisher.publishError(error)
                 } else {
                     self?.presentErrorAlert(error: error)
                     try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))

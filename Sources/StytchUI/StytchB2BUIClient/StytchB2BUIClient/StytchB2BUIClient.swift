@@ -5,18 +5,20 @@ import UIKit
 
 // swiftlint:disable modifier_order prefer_self_in_static_references
 
-public typealias B2BAuthenticateCallback = () -> Void
-
 public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    static var configuration = StytchB2BUIClient.Configuration.empty
-    static var onB2BAuthCallback: B2BAuthenticateCallback?
-    private static var cancellable: AnyCancellable?
-    fileprivate weak static var currentController: B2BAuthRootViewController?
+    public private(set) static var configuration = StytchB2BUIClient.Configuration.empty
 
     public static var dismissUI: AnyPublisher<Void, Never> {
         B2BAuthenticationManager.dismissUI
     }
+
+    public static var errorPublisher: AnyPublisher<Error, Never> {
+        ErrorPublisher.publisher
+    }
+
+    fileprivate static var cancellable: AnyCancellable?
+    fileprivate weak static var currentController: B2BAuthRootViewController?
 
     /// Configures the `StytchB2BUIClient`.
     /// - Parameters:
@@ -33,17 +35,9 @@ public enum StytchB2BUIClient {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
     public static func presentController(
         configuration: Configuration,
-        controller: UIViewController,
-        onB2BAuthCallback: B2BAuthenticateCallback? = nil
+        controller: UIViewController
     ) {
         configure(configuration: configuration)
-
-        Self.onB2BAuthCallback = {
-            Task {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
-            }
-            onB2BAuthCallback?()
-        }
 
         let rootController = B2BAuthRootViewController(configuration: configuration)
         currentController = rootController
@@ -93,6 +87,7 @@ public enum StytchB2BUIClient {
                 }
                 stopLoading()
             } catch {
+                ErrorPublisher.publishError(error)
                 currentController?.showErrorScreen()
                 stopLoading()
             }
@@ -135,17 +130,10 @@ public extension View {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchB2BClient.sessions.onMemberSessionChange` to observe auth changes.
     func b2bAuthenticationSheet(
         configuration: StytchB2BUIClient.Configuration,
-        isPresented: Binding<Bool>,
-        onB2BAuthCallback: B2BAuthenticateCallback? = nil
+        isPresented: Binding<Bool>
     ) -> some View {
         sheet(isPresented: isPresented) {
-            StytchB2BUIClient.onB2BAuthCallback = {
-                Task {
-                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
-                }
-                onB2BAuthCallback?()
-            }
-            return B2BAuthenticationView(configuration)
+            B2BAuthenticationView(configuration)
                 .interactiveDismissDisabled(true)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
