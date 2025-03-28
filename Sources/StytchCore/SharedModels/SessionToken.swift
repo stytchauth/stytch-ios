@@ -72,15 +72,15 @@ public struct SessionToken: Equatable, Sendable {
 
 /// A public interface to require the caller to explicitly pass one of each type of non nil token in order to update a session.
 public struct SessionTokens: Sendable {
-    internal let jwt: SessionToken
+    internal let jwt: SessionToken?
     internal let opaque: SessionToken
 
     /// A nullable initializer that requires the caller to pass at least one non-nil instance of each token type.
     /// - Parameters:
     ///   - jwt: An instance of `SessionToken` with a `type` of `.jwt`
     ///   - opaque: An instance of `SessionToken` with a `type` of `.opaque`
-    public init?(jwt: SessionToken, opaque: SessionToken) {
-        if jwt.kind != .jwt, jwt.value.isEmpty == true {
+    public init?(jwt: SessionToken?, opaque: SessionToken) {
+        if let jwt = jwt, jwt.kind != .jwt, jwt.value.isEmpty == true {
             return nil
         }
 
