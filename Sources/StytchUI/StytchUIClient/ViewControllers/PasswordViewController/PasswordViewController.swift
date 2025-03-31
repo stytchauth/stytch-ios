@@ -1,7 +1,6 @@
 import StytchCore
 import UIKit
 
-// swiftlint:disable type_body_length
 final class PasswordViewController: BaseViewController<PasswordState, PasswordViewModel> {
     private let scrollView: UIScrollView = .init()
 
@@ -43,21 +42,8 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
         input.textInput.textContentType = .newPassword
-        input.textInput.rightView = secureEntryToggleButton
         input.textInput.rightViewMode = .always
         return input
-    }()
-
-    private lazy var secureEntryToggleButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.adjustsImageWhenHighlighted = false
-        button.setImage(UIImage(systemName: "eye"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .secondaryText
-        button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([button.heightAnchor.constraint(equalToConstant: 12.5)])
-        return button
     }()
 
     private lazy var continueButton: Button = .primary(
@@ -254,10 +240,6 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 }
             }
         }
-    }
-
-    @objc private func toggleSecureEntry(sender _: UIButton) {
-        passwordInput.textInput.isSecureTextEntry.toggle()
     }
 
     private func setNeedsStrengthCheck() {

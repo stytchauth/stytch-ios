@@ -143,6 +143,10 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         setupEmailInput(input: emailInput)
 
         hideInputs(for: activeInput)
+
+        if !inputs.isEmpty {
+            activeInput = inputs[0]
+        }
     }
 
     private func hideInputs(for input: Input) {

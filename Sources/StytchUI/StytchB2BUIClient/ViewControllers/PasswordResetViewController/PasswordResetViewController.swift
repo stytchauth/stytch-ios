@@ -14,21 +14,8 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
         input.textInput.textContentType = .password
-        input.textInput.rightView = secureEntryToggleButton
         input.textInput.rightViewMode = .always
         return input
-    }()
-
-    private lazy var secureEntryToggleButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.adjustsImageWhenHighlighted = false
-        button.setImage(UIImage(systemName: "eye"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .secondaryText
-        button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([button.heightAnchor.constraint(equalToConstant: 12.5)])
-        return button
     }()
 
     private lazy var continueButton: Button = .primary(
@@ -72,10 +59,6 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
                 self?.continueWithPasswordResetIfPossible()
             }
         }
-    }
-
-    @objc private func toggleSecureEntry(sender _: UIButton) {
-        passwordInput.textInput.isSecureTextEntry.toggle()
     }
 
     @objc private func continueWithPasswordResetIfPossible() {
