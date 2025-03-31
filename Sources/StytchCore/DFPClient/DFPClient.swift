@@ -62,7 +62,10 @@ private final class MessageHandler: NSObject, WKScriptMessageHandler {
 
 private extension UIApplication {
     var rootViewController: UIViewController? {
-        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController
+        (connectedScenes.first { $0.activationState == .foregroundActive } as? UIWindowScene)?
+            .windows
+            .first { $0.isKeyWindow }?
+            .rootViewController
     }
 }
 
