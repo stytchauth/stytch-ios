@@ -62,6 +62,7 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
                 StytchB2BUIClient.stopLoading()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }

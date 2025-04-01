@@ -35,9 +35,7 @@ struct ContentView: View {
                 .font(.title).bold()
             }
         }
-        .b2bAuthenticationSheet(configuration: viewModel.stytchB2BUIConfig, isPresented: $viewModel.isShowingB2BUI, onB2BAuthCallback: {
-            print("member session: \(String(describing: StytchB2BClient.sessions.memberSession))")
-        })
+        .b2bAuthenticationSheet(configuration: viewModel.stytchB2BUIConfig, isPresented: $viewModel.isShowingB2BUI)
         .padding()
         .onAppear {
             viewModel.loadFromUserDefaults()
@@ -64,6 +62,14 @@ class ContentViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.isShowingB2BUI = false
+            }
+            .store(in: &cancellables)
+
+        StytchB2BUIClient.errorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { error in
+                print("Error from StytchB2BUIClient:")
+                print(error.errorInfo)
             }
             .store(in: &cancellables)
 

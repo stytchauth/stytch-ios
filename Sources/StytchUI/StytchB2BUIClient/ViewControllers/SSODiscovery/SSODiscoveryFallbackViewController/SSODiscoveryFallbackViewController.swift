@@ -53,6 +53,7 @@ final class SSODiscoveryFallbackViewController: BaseViewController<SSODiscoveryF
                 }
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

@@ -54,7 +54,6 @@ extension OTPCodeViewModel: OTPCodeViewModelProtocol {
 
     func enterCode(code: String, methodId: String) async throws {
         let response = try await otpClient.authenticate(parameters: .init(code: code, methodId: methodId))
-        StytchUIClient.onAuthCallback?(response)
     }
 }
 

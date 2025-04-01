@@ -88,6 +88,7 @@ extension TOTPEntryViewController: OTPCodeEntryViewDelegate {
                 continueWithTOTP()
             } catch {
                 otpView.clear()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
                 StytchB2BUIClient.stopLoading()
             }

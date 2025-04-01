@@ -39,6 +39,7 @@ extension BaseViewController {
                 StytchB2BUIClient.stopLoading()
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }
@@ -53,6 +54,7 @@ extension BaseViewController {
                 )
                 startMFAFlowIfNeeded(configuration: configuration)
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

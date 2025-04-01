@@ -25,7 +25,6 @@ final class AuthInputViewModelTests: BaseTestCase {
     override func setUp() async throws {
         try await super.setUp()
         calledMethod = nil
-        StytchUIClient.onAuthCallback = nil
     }
 
     func testCreatesCorrectResetByEmailStartParams() {

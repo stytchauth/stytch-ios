@@ -88,6 +88,7 @@ extension SSODiscoveryEmailViewController: SSODiscoveryEmailViewModelDelegate {
     }
 
     func ssoDiscoveryDidError(error: Error) {
+        ErrorPublisher.publishError(error)
         presentErrorAlert(error: error)
     }
 }

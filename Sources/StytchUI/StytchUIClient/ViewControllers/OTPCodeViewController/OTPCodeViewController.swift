@@ -38,6 +38,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
                     self?.launchPassword(email: email)
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             }
         }
@@ -107,6 +108,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             do {
                 try await viewModel.resendCode(input: viewModel.state.input)
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }
@@ -131,6 +133,7 @@ extension OTPCodeViewController: OTPCodeEntryViewDelegate {
                 self.otpView.clear()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                ErrorPublisher.publishError(error)
                 self.presentErrorAlert(error: error)
                 self.otpView.clear()
             }

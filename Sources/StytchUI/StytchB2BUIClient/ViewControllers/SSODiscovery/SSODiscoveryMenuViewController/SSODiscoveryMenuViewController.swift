@@ -47,6 +47,7 @@ final class SSODiscoveryMenuViewController: BaseViewController<SSODiscoveryMenuS
                 startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
             } catch {
                 StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

@@ -281,6 +281,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                     }
                 }
             } catch {
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

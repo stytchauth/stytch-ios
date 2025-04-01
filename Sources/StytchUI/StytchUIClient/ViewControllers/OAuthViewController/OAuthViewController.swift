@@ -33,6 +33,7 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
                 try await viewModel.startOAuth(provider: provider)
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
+                ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }
         }

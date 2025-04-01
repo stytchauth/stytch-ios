@@ -3,24 +3,22 @@ import StytchCore
 import SwiftUI
 import UIKit
 
-// swiftlint:disable prefer_self_in_static_references
-
-public typealias AuthCallback = (AuthenticateResponseType) -> Void
+// swiftlint:disable prefer_self_in_static_references modifier_order
 
 /// This type serves as the entry point for all usages of the Stytch authentication UI.
 public enum StytchUIClient {
+    // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
+    public private(set) static var configuration = StytchUIClient.Configuration.empty
+
+    public static var errorPublisher: AnyPublisher<Error, Never> {
+        ErrorPublisher.publisher
+    }
+
     // Used to store pending reset emails so as to preserve state
     static var pendingResetEmail: String?
 
-    // swiftformat:disable modifierOrder
-    fileprivate static weak var currentController: AuthRootViewController?
-
-    // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    static var configuration = StytchUIClient.Configuration.empty
-
-    static var onAuthCallback: AuthCallback?
-
-    private static var cancellable: AnyCancellable?
+    fileprivate weak static var currentController: AuthRootViewController?
+    fileprivate static var cancellable: AnyCancellable?
 
     /// Configures the `StytchUIClient`
     /// - Parameters:
@@ -34,19 +32,8 @@ public enum StytchUIClient {
     }
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
-    public static func presentController(
-        configuration: Configuration,
-        controller: UIViewController,
-        onAuthCallback: AuthCallback? = nil
-    ) {
+    public static func presentController(configuration: Configuration, controller: UIViewController) {
         configure(configuration: configuration)
-
-        Self.onAuthCallback = { response in
-            Task {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
-            }
-            onAuthCallback?(response)
-        }
 
         let rootController = AuthRootViewController(config: Self.configuration)
         currentController = rootController
@@ -64,13 +51,8 @@ public enum StytchUIClient {
     public static func handle(url: URL, from controller: UIViewController? = nil) -> Bool {
         Task { @MainActor in
             switch try await StytchClient.handle(url: url) {
-            case let .handled(responseData):
-                switch responseData {
-                case let .auth(response):
-                    self.onAuthCallback?(response)
-                case let .oauth(response):
-                    self.onAuthCallback?(response)
-                }
+            case .handled:
+                break
             case .notHandled:
                 break
             case let .manualHandlingRequired(_, _, token):
@@ -100,6 +82,7 @@ public enum StytchUIClient {
             .sink { sessionInfo in
                 switch sessionInfo {
                 case .available:
+                    EventsClient.sendAuthenticationSuccessEvent()
                     dismiss()
                 case .unavailable:
                     break
@@ -112,17 +95,10 @@ public extension View {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onSessionChange` to observe auth changes.
     func authenticationSheet(
         configuration: StytchUIClient.Configuration,
-        isPresented: Binding<Bool>,
-        onAuthCallback: AuthCallback? = nil
+        isPresented: Binding<Bool>
     ) -> some View {
         sheet(isPresented: isPresented) {
-            StytchUIClient.onAuthCallback = { response in
-                Task {
-                    try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_success"))
-                }
-                onAuthCallback?(response)
-            }
-            return AuthenticationView(configuration)
+            AuthenticationView(configuration)
                 .interactiveDismissDisabled(true)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
@@ -140,7 +116,7 @@ public struct AuthenticationView: UIViewControllerRepresentable {
 
     public func makeUIViewController(context _: Context) -> UIViewController {
         StytchUIClient.configure(configuration: configuration)
-        let controller = AuthRootViewController(config: StytchUIClient.configuration)
+        let controller = AuthRootViewController(config: configuration)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpDismissAuthListener()
         return UINavigationController(rootViewController: controller)

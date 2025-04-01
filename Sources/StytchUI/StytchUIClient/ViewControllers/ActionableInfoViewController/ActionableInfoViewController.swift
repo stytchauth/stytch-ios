@@ -95,6 +95,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                         self.launchForgotPassword(email: email)
                     }
                 } catch {
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }
@@ -106,6 +107,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
                         self.launchCheckYourEmail(email: email)
                     }
                 } catch {
+                    ErrorPublisher.publishError(error)
                     presentErrorAlert(error: error)
                 }
             }

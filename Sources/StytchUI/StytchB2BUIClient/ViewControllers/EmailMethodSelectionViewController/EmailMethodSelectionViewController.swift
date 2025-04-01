@@ -39,6 +39,7 @@ final class EmailMethodSelectionViewController: BaseViewController<EmailMethodSe
     func sendEmailMagicLink() {
         viewModel.sendEmailMagicLink(emailAddress: MemberManager.emailAddress ?? "") { [weak self] error in
             if let error {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             } else {
                 self?.emailMagicLinkSent()
@@ -49,6 +50,7 @@ final class EmailMethodSelectionViewController: BaseViewController<EmailMethodSe
     func sendEmailOTP() {
         viewModel.sendEmailOTP(emailAddress: MemberManager.emailAddress ?? "") { [weak self] error in
             if let error {
+                ErrorPublisher.publishError(error)
                 self?.presentErrorAlert(error: error)
             } else {
                 self?.emailOTPSent()
