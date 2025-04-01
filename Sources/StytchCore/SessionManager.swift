@@ -75,7 +75,7 @@ class SessionManager {
 
         if let tokens = tokens {
             updatePersistentStorage(tokens: tokens)
-            tokens.jwt.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
+            tokens.jwt?.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
             tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
         }
 
