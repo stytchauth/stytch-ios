@@ -3,12 +3,15 @@ import SwiftUI
 import UIKit
 
 final class SecureTextInput: TextInputView<SecureTextField> {
-    private(set) lazy var feedback: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = 2
-        return view
-    }()
+    var onReturn: (Bool) -> Void = { _ in }
+
+    var text: String? {
+        textInput.text
+    }
+
+    var imageName: String {
+        textInput.isSecureTextEntry ? "eye.slash" : "eye"
+    }
 
     private let zxcvbnIndicator = ZXCVBNIndicator(state: ZXCVBNState())
     private lazy var zxcvbnIndicatorView: UIView = UIHostingController(rootView: self.zxcvbnIndicator).view
@@ -16,22 +19,58 @@ final class SecureTextInput: TextInputView<SecureTextField> {
     private let ludsIndicator = LUDSIndicator(state: LUDSFeedbackState())
     private lazy var ludsIndicatorView: UIView = UIHostingController(rootView: self.ludsIndicator).view
 
-    var text: String? { textInput.text }
+    private lazy var toggleButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: imageName), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.tintColor = .secondaryText
+        button.addTarget(self, action: #selector(toggleSecureEntry), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.heightAnchor.constraint(equalToConstant: 12.5),
+        ])
+        return button
+    }()
 
-    var onReturn: (Bool) -> Void = { _ in }
+    private(set) lazy var feedback: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 2
+        return view
+    }()
 
     // swiftlint:disable:next overridden_super_call
     override func setUp() {
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(
+            forName: UITextField.textDidChangeNotification,
+            object: textInput,
+            queue: .main
+        ) { [weak self] _ in
             guard let self else { return }
             self.onTextChanged(self.isValid)
         }
+
         feedback.addArrangedSubview(zxcvbnIndicatorView)
         feedback.addArrangedSubview(ludsIndicatorView)
         supplementaryView = feedback
         feedback.isHidden = true
         textInput.delegate = self
         textInput.returnKeyType = .done
+
+        textInput.rightView = toggleButton
+        textInput.rightViewMode = .always
+    }
+
+    @objc private func toggleSecureEntry() {
+        textInput.isSecureTextEntry.toggle()
+        toggleButton.setImage(UIImage(systemName: imageName), for: .normal)
+
+        // Optional fix for cursor jump
+        if let text = textInput.text, textInput.isFirstResponder {
+            textInput.deleteBackward()
+            textInput.insertText(text + " ")
+            textInput.deleteBackward()
+        }
     }
 
     func setZXCVBNFeedback(suggestions: [String]?, warning: String?, score: Int) {
@@ -64,9 +103,13 @@ final class SecureTextInput: TextInputView<SecureTextField> {
 }
 
 final class SecureTextField: BorderedTextField, TextInputType {
-    var isValid: Bool { text?.isEmpty == false }
+    var isValid: Bool {
+        text?.isEmpty == false
+    }
 
-    var fields: [UIView] { [self] }
+    var fields: [UIView] {
+        [self]
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)

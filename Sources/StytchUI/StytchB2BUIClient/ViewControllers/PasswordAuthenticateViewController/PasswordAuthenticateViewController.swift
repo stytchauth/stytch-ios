@@ -16,20 +16,8 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
         input.textInput.textContentType = .password
-        input.textInput.rightView = secureEntryToggleButton
         input.textInput.rightViewMode = .always
         return input
-    }()
-
-    private lazy var secureEntryToggleButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.adjustsImageWhenHighlighted = false
-        button.setImage(UIImage(systemName: "eye"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.tintColor = .secondaryText
-        button.addTarget(self, action: #selector(toggleSecureEntry(sender:)), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
     }()
 
     private lazy var continueButton: Button = .primary(
@@ -84,10 +72,6 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
         passwordInput.onReturn = { [weak self] _ in
             self?.submit()
         }
-    }
-
-    @objc private func toggleSecureEntry(sender _: UIButton) {
-        passwordInput.textInput.isSecureTextEntry.toggle()
     }
 
     @objc private func signUpOrResetPasswordButtonTapped() {

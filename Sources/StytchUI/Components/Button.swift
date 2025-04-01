@@ -38,23 +38,16 @@ class Button: UIButton {
         onTap()
     }
 
-    private func setInsets(
-        forContentPadding contentPadding: UIEdgeInsets,
+    private func applyConfiguration(
+        contentPadding: NSDirectionalEdgeInsets,
         imageTitlePadding: CGFloat
     ) {
-        contentEdgeInsets = .init(
-            top: contentPadding.top,
-            left: contentPadding.left,
-            bottom: contentPadding.bottom,
-            right: contentPadding.right + imageTitlePadding
-        )
-        titleEdgeInsets = .init(
-            top: 0,
-            left: imageTitlePadding,
-            bottom: 0,
-            right: -imageTitlePadding
-        )
-        imageEdgeInsets = .init(top: 16, left: 0, bottom: 16, right: -12)
+        var config = configuration ?? UIButton.Configuration.plain()
+
+        config.contentInsets = contentPadding
+        config.imagePadding = imageTitlePadding
+
+        configuration = config
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -99,10 +92,12 @@ extension Button {
         button.kind = .secondary
         button.setImage(asset?.image, for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
-        button.setInsets(
-            forContentPadding: .zero,
+
+        button.applyConfiguration(
+            contentPadding: .zero,
             imageTitlePadding: 8
         )
+
         button.setAttributedTitle(
             NSAttributedString(
                 string: title,
