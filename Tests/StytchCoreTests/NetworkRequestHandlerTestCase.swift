@@ -28,9 +28,11 @@ private struct ConfiguredRecaptchaProviderMock: CaptchaProvider {
 }
 
 private struct DFPProviderMock: DFPProvider {
-    func getTelemetryId(publicToken _: String, dfppaDomain _: String) async -> String {
+    func getTelemetryId() async -> String {
         "dfp-telemetry-id"
     }
+
+    func configure(publicToken _: String, dfppaDomain _: String?) {}
 }
 
 private extension URLRequest {
@@ -101,7 +103,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(!hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPObservationModeWithCaptcha() async throws {
@@ -116,7 +118,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPObservationMode(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 
     func testHandleDFPDecisioningMode() async throws {
@@ -142,7 +144,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
                 return (Data(), HTTPURLResponse())
             }
         }
-        _ = try await handler.handleDFPDecisioningMode(session: URLSession(configuration: .default), request: URLRequest(url: url), publicToken: "", dfppaDomain: "", captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
+        _ = try await handler.handleDFPDecisioningMode(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, dfp: dfpClient, requestHandler: requestHandler)
     }
 }
 #endif
