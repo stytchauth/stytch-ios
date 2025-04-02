@@ -28,7 +28,9 @@ struct ConfiguredRecaptchaProviderMock: CaptchaProvider {
 }
 
 struct DFPProviderMock: DFPProvider {
-    func getTelemetryId(publicToken _: String, dfppaDomain _: String) async -> String {
+    func configure(publicToken _: String, dfppaDomain _: String?) {}
+
+    func getTelemetryId() async -> String {
         "dfp-telemetry-id"
     }
 }
@@ -87,7 +89,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
         handler.captchaConfigured = false
 
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
-        _ = try await handler.handleDFPObservationMode(request: URLRequest(url: url), publicToken: "", dfppaDomain: "")
+        _ = try await handler.handleDFPObservationMode(request: URLRequest(url: url))
 
         if let request = handler.request {
             let hasCaptcha = try request.bodyContainsKey(key: "captcha_token")
@@ -103,7 +105,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
         let handler = NetworkRequestHandlerMockLive(urlSession: URLSession(configuration: .default))
 
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
-        _ = try await handler.handleDFPObservationMode(request: URLRequest(url: url), publicToken: "", dfppaDomain: "")
+        _ = try await handler.handleDFPObservationMode(request: URLRequest(url: url))
 
         if let request = handler.request {
             let hasCaptcha = try request.bodyContainsKey(key: "captcha_token")
@@ -119,7 +121,7 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
         let handler = NetworkRequestHandlerMockLiveForDFPDecisioningMode(urlSession: URLSession(configuration: .default))
 
         let url = try XCTUnwrap(URL(string: "https://www.stytch.com"))
-        _ = try await handler.handleDFPDecisioningMode(request: URLRequest(url: url), publicToken: "", dfppaDomain: "")
+        _ = try await handler.handleDFPDecisioningMode(request: URLRequest(url: url))
 
         if let request1 = handler.request1 {
             let hasCaptcha = try request1.bodyContainsKey(key: "captcha_token")
@@ -163,7 +165,7 @@ class NetworkRequestHandlerMockLive: NetworkRequestHandler {
         self.urlSession = urlSession
     }
 
-    func defaultRequestHandler(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    func defaultRequestHandler(request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         self.request = request
         return (Data(), HTTPURLResponse())
     }
@@ -187,7 +189,7 @@ class NetworkRequestHandlerMockLiveForDFPDecisioningMode: NetworkRequestHandler 
         self.urlSession = urlSession
     }
 
-    func defaultRequestHandler(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    func defaultRequestHandler(request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         if request1 == nil, request2 == nil {
             request1 = request
             // force return a 403

@@ -26,18 +26,18 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPObservationMode(request _: URLRequest, publicToken _: String, dfppaDomain _: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(request _: URLRequest) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
-    func handleDFPDecisioningMode(request _: URLRequest, publicToken _: String, dfppaDomain _: String) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(request _: URLRequest) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }
     #endif
 
-    func defaultRequestHandler(_: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    func defaultRequestHandler(request _: URLRequest) async throws -> (Data, HTTPURLResponse) {
         (Data(), HTTPURLResponse())
     }
 }

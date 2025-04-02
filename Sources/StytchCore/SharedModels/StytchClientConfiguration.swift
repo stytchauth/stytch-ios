@@ -11,7 +11,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
 
     public let publicToken: String
     public let hostUrl: URL?
-    public let dfppaDomain: String
+    public let dfppaDomain: String?
 
     /**
      Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
@@ -23,11 +23,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
         self.publicToken = publicToken
         self.hostUrl = hostUrl
-        if let dfppaDomain {
-            self.dfppaDomain = dfppaDomain
-        } else {
-            self.dfppaDomain = "telemetry.stytch.com"
-        }
+        self.dfppaDomain = dfppaDomain
     }
 
     public var baseUrl: URL {
