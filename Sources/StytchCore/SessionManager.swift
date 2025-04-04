@@ -66,17 +66,17 @@ class SessionManager {
         // If there is a valid sessionType then we should clear the IST because we are fully authenticated
         self.intermediateSessionToken = nil
 
+        if let tokens = tokens {
+            updatePersistentStorage(tokens: tokens)
+            tokens.jwt?.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
+            tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
+        }
+
         switch sessionType {
         case let .member(session):
             memberSessionStorage.update(session)
         case let .user(session):
             sessionStorage.update(session)
-        }
-
-        if let tokens = tokens {
-            updatePersistentStorage(tokens: tokens)
-            tokens.jwt?.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
-            tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
         }
 
         switch sessionType {
