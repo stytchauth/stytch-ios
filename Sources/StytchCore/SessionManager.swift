@@ -119,6 +119,16 @@ class SessionManager {
         }
     }
 
+    func resetSessionForUnrecoverableError(_ error: Error, forceClear: Bool = false) {
+        if forceClear == true {
+            resetSession()
+        }
+
+        if let stytchAPIError = error.stytchAPIError, stytchAPIError.isUnrecoverableErrorType == true {
+            resetSession()
+        }
+    }
+
     @objc func cookiesDidUpdate(notification: Notification) {
         let storage = (notification.object as? HTTPCookieStorage) ?? .shared
 

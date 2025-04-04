@@ -119,7 +119,6 @@ public extension NetworkingRouter {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method,
         route: Route,
@@ -172,9 +171,6 @@ public extension NetworkingRouter {
                 )
             }
             return dataContainer.data
-        } catch let error as StytchAPIError where error.statusCode == 401 {
-            sessionManager.resetSession()
-            throw error
         } catch {
             throw error
         }

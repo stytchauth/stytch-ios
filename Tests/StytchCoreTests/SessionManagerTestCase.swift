@@ -4,7 +4,7 @@ import XCTest
 
 // swiftlint:disable multiline_function_chains
 
-final class SessionsTestCase: BaseTestCase {
+final class SessionManagerTestCase: BaseTestCase {
     var subscriptions: Set<AnyCancellable> = []
 
     override func setUpWithError() throws {
@@ -202,5 +202,67 @@ final class SessionsTestCase: BaseTestCase {
         )
 
         XCTAssertNil(StytchClient.sessions.session)
+    }
+
+    func testSessionClearsForUnrecoverable401Error() async throws {
+        // .unauthorizedCredentials is a "Unrecoverable" error as defined by StytchAPIError.isUnrecoverableErrorType
+        let error = StytchAPIError(statusCode: 401, errorType: .unauthorizedCredentials, errorMessage: "")
+        networkInterceptor.responses {
+            error
+        }
+
+        Current.timer = { _, _, _ in .init() }
+
+        Current.sessionManager.updateSession(
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        XCTAssertNotNil(Current.sessionManager.sessionToken)
+        XCTAssertNotNil(Current.sessionManager.sessionJwt)
+        XCTAssertNotNil(Current.sessionStorage.object)
+
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
+
+        await XCTAssertThrowsErrorAsync(
+            _ = try await StytchClient.sessions.authenticate(parameters: parameters),
+            error
+        )
+
+        XCTAssertNil(Current.sessionManager.sessionToken)
+        XCTAssertNil(Current.sessionManager.sessionJwt)
+        XCTAssertNil(Current.sessionStorage.object)
+    }
+
+    func testSessionDoesNotClearsForRecoverable401Error() async throws {
+        // .userNotFound is not a "Unrecoverable" error as it is not defined by StytchAPIError.isUnrecoverableErrorType
+        let error = StytchAPIError(statusCode: 401, errorType: .userNotFound, errorMessage: "")
+        networkInterceptor.responses {
+            error
+        }
+
+        Current.timer = { _, _, _ in .init() }
+
+        Current.sessionManager.updateSession(
+            sessionType: .user(.mock(userId: "i_am_user")),
+            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
+            hostUrl: try XCTUnwrap(URL(string: "https://url.com"))
+        )
+
+        XCTAssertNotNil(Current.sessionManager.sessionToken)
+        XCTAssertNotNil(Current.sessionManager.sessionJwt)
+        XCTAssertNotNil(Current.sessionStorage.object)
+
+        let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
+
+        await XCTAssertThrowsErrorAsync(
+            _ = try await StytchClient.sessions.authenticate(parameters: parameters),
+            error
+        )
+
+        XCTAssertNotNil(Current.sessionManager.sessionToken)
+        XCTAssertNotNil(Current.sessionManager.sessionJwt)
+        XCTAssertNotNil(Current.sessionStorage.object)
     }
 }

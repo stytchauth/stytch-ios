@@ -22,6 +22,13 @@ public class StytchAPIError: StytchError, Decodable {
     public var url: URL? { errorUrl }
     private let errorUrl: URL?
 
+    public var isUnrecoverableErrorType: Bool {
+        errorType == .unauthorizedCredentials ||
+            errorType == .userUnauthenticated ||
+            errorType == .invalidSecretAuthentication ||
+            errorType == .sessionNotFound
+    }
+
     init(
         statusCode: Int,
         requestId: String? = nil,

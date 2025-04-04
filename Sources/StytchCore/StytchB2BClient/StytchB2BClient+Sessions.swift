@@ -36,7 +36,12 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
         public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
-            try await router.post(to: .authenticate, parameters: parameters)
+            do {
+                return try await router.post(to: .authenticate, parameters: parameters)
+            } catch {
+                sessionManager.resetSessionForUnrecoverableError(error)
+                throw error
+            }
         }
 
         /// If your app has cookies disabled or simply receives updated session tokens from your backend via means other than
@@ -54,7 +59,7 @@ public extension StytchB2BClient {
                 sessionManager.resetSession()
                 return response
             } catch {
-                if parameters.forceClear { sessionManager.resetSession() }
+                sessionManager.resetSessionForUnrecoverableError(error, forceClear: parameters.forceClear)
                 throw error
             }
         }
