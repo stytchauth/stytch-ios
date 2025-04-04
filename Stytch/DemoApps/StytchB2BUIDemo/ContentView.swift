@@ -56,8 +56,19 @@ class ContentViewModel: ObservableObject {
     @Published var stytchB2BUIConfig: StytchB2BUIClient.Configuration = .empty
 
     private var cancellables = Set<AnyCancellable>()
+    var date = Date()
 
     init() {
+        startObservables()
+
+        // Used to measure time until StytchB2BClient.isInitialized fires
+        date = Date()
+
+        // To start the underlying client’s observables before displaying the UI, call configure separately.
+        StytchB2BUIClient.configure(configuration: stytchB2BUIConfig)
+    }
+
+    func startObservables() {
         StytchB2BUIClient.dismissUI
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
@@ -73,12 +84,21 @@ class ContentViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+        StytchB2BClient.isInitialized
+            .receive(on: DispatchQueue.main)
+            .sink { isInitialized in
+                print(String(format: "StytchClient.isInitialized took %.2f seconds to fire.", Date().timeIntervalSince(self.date)))
+                print("isInitialized: \(isInitialized)")
+            }.store(in: &cancellables)
+
         StytchB2BClient.sessions.onMemberSessionChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionInfo in
                 switch sessionInfo {
                 case let .available(session, lastValidatedAtDate):
                     print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                    print("StytchB2BClient.sessions.sessionToken: \(StytchB2BClient.sessions.sessionToken?.value ?? "no sessionToken")")
+                    print("StytchB2BClient.sessions.sessionJwt: \(StytchB2BClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
                     self?.isAuthenticated = true
                 case .unavailable:
                     print("Session Unavailable\n")
@@ -86,8 +106,27 @@ class ContentViewModel: ObservableObject {
                 }
             }.store(in: &cancellables)
 
-        // To start the underlying client’s observables before displaying the UI, call configure separately.
-        StytchB2BUIClient.configure(configuration: stytchB2BUIConfig)
+        StytchB2BClient.organizations.onOrganizationChange
+            .receive(on: DispatchQueue.main)
+            .sink { organizationInfo in
+                switch organizationInfo {
+                case let .available(organization, lastValidatedAtDate):
+                    print("Organization Available: \(organization.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                case .unavailable:
+                    print("Organization Unavailable\n")
+                }
+            }.store(in: &cancellables)
+
+        StytchB2BClient.member.onMemberChange
+            .receive(on: DispatchQueue.main)
+            .sink { memberInfo in
+                switch memberInfo {
+                case let .available(member, lastValidatedAtDate):
+                    print("Member Available: \(member.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                case .unavailable:
+                    print("Member Unavailable\n")
+                }
+            }.store(in: &cancellables)
     }
 
     func loadFromUserDefaults() {
