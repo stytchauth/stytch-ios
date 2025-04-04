@@ -46,11 +46,6 @@ extension StytchClientType {
 
     private var uuid: () -> UUID { Current.uuid }
 
-    #if os(iOS)
-    private var dfpClient: DFPProvider { Current.dfpClient }
-    private var captchaClient: CaptchaProvider { Current.captcha }
-    #endif
-
     var pkcePairManager: PKCEPairManager { Current.pkcePairManager }
 
     // swiftlint:disable:next type_contents_order
@@ -65,6 +60,13 @@ extension StytchClientType {
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
         sessionManager.clearEmptyTokens()
+
+        #if os(iOS)
+        if let publicToken = configuration?.publicToken {
+            Current.dfpClient.configure(publicToken: publicToken, dfppaDomain: configuration?.dfppaDomain)
+        }
+        #endif
+
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
             // only run this in non-test environments
             start()
