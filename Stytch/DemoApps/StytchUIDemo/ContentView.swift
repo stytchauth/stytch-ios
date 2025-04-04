@@ -49,20 +49,50 @@ struct ContentView: View {
 class ContentViewModel: ObservableObject {
     @Published var shouldShowB2CUI: Bool = false
     private var cancellables = Set<AnyCancellable>()
+    var date = Date()
 
     init() {
-        // you can also observere: `StytchClient.user.onUserChange` if need be
+        startObservables()
+
+        // Used to measure time until StytchClient.isInitialized fires
+        date = Date()
+
+        // To start the underlying client’s observables before displaying the UI, call configure separately.
+        StytchUIClient.configure(configuration: configuration)
+    }
+
+    func startObservables() {
         StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionInfo in
                 switch sessionInfo {
                 case let .available(session, lastValidatedAtDate):
                     print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                    print("StytchClient.sessions.sessionToken: \(StytchClient.sessions.sessionToken?.value ?? "no sessionToken")")
+                    print("StytchClient.sessions.sessionJwt: \(StytchClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
                     self?.shouldShowB2CUI = false
                 case .unavailable:
                     print("Session Unavailable\n")
                     self?.shouldShowB2CUI = true
                 }
+            }.store(in: &cancellables)
+
+        StytchClient.user.onUserChange
+            .receive(on: DispatchQueue.main)
+            .sink { userInfo in
+                switch userInfo {
+                case let .available(user, lastValidatedAtDate):
+                    print("User Available: \(user.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                case .unavailable:
+                    print("User Unavailable\n")
+                }
+            }.store(in: &cancellables)
+
+        StytchClient.isInitialized
+            .receive(on: DispatchQueue.main)
+            .sink { isInitialized in
+                print(String(format: "StytchClient.isInitialized took %.2f seconds to fire.", Date().timeIntervalSince(self.date)))
+                print("isInitialized: \(isInitialized)")
             }.store(in: &cancellables)
 
         StytchUIClient.errorPublisher
@@ -72,13 +102,10 @@ class ContentViewModel: ObservableObject {
                 print(error.errorInfo)
             }
             .store(in: &cancellables)
-
-        // To start the underlying client’s observables before displaying the UI, call configure separately.
-        StytchUIClient.configure(configuration: configuration)
     }
 
     let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "your-public-token"),
+        stytchClientConfiguration: .init(publicToken: "public-token-test-..."),
         products: [.passwords, .emailMagicLinks, .otp, .oauth],
         navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],
