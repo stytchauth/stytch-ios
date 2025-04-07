@@ -57,6 +57,7 @@ extension StytchB2BClient {
     enum SSORoute: RouteType {
         case authenticate
         case getConnections
+        case discoverConnections
         case deleteConnection(connectionId: String)
         case saml(SAMLRoute)
         case oidc(OIDCRoute)
@@ -67,6 +68,8 @@ extension StytchB2BClient {
                 return "authenticate"
             case .getConnections:
                 return ""
+            case .discoverConnections:
+                return Path(rawValue: "discovery/connections")
             case let .deleteConnection(connectionId):
                 return Path(rawValue: "\(connectionId)")
             case let .saml(route):

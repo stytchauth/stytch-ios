@@ -147,6 +147,12 @@ public extension StytchSDKError {
             errorType: "email_not_eligible_for_jit_provioning"
         )
     )
+    static let invalidURL = StytchSDKError(
+        message: "The URL was invalid or improperly formatted.",
+        options: .init(
+            errorType: "invalid_url"
+        )
+    )
 }
 
 public class StytchSDKNotConfiguredError: StytchSDKError {

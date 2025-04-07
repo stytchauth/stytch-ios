@@ -20,10 +20,12 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
             return try await requestHandler(session, request)
         }
         var newRequest = request
-        let oldBody = newRequest.httpBody ?? Data("{}".utf8)
-        var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
-        newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
-        newRequest.httpBody = try JSONSerialization.data(withJSONObject: newBody)
+        if request.httpMethod != "GET", request.httpMethod != "DELETE" {
+            let oldBody = newRequest.httpBody ?? Data("{}".utf8)
+            var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
+            newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
+            newRequest.httpBody = try JSONSerialization.data(withJSONObject: newBody)
+        }
         return try await requestHandler(session, newRequest)
     }
 

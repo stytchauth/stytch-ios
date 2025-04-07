@@ -90,6 +90,23 @@ final class B2BSSOTestCase: BaseTestCase {
         )
     }
 
+    func testGetDiscoveryConnections() async throws {
+        networkInterceptor.responses {
+            StytchB2BClient.SSO.DiscoverConnectionsResponse(
+                requestId: "1234",
+                statusCode: 200,
+                wrapped: .init(connections: [])
+            )
+        }
+
+        _ = try await StytchB2BClient.sso.discoverConnections(emailAddress: "fake@example.com")
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sso/discovery/connections?email_address=fake@example.com",
+            method: .get
+        )
+    }
+
     func testDeleteConnection() async throws {
         networkInterceptor.responses {
             StytchB2BClient.SSO.DeleteConnectionResponse(

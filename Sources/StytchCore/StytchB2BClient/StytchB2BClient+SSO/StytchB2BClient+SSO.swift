@@ -64,6 +64,14 @@ public extension StytchB2BClient {
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        public func discoverConnections(emailAddress: String) async throws -> DiscoverConnectionsResponse {
+            try await router.get(
+                route: .discoverConnections,
+                queryItems: [URLQueryItem(name: "email_address", value: emailAddress)]
+            )
+        }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         public func deleteConnection(connectionId: String) async throws -> DeleteConnectionResponse {
             try await router.delete(route: .deleteConnection(connectionId: connectionId))
         }
@@ -178,6 +186,14 @@ public extension StytchB2BClient.SSO {
         public let samlConnections: [SAML.SAMLConnection]
         /// The list of OIDC Connections owned by this organization.
         public let oidcConnections: [OIDC.OIDCConnection]
+    }
+}
+
+public extension StytchB2BClient.SSO {
+    typealias DiscoverConnectionsResponse = Response<DiscoverConnectionsResponseData>
+
+    struct DiscoverConnectionsResponseData: Codable, Sendable {
+        public let connections: [StytchB2BClient.SSOActiveConnection]
     }
 }
 

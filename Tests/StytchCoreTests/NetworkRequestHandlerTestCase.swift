@@ -76,7 +76,17 @@ final class NetworkRequestHandlerTestCase: XCTestCase {
             XCTAssert(hasCaptcha)
             return (Data(), HTTPURLResponse())
         }
-        _ = try await handler.handleDFPDisabled(session: URLSession(configuration: .default), request: URLRequest(url: url), captcha: captcha, requestHandler: requestHandler)
+
+        // Must be anything but "GET" to assign captcha to the body
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        _ = try await handler.handleDFPDisabled(
+            session: URLSession(configuration: .default),
+            request: request,
+            captcha: captcha,
+            requestHandler: requestHandler
+        )
     }
 
     func testHandleDFPObservationModeNoCaptcha() async throws {

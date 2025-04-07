@@ -72,24 +72,22 @@ public extension NetworkingRouter {
 
     func put<Parameters: Encodable, Response: Decodable>(
         to route: Route,
-        parameters: Parameters,
-        useDFPPA: Bool = false
+        parameters: Parameters
     ) async throws -> Response {
-        try await performRequest(.put(jsonEncoder.encode(parameters)), route: route, useDFPPA: useDFPPA)
+        try await performRequest(.put(jsonEncoder.encode(parameters)), route: route)
     }
 
     func get<Response: Decodable>(
         route: Route,
-        useDFPPA: Bool = false
+        queryItems: [URLQueryItem]? = nil
     ) async throws -> Response {
-        try await performRequest(.get, route: route, useDFPPA: useDFPPA)
+        try await performRequest(.get, route: route, queryItems: queryItems)
     }
 
     func delete<Response: Decodable>(
-        route: Route,
-        useDFPPA: Bool = false
+        route: Route
     ) async throws -> Response {
-        try await performRequest(.delete, route: route, useDFPPA: useDFPPA)
+        try await performRequest(.delete, route: route)
     }
 }
 
@@ -97,7 +95,7 @@ public extension NetworkingRouter {
     private func performRequest(
         _ method: NetworkingClient.Method,
         route: Route,
-        useDFPPA: Bool
+        useDFPPA: Bool = false
     ) async throws {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
@@ -119,15 +117,24 @@ public extension NetworkingRouter {
         }
     }
 
+    // swiftlint:disable function_body_length
     private func performRequest<Response: Decodable>(
         _ method: NetworkingClient.Method,
         route: Route,
-        useDFPPA: Bool
+        queryItems: [URLQueryItem]? = nil,
+        useDFPPA: Bool = false
     ) async throws -> Response {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
-        let url = configuration.baseUrl.appendingPathComponent(path(for: route).rawValue)
+
+        var components = URLComponents(url: configuration.baseUrl, resolvingAgainstBaseURL: false)
+        components?.path += path(for: route).rawValue
+        components?.queryItems = queryItems
+        guard let url = components?.url else {
+            throw StytchSDKError.invalidURL
+        }
+
         let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
 
         do {
