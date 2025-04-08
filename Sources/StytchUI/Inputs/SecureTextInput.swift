@@ -74,31 +74,41 @@ final class SecureTextInput: TextInputView<SecureTextField> {
     }
 
     func setZXCVBNFeedback(suggestions: [String]?, warning: String?, score: Int) {
-        feedback.isHidden = false
-        zxcvbnIndicatorView.isHidden = false
-        ludsIndicatorView.isHidden = true
-        zxcvbnIndicator.setFeedback(suggestions: suggestions, warning: warning, score: score)
-        didSetFeedback()
+        Task { @MainActor in
+            feedback.isHidden = false
+            zxcvbnIndicatorView.isHidden = false
+            ludsIndicatorView.isHidden = true
+            zxcvbnIndicator.setFeedback(suggestions: suggestions, warning: warning, score: score)
+            didSetFeedback()
+        }
     }
 
     func setLUDSFeedback(ludsRequirement: LudsRequirement, breached: Bool = false, passwordConfig: PasswordConfig? = nil) {
-        feedback.isHidden = false
-        zxcvbnIndicatorView.isHidden = true
-        ludsIndicatorView.isHidden = false
-        ludsIndicator.setFeedback(feedback: ludsRequirement, breached: breached, passwordConfig: passwordConfig)
-        didSetFeedback()
+        Task { @MainActor in
+            feedback.isHidden = false
+            zxcvbnIndicatorView.isHidden = true
+            ludsIndicatorView.isHidden = false
+            ludsIndicator.setFeedback(feedback: ludsRequirement, breached: breached, passwordConfig: passwordConfig)
+            didSetFeedback()
+        }
     }
 
     func updateText(_ text: String) {
-        textInput.text = text
+        Task { @MainActor in
+            textInput.text = text
+        }
     }
 
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
-        textInput.returnKeyType = returnKeyType
+        Task { @MainActor in
+            textInput.returnKeyType = returnKeyType
+        }
     }
 
     func assignFirstResponder() {
-        textInput.becomeFirstResponder()
+        Task { @MainActor in
+            textInput.becomeFirstResponder()
+        }
     }
 }
 

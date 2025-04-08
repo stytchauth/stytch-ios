@@ -14,8 +14,7 @@ final class EmailConfirmationViewModel {
         if state.configuration.computedAuthFlowType == .discovery {
             try await AuthenticationOperations.discoveryResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
         } else {
-            let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
-            if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
+            if let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress) {
                 try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
             } else {
                 try await AuthenticationOperations.sendEmailMagicLinkIfPossible(configuration: state.configuration, emailAddress: emailAddress)

@@ -26,15 +26,21 @@ final class EmailInput: TextInputView<EmailTextField> {
     }
 
     func updateText(_ text: String) {
-        textInput.text = text
+        Task { @MainActor in
+            textInput.text = text
+        }
     }
 
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
-        textInput.returnKeyType = returnKeyType
+        Task { @MainActor in
+            textInput.returnKeyType = returnKeyType
+        }
     }
 
     func assignFirstResponder() {
-        textInput.becomeFirstResponder()
+        Task { @MainActor in
+            textInput.becomeFirstResponder()
+        }
     }
 }
 
