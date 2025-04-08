@@ -63,8 +63,7 @@ final class B2BPasswordsViewModel {
 
         Task {
             do {
-                let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress)
-                if let memberPasswordId = member?.memberPasswordId, memberPasswordId.isEmpty == false {
+                if let member = try? await AuthenticationOperations.searchMember(emailAddress: emailAddress) {
                     let parameters = StytchB2BClient.Passwords.AuthenticateParameters(
                         organizationId: Organization.ID(rawValue: organizationId),
                         emailAddress: emailAddress,

@@ -9,7 +9,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>stytchui-your-public-token</string>
+				<string>stytchui-public-token-test-...</string>
 			</array>
 		</dict>
 	</array>

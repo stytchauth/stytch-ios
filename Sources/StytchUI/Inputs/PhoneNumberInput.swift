@@ -36,11 +36,15 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
     }
 
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
-        textInput.textField.returnKeyType = returnKeyType
+        Task { @MainActor in
+            textInput.textField.returnKeyType = returnKeyType
+        }
     }
 
     func assignFirstResponder() {
-        textInput.textField.becomeFirstResponder()
+        Task { @MainActor in
+            textInput.textField.becomeFirstResponder()
+        }
     }
 }
 
