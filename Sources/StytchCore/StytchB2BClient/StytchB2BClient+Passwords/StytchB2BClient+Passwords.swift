@@ -180,6 +180,7 @@ public extension StytchB2BClient.Passwords {
             case resetPasswordUrl = "resetPasswordRedirectUrl"
             case resetPasswordExpiration = "resetPasswordExpirationMinutes"
             case resetPasswordTemplateId
+            case verifyEmailTemplateId
             case locale
         }
 
@@ -189,6 +190,7 @@ public extension StytchB2BClient.Passwords {
         let resetPasswordUrl: URL?
         let resetPasswordExpiration: Minutes?
         let resetPasswordTemplateId: String?
+        let verifyEmailTemplateId: String?
         let locale: StytchLocale
 
         /// - Parameters:
@@ -198,6 +200,8 @@ public extension StytchB2BClient.Passwords {
         ///   - resetPasswordUrl: The url that the member clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the member. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
         ///   - resetPasswordExpiration: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
         ///   - resetPasswordTemplateId: Use a custom template for password reset emails. If omitted, your default email template will be used. The template must be a template using our built-in customizations or a custom HTML email for Passwords - Password reset.
+        ///   - verifyEmailTemplateId: Use a custom template for password verify emails. By default, it will use your default email template.
+        ///     The template must be a template using our built-in customizations or a custom HTML email for Password Verification.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
@@ -207,6 +211,7 @@ public extension StytchB2BClient.Passwords {
             resetPasswordUrl: URL? = nil,
             resetPasswordExpiration: Minutes? = nil,
             resetPasswordTemplateId: String? = nil,
+            verifyEmailTemplateId: String? = nil,
             locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
@@ -215,6 +220,7 @@ public extension StytchB2BClient.Passwords {
             self.resetPasswordUrl = resetPasswordUrl
             self.resetPasswordExpiration = resetPasswordExpiration
             self.resetPasswordTemplateId = resetPasswordTemplateId
+            self.verifyEmailTemplateId = verifyEmailTemplateId
             self.locale = locale
         }
     }
