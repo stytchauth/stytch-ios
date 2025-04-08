@@ -158,6 +158,9 @@ final class PasswordsViewController: UIViewController {
                         organizationId: values.orgId,
                         emailAddress: values.email,
                         resetPasswordUrl: values.redirectUrl,
+                        resetPasswordExpiration: .defaultSessionDuration,
+                        resetPasswordTemplateId: nil,
+                        verifyEmailTemplateId: nil,
                         locale: .en
                     )
                 )
@@ -275,6 +278,7 @@ final class PasswordsViewController: UIViewController {
                         resetPasswordRedirectUrl: redirectUrl,
                         resetPasswordExpirationMinutes: .defaultSessionDuration,
                         resetPasswordTemplateId: nil,
+                        verifyEmailTemplateId: nil,
                         locale: .en
                     )
                 )

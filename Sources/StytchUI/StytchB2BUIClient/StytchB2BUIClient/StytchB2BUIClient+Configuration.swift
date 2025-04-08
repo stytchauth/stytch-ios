@@ -180,13 +180,16 @@ public extension StytchB2BUIClient {
     struct B2BPasswordOptions: Codable {
         public let resetPasswordExpirationMinutes: Minutes?
         public let resetPasswordTemplateId: String?
+        public let verifyEmailTemplateId: String?
 
         public init(
             resetPasswordExpirationMinutes: Minutes? = nil,
-            resetPasswordTemplateId: String? = nil
+            resetPasswordTemplateId: String? = nil,
+            verifyEmailTemplateId: String? = nil
         ) {
             self.resetPasswordExpirationMinutes = resetPasswordExpirationMinutes
             self.resetPasswordTemplateId = resetPasswordTemplateId
+            self.verifyEmailTemplateId = verifyEmailTemplateId
         }
     }
 

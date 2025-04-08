@@ -92,6 +92,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
                 resetPasswordExpiration: 15,
                 resetPasswordTemplateId: "one-two-buckle-my-shoe",
+                verifyEmailTemplateId: "three-four-lock-the-door",
                 locale: .en
             )
         )
@@ -106,6 +107,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "reset_password_redirect_url": "https://stytch.com/reset",
                 "code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "reset_password_template_id": "one-two-buckle-my-shoe",
+                "verify_email_template_id": "three-four-lock-the-door",
                 "locale": "en",
             ])
         )
@@ -217,7 +219,9 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 discoveryRedirectUrl: XCTUnwrap(URL(string: "https://example.com/discovery-redirect")),
                 resetPasswordRedirectUrl: XCTUnwrap(URL(string: "https://example.com/reset-password")),
                 resetPasswordExpirationMinutes: 15,
-                resetPasswordTemplateId: "template123"
+                resetPasswordTemplateId: "one-two-buckle-my-shoe",
+                verifyEmailTemplateId: "three-four-lock-the-door",
+                locale: .en
             )
         )
 
@@ -230,7 +234,8 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 "discovery_redirect_url": "https://example.com/discovery-redirect",
                 "reset_password_redirect_url": "https://example.com/reset-password",
                 "reset_password_expiration_minutes": 15,
-                "reset_password_template_id": "template123",
+                "reset_password_template_id": "one-two-buckle-my-shoe",
+                "verify_email_template_id": "three-four-lock-the-door",
                 "pkce_code_challenge": "V9dLhNVhiUv_9m8cwFSzLGR9l-q6NAeLskiVZ7WsjA8",
                 "locale": "en",
             ])

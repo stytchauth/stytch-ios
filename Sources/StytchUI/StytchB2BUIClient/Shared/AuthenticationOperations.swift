@@ -141,6 +141,7 @@ extension AuthenticationOperations {
             resetPasswordUrl: configuration.redirectUrl,
             resetPasswordExpiration: configuration.passwordOptions?.resetPasswordExpirationMinutes,
             resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId,
+            verifyEmailTemplateId: configuration.passwordOptions?.verifyEmailTemplateId,
             locale: configuration.locale
         )
         _ = try await StytchB2BClient.passwords.resetByEmailStart(parameters: parameters)
@@ -153,6 +154,7 @@ extension AuthenticationOperations {
             resetPasswordRedirectUrl: configuration.redirectUrl,
             resetPasswordExpirationMinutes: configuration.sessionDurationMinutes,
             resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId,
+            verifyEmailTemplateId: configuration.passwordOptions?.verifyEmailTemplateId,
             locale: configuration.locale
         )
         _ = try await StytchB2BClient.passwords.discovery.resetByEmailStart(parameters: parameters)

@@ -81,6 +81,7 @@ public extension StytchB2BClient.Passwords.Discovery {
         let resetPasswordRedirectUrl: URL?
         let resetPasswordExpirationMinutes: Minutes?
         let resetPasswordTemplateId: String?
+        let verifyEmailTemplateId: String?
         let locale: StytchLocale
 
         /// - Parameters:
@@ -100,6 +101,8 @@ public extension StytchB2BClient.Passwords.Discovery {
         ///   - resetPasswordTemplateId: The email template ID to use for password reset. If not provided, your default email
         ///     template will be sent. If providing a template ID, it must be either a template using Stytch's customizations or a
         ///     Passwords reset custom HTML template.
+        ///   - verifyEmailTemplateId: Use a custom template for password verify emails. By default, it will use your default email template.
+        ///     The template must be a template using our built-in customizations or a custom HTML email for Password Verification.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
@@ -108,6 +111,7 @@ public extension StytchB2BClient.Passwords.Discovery {
             resetPasswordRedirectUrl: URL? = nil,
             resetPasswordExpirationMinutes: Minutes = .defaultSessionDuration,
             resetPasswordTemplateId: String? = nil,
+            verifyEmailTemplateId: String? = nil,
             locale: StytchLocale = .en
         ) {
             self.emailAddress = emailAddress
@@ -115,6 +119,7 @@ public extension StytchB2BClient.Passwords.Discovery {
             self.resetPasswordRedirectUrl = resetPasswordRedirectUrl
             self.resetPasswordExpirationMinutes = resetPasswordExpirationMinutes
             self.resetPasswordTemplateId = resetPasswordTemplateId
+            self.verifyEmailTemplateId = verifyEmailTemplateId
             self.locale = locale
         }
     }
