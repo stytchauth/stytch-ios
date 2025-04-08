@@ -7,7 +7,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
 
         let notHandledUrl = try XCTUnwrap(URL(string: "https://myapp.com?token=12345"))
 
-        switch try await StytchClient.handle(url: notHandledUrl, sessionDuration: 30) {
+        switch try await StytchClient.handle(url: notHandledUrl, sessionDurationMinutes: 30) {
         case .handled:
             XCTFail("expected to be nothandled")
         case .notHandled, .manualHandlingRequired:
@@ -26,7 +26,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
 
         Current.timer = { _, _, _ in .init() }
 
-        switch try await StytchClient.handle(url: handledUrl, sessionDuration: 30) {
+        switch try await StytchClient.handle(url: handledUrl, sessionDurationMinutes: 30) {
         case let .handled(response):
             switch response {
             case let .auth(responseData):

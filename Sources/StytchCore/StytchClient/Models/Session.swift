@@ -7,7 +7,13 @@ public struct Session: Sendable {
     public typealias ID = Identifier<Self, String>
 
     private enum CodingKeys: String, CodingKey {
-        case attributes, authenticationFactors, expiresAt, lastAccessedAt, sessionId, startedAt, userId
+        case attributes
+        case authenticationFactors
+        case expiresAt
+        case lastAccessedAt
+        case sessionId
+        case startedAt
+        case userId
     }
 
     /// Attributes of this session.

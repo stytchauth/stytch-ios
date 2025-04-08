@@ -12,7 +12,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             organizationId: "org123",
             emailAddress: "user@stytch.com",
             password: "password123",
-            sessionDuration: 26,
+            sessionDurationMinutes: 26,
             locale: .en
         )
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
@@ -73,7 +73,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
     func testResetByEmail() async throws {
         await XCTAssertThrowsErrorAsync(
-            try await client.resetByEmail(parameters: .init(token: "12345", password: "iAMpasswordHEARmeROAR")),
+            try await client.resetByEmail(parameters: .init(passwordResetToken: "12345", password: "iAMpasswordHEARmeROAR")),
             StytchSDKError.missingPKCE
         )
 
@@ -88,9 +88,9 @@ final class B2BPasswordsTestCase: BaseTestCase {
             parameters: .init(
                 organizationId: "org123",
                 emailAddress: "user@stytch.com",
-                loginUrl: nil,
-                resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
-                resetPasswordExpiration: 15,
+                loginRedirectUrl: nil,
+                resetPasswordRedirectUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
+                resetPasswordExpirationMinutes: 15,
                 resetPasswordTemplateId: "one-two-buckle-my-shoe",
                 verifyEmailTemplateId: "three-four-lock-the-door",
                 locale: .en
@@ -117,7 +117,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         _ = try await client.resetByEmail(
             parameters: .init(
-                token: "12345",
+                passwordResetToken: "12345",
                 password: "iAMpasswordHEARmeROAR",
                 locale: .en
             )

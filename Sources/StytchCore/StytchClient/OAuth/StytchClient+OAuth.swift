@@ -115,20 +115,18 @@ public extension StytchClient.OAuth {
 public extension StytchClient.OAuth {
     /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey { case token, sessionDuration = "sessionDurationMinutes" }
-
         let token: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - token: The token returned from the identity provider as parsed from the final/complete redirect URL.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(
             token: String,
-            sessionDuration: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = .defaultSessionDuration
         ) {
             self.token = token
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }

@@ -138,20 +138,18 @@ public extension StytchClient.Passwords {
 
     /// The dedicated parameters type for password `create` and `authenticate` calls.
     struct PasswordParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey { case email, password, sessionDuration = "sessionDurationMinutes" }
-
         let email: String
         let password: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         ///  - Parameters:
         ///    - email: The user's email address.
         ///    - password: The user's password.
-        ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(email: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(email: String, password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.email = email
             self.password = password
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }
@@ -159,79 +157,67 @@ public extension StytchClient.Passwords {
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByEmailStart` calls.
     struct ResetByEmailStartParameters: Encodable, Equatable, Sendable {
-        public static func == (
-            lhs: ResetByEmailStartParameters,
-            rhs: ResetByEmailStartParameters
-        ) -> Bool {
-            lhs.email == rhs.email &&
-                lhs.loginUrl == rhs.loginUrl &&
-                lhs.loginExpiration?.rawValue == rhs.loginExpiration?.rawValue &&
-                lhs.resetPasswordUrl == rhs.resetPasswordUrl &&
-                lhs.resetPasswordExpiration?.rawValue == rhs.resetPasswordExpiration?.rawValue &&
-                lhs.resetPasswordTemplateId == rhs.resetPasswordTemplateId
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case email
-            case loginUrl = "loginRedirectUrl"
-            case loginExpiration = "loginExpirationMinutes"
-            case resetPasswordUrl = "resetPasswordRedirectUrl"
-            case resetPasswordExpiration = "resetPasswordExpirationMinutes"
-            case resetPasswordTemplateId
-            case locale
-        }
-
         let email: String
-        let loginUrl: URL?
-        let loginExpiration: Minutes?
-        let resetPasswordUrl: URL?
-        let resetPasswordExpiration: Minutes?
+        let loginRedirectUrl: URL?
+        let loginExpirationMinutes: Minutes?
+        let resetPasswordRedirectUrl: URL?
+        let resetPasswordExpirationMinutes: Minutes?
         let resetPasswordTemplateId: String?
         let locale: StytchLocale
 
         /// - Parameters:
         ///   - email: The user's email address.
-        ///   - loginUrl: The url that the user clicks from the password reset email to skip resetting their password and directly login. This should be a url that your app receives, parses, and subsequently send an API request to complete the password reset process. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
-        ///   - loginExpiration: Set the expiration for the direct login link, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
-        ///   - resetPasswordUrl: The url that the user clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
-        ///   - resetPasswordExpiration: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
+        ///   - loginRedirectUrl: The url that the user clicks from the password reset email to skip resetting their password and directly login. This should be a url that your app receives, parses, and subsequently send an API request to complete the password reset process. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
+        ///   - loginExpirationMinutes: Set the expiration for the direct login link, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
+        ///   - resetPasswordRedirectUrl: The url that the user clicks from the password reset email to finish the reset password flow. This should be a url that your app receives and parses and subsequently send an API request to authenticate the magic link and log in the user. If this value is not passed, the default login redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is returned.
+        ///   - resetPasswordExpirationMinutes: Set the expiration for the password reset, in minutes. By default, it expires in 1 hour. The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
         ///   - resetPasswordTemplateId: Use a custom template for password reset emails. By default, it will use your default email template. The template must be a template using our built-in customizations or a custom HTML email for Passwords - Password reset.
         ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
         public init(
             email: String,
-            loginUrl: URL? = nil,
-            loginExpiration: Minutes? = nil,
-            resetPasswordUrl: URL? = nil,
-            resetPasswordExpiration: Minutes? = nil,
+            loginRedirectUrl: URL? = nil,
+            loginExpirationMinutes: Minutes? = nil,
+            resetPasswordRedirectUrl: URL? = nil,
+            resetPasswordExpirationMinutes: Minutes? = nil,
             resetPasswordTemplateId: String? = nil,
             locale: StytchLocale = .en
         ) {
             self.email = email
-            self.loginUrl = loginUrl
-            self.loginExpiration = loginExpiration
-            self.resetPasswordUrl = resetPasswordUrl
-            self.resetPasswordExpiration = resetPasswordExpiration
+            self.loginRedirectUrl = loginRedirectUrl
+            self.loginExpirationMinutes = loginExpirationMinutes
+            self.resetPasswordRedirectUrl = resetPasswordRedirectUrl
+            self.resetPasswordExpirationMinutes = resetPasswordExpirationMinutes
             self.resetPasswordTemplateId = resetPasswordTemplateId
             self.locale = locale
+        }
+
+        public static func == (
+            lhs: ResetByEmailStartParameters,
+            rhs: ResetByEmailStartParameters
+        ) -> Bool {
+            lhs.email == rhs.email &&
+                lhs.loginRedirectUrl == rhs.loginRedirectUrl &&
+                lhs.loginExpirationMinutes?.rawValue == rhs.loginExpirationMinutes?.rawValue &&
+                lhs.resetPasswordRedirectUrl == rhs.resetPasswordRedirectUrl &&
+                lhs.resetPasswordExpirationMinutes?.rawValue == rhs.resetPasswordExpirationMinutes?.rawValue &&
+                lhs.resetPasswordTemplateId == rhs.resetPasswordTemplateId
         }
     }
 
     /// The dedicated parameters type for passwords `resetByEmail` calls.
     struct ResetByEmailParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey { case token, password, sessionDuration = "sessionDurationMinutes" }
-
         public let token: String
         public let password: String
-        public let sessionDuration: Minutes
+        public let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
         ///   - password: The user's updated password.
-        ///   - sessionDuration: The duration of the requested session.
-        public init(token: String, password: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - sessionDurationMinutes: The duration of the requested session.
+        public init(token: String, password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.token = token
             self.password = password
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }
@@ -239,17 +225,15 @@ public extension StytchClient.Passwords {
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetBySession` calls
     struct ResetBySessionParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey { case password, sessionDuration = "sessionDurationMinutes" }
-
         public let password: String
-        public let sessionDuration: Minutes
+        public let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - password: The user's updated password.
-        ///   - sessionDuration: The duration of the requested session.
-        public init(password: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - sessionDurationMinutes: The duration of the requested session.
+        public init(password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.password = password
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }
@@ -257,33 +241,26 @@ public extension StytchClient.Passwords {
 public extension StytchClient.Passwords {
     /// The dedicated parameters type for passwords `resetByExistingPassword` calls.
     struct ResetByExistingPasswordParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case emailAddress
-            case existingPassword
-            case newPassword
-            case sessionDuration = "sessionDurationMinutes"
-        }
-
         public let emailAddress: String
         public let existingPassword: String
         public let newPassword: String
-        public let sessionDuration: Minutes
+        public let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - emailAddress: The user's email address.
         ///   - existingPassword: The user's existing password.
         ///   - newPassword: The user's new password.
-        ///   - sessionDuration: The duration of the requested session.
+        ///   - sessionDurationMinutes: The duration of the requested session.
         public init(
             emailAddress: String,
             existingPassword: String,
             newPassword: String,
-            sessionDuration: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = .defaultSessionDuration
         ) {
             self.emailAddress = emailAddress
             self.existingPassword = existingPassword
             self.newPassword = newPassword
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }

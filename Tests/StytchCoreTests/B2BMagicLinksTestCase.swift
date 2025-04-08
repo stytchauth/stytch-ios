@@ -100,8 +100,8 @@ final class B2BMagicLinksTestCase: BaseTestCase {
         let authResponse: B2BMFAAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
-            token: "12345",
-            sessionDuration: 15,
+            magicLinksToken: "12345",
+            sessionDurationMinutes: 15,
             locale: .en
         )
 
@@ -155,7 +155,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
             )
         }
 
-        let parameters: StytchB2BClient.MagicLinks.DiscoveryAuthenticateParameters = .init(token: "12345")
+        let parameters: StytchB2BClient.MagicLinks.DiscoveryAuthenticateParameters = .init(discoveryMagicLinksToken: "12345")
 
         await XCTAssertThrowsErrorAsync(
             try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters),

@@ -55,6 +55,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
                 "intermediate_session_token": JSON(stringLiteral: intermediateSessionToken),
                 "organization_id": "org_123",
                 "session_duration_minutes": 5,
+                "locale": "en",
             ])
         )
     }
@@ -68,7 +69,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
         _ = try await client.createOrganization(
             parameters: .init(
-                sessionDuration: 12,
+                sessionDurationMinutes: 12,
                 organizationName: "hello",
                 organizationSlug: "goodbye",
                 organizationLogoUrl: XCTUnwrap(.init(string: "file://123")),

@@ -38,11 +38,6 @@ public extension StytchClient.CryptoWallets {
 
     /// The dedicated parameters type for crypto wallets `authenticateStart` calls.
     struct AuthenticateStartParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case cryptoWalletType
-            case cryptoWalletAddress
-        }
-
         let cryptoWalletType: WalletType
         let cryptoWalletAddress: String
 
@@ -57,12 +52,6 @@ public extension StytchClient.CryptoWallets {
 
     /// The dedicated parameters type for crypto wallets `authenticate` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case cryptoWalletType
-            case cryptoWalletAddress
-            case signature
-        }
-
         let cryptoWalletType: WalletType
         let cryptoWalletAddress: String
         let signature: String
@@ -85,10 +74,6 @@ public extension StytchClient.CryptoWallets {
 
     /// The underlying data for crypto wallets `authenticateStart` calls.
     struct CryptoWalletsAuthenticateResponseData: Codable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case challenge
-        }
-
         /// A challenge string to be signed by the wallet in order to prove ownership.
         public let challenge: String
 

@@ -48,7 +48,7 @@ struct OAuthAuthenticationView: View {
                             signupRedirectUrl: URL(string: "stytch-authentication://signup")!
                         )
                     )
-                    onAuth(try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDuration: 10)))
+                    onAuth(try await StytchClient.oauth.authenticate(parameters: .init(token: token, sessionDurationMinutes: 10)))
                 } catch {
                     print(error.errorInfo)
                 }

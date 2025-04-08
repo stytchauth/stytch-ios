@@ -37,23 +37,18 @@ public extension StytchClient {
 public extension StytchClient.MagicLinks {
     /// A dedicated parameters type for magic links `authenticate` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case token
-            case sessionDuration = "sessionDurationMinutes"
-        }
-
         let token: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /**
          Initializes the parameters struct
          - Parameters:
            - token: The token extracted from the magic link.
-           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+           - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
          */
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        public init(token: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.token = token
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }

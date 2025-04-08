@@ -2,8 +2,8 @@ import XCTest
 @testable import StytchCore
 
 final class PasswordsTestCase: BaseTestCase {
-    private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDuration: 26)
-    private let passwordResetBySessionParams: StytchClient.Passwords.ResetBySessionParameters = .init(password: "password123", sessionDuration: 10)
+    private let passwordParams: StytchClient.Passwords.PasswordParameters = .init(email: "user@stytch.com", password: "password123", sessionDurationMinutes: 26)
+    private let passwordResetBySessionParams: StytchClient.Passwords.ResetBySessionParameters = .init(password: "password123", sessionDurationMinutes: 10)
     private let passwordResetByExistingPasswordParams: StytchClient.Passwords.ResetByExistingPasswordParameters = .init(emailAddress: "user@stytch.com", existingPassword: "password123", newPassword: "password234")
 
     func testCreate() async throws {
@@ -84,10 +84,10 @@ final class PasswordsTestCase: BaseTestCase {
         _ = try await StytchClient.passwords.resetByEmailStart(
             parameters: .init(
                 email: "user@stytch.com",
-                loginUrl: nil,
-                loginExpiration: nil,
-                resetPasswordUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
-                resetPasswordExpiration: 15,
+                loginRedirectUrl: nil,
+                loginExpirationMinutes: nil,
+                resetPasswordRedirectUrl: XCTUnwrap(URL(string: "https://stytch.com/reset")),
+                resetPasswordExpirationMinutes: 15,
                 resetPasswordTemplateId: "one-two-buckle-my-shoe",
                 locale: .en
             )

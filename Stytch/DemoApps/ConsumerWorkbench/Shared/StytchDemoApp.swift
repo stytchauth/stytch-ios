@@ -61,7 +61,7 @@ struct StytchApp: App {
     private func handle(url: URL) {
         Task {
             do {
-                switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+                switch try await StytchClient.handle(url: url, sessionDurationMinutes: 5) {
                 case let .handled(responseData):
                     switch responseData {
                     case let .auth(response):

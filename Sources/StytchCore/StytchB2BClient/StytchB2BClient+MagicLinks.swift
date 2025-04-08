@@ -87,41 +87,31 @@ public extension StytchB2BClient {
 public extension StytchB2BClient.MagicLinks {
     /// A dedicated parameters type for magic links `authenticate` calls.
     struct AuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case sessionDuration = "sessionDurationMinutes"
-            case token = "magicLinksToken"
-            case locale
-        }
-
-        let token: String
-        let sessionDuration: Minutes
+        let magicLinksToken: String
+        let sessionDurationMinutes: Minutes
         let locale: StytchLocale
 
         /**
          Initializes the parameters struct
          - Parameters:
-           - token: The token extracted from the magic link.
-           - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+           - magicLinksToken: The token extracted from the magic link.
+           - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
            - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
          */
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
-            self.token = token
-            self.sessionDuration = sessionDuration
+        public init(magicLinksToken: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
+            self.magicLinksToken = magicLinksToken
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
     }
 
     /// A dedicated parameters type for Discovery `authenticate` calls.
     struct DiscoveryAuthenticateParameters: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case token = "discoveryMagicLinksToken"
-        }
+        let discoveryMagicLinksToken: String
 
-        let token: String
-
-        /// - Parameter token: The Discovery Email Magic Link token to authenticate.
-        public init(token: String) {
-            self.token = token
+        /// - Parameter discoveryMagicLinksToken: The Discovery Email Magic Link token to authenticate.
+        public init(discoveryMagicLinksToken: String) {
+            self.discoveryMagicLinksToken = discoveryMagicLinksToken
         }
     }
 }

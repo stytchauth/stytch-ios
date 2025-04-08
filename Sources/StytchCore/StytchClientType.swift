@@ -14,7 +14,7 @@ protocol StytchClientType {
 
     static var isInitialized: AnyPublisher<Bool, Never> { get }
 
-    static func handle(url: URL, sessionDuration: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>
+    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>
 }
 
 extension StytchClientType {

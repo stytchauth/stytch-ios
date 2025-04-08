@@ -5,7 +5,8 @@ import Foundation
 @dynamicMemberLookup
 public struct Response<Wrapped: Decodable & Sendable>: Decodable, Sendable {
     private enum CodingKeys: String, CodingKey {
-        case requestId, statusCode
+        case requestId
+        case statusCode
     }
 
     /// The underlying wrapped value. It can be accessed directly or via the subscript.

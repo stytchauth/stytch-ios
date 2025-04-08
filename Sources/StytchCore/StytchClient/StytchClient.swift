@@ -88,10 +88,10 @@ public extension StytchClient {
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
-    ///    - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+    ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
     static func handle(
         url: URL,
-        sessionDuration: Minutes = .defaultSessionDuration
+        sessionDurationMinutes: Minutes = .defaultSessionDuration
     ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
         guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
@@ -105,12 +105,12 @@ public extension StytchClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .auth(magicLinks.authenticate(parameters: .init(token: token, sessionDurationMinutes: sessionDurationMinutes))))
         case .oauth:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .oauth(oauth.authenticate(parameters: .init(token: token, sessionDuration: sessionDuration))))
+            return try await .handled(response: .oauth(oauth.authenticate(parameters: .init(token: token, sessionDurationMinutes: sessionDurationMinutes))))
         case .passwordReset:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))

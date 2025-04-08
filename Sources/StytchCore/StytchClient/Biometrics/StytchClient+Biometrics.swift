@@ -106,7 +106,7 @@ public extension StytchClient {
                         startResponse.challenge,
                         privateKey
                     ),
-                    sessionDuration: parameters.sessionDuration
+                    sessionDurationMinutes: parameters.sessionDuration
                 )
             )
 
@@ -312,12 +312,8 @@ extension StytchClient.Biometrics {
     }
 
     private struct RegisterFinishParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case biometricRegistrationId, signature, sessionDuration = "sessionDurationMinutes"
-        }
-
         let biometricRegistrationId: User.BiometricRegistration.ID
         let signature: Data
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
     }
 }

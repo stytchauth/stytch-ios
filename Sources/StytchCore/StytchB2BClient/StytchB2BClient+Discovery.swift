@@ -73,27 +73,22 @@ public extension StytchB2BClient.Discovery {
 public extension StytchB2BClient.Discovery {
     /// The dedicated parameters type for Discovery `exchangeIntermediateSession` calls.
     struct ExchangeIntermediateSessionParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case organizationId
-            case sessionDuration = "sessionDurationMinutes"
-        }
-
         let organizationId: Organization.ID
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
         let locale: StytchLocale
 
         /// - Parameters:
         ///   - organizationId: Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations on an Organization, so be sure to preserve this value.
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             organizationId: Organization.ID,
-            sessionDuration: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = .defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
     }
@@ -102,20 +97,7 @@ public extension StytchB2BClient.Discovery {
 public extension StytchB2BClient.Discovery {
     /// A dedicated parameters type for Discovery `createOrganization` calls.
     struct CreateOrganizationParameters: Codable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case sessionDuration = "sessionDurationMinutes"
-            case organizationName
-            case organizationSlug
-            case organizationLogoUrl
-            case ssoJitProvisioning
-            case emailAllowedDomains
-            case emailJitProvisioning
-            case emailInvites
-            case authMethods
-            case allowedAuthMethods
-        }
-
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
         let organizationName: String?
         let organizationSlug: String?
         let organizationLogoUrl: URL?
@@ -127,7 +109,7 @@ public extension StytchB2BClient.Discovery {
         let allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]?
 
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - organizationName: The name of the Organization. If the name is not specified, a default name will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization name will be generated based on the name portion of the email. Otherwise, the organization name will be generated based on the email domain.
         ///   - organizationSlug: The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. If the slug is not specified, a default slug will be created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a .edu email, the organization slug will be generated based on the name portion of the email. Otherwise, the organization slug will be generated based on the email domain.
         ///   - organizationLogoUrl: The image URL of the Organization logo.
@@ -138,7 +120,7 @@ public extension StytchB2BClient.Discovery {
         ///   - authMethods: The setting that controls which authentication methods can be used by Members of an Organization.
         ///   - allowedAuthMethods: An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
         public init(
-            sessionDuration: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = .defaultSessionDuration,
             organizationName: String? = nil,
             organizationSlug: String? = nil,
             organizationLogoUrl: URL? = nil,
@@ -149,7 +131,7 @@ public extension StytchB2BClient.Discovery {
             authMethods: StytchB2BClient.AuthMethods? = nil,
             allowedAuthMethods: [StytchB2BClient.AllowedAuthMethods]? = nil
         ) {
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.organizationName = organizationName
             self.organizationSlug = organizationSlug
             self.organizationLogoUrl = organizationLogoUrl

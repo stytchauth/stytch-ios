@@ -12,7 +12,7 @@ struct DiscoveryManager {
         let response = try await StytchB2BClient.discovery.exchangeIntermediateSession(
             parameters: .init(
                 organizationId: discoveredOrganization.organization.organizationId,
-                sessionDuration: configuration.sessionDurationMinutes
+                sessionDurationMinutes: configuration.sessionDurationMinutes
             )
         )
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)

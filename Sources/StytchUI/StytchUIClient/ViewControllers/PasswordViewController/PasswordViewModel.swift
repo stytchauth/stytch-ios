@@ -32,15 +32,15 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
 
     func setPassword(token: String, password: String) async throws {
-        let response = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDuration: state.config.sessionDurationMinutes))
+        let response = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
     }
 
     func signup(email: String, password: String) async throws {
-        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDuration: state.config.sessionDurationMinutes))
+        let response = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
     }
 
     func login(email: String, password: String) async throws {
-        let response = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDuration: state.config.sessionDurationMinutes))
+        let response = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
     }
 
     func loginWithEmail(email: String) async throws {
@@ -78,10 +78,10 @@ extension PasswordViewModel {
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: state.config.redirectUrl,
-            loginExpiration: password?.loginExpiration,
-            resetPasswordUrl: state.config.redirectUrl,
-            resetPasswordExpiration: password?.resetPasswordExpiration,
+            loginRedirectUrl: state.config.redirectUrl,
+            loginExpirationMinutes: password?.loginExpiration,
+            resetPasswordRedirectUrl: state.config.redirectUrl,
+            resetPasswordExpirationMinutes: password?.resetPasswordExpiration,
             resetPasswordTemplateId: password?.resetPasswordTemplateId,
             locale: state.config.locale
         )
@@ -91,10 +91,10 @@ extension PasswordViewModel {
         .init(
             email: email,
             loginMagicLinkUrl: state.config.redirectUrl,
-            loginExpiration: magicLink?.loginExpiration,
+            loginExpirationMinutes: magicLink?.loginExpiration,
             loginTemplateId: magicLink?.loginTemplateId,
             signupMagicLinkUrl: state.config.redirectUrl,
-            signupExpiration: magicLink?.signupExpiration,
+            signupExpirationMinutes: magicLink?.signupExpiration,
             signupTemplateId: magicLink?.signupTemplateId,
             locale: state.config.locale
         )

@@ -150,10 +150,10 @@ internal extension ActionableInfoViewModel {
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: state.config.redirectUrl,
-            loginExpiration: password?.loginExpiration,
-            resetPasswordUrl: state.config.redirectUrl,
-            resetPasswordExpiration: password?.resetPasswordExpiration,
+            loginRedirectUrl: state.config.redirectUrl,
+            loginExpirationMinutes: password?.loginExpiration,
+            resetPasswordRedirectUrl: state.config.redirectUrl,
+            resetPasswordExpirationMinutes: password?.resetPasswordExpiration,
             resetPasswordTemplateId: password?.resetPasswordTemplateId,
             locale: state.config.locale
         )
@@ -163,10 +163,10 @@ internal extension ActionableInfoViewModel {
         .init(
             email: email,
             loginMagicLinkUrl: state.config.redirectUrl,
-            loginExpiration: magicLink?.loginExpiration,
+            loginExpirationMinutes: magicLink?.loginExpiration,
             loginTemplateId: magicLink?.loginTemplateId,
             signupMagicLinkUrl: state.config.redirectUrl,
-            signupExpiration: magicLink?.signupExpiration,
+            signupExpirationMinutes: magicLink?.signupExpiration,
             signupTemplateId: magicLink?.signupTemplateId,
             locale: state.config.locale
         )

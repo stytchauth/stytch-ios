@@ -177,7 +177,7 @@ struct OTPAuthenticationView: View, Sendable {
     func authenticate() {
         isLoading = true
         Task {
-            let params: StytchClient.OTP.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDuration: 30)
+            let params: StytchClient.OTP.AuthenticateParameters = .init(code: otp, methodId: methodId, sessionDurationMinutes: 30)
             do {
                 onAuth(try await StytchClient.otps.authenticate(parameters: params))
             } catch {
