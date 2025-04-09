@@ -13,8 +13,20 @@ import UIKit
  */
 public struct StytchB2BClient: StytchClientType {
     static var instance: StytchB2BClient = .init()
-    static let router: NetworkingRouter<BaseRoute> = .init { instance.configuration }
-    public static var isInitialized: AnyPublisher<Bool, Never> { StartupClient.isInitialized }
+
+    static let router: NetworkingRouter<BaseRoute> = .init {
+        instance.configuration
+    }
+
+    /**
+     Signals that the SDK is fully initialized and ready for use.
+     This is sent after two parallel tasks complete:
+     1. Attempting to call sessions.authenticate (if there's a session token cached on the device).
+     2. Bootstrapping configuration, including DFP and captcha setup.
+     */
+    public static var isInitialized: AnyPublisher<Bool, Never> {
+        StartupClient.isInitialized
+    }
 
     public static var lastAuthMethodUsed: B2BAuthMethod {
         Current.sessionManager.b2bLastAuthMethodUsed
