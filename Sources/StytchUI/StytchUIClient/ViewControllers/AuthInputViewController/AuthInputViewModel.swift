@@ -54,19 +54,19 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
 
     func continueWithEmail(email: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: email, loginTemplateId: state.config.otpOptions?.loginTemplateId, signupTemplateId: state.config.otpOptions?.signupTemplateId), expiration: state.config.otpOptions?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .email(email: email, loginTemplateId: state.config.otpOptions?.loginTemplateId, signupTemplateId: state.config.otpOptions?.signupTemplateId), expirationMinutes: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 
     func continueWithPhone(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expiration: state.config.otpOptions?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: phone), expirationMinutes: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 
     func continueWithWhatsApp(phone: String, formattedPhone _: String) async throws -> (StytchClient.OTP.OTPResponse, Date) {
         let expiry = Date().addingTimeInterval(120)
-        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: phone), expiration: state.config.otpOptions?.expiration))
+        let result = try await otpClient.loginOrCreate(parameters: .init(deliveryMethod: .whatsapp(phoneNumber: phone), expirationMinutes: state.config.otpOptions?.expiration))
         return (result, expiry)
     }
 }
@@ -75,10 +75,10 @@ extension AuthInputViewModel {
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: state.config.redirectUrl,
-            loginExpiration: password?.loginExpiration,
-            resetPasswordUrl: state.config.redirectUrl,
-            resetPasswordExpiration: password?.resetPasswordExpiration,
+            loginRedirectUrl: state.config.redirectUrl,
+            loginExpirationMinutes: password?.loginExpiration,
+            resetPasswordRedirectUrl: state.config.redirectUrl,
+            resetPasswordExpirationMinutes: password?.resetPasswordExpiration,
             resetPasswordTemplateId: password?.resetPasswordTemplateId,
             locale: state.config.locale
         )
@@ -88,10 +88,10 @@ extension AuthInputViewModel {
         .init(
             email: email,
             loginMagicLinkUrl: state.config.redirectUrl,
-            loginExpiration: magicLink?.loginExpiration,
+            loginExpirationMinutes: magicLink?.loginExpiration,
             loginTemplateId: magicLink?.loginTemplateId,
             signupMagicLinkUrl: state.config.redirectUrl,
-            signupExpiration: magicLink?.signupExpiration,
+            signupExpirationMinutes: magicLink?.signupExpiration,
             signupTemplateId: magicLink?.signupTemplateId,
             locale: state.config.locale
         )

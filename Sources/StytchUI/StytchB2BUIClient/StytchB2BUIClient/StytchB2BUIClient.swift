@@ -57,7 +57,7 @@ public enum StytchB2BUIClient {
         currentController?.popToRootViewController(animated: false)
         Task { @MainActor in
             do {
-                switch try await StytchB2BClient.handle(url: url, sessionDuration: configuration.sessionDurationMinutes) {
+                switch try await StytchB2BClient.handle(url: url, sessionDurationMinutes: configuration.sessionDurationMinutes) {
                 case let .handled(responseData):
                     switch responseData {
                     case let .mfauth(response):

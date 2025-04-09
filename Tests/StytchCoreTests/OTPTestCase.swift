@@ -21,7 +21,7 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expirationMinutes: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/login_or_create",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
@@ -65,7 +65,7 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expirationMinutes: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/primary",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
@@ -115,7 +115,7 @@ final class OTPTestCase: BaseTestCase {
 
         try await [
             ExpectedValues(
-                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expiration: 3, locale: .en),
+                parameters: .init(deliveryMethod: .whatsapp(phoneNumber: "+12345678901"), expirationMinutes: 3, locale: .en),
                 urlString: "https://api.stytch.com/sdk/v1/otps/whatsapp/send/secondary",
                 body: ["expiration_minutes": 3, "phone_number": "+12345678901", "locale": "en"]
             ),
@@ -147,7 +147,8 @@ final class OTPTestCase: BaseTestCase {
         let parameters: Base.AuthenticateParameters = .init(
             code: "i_am_code",
             methodId: "method_id_fake_id",
-            sessionDuration: 20
+            sessionDurationMinutes:
+            20
         )
 
         XCTAssertNil(StytchClient.sessions.sessionToken)

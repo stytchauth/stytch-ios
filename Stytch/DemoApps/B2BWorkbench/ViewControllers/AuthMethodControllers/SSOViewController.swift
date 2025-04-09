@@ -98,7 +98,7 @@ final class SSOViewController: UIViewController {
                         signupRedirectUrl: redirectUrl
                     )
                 )
-                let response = try await StytchB2BClient.sso.authenticate(parameters: .init(token: token, locale: .en))
+                let response = try await StytchB2BClient.sso.authenticate(parameters: .init(ssoToken: token, locale: .en))
                 presentAlertAndLogMessage(description: "sso start-authenticate success!", object: response)
             } catch {
                 presentAlertAndLogMessage(description: "sso start-authenticate error", object: error)

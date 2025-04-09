@@ -20,9 +20,9 @@ final class PasswordResetViewModel {
     func organizationResetPassword(_ newPassword: String) async throws {
         let response = try await StytchB2BClient.passwords.resetByEmail(
             parameters: .init(
-                token: state.token,
+                passwordResetToken: state.token,
                 password: newPassword,
-                sessionDuration: state.configuration.sessionDurationMinutes,
+                sessionDurationMinutes: state.configuration.sessionDurationMinutes,
                 locale: state.configuration.locale
             )
         )

@@ -64,10 +64,10 @@ final class PasswordViewModelTests: BaseTestCase {
         let viewModel = PasswordViewModel(state: state)
         let expected: StytchClient.Passwords.ResetByEmailStartParameters = .init(
             email: "test@stytch.com",
-            loginUrl: config.redirectUrl,
-            loginExpiration: passwordOptions.loginExpiration,
-            resetPasswordUrl: config.redirectUrl,
-            resetPasswordExpiration: passwordOptions.resetPasswordExpiration,
+            loginRedirectUrl: config.redirectUrl,
+            loginExpirationMinutes: passwordOptions.loginExpiration,
+            resetPasswordRedirectUrl: config.redirectUrl,
+            resetPasswordExpirationMinutes: passwordOptions.resetPasswordExpiration,
             resetPasswordTemplateId: passwordOptions.resetPasswordTemplateId
         )
         let result = viewModel.params(email: "test@stytch.com", password: passwordOptions)
@@ -96,10 +96,10 @@ final class PasswordViewModelTests: BaseTestCase {
         let expected: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "test@stytch.com",
             loginMagicLinkUrl: config.redirectUrl,
-            loginExpiration: magicLinkOptions.loginExpiration,
+            loginExpirationMinutes: magicLinkOptions.loginExpiration,
             loginTemplateId: magicLinkOptions.loginTemplateId,
             signupMagicLinkUrl: config.redirectUrl,
-            signupExpiration: magicLinkOptions.signupExpiration,
+            signupExpirationMinutes: magicLinkOptions.signupExpiration,
             signupTemplateId: magicLinkOptions.signupTemplateId
         )
         let result = viewModel.params(email: "test@stytch.com", magicLink: magicLinkOptions)

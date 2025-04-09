@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func handle(url: URL) {
         Task {
             do {
-                switch try await StytchB2BClient.handle(url: url, sessionDuration: 60) {
+                switch try await StytchB2BClient.handle(url: url, sessionDurationMinutes: 60) {
                 case let .handled(response):
                     // Handled via RootVC onAuthChange publisher
                     switch response {

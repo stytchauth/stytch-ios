@@ -71,10 +71,10 @@ extension OTPCodeViewModel {
     func params(email: String, password: StytchUIClient.PasswordOptions?) -> StytchClient.Passwords.ResetByEmailStartParameters {
         .init(
             email: email,
-            loginUrl: state.config.redirectUrl,
-            loginExpiration: password?.loginExpiration,
-            resetPasswordUrl: state.config.redirectUrl,
-            resetPasswordExpiration: password?.resetPasswordExpiration,
+            loginRedirectUrl: state.config.redirectUrl,
+            loginExpirationMinutes: password?.loginExpiration,
+            resetPasswordRedirectUrl: state.config.redirectUrl,
+            resetPasswordExpirationMinutes: password?.resetPasswordExpiration,
             resetPasswordTemplateId: password?.resetPasswordTemplateId,
             locale: state.config.locale
         )

@@ -34,8 +34,8 @@ final class PasswordModel: ObservableObject {
         try await StytchClient.passwords.resetByEmailStart(
             parameters: .init(
                 email: email,
-                loginUrl: configuration.serverUrl,
-                resetPasswordUrl: configuration.serverUrl,
+                loginRedirectUrl: configuration.serverUrl,
+                resetPasswordRedirectUrl: configuration.serverUrl,
                 resetPasswordTemplateId: resetTemplateId.presence
             )
         )

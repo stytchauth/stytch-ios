@@ -49,20 +49,24 @@ public extension StytchClient {
 public extension StytchClient.OTP {
     /// The dedicated parameters type for OTP `authenticate` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey { case code = "token", methodId, sessionDuration = "sessionDurationMinutes" }
+        private enum CodingKeys: String, CodingKey {
+            case code = "token"
+            case methodId
+            case sessionDurationMinutes
+        }
 
         let code: String
         let methodId: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - code: The one-time passcode
         ///   - methodId: The methodId captured upon requesting the OTP.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(code: String, methodId: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(code: String, methodId: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.code = code
             self.methodId = methodId
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }
@@ -73,7 +77,7 @@ public extension StytchClient.OTP {
         private enum CodingKeys: String, CodingKey {
             case phoneNumber
             case email
-            case expiration = "expirationMinutes"
+            case expirationMinutes
             case loginTemplateId
             case signupTemplateId
             case enableAutofill
@@ -81,22 +85,22 @@ public extension StytchClient.OTP {
         }
 
         let deliveryMethod: DeliveryMethod
-        let expiration: Minutes?
+        let expirationMinutes: Minutes?
         let locale: StytchLocale
 
         /// - Parameters:
         ///   - deliveryMethod: The mechanism used to deliver the one-time passcode.
-        ///   - expiration: Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10 minutes. The default expiration is 2 minutes.
+        ///   - expirationMinutes: Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10 minutes. The default expiration is 2 minutes.
         ///   - locale: Used to determine which language to use when sending the member this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en"
-        public init(deliveryMethod: DeliveryMethod, expiration: Minutes? = nil, locale: StytchLocale = .en) {
+        public init(deliveryMethod: DeliveryMethod, expirationMinutes: Minutes? = nil, locale: StytchLocale = .en) {
             self.deliveryMethod = deliveryMethod
-            self.expiration = expiration
+            self.expirationMinutes = expirationMinutes
             self.locale = locale
         }
 
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encodeIfPresent(expiration, forKey: .expiration)
+            try container.encodeIfPresent(expirationMinutes, forKey: .expirationMinutes)
             try container.encodeIfPresent(locale, forKey: .locale)
             switch deliveryMethod {
             case let .whatsapp(phoneNumber):

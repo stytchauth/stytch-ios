@@ -155,24 +155,18 @@ public extension StytchB2BClient.SSO {
 public extension StytchB2BClient.SSO {
     /// A dedicated parameters type for SSO `authenticate` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        private enum CodingKeys: String, CodingKey {
-            case token = "ssoToken"
-            case sessionDuration = "sessionDurationMinutes"
-            case locale
-        }
-
-        let token: String
-        let sessionDuration: Minutes
+        let ssoToken: String
+        let sessionDurationMinutes: Minutes
         let locale: StytchLocale
 
         /// - Parameters:
-        ///   - token: The token to authenticate.
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - ssoToken: The token to authenticate.
+        ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
-        public init(token: String, sessionDuration: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
-            self.token = token
-            self.sessionDuration = sessionDuration
+        public init(ssoToken: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
+            self.ssoToken = ssoToken
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
     }

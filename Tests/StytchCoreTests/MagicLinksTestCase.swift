@@ -10,10 +10,10 @@ final class MagicLinksTestCase: BaseTestCase {
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            loginExpiration: 30,
+            loginExpirationMinutes: 30,
             loginTemplateId: "g'day",
             signupMagicLinkUrl: baseUrl.appendingPathComponent("signup"),
-            signupExpiration: 30,
+            signupExpirationMinutes: 30,
             signupTemplateId: "mate",
             locale: .en
         )
@@ -49,7 +49,7 @@ final class MagicLinksTestCase: BaseTestCase {
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            loginExpiration: 30,
+            loginExpirationMinutes: 30,
             loginTemplateId: "hello",
             locale: .en
         )
@@ -83,7 +83,7 @@ final class MagicLinksTestCase: BaseTestCase {
         let parameters: StytchClient.MagicLinks.Email.Parameters = .init(
             email: "asdf@stytch.com",
             loginMagicLinkUrl: baseUrl.appendingPathComponent("login"),
-            loginExpiration: 30,
+            loginExpirationMinutes: 30,
             locale: .en
         )
 
@@ -116,7 +116,7 @@ final class MagicLinksTestCase: BaseTestCase {
         networkInterceptor.responses { authResponse }
         let parameters: StytchClient.MagicLinks.AuthenticateParameters = .init(
             token: "12345",
-            sessionDuration: 15
+            sessionDurationMinutes: 15
         )
 
         await XCTAssertThrowsErrorAsync(

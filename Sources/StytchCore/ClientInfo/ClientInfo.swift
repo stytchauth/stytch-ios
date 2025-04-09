@@ -28,7 +28,10 @@ public extension ClientInfo {
     }
 
     struct OperatingSystem: Encodable {
-        private enum CodingKeys: String, CodingKey { case identifier, version }
+        private enum CodingKeys: String, CodingKey {
+            case identifier
+            case version
+        }
 
         var identifier: String { operatingSystem.lowercased() }
 
@@ -52,7 +55,10 @@ public extension ClientInfo {
     }
 
     struct Device: Encodable {
-        private enum CodingKeys: String, CodingKey { case model, screenSize }
+        private enum CodingKeys: String, CodingKey {
+            case model
+            case screenSize
+        }
 
         var model: String {
             #if os(macOS)

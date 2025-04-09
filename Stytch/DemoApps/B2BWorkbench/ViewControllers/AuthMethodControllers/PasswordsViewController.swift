@@ -157,8 +157,8 @@ final class PasswordsViewController: UIViewController {
                     parameters: .init(
                         organizationId: values.orgId,
                         emailAddress: values.email,
-                        resetPasswordUrl: values.redirectUrl,
-                        resetPasswordExpiration: .defaultSessionDuration,
+                        resetPasswordRedirectUrl: values.redirectUrl,
+                        resetPasswordExpirationMinutes: .defaultSessionDuration,
                         resetPasswordTemplateId: nil,
                         verifyEmailTemplateId: nil,
                         locale: .en
@@ -171,12 +171,12 @@ final class PasswordsViewController: UIViewController {
         }
     }
 
-    func resetByEmail(token: String, newPassword: String) {
+    func resetByEmail(passwordResetToken: String, newPassword: String) {
         Task {
             do {
                 let response = try await StytchB2BClient.passwords.resetByEmail(
                     parameters: .init(
-                        token: token,
+                        passwordResetToken: passwordResetToken,
                         password: newPassword,
                         locale: .en
                     )
@@ -316,7 +316,7 @@ final class PasswordsViewController: UIViewController {
                 if passwordDiscovery == true {
                     discoveryResetByEmail(token: token, newPassword: newPassword)
                 } else {
-                    resetByEmail(token: token, newPassword: newPassword)
+                    resetByEmail(passwordResetToken: token, newPassword: newPassword)
                 }
             } catch {
                 presentAlertAndLogMessage(description: "reset password error", object: error)

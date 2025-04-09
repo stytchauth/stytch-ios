@@ -41,7 +41,7 @@ final class OAuthTestCase: BaseTestCase {
         Current.timer = { _, _, _ in .init() }
 
         await XCTAssertThrowsErrorAsync(
-            try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12)),
+            try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDurationMinutes: 12)),
             StytchSDKError.missingPKCE
         )
 
@@ -49,7 +49,7 @@ final class OAuthTestCase: BaseTestCase {
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
         networkInterceptor.responses { StytchClient.OAuth.OAuthAuthenticateResponse.mock }
-        _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDuration: 12))
+        _ = try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDurationMinutes: 12))
 
         try XCTAssertRequest(
             networkInterceptor.requests[1],
