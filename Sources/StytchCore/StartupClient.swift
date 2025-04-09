@@ -33,25 +33,38 @@ struct StartupClient {
     static func start(type: ClientType) async throws {
         clientType = type
 
-        let bootstrapResponseData = try await bootstrap()
+        async let auth: () = authenticateSessionIfNeeded(for: type)
+        async let bootstrap: () = fetchAndApplyBootstrap()
+
+        // Await both tasks to complete
+        _ = try await (auth, bootstrap)
+
+        isInitializedPublisher.send(true)
+    }
+
+    private static func authenticateSessionIfNeeded(for type: ClientType) async {
+        guard Current.sessionManager.hasValidSessionToken else {
+            return
+        }
+        switch type {
+        case .consumer:
+            _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
+        case .b2b:
+            _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
+        }
+    }
+
+    private static func fetchAndApplyBootstrap() async throws {
+        let data = try await bootstrap()
 
         #if os(iOS)
-        Current.networkingClient.dfpEnabled = bootstrapResponseData.dfpProtectedAuthEnabled
-        Current.networkingClient.dfpAuthMode = bootstrapResponseData.dfpProtectedAuthMode ?? DFPProtectedAuthMode.observation
-        if let siteKey = bootstrapResponseData.captchaSettings.siteKey, siteKey.isEmpty == false {
+        Current.networkingClient.dfpEnabled = data.dfpProtectedAuthEnabled
+        Current.networkingClient.dfpAuthMode = data.dfpProtectedAuthMode ?? .observation
+
+        if let siteKey = data.captchaSettings.siteKey, !siteKey.isEmpty {
             await Current.captcha.setCaptchaClient(siteKey: siteKey)
         }
         #endif
-
-        if Current.sessionManager.hasValidSessionToken {
-            if clientType == .consumer {
-                _ = try? await StytchClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
-            } else if clientType == .b2b {
-                _ = try? await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
-            }
-        }
-
-        isInitializedPublisher.send(true)
     }
 
     @discardableResult static func bootstrap() async throws -> BootstrapResponseData {
