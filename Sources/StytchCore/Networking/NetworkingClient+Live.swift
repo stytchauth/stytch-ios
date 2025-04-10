@@ -10,20 +10,22 @@ extension NetworkingClient {
 
         return .init { request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain, useDFPPA in
             #if os(iOS)
-            if request.url?.path.contains("/events") == true {
-                return try await defaultRequestHandler(session: session, request: request)
-            }
-            if dfpEnabled == true, useDFPPA == true {
-                switch dfpAuthMode {
-                case .observation:
-                    return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
-                case .decisioning:
-                    return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+            if useDFPPA == true {
+                if dfpEnabled == true {
+                    switch dfpAuthMode {
+                    case .observation:
+                        return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                    case .decisioning:
+                        return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                    }
+                } else {
+                    return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
                 }
             } else {
-                return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
+                return try await defaultRequestHandler(session: session, request: request)
             }
             #endif
+
             return try await defaultRequestHandler(session: session, request: request)
         }
     }
