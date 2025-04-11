@@ -1,3 +1,9 @@
+import Foundation
+
+public extension StytchClient {
+    static let dfp: DFP = .init()
+}
+
 public extension StytchClient {
     struct DFP {
         #if os(iOS)
@@ -6,22 +12,12 @@ public extension StytchClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Returns a DFP Telemetry ID
         public func getTelemetryID() async throws -> String {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
-                throw StytchSDKError.consumerSDKNotConfigured
-            }
-            guard let dfppaDomain = StytchClient.instance.configuration?.dfppaDomain else {
-                throw StytchSDKError.consumerSDKNotConfigured
-            }
             #if os(iOS)
-            let telemetryId = await dfpClient.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain)
+            let telemetryId = await dfpClient.getTelemetryId()
             return telemetryId
             #else
             return ""
             #endif
         }
     }
-}
-
-public extension StytchClient {
-    static let dfp: DFP = .init()
 }

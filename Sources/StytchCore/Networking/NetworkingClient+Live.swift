@@ -8,15 +8,15 @@ extension NetworkingClient {
         #endif
         let session: URLSession = .init(configuration: .default)
 
-        return .init { request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain, useDFPPA in
+        return .init { request, dfpEnabled, dfpAuthMode, _, _, useDFPPA in
             #if os(iOS)
             if useDFPPA == true {
                 if dfpEnabled == true {
                     switch dfpAuthMode {
                     case .observation:
-                        return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                        return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
                     case .decisioning:
-                        return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                        return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
                     }
                 } else {
                     return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
