@@ -18,6 +18,7 @@ let package = Package(
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", .exact("3.8.0")),
         .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", .exact("18.7.0")),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.2"),
+        .package(url: "https://github.com/stytchauth/stytch-ios-dfp.git", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -34,10 +35,10 @@ let package = Package(
             name: "StytchCore",
             dependencies: [
                 .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
+                .product(name: "StytchDFP", package: "stytch-ios-dfp", condition: .when(platforms: [.iOS])),
                 .product(name: "SwiftyJSON", package: "SwiftyJSON"),
             ],
             resources: [
-                .copy("DFPClient/dfp.html"),
                 .process("PrivacyInfo.xcprivacy"),
             ]
         ),

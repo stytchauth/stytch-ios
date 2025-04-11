@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "StytchDFP",
+        "repositoryURL": "https://github.com/stytchauth/stytch-ios-dfp.git",
+        "state": {
+          "branch": null,
+          "revision": "45776cdac6e4bcc1a24f49fbb16bb5cf469acf85",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "swift-asn1",
         "repositoryURL": "https://github.com/apple/swift-asn1.git",
         "state": {

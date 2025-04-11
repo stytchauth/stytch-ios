@@ -30,7 +30,7 @@ public enum EventsClient {
                 device: Current.clientInfo.device
             ),
             event: .init(
-                publicToken: Current.networkingClient.publicToken,
+                publicToken: Current.localStorage.configuration?.publicToken ?? "",
                 eventName: parameters.eventName,
                 details: parameters.details,
                 error: parameters.error
