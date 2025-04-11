@@ -2,31 +2,49 @@ import Foundation
 import XCTest
 @testable import StytchCore
 
+// swiftlint:disable type_contents_order
+
 private class NetworkRequestHandlerMock: NetworkRequestHandler {
     private(set) var methodCalled: String?
+    var urlSession: URLSession
+
+    required init(urlSession: URLSession) {
+        self.urlSession = urlSession
+    }
+
     #if os(iOS)
-    func handleDFPDisabled(session _: URLSession, request _: URLRequest, captcha _: CaptchaProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    var captchaProvider: CaptchaProvider {
+        ConfiguredRecaptchaProviderMock()
+    }
+
+    var dfpProvider: DFPProvider {
+        DFPProviderMock()
+    }
+
+    func handleDFPDisabled(request _: URLRequest) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDfpDisabled"
         return (Data(), HTTPURLResponse())
     }
 
-    // swiftlint:disable:next function_parameter_count
-    func handleDFPObservationMode(session _: URLSession, request _: URLRequest, publicToken _: String, dfppaDomain _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPObservationMode(request _: URLRequest, publicToken _: String, dfppaDomain _: String) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPObservationMode"
         return (Data(), HTTPURLResponse())
     }
 
-    // swiftlint:disable:next function_parameter_count
-    func handleDFPDecisioningMode(session _: URLSession, request _: URLRequest, publicToken _: String, dfppaDomain _: String, captcha _: CaptchaProvider, dfp _: DFPProvider, requestHandler _: (URLSession, URLRequest) async throws -> (Data, HTTPURLResponse)) async throws -> (Data, HTTPURLResponse) {
+    func handleDFPDecisioningMode(request _: URLRequest, publicToken _: String, dfppaDomain _: String) async throws -> (Data, HTTPURLResponse) {
         methodCalled = "handleDFPDecisioningMode"
         return (Data(), HTTPURLResponse())
     }
     #endif
+
+    func defaultRequestHandler(_: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        (Data(), HTTPURLResponse())
+    }
 }
 
 final class NetworkingClientLiveTestCase: XCTestCase {
     func testDFPDisabled() async throws {
-        let handler = NetworkRequestHandlerMock()
+        let handler = NetworkRequestHandlerMock(urlSession: .shared)
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = false
         client.dfpAuthMode = DFPProtectedAuthMode.observation
@@ -39,7 +57,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
     }
 
     func testDFPObservation() async throws {
-        let handler = NetworkRequestHandlerMock()
+        let handler = NetworkRequestHandlerMock(urlSession: .shared)
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.observation
@@ -52,7 +70,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
     }
 
     func testDFPDecisioning() async throws {
-        let handler = NetworkRequestHandlerMock()
+        let handler = NetworkRequestHandlerMock(urlSession: .shared)
         let client = NetworkingClient.live(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.decisioning
