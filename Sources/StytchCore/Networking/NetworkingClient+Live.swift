@@ -1,40 +1,26 @@
 import Foundation
 
 extension NetworkingClient {
-    static func live(networkRequestHandler: NetworkRequestHandler = NetworkRequestHandlerImplementation()) -> NetworkingClient {
-        #if os(iOS)
-        @Dependency(\.dfpClient) var dfpClient
-        @Dependency(\.captcha) var captcha
-        #endif
-        let session: URLSession = .init(configuration: .default)
-
-        return .init { request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain, useDFPPA in
+    static func live(networkRequestHandler: NetworkRequestHandler = NetworkRequestHandlerImplementation(urlSession: .init(configuration: .default))) -> NetworkingClient {
+        .init { request, dfpEnabled, dfpAuthMode, publicToken, dfppaDomain, useDFPPA in
             #if os(iOS)
             if useDFPPA == true {
                 if dfpEnabled == true {
                     switch dfpAuthMode {
                     case .observation:
-                        return try await networkRequestHandler.handleDFPObservationMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                        return try await networkRequestHandler.handleDFPObservationMode(request: request, publicToken: publicToken, dfppaDomain: dfppaDomain)
                     case .decisioning:
-                        return try await networkRequestHandler.handleDFPDecisioningMode(session: session, request: request, publicToken: publicToken, dfppaDomain: dfppaDomain, captcha: captcha, dfp: dfpClient, requestHandler: defaultRequestHandler)
+                        return try await networkRequestHandler.handleDFPDecisioningMode(request: request, publicToken: publicToken, dfppaDomain: dfppaDomain)
                     }
                 } else {
-                    return try await networkRequestHandler.handleDFPDisabled(session: session, request: request, captcha: captcha, requestHandler: defaultRequestHandler)
+                    return try await networkRequestHandler.handleDFPDisabled(request: request)
                 }
             } else {
-                return try await defaultRequestHandler(session: session, request: request)
+                return try await networkRequestHandler.defaultRequestHandler(request)
             }
             #endif
 
-            return try await defaultRequestHandler(session: session, request: request)
+            return try await networkRequestHandler.defaultRequestHandler(request)
         }
-    }
-
-    private static func defaultRequestHandler(session: URLSession, request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        let (data, response) = try await session.data(for: request)
-        guard let response = response as? HTTPURLResponse else {
-            throw StytchAPISchemaError(message: "Request does not match expected schema.")
-        }
-        return (data, response)
     }
 }
