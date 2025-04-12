@@ -4,7 +4,7 @@ import XCTest
 
 // swiftlint:disable type_contents_order
 
-private class NetworkRequestHandlerMock: NetworkRequestHandler {
+class NetworkRequestHandlerMock: NetworkRequestHandler {
     private(set) var methodCalled: String?
     var urlSession: URLSession
 
@@ -45,7 +45,7 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
 final class NetworkingClientLiveTestCase: XCTestCase {
     func testDFPDisabled() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.dfpEnabled = false
         client.dfpAuthMode = DFPProtectedAuthMode.observation
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
@@ -58,7 +58,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
 
     func testDFPObservation() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.observation
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
@@ -71,7 +71,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
 
     func testDFPDecisioning() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.dfpEnabled = true
         client.dfpAuthMode = DFPProtectedAuthMode.decisioning
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)

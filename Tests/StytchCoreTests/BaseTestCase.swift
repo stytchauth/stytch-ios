@@ -5,14 +5,14 @@ import XCTest
 // swiftlint:disable test_case_accessibility
 
 class BaseTestCase: XCTestCase {
-    var networkInterceptor: NetworkingClientInterceptor = .init()
+    var networkInterceptor: NetworkingClientInterceptor = .init(networkRequestHandler: NetworkRequestHandlerMock(urlSession: .shared))
 
     let intermediateSessionToken = "intermediateSessionToken_asdfg"
 
     override func setUpWithError() throws {
         try super.setUpWithError()
 
-        Current.networkingClient = .init(handleRequest: networkInterceptor.handleRequest)
+        Current.networkingClient = networkInterceptor
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = KeychainClientMock()
