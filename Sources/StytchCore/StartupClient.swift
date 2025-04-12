@@ -58,8 +58,10 @@ struct StartupClient {
         let data = try await bootstrap()
 
         #if os(iOS)
-        Current.networkingClient.dfpEnabled = data.dfpProtectedAuthEnabled
-        Current.networkingClient.dfpAuthMode = data.dfpProtectedAuthMode ?? .observation
+        Current.networkingClient.configureDFP(
+            dfpEnabled: data.dfpProtectedAuthEnabled,
+            dfpAuthMode: data.dfpProtectedAuthMode
+        )
 
         if let siteKey = data.captchaSettings.siteKey, !siteKey.isEmpty {
             await Current.captcha.setCaptchaClient(siteKey: siteKey)

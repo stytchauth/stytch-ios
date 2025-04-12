@@ -1,29 +1,47 @@
 import Foundation
 
-final class NetworkingClient {
-    typealias NetworkingClientRequestBlock = (URLRequest, Bool, DFPProtectedAuthMode, Bool) async throws -> (Data, HTTPURLResponse)
+// swiftlint:disable type_contents_order
 
-    var headerProvider: (() -> [String: String])?
-    var dfpEnabled: Bool = false
-    var dfpAuthMode = DFPProtectedAuthMode.observation
+protocol NetworkingClient {
+    func configureDFP(dfpEnabled: Bool, dfpAuthMode: DFPProtectedAuthMode?)
+    func handleRequest(request: URLRequest, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse)
+}
 
-    private let handleRequest: NetworkingClientRequestBlock
+extension NetworkingClient {
+    var headers: [String: String] {
+        guard let configuration = Current.localStorage.configuration else {
+            return [:]
+        }
 
-    init(handleRequest: @escaping NetworkingClientRequestBlock) {
-        self.handleRequest = handleRequest
+        let clientInfoString = try? Current.clientInfo.base64EncodedString(encoder: Current.jsonEncoder)
+
+        let publicToken = configuration.publicToken
+
+        let authToken: String
+        if let sessionToken = Current.sessionManager.sessionToken?.value, sessionToken.isEmpty == false {
+            authToken = "\(publicToken):\(sessionToken)".base64Encoded()
+        } else {
+            authToken = "\(publicToken):\(publicToken)".base64Encoded()
+        }
+
+        return [
+            "Content-Type": "application/json",
+            "Authorization": "Basic \(authToken)",
+            "X-SDK-Client": clientInfoString ?? "",
+        ]
     }
 
-    func performRequest(_ method: Method, url: URL, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
+    func performRequest(_ method: HTTPMethod, url: URL, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
         let request = urlRequest(url: url, method: method)
-        return try await handleRequest(request, dfpEnabled, dfpAuthMode, useDFPPA)
+        return try await handleRequest(request: request, useDFPPA: useDFPPA)
     }
 
-    private func urlRequest(url: URL, method: Method) -> URLRequest {
+    func urlRequest(url: URL, method: HTTPMethod) -> URLRequest {
         var request: URLRequest = .init(url: url)
 
         request.httpMethod = method.stringValue
 
-        headerProvider?().forEach { field, value in
+        headers.forEach { field, value in
             request.addValue(value, forHTTPHeaderField: field)
         }
 
@@ -38,24 +56,60 @@ final class NetworkingClient {
     }
 }
 
-extension NetworkingClient {
-    enum Method {
-        case delete
-        case get
-        case post(Data?)
-        case put(Data?)
+final class NetworkingClientImplementation: NetworkingClient {
+    let networkRequestHandler: NetworkRequestHandler
 
-        var stringValue: String {
-            switch self {
-            case .delete:
-                return "DELETE"
-            case .get:
-                return "GET"
-            case .post:
-                return "POST"
-            case .put:
-                return "PUT"
+    private(set) var dfpEnabled: Bool = false
+    private(set) var dfpAuthMode = DFPProtectedAuthMode.observation
+
+    init(networkRequestHandler: NetworkRequestHandler) {
+        self.networkRequestHandler = networkRequestHandler
+    }
+
+    func configureDFP(dfpEnabled: Bool, dfpAuthMode: DFPProtectedAuthMode?) {
+        self.dfpEnabled = dfpEnabled
+        self.dfpAuthMode = dfpAuthMode ?? .observation
+    }
+
+    func handleRequest(request: URLRequest, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
+        #if os(iOS)
+        if useDFPPA == true {
+            if dfpEnabled == true {
+                switch dfpAuthMode {
+                case .observation:
+                    return try await networkRequestHandler.handleDFPObservationMode(request: request)
+                case .decisioning:
+                    return try await networkRequestHandler.handleDFPDecisioningMode(request: request)
+                }
+            } else {
+                return try await networkRequestHandler.handleDFPDisabled(request: request)
             }
+        } else {
+            return try await networkRequestHandler.defaultRequestHandler(request: request)
+        }
+        #endif
+        return try await networkRequestHandler.defaultRequestHandler(request: request)
+    }
+
+    static var live = NetworkingClientImplementation(networkRequestHandler: NetworkRequestHandlerImplementation(urlSession: .init(configuration: .default)))
+}
+
+enum HTTPMethod {
+    case delete
+    case get
+    case post(Data?)
+    case put(Data?)
+
+    var stringValue: String {
+        switch self {
+        case .delete:
+            return "DELETE"
+        case .get:
+            return "GET"
+        case .post:
+            return "POST"
+        case .put:
+            return "PUT"
         }
     }
 }

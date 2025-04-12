@@ -93,7 +93,7 @@ public extension NetworkingRouter {
 
 public extension NetworkingRouter {
     private func performRequest(
-        _ method: NetworkingClient.Method,
+        _ method: HTTPMethod,
         route: Route,
         useDFPPA: Bool = false
     ) async throws {
@@ -119,7 +119,7 @@ public extension NetworkingRouter {
 
     // swiftlint:disable function_body_length
     private func performRequest<Response: Decodable>(
-        _ method: NetworkingClient.Method,
+        _ method: HTTPMethod,
         route: Route,
         queryItems: [URLQueryItem]? = nil,
         useDFPPA: Bool = false

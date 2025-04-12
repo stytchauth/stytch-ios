@@ -3,16 +3,13 @@ import Foundation
 import XCTest
 @testable import StytchCore
 
-final class NetworkingClientInterceptor {
+final class NetworkingClientInterceptor: NetworkingClient {
     private(set) var requests: [URLRequest] = []
     private var responses: [Result<Data, Error>] = []
 
-    func reset() {
-        requests = []
-        responses = []
-    }
+    func configureDFP(dfpEnabled _: Bool, dfpAuthMode _: DFPProtectedAuthMode?) {}
 
-    func handleRequest(request: URLRequest, _: Bool, _: DFPProtectedAuthMode, _: Bool) async throws -> (Data, HTTPURLResponse) {
+    func handleRequest(request: URLRequest, useDFPPA _: Bool) async throws -> (Data, HTTPURLResponse) {
         if request.url?.absoluteString.contains("/v1/events") != nil {
             responses.append(.success(try Current.jsonEncoder.encode(AuthenticateResponse.mock)).map { $0.surroundInDataJSONContainer() })
         }
@@ -40,6 +37,11 @@ final class NetworkingClientInterceptor {
                 }
             }
         }
+    }
+
+    func reset() {
+        requests = []
+        responses = []
     }
 }
 
