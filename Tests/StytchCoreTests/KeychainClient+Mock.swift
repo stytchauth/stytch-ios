@@ -8,15 +8,15 @@ class KeychainClientMock: KeychainClient {
     let lock: NSLock = .init()
     var keychainItems: [String: [KeychainQueryResult]] = [:]
 
-    func getQueryResults(item: StytchCore.KeychainItem) throws -> [StytchCore.KeychainQueryResult] {
+    func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult] {
         lock.withLock { keychainItems[item.name] ?? [] }
     }
 
-    func valueExistsForItem(item: StytchCore.KeychainItem) -> Bool {
+    func valueExistsForItem(item: KeychainItem) -> Bool {
         lock.withLock { keychainItems[item.name].map { !$0.isEmpty } ?? false }
     }
 
-    func setValueForItem(value: StytchCore.KeychainItem.Value, item: StytchCore.KeychainItem) throws {
+    func setValueForItem(value: KeychainItem.Value, item: KeychainItem) throws {
         lock.withLock {
             let queryResult: KeychainQueryResult = .init(
                 data: value.data,
@@ -36,7 +36,7 @@ class KeychainClientMock: KeychainClient {
         }
     }
 
-    func removeItem(item: StytchCore.KeychainItem) throws {
+    func removeItem(item: KeychainItem) throws {
         lock.withLock { keychainItems[item.name] = nil }
     }
 }

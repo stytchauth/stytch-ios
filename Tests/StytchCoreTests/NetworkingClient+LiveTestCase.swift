@@ -4,7 +4,7 @@ import XCTest
 
 // swiftlint:disable type_contents_order
 
-private class NetworkRequestHandlerMock: NetworkRequestHandler {
+class NetworkRequestHandlerMock: NetworkRequestHandler {
     private(set) var methodCalled: String?
     var urlSession: URLSession
 
@@ -45,9 +45,9 @@ private class NetworkRequestHandlerMock: NetworkRequestHandler {
 final class NetworkingClientLiveTestCase: XCTestCase {
     func testDFPDisabled() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
-        client.dfpEnabled = false
-        client.dfpAuthMode = DFPProtectedAuthMode.observation
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
+        client.configureDFP(dfpEnabled: false, dfpAuthMode: .observation)
+
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
@@ -58,9 +58,9 @@ final class NetworkingClientLiveTestCase: XCTestCase {
 
     func testDFPObservation() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
-        client.dfpEnabled = true
-        client.dfpAuthMode = DFPProtectedAuthMode.observation
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
+        client.configureDFP(dfpEnabled: true, dfpAuthMode: .observation)
+
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
@@ -71,9 +71,9 @@ final class NetworkingClientLiveTestCase: XCTestCase {
 
     func testDFPDecisioning() async throws {
         let handler = NetworkRequestHandlerMock(urlSession: .shared)
-        let client = NetworkingClient.live(networkRequestHandler: handler)
-        client.dfpEnabled = true
-        client.dfpAuthMode = DFPProtectedAuthMode.decisioning
+        let client = NetworkingClientImplementation(networkRequestHandler: handler)
+        client.configureDFP(dfpEnabled: true, dfpAuthMode: .decisioning)
+
         _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)

@@ -26,7 +26,6 @@ extension StytchClientType {
         }
         set {
             localStorage.configuration = newValue
-            updateNetworkingClient()
         }
     }
 
@@ -56,7 +55,6 @@ extension StytchClientType {
 
         configuration = newConfiguration
 
-        updateNetworkingClient()
         resetKeychainOnFreshInstall()
         runKeychainMigrations()
         sessionManager.clearEmptyTokens()
@@ -113,32 +111,6 @@ extension StytchClientType {
         }
 
         return (tokenType: type, redirectType, token)
-    }
-
-    // To be called after configuration
-    private func updateNetworkingClient() {
-        let clientInfoString = try? clientInfo.base64EncodedString(encoder: jsonEncoder)
-
-        networkingClient.headerProvider = { [weak localStorage, weak sessionManager] in
-            guard let configuration = localStorage?.configuration else {
-                return [:]
-            }
-
-            let publicToken = configuration.publicToken
-
-            let authToken: String
-            if let sessionToken = sessionManager?.sessionToken?.value, sessionToken.isEmpty == false {
-                authToken = "\(publicToken):\(sessionToken)".base64Encoded()
-            } else {
-                authToken = "\(publicToken):\(publicToken)".base64Encoded()
-            }
-
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Basic \(authToken)",
-                "X-SDK-Client": clientInfoString ?? "",
-            ]
-        }
     }
 
     private func resetKeychainOnFreshInstall() {
