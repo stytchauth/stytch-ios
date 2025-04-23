@@ -53,7 +53,7 @@ import StytchCore
 func handle(url: URL) {
     Task {
         do {
-            switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+            switch try await StytchClient.handle(url: url, sessionDurationMinutes: 5) {
             case let .handled(response):
                 switch responseData {
                 case let .auth(response):

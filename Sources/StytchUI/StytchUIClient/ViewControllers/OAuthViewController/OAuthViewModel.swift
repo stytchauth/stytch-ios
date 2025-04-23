@@ -31,7 +31,7 @@ extension OAuthViewModel: OAuthViewModelProtocol {
         guard state.config.supportsOauth else { return }
         switch provider {
         case .apple:
-            let response = try await appleOauthProvider.start(parameters: .init(sessionDuration: state.config.sessionDurationMinutes))
+            let response = try await appleOauthProvider.start(parameters: .init(sessionDurationMinutes: state.config.sessionDurationMinutes))
         case let .thirdParty(provider):
             let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
                 configuration: .init(loginRedirectUrl: state.config.redirectUrl, signupRedirectUrl: state.config.redirectUrl)

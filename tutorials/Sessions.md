@@ -68,14 +68,14 @@ Every authentication call that supplies a session duration (and succeeds!) will 
 
 With the exception of Sessions Authenticate calls, if you do not provide a session duration, the SDK will default it to 5 minutes. The Sessions Authenticate call is special, in that there is no default session duration if none is passed. This enables the "heartbeat" functionality discussed earlier. 
 
-If you call authenticate with no `sessionDuration` it will merely respond with whether or not the session is active.
+If you call authenticate with no `sessionDurationMinutes` it will merely respond with whether or not the session is active.
 ```swift
 StytchClient.sessions.authenticate(parameters: Sessions.AuthenticateParameters()) 
 ```
 
-If you do pass in a `sessionDuration` it will behave like all other endpoints and extend the existing session by 5 minutes.
+If you do pass in a `sessionDurationMinutes` it will behave like all other endpoints and extend the existing session by 5 minutes.
 ```swift
-StytchClient.sessions.authenticate(parameters: Sessions.AuthenticateParameters(sessionDuration: Minutes(rawValue: 5)))
+StytchClient.sessions.authenticate(parameters: Sessions.AuthenticateParameters(sessionDurationMinutes: Minutes(rawValue: 5)))
 ``` 
 
 ## Manual Session Management

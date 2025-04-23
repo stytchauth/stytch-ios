@@ -79,7 +79,7 @@ public extension StytchClient {
                         signature: credential.signature,
                         userHandle: credential.userID
                     )
-                ).wrapped(sessionDuration: parameters.sessionDuration),
+                ).wrapped(sessionDurationMinutes: parameters.sessionDurationMinutes),
                 useDFPPA: true
             )
 
@@ -146,20 +146,20 @@ public extension StytchClient.Passkeys {
         }
 
         let domain: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
         let returnPasskeyCredentialOptions: Bool = true
         let requestBehavior: RequestBehavior
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(
             domain: String,
             requestBehavior: RequestBehavior = .defaultPlatformValue,
-            sessionDuration: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = .defaultSessionDuration
         ) {
             self.domain = domain
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.requestBehavior = requestBehavior
         }
     }
@@ -374,8 +374,8 @@ private extension StytchClient.Passkeys {
             try container.encode(response, forKey: .response)
         }
 
-        func wrapped(sessionDuration: Minutes? = nil) throws -> CredentialContainer {
-            .init(publicKeyCredential: try asJson(encoder: .init()), sessionDurationMinutes: sessionDuration)
+        func wrapped(sessionDurationMinutes: Minutes? = nil) throws -> CredentialContainer {
+            .init(publicKeyCredential: try asJson(encoder: .init()), sessionDurationMinutes: sessionDurationMinutes)
         }
 
         struct CredentialContainer: Encodable {

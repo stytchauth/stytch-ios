@@ -31,7 +31,7 @@ public extension StytchClient.OAuth {
                 parameters: AuthenticateParameters(
                     idToken: authenticateResult.idToken,
                     nonce: rawNonce,
-                    sessionDurationMinutes: parameters.sessionDuration
+                    sessionDurationMinutes: parameters.sessionDurationMinutes
                 )
             )
             if authenticateResult.name != nil {
@@ -78,27 +78,27 @@ public extension StytchClient.OAuth.Apple {
 
     /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg`` calls.
     struct StartParameters {
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
         #if !os(watchOS)
         let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
         #endif
 
         #if !os(watchOS)
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         ///   - presentationContextProvider: This native Apple authorization type allows you to present Sign In With Apple in the window of your choosing.
         public init(
-            sessionDuration: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = .defaultSessionDuration,
             presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil
         ) {
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
             self.presentationContextProvider = presentationContextProvider
         }
         #else
         /// - Parameters:
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(sessionDuration: Minutes = .defaultSessionDuration) {
-            self.sessionDuration = sessionDuration
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
         #endif
     }
