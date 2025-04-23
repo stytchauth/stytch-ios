@@ -4,11 +4,11 @@ import UIKit
 
 final class PasswordForgotViewController: BaseViewController<PasswordForgotState, PasswordForgotViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchPasswordForgotTitle", value: "Check your email for help signing in!", comment: "")
+        text: LocalizationManager.stytch_b2b_password_forgot_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchPasswordForgotSubtitle", value: "We'll email you a login link to sign in to your account directly or reset your password if you have one.", comment: "")
+        text: LocalizationManager.stytch_b2b_password_forgot_subtitle
     )
 
     private let emailInputLabel = UILabel.makeEmailInputLabel()
@@ -16,7 +16,7 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
     private lazy var emailInput: EmailInput = .init()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.continueWithPasswordResetIfPossible()
     }
@@ -65,11 +65,7 @@ final class PasswordForgotViewController: BaseViewController<PasswordForgotState
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_invalid_email))
             case (false, false):
                 break
             }

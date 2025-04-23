@@ -31,7 +31,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         let label = UILabel()
         label.numberOfLines = 0
         label.font = .IBMPlexSansRegular(size: 18)
-        label.text = NSLocalizedString("stytch.pwFinishCreatingLabel", value: "Finish creating your account by setting a password.", comment: "")
+        label.text = LocalizationManager.stytch_b2c_password_finish_creating_label
         label.textColor = .primaryText
         return label
     }()
@@ -50,11 +50,11 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     }()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_b2c_password_continue_title
     ) { [weak self] in self?.submit() }
 
     private lazy var forgotPasswordButton: Button = .tertiary(
-        title: NSLocalizedString("stytch.forgotPassword", value: "Forgot password?", comment: "")
+        title: LocalizationManager.stytch_b2c_password_forgot
     ) { [weak self] in
         guard let email = self?.emailInput.text else { return }
         Task {
@@ -142,20 +142,20 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         switch intent {
         case .signup:
             if viewModel.state.magicLinksEnabled {
-                titleLabel.text = NSLocalizedString("stytch.pwChooseHowCreate", value: "Choose how you would like to create your account.", comment: "")
+                titleLabel.text = LocalizationManager.stytch_b2c_password_choose_how_create
                 emailLoginLinkPrimaryButton.isHidden = false
                 upperSeparator.isHidden = false
                 finishCreatingLabel.isHidden = false
             } else {
-                titleLabel.text = NSLocalizedString("stytch.pwCreateAccount", value: "Create account", comment: "")
+                titleLabel.text = LocalizationManager.stytch_b2c_password_create_account
             }
             passwordInput.feedback.isHidden = false
         case .enterNewPassword:
             passwordInput.feedback.isHidden = false
             emailInput.isEnabled = false
-            titleLabel.text = NSLocalizedString("stytch.pwSetNewPW", value: "Set a new password", comment: "")
+            titleLabel.text = LocalizationManager.stytch_b2c_password_set_new_password
         case .login:
-            titleLabel.text = NSLocalizedString("stytch.pwLogIn", value: "Log in", comment: "")
+            titleLabel.text = LocalizationManager.stytch_b2c_password_log_in
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false
@@ -302,7 +302,7 @@ protocol PasswordViewModelDelegate: AnyObject {
 
 extension PasswordViewController: PasswordViewModelDelegate {
     func launchCheckYourEmail(email: String) {
-        let controller = ActionableInfoViewController(
+        let controller = EmailConfirmationViewController(
             state: .checkYourEmail(config: viewModel.state.config, email: email) {
                 try await self.viewModel.loginWithEmail(email: email)
             }
@@ -311,7 +311,7 @@ extension PasswordViewController: PasswordViewModelDelegate {
     }
 
     func launchForgotPassword(email: String) {
-        let controller = ActionableInfoViewController(
+        let controller = EmailConfirmationViewController(
             state: .forgotPassword(config: viewModel.state.config, email: email) {
                 try await self.viewModel.forgotPassword(email: email)
             }
@@ -321,5 +321,5 @@ extension PasswordViewController: PasswordViewModelDelegate {
 }
 
 private extension String {
-    static let emailLoginLink: String = NSLocalizedString("stytch.passwordEmailLoginLink", value: "Email me a login link", comment: "")
+    static let emailLoginLink: String = LocalizationManager.stytch_b2c_password_email_login_link
 }

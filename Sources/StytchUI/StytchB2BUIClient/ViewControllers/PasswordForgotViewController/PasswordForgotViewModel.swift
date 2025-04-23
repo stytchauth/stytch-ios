@@ -29,7 +29,8 @@ final class PasswordForgotViewModel {
     func organizationResetPasswordByEmail(_ emailAddress: String) {
         Task {
             do {
-                if let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress) {
+                let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
+                if member != nil {
                     try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
                     delegate?.didSendResetByEmailStart()
                 } else {

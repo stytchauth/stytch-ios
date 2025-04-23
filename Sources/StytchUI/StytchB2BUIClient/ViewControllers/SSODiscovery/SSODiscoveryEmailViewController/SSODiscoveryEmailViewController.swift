@@ -5,7 +5,7 @@ import UIKit
 final class SSODiscoveryEmailViewController: BaseViewController<SSODiscoveryEmailState, SSODiscoveryEmailViewModel> {
     private lazy var emailInput: EmailInput = .init()
 
-    private lazy var continueButton: Button = .primary(title: "Continue") { [weak self] in
+    private lazy var continueButton: Button = .primary(title: LocalizationManager.stytch_continue_button) { [weak self] in
         self?.continueButtonTapped()
     }
 
@@ -18,7 +18,7 @@ final class SSODiscoveryEmailViewController: BaseViewController<SSODiscoveryEmai
 
         viewModel.delegate = self
 
-        let titleLabel = UILabel.makeTitleLabel(text: "Enter your email to continue")
+        let titleLabel = UILabel.makeTitleLabel(text: LocalizationManager.stytch_b2b_sso_discovery_enter_email)
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(emailInput)
@@ -46,11 +46,7 @@ final class SSODiscoveryEmailViewController: BaseViewController<SSODiscoveryEmai
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_invalid_email))
             case (false, false):
                 break
             }

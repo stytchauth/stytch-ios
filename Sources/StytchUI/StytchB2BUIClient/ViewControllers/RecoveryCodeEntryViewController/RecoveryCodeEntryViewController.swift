@@ -4,17 +4,17 @@ import UIKit
 
 final class RecoveryCodeEntryViewController: BaseViewController<RecoveryCodeEntryState, RecoveryCodeEntryViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchRecoveryCodeEntryTitle", value: "Enter backup code", comment: "")
+        text: LocalizationManager.stytch_b2b_recovery_code_entry_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchRecoveryCodeEntrySubtitle", value: "Enter one of the backup codes you saved when setting up your authenticator app.", comment: "")
+        text: LocalizationManager.stytch_b2b_recovery_code_entry_subtitle
     )
 
     private lazy var recoveryCodeInput: RecoveryCodeInput = .init()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.recoveryCodeEntered()
     }

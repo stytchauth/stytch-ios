@@ -2,7 +2,7 @@ import XCTest
 @testable import StytchCore
 @testable import StytchUI
 
-final class ActionableInfoViewModelTests: BaseTestCase {
+final class EmailConfirmationViewModelTests: BaseTestCase {
     var calledMethod: CalledMethod?
 
     let magicLinkConfig: StytchUIClient.MagicLinkOptions = .init(
@@ -35,7 +35,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             sessionDurationMinutes: 123
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -43,7 +43,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -57,7 +57,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             products: [.emailMagicLinks]
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -65,7 +65,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -80,7 +80,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             passwordOptions: passwordConfig
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -88,7 +88,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -112,7 +112,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             magicLinkOptions: magicLinkConfig
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -120,7 +120,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -144,7 +144,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             products: []
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -152,7 +152,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -168,7 +168,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             magicLinkOptions: magicLinkConfig
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -176,7 +176,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -191,7 +191,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             products: []
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -199,7 +199,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -216,7 +216,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             magicLinkOptions: magicLinkConfig
         )
 
-        let state: ActionableInfoState = .init(
+        let state: EmailConfirmationState = .init(
             config: config,
             email: "test@stytch.com",
             title: "Some ATitle",
@@ -224,7 +224,7 @@ final class ActionableInfoViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = ActionableInfoViewModel(
+        let viewModel = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)

@@ -9,7 +9,7 @@ struct ZXCVBNIndicator: View {
     var body: some View {
         let emptyColor = UIColor.progressDefault
         let filledColor: UIColor = state.score < MAXSCORE ? UIColor.progressDanger : UIColor.progressSuccess
-        let text = state.score < MAXSCORE ? (state.suggestions ?? []).joined(separator: ", ") : "Great job! This is a strong password."
+        let text = state.score < MAXSCORE ? (state.suggestions ?? []).joined(separator: ", ") : LocalizationManager.stytch_zxcvbn_feedback_success
         VStack(alignment: .leading) {
             HStack(alignment: .center) {
                 ForEach(0...MAXSCORE, id: \.self) { index in

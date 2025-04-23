@@ -3,11 +3,11 @@ import UIKit
 
 class DiscoveredOrganizationsViewController: BaseViewController<DiscoveredOrganizationsState, DiscoveredOrganizationsViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchDiscoveredOrganizationsTitle", value: "Select an organization to continue", comment: "")
+        text: LocalizationManager.stytch_b2b_discovered_organizations_title
     )
 
     private lazy var createOrganizationButton: Button = .primary(
-        title: NSLocalizedString("stytchDiscoveredOrganizationsCreateOrganizationButton", value: "Create an organization", comment: "")
+        title: LocalizationManager.stytch_b2b_create_organization_button
     ) { [weak self] in
         self?.createOrganization()
     }

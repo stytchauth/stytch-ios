@@ -8,15 +8,15 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
     var error: Error?
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchTOTPEnrollmentTitle", value: "Copy the code below to link your authenticator app", comment: "")
+        text: LocalizationManager.stytch_b2b_totp_enrollment_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchTOTPEnrollmentSubtitle", value: "Enter the key below into your authenticator app. If you don’t have an authenticator app, you’ll need to install one first.", comment: "")
+        text: LocalizationManager.stytch_b2b_totp_enrollment_subtitle
     )
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.continueWithTOTP()
     }
@@ -66,14 +66,14 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
             do {
                 let secret = try await self?.viewModel.createTOTP()
                 Task { @MainActor in
-                    self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: ""), for: .normal)
+                    self?.continueButton.setTitle(LocalizationManager.stytch_continue_button, for: .normal)
                     self?.totpSecretView.configure(with: secret ?? "")
                     self?.error = nil
                     StytchB2BUIClient.stopLoading()
                 }
             } catch {
                 Task { @MainActor in
-                    self?.continueButton.setTitle(NSLocalizedString("stytch.pwContinueTryAgainTitle", value: "Try Again", comment: ""), for: .normal)
+                    self?.continueButton.setTitle(LocalizationManager.stytch_b2c_password_continue_try_again_title, for: .normal)
                     ErrorPublisher.publishError(error)
                     self?.presentErrorAlert(error: error)
                     self?.error = error
@@ -86,6 +86,6 @@ final class TOTPEnrollmentViewController: BaseViewController<TOTPEnrollmentState
 
 extension TOTPEnrollmentViewController: TOTPSecretViewDelegate {
     func didCopyTOTPSecret() {
-        presentAlert(title: "Secret Copied!", message: nil)
+        presentAlert(title: LocalizationManager.stytch_b2b_totp_secret_copied, message: nil)
     }
 }
