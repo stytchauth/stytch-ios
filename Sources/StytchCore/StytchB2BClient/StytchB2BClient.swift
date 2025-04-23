@@ -103,7 +103,7 @@ public extension StytchB2BClient {
         }
     }
 
-    /// Wrapper around the possible types returned from the `handle(url:sessionDuration:)` function.
+    /// Wrapper around the possible types returned from the `handle(url:sessionDurationMinutes:)` function.
     enum DeeplinkResponse: Sendable {
         case mfauth(B2BMFAAuthenticateResponse)
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
@@ -121,7 +121,7 @@ public extension StytchB2BClient {
     // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
     /// This function is provided as a simple convenience handler to be used in your AppDelegate or
     /// SwiftUI App file upon receiving a deeplink URL, e.g. `.onOpenURL {}`.
-    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDuration` of
+    /// If Stytch is able to handle the URL and log the user in, an ``AuthenticateResponse`` will be returned to you asynchronously, with a `sessionDurationMinutes` of
     /// the length requested here.
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.

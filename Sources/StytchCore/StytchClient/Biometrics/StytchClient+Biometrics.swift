@@ -106,7 +106,7 @@ public extension StytchClient {
                         startResponse.challenge,
                         privateKey
                     ),
-                    sessionDurationMinutes: parameters.sessionDuration
+                    sessionDurationMinutes: parameters.sessionDurationMinutes
                 )
             )
 
@@ -149,7 +149,7 @@ public extension StytchClient {
             let authenticateCompleteParameters = AuthenticateCompleteParameters(
                 signature: try cryptoClient.signChallengeWithPrivateKey(startResponse.challenge, privateKey),
                 biometricRegistrationId: startResponse.biometricRegistrationId,
-                sessionDurationMinutes: parameters.sessionDuration
+                sessionDurationMinutes: parameters.sessionDurationMinutes
             )
 
             // NOTE: - We could return separate concrete type which deserializes/contains biometric_registration_id, but this doesn't currently add much value
@@ -218,12 +218,12 @@ public extension StytchClient.Biometrics {
 
     /// A dedicated parameters type for biometrics `authenticate` calls.
     struct AuthenticateParameters: Sendable {
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// Initializes the parameters struct
-        /// - Parameter sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        public init(sessionDuration: Minutes = .defaultSessionDuration) {
-            self.sessionDuration = sessionDuration
+        /// - Parameter sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        public init(sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 
@@ -231,21 +231,21 @@ public extension StytchClient.Biometrics {
     struct RegisterParameters: Sendable {
         let identifier: String
         let accessPolicy: AccessPolicy
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// Initializes the parameters struct
         /// - Parameters:
         ///   - identifier: An id used to easily identify the account associated with the biometric registration, generally an email or phone number.
         ///   - accessPolicy: Defines the policy as to how the user must confirm their ownership.
-        ///   - sessionDuration: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         public init(
             identifier: String,
             accessPolicy: StytchClient.Biometrics.RegisterParameters.AccessPolicy = .deviceOwnerAuthenticationWithBiometrics,
-            sessionDuration: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = .defaultSessionDuration
         ) {
             self.identifier = identifier
             self.accessPolicy = accessPolicy
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 

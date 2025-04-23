@@ -106,7 +106,7 @@ var passwordResetToken: String? = nil
 func handle(url: URL) {
     Task {
         do {
-            switch try await StytchClient.handle(url: url, sessionDuration: 5) {
+            switch try await StytchClient.handle(url: url, sessionDurationMinutes: 5) {
             case let .handled(response):
                 print("handled: \(response.session) - \(response.user)")
             case .notHandled:

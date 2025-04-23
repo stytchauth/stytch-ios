@@ -57,7 +57,7 @@ func send(parameters: StytchClient.MagicLinks.Email.Parameters) {
 }
 ```
 
-Lastly, once you receive the deeplink it will be automatically authenticated using the `try await StytchClient.handle(url: url, sessionDuration: 5)` method.
+Lastly, once you receive the deeplink it will be automatically authenticated using the `try await StytchClient.handle(url: url, sessionDurationMinutes: 5)` method.
 
 ## PKCE
 PKCE (Pronounced "pixie") stands for Proof Key for Code Exchange, and is a method of ensuring that an authentication flow that starts on one device is completed on the same device, to avoid an authorization code interception attack. While PKCE is optional when integrating with our backend SDKs, it is mandatory when using our mobile SDKs. When using the Stytch iOS SDK, the management of the PKCE flow is automatic; it will automatically create PKCE code pairs and use and delete them as appropriate.

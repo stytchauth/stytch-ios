@@ -42,53 +42,39 @@ public extension StytchClient {
 public extension StytchClient.TOTP {
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/create(parameters:)-437r4`` calls.
     struct CreateParameters: Encodable, Sendable {
-        enum CodingKeys: String, CodingKey {
-            case expiration = "expirationMinutes"
-        }
+        let expirationMinutes: Minutes
 
-        let expiration: Minutes
-
-        /// - Parameter expiration: The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
-        public init(expiration: Minutes = .defaultSessionDuration) {
-            self.expiration = expiration
+        /// - Parameter expirationMinutes: The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
+        public init(expirationMinutes: Minutes = .defaultSessionDuration) {
+            self.expirationMinutes = expirationMinutes
         }
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/authenticate(parameters:)-2ck6w`` calls.
     struct AuthenticateParameters: Encodable, Sendable {
-        enum CodingKeys: String, CodingKey {
-            case totpCode
-            case sessionDuration = "sessionDurationMinutes"
-        }
-
         let totpCode: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - totpCode: The TOTP code to authenticate. The TOTP code should consist of 6 digits.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(totpCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(totpCode: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.totpCode = totpCode
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 
     /// A dedicated parameters type for TOTP ``StytchClient/TOTP/recover(parameters:)-9swfk`` calls.
     struct RecoverParameters: Encodable, Sendable {
-        enum CodingKeys: String, CodingKey {
-            case recoveryCode
-            case sessionDuration = "sessionDurationMinutes"
-        }
-
         let recoveryCode: String
-        let sessionDuration: Minutes
+        let sessionDurationMinutes: Minutes
 
         /// - Parameters:
         ///   - recoveryCode: The recovery code to authenticate.
-        ///   - sessionDuration: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(recoveryCode: String, sessionDuration: Minutes = .defaultSessionDuration) {
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(recoveryCode: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
             self.recoveryCode = recoveryCode
-            self.sessionDuration = sessionDuration
+            self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
 }
