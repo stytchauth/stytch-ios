@@ -76,7 +76,8 @@ extension BootstrapResponseData {
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: nil,
             rbacPolicy: .mock,
-            passwordConfig: nil
+            passwordConfig: nil,
+            vertical: nil
         )
     }
 
@@ -95,7 +96,8 @@ extension BootstrapResponseData {
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: nil,
             rbacPolicy: .mockWithoutDefaultRole,
-            passwordConfig: nil
+            passwordConfig: nil,
+            vertical: nil
         )
     }
 }

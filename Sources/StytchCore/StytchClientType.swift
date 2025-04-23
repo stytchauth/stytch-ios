@@ -78,7 +78,7 @@ extension StytchClientType {
             Task {
                 // Skip the startup sequence if offline, it will auto-start when connectivity is restored.
                 if Current.networkMonitor.isConnected == true {
-                    try await StartupClient.start(type: Self.clientType)
+                    try await StartupClient.start(clientType: Self.clientType)
                 }
             }
         }
@@ -86,7 +86,7 @@ extension StytchClientType {
 
         Task {
             do {
-                try await StartupClient.start(type: Self.clientType)
+                try await StartupClient.start(clientType: Self.clientType)
                 try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
