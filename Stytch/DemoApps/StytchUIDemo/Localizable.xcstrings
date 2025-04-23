@@ -1,0 +1,26 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Log In With Stytch!" : {
+
+    },
+    "Log Out" : {
+
+    },
+    "stytch.b2c.auth.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stytch Prebuilt UI Title Configured with Localized Strings!"
+          }
+        }
+      }
+    },
+    "You have logged in with Stytch!" : {
+
+    }
+  },
+  "version" : "1.0"
+}

@@ -27,44 +27,44 @@ extension EmailConfirmationViewModel {
     var title: String {
         switch state.type {
         case .emailConfirmation:
-            return "Check your email"
+            return LocalizationManager.stytch_b2b_email_confirmation_check_email
         case .passwordSetNew:
-            return "Check your email!"
+            return LocalizationManager.stytch_b2b_email_confirmation_check_email
         case .passwordResetVerify:
-            return "Please verify your email"
+            return LocalizationManager.stytch_b2b_email_confirmation_verify_email
         }
     }
 
     var message: String {
         switch state.type {
         case .emailConfirmation:
-            return "An email was sent to"
+            return LocalizationManager.stytch_b2b_email_confirmation_email_sent
         case .passwordSetNew:
-            return "A login link was sent to you at"
+            return LocalizationManager.stytch_b2b_email_confirmation_login_link_sent
         case .passwordResetVerify:
-            return "A login link was sent to you at"
+            return LocalizationManager.stytch_b2b_email_confirmation_login_link_sent
         }
     }
 
     var primarySubtext: String {
         switch state.type {
         case .emailConfirmation:
-            return "Didn’t get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         case .passwordSetNew:
-            return "Didn't get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         case .passwordResetVerify:
-            return "Didn't get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         }
     }
 
     var secondaryBoldSubtext: String {
         switch state.type {
         case .emailConfirmation:
-            return "Try Again"
+            return LocalizationManager.stytch_b2b_email_confirmation_try_again
         case .passwordSetNew:
-            return "Resend email"
+            return LocalizationManager.stytch_b2b_email_confirmation_resend_email
         case .passwordResetVerify:
-            return "Resend email"
+            return LocalizationManager.stytch_b2b_email_confirmation_resend_email
         }
     }
 }

@@ -25,7 +25,7 @@ final class B2BPasswordsHomeViewController: BaseViewController<B2BPasswordsState
     }()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue
     ) { [weak self] in
         self?.submit()
     }

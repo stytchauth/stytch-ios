@@ -16,19 +16,19 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             switch input {
             case .email:
                 segmentedControl.insertSegment(
-                    withTitle: NSLocalizedString("stytch.aivcEmail", value: "Email", comment: ""),
+                    withTitle: LocalizationManager.stytch_b2c_email,
                     at: segmentedControl.numberOfSegments,
                     animated: false
                 )
             case .phone:
                 segmentedControl.insertSegment(
-                    withTitle: NSLocalizedString("stytch.aivcText", value: "Text", comment: ""),
+                    withTitle: LocalizationManager.stytch_b2c_text,
                     at: segmentedControl.numberOfSegments,
                     animated: false
                 )
             case .whatsapp:
                 segmentedControl.insertSegment(
-                    withTitle: NSLocalizedString("stytch.aivcWhatsApp", value: "WhatsApp", comment: ""),
+                    withTitle: LocalizationManager.stytch_b2c_whatsApp,
                     at: segmentedControl.numberOfSegments,
                     animated: false
                 )
@@ -73,7 +73,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
     private lazy var continueButton: UIButton = {
         let button = Button.primary(
-            title: NSLocalizedString("stytch.aivcContinue", value: "Continue", comment: "")
+            title: LocalizationManager.stytch_continue
         ) { [weak self] in
             self?.didTapContinue()
         }
@@ -173,11 +173,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_b2c_invalid_number))
             case (false, false):
                 break
             }
@@ -194,11 +190,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_b2c_invalid_email))
             case (false, false):
                 break
             }

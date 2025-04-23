@@ -58,7 +58,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
         stackView.addArrangedSubview(titleLabel)
 
         if B2BAuthenticationManager.primaryRequired != nil {
-            let subtitleLabel = UILabel.makeSubtitleLabel(text: "Confirm your email address with one of the following")
+            let subtitleLabel = UILabel.makeSubtitleLabel(text: LocalizationManager.stytch_b2b_home_confirm_email)
             stackView.addArrangedSubview(subtitleLabel)
         }
 
@@ -128,13 +128,13 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 extension B2BAuthHomeViewController {
     var titleText: String {
         if B2BAuthenticationManager.primaryRequired != nil {
-            return "Verify Your Email"
+            return LocalizationManager.stytch_b2b_home_verify_email
         } else {
             switch viewModel.state.configuration.computedAuthFlowType {
             case .discovery:
-                return "Sign up or log in"
+                return LocalizationManager.stytch_b2b_home_sign_up_or_log_in
             case .organization(slug: _):
-                return "Continue to \(OrganizationManager.name ?? "...")"
+                return LocalizationManager.stytch_b2b_home_continue_to_organization(organization: OrganizationManager.name ?? "...")
             }
         }
     }

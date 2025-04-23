@@ -141,9 +141,9 @@ class DiscoveredOrganizationTableViewCell: UITableViewCell {
         case .activeMember:
             joinLabel.isHidden = true
         case .invitedMember:
-            joinLabel.text = "Accept Invite"
+            joinLabel.text = LocalizationManager.stytch_b2b_discovery_accept_invite
         case .pendingMember, .eligibleToJoinByEmailDomain, .eligibleToJoinByOauthTenant:
-            joinLabel.text = "Join"
+            joinLabel.text = LocalizationManager.stytch_b2b_discovery_join
         }
     }
 }

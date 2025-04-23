@@ -4,7 +4,7 @@ import UIKit
 
 final class PasswordResetViewController: BaseViewController<PasswordResetState, PasswordResetViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchPasswordResetTitle", value: "Set a new password", comment: "")
+        text: LocalizationManager.stytch_b2b_password_reset_title
     )
 
     private let passwordInputLabel = UILabel.makePasswordInputLabel()
@@ -19,7 +19,7 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
     }()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_b2c_password_continue_title
     ) { [weak self] in
         self?.continueWithPasswordResetIfPossible()
     }

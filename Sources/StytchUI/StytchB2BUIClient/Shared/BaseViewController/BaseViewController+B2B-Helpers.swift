@@ -19,9 +19,10 @@ extension BaseViewController {
     func showEmailNotEligibleForJitProvioningErrorIfPossible(_ error: any Error) {
         if let error = error as? StytchSDKError, error == .emailNotEligibleForJitProvioning {
             ErrorPublisher.publishError(error)
+            let messsage = LocalizationManager.stytch_b2b_email_not_eligible_for_jit_provioning_error(memberEmail: MemberManager.emailAddress ?? "This email", orgName: OrganizationManager.name ?? "this organization")
             presentAlert(
-                title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
-                message: "\(MemberManager.emailAddress ?? "This email") does not have access to \(OrganizationManager.name ?? "this organization"). If you think this is a mistake, contact your admin."
+                title: LocalizationManager.stytch_b2c_error_title,
+                message: messsage
             )
         } else {
             ErrorPublisher.publishError(error)

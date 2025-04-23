@@ -68,14 +68,12 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
 
     @objc private func didTapRetry(sender _: UIButton) {
         let controller = UIAlertController(
-            title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
-            message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel.state.email
-            ),
+            title: LocalizationManager.stytch_b2c_resend_code,
+            message: LocalizationManager.stytch_b2c_new_code_will_be_sent(email: viewModel.state.email),
             preferredStyle: .alert
         )
-        controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
-        controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
+        controller.addAction(.init(title: LocalizationManager.stytch_b2c_cancel, style: .default))
+        controller.addAction(.init(title: LocalizationManager.stytch_b2c_confirm, style: .default) { [weak self] _ in
             Task { @MainActor in
                 try await self?.viewModel.state.retryAction()
             }
