@@ -20,6 +20,8 @@ protocol BootstrapResponseDataType {
     var dfpProtectedAuthMode: DFPProtectedAuthMode? { get }
     var rbacPolicy: RBACPolicy? { get }
     var passwordConfig: PasswordConfig? { get }
+    var vertical: ClientType? { get }
+    var clientType: ClientType? { get }
 }
 
 /// The underlying data for `bootstrap` calls.
@@ -38,6 +40,11 @@ struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataType {
     let dfpProtectedAuthMode: DFPProtectedAuthMode?
     let rbacPolicy: RBACPolicy?
     let passwordConfig: PasswordConfig?
+    let vertical: ClientType?
+
+    var clientType: ClientType? {
+        vertical
+    }
 }
 
 extension BootstrapResponseData {
@@ -56,7 +63,8 @@ extension BootstrapResponseData {
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: .observation,
             rbacPolicy: nil,
-            passwordConfig: nil
+            passwordConfig: nil,
+            vertical: nil
         )
     }
 }
