@@ -33,6 +33,7 @@ public enum StytchAPIErrorType: String, Codable {
     case cannotPreserveExistingSessions = "cannot_preserve_existing_sessions"
     case cannotRemovePrimaryAuthMechanism = "cannot_remove_primary_auth_mechanism"
     case cannotResetPasswordWithExistingPassword = "cannot_reset_password_with_existing_password"
+    case cannotToggleCrossOrgPasswordsWhenPasswordInUse = "cannot_toggle_cross_org_passwords_when_password_in_use"
     case cannotUpdateTrustedMetadata = "cannot_update_trusted_metadata"
     case cannotUseBiometricsWithPendingUser = "cannot_use_biometrics_with_pending_user"
     case cannotUseWebauthnWithPendingUser = "cannot_use_webauthn_with_pending_user"
