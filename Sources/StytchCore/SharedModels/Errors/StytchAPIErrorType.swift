@@ -58,6 +58,7 @@ public enum StytchAPIErrorType: String, Codable {
     case denyListMaxExceeded = "deny_list_max_exceeded"
     case deprecatedEndpoint = "deprecated_endpoint"
     case desiredEmailDeactivatedByDifferentMember = "desired_email_deactivated_by_different_member"
+    case downstreamCarrierError = "downstream_carrier_error"
     case duplicateBiometricRegistration = "duplicate_biometric_registration"
     case duplicateCustomHostnameFound = "duplicate_custom_hostname_found"
     case duplicateEmail = "duplicate_email"
