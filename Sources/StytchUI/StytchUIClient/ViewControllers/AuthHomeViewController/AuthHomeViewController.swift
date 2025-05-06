@@ -8,13 +8,6 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
     )
 
-    private let separatorView: LabelSeparatorView = .orSeparator()
-
-    private var showOrSeparator: Bool {
-        guard !viewModel.state.config.oauthProviders.isEmpty else { return false }
-        return viewModel.state.config.inputProductsEnabled
-    }
-
     init(state: AuthHomeState) {
         super.init(viewModel: AuthHomeViewModel(state: state))
     }
@@ -58,8 +51,12 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
                 let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
                 addChild(oauthController)
                 stackView.addArrangedSubview(oauthController.view)
+            case .biometrics:
+                if StytchClient.biometrics.availability.isAvailableRegistered {
+                    stackView.addArrangedSubview(biometricsButton)
+                }
             case .divider:
-                stackView.addArrangedSubview(separatorView)
+                stackView.addArrangedSubview(LabelSeparatorView.orSeparator())
             }
         }
 
@@ -78,5 +75,38 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         }
 
         configureCloseButton(viewModel.state.config.navigation)
+    }
+}
+
+extension AuthHomeViewController {
+    var biometricsButton: UIButton {
+        var imageAsset = ImageAsset.biometricsFaceID
+        var title = "Continue with Face ID"
+        if StytchClient.biometrics.biometryType == .touchID {
+            imageAsset = ImageAsset.biometricsTouchID
+            title = "Continue with Touch ID"
+        }
+
+        let button = Button.secondary(
+            image: imageAsset,
+            title: title
+        ) {}
+
+        button.addTarget(self, action: #selector(authenticateBiometricsButtonTapped), for: .touchUpInside)
+        return button
+    }
+
+    @objc func authenticateBiometricsButtonTapped() {
+        StytchB2BUIClient.startLoading()
+        Task {
+            do {
+                StytchB2BUIClient.stopLoading()
+                _ = try await StytchClient.biometrics.authenticate(parameters: .init())
+            } catch {
+                StytchB2BUIClient.stopLoading()
+                ErrorPublisher.publishError(error)
+                presentErrorAlert(error: error)
+            }
+        }
     }
 }

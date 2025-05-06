@@ -16,12 +16,9 @@ public extension StytchUIClient {
         public let passwordOptions: PasswordOptions?
         public let magicLinkOptions: MagicLinkOptions?
         public let otpOptions: OTPOptions?
+        public let biometricsOptions: BiometricsOptions
         public let theme: StytchTheme
         public let locale: StytchLocale
-
-        public var inputProductsEnabled: Bool {
-            products.contains(.passwords) || products.contains(.emailMagicLinks) || products.contains(.otp)
-        }
 
         public var redirectUrl: URL? {
             URL(string: "stytchui-\(stytchClientConfiguration.publicToken)://deeplink")
@@ -43,6 +40,18 @@ public extension StytchUIClient {
             products.contains(.passwords)
         }
 
+        public var supportsBiometrics: Bool {
+            products.contains(.biometrics)
+        }
+
+        public var supportsBiometricsAndOAuth: Bool {
+            supportsBiometrics && supportsOauth
+        }
+
+        public var supportsInputProducts: Bool {
+            products.contains(.passwords) || products.contains(.emailMagicLinks) || products.contains(.otp)
+        }
+
         /// - Parameters:
         ///   - stytchClientConfiguration: A flexible and extensible object used to configure the core `StychClient` requiring at least a public token, with optional additional settings.
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
@@ -53,6 +62,7 @@ public extension StytchUIClient {
         ///   - passwordOptions: The password options to use if you have a custom configuration.
         ///   - magicLinkOptions: The email magic link options to use if you have a custom configuration.
         ///   - otpOptions: The otp options to use if you have a custom configuration.
+        ///   - biometricsOptions: The biometrics options to use if you want to configure whether biometric registration should be shown during login. If not provided, biometric registration will be shown automatically.
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
@@ -65,6 +75,7 @@ public extension StytchUIClient {
             passwordOptions: PasswordOptions? = nil,
             magicLinkOptions: MagicLinkOptions? = nil,
             otpOptions: OTPOptions? = nil,
+            biometricsOptions: BiometricsOptions = BiometricsOptions(showBiometricRegistrationOnLogin: true),
             theme: StytchTheme = StytchTheme(),
             locale: StytchLocale = .en
         ) {
@@ -76,6 +87,7 @@ public extension StytchUIClient {
             self.passwordOptions = passwordOptions
             self.magicLinkOptions = magicLinkOptions
             self.otpOptions = otpOptions
+            self.biometricsOptions = biometricsOptions
             self.theme = theme
             self.locale = locale
         }
@@ -86,6 +98,7 @@ public extension StytchUIClient {
         case oauth
         case passwords
         case otp
+        case biometrics
     }
 
     enum OAuthProvider: Codable {
@@ -158,6 +171,18 @@ public extension StytchUIClient {
             self.expiration = expiration
             self.loginTemplateId = loginTemplateId
             self.signupTemplateId = signupTemplateId
+        }
+    }
+
+    /// A struct defining the configuration of the Biometrics product.
+    /// `showBiometricRegistrationOnLogin` determines whether the biometric registration screen is shown during login
+    /// when biometric registration is available but not yet completed. If set to `false`, you must call
+    /// `StytchClient.biometrics.register` from elsewhere in your app to handle registration.
+    struct BiometricsOptions: Codable {
+        let showBiometricRegistrationOnLogin: Bool
+
+        public init(showBiometricRegistrationOnLogin: Bool) {
+            self.showBiometricRegistrationOnLogin = showBiometricRegistrationOnLogin
         }
     }
 

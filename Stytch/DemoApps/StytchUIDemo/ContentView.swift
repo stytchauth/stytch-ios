@@ -49,20 +49,24 @@ struct ContentView: View {
 class ContentViewModel: ObservableObject {
     @Published var shouldShowB2CUI: Bool = false
     @Published var isAuthenticated: Bool = false
+
     private var cancellables = Set<AnyCancellable>()
-    var date = Date()
 
     init() {
         startObservables()
-
-        // Used to measure time until StytchClient.isInitialized fires
-        date = Date()
 
         // To start the underlying client’s observables before displaying the UI, call configure separately.
         StytchUIClient.configure(configuration: configuration)
     }
 
     func startObservables() {
+        StytchUIClient.dismissUI
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.shouldShowB2CUI = false
+            }
+            .store(in: &cancellables)
+
         StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionInfo in
@@ -72,7 +76,6 @@ class ContentViewModel: ObservableObject {
                     print("StytchClient.sessions.sessionToken: \(StytchClient.sessions.sessionToken?.value ?? "no sessionToken")")
                     print("StytchClient.sessions.sessionJwt: \(StytchClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
                     self?.isAuthenticated = true
-                    self?.shouldShowB2CUI = false
                 case .unavailable:
                     print("Session Unavailable\n")
                     self?.isAuthenticated = false
@@ -93,7 +96,6 @@ class ContentViewModel: ObservableObject {
         StytchClient.isInitialized
             .receive(on: DispatchQueue.main)
             .sink { isInitialized in
-                print(String(format: "StytchClient.isInitialized took %.2f seconds to fire.", Date().timeIntervalSince(self.date)))
                 print("isInitialized: \(isInitialized)")
             }.store(in: &cancellables)
 
@@ -107,8 +109,8 @@ class ContentViewModel: ObservableObject {
     }
 
     let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "public-token-test-..."),
-        products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        stytchClientConfiguration: .init(publicToken: "public-token-test-728f8b82-2a20-4926-b077-a8ca7d67e1b2"),
+        products: [.otp, .oauth, .passwords, .emailMagicLinks, .biometrics],
         navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],
         otpOptions: .init(methods: [.sms, .whatsapp])

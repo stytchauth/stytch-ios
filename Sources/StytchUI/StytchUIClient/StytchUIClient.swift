@@ -7,14 +7,19 @@ import UIKit
 
 /// This type serves as the entry point for all usages of the Stytch authentication UI.
 public enum StytchUIClient {
-    // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
+    /// The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     public private(set) static var configuration = StytchUIClient.Configuration.empty
+
+    private static let dismissUIPublisher = PassthroughSubject<Void, Never>()
+    public static var dismissUI: AnyPublisher<Void, Never> {
+        dismissUIPublisher.eraseToAnyPublisher()
+    }
 
     public static var errorPublisher: AnyPublisher<Error, Never> {
         ErrorPublisher.publisher
     }
 
-    // Used to store pending reset emails so as to preserve state
+    /// Used to store pending reset emails so as to preserve state
     static var pendingResetEmail: String?
 
     fileprivate weak static var currentController: AuthRootViewController?
@@ -72,8 +77,9 @@ public enum StytchUIClient {
     }
 
     public static func dismiss() {
-        currentController?.dismissAuth()
+        dismissUIPublisher.send()
         cancellable = nil
+        currentController?.dismissPresentingViewController()
     }
 
     fileprivate static func setUpDismissAuthListener() {
@@ -83,11 +89,19 @@ public enum StytchUIClient {
                 switch sessionInfo {
                 case .available:
                     EventsClient.sendAuthenticationSuccessEvent()
-                    dismiss()
+                    currentController?.showBiometricsRegistrationIfNeeded()
                 case .unavailable:
                     break
                 }
             }
+    }
+
+    static func startLoading() {
+        currentController?.startLoading()
+    }
+
+    static func stopLoading() {
+        currentController?.stopLoading()
     }
 }
 
