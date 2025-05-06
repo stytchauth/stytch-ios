@@ -9,18 +9,22 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Button("Log In With Stytch!") {
-                    viewModel.shouldShowB2CUI = true
-                }.font(.title).bold()
-
-                if viewModel.shouldShowB2CUI == false {
+                if viewModel.isAuthenticated == true {
                     Text("You have logged in with Stytch!")
                         .font(.largeTitle)
                         .bold()
                         .multilineTextAlignment(.center)
 
+                    Text(viewModel.sessionExpirationText)
+                        .font(.headline)
+                        .foregroundColor(.gray)
+
                     Button("Log Out") {
                         logOut()
+                    }.font(.title).bold()
+                } else {
+                    Button("Log In With Stytch!") {
+                        viewModel.shouldShowB2CUI = true
                     }.font(.title).bold()
                 }
             }
@@ -48,6 +52,10 @@ struct ContentView: View {
 
 class ContentViewModel: ObservableObject {
     @Published var shouldShowB2CUI: Bool = false
+    @Published var isAuthenticated: Bool = false
+    @Published var sessionExpirationText: String = ""
+    private var expirationTimer: Timer?
+
     private var cancellables = Set<AnyCancellable>()
     var date = Date()
 
@@ -62,6 +70,13 @@ class ContentViewModel: ObservableObject {
     }
 
     func startObservables() {
+        StytchUIClient.dismissUI
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.shouldShowB2CUI = false
+            }
+            .store(in: &cancellables)
+
         StytchClient.sessions.onSessionChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessionInfo in
@@ -70,10 +85,13 @@ class ContentViewModel: ObservableObject {
                     print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
                     print("StytchClient.sessions.sessionToken: \(StytchClient.sessions.sessionToken?.value ?? "no sessionToken")")
                     print("StytchClient.sessions.sessionJwt: \(StytchClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
-                    self?.shouldShowB2CUI = false
+                    self?.isAuthenticated = true
+                    self?.updateExpirationCountdown(to: session.expiresAt)
                 case .unavailable:
                     print("Session Unavailable\n")
-                    self?.shouldShowB2CUI = true
+                    self?.isAuthenticated = false
+                    self?.sessionExpirationText = ""
+                    self?.expirationTimer?.invalidate()
                 }
             }.store(in: &cancellables)
 
@@ -105,12 +123,34 @@ class ContentViewModel: ObservableObject {
     }
 
     let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "public-token-test-..."),
-        products: [.passwords, .emailMagicLinks, .otp, .oauth],
+        stytchClientConfiguration: .init(publicToken: "public-token-test-728f8b82-2a20-4926-b077-a8ca7d67e1b2"),
+        products: [.passwords, .emailMagicLinks, .otp, .biometrics, .oauth],
         navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],
         otpOptions: .init(methods: [.sms, .whatsapp])
     )
+
+    private func updateExpirationCountdown(to expirationDate: Date) {
+        expirationTimer?.invalidate()
+
+        func updateLabel() {
+            let remaining = expirationDate.timeIntervalSinceNow
+            if remaining <= 0 {
+                sessionExpirationText = "Session expired"
+                expirationTimer?.invalidate()
+            } else {
+                let minutes = Int(remaining) / 60
+                let seconds = Int(remaining) % 60
+                sessionExpirationText = "Your session expires in \(minutes) min \(seconds) sec"
+            }
+        }
+
+        expirationTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            updateLabel()
+        }
+        RunLoop.main.add(expirationTimer!, forMode: .common)
+        updateLabel()
+    }
 }
 
 #Preview {

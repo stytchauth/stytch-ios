@@ -7,6 +7,33 @@ public extension StytchClient.Biometrics {
         case systemUnavailable(LAError.Code?)
         case availableNoRegistration
         case availableRegistered
+
+        public var isAvailableNoRegistration: Bool {
+            switch self {
+            case .availableNoRegistration:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isAvailableRegistered: Bool {
+            switch self {
+            case .availableRegistered:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isSystemUnavailable: Bool {
+            switch self {
+            case .systemUnavailable:
+                return true
+            default:
+                return false
+            }
+        }
     }
 }
 
@@ -90,6 +117,19 @@ public extension StytchClient {
             guard registrationAvailable == false else {
                 throw StytchSDKError.biometricsAlreadyEnrolled
             }
+
+            #if !os(tvOS) && !os(watchOS)
+            let context = LAContext()
+            var error: NSError?
+            guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+                throw StytchSDKError.biometricsUnavailable
+            }
+
+            let reason = "Authenticate to register biometrics"
+            guard try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) else {
+                throw StytchSDKError.biometricAuthenticationFailed
+            }
+            #endif
 
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
 

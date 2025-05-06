@@ -17,17 +17,28 @@ final class AuthHomeViewModel {
 extension AuthHomeViewModel {
     var productComponents: [StytchUIClient.ProductComponent] {
         var productComponents = [StytchUIClient.ProductComponent]()
+        var hasBiometrics = false
+
         for component in state.config.products {
             switch component {
+            case .biometrics:
+                productComponents.appendIfNotPresent(.biometrics)
+                hasBiometrics = true
             case .oauth:
-                productComponents.appendIfNotPresent(.oAuthButtons)
+                if !productComponents.contains(.oAuthButtons) {
+                    productComponents.append(.oAuthButtons)
+                }
             case .emailMagicLinks, .passwords, .otp:
-                productComponents.appendIfNotPresent(.inputProducts)
+                if !productComponents.contains(.inputProducts) {
+                    productComponents.append(.inputProducts)
+                }
             }
         }
 
-        if productComponents.count == 2 {
-            productComponents.insert(.divider, at: 1)
+        if hasBiometrics {
+            if let biometricsIndex = productComponents.firstIndex(of: .biometrics) {
+                productComponents.insert(.divider, at: biometricsIndex)
+            }
         }
 
         return productComponents
@@ -59,6 +70,7 @@ extension StytchUIClient {
     enum ProductComponent: String, Equatable {
         case inputProducts
         case oAuthButtons
+        case biometrics
         case divider
     }
 }

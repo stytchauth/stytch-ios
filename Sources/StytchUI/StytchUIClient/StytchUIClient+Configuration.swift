@@ -16,6 +16,7 @@ public extension StytchUIClient {
         public let passwordOptions: PasswordOptions?
         public let magicLinkOptions: MagicLinkOptions?
         public let otpOptions: OTPOptions?
+        public let biometricsOptions: BiometricsOptions?
         public let theme: StytchTheme
         public let locale: StytchLocale
 
@@ -43,6 +44,10 @@ public extension StytchUIClient {
             products.contains(.passwords)
         }
 
+        public var supportsBiometrics: Bool {
+            products.contains(.biometrics)
+        }
+
         /// - Parameters:
         ///   - stytchClientConfiguration: A flexible and extensible object used to configure the core `StychClient` requiring at least a public token, with optional additional settings.
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
@@ -53,6 +58,7 @@ public extension StytchUIClient {
         ///   - passwordOptions: The password options to use if you have a custom configuration.
         ///   - magicLinkOptions: The email magic link options to use if you have a custom configuration.
         ///   - otpOptions: The otp options to use if you have a custom configuration.
+        ///   - biometricsOptions: xyz
         ///   - theme: A configureable way to control the appearance of the UI, has default values provided
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
@@ -65,6 +71,7 @@ public extension StytchUIClient {
             passwordOptions: PasswordOptions? = nil,
             magicLinkOptions: MagicLinkOptions? = nil,
             otpOptions: OTPOptions? = nil,
+            biometricsOptions: BiometricsOptions? = nil,
             theme: StytchTheme = StytchTheme(),
             locale: StytchLocale = .en
         ) {
@@ -76,6 +83,7 @@ public extension StytchUIClient {
             self.passwordOptions = passwordOptions
             self.magicLinkOptions = magicLinkOptions
             self.otpOptions = otpOptions
+            self.biometricsOptions = biometricsOptions
             self.theme = theme
             self.locale = locale
         }
@@ -86,6 +94,7 @@ public extension StytchUIClient {
         case oauth
         case passwords
         case otp
+        case biometrics
     }
 
     enum OAuthProvider: Codable {
@@ -160,6 +169,8 @@ public extension StytchUIClient {
             self.signupTemplateId = signupTemplateId
         }
     }
+
+    struct BiometricsOptions: Codable {}
 
     /// The OTP methods that are available
     enum OTPMethod: Codable {

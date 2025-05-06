@@ -4,11 +4,18 @@ import UIKit
 final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeViewModel> {
     private let scrollView: UIScrollView = .init()
 
+    var biometricsButton: UIButton {
+        let button = Button.secondary(
+            image: .biometrics,
+            title: "Continue with Face ID"
+        ) {}
+        button.addTarget(self, action: #selector(authenticateBiometricsButtonTapped), for: .touchUpInside)
+        return button
+    }
+
     private let titleLabel: UILabel = .makeTitleLabel(
         text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
     )
-
-    private let separatorView: LabelSeparatorView = .orSeparator()
 
     private var showOrSeparator: Bool {
         guard !viewModel.state.config.oauthProviders.isEmpty else { return false }
@@ -58,8 +65,12 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
                 let oauthController = OAuthViewController(state: .init(config: viewModel.state.config))
                 addChild(oauthController)
                 stackView.addArrangedSubview(oauthController.view)
+            case .biometrics:
+                if StytchClient.biometrics.availability.isAvailableRegistered {
+                    stackView.addArrangedSubview(biometricsButton)
+                }
             case .divider:
-                stackView.addArrangedSubview(separatorView)
+                stackView.addArrangedSubview(LabelSeparatorView.orSeparator())
             }
         }
 
@@ -78,5 +89,20 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
         }
 
         configureCloseButton(viewModel.state.config.navigation)
+    }
+
+    @objc private func handleToggleChange(_ sender: UISwitch) {
+        UserDefaults.standard.set(sender.isOn, forKey: "shouldRegisterBiometrics")
+    }
+
+    @objc func authenticateBiometricsButtonTapped() {
+        Task {
+            do {
+                let response = try await StytchClient.biometrics.authenticate(parameters: .init())
+                print(response)
+            } catch {
+                print(error.errorInfo)
+            }
+        }
     }
 }

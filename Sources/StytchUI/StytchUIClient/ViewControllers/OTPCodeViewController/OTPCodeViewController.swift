@@ -123,19 +123,23 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
 extension OTPCodeViewController: OTPCodeEntryViewDelegate {
     func didEnterOTPCode(_ code: String) {
+        StytchUIClient.startLoading()
         Task {
             do {
                 try await self.viewModel.enterCode(code: code, methodId: self.viewModel.state.methodId)
+                StytchUIClient.stopLoading()
             } catch let error as StytchAPIError where error.errorType == .otpCodeNotFound {
                 DispatchQueue.main.async {
                     self.presentAlert(title: NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: ""))
                 }
                 self.otpView.clear()
+                StytchUIClient.stopLoading()
             } catch {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "ui_authentication_failure", error: error))
                 ErrorPublisher.publishError(error)
                 self.presentErrorAlert(error: error)
                 self.otpView.clear()
+                StytchUIClient.stopLoading()
             }
         }
     }

@@ -6,6 +6,7 @@ enum ImageAsset {
     case b2bOauthIcon(StytchB2BClient.OAuth.ThirdParty.Provider)
     case sso(String)
     case poweredByStytch
+    case biometrics
 
     var image: UIImage? {
         let imageName: String
@@ -18,6 +19,8 @@ enum ImageAsset {
             imageName = provider.lowercased()
         case .poweredByStytch:
             imageName = "poweredbystytch"
+        case .biometrics:
+            return UIImage(systemName: "faceid")
         }
         return .init(named: imageName, in: .module, compatibleWith: nil)
     }

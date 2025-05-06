@@ -241,6 +241,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     }
 
     @objc private func didTapContinue() {
+        StytchUIClient.startLoading()
         Task {
             do {
                 switch activeInput {
@@ -258,6 +259,9 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                         } else {
                             try await launchPasswordOnly(email: email)
                         }
+
+                        StytchUIClient.biometricsRegistrationIdentifier = email
+                        StytchUIClient.stopLoading()
                     }
                 case .phone:
                     if let phone = phoneNumberInput.phoneNumberE164, let formattedPhone = phoneNumberInput.formattedPhoneNumber {
@@ -268,6 +272,9 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                         DispatchQueue.main.async {
                             self.launchOTP(input: phone, formattedInput: formattedPhone, otpMethod: .sms, result: result, expiry: expiry)
                         }
+
+                        StytchUIClient.biometricsRegistrationIdentifier = phone
+                        StytchUIClient.stopLoading()
                     }
                 case .whatsapp:
                     if let phone = whatsAppInput.phoneNumberE164, let formattedPhone = whatsAppInput.formattedPhoneNumber {
@@ -278,9 +285,13 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                         DispatchQueue.main.async {
                             self.launchOTP(input: phone, formattedInput: formattedPhone, otpMethod: .whatsapp, result: result, expiry: expiry)
                         }
+
+                        StytchUIClient.biometricsRegistrationIdentifier = phone
+                        StytchUIClient.stopLoading()
                     }
                 }
             } catch {
+                StytchUIClient.stopLoading()
                 ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
             }

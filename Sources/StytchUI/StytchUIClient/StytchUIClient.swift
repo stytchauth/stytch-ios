@@ -10,12 +10,19 @@ public enum StytchUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     public private(set) static var configuration = StytchUIClient.Configuration.empty
 
+    public static var dismissUI: AnyPublisher<Void, Never> {
+        AuthRootViewController.dismissUI
+    }
+
     public static var errorPublisher: AnyPublisher<Error, Never> {
         ErrorPublisher.publisher
     }
 
     // Used to store pending reset emails so as to preserve state
     static var pendingResetEmail: String?
+
+    //
+    static var biometricsRegistrationIdentifier: String?
 
     fileprivate weak static var currentController: AuthRootViewController?
     fileprivate static var cancellable: AnyCancellable?
@@ -83,11 +90,20 @@ public enum StytchUIClient {
                 switch sessionInfo {
                 case .available:
                     EventsClient.sendAuthenticationSuccessEvent()
-                    dismiss()
+                    currentController?.showBiometricsRegistrationIfNeeded()
+                    cancellable = nil
                 case .unavailable:
                     break
                 }
             }
+    }
+
+    static func startLoading() {
+        currentController?.startLoading()
+    }
+
+    static func stopLoading() {
+        currentController?.stopLoading()
     }
 }
 
