@@ -12,21 +12,21 @@ final class ErrorViewModel {
 
 extension ErrorViewModel {
     var title: String {
-        "Looks like there was an error!"
+        LocalizationManager.stytch_b2b_error_title
     }
 
     var subtitle: String {
         switch state.type {
         case .noOrganziationFound:
-            return "The organization you are looking for could not be found. If you think this is a mistake, contact your admin."
+            return LocalizationManager.stytch_b2b_error_no_org_found
         case .noPrimaryAuthMethods:
-            return "Unable to join due to \(OrganizationManager.name ?? "the organization")'s authentication policy. Please contact your admin for more information."
+            return LocalizationManager.stytch_b2b_error_no_primary_auth_methods(orgName: OrganizationManager.name ?? "the organization")
         case .emailAuthFailed:
-            return "Something went wrong. Your login link may have expired, been revoked, or been used more than once. Request a new login link to try again, or contact your admin for help."
+            return LocalizationManager.stytch_b2b_error_email_auth_failed
         case .generic:
-            return "Something went wrong. Try again later or contact your admin for help."
+            return LocalizationManager.stytch_b2b_error_generic
         case .invlaidProductConfiguration:
-            return "Invalid product configuration detected"
+            return LocalizationManager.stytch_b2b_error_invalid_product_configuration
         }
     }
 }

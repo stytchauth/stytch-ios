@@ -30,21 +30,15 @@ extension OTPEntryViewControllerProtocol {
         return button
     }
 
-    func expiryAttributedText(initialSegment: String) -> NSAttributedString {
-        let attributedString = NSMutableAttributedString(string: initialSegment + NSLocalizedString("stytch.otpDidntGetIt", value: " Didn't get it?", comment: ""), attributes: [.font: UIFont.IBMPlexSansRegular(size: 16)])
-        let appendedAttributedString = NSAttributedString(string: NSLocalizedString("stytch.otpResendIt", value: " Resend it.", comment: ""), attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)])
-        attributedString.append(appendedAttributedString)
-        return attributedString
-    }
-
-    func presentCodeResetConfirmation(message: String?) {
+    func presentCodeResetConfirmation(recipient: String) {
+        let message = LocalizationManager.stytch_otp_alert_message_new_code_will_be_sent(recipient: recipient)
         let controller = UIAlertController(
-            title: NSLocalizedString("stytch.otpResendCode", value: "Resend code", comment: ""),
+            title: LocalizationManager.stytch_otp_alert_title_resend_code,
             message: message,
             preferredStyle: .alert
         )
-        controller.addAction(.init(title: NSLocalizedString("stytch.otpCancel", value: "Cancel", comment: ""), style: .default))
-        controller.addAction(.init(title: NSLocalizedString("stytch.otpConfirm", value: "Send code", comment: ""), style: .default) { [weak self] _ in
+        controller.addAction(.init(title: LocalizationManager.stytch_otp_alert_cancel, style: .default))
+        controller.addAction(.init(title: LocalizationManager.stytch_otp_alert_confirm, style: .default) { [weak self] _ in
             self?.resendCode()
         })
         controller.view.tintColor = .primaryText
@@ -53,15 +47,11 @@ extension OTPEntryViewControllerProtocol {
 
     func updateExpirationText() {
         if case let currentDate = Date(), expirationDate > currentDate, let dateString = dateFormatter.string(from: currentDate, to: expirationDate) {
-            expiryButton.setAttributedTitle(
-                expiryAttributedText(initialSegment: .localizedStringWithFormat(NSLocalizedString("stytch.otpCodeExpiresIn", value: "Your code expires in %@.", comment: ""), dateString)),
-                for: .normal
-            )
+            let attributedString = NSAttributedString(string: LocalizationManager.stytch_otp_code_expires_in(timeString: dateString), attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)])
+            expiryButton.setAttributedTitle(attributedString, for: .normal)
         } else {
-            expiryButton.setAttributedTitle(
-                expiryAttributedText(initialSegment: NSLocalizedString("stytch.otpCodeExpired", value: "Your code has expired.", comment: "")),
-                for: .normal
-            )
+            let attributedString = NSAttributedString(string: LocalizationManager.stytch_otp_code_expired, attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)])
+            expiryButton.setAttributedTitle(attributedString, for: .normal)
             timer?.invalidate()
             return
         }

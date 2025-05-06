@@ -3,11 +3,11 @@ import StytchCore
 import UIKit
 
 final class EmailMethodSelectionViewController: BaseViewController<EmailMethodSelectionState, EmailMethodSelectionViewModel> {
-    let emailMagicLinkLabelText = "Email me a log in link"
-    let emailOTPLabelText = "Email me a log in code"
+    let emailMagicLinkLabelText = LocalizationManager.stytch_b2b_email_method_link
+    let emailOTPLabelText = LocalizationManager.stytch_b2b_email_method_code
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchEmailMethodTitle", value: "Select how you'd like to continue.", comment: "")
+        text: LocalizationManager.stytch_b2b_email_method_title
     )
 
     init(state: EmailMethodSelectionState) {

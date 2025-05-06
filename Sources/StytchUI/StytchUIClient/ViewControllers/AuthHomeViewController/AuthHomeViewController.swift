@@ -5,7 +5,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
+        text: LocalizationManager.stytch_b2c_auth_title
     )
 
     private let separatorView: LabelSeparatorView = .orSeparator()

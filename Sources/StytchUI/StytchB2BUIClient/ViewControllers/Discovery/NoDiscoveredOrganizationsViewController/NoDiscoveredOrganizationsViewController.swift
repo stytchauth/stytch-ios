@@ -3,7 +3,7 @@ import UIKit
 
 class NoDiscoveredOrganizationsViewController: BaseViewController<NoDiscoveredOrganizationsState, NoDiscoveredOrganizationsViewModel> {
     private lazy var tryDifferntEmailAddressButton: Button = .primary(
-        title: NSLocalizedString("stytchNoDiscoveredOrganizationsTryDifferntEmailAddressButtonTitle", value: "Try a different email address", comment: "")
+        title: LocalizationManager.stytch_b2b_no_discovered_organizations_try_differnt_email_address_button
     ) { [weak self] in
         self?.tryDifferntEmailAddressButtonTapped()
     }
@@ -19,15 +19,12 @@ class NoDiscoveredOrganizationsViewController: BaseViewController<NoDiscoveredOr
         stackView.spacing = .spacingRegular
 
         let titleLabel: UILabel = .makeTitleLabel(
-            text: .localizedStringWithFormat(
-                NSLocalizedString("stytchNoDiscoveredOrganizationsTitle", value: "%@ does not belong to any organizations.", comment: ""),
-                MemberManager.emailAddress ?? ""
-            )
+            text: LocalizationManager.stytch_b2b_no_discovered_organizations_title(email: MemberManager.emailAddress ?? "")
         )
         stackView.addArrangedSubview(titleLabel)
 
         let subtitleLabel: UILabel = .makeSubtitleLabel(
-            text: NSLocalizedString("stytchNoDiscoveredOrganizationsSubtitle", value: "Make sure your email address is correct. Otherwise, you might need to be invited by your admin.", comment: "")
+            text: LocalizationManager.stytch_b2b_no_discovered_organizations_subtitle
         )
         stackView.addArrangedSubview(subtitleLabel)
 

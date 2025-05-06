@@ -17,7 +17,7 @@ struct LUDSIndicator: View {
                     } else {
                         Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     }
-                    Text("Must be at least \(state.passwordConfig?.ludsMinimumCount ?? 0) characters long")
+                    Text(LocalizationManager.stytch_luds_feedback_length(ludsMinimumCount: "\(state.passwordConfig?.ludsMinimumCount ?? 0)"))
                         .fixedSize(horizontal: false, vertical: true)
                         .font(Font(UIFont.IBMPlexSansRegular(size: 16)))
                         .multilineTextAlignment(.leading)
@@ -29,7 +29,7 @@ struct LUDSIndicator: View {
                     } else {
                         Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     }
-                    Text("Must contain \(state.passwordConfig?.ludsComplexity ?? 0) of the following: uppercase letter, lowercase letter, number, symbol")
+                    Text(LocalizationManager.stytch_luds_feedback_characters(ludsComplexity: "\(state.passwordConfig?.ludsComplexity ?? 0)"))
                         .fixedSize(horizontal: false, vertical: true)
                         .font(Font(UIFont.IBMPlexSansRegular(size: 16)))
                         .multilineTextAlignment(.leading)
@@ -38,7 +38,7 @@ struct LUDSIndicator: View {
                 if state.breached {
                     Image("crossIcon", bundle: .module).frame(width: 16, height: 16, alignment: .center)
                     HStack(alignment: .center, spacing: 4) {
-                        Text("This password may have been used on a different site that experienced a security issue. Please choose another password.")
+                        Text(LocalizationManager.stytch_luds_feedback_password_reuse)
                             .fixedSize(horizontal: false, vertical: true)
                             .font(Font(UIFont.IBMPlexSansRegular(size: 16)))
                             .multilineTextAlignment(.leading)

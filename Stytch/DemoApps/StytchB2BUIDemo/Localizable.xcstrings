@@ -1,0 +1,32 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Enter Org Slug (optional)" : {
+
+    },
+    "Enter Public Token" : {
+
+    },
+    "Launch Discovery Flow" : {
+
+    },
+    "Launch Org Specific Flow" : {
+
+    },
+    "Log Out" : {
+
+    },
+    "stytch.b2b.home.sign.up.or.log.in" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stytch Prebuilt UI Title Configured with Localized Strings!"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -57,9 +57,9 @@ extension ActionableInfoState {
         .init(
             config: config,
             email: email,
-            title: NSLocalizedString("stytch.aiForgotPW", value: "Forgot password?", comment: ""),
+            title: LocalizationManager.stytch_b2c_forgot_password,
             infoComponents: [
-                .string(NSLocalizedString("stytch.linkToResetPWSent", value: "A link to reset your password was sent to you at ", comment: "")),
+                .string(LocalizationManager.stytch_b2c_link_to_reset_password_sent),
                 .bold(.string(email)),
             ],
             actionComponents: .didntGetItResendEmail,
@@ -80,27 +80,27 @@ extension ActionableInfoState {
         )
     }
 
-    static func checkYourEmailCreatePWInstead(config: StytchUIClient.Configuration, email: String, retryAction: @escaping RetryAction) -> Self {
+    static func checkYourEmailCreatePasswordInstead(config: StytchUIClient.Configuration, email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             config: config,
             email: email,
             title: .checkEmail,
             infoComponents: [.string(.loginLinkSentToYou), .bold(.string(email)), "."],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (NSLocalizedString("stytch.aiCreatePWInstead", value: "Create a password instead", comment: ""), .didTapCreatePassword(email: email)),
+            secondaryAction: (LocalizationManager.stytch_b2c_create_password_instead, .didTapCreatePassword(email: email)),
             retryAction: retryAction
         )
     }
 
-    static func checkYourEmailReset(config: StytchUIClient.Configuration, email: String, retryAction: @escaping RetryAction) -> Self {
+    static func checkYourEmailResetPassword(config: StytchUIClient.Configuration, email: String, retryAction: @escaping RetryAction) -> Self {
         .init(
             config: config,
             email: email,
-            title: .checkEmailForNewPW,
+            title: .checkEmailForNewPassword,
             infoComponents: [
                 .string(.loginLinkSentToYou),
                 .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toCreatePW", value: " to create a password for your account.", comment: "")),
+                .string(LocalizationManager.stytch_b2c_to_create_password),
             ],
             actionComponents: .didntGetItResendEmail,
             secondaryAction: nil,
@@ -112,14 +112,14 @@ extension ActionableInfoState {
         .init(
             config: config,
             email: email,
-            title: .checkEmailForNewPW,
+            title: .checkEmailForNewPassword,
             infoComponents: [
-                .string(NSLocalizedString("stytch.aiMakeSureAcctSecure", value: "We want to make sure your account is secure and that it’s really you logging in. A login link was sent to you at ", comment: "")),
+                .string(LocalizationManager.stytch_b2c_make_sure_acount_secure),
                 .bold(.string(email)),
                 .string(.period),
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
+            secondaryAction: (.loginWithoutPassword, .didTapLoginWithoutPassword(email: email)),
             retryAction: retryAction
         )
     }
@@ -128,14 +128,14 @@ extension ActionableInfoState {
         .init(
             config: config,
             email: email,
-            title: .checkEmailForNewPW,
+            title: .checkEmailForNewPassword,
             infoComponents: [
-                .string(NSLocalizedString("stytch.aiPWBreach", value: "A different site where you use the same password had a security issue recently. For your safety, an email was sent to you at ", comment: "")),
+                .string(LocalizationManager.stytch_b2c_password_breach),
                 .bold(.string(email)),
-                .string(NSLocalizedString("stytch.toResetPW", value: " to reset your password.", comment: "")),
+                .string(LocalizationManager.stytch_b2c_to_reset_password),
             ],
             actionComponents: .didntGetItResendEmail,
-            secondaryAction: (.loginWithoutPW, .didTapLoginWithoutPassword(email: email)),
+            secondaryAction: (.loginWithoutPassword, .didTapLoginWithoutPassword(email: email)),
             retryAction: retryAction
         )
     }
@@ -176,16 +176,16 @@ internal extension ActionableInfoViewModel {
 extension [AttrStringComponent] {
     static var didntGetItResendEmail: Self {
         [
-            .string(NSLocalizedString("stytch.aiDidntGetIt", value: "Didn't get it? ", comment: "")),
-            .bold(.string(NSLocalizedString("stytch.aiResendEmail", value: "Resend email", comment: ""))),
+            .string(LocalizationManager.stytch_b2c_didnt_get_it),
+            .bold(.string(LocalizationManager.stytch_b2c_didnt_get_it)),
         ]
     }
 }
 
 internal extension String {
-    static let checkEmail: String = NSLocalizedString("stytch.aiCheckEmail", value: "Check your email", comment: "")
-    static let checkEmailForNewPW: String = NSLocalizedString("stytch.aiCheckEmailForPW", value: "Check your email to set a new password", comment: "")
-    static let loginLinkSentToYou: String = NSLocalizedString("stytch.aiLoginLinkSentAt", value: "A login link was sent to you at ", comment: "")
-    static let loginWithoutPW: String = NSLocalizedString("stytch.aiLoginWithoutPW", value: "Login without a password", comment: "")
-    static let period: String = NSLocalizedString("stytch.aiPeriod", value: ".", comment: "")
+    static let checkEmail: String = LocalizationManager.stytch_b2c_check_email
+    static let checkEmailForNewPassword: String = LocalizationManager.stytch_b2c_check_email_for_password
+    static let loginLinkSentToYou: String = LocalizationManager.stytch_b2c_login_link_sent
+    static let loginWithoutPassword: String = LocalizationManager.stytch_b2c_login_without_password
+    static let period: String = LocalizationManager.stytch_b2c_period
 }

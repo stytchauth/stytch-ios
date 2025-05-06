@@ -62,7 +62,7 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
             do {
                 try await viewModel.resendResetPasswordByEmailIfPossible(emailAddress: emailAddress)
                 StytchB2BUIClient.stopLoading()
-                presentAlert(title: "Email Sent!")
+                presentAlert(title: LocalizationManager.stytch_b2b_email_confirmation_email_sent_alert_title)
             } catch {
                 StytchB2BUIClient.stopLoading()
                 ErrorPublisher.publishError(error)

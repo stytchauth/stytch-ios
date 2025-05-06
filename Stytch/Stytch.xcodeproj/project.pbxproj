@@ -43,6 +43,7 @@
 		74234D4E2C21EAC10001DA69 /* TOTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */; };
 		74234D512C21EB770001DA69 /* SwiftOTP in Frameworks */ = {isa = PBXBuildFile; productRef = 74234D502C21EB770001DA69 /* SwiftOTP */; };
 		7437F8252CF4F78E00701EF0 /* Launch Screen B2B.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7437F8242CF4F78E00701EF0 /* Launch Screen B2B.storyboard */; };
+		743C612B2DC947C800F21D06 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 743C612A2DC947C800F21D06 /* Localizable.xcstrings */; };
 		7447F58D2CF108E90006F181 /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7447F58C2CF108E90006F181 /* StytchUI */; };
 		745BAB6A2C88C27600771497 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB692C88C27600771497 /* ContentView.swift */; };
 		745BAB6C2C88C27700771497 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 745BAB6B2C88C27700771497 /* Assets.xcassets */; };
@@ -57,6 +58,7 @@
 		74707A342D15C8F700CCCDC8 /* B2BUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74707A332D15C8F700CCCDC8 /* B2BUIViewController.swift */; };
 		7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */; };
 		7478F7DC2BF6467900BCB233 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* CommonExtensions.swift */; };
+		747C39512DBBFECE006475D5 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 747C39502DBBFECE006475D5 /* Localizable.xcstrings */; };
 		74A2D1912C21FDF8007F8F20 /* OTPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */; };
 		74BCCBD72D2C2A97001A1C0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BCCBCD2D2C2A97001A1C0A /* AppDelegate.swift */; };
 		74BCCBD82D2C2A97001A1C0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BCCBD42D2C2A97001A1C0A /* SceneDelegate.swift */; };
@@ -123,6 +125,7 @@
 		74234D4D2C21EAC10001DA69 /* TOTPViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOTPViewController.swift; sourceTree = "<group>"; };
 		7425CEF12C518A260068B33E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7437F8242CF4F78E00701EF0 /* Launch Screen B2B.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen B2B.storyboard"; sourceTree = "<group>"; };
+		743C612A2DC947C800F21D06 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		745BAB652C88C27600771497 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		745BAB672C88C27600771497 /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		745BAB692C88C27600771497 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 		74707A332D15C8F700CCCDC8 /* B2BUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = B2BUIViewController.swift; sourceTree = "<group>"; };
 		7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		7478F7DA2BF6467900BCB233 /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
+		747C39502DBBFECE006475D5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		74A2D1902C21FDF8007F8F20 /* OTPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPViewController.swift; sourceTree = "<group>"; };
 		74BCCBB82D2C2A8D001A1C0A /* StytchBiometrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchBiometrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74BCCBCD2D2C2A97001A1C0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -279,6 +283,7 @@
 				53E128262B50092E00976CAC /* ContentView.swift */,
 				53E128282B50092F00976CAC /* Assets.xcassets */,
 				7478F7D82BF595CD00BCB233 /* Launch Screen.storyboard */,
+				747C39502DBBFECE006475D5 /* Localizable.xcstrings */,
 			);
 			path = StytchUIDemo;
 			sourceTree = "<group>";
@@ -321,6 +326,7 @@
 				741827112CF0FF1E00A475CB /* ContentView.swift */,
 				741827122CF0FF1E00A475CB /* StytchB2BUIDemoApp.swift */,
 				7437F8242CF4F78E00701EF0 /* Launch Screen B2B.storyboard */,
+				743C612A2DC947C800F21D06 /* Localizable.xcstrings */,
 			);
 			path = StytchB2BUIDemo;
 			sourceTree = "<group>";
@@ -587,6 +593,7 @@
 			files = (
 				7478F7D92BF595CD00BCB233 /* Launch Screen.storyboard in Resources */,
 				53E128292B50092F00976CAC /* Assets.xcassets in Resources */,
+				747C39512DBBFECE006475D5 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,6 +610,7 @@
 			files = (
 				7437F8252CF4F78E00701EF0 /* Launch Screen B2B.storyboard in Resources */,
 				741827142CF0FF1E00A475CB /* Preview Assets.xcassets in Resources */,
+				743C612B2DC947C800F21D06 /* Localizable.xcstrings in Resources */,
 				741827152CF0FF1E00A475CB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -887,6 +895,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "StytchDemo (iOS)-Bridging-Header";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -942,6 +951,7 @@
 				MTL_FAST_MATH = YES;
 				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "StytchDemo/StytchDemo (iOS)-Bridging-Header";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;

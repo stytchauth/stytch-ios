@@ -27,7 +27,7 @@ final class OrganizationSlugTextField: BorderedTextField, TextInputType {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        placeholder = NSLocalizedString("stytch.organizationSlugPlaceholder", value: "Enter Organization Slug", comment: "")
+        placeholder = LocalizationManager.stytch_b2b_organization_slug_placeholder
         autocapitalizationType = .none
         autocorrectionType = .no
         background = UIColor.clear.image()
