@@ -3,6 +3,7 @@
 import Combine
 import Foundation
 
+#if !os(watchOS) && !os(tvOS)
 public extension StytchClient.Biometrics {
     /// Removes the current device's existing biometric registration from both the device itself and from the server.
     func removeRegistration(completion: @escaping Completion<Void>) {
@@ -31,3 +32,4 @@ public extension StytchClient.Biometrics {
         .eraseToAnyPublisher()
     }
 }
+#endif
