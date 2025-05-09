@@ -3,6 +3,7 @@
 import Combine
 import Foundation
 
+#if !os(watchOS) && !os(tvOS)
 public extension StytchClient.Biometrics {
     /// When a valid/active session exists, this method will add a biometric registration for the current user. The user will later be able to start a new session with biometrics or use biometrics as an additional authentication factor.
     /// 
@@ -35,3 +36,4 @@ public extension StytchClient.Biometrics {
         .eraseToAnyPublisher()
     }
 }
+#endif

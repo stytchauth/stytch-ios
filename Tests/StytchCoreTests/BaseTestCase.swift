@@ -46,6 +46,10 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionManager.consumerLastAuthMethodUsed = StytchClient.ConsumerAuthMethod.unknown
         Current.sessionManager.b2bLastAuthMethodUsed = StytchB2BClient.B2BAuthMethod.unknown
+
+        #if !os(tvOS) && !os(watchOS)
+        Current.localAuthenticationContext = MockLocalAuthenticationContext()
+        #endif
     }
 }
 
@@ -173,3 +177,23 @@ extension XCTestCase {
         }
     }
 }
+
+#if !os(tvOS) && !os(watchOS)
+import LocalAuthentication
+class MockLocalAuthenticationContext: LAContextEvaluating {
+    var canEvaluate = true
+    var shouldSucceed = true
+    var thrownError: Error?
+
+    func canEvaluatePolicy(_: LAPolicy, error _: NSErrorPointer) -> Bool {
+        canEvaluate
+    }
+
+    func evaluatePolicy(_: LAPolicy, localizedReason _: String) async throws -> Bool {
+        if let error = thrownError {
+            throw error
+        }
+        return shouldSucceed
+    }
+}
+#endif

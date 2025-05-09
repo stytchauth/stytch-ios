@@ -14,9 +14,9 @@ public extension StytchClient {
     /// The interface for interacting with biometrics products.
     static var biometrics: Biometrics { .init(router: router.scopedRouter { $0.biometrics }) }
 }
-#endif
 
 public extension StytchClient {
+    // sourcery: ExcludeWatchAndTVOS
     /// Biometric authentication enables your users to leverage their devices' built-in biometric authenticators such as FaceID and TouchID for quick and seamless login experiences.
     ///
     /// ## Important Notes
@@ -32,6 +32,8 @@ public extension StytchClient {
 
         @Dependency(\.jsonDecoder) private var jsonDecoder
 
+        @Dependency(\.localAuthenticationContext) private var localAuthenticationContext
+
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
             keychainClient.valueExistsForItem(item: .privateKeyRegistration)
@@ -44,12 +46,10 @@ public extension StytchClient {
             return biometricKeyRegistrationQueryResult.stringValue
         }
 
-        #if !os(tvOS) && !os(watchOS)
         /// Indicates if biometrics are available
         public var availability: Availability {
-            let context = LAContext()
             var error: NSError?
-            switch (context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {
+            switch (localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {
             case (false, _):
                 return .systemUnavailable((error as? LAError)?.code)
             case (true, false):
@@ -58,7 +58,6 @@ public extension StytchClient {
                 return .availableRegistered
             }
         }
-        #endif
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Removes the current device's existing biometric registration from both the device itself and from the server.
@@ -89,6 +88,14 @@ public extension StytchClient {
             // Early return if the user is already enrolled in biometrics
             guard registrationAvailable == false else {
                 throw StytchSDKError.biometricsAlreadyEnrolled
+            }
+
+            guard localAuthenticationContext.canEvaluatePolicy(parameters.accessPolicy, error: nil) else {
+                throw StytchSDKError.biometricsUnavailable
+            }
+
+            guard try await localAuthenticationContext.evaluatePolicy(parameters.accessPolicy, localizedReason: "Authenticate to register biometrics") else {
+                throw StytchSDKError.biometricAuthenticationFailed
             }
 
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
@@ -230,7 +237,7 @@ public extension StytchClient.Biometrics {
     /// A dedicated parameters type for biometrics `register` calls.
     struct RegisterParameters: Sendable {
         let identifier: String
-        let accessPolicy: AccessPolicy
+        let accessPolicy: LAPolicy
         let sessionDurationMinutes: Minutes
 
         /// Initializes the parameters struct
@@ -240,7 +247,7 @@ public extension StytchClient.Biometrics {
         ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         public init(
             identifier: String,
-            accessPolicy: StytchClient.Biometrics.RegisterParameters.AccessPolicy = .deviceOwnerAuthenticationWithBiometrics,
+            accessPolicy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics,
             sessionDurationMinutes: Minutes = .defaultSessionDuration
         ) {
             self.identifier = identifier
@@ -258,29 +265,19 @@ public extension StytchClient.Biometrics {
     }
 }
 
-public extension StytchClient.Biometrics.RegisterParameters {
-    /// Defines the policy as to how the user must confirm their device ownership.
-    enum AccessPolicy: Sendable {
-        /// The device will first try to confirm access rights via biometrics and will fall back to device passcode.
-        case deviceOwnerAuthentication
-        /// The device will try to confirm access rights via biometrics.
-        case deviceOwnerAuthenticationWithBiometrics
+extension LAPolicy {
+    var keychainValue: KeychainItem.AccessPolicy {
+        switch self {
+        case .deviceOwnerAuthentication:
+            return .deviceOwnerAuthentication
+        case .deviceOwnerAuthenticationWithBiometrics:
+            return .deviceOwnerAuthenticationWithBiometrics
         #if os(macOS)
-        /// The device will, in parallel, try to confirm access rights via biometrics or an associated Apple Watch.
-        case deviceOwnerAuthenticationWithBiometricsOrWatch // swiftlint:disable:this identifier_name
+        case .deviceOwnerAuthenticationWithBiometricsOrWatch:
+            return .deviceOwnerAuthenticationWithBiometricsOrWatch
         #endif
-
-        var keychainValue: KeychainItem.AccessPolicy {
-            switch self {
-            case .deviceOwnerAuthentication:
-                return .deviceOwnerAuthentication
-            case .deviceOwnerAuthenticationWithBiometrics:
-                return .deviceOwnerAuthenticationWithBiometrics
-            #if os(macOS)
-            case .deviceOwnerAuthenticationWithBiometricsOrWatch:
-                return .deviceOwnerAuthenticationWithBiometricsOrWatch
-            #endif
-            }
+        @unknown default:
+            return .deviceOwnerAuthenticationWithBiometrics
         }
     }
 }
@@ -317,3 +314,5 @@ extension StytchClient.Biometrics {
         let sessionDurationMinutes: Minutes
     }
 }
+
+#endif

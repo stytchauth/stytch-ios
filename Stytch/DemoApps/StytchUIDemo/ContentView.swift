@@ -9,11 +9,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Button("Log In With Stytch!") {
-                    viewModel.shouldShowB2CUI = true
-                }.font(.title).bold()
-
-                if viewModel.shouldShowB2CUI == false {
+                if viewModel.isAuthenticated == true {
                     Text("You have logged in with Stytch!")
                         .font(.largeTitle)
                         .bold()
@@ -21,6 +17,10 @@ struct ContentView: View {
 
                     Button("Log Out") {
                         logOut()
+                    }.font(.title).bold()
+                } else {
+                    Button("Log In With Stytch!") {
+                        viewModel.shouldShowB2CUI = true
                     }.font(.title).bold()
                 }
             }
@@ -48,6 +48,7 @@ struct ContentView: View {
 
 class ContentViewModel: ObservableObject {
     @Published var shouldShowB2CUI: Bool = false
+    @Published var isAuthenticated: Bool = false
     private var cancellables = Set<AnyCancellable>()
     var date = Date()
 
@@ -70,10 +71,11 @@ class ContentViewModel: ObservableObject {
                     print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
                     print("StytchClient.sessions.sessionToken: \(StytchClient.sessions.sessionToken?.value ?? "no sessionToken")")
                     print("StytchClient.sessions.sessionJwt: \(StytchClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
+                    self?.isAuthenticated = true
                     self?.shouldShowB2CUI = false
                 case .unavailable:
                     print("Session Unavailable\n")
-                    self?.shouldShowB2CUI = true
+                    self?.isAuthenticated = false
                 }
             }.store(in: &cancellables)
 

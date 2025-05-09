@@ -5,6 +5,10 @@ import AppKit
 import UIKit
 #endif
 
+#if !os(tvOS) && !os(watchOS)
+import LocalAuthentication
+#endif
+
 // swiftlint:disable identifier_name
 #if DEBUG
 var Current: Environment = .init()
@@ -110,6 +114,10 @@ struct Environment {
     #if os(iOS)
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
+    #endif
+
+    #if !os(tvOS) && !os(watchOS)
+    var localAuthenticationContext: LAContextEvaluating = LAContext()
     #endif
 
     var pkcePairManager: PKCEPairManager {
