@@ -63,6 +63,18 @@ public extension StytchSDKError {
             errorType: "biometrics_already_enrolled"
         )
     )
+    static let biometricsUnavailable = StytchSDKError(
+        message: "Biometric authentication is unavailable on this device. Check device settings and try again.",
+        options: .init(
+            errorType: "biometrics_unavailable"
+        )
+    )
+    static let biometricAuthenticationFailed = StytchSDKError(
+        message: "Biometric authentication failed. Please try again.",
+        options: .init(
+            errorType: "biometric_authentication_failed"
+        )
+    )
     static let invalidAuthorizationCredential = StytchSDKError(
         message: "The authorization credential is invalid. Verify that OAuth is set up correctly in the developer console, and call the start flow method.",
         options: .init(
