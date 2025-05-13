@@ -47,6 +47,7 @@ public enum StytchAPIErrorType: String, Codable {
     case cnameRecordNotFound = "cname_record_not_found"
     case cnameRequiredForHttpOnlyCookies = "cname_required_for_http_only_cookies"
     case connectedAppConsentRevoked = "connected_app_consent_revoked"
+    case connectedAppNotAllowedForOrg = "connected_app_not_allowed_for_org"
     case couldNotParseBiometricSignature = "could_not_parse_biometric_signature"
     case crossOrgPasswordsEnabled = "cross_org_passwords_enabled"
     case crossOrgPasswordsNotEnabled = "cross_org_passwords_not_enabled"
