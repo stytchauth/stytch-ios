@@ -5,8 +5,9 @@
 import Combine
 import Foundation
 
-{% set excludeWatchOS %}#if !os(watchOS){% endset %}
-{% if type.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% elif method.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% endif %}
+{% if type.annotations.ExcludeWatchOS or method.annotations.ExcludeWatchOS or type.annotations.ExcludeTVOS or method.annotations.ExcludeTVOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS %}
+#if {% if type.annotations.ExcludeWatchOS or method.annotations.ExcludeWatchOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS %}!os(watchOS){% endif %}{% if (type.annotations.ExcludeWatchOS or method.annotations.ExcludeWatchOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS) and (type.annotations.ExcludeTVOS or method.annotations.ExcludeTVOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS) %} && {% endif %}{% if type.annotations.ExcludeTVOS or method.annotations.ExcludeTVOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS %}!os(tvOS){% endif %}
+{% endif %}
 {% for attribute in type.attributes.available %}{{ attribute }}{% endfor %}
 public extension {{ type.name }} {
 {% set methodKeywords %}{% if method.isClass %}class {% elif method.isStatic %}static {% endif %}func{% endset %}
@@ -47,8 +48,9 @@ public extension {{ type.name }} {
         .eraseToAnyPublisher()
     }
 }
-{% set excludeWatchOS %}#endif{% endset %}
-{% if type.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% elif method.annotations.ExcludeWatchOS %}{{ excludeWatchOS }}{% endif %}
+{% if type.annotations.ExcludeWatchOS or method.annotations.ExcludeWatchOS or type.annotations.ExcludeTVOS or method.annotations.ExcludeTVOS or type.annotations.ExcludeWatchAndTVOS or method.annotations.ExcludeWatchAndTVOS %}
+#endif
+{% endif %}
 
 // sourcery:end
 {% endfor %}
