@@ -7,6 +7,21 @@ public extension StytchClient.Biometrics {
         case systemUnavailable(LAError.Code?)
         case availableNoRegistration
         case availableRegistered
+
+        public var isSystemUnavailable: Bool {
+            if case .systemUnavailable = self { return true }
+            return false
+        }
+
+        public var isAvailableNoRegistration: Bool {
+            if case .availableNoRegistration = self { return true }
+            return false
+        }
+
+        public var isAvailableRegistered: Bool {
+            if case .availableRegistered = self { return true }
+            return false
+        }
     }
 }
 
@@ -57,6 +72,12 @@ public extension StytchClient {
             case (true, true):
                 return .availableRegistered
             }
+        }
+
+        /// Returns the type of biometric authentication available on the device. touchID or faceID
+        public var biometryType: LABiometryType {
+            _ = localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            return localAuthenticationContext.biometryType
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

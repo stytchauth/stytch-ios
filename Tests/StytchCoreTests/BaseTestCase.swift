@@ -185,6 +185,10 @@ class MockLocalAuthenticationContext: LAContextEvaluating {
     var shouldSucceed = true
     var thrownError: Error?
 
+    var biometryType: LABiometryType {
+        .faceID
+    }
+
     func canEvaluatePolicy(_: LAPolicy, error _: NSErrorPointer) -> Bool {
         canEvaluate
     }

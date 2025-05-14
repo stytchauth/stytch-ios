@@ -78,7 +78,7 @@ extension B2BAuthRootViewController {
 
             let loadingView = UIView()
             // swiftlint:disable:next object_literal
-            loadingView.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+            loadingView.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
             loadingView.translatesAutoresizingMaskIntoConstraints = false
 
             let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -94,7 +94,7 @@ extension B2BAuthRootViewController {
                 loadingView.topAnchor.constraint(equalTo: view.topAnchor),
                 loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 activityIndicator.centerXAnchor.constraint(equalTo: loadingView.centerXAnchor),
-                activityIndicator.centerYAnchor.constraint(equalTo: loadingView.centerYAnchor),
+                activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             ])
 
             self.loadingView = loadingView
