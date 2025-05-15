@@ -100,6 +100,8 @@ public enum StytchAPIErrorType: String, Codable {
     case enterpriseEndpoint = "enterprise_endpoint"
     case eventLogStreamingBadDatadogConfig = "event_log_streaming_bad_datadog_config"
     case eventLogStreamingBadGrafanaLokiConfig = "event_log_streaming_bad_grafana_loki_config"
+    case eventLogStreamingInvalidDestinationType = "event_log_streaming_invalid_destination_type"
+    case eventLogStreamingInvalidStreamingStatus = "event_log_streaming_invalid_streaming_status"
     case eventLogStreamingNotFound = "event_log_streaming_not_found"
     case eventLogStreamingTooManyDestinations = "event_log_streaming_too_many_destinations"
     case expiredOauthResponse = "expired_oauth_response"
