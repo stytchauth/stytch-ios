@@ -4,7 +4,7 @@ import UIKit
 extension UIViewController {
     func presentErrorAlert(error: Error) {
         presentAlert(
-            title: NSLocalizedString("stytch.vcErrorTitle", value: "Error", comment: ""),
+            title: LocalizationManager.stytch_error_alert_title,
             message: (error as? StytchError)?.message ?? error.localizedDescription
         )
     }
@@ -13,7 +13,7 @@ extension UIViewController {
         Task { @MainActor in
             let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.view.tintColor = .primaryText
-            alertController.addAction(.init(title: NSLocalizedString("stytch.vcOK", value: "OK", comment: ""), style: .default))
+            alertController.addAction(.init(title: LocalizationManager.stytch_alert_ok, style: .default))
             present(alertController, animated: true)
         }
     }

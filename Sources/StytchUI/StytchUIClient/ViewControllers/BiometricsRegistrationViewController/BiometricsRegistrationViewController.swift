@@ -26,7 +26,7 @@ final class BiometricsRegistrationViewController: BaseViewController<BiometricsR
             self?.enableFaceIDButtonTapped()
         }
 
-        let skipForNowButton: Button = .tertiary(title: "Skip for now") { [weak self] in
+        let skipForNowButton: Button = .tertiary(title: LocalizationManager.stytch_b2c_biometrics_skip_for_now) { [weak self] in
             self?.skipForNowButtonTapped()
         }
 
@@ -73,27 +73,30 @@ final class BiometricsRegistrationViewController: BaseViewController<BiometricsR
 
 extension BiometricsRegistrationViewController {
     var titleText: String {
-        var titleText = "Enable Face ID login?"
-        if StytchClient.biometrics.biometryType == .touchID {
-            titleText = "Enable Touch ID login?"
+        switch StytchClient.biometrics.biometryType {
+        case .touchID:
+            return LocalizationManager.stytch_b2c_biometrics_title_touch_id
+        default:
+            return LocalizationManager.stytch_b2c_biometrics_title_face_id
         }
-        return titleText
     }
 
     var subtitleText: String {
-        var subtitleText = "Use Face ID to log into your account. You will be prompted to allow this app to use Face ID."
-        if StytchClient.biometrics.biometryType == .touchID {
-            subtitleText = "Use Touch ID to log into your account. You will be prompted to allow this app to use Touch ID."
+        switch StytchClient.biometrics.biometryType {
+        case .touchID:
+            return LocalizationManager.stytch_b2c_biometrics_subtitle_touch_id
+        default:
+            return LocalizationManager.stytch_b2c_biometrics_subtitle_face_id
         }
-        return subtitleText
     }
 
     var enableFaceIDButtonText: String {
-        var enableFaceIDButtonText = "Enable Face ID"
-        if StytchClient.biometrics.biometryType == .touchID {
-            enableFaceIDButtonText = "Enable Touch ID"
+        switch StytchClient.biometrics.biometryType {
+        case .touchID:
+            return LocalizationManager.stytch_b2c_biometrics_enable_button_touch_id
+        default:
+            return LocalizationManager.stytch_b2c_biometrics_enable_button_face_id
         }
-        return enableFaceIDButtonText
     }
 }
 

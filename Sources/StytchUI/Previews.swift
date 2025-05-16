@@ -13,7 +13,7 @@ struct StytchUI_Previews: PreviewProvider {
         .toControllerView()
         .previewDisplayName("Root")
 
-        ActionableInfoViewController(
+        EmailConfirmationViewController(
             state: .forgotPassword(
                 config: .init(
                     stytchClientConfiguration: .init(publicToken: ""),

@@ -4,7 +4,7 @@ import UIKit
 
 final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsState, B2BPasswordsViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchPasswordAuthenticateTitle", value: "Log in with email and password", comment: "")
+        text: LocalizationManager.stytch_b2b_password_authenticate_title
     )
 
     private let emailInputLabel = UILabel.makeEmailInputLabel()
@@ -21,7 +21,7 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
     }()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.submit()
     }
@@ -38,7 +38,7 @@ final class PasswordAuthenticateViewController: BaseViewController<B2BPasswordsS
 
         let signUpOrResetPasswordButton = Button.createTextButton(
             withPlainText: "",
-            boldText: "Sign up or reset password",
+            boldText: LocalizationManager.stytch_b2b_password_signup_or_reset,
             action: #selector(signUpOrResetPasswordButtonTapped),
             target: self
         )

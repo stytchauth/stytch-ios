@@ -6,7 +6,7 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
     let otpView = OTPCodeEntryView(frame: .zero)
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchSMSOTPEntryTitle", value: "Enter passcode", comment: "")
+        text: LocalizationManager.stytch_b2b_sms_otp_entry_title
     )
 
     var timer: Timer?
@@ -27,7 +27,7 @@ final class SMSOTPEntryViewController: BaseViewController<SMSOTPEntryState, SMSO
         stackView.addArrangedSubview(titleLabel)
 
         let smsConfirmationLabel = UILabel.makeComboLabel(
-            withPlainText: "A 6-digit passcode was sent to you at",
+            withPlainText: LocalizationManager.stytch_b2b_otp_message,
             boldText: MemberManager.formattedPhoneNumber,
             fontSize: 18,
             alignment: .left
@@ -102,9 +102,7 @@ extension SMSOTPEntryViewController: OTPEntryViewControllerProtocol {
             return
         }
 
-        presentCodeResetConfirmation(message: .localizedStringWithFormat(
-            NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), phoneNumber
-        ))
+        presentCodeResetConfirmation(recipient: phoneNumber)
     }
 
     @objc private func updateExpiryText() {

@@ -27,7 +27,7 @@ final class RecoveryCodeTextField: BorderedTextField, TextInputType {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        placeholder = NSLocalizedString("stytch.recoveryCodePlaceholder", value: "Enter backup code", comment: "")
+        placeholder = LocalizationManager.stytch_b2b_recovery_code_placeholder
         autocapitalizationType = .none
         autocorrectionType = .no
         background = UIColor.clear.image()

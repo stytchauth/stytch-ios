@@ -5,17 +5,17 @@ import UIKit
 
 final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentState, SMSOTPEnrollmentViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchSMSOTPEnrollmentTitle", value: "Enter your phone number to set up Multi-Factor Authentication", comment: "")
+        text: LocalizationManager.stytch_b2b_sms_otp_enrollment_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchSMSOTPEnrollmentSubtitle", value: "Your organization requires an additional form of verification to make your account more secure.", comment: "")
+        text: LocalizationManager.stytch_b2b_sms_otp_enrollment_subtitle
     )
 
     private let phoneNumberInput: PhoneNumberInput = .init()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.continueWithSMSOTP()
     }
@@ -66,11 +66,7 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidNumber", value: "Invalid number, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_invalid_phone_number))
             case (false, false):
                 break
             }

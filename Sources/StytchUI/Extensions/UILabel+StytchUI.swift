@@ -32,7 +32,7 @@ extension UILabel {
         let label = UILabel()
         label.font = .IBMPlexSansRegular(size: 14)
         label.textColor = .secondaryText
-        label.text = NSLocalizedString("stytch.emailInputLabel", value: "Email", comment: "")
+        label.text = LocalizationManager.stytch_email_input_title
         return label
     }
 
@@ -40,7 +40,7 @@ extension UILabel {
         let label = UILabel()
         label.font = .IBMPlexSansRegular(size: 14)
         label.textColor = .secondaryText
-        label.text = NSLocalizedString("stytch.passwordInputLabel", value: "Password", comment: "")
+        label.text = LocalizationManager.stytch_password_input_label
         return label
     }
 

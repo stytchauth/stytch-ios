@@ -1,6 +1,6 @@
 import UIKit
 
-final class ActionableInfoViewController: BaseViewController<ActionableInfoState, ActionableInfoViewModel> {
+final class EmailConfirmationViewController: BaseViewController<EmailConfirmationState, EmailConfirmationViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel()
 
     private let infoLabel: UILabel = {
@@ -29,8 +29,8 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         return button
     }()
 
-    init(state: ActionableInfoState) {
-        super.init(viewModel: ActionableInfoViewModel(state: state))
+    init(state: EmailConfirmationState) {
+        super.init(viewModel: EmailConfirmationViewModel(state: state))
     }
 
     override func configureView() {
@@ -68,14 +68,12 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
 
     @objc private func didTapRetry(sender _: UIButton) {
         let controller = UIAlertController(
-            title: NSLocalizedString("stytch.aiResendCode", value: "Resend link", comment: ""),
-            message: .localizedStringWithFormat(
-                NSLocalizedString("stytch.aiNewCodeWillBeSent", value: "A new link will be sent to %@.", comment: ""), viewModel.state.email
-            ),
+            title: LocalizationManager.stytch_b2c_email_confirmation_alert_title,
+            message: LocalizationManager.stytch_b2c_email_confirmation_alert_message(email: viewModel.state.email),
             preferredStyle: .alert
         )
-        controller.addAction(.init(title: NSLocalizedString("stytch.aiCancel", value: "Cancel", comment: ""), style: .default))
-        controller.addAction(.init(title: NSLocalizedString("stytch.aiConfirm", value: "Send link", comment: ""), style: .default) { [weak self] _ in
+        controller.addAction(.init(title: LocalizationManager.stytch_b2c_email_confirmation_alert_cancel, style: .default))
+        controller.addAction(.init(title: LocalizationManager.stytch_b2c_email_confirmation_alert_confirm, style: .default) { [weak self] _ in
             Task { @MainActor in
                 try await self?.viewModel.state.retryAction()
             }
@@ -114,7 +112,7 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
         }
     }
 
-    private func attrStrings(state: ActionableInfoState) -> (info: NSAttributedString, action: NSAttributedString) {
+    private func attrStrings(state: EmailConfirmationState) -> (info: NSAttributedString, action: NSAttributedString) {
         let transformer: ([AttrStringComponent]) -> NSAttributedString = { components in
             components.reduce(into: NSMutableAttributedString(string: "")) { partial, next in
                 switch next {
@@ -131,14 +129,14 @@ final class ActionableInfoViewController: BaseViewController<ActionableInfoState
     }
 }
 
-protocol ActionableInfoViewModelDelegate: AnyObject {
+protocol EmailConfirmationViewModelDelegate: AnyObject {
     func launchCheckYourEmail(email: String)
     func launchForgotPassword(email: String)
 }
 
-extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
+extension EmailConfirmationViewController: EmailConfirmationViewModelDelegate {
     func launchCheckYourEmail(email: String) {
-        let controller = ActionableInfoViewController(
+        let controller = EmailConfirmationViewController(
             state: .checkYourEmail(config: viewModel.state.config, email: email) {
                 try await self.viewModel.loginWithoutPassword(email: email)
             }
@@ -147,7 +145,7 @@ extension ActionableInfoViewController: ActionableInfoViewModelDelegate {
     }
 
     func launchForgotPassword(email: String) {
-        let controller = ActionableInfoViewController(
+        let controller = EmailConfirmationViewController(
             state: .forgotPassword(config: viewModel.state.config, email: email) {
                 try await self.viewModel.forgotPassword(email: email)
             }

@@ -2,9 +2,9 @@ import AuthenticationServices
 import StytchCore
 import UIKit
 
-final class EmailConfirmationViewController: BaseViewController<EmailConfirmationState, EmailConfirmationViewModel> {
-    init(state: EmailConfirmationState) {
-        super.init(viewModel: EmailConfirmationViewModel(state: state))
+final class B2BEmailConfirmationViewController: BaseViewController<B2BEmailConfirmationState, B2BEmailConfirmationViewModel> {
+    init(state: B2BEmailConfirmationState) {
+        super.init(viewModel: B2BEmailConfirmationViewModel(state: state))
     }
 
     override func configureView() {
@@ -62,7 +62,7 @@ final class EmailConfirmationViewController: BaseViewController<EmailConfirmatio
             do {
                 try await viewModel.resendResetPasswordByEmailIfPossible(emailAddress: emailAddress)
                 StytchB2BUIClient.stopLoading()
-                presentAlert(title: "Email Sent!")
+                presentAlert(title: LocalizationManager.stytch_b2b_email_confirmation_email_sent_alert_title)
             } catch {
                 StytchB2BUIClient.stopLoading()
                 ErrorPublisher.publishError(error)

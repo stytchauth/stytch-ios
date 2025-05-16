@@ -57,7 +57,7 @@ final class LabelSeparatorView: UIView {
 extension LabelSeparatorView {
     static func orSeparator() -> Self {
         let view = Self()
-        view.text = NSLocalizedString("stytch.orSeparator", value: "or", comment: "")
+        view.text = LocalizationManager.stytch_or_separator
         return view
     }
 }

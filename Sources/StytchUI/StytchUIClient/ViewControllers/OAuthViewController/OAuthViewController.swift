@@ -22,7 +22,9 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
         attachStackView(within: view)
 
         NSLayoutConstraint.activate(
-            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+            stackView.arrangedSubviews.map {
+                $0.widthAnchor.constraint(equalTo: stackView.widthAnchor)
+            }
         )
     }
 
@@ -66,10 +68,7 @@ private extension OAuthViewController {
     static func makeThirdPartyButton(provider: StytchClient.OAuth.ThirdParty.Provider) -> UIButton {
         let button = Button.secondary(
             image: provider.imageAsset,
-            title: .localizedStringWithFormat(
-                NSLocalizedString("stytch.oauthThirdPartyTitle", value: "Continue with %@", comment: ""),
-                provider.rawValue.capitalized
-            )
+            title: LocalizationManager.stytch_oauth_third_party_title(providerName: provider.rawValue.capitalized)
         ) {}
         button.removeTarget(nil, action: nil, for: .touchUpInside)
         return button

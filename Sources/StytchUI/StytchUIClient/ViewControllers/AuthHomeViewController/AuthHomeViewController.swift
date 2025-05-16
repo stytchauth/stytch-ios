@@ -5,7 +5,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
     private let scrollView: UIScrollView = .init()
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.authTitle", value: "Sign up or log in", comment: "")
+        text: LocalizationManager.stytch_b2c_home_title
     )
 
     init(state: AuthHomeState) {
@@ -81,10 +81,11 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 extension AuthHomeViewController {
     var biometricsButton: UIButton {
         var imageAsset = ImageAsset.biometricsFaceID
-        var title = "Continue with Face ID"
+        var title = LocalizationManager.stytch_b2c_home_biometrics_continue_with_face_id
+
         if StytchClient.biometrics.biometryType == .touchID {
             imageAsset = ImageAsset.biometricsTouchID
-            title = "Continue with Touch ID"
+            title = LocalizationManager.stytch_b2c_home_biometrics_continue_with_touch_id
         }
 
         let button = Button.secondary(

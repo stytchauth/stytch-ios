@@ -68,7 +68,7 @@ final class EmailTextField: BorderedTextField, TextInputType {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        placeholder = NSLocalizedString("stytch.emailPlaceholder", value: "example@company.com", comment: "")
+        placeholder = LocalizationManager.stytch_b2c_email_placeholder
         autocapitalizationType = .none
         autocorrectionType = .no
         textContentType = .emailAddress

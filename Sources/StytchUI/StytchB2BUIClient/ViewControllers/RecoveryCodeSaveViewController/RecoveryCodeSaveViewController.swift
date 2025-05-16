@@ -4,21 +4,21 @@ import UIKit
 
 final class RecoveryCodeSaveViewController: BaseViewController<RecoveryCodeSaveState, RecoveryCodeSaveViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchRecoveryCodeSaveTitle", value: "Save your backup codes!", comment: "")
+        text: LocalizationManager.stytch_b2b_recovery_code_save_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchRecoveryCodeSaveSubtitle", value: "This is the only time you will be able to access and save your backup codes.", comment: "")
+        text: LocalizationManager.stytch_b2b_recovery_code_save_subtitle
     )
 
     private lazy var saveButton: Button = .primary(
-        title: NSLocalizedString("stytchRecoveryCodeSaveButton", value: "Save", comment: "")
+        title: LocalizationManager.stytch_b2b_recovery_code_save_button
     ) { [weak self] in
         self?.saveTapped()
     }
 
     private lazy var copyButton: Button = .primary(
-        title: NSLocalizedString("stytchRecoveryCodeSaveCopy", value: "Copy", comment: "")
+        title: LocalizationManager.stytch_b2b_recovery_code_copy
     ) { [weak self] in
         self?.copyTapped()
     }
@@ -39,7 +39,7 @@ final class RecoveryCodeSaveViewController: BaseViewController<RecoveryCodeSaveS
 
         let doneButton = Button.createTextButton(
             withPlainText: "",
-            boldText: "Done",
+            boldText: LocalizationManager.stytch_b2b_recovery_code_done,
             action: #selector(doneTapped),
             target: self
         )
@@ -75,6 +75,6 @@ final class RecoveryCodeSaveViewController: BaseViewController<RecoveryCodeSaveS
 
     @objc func copyTapped() {
         UIPasteboard.general.string = B2BAuthenticationManager.recoveryCodes.joined(separator: "\n")
-        presentAlert(title: "Recovery Codes Copied!")
+        presentAlert(title: LocalizationManager.stytch_b2b_recovery_code_copied)
     }
 }

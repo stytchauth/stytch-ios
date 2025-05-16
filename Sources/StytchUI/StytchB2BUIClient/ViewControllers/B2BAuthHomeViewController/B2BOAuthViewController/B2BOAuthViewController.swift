@@ -66,10 +66,7 @@ private extension B2BOAuthViewController {
     static func makeOauthButton(provider: StytchB2BClient.OAuth.ThirdParty.Provider) -> UIControl {
         let button = Button.secondary(
             image: provider.imageAsset,
-            title: .localizedStringWithFormat(
-                NSLocalizedString("stytch.oauthThirdPartyTitle", value: "Continue with %@", comment: ""),
-                provider.rawValue.capitalized
-            )
+            title: LocalizationManager.stytch_oauth_third_party_title(providerName: provider.rawValue.capitalized)
         ) {}
         button.removeTarget(nil, action: nil, for: .touchUpInside)
         return button

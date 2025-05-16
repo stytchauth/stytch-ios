@@ -12,7 +12,7 @@ final class SSODiscoveryMenuViewController: BaseViewController<SSODiscoveryMenuS
     override func configureView() {
         super.configureView()
 
-        let titleLabel = UILabel.makeTitleLabel(text: "Select a connection to continue")
+        let titleLabel = UILabel.makeTitleLabel(text: LocalizationManager.stytch_b2b_sso_select_connection)
 
         stackView.addArrangedSubview(titleLabel)
 

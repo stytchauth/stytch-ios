@@ -6,15 +6,15 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
     let otpView = OTPCodeEntryView(frame: .zero)
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchTOTPEntryTitle", value: "Enter verification code", comment: "")
+        text: LocalizationManager.stytch_b2b_totp_entry_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchTOTPEntrySubtitle", value: "Enter the 6-digit code from your authenticator app.", comment: "")
+        text: LocalizationManager.stytch_b2b_totp_entry_subtitle
     )
 
     private let footerLabel: UILabel = .makeFooterLabel(
-        text: NSLocalizedString("stytchTOTPEntryFooter", value: "If the verification code doesn’t work, go back to your authenticator app to get a new code.", comment: "")
+        text: LocalizationManager.stytch_b2b_totp_entry_footer
     )
 
     init(state: TOTPEntryState) {
@@ -39,8 +39,8 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
             stackView.addArrangedSubview(footerLabel)
         } else {
             let useRecoveryCodeButton = Button.createTextButton(
-                withPlainText: "Can't access your authenticator app?",
-                boldText: "Use a backup code.",
+                withPlainText: LocalizationManager.stytch_b2b_totp_cant_access_authenticator_app,
+                boldText: LocalizationManager.stytch_b2b_totp_use_backup_code,
                 action: #selector(useRecoveryCodeButtonTapped),
                 target: self
             )

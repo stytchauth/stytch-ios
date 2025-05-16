@@ -16,14 +16,14 @@ final class B2BEmailViewController: BaseViewController<B2BEmailState, B2BEmailVi
     private lazy var emailInput: EmailInput = .init()
 
     private lazy var continueButton: Button = .primary(
-        title: NSLocalizedString("stytch.pwContinueTitle", value: "Continue with email", comment: "")
+        title: LocalizationManager.stytch_continue_button
     ) { [weak self] in
         self?.continueButtonTapped()
     }
 
     private lazy var usePasswordInsteadButton: Button = {
         let button = Button.tertiary(
-            title: NSLocalizedString("stytch.forgotPassword", value: "Use password instead", comment: "")
+            title: LocalizationManager.stytch_b2b_email_use_password_instead
         ) { [weak self] in
             self?.usePasswordInsteadButtonTapped()
         }
@@ -72,11 +72,7 @@ final class B2BEmailViewController: BaseViewController<B2BEmailState, B2BEmailVi
             case (_, true):
                 input.setFeedback(nil)
             case (true, false):
-                input.setFeedback(
-                    .error(
-                        NSLocalizedString("stytch.invalidEmail", value: "Invalid email address, please try again.", comment: "")
-                    )
-                )
+                input.setFeedback(.error(LocalizationManager.stytch_invalid_email))
             case (false, false):
                 break
             }

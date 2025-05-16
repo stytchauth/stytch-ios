@@ -4,11 +4,11 @@ import UIKit
 
 final class MFAEnrollmentSelectionViewController: BaseViewController<MFAEnrollmentSelectionState, MFAEnrollmentSelectionViewModel> {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchMfaEnrollmentTitle", value: "Set up Multi-Factor Authentication", comment: "")
+        text: LocalizationManager.stytch_b2b_mfa_enrollment_title
     )
 
     private let subtitleLabel: UILabel = .makeSubtitleLabel(
-        text: NSLocalizedString("stytchMfaEnrollmentSubtitle", value: "Add an additional form of verification to make your account more secure.", comment: "")
+        text: LocalizationManager.stytch_b2b_mfa_enrollment_subtitle
     )
 
     init(state: MFAEnrollmentSelectionState) {
@@ -88,9 +88,9 @@ extension StytchB2BClient.MfaMethod {
     var descriptionText: String {
         switch self {
         case .sms:
-            return "Text me a code"
+            return LocalizationManager.stytch_b2b_mfa_selection_text
         case .totp:
-            return "Use an authenticator app"
+            return LocalizationManager.stytch_b2b_mfa_selection_totp
         }
     }
 }

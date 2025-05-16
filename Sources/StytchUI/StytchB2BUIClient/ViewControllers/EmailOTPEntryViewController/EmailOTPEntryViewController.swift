@@ -6,7 +6,7 @@ final class EmailOTPEntryViewController: BaseViewController<EmailOTPEntryState, 
     let otpView = OTPCodeEntryView(frame: .zero)
 
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytchEmailOTPEntryTitle", value: "Enter verification code", comment: "")
+        text: LocalizationManager.stytch_b2b_email_otp_entry_title
     )
 
     var timer: Timer?
@@ -26,7 +26,7 @@ final class EmailOTPEntryViewController: BaseViewController<EmailOTPEntryState, 
         stackView.addArrangedSubview(titleLabel)
 
         let emailConfirmationLabel = UILabel.makeComboLabel(
-            withPlainText: "A 6-digit passcode was sent to you at",
+            withPlainText: LocalizationManager.stytch_b2b_email_otp_passcode_sent,
             boldText: MemberManager.emailAddress,
             fontSize: 18,
             alignment: .left
@@ -92,9 +92,7 @@ extension EmailOTPEntryViewController: OTPEntryViewControllerProtocol {
             return
         }
 
-        presentCodeResetConfirmation(message: .localizedStringWithFormat(
-            NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), emailAddress
-        ))
+        presentCodeResetConfirmation(recipient: emailAddress)
     }
 
     @objc private func updateExpiryText() {

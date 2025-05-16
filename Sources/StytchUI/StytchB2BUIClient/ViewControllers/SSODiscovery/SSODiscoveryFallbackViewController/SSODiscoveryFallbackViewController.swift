@@ -5,7 +5,7 @@ import UIKit
 final class SSODiscoveryFallbackViewController: BaseViewController<SSODiscoveryFallbackState, SSODiscoveryFallbackViewModel> {
     private lazy var organizationSlugInput: OrganizationSlugInput = .init()
 
-    private lazy var continueButton: Button = .primary(title: "Continue") { [weak self] in
+    private lazy var continueButton: Button = .primary(title: LocalizationManager.stytch_continue_button) { [weak self] in
         self?.continueButtonTapped()
     }
 
@@ -16,11 +16,11 @@ final class SSODiscoveryFallbackViewController: BaseViewController<SSODiscoveryF
     override func configureView() {
         super.configureView()
 
-        let titleLabel = UILabel.makeTitleLabel(text: "Sorry, we couldn't find any connections")
-        let subtitleLabel = UILabel.makeSubtitleLabel(text: "Please input the Organization's unique slug to continue. If you don't know the unique slug, log in through another method to view all of your available Organizations.")
+        let titleLabel = UILabel.makeTitleLabel(text: LocalizationManager.stytch_b2b_sso_discovery_fallback_no_connections)
+        let subtitleLabel = UILabel.makeSubtitleLabel(text: LocalizationManager.stytch_b2b_sso_discovery_fallback_enter_org_slug)
 
         let tryAnotherLoginMethodButton = Button.createTextButton(
-            withPlainText: "Try another login method",
+            withPlainText: LocalizationManager.stytch_b2b_sso_discovery_fallback_try_another_login,
             boldText: "",
             action: #selector(tryAnotherLoginMethodTapped),
             target: self

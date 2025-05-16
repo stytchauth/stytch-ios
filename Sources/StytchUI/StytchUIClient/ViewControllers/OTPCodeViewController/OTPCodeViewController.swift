@@ -3,7 +3,7 @@ import UIKit
 
 final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewModel>, OTPEntryViewControllerProtocol {
     private let titleLabel: UILabel = .makeTitleLabel(
-        text: NSLocalizedString("stytch.otpTitle", value: "Enter passcode", comment: "")
+        text: LocalizationManager.stytch_b2c_otp_title
     )
 
     private let inputLabel: UILabel = {
@@ -73,7 +73,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             otpView.heightAnchor.constraint(equalToConstant: 50),
         ])
 
-        let attributedText = NSMutableAttributedString(string: NSLocalizedString("stytch.otpMessage", value: "A 6-digit passcode was sent to you at ", comment: ""))
+        let attributedText = NSMutableAttributedString(string: LocalizationManager.stytch_b2c_otp_message)
         let attributedPhone = NSAttributedString(
             string: viewModel.state.formattedInput,
             attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 18)]
@@ -81,13 +81,13 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         attributedText.append(attributedPhone)
         attributedText.append(.init(string: "."))
         inputLabel.attributedText = attributedText
-        updateExpiryText()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
 
         lowerSeparator.isHidden = !viewModel.state.passwordsEnabled
         passwordTertiaryButton.isHidden = !viewModel.state.passwordsEnabled
 
         otpView.delegate = self
+
+        startTimer()
     }
 
     @objc private func updateExpiryText() {
@@ -95,7 +95,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }
 
     private func launchPassword(email: String) {
-        let controller = ActionableInfoViewController(
+        let controller = EmailConfirmationViewController(
             state: .forgotPassword(config: viewModel.state.config, email: email) {
                 try await self.viewModel.forgotPassword(email: email)
             }
@@ -103,10 +103,18 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         navigationController?.pushViewController(controller, animated: true)
     }
 
+    func startTimer() {
+        timer?.invalidate()
+        timer = nil
+        updateExpiryText()
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateExpiryText), userInfo: nil, repeats: true)
+    }
+
     func resendCode() {
         Task {
             do {
                 try await viewModel.resendCode(input: viewModel.state.input)
+                startTimer()
             } catch {
                 ErrorPublisher.publishError(error)
                 presentErrorAlert(error: error)
@@ -115,9 +123,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }
 
     func presentCodeResetConfirmation() {
-        presentCodeResetConfirmation(message: .localizedStringWithFormat(
-            NSLocalizedString("stytch.otpNewCodeWillBeSent", value: "A new code will be sent to %@.", comment: ""), viewModel.state.formattedInput
-        ))
+        presentCodeResetConfirmation(recipient: viewModel.state.formattedInput)
     }
 }
 
@@ -130,7 +136,7 @@ extension OTPCodeViewController: OTPCodeEntryViewDelegate {
                 StytchUIClient.stopLoading()
             } catch let error as StytchAPIError where error.errorType == .otpCodeNotFound {
                 DispatchQueue.main.async {
-                    self.presentAlert(title: NSLocalizedString("stytch.otpError", value: "Invalid passcode, please try again.", comment: ""))
+                    self.presentAlert(title: LocalizationManager.stytch_b2c_otp_error)
                 }
                 self.otpView.clear()
                 StytchUIClient.stopLoading()
@@ -146,5 +152,5 @@ extension OTPCodeViewController: OTPCodeEntryViewDelegate {
 }
 
 private extension String {
-    static let createPasswordInstead: String = NSLocalizedString("stytch.createPasswordInstead", value: "Create a password instead", comment: "")
+    static let createPasswordInstead: String = LocalizationManager.stytch_b2c_create_password_instead
 }

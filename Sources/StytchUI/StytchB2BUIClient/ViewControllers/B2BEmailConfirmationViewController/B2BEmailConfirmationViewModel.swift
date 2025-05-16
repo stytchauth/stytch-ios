@@ -1,10 +1,10 @@
 import StytchCore
 
-final class EmailConfirmationViewModel {
-    let state: EmailConfirmationState
+final class B2BEmailConfirmationViewModel {
+    let state: B2BEmailConfirmationState
 
     init(
-        state: EmailConfirmationState
+        state: B2BEmailConfirmationState
     ) {
         self.state = state
     }
@@ -14,7 +14,8 @@ final class EmailConfirmationViewModel {
         if state.configuration.computedAuthFlowType == .discovery {
             try await AuthenticationOperations.discoveryResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
         } else {
-            if let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress) {
+            let member = try await AuthenticationOperations.searchMember(emailAddress: emailAddress)
+            if member != nil {
                 try await AuthenticationOperations.organizationResetPasswordByEmailStart(configuration: state.configuration, emailAddress: emailAddress)
             } else {
                 try await AuthenticationOperations.sendEmailMagicLinkIfPossible(configuration: state.configuration, emailAddress: emailAddress)
@@ -23,53 +24,53 @@ final class EmailConfirmationViewModel {
     }
 }
 
-extension EmailConfirmationViewModel {
+extension B2BEmailConfirmationViewModel {
     var title: String {
         switch state.type {
         case .emailConfirmation:
-            return "Check your email"
+            return LocalizationManager.stytch_b2b_email_confirmation_check_email
         case .passwordSetNew:
-            return "Check your email!"
+            return LocalizationManager.stytch_b2b_email_confirmation_check_email
         case .passwordResetVerify:
-            return "Please verify your email"
+            return LocalizationManager.stytch_b2b_email_confirmation_verify_email
         }
     }
 
     var message: String {
         switch state.type {
         case .emailConfirmation:
-            return "An email was sent to"
+            return LocalizationManager.stytch_b2b_email_confirmation_email_sent
         case .passwordSetNew:
-            return "A login link was sent to you at"
+            return LocalizationManager.stytch_b2b_email_confirmation_login_link_sent
         case .passwordResetVerify:
-            return "A login link was sent to you at"
+            return LocalizationManager.stytch_b2b_email_confirmation_login_link_sent
         }
     }
 
     var primarySubtext: String {
         switch state.type {
         case .emailConfirmation:
-            return "Didn’t get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         case .passwordSetNew:
-            return "Didn't get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         case .passwordResetVerify:
-            return "Didn't get it?"
+            return LocalizationManager.stytch_b2b_email_confirmation_didnt_get_it
         }
     }
 
     var secondaryBoldSubtext: String {
         switch state.type {
         case .emailConfirmation:
-            return "Try Again"
+            return LocalizationManager.stytch_b2b_email_confirmation_try_again
         case .passwordSetNew:
-            return "Resend email"
+            return LocalizationManager.stytch_b2b_email_confirmation_resend_email
         case .passwordResetVerify:
-            return "Resend email"
+            return LocalizationManager.stytch_b2b_email_confirmation_resend_email
         }
     }
 }
 
-struct EmailConfirmationState {
+struct B2BEmailConfirmationState {
     let configuration: StytchB2BUIClient.Configuration
     let type: EmailConfirmationType
 }

@@ -92,8 +92,11 @@ For further information and tutorials on some of our more common implementations
 * [OAuth](./tutorials/OAuth.md)
 * [Passwords](./tutorials/Passwords.md)
 * [Sessions](./tutorials/Sessions.md)
+
+### Using The Prebuilt UI for Authentication
 * [Stytch UI - Consumer](./tutorials/UI.md)
 * [Stytch UI - B2B](./tutorials/B2B-UI.md)
+* [Localization](./tutorials/Localization.md)
 
 ## Further Reading
 

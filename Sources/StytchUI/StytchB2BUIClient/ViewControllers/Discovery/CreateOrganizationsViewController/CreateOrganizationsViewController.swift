@@ -3,7 +3,7 @@ import UIKit
 
 class CreateOrganizationViewController: BaseViewController<CreateOrganizationsState, CreateOrganizationsViewModel> {
     private lazy var createOrganizationButton: Button = .primary(
-        title: NSLocalizedString("stytchCreateOrganizationCreateOrganizationButton", value: "Create an organization", comment: "")
+        title: LocalizationManager.stytch_b2b_create_organization_button
     ) { [weak self] in
         self?.createOrganization()
     }
@@ -19,17 +19,14 @@ class CreateOrganizationViewController: BaseViewController<CreateOrganizationsSt
         stackView.spacing = .spacingRegular
 
         let titleLabel: UILabel = .makeTitleLabel(
-            text: NSLocalizedString("stytchCreateOrganizationTitle", value: "Create an organization to get started", comment: "")
+            text: LocalizationManager.stytch_b2b_create_organization_title
         )
         stackView.addArrangedSubview(titleLabel)
 
         stackView.addArrangedSubview(createOrganizationButton)
 
         let subtitleLabel: UILabel = .makeSubtitleLabel(
-            text: .localizedStringWithFormat(
-                NSLocalizedString("stytchCreateOrganizationSubtitle", value: "%@ does not have an account. Think this is a mistake? Try a different email address, or contact your admin.", comment: ""),
-                MemberManager.emailAddress ?? ""
-            )
+            text: LocalizationManager.stytch_b2b_create_organization_subtitle(value: MemberManager.emailAddress ?? "")
         )
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(SpacerView())
