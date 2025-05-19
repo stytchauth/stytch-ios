@@ -107,14 +107,7 @@ public extension NetworkingRouter {
             useDFPPA: useDFPPA
         )
 
-        do {
-            try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
-        } catch let error as StytchAPIError where error.statusCode == 401 {
-            sessionManager.resetSession()
-            throw error
-        } catch {
-            throw error
-        }
+        try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
     }
 
     // swiftlint:disable function_body_length
