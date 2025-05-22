@@ -29,9 +29,9 @@ extension LocalStorage {
         if let cnameDomain = bootstrapData?.cnameDomain {
             domain = cnameDomain
         } else if publicToken.hasPrefix("public-token-test") {
-            domain = "test.stytch.com"
+            domain = configuration?.testDomain ?? "test.stytch.com"
         } else {
-            domain = "api.stytch.com"
+            domain = configuration?.liveDomain ?? "api.stytch.com"
         }
         return domain
     }

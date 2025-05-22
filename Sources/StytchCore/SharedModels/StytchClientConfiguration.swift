@@ -23,6 +23,8 @@ public struct StytchClientConfiguration: Equatable, Codable {
        - publicToken: Available via the Stytch dashboard in the `API keys` section
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
        - dfppaDomain: The domain that should be used for DFPPA
+       - testDomain: The custom domain to use for Stytch API calls for test projects
+       - liveDomain: The custom domain to use for Stytch API calls for live projects
      */
     public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil, testDomain: String = "test.stytch.com", liveDomain: String = "api.stytch.com") {
         self.publicToken = publicToken
