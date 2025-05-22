@@ -7,11 +7,15 @@ public struct StytchClientConfiguration: Equatable, Codable {
         case publicToken = "StytchPublicToken"
         case hostUrl = "StytchHostURL"
         case dfppaDomain = "StytchDfppaDomain"
+        case testDomain = "StytchTestDomain"
+        case liveDomain = "StytchLiveDomain"
     }
 
     public let publicToken: String
     public let hostUrl: URL?
     public let dfppaDomain: String?
+    public let testDomain: String
+    public let liveDomain: String
 
     /**
      Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
@@ -19,11 +23,15 @@ public struct StytchClientConfiguration: Equatable, Codable {
        - publicToken: Available via the Stytch dashboard in the `API keys` section
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted. This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests. If not passed here, no cookies will be set on your behalf.
        - dfppaDomain: The domain that should be used for DFPPA
+       - testDomain: The custom domain to use for Stytch API calls for test projects
+       - liveDomain: The custom domain to use for Stytch API calls for live projects
      */
-    public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil) {
+    public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil, testDomain: String = "test.stytch.com", liveDomain: String = "api.stytch.com") {
         self.publicToken = publicToken
         self.hostUrl = hostUrl
         self.dfppaDomain = dfppaDomain
+        self.testDomain = testDomain
+        self.liveDomain = liveDomain
     }
 
     public var baseUrl: URL {
@@ -32,9 +40,9 @@ public struct StytchClientConfiguration: Equatable, Codable {
         urlComponents.path = "/sdk/v1/"
 
         if publicToken.hasPrefix("public-token-test") {
-            urlComponents.host = "test.stytch.com"
+            urlComponents.host = testDomain
         } else {
-            urlComponents.host = "api.stytch.com"
+            urlComponents.host = liveDomain
         }
 
         guard let url = urlComponents.url else {
@@ -49,6 +57,8 @@ public extension StytchClientConfiguration {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         publicToken = try container.decode(key: .publicToken)
         dfppaDomain = try container.decode(key: .dfppaDomain)
+        testDomain = try container.decode(key: .testDomain)
+        liveDomain = try container.decode(key: .liveDomain)
         do {
             hostUrl = try container.decode(key: .hostUrl)
         } catch {
