@@ -20,7 +20,7 @@ public struct AuthenticationFactor: Sendable {
 }
 
 extension AuthenticationFactor: Equatable {
-    public static func == (lhs: AuthenticationFactor, rhs: AuthenticationFactor) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.rawData == rhs.rawData &&
             lhs.kind == rhs.kind &&
             lhs.lastAuthenticatedAt == rhs.lastAuthenticatedAt

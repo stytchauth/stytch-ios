@@ -1,5 +1,5 @@
 enum AttrStringComponent: Equatable {
-    indirect case bold(AttrStringComponent)
+    indirect case bold(Self)
     case string(String)
 }
 

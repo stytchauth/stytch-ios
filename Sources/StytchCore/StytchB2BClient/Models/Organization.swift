@@ -76,7 +76,7 @@ public struct Organization: OrganizationType {
 }
 
 extension Organization: Equatable {
-    public static func == (lhs: Organization, rhs: Organization) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.name == rhs.name &&
             lhs.slug == rhs.slug &&
             lhs.logoUrl == rhs.logoUrl &&

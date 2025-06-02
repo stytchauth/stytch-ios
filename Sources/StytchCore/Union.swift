@@ -4,6 +4,7 @@ public struct Union<LHS: Sendable, RHS: Sendable>: Sendable {
     let lhs: LHS
     let rhs: RHS
 
+    // swiftlint:disable:next unneeded_synthesized_initializer
     init(lhs: LHS, rhs: RHS) {
         self.lhs = lhs
         self.rhs = rhs

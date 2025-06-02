@@ -55,11 +55,9 @@ extension B2BMFAAuthenticateResponseDataType {
         } else if let defaultMFAMethod = defaultMFAMethod {
             entryMethod = defaultMFAMethod
         } else {
-            for enrolledMFAMethod in enrolledMFAMethods {
-                if organization.isMFAMethodAllowed(enrolledMFAMethod) {
-                    entryMethod = enrolledMFAMethod
-                    break
-                }
+            for enrolledMFAMethod in enrolledMFAMethods where organization.isMFAMethodAllowed(enrolledMFAMethod) {
+                entryMethod = enrolledMFAMethod
+                break
             }
         }
 

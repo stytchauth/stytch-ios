@@ -133,7 +133,7 @@ extension B2BAuthHomeViewController {
             switch viewModel.state.configuration.computedAuthFlowType {
             case .discovery:
                 return LocalizationManager.stytch_b2b_home_sign_up_or_log_in
-            case .organization(slug: _):
+            case .organization:
                 return LocalizationManager.stytch_b2b_home_continue_to_organization(organization: OrganizationManager.name ?? "...")
             }
         }

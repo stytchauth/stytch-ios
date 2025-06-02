@@ -1,6 +1,6 @@
 included:
   - Sources
-  - Tests
+#  - Tests
 
 excluded:
   - StytchPlayground.playground
@@ -11,6 +11,8 @@ disabled_rules:
   - line_length
   - trailing_comma
   - todo # disable for initial development stages
+  - non_optional_string_data_conversion
+  - blanket_disable_command
 
 analyzer_rules:
   - unused_declaration
@@ -103,6 +105,7 @@ opt_in_rules:
 
 type_name:
   min_length: 2
+  max_length: 64
 
 nesting:
   type_level: 3

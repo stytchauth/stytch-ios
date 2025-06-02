@@ -39,7 +39,6 @@ final class SecureTextInput: TextInputView<SecureTextField> {
         return view
     }()
 
-    // swiftlint:disable:next overridden_super_call
     override func setUp() {
         NotificationCenter.default.addObserver(
             forName: UITextField.textDidChangeNotification,

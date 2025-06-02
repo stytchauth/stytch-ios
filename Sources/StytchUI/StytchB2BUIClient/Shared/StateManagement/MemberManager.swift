@@ -3,7 +3,9 @@ import StytchCore
 
 struct MemberManager {
     private(set) static var member: Member?
+    // swiftlint:disable:next identifier_name
     fileprivate private(set) static var _emailAddress: String?
+    // swiftlint:disable:next identifier_name
     fileprivate private(set) static var _phoneNumber: String?
 
     static var memberId: String? {

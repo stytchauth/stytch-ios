@@ -6,7 +6,7 @@ import UIKit
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        static let empty = Configuration(stytchClientConfiguration: .init(publicToken: ""), products: [])
+        static let empty = Self(stytchClientConfiguration: .init(publicToken: ""), products: [])
 
         public let stytchClientConfiguration: StytchClientConfiguration
         public let products: [Products]

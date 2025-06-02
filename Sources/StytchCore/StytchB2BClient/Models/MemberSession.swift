@@ -28,7 +28,7 @@ public struct MemberSession: Codable, Sendable {
 }
 
 extension MemberSession: Equatable {
-    public static func == (lhs: MemberSession, rhs: MemberSession) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id &&
             lhs.organizationId == rhs.organizationId &&
             lhs.memberId == rhs.memberId &&

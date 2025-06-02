@@ -18,7 +18,6 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
 
     private var textField: PhoneNumberTextField { textInput.textField }
 
-    // swiftlint:disable:next overridden_super_call
     override func setUp() {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: .main) { [weak self] _ in
             guard let self else { return }

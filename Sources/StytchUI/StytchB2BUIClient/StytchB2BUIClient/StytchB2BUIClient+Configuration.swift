@@ -6,7 +6,7 @@ import UIKit
 
 public extension StytchB2BUIClient {
     struct Configuration: Codable {
-        public static let empty = Configuration(stytchClientConfiguration: .init(publicToken: ""), products: [], authFlowType: .discovery)
+        public static let empty = Self(stytchClientConfiguration: .init(publicToken: ""), products: [], authFlowType: .discovery)
 
         public let stytchClientConfiguration: StytchClientConfiguration
         public let products: [B2BProducts]
@@ -251,7 +251,7 @@ extension StytchB2BUIClient.Configuration {
         case .discovery:
             // If we are in discovery just return what is passed in the UI config since we have no org set yet
             return oauthProviders
-        case .organization(slug: _):
+        case .organization:
             // If a valid primaryRequired object exists, prioritize its allowed auth methods.
             // Otherwise check the current org for if restricted mode is enabled and if so use its allowedAuthMethods.
             // If so, filter the OAuth provider options based on allowedAuthMethods, giving preference to primaryRequired.
@@ -265,10 +265,8 @@ extension StytchB2BUIClient.Configuration {
 
             if allowedAuthMethods.isEmpty == false {
                 var filteredOauthProviders: [StytchB2BUIClient.B2BOAuthProviderOptions] = []
-                for oauthProvider in oauthProviders {
-                    if allowedAuthMethods.contains(oauthProvider.provider.allowedAuthMethodType) {
-                        filteredOauthProviders.append(oauthProvider)
-                    }
+                for oauthProvider in oauthProviders where allowedAuthMethods.contains(oauthProvider.provider.allowedAuthMethodType) {
+                    filteredOauthProviders.append(oauthProvider)
                 }
                 return filteredOauthProviders
             } else {
