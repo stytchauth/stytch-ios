@@ -91,17 +91,12 @@ class SessionStorageWrapper: ObjectStorageWrapper {
     }
 
     func getObject() throws -> Session? {
-        do {
-            var sessionToReturn: Session? = try keychainClient.getObject(Session.self, for: keychainItem)
-            if let session = sessionToReturn, session.expiresAt.isInThePast {
-                sessionToReturn = nil
-                sessionManager.resetSession()
-            }
-            return sessionToReturn
-        } catch {
+        var sessionToReturn: Session? = try keychainClient.getObject(Session.self, for: keychainItem)
+        if let session = sessionToReturn, session.expiresAt.isInThePast {
+            sessionToReturn = nil
             sessionManager.resetSession()
-            throw error
         }
+        return sessionToReturn
     }
 }
 
@@ -114,17 +109,12 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
     }
 
     func getObject() throws -> MemberSession? {
-        do {
-            var sessionToReturn: MemberSession? = try keychainClient.getObject(MemberSession.self, for: keychainItem)
-            if let session = sessionToReturn, session.expiresAt.isInThePast {
-                sessionToReturn = nil
-                sessionManager.resetSession()
-            }
-            return sessionToReturn
-        } catch {
+        var sessionToReturn: MemberSession? = try keychainClient.getObject(MemberSession.self, for: keychainItem)
+        if let session = sessionToReturn, session.expiresAt.isInThePast {
+            sessionToReturn = nil
             sessionManager.resetSession()
-            throw error
         }
+        return sessionToReturn
     }
 }
 
