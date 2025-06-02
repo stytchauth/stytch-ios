@@ -13,7 +13,7 @@ public class StytchError: Error, Equatable {
         self.message = message
     }
 
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: StytchError, rhs: StytchError) -> Bool {
         lhs.name == rhs.name && lhs.message == rhs.message
     }
 }
