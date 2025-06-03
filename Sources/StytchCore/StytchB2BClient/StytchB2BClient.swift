@@ -61,6 +61,7 @@ public struct StytchB2BClient: StytchClientType {
         instance.configure(newConfiguration: configuration)
     }
 
+    // swiftlint:disable:next orphaned_doc_comment
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     // swiftlint:disable:next large_tuple
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, DeeplinkRedirectType, String)? {
@@ -95,7 +96,7 @@ public extension StytchB2BClient {
         case unknown
 
         init(_ string: String?) {
-            if let value = string, let type = DeeplinkRedirectType(rawValue: value) {
+            if let value = string, let type = Self(rawValue: value) {
                 self = type
             } else {
                 self = .unknown

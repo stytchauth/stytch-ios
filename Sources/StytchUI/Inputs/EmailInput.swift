@@ -15,7 +15,6 @@ final class EmailInput: TextInputView<EmailTextField> {
 
     var text: String? { textInput.text }
 
-    // swiftlint:disable:next overridden_super_call
     override func setUp() {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
             guard let self else { return }

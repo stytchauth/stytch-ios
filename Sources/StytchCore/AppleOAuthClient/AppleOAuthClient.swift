@@ -3,7 +3,7 @@ import AuthenticationServices
 struct AppleOAuthClient {
     private var authenticate: (@escaping (ASAuthorizationController) -> Void, String) async throws -> Result
 
-    init(authenticate: @escaping (@escaping (ASAuthorizationController) -> Void, String) async throws -> AppleOAuthClient.Result) {
+    init(authenticate: @escaping (@escaping (ASAuthorizationController) -> Void, String) async throws -> Self.Result) {
         self.authenticate = authenticate
     }
 

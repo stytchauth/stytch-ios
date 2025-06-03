@@ -3,11 +3,9 @@ import StytchCore
 import SwiftUI
 import UIKit
 
-// swiftlint:disable modifier_order prefer_self_in_static_references
-
 public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    public private(set) static var configuration = StytchB2BUIClient.Configuration.empty
+    public private(set) static var configuration = Self.Configuration.empty
 
     public static var dismissUI: AnyPublisher<Void, Never> {
         B2BAuthenticationManager.dismissUI
@@ -18,14 +16,14 @@ public enum StytchB2BUIClient {
     }
 
     fileprivate static var cancellable: AnyCancellable?
-    fileprivate weak static var currentController: B2BAuthRootViewController?
+    fileprivate static weak var currentController: B2BAuthRootViewController?
 
     /// Configures the `StytchB2BUIClient`.
     /// - Parameters:
     ///   - configuration: Defines the configuration for `StytchB2BUIClient`, including authentication methods, session settings,
     ///     UI customization, and organizational options. This object controls how users authenticate,
     ///     which authentication flows are available, and the overall user experience within the B2B UI.
-    public static func configure(configuration: StytchB2BUIClient.Configuration) {
+    public static func configure(configuration: Self.Configuration) {
         reset()
         StytchB2BClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()

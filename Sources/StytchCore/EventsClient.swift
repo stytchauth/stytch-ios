@@ -59,7 +59,7 @@ extension EventsClient {
         let telemetry: Telemetry
         let event: Event
 
-        public init(telemetry: Telemetry, event: Event) {
+        init(telemetry: Telemetry, event: Event) {
             self.telemetry = telemetry
             self.event = event
         }
@@ -76,7 +76,7 @@ extension EventsClient {
             let sdk: ClientInfo.SDK
             let device: ClientInfo.Device
 
-            public init(
+            init(
                 eventId: String,
                 appSessionId: String,
                 persistentId: String,
@@ -103,7 +103,7 @@ extension EventsClient {
                 let identifier: String
                 let version: String?
 
-                public init(identifier: String, version: String? = nil) {
+                init(identifier: String, version: String? = nil) {
                     self.identifier = identifier
                     self.version = version
                 }
@@ -113,7 +113,7 @@ extension EventsClient {
                 let model: String?
                 let screenSize: String?
 
-                public init(model: String?, screenSize: String? = nil) {
+                init(model: String?, screenSize: String? = nil) {
                     self.model = model
                     self.screenSize = screenSize
                 }
@@ -126,7 +126,7 @@ extension EventsClient {
             let details: [String: String]?
             let errorDescription: String?
 
-            public init(publicToken: String, eventName: String, details: [String: String]? = nil, error: Error? = nil) {
+            init(publicToken: String, eventName: String, details: [String: String]? = nil, error: Error? = nil) {
                 self.publicToken = publicToken
                 self.eventName = eventName
                 self.details = details

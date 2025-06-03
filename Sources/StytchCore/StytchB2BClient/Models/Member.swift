@@ -61,7 +61,7 @@ public struct Member: Codable, Sendable {
 }
 
 extension Member: Equatable {
-    public static func == (lhs: Member, rhs: Member) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.organizationId == rhs.organizationId &&
             lhs.id == rhs.id &&
             lhs.emailAddress == rhs.emailAddress &&

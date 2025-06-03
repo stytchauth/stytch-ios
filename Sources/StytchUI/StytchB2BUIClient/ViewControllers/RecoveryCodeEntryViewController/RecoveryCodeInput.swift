@@ -5,7 +5,6 @@ final class RecoveryCodeInput: TextInputView<RecoveryCodeTextField> {
 
     var onReturn: (Bool) -> Void = { _ in }
 
-    // swiftlint:disable:next overridden_super_call
     override func setUp() {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textInput, queue: .main) { [weak self] _ in
             guard let self else { return }

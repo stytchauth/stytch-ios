@@ -3,12 +3,10 @@ import StytchCore
 import SwiftUI
 import UIKit
 
-// swiftlint:disable prefer_self_in_static_references modifier_order
-
 /// This type serves as the entry point for all usages of the Stytch authentication UI.
 public enum StytchUIClient {
     /// The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
-    public private(set) static var configuration = StytchUIClient.Configuration.empty
+    public private(set) static var configuration = Self.Configuration.empty
 
     private static let dismissUIPublisher = PassthroughSubject<Void, Never>()
     public static var dismissUI: AnyPublisher<Void, Never> {
@@ -22,7 +20,7 @@ public enum StytchUIClient {
     /// Used to store pending reset emails so as to preserve state
     static var pendingResetEmail: String?
 
-    fileprivate weak static var currentController: AuthRootViewController?
+    fileprivate static weak var currentController: AuthRootViewController?
     fileprivate static var cancellable: AnyCancellable?
 
     /// Configures the `StytchUIClient`
@@ -30,7 +28,7 @@ public enum StytchUIClient {
     ///   - configuration: Defines the configuration for `StytchConsumerUIClient`, including authentication methods, session settings,
     ///     UI customization, and user experience options. This object controls how consumers authenticate,
     ///     which authentication flows are available, and the overall look and feel of the Consumer UI.
-    public static func configure(configuration: StytchUIClient.Configuration) {
+    public static func configure(configuration: Self.Configuration) {
         StytchClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()
         Self.configuration = configuration

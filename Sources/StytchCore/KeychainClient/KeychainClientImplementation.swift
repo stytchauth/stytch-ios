@@ -53,6 +53,10 @@ class KeychainClientImplementation: KeychainClient {
             status = SecItemCopyMatching(query as CFDictionary, &result)
         }
 
+        if let status = status, ![errSecSuccess, errSecItemNotFound].contains(status) {
+            throw KeychainError.unhandledError(status: status)
+        }
+
         guard case errSecSuccess = status else {
             return []
         }

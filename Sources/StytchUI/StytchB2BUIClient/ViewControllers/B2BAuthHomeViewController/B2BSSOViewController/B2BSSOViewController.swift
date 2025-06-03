@@ -27,7 +27,7 @@ final class B2BSSOViewController: BaseViewController<SSOState, SSOViewModel> {
             let button = makeSSODiscoveryButton()
             button.addTarget(self, action: #selector(didTapSSODiscoveryButton(sender:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
-        case .organization(slug: _):
+        case .organization:
             ssoActiveConnections.enumerated().forEach { index, ssoActiveConnection in
                 let button = makeSSOButton(ssoActiveConnection: ssoActiveConnection)
                 button.tag = index

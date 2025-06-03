@@ -69,10 +69,8 @@ extension StytchB2BUIClient {
         oauthProviders: [B2BOAuthProviderOptions]
     ) -> Bool {
         var isValidOAuthConfiguration = false
-        for oauthProviderOptions in oauthProviders {
-            if isAllowedOAuthProvider(allowedAuthMethods: allowedAuthMethods, oauthProviderOptions: oauthProviderOptions) == true {
-                isValidOAuthConfiguration = true
-            }
+        for oauthProviderOptions in oauthProviders where isAllowedOAuthProvider(allowedAuthMethods: allowedAuthMethods, oauthProviderOptions: oauthProviderOptions) == true {
+            isValidOAuthConfiguration = true
         }
 
         return isValidOAuthConfiguration

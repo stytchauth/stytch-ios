@@ -6,9 +6,9 @@ import Foundation
 /// StytchObjectInfo provides a generic way to unify the publishing of Stytch object types.
 /// If there is an object to publish you will get `case available(T, Date)`, which will publish the object
 /// and the date is was last validated at. The receiver of the event if the object is within their time tolerance for use.
-/// If there is no object to publish you will get `case unavailable`. So the publisher will never have to publish a nil value.
+/// If there is no object to publish you will get `case unavailable(KeychainError?)`. So the publisher will never have to publish a nil value.
 public enum StytchObjectInfo<T: Equatable>: Equatable {
-    case unavailable
+    case unavailable(KeychainError?)
     case available(T, Date)
 }
 
@@ -23,7 +23,7 @@ protocol ObjectStorageWrapper {
     var lastValidatedAtDate: Date? { get }
     var keychainItem: KeychainItem { get }
     func setObject(object: ObjectType?)
-    func getObject() -> ObjectType?
+    func getObject() throws -> ObjectType?
 }
 
 extension ObjectStorageWrapper {
@@ -59,7 +59,7 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
     }
 
     var object: WrapperType.ObjectType? {
-        objectWrapper.getObject()
+        try? objectWrapper.getObject()
     }
 
     func update(_ object: WrapperType.ObjectType?) {
@@ -68,10 +68,16 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
     }
 
     private func publish() {
-        if let object = object, let lastValidatedAtDate = objectWrapper.lastValidatedAtDate {
-            _onChange.send(.available(object, lastValidatedAtDate))
-        } else {
-            _onChange.send(.unavailable)
+        do {
+            if let object = try objectWrapper.getObject(), let lastValidatedAtDate = objectWrapper.lastValidatedAtDate {
+                _onChange.send(.available(object, lastValidatedAtDate))
+            } else {
+                _onChange.send(.unavailable(nil))
+            }
+        } catch let error as KeychainError {
+            _onChange.send(.unavailable(error))
+        } catch {
+            _onChange.send(.unavailable(nil))
         }
     }
 }
@@ -84,8 +90,8 @@ class SessionStorageWrapper: ObjectStorageWrapper {
         try? keychainClient.setObject(object, for: keychainItem)
     }
 
-    func getObject() -> Session? {
-        var sessionToReturn: Session? = try? keychainClient.getObject(Session.self, for: keychainItem)
+    func getObject() throws -> Session? {
+        var sessionToReturn: Session? = try keychainClient.getObject(Session.self, for: keychainItem)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -102,8 +108,8 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
         try? keychainClient.setObject(object, for: keychainItem)
     }
 
-    func getObject() -> MemberSession? {
-        var sessionToReturn: MemberSession? = try? keychainClient.getObject(MemberSession.self, for: keychainItem)
+    func getObject() throws -> MemberSession? {
+        var sessionToReturn: MemberSession? = try keychainClient.getObject(MemberSession.self, for: keychainItem)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -119,8 +125,8 @@ class UserStorageWrapper: ObjectStorageWrapper {
         try? keychainClient.setObject(object, for: keychainItem)
     }
 
-    func getObject() -> User? {
-        try? keychainClient.getObject(User.self, for: keychainItem)
+    func getObject() throws -> User? {
+        try keychainClient.getObject(User.self, for: keychainItem)
     }
 }
 
@@ -131,8 +137,8 @@ class MemberStorageWrapper: ObjectStorageWrapper {
         try? keychainClient.setObject(object, for: keychainItem)
     }
 
-    func getObject() -> Member? {
-        try? keychainClient.getObject(Member.self, for: keychainItem)
+    func getObject() throws -> Member? {
+        try keychainClient.getObject(Member.self, for: keychainItem)
     }
 }
 
@@ -143,8 +149,8 @@ class OrganizationStorageWrapper: ObjectStorageWrapper {
         try? keychainClient.setObject(object, for: keychainItem)
     }
 
-    func getObject() -> Organization? {
-        try? keychainClient.getObject(Organization.self, for: keychainItem)
+    func getObject() throws -> Organization? {
+        try keychainClient.getObject(Organization.self, for: keychainItem)
     }
 }
 

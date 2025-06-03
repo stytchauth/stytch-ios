@@ -22,9 +22,11 @@ extension WebAuthenticationSessionClient {
     struct Parameters {
         let url: URL
         let callbackUrlScheme: String
+
         #if !os(tvOS)
         let presentationContextProvider: ASWebAuthenticationPresentationContextProviding
         #endif
+
         let clientType: ClientType
     }
 }

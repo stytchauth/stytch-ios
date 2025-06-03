@@ -25,7 +25,7 @@ public struct Session: Sendable {
     /// The date this session was last accessed.
     public let lastAccessedAt: Date
     /// The id for this session.
-    public let sessionId: Session.ID
+    public let sessionId: Self.ID
     /// The date this session began.
     public let startedAt: Date
     /// The user id associated with this session.
@@ -33,7 +33,7 @@ public struct Session: Sendable {
 }
 
 extension Session: Equatable {
-    public static func == (lhs: Session, rhs: Session) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.attributes == rhs.attributes &&
             lhs.authenticationFactors == rhs.authenticationFactors &&
             lhs.expiresAt == rhs.expiresAt &&
@@ -78,7 +78,7 @@ public extension Session {
         /// The user agent associated with a session.
         public let userAgent: String
 
-        public static func == (lhs: Attributes, rhs: Attributes) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.ipAddress == rhs.ipAddress &&
                 lhs.userAgent == rhs.userAgent
         }

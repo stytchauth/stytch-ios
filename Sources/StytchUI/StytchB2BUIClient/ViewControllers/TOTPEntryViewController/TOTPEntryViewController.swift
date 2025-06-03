@@ -21,10 +21,6 @@ final class TOTPEntryViewController: BaseViewController<TOTPEntryState, TOTPEntr
         super.init(viewModel: TOTPEntryViewModel(state: state))
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     override func configureView() {
         super.configureView()
 
