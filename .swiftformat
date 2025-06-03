@@ -38,5 +38,5 @@
 --wrapcollections preserve
 
 # rules
-
+--disable modifierOrder
 --enable isEmpty

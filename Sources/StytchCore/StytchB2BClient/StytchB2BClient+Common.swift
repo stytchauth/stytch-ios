@@ -185,7 +185,7 @@ public extension StytchB2BClient {
 
         let registrationId: ID
 
-        public static func == (lhs: SSORegistration, rhs: SSORegistration) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id &&
                 lhs.connectionId == rhs.connectionId &&
                 lhs.externalId == rhs.externalId &&

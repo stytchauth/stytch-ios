@@ -6,9 +6,11 @@ import Foundation
 @available(tvOS 16.0, *)
 public protocol WebAuthenticationSessionClientConfiguration {
     var clientType: ClientType { get }
+
     #if !os(tvOS)
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? { get }
     #endif
+
     func startUrl(_ providerName: String) throws -> URL
     func callbackUrlScheme() throws -> String
 }

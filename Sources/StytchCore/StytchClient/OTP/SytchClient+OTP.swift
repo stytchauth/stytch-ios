@@ -148,11 +148,11 @@ public extension StytchClient.OTP {
 
         var shouldUseDFPPA: Bool {
             switch self {
-            case .sms(phoneNumber: _, enableAutofill: _):
+            case .sms:
                 return true
-            case .whatsapp(phoneNumber: _):
+            case .whatsapp:
                 return true
-            case .email(email: _, loginTemplateId: _, signupTemplateId: _):
+            case .email:
                 return false
             }
         }

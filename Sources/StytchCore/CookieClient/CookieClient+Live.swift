@@ -1,9 +1,9 @@
 import Foundation
 
 extension CookieClient {
-    // swiftlint:disable:next trailing_closure
     static let live: Self = .init(
         setCookie: HTTPCookieStorage.shared.setCookie(_:),
+        // swiftlint:disable:next trailing_closure
         deleteCookieNamed: { name in
             HTTPCookieStorage.shared.cookies?
                 .filter { $0.name == name }

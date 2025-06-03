@@ -61,6 +61,7 @@ public struct StytchClient: StytchClientType {
         instance.configure(newConfiguration: configuration)
     }
 
+    // swiftlint:disable:next orphaned_doc_comment
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     // swiftlint:disable:next large_tuple
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, DeeplinkRedirectType, String)? {

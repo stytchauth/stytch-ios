@@ -192,8 +192,8 @@ public extension StytchClient.Passwords {
         }
 
         public static func == (
-            lhs: ResetByEmailStartParameters,
-            rhs: ResetByEmailStartParameters
+            lhs: Self,
+            rhs: Self
         ) -> Bool {
             lhs.email == rhs.email &&
                 lhs.loginRedirectUrl == rhs.loginRedirectUrl &&

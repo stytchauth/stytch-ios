@@ -123,7 +123,6 @@ public extension StytchClient.Passkeys {
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
     struct AuthenticateParameters: Sendable {
-        // swiftlint:disable duplicate_enum_cases
         /// A type representing the desired request behavior
         public enum RequestBehavior: Sendable {
             #if os(iOS)
@@ -344,6 +343,7 @@ public struct PasskeysUpdateRequest: Codable, Sendable {
 
     let name: String
 
+    // swiftlint:disable:next unneeded_synthesized_initializer
     init(name: String) {
         self.name = name
     }

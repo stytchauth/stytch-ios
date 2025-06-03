@@ -90,7 +90,7 @@ public extension StytchClient.MagicLinks.Email {
             self.locale = locale
         }
 
-        public static func == (lhs: Parameters, rhs: Parameters) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.loginMagicLinkUrl == rhs.loginMagicLinkUrl &&
                 lhs.loginExpirationMinutes == rhs.loginExpirationMinutes &&
                 lhs.loginTemplateId == rhs.loginTemplateId &&

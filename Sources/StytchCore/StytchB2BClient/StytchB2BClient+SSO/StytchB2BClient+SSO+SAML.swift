@@ -145,7 +145,6 @@ public extension StytchB2BClient.SSO.SAML {
     }
 }
 
-// swiftlint:disable type_name
 public extension StytchB2BClient.SSO.SAML {
     /// The response type for delete verification certificate calls.
     typealias SAMLDeleteVerificationCertificateResponse = Response<SAMLDeleteVerificationCertificateResponseData>

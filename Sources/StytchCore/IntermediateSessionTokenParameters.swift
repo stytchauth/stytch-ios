@@ -1,7 +1,5 @@
 import Foundation
 
-// swiftlint:disable type_name
-
 struct IntermediateSessionTokenParameters<T: Encodable>: Encodable {
     private enum CodingKeys: String, CodingKey {
         case intermediateSessionToken
@@ -10,6 +8,7 @@ struct IntermediateSessionTokenParameters<T: Encodable>: Encodable {
     let intermediateSessionToken: String?
     let wrapped: T
 
+    // swiftlint:disable:next unneeded_synthesized_initializer
     init(intermediateSessionToken: String?, wrapped: T) {
         self.intermediateSessionToken = intermediateSessionToken
         self.wrapped = wrapped
@@ -27,6 +26,7 @@ struct IntermediateSessionTokenParameters<T: Encodable>: Encodable {
 struct IntermediateSessionTokenParametersWithNoWrappedValue: Codable {
     let intermediateSessionToken: String?
 
+    // swiftlint:disable:next unneeded_synthesized_initializer
     init(intermediateSessionToken: String?) {
         self.intermediateSessionToken = intermediateSessionToken
     }
