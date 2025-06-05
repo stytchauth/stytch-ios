@@ -674,6 +674,7 @@ public enum StytchAPIErrorType: String, Codable {
     case totpCodeUsedAsRecoveryCode = "totp_code_used_as_recovery_code"
     case totpNotFound = "totp_not_found"
     case totpsNotFoundForUser = "totps_not_found_for_user"
+    case trustedTokenProfileNotFound = "trusted_token_profile_not_found"
     case twitter401 = "twitter_401"
     case twitter403 = "twitter_403"
     case unableToAuthBiometricRegistration = "unable_to_auth_biometric_registration"
