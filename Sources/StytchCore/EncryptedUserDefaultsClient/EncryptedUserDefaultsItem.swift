@@ -8,7 +8,6 @@ struct EncryptedUserDefaultsItem {
 extension EncryptedUserDefaultsItem {
     enum Kind {
         case encrypted
-        case unencrypted
     }
 }
 

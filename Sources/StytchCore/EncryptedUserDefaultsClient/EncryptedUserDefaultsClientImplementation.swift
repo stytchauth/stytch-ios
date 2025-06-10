@@ -14,12 +14,6 @@ class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClient {
 
     func getItem(item: EncryptedUserDefaultsItem) throws -> EncryptedUserDefaultsItemResult? {
         let userDefaultsData = defaults.data(forKey: item.name)
-        if item.kind == .unencrypted {
-            guard let userDefaultsData else {
-                return nil
-            }
-            return .init(data: userDefaultsData)
-        }
         guard let decrypted = decryptData(encryptedData: userDefaultsData) else {
             return nil
         }
