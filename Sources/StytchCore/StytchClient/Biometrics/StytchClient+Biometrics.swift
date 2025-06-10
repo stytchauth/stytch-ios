@@ -57,10 +57,7 @@ public extension StytchClient {
         }
 
         public var biometricRegistrationId: String? {
-            guard let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(item: .biometricKeyRegistration).first else {
-                return nil
-            }
-            return biometricKeyRegistrationQueryResult.stringValue
+            return try? userDefaultsClient.getStringValue(.biometricKeyRegistration)
         }
 
         /// Indicates if biometrics are available

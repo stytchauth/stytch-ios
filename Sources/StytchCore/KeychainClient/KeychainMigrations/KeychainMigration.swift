@@ -11,6 +11,7 @@ extension KeychainClient {
             KeychainMigration1.self,
             KeychainMigration2.self,
             KeychainMigration3.self,
+            KeychainMigration4.self,
         ]
     }
 }
