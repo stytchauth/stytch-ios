@@ -32,6 +32,6 @@ extension EncryptedUserDefaultsItem {
     static let consumerLastAuthMethodUsed: Self = .init(name: "consumer_last_auth_method_used")
 
     static func lastValidatedAtDate(_ prefix: String) -> Self {
-        return .init(name: "\(prefix)_last_validated_at_date")
+        .init(name: "\(prefix)_last_validated_at_date")
     }
 }

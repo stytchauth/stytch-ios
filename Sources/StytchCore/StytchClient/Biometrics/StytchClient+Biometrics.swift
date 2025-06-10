@@ -57,7 +57,7 @@ public extension StytchClient {
         }
 
         public var biometricRegistrationId: String? {
-            return try? userDefaultsClient.getStringValue(.biometricKeyRegistration)
+            try? userDefaultsClient.getStringValue(.biometricKeyRegistration)
         }
 
         /// Indicates if biometrics are available

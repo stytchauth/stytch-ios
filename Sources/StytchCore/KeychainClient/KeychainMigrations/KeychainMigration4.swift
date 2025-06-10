@@ -21,7 +21,7 @@ struct KeychainMigration4: KeychainMigration {
             (KeychainItem.b2bLastAuthMethodUsed, EncryptedUserDefaultsItem.b2bLastAuthMethodUsed),
             (KeychainItem.consumerLastAuthMethodUsed, EncryptedUserDefaultsItem.consumerLastAuthMethodUsed),
         ]
-        .forEach { (keyChainKey, userDefaultsKey) in
+        .forEach { keyChainKey, userDefaultsKey in
             // fetch data from keychain
             let results = try keychainClient.getQueryResults(item: keyChainKey)
             guard let keychainData = results.first, let keychainDataString = keychainData.stringValue else { return }

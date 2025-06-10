@@ -1,11 +1,11 @@
+import CryptoKit
 import Foundation
 import Security
-import CryptoKit
 #if !os(tvOS)
 import LocalAuthentication
 #endif
 
-public let AES_ACCOUNT = "EncryptedUserDefaultsKey"
+public let ENCRYPTEDUSERDEFAULTSKEYNAME = "EncryptedUserDefaultsKey"
 
 class KeychainClientImplementation: KeychainClient {
     func getEncryptionKey() throws -> SymmetricKey {
@@ -13,14 +13,15 @@ class KeychainClientImplementation: KeychainClient {
         guard let result else {
             // Key doesn't exist so create it
             let data = SymmetricKey(size: .bits256).withUnsafeBytes {
-                return Data(Array($0))
+                Data(Array($0))
             }
-            try setValueForItem(value: .init(data: data, account: AES_ACCOUNT, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
+            try setValueForItem(value: .init(data: data, account: ENCRYPTEDUSERDEFAULTSKEYNAME, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
             return SymmetricKey(data: data)
         }
         return SymmetricKey(data: result.data)
     }
 
+    // swiftlint:disable:next function_body_length
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult] {
         var result: CFTypeRef?
 
@@ -65,7 +66,7 @@ class KeychainClientImplementation: KeychainClient {
             }
         } else if item.kind == .encryptionKey {
             var newQuery = query
-            newQuery[kSecAttrAccount] = AES_ACCOUNT
+            newQuery[kSecAttrAccount] = ENCRYPTEDUSERDEFAULTSKEYNAME
             status = SecItemCopyMatching(newQuery as CFDictionary, &result)
         } else {
             status = SecItemCopyMatching(query as CFDictionary, &result)

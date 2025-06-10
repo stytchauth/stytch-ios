@@ -37,3 +37,7 @@ struct EncryptedUserDefaultsItemResult {
         String(data: data, encoding: .utf8)
     }
 }
+
+enum EncryptedUserDefaultsError: Error {
+    case encryptionKeyNotSet
+}

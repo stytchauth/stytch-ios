@@ -1,5 +1,5 @@
-import Foundation
 import CryptoKit
+import Foundation
 
 protocol KeychainClient: AnyObject {
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult]
