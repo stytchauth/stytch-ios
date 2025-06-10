@@ -71,6 +71,8 @@ struct Environment {
 
     var keychainClient: KeychainClient = KeychainClientImplementation()
 
+    let userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation(keychainClient: KeychainClientImplementation())
+
     var networkMonitor: NetworkMonitor = .init()
 
     // consumer
@@ -122,7 +124,7 @@ struct Environment {
 
     var pkcePairManager: PKCEPairManager {
         PKCEPairManagerImpl(
-            keychainClient: keychainClient,
+            userDefaultsClient: userDefaultsClient,
             cryptoClient: cryptoClient
         )
     }

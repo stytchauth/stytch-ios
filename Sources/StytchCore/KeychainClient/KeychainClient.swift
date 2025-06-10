@@ -1,43 +1,17 @@
 import Foundation
+import CryptoKit
 
 protocol KeychainClient: AnyObject {
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult]
     func valueExistsForItem(item: KeychainItem) -> Bool
     func setValueForItem(value: KeychainItem.Value, item: KeychainItem) throws
     func removeItem(item: KeychainItem) throws
+    func getEncryptionKey() throws -> SymmetricKey
 }
 
 extension KeychainClient {
     func getFirstQueryResult(_ item: KeychainItem) throws -> KeychainQueryResult? {
         try getQueryResults(item: item).first
-    }
-
-    func getStringValue(_ item: KeychainItem) throws -> String? {
-        try getQueryResults(item: item)
-            .first
-            .flatMap(\.stringValue)
-    }
-
-    func getObject<T: Decodable>(_: T.Type, for item: KeychainItem) throws -> T? {
-        guard let result = try getFirstQueryResult(item) else {
-            return nil
-        }
-        return try Current.jsonDecoder.decode(T.self, from: result.data)
-    }
-
-    func setStringValue(_ value: String, for item: KeychainItem) throws {
-        try setValueForItem(
-            value: .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil),
-            item: item
-        )
-    }
-
-    func setObject(_ object: any Codable, for item: KeychainItem) throws {
-        let encodedData = try Current.jsonEncoder.encode(object)
-        try setValueForItem(
-            value: .init(data: encodedData, account: nil, label: nil, generic: nil, accessPolicy: nil),
-            item: item
-        )
     }
 
     func setPrivateKeyRegistration(

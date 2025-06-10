@@ -22,7 +22,7 @@ class SessionManager {
     @Dependency(\.memberStorage) private var memberStorage
     @Dependency(\.organizationStorage) private var organizationStorage
     @Dependency(\.cookieClient) private var cookieClient
-    @Dependency(\.keychainClient) private var keychainClient
+    @Dependency(\.userDefaultsClient) private var userDefaultsClient
     @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
     @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
     @Dependency(\.date) private var date
@@ -146,30 +146,30 @@ class SessionManager {
 extension SessionManager {
     private(set) var sessionToken: SessionToken? {
         get {
-            try? keychainClient.getStringValue(.sessionToken).map(SessionToken.opaque)
+            try? userDefaultsClient.getStringValue(.sessionToken).map(SessionToken.opaque)
         }
         set {
-            let keychainItem: KeychainItem = .sessionToken
+            let userDefaultsItem: EncryptedUserDefaultsItem = .sessionToken
             if let newValue = newValue {
-                try? keychainClient.setStringValue(newValue.value, for: keychainItem)
+                try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
             } else {
-                try? keychainClient.removeItem(item: keychainItem)
-                cookieClient.deleteCookie(named: keychainItem.name)
+                try? userDefaultsClient.removeItem(item: userDefaultsItem)
+                cookieClient.deleteCookie(named: userDefaultsItem.name)
             }
         }
     }
 
     private(set) var sessionJwt: SessionToken? {
         get {
-            try? keychainClient.getStringValue(.sessionJwt).map(SessionToken.jwt)
+            try? userDefaultsClient.getStringValue(.sessionJwt).map(SessionToken.jwt)
         }
         set {
-            let keychainItem: KeychainItem = .sessionJwt
+            let userDefaultsItem: EncryptedUserDefaultsItem = .sessionJwt
             if let newValue = newValue {
-                try? keychainClient.setStringValue(newValue.value, for: keychainItem)
+                try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
             } else {
-                try? keychainClient.removeItem(item: keychainItem)
-                cookieClient.deleteCookie(named: keychainItem.name)
+                try? userDefaultsClient.removeItem(item: userDefaultsItem)
+                cookieClient.deleteCookie(named: userDefaultsItem.name)
             }
         }
     }
@@ -183,11 +183,13 @@ extension SessionManager {
                 // Retrieve the IST from the keychain and check its age.
                 // If it's less than 10 minutes old, return it.
                 // Otherwise, remove it from the keychain and cookie storage.
-                guard let result = try keychainClient.getFirstQueryResult(.intermediateSessionToken) else {
+                guard let result = try userDefaultsClient.getItem(item: .intermediateSessionToken) else {
                     return nil
                 }
-
-                if isValidIntermediateSessionToken(result.createdAt), result.stringValue?.isEmpty == false {
+                guard let istLastValidatedAtDate = try userDefaultsClient.getObject(Date.self, for: .lastValidatedAtDate(EncryptedUserDefaultsItem.intermediateSessionToken.name)) else {
+                    return nil
+                }
+                if isValidIntermediateSessionToken(istLastValidatedAtDate), result.stringValue?.isEmpty == false {
                     return result.stringValue
                 } else {
                     removeIntermediateSessionToken()
@@ -201,7 +203,7 @@ extension SessionManager {
         set {
             do {
                 if let newIST = newValue, newIST.isEmpty == false {
-                    try keychainClient.setStringValue(newIST, for: .intermediateSessionToken)
+                    try userDefaultsClient.setStringValue(newIST, for: .intermediateSessionToken)
                 } else {
                     removeIntermediateSessionToken()
                 }
@@ -217,9 +219,9 @@ extension SessionManager {
     }
 
     private func removeIntermediateSessionToken() {
-        let keychainItem: KeychainItem = .intermediateSessionToken
-        try? keychainClient.removeItem(item: keychainItem)
-        cookieClient.deleteCookie(named: keychainItem.name)
+        let userDefaultsItem: EncryptedUserDefaultsItem = .intermediateSessionToken
+        try? userDefaultsClient.removeItem(item: userDefaultsItem)
+        cookieClient.deleteCookie(named: userDefaultsItem.name)
     }
 }
 
@@ -227,27 +229,27 @@ extension SessionManager {
 extension SessionManager {
     var b2bLastAuthMethodUsed: StytchB2BClient.B2BAuthMethod {
         get {
-            if let string = try? keychainClient.getStringValue(.b2bLastAuthMethodUsed) {
+            if let string = try? userDefaultsClient.getStringValue(.b2bLastAuthMethodUsed) {
                 return StytchB2BClient.B2BAuthMethod(rawValue: string) ?? .unknown
             } else {
                 return StytchB2BClient.B2BAuthMethod.unknown
             }
         }
         set {
-            try? keychainClient.setStringValue(newValue.rawValue, for: .b2bLastAuthMethodUsed)
+            try? userDefaultsClient.setStringValue(newValue.rawValue, for: .b2bLastAuthMethodUsed)
         }
     }
 
     var consumerLastAuthMethodUsed: StytchClient.ConsumerAuthMethod {
         get {
-            if let string = try? keychainClient.getStringValue(.consumerLastAuthMethodUsed) {
+            if let string = try? userDefaultsClient.getStringValue(.consumerLastAuthMethodUsed) {
                 return StytchClient.ConsumerAuthMethod(rawValue: string) ?? .unknown
             } else {
                 return StytchClient.ConsumerAuthMethod.unknown
             }
         }
         set {
-            try? keychainClient.setStringValue(newValue.rawValue, for: .consumerLastAuthMethodUsed)
+            try? userDefaultsClient.setStringValue(newValue.rawValue, for: .consumerLastAuthMethodUsed)
         }
     }
 }

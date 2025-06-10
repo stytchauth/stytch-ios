@@ -26,25 +26,25 @@ protocol PKCEPairManager {
 }
 
 internal class PKCEPairManagerImpl: PKCEPairManager {
-    let keychainClient: KeychainClient
+    let userDefaultsClient: EncryptedUserDefaultsClient
     let cryptoClient: CryptoClient
 
-    init(keychainClient: KeychainClient, cryptoClient: CryptoClient) {
-        self.keychainClient = keychainClient
+    init(userDefaultsClient: EncryptedUserDefaultsClient, cryptoClient: CryptoClient) {
+        self.userDefaultsClient = userDefaultsClient
         self.cryptoClient = cryptoClient
     }
 
     func generateAndReturnPKCECodePair() throws -> PKCECodePair {
         let codeVerifier = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
         let codeChallenge = cryptoClient.sha256(codeVerifier).base64UrlEncoded()
-        try keychainClient.setStringValue(codeVerifier, for: .codeVerifierPKCE)
-        try keychainClient.setStringValue(codeChallenge, for: .codeChallengePKCE)
+        try userDefaultsClient.setStringValue(codeVerifier, for: .codeVerifierPKCE)
+        try userDefaultsClient.setStringValue(codeChallenge, for: .codeChallengePKCE)
         return PKCECodePair(codeChallenge: codeChallenge, codeVerifier: codeVerifier)
     }
 
     func getPKCECodePair() -> PKCECodePair? {
-        let codeChallenge = try? keychainClient.getStringValue(.codeChallengePKCE)
-        let codeVerifier = try? keychainClient.getStringValue(.codeVerifierPKCE)
+        let codeChallenge = try? userDefaultsClient.getStringValue(.codeChallengePKCE)
+        let codeVerifier = try? userDefaultsClient.getStringValue(.codeVerifierPKCE)
         if let codeChallenge = codeChallenge, let codeVerifier = codeVerifier {
             return PKCECodePair(codeChallenge: codeChallenge, codeVerifier: codeVerifier)
         } else {
@@ -53,7 +53,7 @@ internal class PKCEPairManagerImpl: PKCEPairManager {
     }
 
     func clearPKCECodePair() throws {
-        try keychainClient.removeItem(item: .codeChallengePKCE)
-        try keychainClient.removeItem(item: .codeVerifierPKCE)
+        try userDefaultsClient.removeItem(item: .codeChallengePKCE)
+        try userDefaultsClient.removeItem(item: .codeVerifierPKCE)
     }
 }

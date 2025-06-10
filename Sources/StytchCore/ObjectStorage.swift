@@ -21,22 +21,23 @@ public enum StytchObjectInfo<T: Equatable>: Equatable {
 protocol ObjectStorageWrapper {
     associatedtype ObjectType: Equatable
     var lastValidatedAtDate: Date? { get }
-    var keychainItem: KeychainItem { get }
+    var item: EncryptedUserDefaultsItem { get }
     func setObject(object: ObjectType?)
     func getObject() throws -> ObjectType?
 }
 
 extension ObjectStorageWrapper {
-    var keychainClient: KeychainClient {
-        Current.keychainClient
+    var userDefaultsClient: EncryptedUserDefaultsClient {
+        Current.userDefaultsClient
     }
 
-    var queryResult: KeychainQueryResult? {
-        try? keychainClient.getFirstQueryResult(keychainItem)
+    var queryResult: EncryptedUserDefaultsItemResult? {
+        try? userDefaultsClient.getItem(item: item)
     }
 
     var lastValidatedAtDate: Date? {
-        queryResult?.modifiedAt
+        let last = try? userDefaultsClient.getObject(Date.self, for: EncryptedUserDefaultsItem.lastValidatedAtDate(item.name))
+        return last
     }
 }
 
@@ -84,14 +85,14 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
 
 class SessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
-    let keychainItem = KeychainItem.session
+    let item = EncryptedUserDefaultsItem.session
 
     func setObject(object: Session?) {
-        try? keychainClient.setObject(object, for: keychainItem)
+        try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
     func getObject() throws -> Session? {
-        var sessionToReturn: Session? = try keychainClient.getObject(Session.self, for: keychainItem)
+        var sessionToReturn: Session? = try userDefaultsClient.getObject(Session.self, for: item)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -102,14 +103,14 @@ class SessionStorageWrapper: ObjectStorageWrapper {
 
 class MemberSessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
-    let keychainItem = KeychainItem.memberSession
+    let item = EncryptedUserDefaultsItem.memberSession
 
     func setObject(object: MemberSession?) {
-        try? keychainClient.setObject(object, for: keychainItem)
+        try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
     func getObject() throws -> MemberSession? {
-        var sessionToReturn: MemberSession? = try keychainClient.getObject(MemberSession.self, for: keychainItem)
+        var sessionToReturn: MemberSession? = try userDefaultsClient.getObject(MemberSession.self, for: item)
         if let session = sessionToReturn, session.expiresAt.isInThePast {
             sessionToReturn = nil
             sessionManager.resetSession()
@@ -119,38 +120,38 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
 }
 
 class UserStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainItem.user
+    let item = EncryptedUserDefaultsItem.user
 
     func setObject(object: User?) {
-        try? keychainClient.setObject(object, for: keychainItem)
+        try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
     func getObject() throws -> User? {
-        try keychainClient.getObject(User.self, for: keychainItem)
+        try userDefaultsClient.getObject(User.self, for: item)
     }
 }
 
 class MemberStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainItem.member
+    let item = EncryptedUserDefaultsItem.member
 
     func setObject(object: Member?) {
-        try? keychainClient.setObject(object, for: keychainItem)
+        try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
     func getObject() throws -> Member? {
-        try keychainClient.getObject(Member.self, for: keychainItem)
+        try userDefaultsClient.getObject(Member.self, for: item)
     }
 }
 
 class OrganizationStorageWrapper: ObjectStorageWrapper {
-    let keychainItem = KeychainItem.organization
+    let item = EncryptedUserDefaultsItem.organization
 
     func setObject(object: Organization?) {
-        try? keychainClient.setObject(object, for: keychainItem)
+        try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
     func getObject() throws -> Organization? {
-        try keychainClient.getObject(Organization.self, for: keychainItem)
+        try userDefaultsClient.getObject(Organization.self, for: item)
     }
 }
 
