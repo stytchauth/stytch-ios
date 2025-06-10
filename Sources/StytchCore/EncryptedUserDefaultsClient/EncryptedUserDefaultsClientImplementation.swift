@@ -7,12 +7,9 @@ class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClient {
 
     internal let defaults: UserDefaults = .init(suiteName: "StytchEncryptedUserDefaults") ?? .standard
 
-    init(keychainClient: KeychainClient) throws {
+    init(keychainClient: KeychainClient) {
         self.keychainClient = keychainClient
         encryptionKey = try? keychainClient.getEncryptionKey()
-        if encryptionKey == nil {
-            throw EncryptedUserDefaultsError.encryptionKeyNotSet
-        }
     }
 
     func getItem(item: EncryptedUserDefaultsItem) throws -> EncryptedUserDefaultsItemResult? {

@@ -18,13 +18,13 @@ final class MagicLinksTestCase: BaseTestCase {
             locale: .en
         )
 
-        XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
+        XCTAssertTrue(try Current.userDefaultsClient.getItem(item: .codeVerifierPKCE) == nil)
 
         let response = try await StytchClient.magicLinks.email.loginOrCreate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.userDefaultsClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -61,7 +61,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.userDefaultsClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -87,7 +87,7 @@ final class MagicLinksTestCase: BaseTestCase {
             locale: .en
         )
 
-        try Current.keychainClient.setStringValue("123", for: .sessionToken)
+        try Current.userDefaultsClient.setStringValue("123", for: .sessionToken)
 
         XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
         XCTAssertTrue(try Current.keychainClient.getQueryResults(item: .codeVerifierPKCE).isEmpty)
@@ -96,7 +96,7 @@ final class MagicLinksTestCase: BaseTestCase {
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(response.requestId, "1234")
 
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
+        XCTAssertEqual(try Current.userDefaultsClient.getStringValue(.codeVerifierPKCE), "e0683c9c02bf554ab9c731a1767bc940d71321a40fdbeac62824e7b6495a8741")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
@@ -124,10 +124,10 @@ final class MagicLinksTestCase: BaseTestCase {
             StytchSDKError.missingPKCE
         )
 
-        try Current.keychainClient.setStringValue(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
-        try Current.keychainClient.setStringValue(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
+        try Current.userDefaultsClient.setStringValue(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
+        try Current.userDefaultsClient.setStringValue(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
-        XCTAssertNotNil(try Current.keychainClient.getStringValue(.codeVerifierPKCE))
+        XCTAssertNotNil(try Current.userDefaultsClient.getStringValue(.codeVerifierPKCE))
 
         Current.timer = { _, _, _ in .init() }
 

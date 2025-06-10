@@ -3,48 +3,27 @@ import XCTest
 
 final class KeychainClientTestCase: BaseTestCase {
     func testKeychainClient() throws {
-        let item: KeychainItem = .init(kind: .token, name: "item")
-        let otherItem: KeychainItem = .init(kind: .token, name: "other_item")
+        let item: KeychainItem = .init(kind: .privateKey, name: "item")
+        let otherItem: KeychainItem = .init(kind: .encryptionKey, name: "other_item")
 
-        XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
-        XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(item) == nil)
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(otherItem) == nil)
 
-        try Current.keychainClient.setStringValue("test test", for: item)
+        try Current.keychainClient.setValueForItem(value: .init(data: "test test".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: item)
 
-        XCTAssertTrue(Current.keychainClient.resultsExistForItem(item))
-        XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(item) != nil)
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(otherItem) == nil)
 
-        XCTAssertEqual(try Current.keychainClient.getStringValue(item), "test test")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(item)?.stringValue, "test test")
 
-        try Current.keychainClient.setStringValue("test again", for: item)
+        try Current.keychainClient.setValueForItem(value: .init(data: "test again".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: item)
 
-        XCTAssertEqual(try Current.keychainClient.getStringValue(item), "test again")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(item)?.stringValue, "test again")
 
         try Current.keychainClient.removeItem(item: item)
 
-        XCTAssertFalse(Current.keychainClient.resultsExistForItem(item))
-        XCTAssertFalse(Current.keychainClient.resultsExistForItem(otherItem))
-    }
-
-    func testKeychainTokenItem() {
-        let item: KeychainItem = .init(kind: .token, name: "item")
-
-        let itemValueForKey: (String) -> KeychainItem.Value = { value in
-            .init(data: .init(value.utf8), account: nil, label: nil, generic: nil, accessPolicy: nil)
-        }
-
-        XCTAssertEqual(
-            item.getQuery as CFDictionary,
-            ["svce": "item", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
-        )
-        XCTAssertEqual(
-            item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
-            ["v_Data": Data("value".utf8), "pdmn": "ck"] as CFDictionary
-        )
-        XCTAssertEqual(
-            item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
-            ["svce": "item", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1, "pdmn": "ck"] as CFDictionary
-        )
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(item) == nil)
+        XCTAssertTrue(try Current.keychainClient.getFirstQueryResult(otherItem) == nil)
     }
 
     func testKeychainPrivateKeyItem() {
@@ -74,6 +53,26 @@ final class KeychainClientTestCase: BaseTestCase {
         )
     }
 
+    func testKeychainEncryptionKeyItem() {
+        let item: KeychainItem = .init(kind: .encryptionKey, name: "encryptionKey")
+
+        let itemValueForKey: (String) -> KeychainItem.Value = { value in
+            .init(data: .init(value.utf8), account: ENCRYPTEDUSERDEFAULTSKEYNAME, label: nil, generic: nil, accessPolicy: nil)
+        }
+        XCTAssertEqual(
+            item.getQuery as CFDictionary,
+            ["svce": "encryptionKey", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
+            ["acct": ENCRYPTEDUSERDEFAULTSKEYNAME, "v_Data": Data("value".utf8)] as CFDictionary
+        )
+        XCTAssertEqual(
+            item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
+            ["acct": ENCRYPTEDUSERDEFAULTSKEYNAME, "svce": "encryptionKey", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1] as CFDictionary
+        )
+    }
+
     func testQueryResults() throws {
         let data = try Current.cryptoClient.dataWithRandomBytesOfCount(32)
         try Current.keychainClient.setPrivateKeyRegistration(
@@ -89,28 +88,28 @@ final class KeychainClientTestCase: BaseTestCase {
     func testKeychainReset() throws {
         let installIdKey = "stytch_install_id_defaults_key"
         Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
-        try Current.keychainClient.setStringValue("token", for: .sessionToken)
-        try Current.keychainClient.setStringValue("token_jwt", for: .sessionJwt)
+        try Current.keychainClient.setValueForItem(value: .init(data: "private key".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: .privateKeyRegistration)
+        try Current.keychainClient.setValueForItem(value: .init(data: "encryption key".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionToken), "token")
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionJwt), "token_jwt")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(.privateKeyRegistration)?.stringValue, "private key")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(.encryptionKey)?.stringValue, "encryption key")
         Current.defaults.removeObject(forKey: installIdKey)
         StytchClient.configure(configuration: .init(publicToken: "another public token"))
-        XCTAssertNil(try Current.keychainClient.getStringValue(.sessionToken))
-        XCTAssertNil(try Current.keychainClient.getStringValue(.sessionJwt))
+        XCTAssertNil(try Current.keychainClient.getFirstQueryResult(.privateKeyRegistration))
+        XCTAssertNil(try Current.keychainClient.getFirstQueryResult(.encryptionKey))
     }
 
     func testKeychainDoesNotResetWhenConfigureIsCalledAgainWithSamePublicToken() throws {
         let installIdKey = "stytch_install_id_defaults_key"
         Current.defaults.set(Current.uuid().uuidString, forKey: installIdKey)
-        try Current.keychainClient.setStringValue("token", for: .sessionToken)
-        try Current.keychainClient.setStringValue("token_jwt", for: .sessionJwt)
+        try Current.keychainClient.setValueForItem(value: .init(data: "private key".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: .privateKeyRegistration)
+        try Current.keychainClient.setValueForItem(value: .init(data: "encryption key".data(using: .utf8)!, account: nil, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionToken), "token")
-        XCTAssertEqual(try Current.keychainClient.getStringValue(.sessionJwt), "token_jwt")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(.privateKeyRegistration)?.stringValue, "private key")
+        XCTAssertEqual(try Current.keychainClient.getFirstQueryResult(.encryptionKey)?.stringValue, "encryption key")
         Current.defaults.removeObject(forKey: installIdKey)
         StytchClient.configure(configuration: .init(publicToken: "some public token"))
-        XCTAssertNotNil(try Current.keychainClient.getStringValue(.sessionToken))
-        XCTAssertNotNil(try Current.keychainClient.getStringValue(.sessionJwt))
+        XCTAssertNotNil(try Current.keychainClient.getFirstQueryResult(.privateKeyRegistration))
+        XCTAssertNotNil(try Current.keychainClient.getFirstQueryResult(.encryptionKey))
     }
 }

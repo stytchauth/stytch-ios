@@ -5,7 +5,7 @@ import XCTest
 final class SessionStorageTestCase: BaseTestCase {
     override func tearDownWithError() throws {
         try super.tearDownWithError()
-        keychainDateCreatedOffsetInMinutes = 0
+        userDefaultsLastModifiedOffset = 0
     }
 
     func testNotification() throws {
@@ -27,13 +27,13 @@ final class SessionStorageTestCase: BaseTestCase {
     }
 
     func testIntermediateSessionTokenExpiresAfter11Minutes() {
-        let keychainItem: KeychainItem = .intermediateSessionToken
+        let istItem: EncryptedUserDefaultsItem = .intermediateSessionToken
 
         // clear the IST
-        try? Current.keychainClient.removeItem(item: keychainItem)
+        try? Current.userDefaultsClient.removeItem(item: istItem)
 
         // set the date created offset to 11 minutes so that the IST will be expired and return nil
-        keychainDateCreatedOffsetInMinutes = 11
+        userDefaultsLastModifiedOffset = 11
 
         // call updateSession with only the IST which will assign it to the keychain item for the IST
         Current.sessionManager.updateSession(intermediateSessionToken: "1234567890")
@@ -49,7 +49,7 @@ final class SessionStorageTestCase: BaseTestCase {
         try? Current.keychainClient.removeItem(item: keychainItem)
 
         // set the date created offset to only 5 minutes so that the IST is still valid
-        keychainDateCreatedOffsetInMinutes = 5
+        userDefaultsLastModifiedOffset = 5
 
         // call updateSession with only the IST which will assign it to the keychain item for the IST
         Current.sessionManager.updateSession(intermediateSessionToken: "1234567890")
