@@ -16,6 +16,7 @@ class BaseTestCase: XCTestCase {
         Current.sessionsPollingClient = .failing
         Current.cookieClient = .mock()
         Current.keychainClient = KeychainClientMock()
+        Current.userDefaultsClient = EncryptedUserDefaultsClientMock()
         Current.cryptoClient = .live
         Current.localStorage = .init()
         Current.timer = { _, _, _ in

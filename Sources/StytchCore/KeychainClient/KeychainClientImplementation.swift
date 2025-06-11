@@ -1,12 +1,27 @@
+import CryptoKit
 import Foundation
 import Security
 #if !os(tvOS)
 import LocalAuthentication
 #endif
 
-// swiftlint:disable function_body_length
+public let ENCRYPTEDUSERDEFAULTSKEYNAME = "EncryptedUserDefaultsKey"
 
 class KeychainClientImplementation: KeychainClient {
+    func getEncryptionKey() throws -> SymmetricKey {
+        let result = try getFirstQueryResult(KeychainItem.encryptionKey)
+        guard let result else {
+            // Key doesn't exist so create it
+            let data = SymmetricKey(size: .bits256).withUnsafeBytes {
+                Data(Array($0))
+            }
+            try setValueForItem(value: .init(data: data, account: ENCRYPTEDUSERDEFAULTSKEYNAME, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
+            return SymmetricKey(data: data)
+        }
+        return SymmetricKey(data: result.data)
+    }
+
+    // swiftlint:disable:next function_body_length
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult] {
         var result: CFTypeRef?
 
@@ -49,6 +64,10 @@ class KeychainClientImplementation: KeychainClient {
                     break
                 }
             }
+        } else if item.kind == .encryptionKey {
+            var newQuery = query
+            newQuery[kSecAttrAccount] = ENCRYPTEDUSERDEFAULTSKEYNAME
+            status = SecItemCopyMatching(newQuery as CFDictionary, &result)
         } else {
             status = SecItemCopyMatching(query as CFDictionary, &result)
         }
@@ -137,7 +156,7 @@ class KeychainClientImplementation: KeychainClient {
         }
 
         var parameters: [CFString: AnyObject] = [kSecAttrSynchronizable: kSecAttrSynchronizableAny]
-        if item.kind == .token {
+        if item.kind == .encryptionKey {
             parameters[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
             try tryRemovingItem(item.baseQuery.merging(parameters))
         } else {

@@ -43,6 +43,8 @@ public extension StytchClient {
 
         @Dependency(\.keychainClient) private var keychainClient
 
+        @Dependency(\.userDefaultsClient) private var userDefaultsClient
+
         @Dependency(\.sessionManager) private var sessionManager
 
         @Dependency(\.jsonDecoder) private var jsonDecoder
@@ -55,10 +57,7 @@ public extension StytchClient {
         }
 
         public var biometricRegistrationId: String? {
-            guard let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(item: .biometricKeyRegistration).first else {
-                return nil
-            }
-            return biometricKeyRegistrationQueryResult.stringValue
+            try? userDefaultsClient.getStringValue(.biometricKeyRegistration)
         }
 
         /// Indicates if biometrics are available
@@ -152,7 +151,7 @@ public extension StytchClient {
             )
 
             // Set the .biometricKeyRegistration
-            try keychainClient.setStringValue(registration.registrationId.rawValue, for: .biometricKeyRegistration)
+            try userDefaultsClient.setStringValue(registration.registrationId.rawValue, for: .biometricKeyRegistration)
 
             return finishResponse
         }
@@ -233,9 +232,9 @@ public extension StytchClient {
          without prompting the user unnecessarily for biometric authentication.
          */
         func copyBiometricRegistrationIDToKeychainIfNeeded(_ privateKeyRegistrationQueryResult: KeychainQueryResult) throws {
-            let biometricKeyRegistrationQueryResult = try? keychainClient.getQueryResults(item: .biometricKeyRegistration).first
+            let biometricKeyRegistrationQueryResult = try? userDefaultsClient.getItem(item: .biometricKeyRegistration)
             if biometricKeyRegistrationQueryResult == nil, let privateKeyRegistration = try privateKeyRegistrationQueryResult.generic.map({ try jsonDecoder.decode(BiometricPrivateKeyRegistration.self, from: $0) }) {
-                try keychainClient.setStringValue(privateKeyRegistration.registrationId.rawValue, for: .biometricKeyRegistration)
+                try userDefaultsClient.setStringValue(privateKeyRegistration.registrationId.rawValue, for: .biometricKeyRegistration)
             }
         }
     }

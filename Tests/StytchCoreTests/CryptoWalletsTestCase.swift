@@ -29,7 +29,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
             StytchClient.CryptoWallets.AuthenticateStartResponse(requestId: "mock-request-id", statusCode: 200, wrapped: .init(challenge: "mock-challenge"))
         }
 
-        try Current.keychainClient.setStringValue("123", for: .sessionToken)
+        try Current.userDefaultsClient.setStringValue("123", for: .sessionToken)
 
         XCTAssertTrue(Current.sessionManager.hasValidSessionToken)
 

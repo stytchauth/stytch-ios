@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 @testable import StytchCore
 
@@ -5,6 +6,10 @@ import Foundation
 public var keychainDateCreatedOffsetInMinutes = 0
 
 class KeychainClientMock: KeychainClient {
+    func getEncryptionKey() throws -> SymmetricKey {
+        SymmetricKey(data: try Current.cryptoClient.dataWithRandomBytesOfCount(256))
+    }
+
     let lock: NSLock = .init()
     var keychainItems: [String: [KeychainQueryResult]] = [:]
 
@@ -38,12 +43,6 @@ class KeychainClientMock: KeychainClient {
 
     func removeItem(item: KeychainItem) throws {
         lock.withLock { keychainItems[item.name] = nil }
-    }
-}
-
-extension KeychainClient {
-    func resultsExistForItem(_ item: KeychainItem) -> Bool {
-        (try? getStringValue(item).map { !$0.isEmpty }) ?? false
     }
 }
 
