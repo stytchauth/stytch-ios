@@ -18,7 +18,7 @@ let package = Package(
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", .exact("3.8.0")),
         .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", .exact("18.7.0")),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.2"),
-        .package(url: "https://github.com/stytchauth/stytch-ios-dfp.git", from: "1.0.2"),
+        .package(url: "https://github.com/stytchauth/stytch-ios-dfp.git", from: "1.0.4"),
     ],
     targets: [
         .target(
