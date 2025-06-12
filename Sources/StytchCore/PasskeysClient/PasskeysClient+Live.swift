@@ -40,17 +40,16 @@ extension PasskeysClient {
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
                 delegate.continuation = continuation
+                #if os(iOS) && !targetEnvironment(macCatalyst)
                 switch requestBehavior {
-                #if os(iOS)
                 case .autoFill:
                     controller.performAutoFillAssistedRequests()
                 case let .default(preferLocalCredentials):
                     controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
-                #else
-                case .default:
-                    controller.performRequests()
-                #endif
                 }
+                #else
+                controller.performRequests()
+                #endif
             }
 
             guard let credential = credential as? ASAuthorizationPublicKeyCredentialAssertion else {

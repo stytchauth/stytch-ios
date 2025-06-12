@@ -7,7 +7,7 @@ internal protocol NetworkRequestHandler {
 
     init(urlSession: URLSession)
 
-    #if os(iOS)
+    #if canImport(StytchDFP) && canImport(RecaptchaEnterprise)
     var captchaProvider: CaptchaProvider { get }
     var dfpProvider: DFPProvider { get }
 
@@ -20,7 +20,7 @@ internal protocol NetworkRequestHandler {
 }
 
 extension NetworkRequestHandler {
-    #if os(iOS)
+    #if canImport(StytchDFP) && canImport(RecaptchaEnterprise)
     func handleDFPDisabled(request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         // DISABLED = if captcha client is configured, add a captcha token, else do nothing
         if captchaProvider.isConfigured() == false {
@@ -76,7 +76,7 @@ extension NetworkRequestHandler {
 internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
     let urlSession: URLSession
 
-    #if os(iOS)
+    #if canImport(StytchDFP) && canImport(RecaptchaEnterprise)
     var captchaProvider: CaptchaProvider {
         Current.captcha
     }

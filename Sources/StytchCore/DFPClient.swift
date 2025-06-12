@@ -1,4 +1,4 @@
-#if os(iOS)
+#if canImport(StytchDFP)
 import Foundation
 import StytchDFP
 
