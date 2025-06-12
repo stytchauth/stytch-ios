@@ -65,7 +65,7 @@ struct StartupClient {
             print("This application is using a Stytch client for B2B projects, but the public token is for a Stytch Consumer project. Use a Consumer Stytch client instead, or verify that the public token is correct.")
         }
 
-        #if os(iOS)
+        #if canImport(StytchDFP)
         Current.networkingClient.configureDFP(
             dfpEnabled: bootstrapData.dfpProtectedAuthEnabled,
             dfpAuthMode: bootstrapData.dfpProtectedAuthMode

@@ -72,7 +72,7 @@ final class NetworkingClientImplementation: NetworkingClient {
     }
 
     func handleRequest(request: URLRequest, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
-        #if os(iOS)
+        #if canImport(StytchDFP)
         if useDFPPA == true {
             if dfpEnabled == true {
                 switch dfpAuthMode {
