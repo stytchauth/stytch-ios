@@ -59,7 +59,7 @@ extension StytchClientType {
         runKeychainMigrations()
         sessionManager.clearEmptyTokens()
 
-        #if os(iOS)
+        #if canImport(StytchDFP)
         if let publicToken = configuration?.publicToken {
             Current.dfpClient.configure(publicToken: publicToken, dfppaDomain: configuration?.dfppaDomain)
         }

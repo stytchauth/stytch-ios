@@ -1,4 +1,4 @@
-#if os(iOS)
+#if canImport(RecaptchaEnterprise)
 import Foundation
 import RecaptchaEnterprise
 

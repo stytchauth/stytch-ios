@@ -113,7 +113,7 @@ struct Environment {
         set { _passkeysClent = newValue }
     }
     #endif
-    #if os(iOS)
+    #if canImport(StytchDFP)
     var dfpClient: DFPProvider = DFPClient()
     var captcha: CaptchaProvider = CaptchaClient()
     #endif
