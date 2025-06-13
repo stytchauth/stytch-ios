@@ -338,6 +338,7 @@ public enum StytchAPIErrorType: String, Codable {
     case invalidTokenUrl = "invalid_token_url"
     case invalidTotpCode = "invalid_totp_code"
     case invalidTotpId = "invalid_totp_id"
+    case invalidTrustedAuthToken = "invalid_trusted_auth_token"
     case invalidUrl = "invalid_url"
     case invalidUserAgent = "invalid_user_agent"
     case invalidUserId = "invalid_user_id"
