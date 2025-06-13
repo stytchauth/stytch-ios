@@ -1,6 +1,6 @@
 #if canImport(RecaptchaEnterprise)
 import Foundation
-import RecaptchaEnterprise
+@preconcurrency import RecaptchaEnterprise
 
 internal protocol CaptchaProvider {
     func setCaptchaClient(siteKey: String) async
