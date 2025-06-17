@@ -652,6 +652,7 @@ public enum StytchAPIErrorType: String, Codable {
     case stytchClaimsInCustomClaims = "stytch_claims_in_custom_claims"
     case testIdUsedInLiveEnvironment = "test_id_used_in_live_environment"
     case thirdPartyClientsCannotUseFullAccess = "third_party_clients_cannot_use_full_access"
+    case thirdPartyClientsRequireConsentForOfflineAccess = "third_party_clients_require_consent_for_offline_access"
     case tooFewTokensAuthenticated = "too_few_tokens_authenticated"
     case tooManyBiometricRegistrationsForUser = "too_many_biometric_registrations_for_user"
     case tooManyDomains = "too_many_domains"
