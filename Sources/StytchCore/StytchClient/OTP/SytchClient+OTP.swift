@@ -17,7 +17,7 @@ public extension StytchClient {
             try await router.post(
                 to: .loginOrCreate(parameters.deliveryMethod),
                 parameters: parameters,
-                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
+                useDFPPA: true
             )
         }
 
@@ -27,7 +27,7 @@ public extension StytchClient {
             try await router.post(
                 to: sessionManager.hasValidSessionToken ? .sendSecondary(parameters.deliveryMethod) : .sendPrimary(parameters.deliveryMethod),
                 parameters: parameters,
-                useDFPPA: parameters.deliveryMethod.shouldUseDFPPA
+                useDFPPA: true
             )
         }
 
@@ -143,17 +143,6 @@ public extension StytchClient.OTP {
                 return "whatsapp"
             case .email:
                 return "email"
-            }
-        }
-
-        var shouldUseDFPPA: Bool {
-            switch self {
-            case .sms:
-                return true
-            case .whatsapp:
-                return true
-            case .email:
-                return false
             }
         }
     }
