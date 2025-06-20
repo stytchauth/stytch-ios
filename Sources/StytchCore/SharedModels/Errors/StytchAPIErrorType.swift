@@ -705,6 +705,7 @@ public enum StytchAPIErrorType: String, Codable {
     case unableToRegisterBiometricRegistration = "unable_to_register_biometric_registration"
     case unableToRegisterWebauthnRegistration = "unable_to_register_webauthn_registration"
     case unableToRepresentCustomClaimsJson = "unable_to_represent_custom_claims_json"
+    case unableToVerifyMemberEmailUpdate = "unable_to_verify_member_email_update"
     case unauthorizedAction = "unauthorized_action"
     case unauthorizedBillingPermissions = "unauthorized_billing_permissions"
     case unauthorizedCredentials = "unauthorized_credentials"
