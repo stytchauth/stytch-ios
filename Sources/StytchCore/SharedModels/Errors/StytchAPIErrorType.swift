@@ -379,6 +379,7 @@ public enum StytchAPIErrorType: String, Codable {
     case memberCannotUpdateTheirEmailAddress = "member_cannot_update_their_email_address"
     case memberDashboardSearchDisabled = "member_dashboard_search_disabled"
     case memberDoesNotExistInOrganization = "member_does_not_exist_in_organization"
+    case memberHasNoActiveVerifiedEmail = "member_has_no_active_verified_email"
     case memberImpersonationNotAllowed = "member_impersonation_not_allowed"
     case memberNotFound = "member_not_found"
     case memberOauthTokenNotFound = "member_oauth_token_not_found"
