@@ -115,8 +115,9 @@ struct Environment {
     #endif
     #if canImport(StytchDFP)
     var dfpClient: DFPProvider = DFPClient()
-    var captcha: CaptchaProvider = CaptchaClient()
     #endif
+    
+    var captcha: CaptchaProvider = NoOpCaptchaProvider()
 
     #if !os(tvOS) && !os(watchOS)
     var localAuthenticationContext: LAContextEvaluating = LAContext()

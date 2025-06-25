@@ -60,6 +60,24 @@ public struct StytchB2BClient: StytchClientType {
     public static func configure(configuration: StytchClientConfiguration) {
         instance.configure(newConfiguration: configuration)
     }
+    
+    /**
+     Configures the captcha provider for the `StytchB2BClient`
+     - Parameters:
+       - captchaProvider: An implementation of `CaptchaProvider` to use for captcha functionality. Use `CaptchaClient()` from `StytchCaptcha` package for full functionality, or provide your own implementation.
+       
+     # Example
+     ```swift
+     import StytchCore
+     import StytchCaptcha
+     
+     StytchB2BClient.configure(configuration: .init(publicToken: "your-token"))
+     StytchB2BClient.configureCaptcha(captchaProvider: CaptchaClient())
+     ```
+     */
+    public static func configureCaptcha(captchaProvider: CaptchaProvider) {
+        Current.captcha = captchaProvider
+    }
 
     // swiftlint:disable:next orphaned_doc_comment
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink

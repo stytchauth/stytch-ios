@@ -1,45 +1,29 @@
-#if canImport(RecaptchaEnterprise)
 import Foundation
-import RecaptchaEnterprise
 
-internal protocol CaptchaProvider {
+/// Protocol defining the interface for captcha providers
+public protocol CaptchaProvider: Sendable {
     func setCaptchaClient(siteKey: String) async
-
     func executeRecaptcha() async -> String
-
     func isConfigured() -> Bool
 }
 
-final class CaptchaClient: CaptchaProvider {
-    private var recaptchaClient: RecaptchaClient?
-
-    func isConfigured() -> Bool {
-        recaptchaClient != nil
+/// No-op implementation of CaptchaProvider for when captcha functionality is not needed
+public final class NoOpCaptchaProvider: CaptchaProvider {
+    public init() {}
+    
+    public func setCaptchaClient(siteKey: String) async {
+        // No-op implementation
     }
-
-    func executeRecaptcha() async -> String {
-        guard let recaptchaClient = recaptchaClient else {
-            return ""
-        }
-        do {
-            return try await recaptchaClient.execute(withAction: RecaptchaAction.login)
-        } catch let error as RecaptchaError {
-            print("RecaptchaClient execute error: \(String(describing: error.errorMessage)).")
-            return ""
-        } catch {
-            print("RecaptchaClient execute error: \(String(describing: error)).")
-            return ""
-        }
+    
+    public func executeRecaptcha() async -> String {
+        // Returns empty string when no captcha is configured
+        return ""
     }
-
-    func setCaptchaClient(siteKey: String) async {
-        do {
-            recaptchaClient = try await Recaptcha.fetchClient(withSiteKey: siteKey)
-        } catch let error as RecaptchaError {
-            print("RecaptchaClient creation error: \(String(describing: error.errorMessage)).")
-        } catch {
-            print("RecaptchaClient creation error: \(String(describing: error))")
-        }
+    
+    public func isConfigured() -> Bool {
+        // Always returns false for no-op implementation
+        return false
     }
 }
-#endif
+
+

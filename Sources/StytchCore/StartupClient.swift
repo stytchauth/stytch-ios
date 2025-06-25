@@ -70,11 +70,11 @@ struct StartupClient {
             dfpEnabled: bootstrapData.dfpProtectedAuthEnabled,
             dfpAuthMode: bootstrapData.dfpProtectedAuthMode
         )
+        #endif
 
         if let siteKey = bootstrapData.captchaSettings.siteKey, !siteKey.isEmpty {
             await Current.captcha.setCaptchaClient(siteKey: siteKey)
         }
-        #endif
     }
 
     @discardableResult static func bootstrap() async throws -> BootstrapResponseData {

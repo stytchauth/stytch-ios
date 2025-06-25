@@ -13,6 +13,7 @@ let package = Package(
     products: [
         .library(name: "StytchCore", targets: ["StytchCore"]),
         .library(name: "StytchUI", targets: ["StytchUI"]),
+        .library(name: "StytchCaptcha", targets: ["StytchCaptcha"]),
     ],
     dependencies: [
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", .exact("3.8.0")),
@@ -34,12 +35,18 @@ let package = Package(
         .target(
             name: "StytchCore",
             dependencies: [
-                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
                 .product(name: "StytchDFP", package: "stytch-ios-dfp", condition: .when(platforms: [.iOS])),
                 .product(name: "SwiftyJSON", package: "SwiftyJSON"),
             ],
             resources: [
                 .process("PrivacyInfo.xcprivacy"),
+            ]
+        ),
+        .target(
+            name: "StytchCaptcha",
+            dependencies: [
+                .target(name: "StytchCore"),
+                .product(name: "RecaptchaEnterprise", package: "recaptcha-enterprise-mobile-sdk", condition: .when(platforms: [.iOS])),
             ]
         ),
         .testTarget(name: "StytchCoreTests", dependencies: ["StytchCore"]),
