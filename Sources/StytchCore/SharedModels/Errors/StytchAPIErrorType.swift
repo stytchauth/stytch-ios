@@ -52,6 +52,7 @@ public enum StytchAPIErrorType: String, Codable {
     case connectedAppConsentRevoked = "connected_app_consent_revoked"
     case connectedAppNotAllowedForOrg = "connected_app_not_allowed_for_org"
     case couldNotParseBiometricSignature = "could_not_parse_biometric_signature"
+    case countryCodeAllowlistB2bWhatsappNotSupported = "country_code_allowlist_b2b_whatsapp_not_supported"
     case countryCodeAllowlistEmpty = "country_code_allowlist_empty"
     case countryCodeAllowlistInvalidCountryCodes = "country_code_allowlist_invalid_country_codes"
     case crossOrgPasswordsEnabled = "cross_org_passwords_enabled"
