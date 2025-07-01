@@ -8,6 +8,8 @@ import LocalAuthentication
 public let ENCRYPTEDUSERDEFAULTSKEYNAME = "EncryptedUserDefaultsKey"
 
 class KeychainClientImplementation: KeychainClient {
+    private let lock = NSLock()
+
     func getEncryptionKey() throws -> SymmetricKey {
         let result = try getFirstQueryResult(KeychainItem.encryptionKey)
         guard let result else {
@@ -23,6 +25,9 @@ class KeychainClientImplementation: KeychainClient {
 
     // swiftlint:disable:next function_body_length
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult] {
+        lock.lock()
+        defer { lock.unlock() }
+
         var result: CFTypeRef?
 
         var query = item.getQuery
@@ -112,6 +117,9 @@ class KeychainClientImplementation: KeychainClient {
     }
 
     func valueExistsForItem(item: KeychainItem) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+
         var result: CFTypeRef?
         var query = item.getQuery
 
@@ -131,15 +139,21 @@ class KeychainClientImplementation: KeychainClient {
         var query = item.baseQuery
 
         #if !os(tvOS)
+        lock.lock()
         _ = updateQueryWithLAContext(&query)
+        lock.unlock()
         #endif
 
         if valueExistsForItem(item: item) {
+            lock.lock()
             let queryDict = query as CFDictionary
             let attributesToUpdate = item.updateQuerySegment(for: value) as CFDictionary
             status = SecItemUpdate(queryDict, attributesToUpdate)
+            lock.unlock()
         } else {
+            lock.lock()
             status = SecItemAdd(item.insertQuery(value: value), nil)
+            lock.unlock()
         }
 
         if status != errSecSuccess {
@@ -148,6 +162,9 @@ class KeychainClientImplementation: KeychainClient {
     }
 
     func removeItem(item: KeychainItem) throws {
+        lock.lock()
+        defer { lock.unlock() }
+
         let tryRemovingItem: (CFDictionary) throws -> Void = { query in
             let status = SecItemDelete(query)
             guard [errSecSuccess, errSecItemNotFound].contains(status) else {
