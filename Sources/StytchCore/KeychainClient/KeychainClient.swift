@@ -2,11 +2,12 @@ import CryptoKit
 import Foundation
 
 protocol KeychainClient: AnyObject {
+    var encryptionKey: SymmetricKey? { get }
+
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult]
     func valueExistsForItem(item: KeychainItem) -> Bool
     func setValueForItem(value: KeychainItem.Value, item: KeychainItem) throws
     func removeItem(item: KeychainItem) throws
-    func getEncryptionKey() throws -> SymmetricKey
 }
 
 extension KeychainClient {
