@@ -69,9 +69,9 @@ struct Environment {
 
     var cookieClient: CookieClient = .live
 
-    var keychainClient: KeychainClient = KeychainClientImplementation()
+    var keychainClient: KeychainClient = KeychainClientImplementation.shared
 
-    var userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation(keychainClient: KeychainClientImplementation())
+    var userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation(keychainClient: KeychainClientImplementation.shared)
 
     var networkMonitor: NetworkMonitor = .init()
 

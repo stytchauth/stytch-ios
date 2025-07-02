@@ -6,8 +6,12 @@ import Foundation
 public var keychainDateCreatedOffsetInMinutes = 0
 
 class KeychainClientMock: KeychainClient {
-    func getEncryptionKey() throws -> SymmetricKey {
-        SymmetricKey(data: try Current.cryptoClient.dataWithRandomBytesOfCount(256))
+    var encryptionKey: SymmetricKey? {
+        do {
+            return SymmetricKey(data: try Current.cryptoClient.dataWithRandomBytesOfCount(256))
+        } catch {
+            return nil
+        }
     }
 
     let lock: NSLock = .init()

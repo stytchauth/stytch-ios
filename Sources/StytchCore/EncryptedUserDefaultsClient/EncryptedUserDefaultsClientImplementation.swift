@@ -3,13 +3,11 @@ import Foundation
 
 class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClient {
     private let keychainClient: KeychainClient
-    private let encryptionKey: SymmetricKey?
 
     internal let defaults: UserDefaults = .init(suiteName: "StytchEncryptedUserDefaults") ?? .standard
 
     init(keychainClient: KeychainClient) {
         self.keychainClient = keychainClient
-        encryptionKey = try? keychainClient.getEncryptionKey()
     }
 
     func getItem(item: EncryptedUserDefaultsItem) throws -> EncryptedUserDefaultsItemResult? {
@@ -44,7 +42,7 @@ class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClient {
     }
 
     private func encryptString(plainText: String) throws -> Data? {
-        guard let encryptionKey else { return nil }
+        guard let encryptionKey = keychainClient.encryptionKey else { return nil }
         let sealedBox = try AES.GCM.seal(
             Data(plainText.utf8),
             using: encryptionKey
@@ -53,7 +51,7 @@ class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClient {
     }
 
     private func decryptData(encryptedData: Data?) -> String? {
-        guard let encryptionKey, let encryptedData else { return nil }
+        guard let encryptionKey = keychainClient.encryptionKey, let encryptedData else { return nil }
         do {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: encryptionKey)
