@@ -415,6 +415,7 @@ public enum StytchAPIErrorType: String, Codable {
     case memberSearchMissingTotpExists = "member_search_missing_totp_exists"
     case memberSearchOrganizationIdsEmpty = "member_search_organization_ids_empty"
     case memberSearchOrganizationSlugFuzzyTooShort = "member_search_organization_slug_fuzzy_too_short"
+    case memberSessionMemberIdMismatch = "member_session_member_id_mismatch"
     case metadataInvalidFormat = "metadata_invalid_format"
     case metadataTooLarge = "metadata_too_large"
     case metadataTooManyKeys = "metadata_too_many_keys"
