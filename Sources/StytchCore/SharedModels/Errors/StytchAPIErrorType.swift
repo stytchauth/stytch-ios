@@ -109,6 +109,7 @@ public enum StytchAPIErrorType: String, Codable {
     case emailSettingsNotFound = "email_settings_not_found"
     case emailTemplateNotFound = "email_template_not_found"
     case emailUnverifiedForReactivation = "email_unverified_for_reactivation"
+    case emailUpdatesAvailableOnlyForActiveMembers = "email_updates_available_only_for_active_members"
     case emailVerificationRequired = "email_verification_required"
     case emptyRbacResourceId = "empty_rbac_resource_id"
     case emptyRbacRoleId = "empty_rbac_role_id"
