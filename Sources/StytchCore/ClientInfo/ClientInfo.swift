@@ -75,6 +75,8 @@ public extension ClientInfo {
             NSScreen.main?.frame.size ?? .zero
             #elseif os(watchOS)
             WKInterfaceDevice.current().screenBounds.size
+            #elseif os(visionOS)
+            CGSize(width: 800, height: 600)
             #else
             UIScreen.main.bounds.size
             #endif
