@@ -82,16 +82,18 @@ extension StytchClientType {
                 }
             }
         }
-        #endif
-
-        Task {
-            do {
-                try await StartupClient.start(clientType: Self.clientType)
-                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
-            } catch {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
+        if UIApplication.shared.isProtectedDataAvailable {
+            keychainClient.onProtectedDataDidBecomeAvailable()
+            defaultStartupFlow()
+        } else {
+            NotificationCenter.default.addObserver(forName: UIApplication.protectedDataDidBecomeAvailableNotification, object: nil, queue: nil) { _ in
+                keychainClient.onProtectedDataDidBecomeAvailable()
+                defaultStartupFlow()
             }
         }
+        #else
+        defaultStartupFlow()
+        #endif
     }
 
     // swiftlint:disable:next identifier_name large_tuple
@@ -136,6 +138,17 @@ extension StytchClientType {
                 defaults.set(true, forKey: migrationName)
             } catch {
                 print(error)
+            }
+        }
+    }
+
+    private func defaultStartupFlow() {
+        Task {
+            do {
+                try await StartupClient.start(clientType: Self.clientType)
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
+            } catch {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
             }
         }
     }

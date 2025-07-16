@@ -8,6 +8,7 @@ protocol KeychainClient: AnyObject {
     func valueExistsForItem(item: KeychainItem) -> Bool
     func setValueForItem(value: KeychainItem.Value, item: KeychainItem) throws
     func removeItem(item: KeychainItem) throws
+    func onProtectedDataDidBecomeAvailable()
 }
 
 extension KeychainClient {

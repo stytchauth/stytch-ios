@@ -71,7 +71,7 @@ struct Environment {
 
     var keychainClient: KeychainClient = KeychainClientImplementation.shared
 
-    var userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation(keychainClient: KeychainClientImplementation.shared)
+    var userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation.shared
 
     var networkMonitor: NetworkMonitor = .init()
 
