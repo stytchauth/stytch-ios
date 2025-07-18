@@ -61,6 +61,7 @@ public enum StytchAPIErrorType: String, Codable {
     case connectedAppRedirectUrlMustUseHttpOrHttpsScheme = "connected_app_redirect_url_must_use_http_or_https_scheme"
     case connectedAppRedirectUrlMustUseHttpsScheme = "connected_app_redirect_url_must_use_https_scheme"
     case connectedAppSuppliedRedirectUrlNotFoundInClient = "connected_app_supplied_redirect_url_not_found_in_client"
+    case consumerSessionAuthorizationError = "consumer_session_authorization_error"
     case couldNotParseBiometricSignature = "could_not_parse_biometric_signature"
     case countryCodeAllowlistB2bWhatsappNotSupported = "country_code_allowlist_b2b_whatsapp_not_supported"
     case countryCodeAllowlistBillingNotVerified = "country_code_allowlist_billing_not_verified"
