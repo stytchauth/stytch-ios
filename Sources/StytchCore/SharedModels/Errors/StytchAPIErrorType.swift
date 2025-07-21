@@ -480,6 +480,7 @@ public enum StytchAPIErrorType: String, Codable {
     case oauthDiscoveryFlowCallbackError = "oauth_discovery_flow_callback_error"
     case oauthFlowCallbackError = "oauth_flow_callback_error"
     case oauthInvalidCallbackRequest = "oauth_invalid_callback_request"
+    case oauthInvalidScopeRequested = "oauth_invalid_scope_requested"
     case oauthInvalidState = "oauth_invalid_state"
     case oauthNonDiscoveryFlowCallbackError = "oauth_non_discovery_flow_callback_error"
     case oauthStateMismatch = "oauth_state_mismatch"
