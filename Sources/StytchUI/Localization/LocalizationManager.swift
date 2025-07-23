@@ -1015,5 +1015,4 @@ extension LocalizationManager {
     static var stytch_error_magic_link_not_found: String {
         NSLocalizedString("stytch.error.magiclinknotfound", value: "The magic link could not be authenticated, try sending another magic link.", comment: "")
     }
-
 }

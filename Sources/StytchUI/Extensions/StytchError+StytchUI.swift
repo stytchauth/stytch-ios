@@ -1,8 +1,9 @@
 import StytchCore
 
-extension StytchError {
-    func getLocalizedErrorMessage() -> String {
-        if let apiError = self.stytchAPIError {
+// swiftlint:disable cyclomatic_complexity function_body_length
+extension Error {
+    func getLocalizedErrorMessage() -> String? {
+        if let apiError = (self as Error).stytchAPIError {
             return switch apiError.errorType {
             case .unauthorizedCredentials:
                 LocalizationManager.stytch_error_unauthorized_credentials
@@ -105,9 +106,10 @@ extension StytchError {
             case .magicLinkNotFound:
                 LocalizationManager.stytch_error_magic_link_not_found
             default:
-                self.message
+                nil
             }
+        } else {
+            return nil
         }
-        return self.message
     }
 }
