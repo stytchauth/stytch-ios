@@ -801,3 +801,218 @@ extension LocalizationManager {
         NSLocalizedString("stytch.zxcvbn.suggestion.27", value: "Common names and surnames are easy to guess.", comment: "")
     }
 }
+
+// Most common API errors
+extension LocalizationManager {
+    static var stytch_error_unauthorized_credentials: String {
+        NSLocalizedString("stytch.error.unauthorizedcredentials", value: "Unauthorized credentials.", comment: "")
+    }
+
+    static var stytch_error_user_unauthenticated: String {
+        NSLocalizedString("stytch.error.userunauthenticated", value: "User must have an active Stytch session to call this method. Have you logged in yet?", comment: "")
+    }
+
+    static var stytch_error_email_not_found: String {
+        NSLocalizedString("stytch.error.emailnotfound", value: "Email could not be found.", comment: "")
+    }
+
+    static var stytch_error_otp_code_not_found: String {
+        NSLocalizedString("stytch.error.otpcode_notfound", value: "The passcode was incorrect and could not be authenticated, encourage the user to try inputting the passcode again or send another passcode.", comment: "")
+    }
+
+    static var stytch_error_breached_password: String {
+        NSLocalizedString("stytch.error.breachedpassword", value: "password appears in a list of breached passwords.", comment: "")
+    }
+
+    static var stytch_error_no_user_password: String {
+        NSLocalizedString("stytch.error.nouserpassword", value: "user doesn't have an associated password.", comment: "")
+    }
+
+    static var stytch_error_invalid_code: String {
+        NSLocalizedString("stytch.error.invalidcode", value: "Code format is invalid.", comment: "")
+    }
+
+    static var stytch_error_too_many_requests: String {
+        NSLocalizedString("stytch.error.toomanyrequests", value: "Too many requests have been made.", comment: "")
+    }
+
+    static var stytch_error_session_not_found: String {
+        NSLocalizedString("stytch.error.sessionnotfound", value: "Session could not be found.", comment: "")
+    }
+
+    static var stytch_error_user_lock_limit_reached: String {
+        NSLocalizedString("stytch.error.userlocklimitreached", value: "The user has been locked out due to too many failed authentication attempts. Please try again later.", comment: "")
+    }
+
+    static var stytch_error_reset_password: String {
+        NSLocalizedString("stytch.error.resetpassword", value: "user must reset their password", comment: "")
+    }
+
+    static var stytch_error_unable_to_auth_otp_code: String {
+        NSLocalizedString("stytch.error.unabletoauthotpcode", value: "The passcode could not be authenticated because it was either already used or expired. Send another passcode to this user.", comment: "")
+    }
+
+    static var stytch_error_no_active_biometric_registrations: String {
+        NSLocalizedString("stytch.error.noactivebiometricregistrations", value: "No active mobile biometric registrations were found.", comment: "")
+    }
+
+    static var stytch_error_unable_to_auth_magic_link: String {
+        NSLocalizedString("stytch.error.unabletoauthmagiclink", value: "The magic link could not be authenticated because it was either already used or expired. Send another magic link to this user.", comment: "")
+    }
+
+    static var stytch_error_client_closed_request: String {
+        NSLocalizedString("stytch.error.clientclosedrequest", value: "Client closed request.", comment: "")
+    }
+
+    static var stytch_error_phone_number_not_found: String {
+        NSLocalizedString("stytch.error.phonenumbernotfound", value: "Phone Number could not be found.", comment: "")
+    }
+
+    static var stytch_error_invalid_phone_number_country_code: String {
+        NSLocalizedString("stytch.error.invalidphonenumbercountrycode", value: "The phone number's country code is invalid, unsupported, or disabled.", comment: "")
+    }
+
+    static var stytch_error_session_too_old_to_reset_password: String {
+        NSLocalizedString("stytch.error.sessiontoooldtoresetpassword", value: "The provided session cannot be used to reset a password. It does not have an authentication_factor that was authenticated within the last 5 minutes. Please prompt the user to authenticate again before retrying the endpoint.", comment: "")
+    }
+
+    static var stytch_error_invalid_email: String {
+        NSLocalizedString("stytch.error.invalidemail", value: "Email format is invalid.", comment: "")
+    }
+
+    static var stytch_error_unauthorized_action: String {
+        NSLocalizedString("stytch.error.unauthorizedaction", value: "Unauthorized action.", comment: "")
+    }
+
+    static var stytch_error_weak_password: String {
+        NSLocalizedString("stytch.error.weakpassword", value: "password doesn't meet our strength requirements.", comment: "")
+    }
+
+    static var stytch_error_duplicate_email: String {
+        NSLocalizedString("stytch.error.duplicateemail", value: "A user with the specified email already exists for this project.", comment: "")
+    }
+
+    static var stytch_error_invalid_phone_number: String {
+        NSLocalizedString("stytch.error.invalidphonenumber", value: "Phone number format is invalid. Ensure the phone number is in the E.164 format.", comment: "")
+    }
+
+    static var stytch_error_oauth_auth_code_error: String {
+        NSLocalizedString("stytch.error.oauthauthcodeerror", value: "An error was encountered when exchanging the OAuth auth code. Please try again.", comment: "")
+    }
+
+    static var stytch_error_oauth_flow_callback_error: String {
+        NSLocalizedString("stytch.error.oauthflowcallbackerror", value: "An error was encountered in the callback of the OAuth flow. Please try again.", comment: "")
+    }
+
+    static var stytch_error_oauth_token_not_found: String {
+        NSLocalizedString("stytch.error.oauthtokennotfound", value: "Member OAuth Token not found", comment: "")
+    }
+
+    static var stytch_error_pkce_mismatch: String {
+        NSLocalizedString("stytch.error.pkcemismatch", value: "The submitted code_verifier does not match the code_challenge sent at the start of the flow.", comment: "")
+    }
+
+    static var stytch_error_ad_blocker_detected: String {
+        NSLocalizedString("stytch.error.adblockerdetected", value: "The request was blocked by an Ad Blocker. Please disable your ad blocker and try the request again.", comment: "")
+    }
+
+    static var stytch_error_stale_factors: String {
+        NSLocalizedString("stytch.error.stalefactors", value: "In order to call this endpoint, the user should have authenticated within the last hour. Please reauthenticate and try again.", comment: "")
+    }
+
+    static var stytch_error_internal_server_error: String {
+        NSLocalizedString("stytch.error.internalservererror", value: "Oops, something seems to have gone wrong. If this issue persists, please reach out to support.", comment: "")
+    }
+
+    static var stytch_error_invalid_method_id: String {
+        NSLocalizedString("stytch.error.invalidmethodid", value: "method_id format is invalid.", comment: "")
+    }
+
+    static var stytch_error_unable_to_auth_biometric_registration: String {
+        NSLocalizedString("stytch.error.unabletoauthbiometricregistration", value: "Biometric registration could not be authenticated.", comment: "")
+    }
+
+    static var stytch_error_unsubscribed_phone_number: String {
+        NSLocalizedString("stytch.error.unsubscribedphonenumber", value: "User has unsubscribed. User must resubscribe by texting 'START' before messages can be sent.", comment: "")
+    }
+
+    static var stytch_error_id_token_nonce_invalid: String {
+        NSLocalizedString("stytch.error.idtokennonceinvalid", value: "The provided nonce does not match the nonce in the ID token.", comment: "")
+    }
+
+    static var stytch_error_email_template_not_found: String {
+        NSLocalizedString("stytch.error.emailtemplatenotfound", value: "Email Template could not be found.", comment: "")
+    }
+
+    static var stytch_error_pkce_expected_code_verifier: String {
+        NSLocalizedString("stytch.error.pkceexpectedcodeverifier", value: "This flow was started using a code_challenge but the authentication call is missing the corresponding code_verifier.", comment: "")
+    }
+
+    static var stytch_error_captcha_required: String {
+        NSLocalizedString("stytch.error.captcharequired", value: "Captcha required", comment: "")
+    }
+
+    static var stytch_error_inactive_email: String {
+        NSLocalizedString("stytch.error.inactiveemail", value: "The email address is marked as inactive. Please try another email address, or contact your admin if you think this is a mistake.", comment: "")
+    }
+
+    static var stytch_error_member_password_not_found: String {
+        NSLocalizedString("stytch.error.memberpasswordnotfound", value: "Member password not found", comment: "")
+    }
+
+    static var stytch_error_too_many_unverified_factors: String {
+        NSLocalizedString("stytch.error.toomanyunverifiedfactors", value: "We were unable to create a new auth factor. This user already has too many unverified factors.", comment: "")
+    }
+
+    static var stytch_error_server_unavailable: String {
+        NSLocalizedString("stytch.error.serverunavailable", value: "Oops, something seems to have gone wrong. Please retry the request. If this issue persists, please reach out to support.", comment: "")
+    }
+
+    static var stytch_error_too_many_biometric_registrations_for_user: String {
+        NSLocalizedString("stytch.error.toomanybiometricregistrationsforuser", value: "The provided user_id has reached the maximum allowed mobile biometric registrations. The maximum is 25.", comment: "")
+    }
+
+    static var stytch_error_duplicate_phone_number: String {
+        NSLocalizedString("stytch.error.duplicatephonenumber", value: "A user with the specified phone number already exists for this project.", comment: "")
+    }
+
+    static var stytch_error_oauth_invalid_callback_request: String {
+        NSLocalizedString("stytch.error.oauthinvalidcallbackrequest", value: "The OAuth callback request is invalid. Please reach out to the application developer for support.", comment: "")
+    }
+
+    static var stytch_error_intermediate_session_not_found: String {
+        NSLocalizedString("stytch.error.intermediatesessionnotfound", value: "Intermediate session could not be found.", comment: "")
+    }
+
+    static var stytch_error_no_match_for_provided_magic_link_url: String {
+        NSLocalizedString("stytch.error.nomatchforprovidedmagiclinkurl", value: "The magic_link_url in the request did not match any redirect URLs set for this project.", comment: "")
+    }
+
+    static var stytch_error_totp_code_already_authenticated: String {
+        NSLocalizedString("stytch.error.totpcodealreadyauthenticated", value: "This TOTP code has already been authenticated. Please attempt with the next generated code.", comment: "")
+    }
+
+    static var stytch_error_invalid_session_duration_minutes: String {
+        NSLocalizedString("stytch.error.invalidsessiondurationminutes", value: "session_duration_minutes is invalid, should be between 5 to 527040 minutes.", comment: "")
+    }
+
+    static var stytch_error_invalid_consumer_endpoint: String {
+        NSLocalizedString("stytch.error.invalidconsumerendpoint", value: "This endpoint is only enabled for consumer projects.", comment: "")
+    }
+
+    static var stytch_error_cross_org_passwords_not_enabled: String {
+        NSLocalizedString("stytch.error.crossorgpasswordsnotenabled", value: "Cross-organization passwords are not enabled for this project.", comment: "")
+    }
+
+    static var stytch_error_invalid_session_duration: String {
+        NSLocalizedString("stytch.error.invalidsessionduration", value: "The submitted session duration exceeds the maximum session duration allowed for this project.", comment: "")
+    }
+
+    static var stytch_error_invalid_locale: String {
+        NSLocalizedString("stytch.error.invalidlocale", value: "locale is invalid.", comment: "")
+    }
+
+    static var stytch_error_magic_link_not_found: String {
+        NSLocalizedString("stytch.error.magiclinknotfound", value: "The magic link could not be authenticated, try sending another magic link.", comment: "")
+    }
+}

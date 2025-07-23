@@ -5,7 +5,7 @@ extension UIViewController {
     func presentErrorAlert(error: Error) {
         presentAlert(
             title: LocalizationManager.stytch_error_alert_title,
-            message: (error as? StytchError)?.message ?? error.localizedDescription
+            message: error.getLocalizedErrorMessage() ?? (error as? StytchError)?.message ?? error.localizedDescription
         )
     }
 
