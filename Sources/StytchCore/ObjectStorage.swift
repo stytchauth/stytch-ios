@@ -6,9 +6,9 @@ import Foundation
 /// StytchObjectInfo provides a generic way to unify the publishing of Stytch object types.
 /// If there is an object to publish you will get `case available(T, Date)`, which will publish the object
 /// and the date is was last validated at. The receiver of the event if the object is within their time tolerance for use.
-/// If there is no object to publish you will get `case unavailable(KeychainError?)`. So the publisher will never have to publish a nil value.
+/// If there is no object to publish you will get `case unavailable(EncryptedUserDefaultsError?)`. So the publisher will never have to publish a nil value.
 public enum StytchObjectInfo<T: Equatable>: Equatable {
-    case unavailable(KeychainError?)
+    case unavailable(EncryptedUserDefaultsError?)
     case available(T, Date)
 }
 
@@ -73,9 +73,17 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
             if let object = try objectWrapper.getObject(), let lastValidatedAtDate = objectWrapper.lastValidatedAtDate {
                 _onChange.send(.available(object, lastValidatedAtDate))
             } else {
-                _onChange.send(.unavailable(nil))
+                // because getObject() throws, except for session fetching, there are only two reasons we would be in here:
+                // 1. it's a session that is expired, meaning getObject did NOT throw, but returned a nil value
+                // 2. lastValidatedAt returned nil
+                // so we need to figure out which one it is
+                if objectWrapper.lastValidatedAtDate == nil {
+                    throw EncryptedUserDefaultsError.metadataIsMissing
+                } else {
+                    throw EncryptedUserDefaultsError.dataIsExpired
+                }
             }
-        } catch let error as KeychainError {
+        } catch let error as EncryptedUserDefaultsError {
             _onChange.send(.unavailable(error))
         } catch {
             _onChange.send(.unavailable(nil))

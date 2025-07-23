@@ -12,12 +12,19 @@ extension EncryptedUserDefaultsClient {
         guard let result = try getItem(item: item) else {
             return nil
         }
-        let data = try Current.jsonDecoder.decode(T.self, from: result.data)
-        return data
+        do {
+            return try Current.jsonDecoder.decode(T.self, from: result.data)
+        } catch {
+            throw EncryptedUserDefaultsError.dataCouldNotBeMarshalled
+        }
     }
 
     func getStringValue(_ item: EncryptedUserDefaultsItem) throws -> String? {
-        try getItem(item: item)?.stringValue
+        do {
+            return try getItem(item: item)?.stringValue
+        } catch {
+            return nil
+        }
     }
 
     func setObjectValue<T: Encodable>(_ data: T, for item: EncryptedUserDefaultsItem) throws {
@@ -38,6 +45,13 @@ struct EncryptedUserDefaultsItemResult {
     }
 }
 
-enum EncryptedUserDefaultsError: Error {
-    case encryptionKeyNotSet
+public enum EncryptedUserDefaultsError: Error {
+    case encryptionKeyNotAvailable
+    case noDataFound
+    case dataCouldNotBeDecrypted
+    case decryptedDataWasNil
+    case decryptedDataCouldNotBeStringified
+    case dataCouldNotBeMarshalled
+    case metadataIsMissing
+    case dataIsExpired
 }
