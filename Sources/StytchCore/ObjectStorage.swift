@@ -85,8 +85,14 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
             }
         } catch let error as EncryptedUserDefaultsError {
             _onChange.send(.unavailable(error))
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "persisted_data_was_unavailable", error: error))
+            }
         } catch {
             _onChange.send(.unavailable(nil))
+            Task {
+                try? await EventsClient.logEvent(parameters: .init(eventName: "persisted_data_was_unavailable", error: error))
+            }
         }
     }
 }
