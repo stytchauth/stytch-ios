@@ -696,81 +696,107 @@ extension LocalizationManager {
     static var stytch_zxcvbn_suggestion_1: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.1", value: "Use a few words, avoid common phrases.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_2: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.2", value: "No need for symbols, digits, or uppercase letters.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_3: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.3", value: "Add another word or two. Uncommon words are better.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_4: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.4", value: "Use a longer keyboard pattern with more turns.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_5: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.5", value: "Avoid repeated words and characters.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_6: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.6", value: "Avoid sequences.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_7: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.7", value: "Avoid recent years.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_8: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.8", value: "Avoid years that are associated with you.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_9: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.9", value: "Avoid dates and years that are associated with you.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_10: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.10", value: "Capitalization doesn\'t help very much.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_11: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.11", value: "All-uppercase is almost as easy to guess as all-lowercase.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_12: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.12", value: "Reversed words aren\'t much harder to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_13: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.13", value: "Predictable substitutions like \'@\' instead of \'a\' don\'t help very much.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_14: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.14", value: "Short keyboard patterns are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_15: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.15", value: "Straight rows of keys are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_16: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.16", value: "Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\".", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_17: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.17", value: "Repeats like \"aaa\" are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_18: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.18", value: "Sequences like \"abc\" or \"6543\" are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_19: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.19", value: "Recent years are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_20: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.20", value: "Dates are often easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_21: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.21", value: "This is a top-10 common password.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_22: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.22", value: "This is a top-100 common password.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_23: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.23", value: "This is a very common password.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_24: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.24", value: "This is similar to a commonly used password.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_25: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.25", value: "A word by itself is easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_26: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.26", value: "Names and surnames by themselves are easy to guess.", comment: "")
     }
+
     static var stytch_zxcvbn_suggestion_27: String {
         NSLocalizedString("stytch.zxcvbn.suggestion.27", value: "Common names and surnames are easy to guess.", comment: "")
     }

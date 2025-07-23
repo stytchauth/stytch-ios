@@ -73,6 +73,7 @@ final class ZXCVBNState: ObservableObject {
     }
 }
 
+// swiftlint:disable cyclomatic_complexity function_body_length
 private extension String {
     func mapToLocalizedString() -> String {
         switch self {
@@ -141,7 +142,7 @@ private extension String {
         score: 2,
         suggestions: [
             "Predictable substitutions like \'@\' instead of \'a\' don\'t help very much.",
-            "Common names and surnames are easy to guess."
+            "Common names and surnames are easy to guess.",
         ],
         warning: "Common names and surnames are easy to guess."
     )
