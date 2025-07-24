@@ -15,6 +15,13 @@ extension EncryptedUserDefaultsClient {
         do {
             return try Current.jsonDecoder.decode(T.self, from: result.data)
         } catch {
+            Task {
+                var details: [String: String] = [
+                    "type" : item.name,
+                    "json" : result.stringValue ?? "No String Value"
+                ]
+                try? await EventsClient.logEvent(parameters: .init(eventName: "json_decoding_error", details: details))
+            }
             throw EncryptedUserDefaultsError.dataCouldNotBeMarshalled
         }
     }
