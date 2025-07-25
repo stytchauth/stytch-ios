@@ -10,7 +10,7 @@ protocol EncryptedUserDefaultsClient: AnyObject {
 extension EncryptedUserDefaultsClient {
     func getObject<T: Decodable>(_: T.Type, for item: EncryptedUserDefaultsItem) throws -> T? {
         guard let result = try getItem(item: item), result.stringValue != "null" else {
-            return nil
+            throw EncryptedUserDefaultsError.noDataFound
         }
         do {
             return try Current.jsonDecoder.decode(T.self, from: result.data)
