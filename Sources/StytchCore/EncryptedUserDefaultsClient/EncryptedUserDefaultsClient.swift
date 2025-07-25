@@ -9,16 +9,16 @@ protocol EncryptedUserDefaultsClient: AnyObject {
 
 extension EncryptedUserDefaultsClient {
     func getObject<T: Decodable>(_: T.Type, for item: EncryptedUserDefaultsItem) throws -> T? {
-        guard let result = try getItem(item: item) else {
+        guard let result = try getItem(item: item), result.stringValue != "null" else {
             return nil
         }
         do {
             return try Current.jsonDecoder.decode(T.self, from: result.data)
         } catch {
             Task {
-                var details: [String: String] = [
-                    "type" : item.name,
-                    "json" : result.stringValue ?? "No String Value"
+                let details: [String: String] = [
+                    "type": item.name,
+                    "json": result.stringValue ?? "No String Value",
                 ]
                 try? await EventsClient.logEvent(parameters: .init(eventName: "json_decoding_error", details: details))
             }

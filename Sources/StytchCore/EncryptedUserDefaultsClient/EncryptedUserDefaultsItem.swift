@@ -1,8 +1,12 @@
 import Foundation
 
-struct EncryptedUserDefaultsItem {
+struct EncryptedUserDefaultsItem: Equatable {
     var kind: Kind = .encrypted
     var name: String
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.name == rhs.name
+    }
 }
 
 extension EncryptedUserDefaultsItem {

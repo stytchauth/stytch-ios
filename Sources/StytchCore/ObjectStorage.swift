@@ -24,6 +24,7 @@ protocol ObjectStorageWrapper {
     var item: EncryptedUserDefaultsItem { get }
     func setObject(object: ObjectType?)
     func getObject() throws -> ObjectType?
+    var dataWasExpected: Bool { get set }
 }
 
 extension ObjectStorageWrapper {
@@ -84,15 +85,31 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
                 }
             }
         } catch let error as EncryptedUserDefaultsError {
-            _onChange.send(.unavailable(error))
-            Task {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "persisted_data_was_unavailable", error: error))
+            if error == .noDataFound {
+                // if the underlying error was that no data could be found, check if we were _expecting_ there to be data
+                if objectWrapper.dataWasExpected {
+                    // if it was expected to exist, send the error that was encountered. This is an exceptional .unavailable case
+                    _onChange.send(.unavailable(error))
+                    logExceptionalUnavailableCase(error: error)
+                } else {
+                    // if it wasn't expected to exist, we can indicate that by sending no errors. This is an unexceptional .unavailable case
+                    _onChange.send(.unavailable(nil))
+                }
+            } else {
+                // if there was any other error other than data not being available, something went wrong, so this is an exceptional case
+                _onChange.send(.unavailable(error))
+                logExceptionalUnavailableCase(error: error)
             }
         } catch {
+            // if there was any other error other than an EncryptedUserDefaultsError, something REALLY went wrong so this is an exceptional case
             _onChange.send(.unavailable(nil))
-            Task {
-                try? await EventsClient.logEvent(parameters: .init(eventName: "persisted_data_was_unavailable", error: error))
-            }
+            logExceptionalUnavailableCase(error: error)
+        }
+    }
+
+    private func logExceptionalUnavailableCase(error: Error) {
+        Task {
+            try? await EventsClient.logEvent(parameters: .init(eventName: "unavailable_data_with_error", error: error))
         }
     }
 }
@@ -100,8 +117,10 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
 class SessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
     let item = EncryptedUserDefaultsItem.session
+    var dataWasExpected = false
 
     func setObject(object: Session?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -118,8 +137,10 @@ class SessionStorageWrapper: ObjectStorageWrapper {
 class MemberSessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
     let item = EncryptedUserDefaultsItem.memberSession
+    var dataWasExpected = false
 
     func setObject(object: MemberSession?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -135,8 +156,10 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
 
 class UserStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.user
+    var dataWasExpected = false
 
     func setObject(object: User?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -147,8 +170,10 @@ class UserStorageWrapper: ObjectStorageWrapper {
 
 class MemberStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.member
+    var dataWasExpected = false
 
     func setObject(object: Member?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -159,8 +184,10 @@ class MemberStorageWrapper: ObjectStorageWrapper {
 
 class OrganizationStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.organization
+    var dataWasExpected = false
 
     func setObject(object: Organization?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
