@@ -9,15 +9,29 @@ protocol EncryptedUserDefaultsClient: AnyObject {
 
 extension EncryptedUserDefaultsClient {
     func getObject<T: Decodable>(_: T.Type, for item: EncryptedUserDefaultsItem) throws -> T? {
-        guard let result = try getItem(item: item) else {
-            return nil
+        guard let result = try getItem(item: item), result.stringValue != "null" else {
+            throw EncryptedUserDefaultsError.noDataFound
         }
-        let data = try Current.jsonDecoder.decode(T.self, from: result.data)
-        return data
+        do {
+            return try Current.jsonDecoder.decode(T.self, from: result.data)
+        } catch {
+            Task {
+                let details: [String: String] = [
+                    "type": item.name,
+                    "json": result.stringValue ?? "No String Value",
+                ]
+                try? await EventsClient.logEvent(parameters: .init(eventName: "json_decoding_error", details: details))
+            }
+            throw EncryptedUserDefaultsError.dataCouldNotBeMarshalled
+        }
     }
 
     func getStringValue(_ item: EncryptedUserDefaultsItem) throws -> String? {
-        try getItem(item: item)?.stringValue
+        do {
+            return try getItem(item: item)?.stringValue
+        } catch {
+            return nil
+        }
     }
 
     func setObjectValue<T: Encodable>(_ data: T, for item: EncryptedUserDefaultsItem) throws {
@@ -38,6 +52,13 @@ struct EncryptedUserDefaultsItemResult {
     }
 }
 
-enum EncryptedUserDefaultsError: Error {
-    case encryptionKeyNotSet
+public enum EncryptedUserDefaultsError: Error {
+    case encryptionKeyNotAvailable
+    case noDataFound
+    case dataCouldNotBeDecrypted
+    case decryptedDataWasNil
+    case decryptedDataCouldNotBeStringified
+    case dataCouldNotBeMarshalled
+    case metadataIsMissing
+    case dataIsExpired
 }

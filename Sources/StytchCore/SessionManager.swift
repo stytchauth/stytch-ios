@@ -173,6 +173,14 @@ extension SessionManager {
             }
         }
     }
+
+    var sessionId: Session.ID? {
+        try? userDefaultsClient.getObject(Session.self, for: .session)?.sessionId
+    }
+
+    var memberSessionId: MemberSession.ID? {
+        try? userDefaultsClient.getObject(MemberSession.self, for: .memberSession)?.memberSessionId
+    }
 }
 
 // Intermediate Session Token

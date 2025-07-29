@@ -28,12 +28,14 @@ final class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClie
 
     func getItem(item: EncryptedUserDefaultsItem) throws -> EncryptedUserDefaultsItemResult? {
         try safelyEnqueue {
-            let userDefaultsData = defaults.data(forKey: item.name)
-            guard let decrypted = decryptData(encryptedData: userDefaultsData) else {
-                return nil
+            guard let userDefaultsData = defaults.data(forKey: item.name) else {
+                throw EncryptedUserDefaultsError.noDataFound
+            }
+            guard let decrypted = try decryptData(encryptedData: userDefaultsData) else {
+                throw EncryptedUserDefaultsError.decryptedDataWasNil
             }
             guard let data = decrypted.data(using: .utf8) else {
-                return nil
+                throw EncryptedUserDefaultsError.decryptedDataCouldNotBeStringified
             }
             return .init(data: data)
         }
@@ -68,7 +70,9 @@ final class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClie
 
     private func encryptString(plainText: String) throws -> Data? {
         try safelyEnqueue {
-            guard let encryptionKey = keychainClient.encryptionKey else { return nil }
+            guard let encryptionKey = keychainClient.encryptionKey else {
+                throw EncryptedUserDefaultsError.encryptionKeyNotAvailable
+            }
             let sealedBox = try AES.GCM.seal(
                 Data(plainText.utf8),
                 using: encryptionKey
@@ -77,15 +81,17 @@ final class EncryptedUserDefaultsClientImplementation: EncryptedUserDefaultsClie
         }
     }
 
-    private func decryptData(encryptedData: Data?) -> String? {
-        try? safelyEnqueue {
-            guard let encryptionKey = keychainClient.encryptionKey, let encryptedData else { return nil }
+    private func decryptData(encryptedData: Data) throws -> String? {
+        try safelyEnqueue {
+            guard let encryptionKey = keychainClient.encryptionKey else {
+                throw EncryptedUserDefaultsError.encryptionKeyNotAvailable
+            }
             do {
                 let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
                 let decryptedData = try AES.GCM.open(sealedBox, using: encryptionKey)
                 return String(data: decryptedData, encoding: .utf8)
             } catch {
-                return nil
+                throw EncryptedUserDefaultsError.dataCouldNotBeDecrypted
             }
         }
     }
