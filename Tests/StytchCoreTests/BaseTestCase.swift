@@ -21,7 +21,7 @@ class BaseTestCase: XCTestCase {
         Current.localStorage = .init()
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
-            return .init()
+            return Self.mockTimer
         }
         Current.asyncAfter = { _, _, _ in
             XCTFail("Unexpected asyncAfter run")
@@ -200,3 +200,7 @@ class MockLocalAuthenticationContext: LAContextEvaluating {
     }
 }
 #endif
+
+extension BaseTestCase {
+    static var mockTimer = DispatchSource.makeTimerSource(queue: .main)
+}
