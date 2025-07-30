@@ -6,7 +6,7 @@ final class PollingClient {
     private let queue: DispatchQueue
     private let task: Task
     private var retryClient: RetryClient?
-    private var timer: Timer?
+    private var timer: DispatchSourceTimer?
 
     @Dependency(\.timer) private var createTimer
 
@@ -25,11 +25,11 @@ final class PollingClient {
     func start() {
         queue.async { [weak self] in
             guard let self = self else { return }
-            timer?.invalidate()
+            timer?.cancel()
             retryClient?.cancel()
             retryClient = nil
 
-            timer = createTimer(interval, .main) { [weak self] in
+            timer = createTimer(interval, queue) { [weak self] in
                 guard let self = self else { return }
                 self.retryClient?.cancel()
                 self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
@@ -40,7 +40,7 @@ final class PollingClient {
 
     func stop() {
         queue.async { [weak self] in
-            self?.timer?.invalidate()
+            self?.timer?.cancel()
             self?.timer = nil
             self?.retryClient?.cancel()
             self?.retryClient = nil
