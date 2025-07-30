@@ -24,7 +24,7 @@ final class DeeplinkHandlerTestCase: BaseTestCase {
         try Current.keychainClient.setStringValue(String.mockPKCECodeVerifier, for: .codeVerifierPKCE)
         try Current.keychainClient.setStringValue(String.mockPKCECodeChallenge, for: .codeChallengePKCE)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         switch try await StytchClient.handle(url: handledUrl, sessionDurationMinutes: 30) {
         case let .handled(response):

@@ -154,7 +154,7 @@ final class OTPTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.otps.authenticate(parameters: parameters)
 

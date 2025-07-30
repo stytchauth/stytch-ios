@@ -110,7 +110,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         XCTAssertNotNil(try Current.keychainClient.getStringValue(.codeVerifierPKCE))
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
@@ -167,7 +167,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
 
         XCTAssertNotNil(try Current.keychainClient.getStringValue(.codeVerifierPKCE))
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchB2BClient.magicLinks.discoveryAuthenticate(parameters: parameters)
 

@@ -12,7 +12,7 @@ final class B2BSessionsTestCase: BaseTestCase {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
         let parameters: StytchB2BClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNil(StytchB2BClient.sessions.memberSession)
 
@@ -37,7 +37,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
     func testSessionsRevoke() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
@@ -76,7 +76,7 @@ final class B2BSessionsTestCase: BaseTestCase {
             B2BMFAAuthenticateResponse.mock
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let organizationID = "org_123"
         let parameters = StytchB2BClient.Sessions.ExchangeParameters(organizationID: organizationID)
@@ -109,7 +109,7 @@ final class B2BSessionsTestCase: BaseTestCase {
             }
         }.store(in: &subscriptions)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
@@ -133,7 +133,7 @@ final class B2BSessionsTestCase: BaseTestCase {
             }
         }.store(in: &subscriptions)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: nil,
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),
@@ -145,7 +145,7 @@ final class B2BSessionsTestCase: BaseTestCase {
     }
 
     func testGetExpiredMemberSessionReturnsNil() throws {
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .member(.mockWithExpiredMemberSession),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day")),

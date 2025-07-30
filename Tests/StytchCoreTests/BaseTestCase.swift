@@ -20,7 +20,7 @@ class BaseTestCase: XCTestCase {
         Current.localStorage = .init()
         Current.timer = { _, _, _ in
             XCTFail("Unexpected timer initialization")
-            return .init()
+            return Self.mockTimer
         }
         Current.asyncAfter = { _, _, _ in
             XCTFail("Unexpected asyncAfter run")
@@ -172,4 +172,8 @@ extension XCTestCase {
             XCTAssertEqual(queryDictionary[key], expectedValue, "URL missing expected query parameter: \(key)", file: file, line: line)
         }
     }
+}
+
+extension BaseTestCase {
+    static var mockTimer = DispatchSource.makeTimerSource(queue: .main)
 }

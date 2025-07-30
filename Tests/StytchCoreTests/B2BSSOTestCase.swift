@@ -39,7 +39,7 @@ final class B2BSSOTestCase: BaseTestCase {
         networkInterceptor.responses {
             B2BMFAAuthenticateResponse.mock
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         await XCTAssertThrowsErrorAsync(
             try await StytchB2BClient.sso.authenticate(parameters: .init(ssoToken: "i-am-token", sessionDurationMinutes: 12, locale: .en)),

@@ -129,7 +129,7 @@ final class MagicLinksTestCase: BaseTestCase {
 
         XCTAssertNotNil(try Current.keychainClient.getStringValue(.codeVerifierPKCE))
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let response = try await StytchClient.magicLinks.authenticate(parameters: parameters)
         XCTAssertEqual(response.statusCode, 200)
