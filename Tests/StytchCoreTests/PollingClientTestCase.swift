@@ -37,7 +37,7 @@ final class PollingClientTestCase: BaseTestCase {
         // wait for it to fire a few times
         let secondsToRun = 3.0
         let expectedFires = secondsToRun / interval
-        dispatchQueue.asyncAfter(deadline: .now() + secondsToRun, execute: { expectation.fulfill() })
+        dispatchQueue.asyncAfter(deadline: .now() + secondsToRun) { expectation.fulfill() }
         wait(for: [expectation], timeout: secondsToRun * 2)
 
         // did it fire the expected number of times?
