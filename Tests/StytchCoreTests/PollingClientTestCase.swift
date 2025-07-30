@@ -3,6 +3,8 @@ import XCTest
 
 final class PollingClientTestCase: BaseTestCase {
     func testDefault() {
+        let expectation = XCTestExpectation()
+        let dispatchQueue = DispatchQueue(label: "test")
         var timer: Timer?
         Current.timer = { timeInterval, _, task in
             let newTimer = Timer(fire: .distantFuture, interval: timeInterval, repeats: true) { _ in task() }
@@ -14,7 +16,7 @@ final class PollingClientTestCase: BaseTestCase {
         let pollingClient: PollingClient = .init(
             interval: 5,
             maxRetries: 5,
-            queue: .main
+            queue: dispatchQueue
         ) { _, onFailure in
             fireCount += 1
             if let theError = error {
@@ -28,6 +30,9 @@ final class PollingClientTestCase: BaseTestCase {
         XCTAssertNil(timer)
 
         pollingClient.start()
+
+        dispatchQueue.asyncAfter(deadline: .now() + 1, execute: { expectation.fulfill() })
+        wait(for: [expectation], timeout: 10)
 
         XCTAssertEqual(fireCount, 0)
 
