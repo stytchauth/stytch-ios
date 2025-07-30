@@ -34,6 +34,7 @@ final class PollingClientTestCase: BaseTestCase {
         XCTAssertNil(timer)
 
         pollingClient.start()
+
         // wait for it to fire a few times
         let secondsToRun = 3.0
         let expectedFires = secondsToRun / interval
