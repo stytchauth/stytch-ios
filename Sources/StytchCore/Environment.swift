@@ -127,9 +127,11 @@ struct Environment {
         $0.asyncAfter(deadline: $1, execute: $2)
     }
 
-    var timer: (TimeInterval, RunLoop, @escaping () -> Void) -> Timer = { interval, runloop, task in
-        let timer = Timer(timeInterval: interval, repeats: true) { _ in task() }
-        runloop.add(timer, forMode: .common)
+    var timer: (TimeInterval, DispatchQueue, @escaping () -> Void) -> DispatchSourceTimer = { interval, queue, task in
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + interval, repeating: interval)
+        timer.setEventHandler { task() }
+        timer.resume()
         return timer
     }
 }

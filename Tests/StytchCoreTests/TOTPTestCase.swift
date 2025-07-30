@@ -15,7 +15,7 @@ final class TOTPTestCase: BaseTestCase {
     func testAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.totps.authenticate(parameters: .init(totpCode: "test-code"))
 
@@ -41,7 +41,7 @@ final class TOTPTestCase: BaseTestCase {
             )
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.totps.recover(parameters: .init(recoveryCode: "recover-edoc"))
 
