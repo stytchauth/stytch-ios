@@ -23,20 +23,23 @@ final class PollingClient {
     }
 
     func start() {
-        timer?.invalidate()
-        retryClient?.cancel()
-        retryClient = nil
-
-        timer = createTimer(interval, .main) { [weak self] in
+        queue.async { [weak self] in
             guard let self = self else { return }
-            self.retryClient?.cancel()
-            self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
-            self.retryClient?.attempt()
+            timer?.invalidate()
+            retryClient?.cancel()
+            retryClient = nil
+
+            timer = createTimer(interval, .main) { [weak self] in
+                guard let self = self else { return }
+                self.retryClient?.cancel()
+                self.retryClient = .init(maxRetries: self.maxRetries, queue: self.queue, task: self.task)
+                self.retryClient?.attempt()
+            }
         }
     }
 
     func stop() {
-        DispatchQueue.main.async { [weak self] in
+        queue.async { [weak self] in
             self?.timer?.invalidate()
             self?.timer = nil
             self?.retryClient?.cancel()
