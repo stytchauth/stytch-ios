@@ -644,7 +644,7 @@ public enum StytchAPIErrorType: String, Codable {
     case sessionEnforcedFactorMatchingSessionRequired = "session_enforced_factor_matching_session_required"
     case sessionMustHaveAtLeastOneActiveFactor = "session_must_have_at_least_one_active_factor"
     case sessionNotFound = "session_not_found"
-    case sessionNotMutableImpersonated = "session_not_mutable_impersonated"
+    case sessionNotMutable = "session_not_mutable"
     case sessionOnCodeDoesNotMatchSessionPassedIn = "session_on_code_does_not_match_session_passed_in"
     case sessionTooOldToResetPassword = "session_too_old_to_reset_password"
     case signatureIsIncorrectSize = "signature_is_incorrect_size"
