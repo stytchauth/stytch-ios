@@ -51,7 +51,7 @@ final class CryptoWalletsTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.cryptoWallets.authenticate(parameters: .init(cryptoWalletType: .solana, cryptoWalletAddress: "mock-crypto-address", signature: "mock-signature"))
 
