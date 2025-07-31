@@ -67,7 +67,7 @@ final class PasskeysTestCase: BaseTestCase {
                 credentialID: .init("fake_id".utf8)
             )
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         #if os(iOS)
         let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .autoFill)
         #else

@@ -41,7 +41,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
     func testExchangeIntermediateSession() async throws {
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
         XCTAssertTrue(Current.sessionManager.hasValidIntermediateSessionToken)
@@ -62,7 +62,7 @@ final class B2BDiscoveryTestCase: BaseTestCase {
 
     func testCreateOrganization() async throws {
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
         XCTAssertTrue(Current.sessionManager.hasValidIntermediateSessionToken)

@@ -42,7 +42,7 @@ final class B2BTOTPTestCase: BaseTestCase {
             B2BAuthenticateResponse.mock
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let organizationId = "orgid1234"
         let memberId = "memberid1234"

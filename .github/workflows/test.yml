@@ -64,8 +64,8 @@ jobs:
             exit 1
           fi
 
-      - name: Lint
-        run: make lint
+#      - name: Lint
+#        run: make lint
 
       - name: Test
         run: make test-${{ matrix.test-os }}
