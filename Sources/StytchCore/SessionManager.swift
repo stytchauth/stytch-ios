@@ -26,6 +26,7 @@ class SessionManager {
     @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
     @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
     @Dependency(\.date) private var date
+    @Dependency(\.keychainClient) private var keychainClient
 
     var hasValidSessionToken: Bool {
         sessionToken != nil && sessionToken?.value.isEmpty == false
@@ -278,5 +279,38 @@ extension HTTPCookieStorage {
         }
 
         return cookieValue
+    }
+}
+
+extension SessionManager {
+    func processPotentialBiometricRegistrationCleanups(currentUser: User, lastAuthenticatedUserId: String?) {
+        guard let previousUserId = lastAuthenticatedUserId else {
+            // if we have no previous user, just clean up any local registrations that don't exist on the server
+            return StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+        }
+        if previousUserId == currentUser.userId.rawValue {
+            // if the previous and current user are the same, only clean up any local registrations that don't exist on the server
+            StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+        } else {
+            // if they are different, process potential pending delete record for the current user
+            let pendingDeleteRecordKey = EncryptedUserDefaultsItem.biometricPendingDeleteFor(currentUser.userId.rawValue)
+            if let biometricRegistrationIdToDelete = try? userDefaultsClient.getStringValue(pendingDeleteRecordKey) {
+                // if there is a pending delete, delete it and remove pending delete record
+                StytchClient.user.deleteFactor(
+                    .biometricRegistration(id: User.BiometricRegistration.ID(stringLiteral: biometricRegistrationIdToDelete))
+                ) { [weak self] response in
+                    guard let self = self, case .success = response else { return }
+                    try? self.userDefaultsClient.removeItem(item: pendingDeleteRecordKey)
+                }
+            }
+
+            // if there is an existing biometric registration on the device, add a pending delete record for the previous user id
+            if let existingBiometricRegistrationId = try? userDefaultsClient.getStringValue(.biometricKeyRegistration) {
+                try? userDefaultsClient.setStringValue(existingBiometricRegistrationId, for: .biometricPendingDeleteFor(previousUserId))
+                // delete the local registration
+                try? keychainClient.removeItem(item: .privateKeyRegistration)
+                try? keychainClient.removeItem(item: .biometricKeyRegistration)
+            }
+        }
     }
 }
