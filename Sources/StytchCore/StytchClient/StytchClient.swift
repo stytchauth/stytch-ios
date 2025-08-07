@@ -48,6 +48,10 @@ public struct StytchClient: StytchClientType {
         Current.localStorage.bootstrapData?.passwordConfig
     }
 
+    public static var bootstrapData: BootstrapResponseData? {
+        Current.localStorage.bootstrapData
+    }
+
     public static var clientType: ClientType {
         .consumer
     }
