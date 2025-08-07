@@ -16,7 +16,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             locale: .en
         )
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
@@ -112,7 +112,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             ])
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
         _ = try await client.resetByEmail(
@@ -143,7 +143,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
     func testResetByExistingPassword() async throws {
         networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
@@ -182,7 +182,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
                 wrapped: .init(memberSession: .mock, member: .mock, organization: .mock)
             )
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await client.resetBySession(parameters: .init(organizationId: "org123", password: "hi, i'm Tom.", locale: .en))
 
@@ -241,7 +241,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             ])
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
         // Call resetByEmail

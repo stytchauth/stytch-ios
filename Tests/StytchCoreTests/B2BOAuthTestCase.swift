@@ -9,7 +9,7 @@ final class B2BOAuthTestCase: BaseTestCase {
             StytchB2BClient.OAuth.OAuthAuthenticateResponse.mock
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
@@ -52,7 +52,7 @@ final class B2BOAuthTestCase: BaseTestCase {
             )
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try Current.pkcePairManager.generateAndReturnPKCECodePair()
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
