@@ -25,7 +25,7 @@ protocol BootstrapResponseDataType {
 }
 
 /// The underlying data for `bootstrap` calls.
-struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataType {
+public struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataType {
     let disableSdkWatermark: Bool
     let cnameDomain: String?
     let emailDomains: [String]
