@@ -461,6 +461,8 @@ public enum StytchAPIErrorType: String, Codable {
     case noMatchForProvidedMagicLinkUrl = "no_match_for_provided_magic_link_url"
     case noMatchForProvidedOauthUrl = "no_match_for_provided_oauth_url"
     case noMatchForProvidedSsoUrl = "no_match_for_provided_sso_url"
+    case noOauthAuthorizeMemberSelector = "no_oauth_authorize_member_selector"
+    case noOauthAuthorizeUserSelector = "no_oauth_authorize_user_selector"
     case noPasswordResetRedirectUrl = "no_password_reset_redirect_url"
     case noPendingWebauthnRegistration = "no_pending_webauthn_registration"
     case noSessionArguments = "no_session_arguments"
