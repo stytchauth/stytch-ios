@@ -96,5 +96,6 @@ public extension StytchB2BClient.RecoveryCodes {
         public let sessionJwt: String
         /// Number of recovery codes remaining for the member.
         public let recoveryCodesRemaining: Int
+        public let memberDevice: SDKDeviceHistory?
     }
 }

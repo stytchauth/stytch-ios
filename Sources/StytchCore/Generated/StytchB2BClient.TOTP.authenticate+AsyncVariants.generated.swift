@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchB2BClient.TOTP {
     /// Authenticate a TOTP for a member
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BAuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<TOTPAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.TOTP {
     }
 
     /// Authenticate a TOTP for a member
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BAuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<TOTPAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

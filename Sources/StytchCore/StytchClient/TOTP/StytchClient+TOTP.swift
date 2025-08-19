@@ -14,8 +14,8 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/totp-authenticate) endpoint. Call this method to authenticate a TOTP code entered by a user.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+        public func authenticate(parameters: AuthenticateParameters) async throws -> TOTPAuthenticateResponse {
+            let authenticateResponse: TOTPAuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .totp
             return authenticateResponse
         }
@@ -105,6 +105,7 @@ public extension StytchClient.TOTP {
         public let session: Session
         public let sessionToken: String
         public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` responses.
@@ -116,5 +117,14 @@ public extension StytchClient.TOTP {
     /// Additional data unioned to the ``User`` type.
     struct RecoveryCodes: Codable, Sendable {
         public let recoveryCodes: [String]
+    }
+
+    typealias TOTPAuthenticateResponse = Response<TOTPAuthenticateResponseData>
+    struct TOTPAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }

@@ -22,8 +22,8 @@ public extension StytchB2BClient.OTP {
 
         // sourcery: AsyncVariants
         /// Authenticate a one-time passcode (OTP) sent to a user via Email.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+        public func authenticate(parameters: AuthenticateParameters) async throws -> StytchB2BClient.OTP.OTPAuthenticateResponse {
+            let authenticateResponse: OTPAuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
             sessionManager.b2bLastAuthMethodUsed = .emailOtp
             return authenticateResponse
         }

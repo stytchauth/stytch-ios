@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchClient.OTP {
     /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<OTPAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchClient.OTP {
     }
 
     /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<OTPAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

@@ -24,8 +24,8 @@ public extension StytchB2BClient {
         ///   a. We force a password reset to ensure that the member is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
         /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
-            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BPasswordAuthenticateResponse {
+            let mfaAuthenticateResponse: B2BPasswordAuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -59,7 +59,7 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the magic link token is valid, hasn’t expired, or already been used.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> B2BPasswordEmailResetResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -76,7 +76,7 @@ public extension StytchB2BClient {
                 )
             )
 
-            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+            let mfaAuthenticateResponse: B2BPasswordEmailResetResponse = try await router.post(
                 to: .resetByEmail(.complete),
                 parameters: intermediateSessionTokenParameters,
                 useDFPPA: true
@@ -91,8 +91,8 @@ public extension StytchB2BClient {
         /// Reset the member’s password and authenticate them. This endpoint checks that the existing password matches the stored value.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the member is authenticated.
-        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BMFAAuthenticateResponse {
-            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> B2BPasswordExistingPasswordResetResponse {
+            let mfaAuthenticateResponse: B2BPasswordExistingPasswordResetResponse = try await router.post(
                 to: .resetByExistingPassword,
                 parameters: IntermediateSessionTokenParameters(
                     intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -159,6 +159,21 @@ public extension StytchB2BClient.Passwords {
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
+    }
+
+    typealias B2BPasswordAuthenticateResponse = Response<B2BPasswordAuthenticateResponseData>
+    struct B2BPasswordAuthenticateResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
+        public let memberSession: MemberSession?
+        public let memberId: Member.ID
+        public let member: Member
+        public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let intermediateSessionToken: String?
+        public let memberAuthenticated: Bool
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        public let memberDevice: SDKDeviceHistory?
     }
 }
 
@@ -233,6 +248,21 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+
+    typealias B2BPasswordEmailResetResponse = Response<B2BPasswordEmailResetResponseData>
+    struct B2BPasswordEmailResetResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
+        public let memberSession: MemberSession?
+        public let memberId: Member.ID
+        public let member: Member
+        public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let intermediateSessionToken: String?
+        public let memberAuthenticated: Bool
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        public let memberDevice: SDKDeviceHistory?
+    }
 }
 
 public extension StytchB2BClient.Passwords {
@@ -269,6 +299,21 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+
+    typealias B2BPasswordExistingPasswordResetResponse = Response<B2BPasswordExistingPasswordResetResponseData>
+    struct B2BPasswordExistingPasswordResetResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
+        public let memberSession: MemberSession?
+        public let memberId: Member.ID
+        public let member: Member
+        public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let intermediateSessionToken: String?
+        public let memberAuthenticated: Bool
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        public let memberDevice: SDKDeviceHistory?
+    }
 }
 
 public extension StytchB2BClient.Passwords {
@@ -283,6 +328,7 @@ public extension StytchB2BClient.Passwords {
         public let member: Member
         /// The current organization object.
         public let organization: Organization
+        public let memberDevice: SDKDeviceHistory?
     }
 
     /// The dedicated parameters type for passwords `resetBySession` calls.

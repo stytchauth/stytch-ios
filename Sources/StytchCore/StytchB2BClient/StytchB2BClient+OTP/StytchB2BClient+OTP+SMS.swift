@@ -30,7 +30,7 @@ public extension StytchB2BClient.OTP {
 
         // sourcery: AsyncVariants
         /// Authenticate a one-time passcode (OTP) sent to a user via SMS.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> StytchB2BClient.OTP.OTPAuthenticateResponse {
             try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(

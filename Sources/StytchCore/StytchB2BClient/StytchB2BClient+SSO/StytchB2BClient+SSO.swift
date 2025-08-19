@@ -30,7 +30,7 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Authenticate a member given a token. This endpoint verifies that the memeber completed the SSO Authentication flow by
         /// verifying that the token is valid and hasn't expired.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> SSOAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -48,7 +48,7 @@ public extension StytchB2BClient {
                 )
             )
 
-            let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+            let mfaAuthenticateResponse: SSOAuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: intermediateSessionTokenParameters,
                 useDFPPA: true
@@ -170,6 +170,21 @@ public extension StytchB2BClient.SSO {
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
         }
+    }
+
+    typealias SSOAuthenticateResponse = Response<SSOAuthenticateResponseData>
+    struct SSOAuthenticateResponseData: Codable, Sendable, B2BMFAAuthenticateResponseDataType {
+        public let memberSession: MemberSession?
+        public let memberId: Member.ID
+        public let member: Member
+        public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let intermediateSessionToken: String?
+        public let memberAuthenticated: Bool
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        public let memberDevice: SDKDeviceHistory?
     }
 }
 

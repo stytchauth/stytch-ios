@@ -109,8 +109,8 @@ public extension StytchB2BClient {
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDurationMinutes:)` function.
-    enum DeeplinkResponse: Sendable {
-        case mfauth(B2BMFAAuthenticateResponse)
+    enum DeeplinkResponse<T: Decodable & Sendable>: Sendable {
+        case mfauth(Response<T>)
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
@@ -131,7 +131,7 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
+    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse<B2BMFAAuthenticateResponseDataType>, DeeplinkTokenType, DeeplinkRedirectType> {
         guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))

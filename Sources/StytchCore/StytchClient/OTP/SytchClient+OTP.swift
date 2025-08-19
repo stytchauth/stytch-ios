@@ -1,7 +1,7 @@
 public protocol OTPProtocol {
     func loginOrCreate(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse
     func send(parameters: StytchClient.OTP.Parameters) async throws -> StytchClient.OTP.OTPResponse
-    func authenticate(parameters: StytchClient.OTP.AuthenticateParameters) async throws -> AuthenticateResponse
+    func authenticate(parameters: StytchClient.OTP.AuthenticateParameters) async throws -> StytchClient.OTP.OTPAuthenticateResponse
 }
 
 public extension StytchClient {
@@ -33,8 +33,8 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the OTP [authenticate](https://stytch.com/docs/api/authenticate-otp) API endpoint which validates the one-time code passed in. If this method succeeds, the user will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+        public func authenticate(parameters: AuthenticateParameters) async throws -> OTPAuthenticateResponse {
+            let authenticateResponse: OTPAuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .otp
             return authenticateResponse
         }
@@ -68,6 +68,15 @@ public extension StytchClient.OTP {
             self.methodId = methodId
             self.sessionDurationMinutes = sessionDurationMinutes
         }
+    }
+
+    typealias OTPAuthenticateResponse = Response<OTPAuthenticateResponseData>
+    struct OTPAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }
 

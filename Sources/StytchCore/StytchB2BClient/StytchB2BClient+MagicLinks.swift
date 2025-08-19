@@ -26,7 +26,7 @@ public extension StytchB2BClient {
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
         /// If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> MagicLinksAuthenticateResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -41,7 +41,7 @@ public extension StytchB2BClient {
                         wrapped: parameters
                     )
                 )
-                let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+                let mfaAuthenticateResponse: MagicLinksAuthenticateResponse = try await router.post(
                     to: .authenticate,
                     parameters: intermediateSessionTokenParameters,
                     useDFPPA: true
@@ -51,7 +51,7 @@ public extension StytchB2BClient {
             }
             // For authenticating if inviteSend was called, in which case we will not have a PKCE challenge code
             else {
-                let mfaAuthenticateResponse: B2BMFAAuthenticateResponse = try await router.post(
+                let mfaAuthenticateResponse: MagicLinksAuthenticateResponse = try await router.post(
                     to: .authenticate,
                     parameters: IntermediateSessionTokenParameters(
                         intermediateSessionToken: sessionManager.intermediateSessionToken,
@@ -268,5 +268,22 @@ public extension StytchB2BClient.MagicLinks.Email {
             self.locale = locale
             self.roles = roles
         }
+    }
+}
+
+public extension StytchB2BClient.MagicLinks {
+    typealias MagicLinksAuthenticateResponse = Response<MagicLinksAuthenticateResponseData>
+    struct MagicLinksAuthenticateResponseData: Codable, Sendable, B2BMFAAuthenticateResponseDataType {
+        public let memberSession: MemberSession?
+        public let memberId: Member.ID
+        public let member: Member
+        public let organization: Organization
+        public let intermediateSessionToken: String?
+        public let memberAuthenticated: Bool
+        public let mfaRequired: StytchB2BClient.MFARequired?
+        public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let memberDevice: SDKDeviceHistory?
     }
 }

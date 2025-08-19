@@ -5,7 +5,7 @@ import Foundation
 
 public extension StytchB2BClient.OTP.Email {
     /// Authenticate a one-time passcode (OTP) sent to a user via Email.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<AuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<StytchB2BClient.OTP.OTPAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -16,7 +16,7 @@ public extension StytchB2BClient.OTP.Email {
     }
 
     /// Authenticate a one-time passcode (OTP) sent to a user via Email.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<AuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<StytchB2BClient.OTP.OTPAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

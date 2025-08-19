@@ -6,7 +6,7 @@ import Foundation
 public extension StytchB2BClient.MagicLinks {
     /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
     /// If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BMFAAuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<MagicLinksAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -18,7 +18,7 @@ public extension StytchB2BClient.MagicLinks {
 
     /// Wraps the magic link [authenticate](https://stytch.com/docs/b2b/api/authenticate-magic-link) API endpoint which validates the magic link token passed in.
     /// If this method succeeds, the member will be logged in, granted an active session, and the session cookies will be minted and stored in `HTTPCookieStorage.shared`.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BMFAAuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<MagicLinksAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

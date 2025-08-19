@@ -2,12 +2,12 @@ import Foundation
 
 public protocol PasswordsProtocol {
     func create(parameters: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.CreateResponse
-    func authenticate(parameters: StytchClient.Passwords.PasswordParameters) async throws -> AuthenticateResponse
+    func authenticate(parameters: StytchClient.Passwords.PasswordParameters) async throws -> StytchClient.Passwords.PasswordsAuthenticateResponse
     func resetByEmailStart(parameters: StytchClient.Passwords.ResetByEmailStartParameters) async throws -> BasicResponse
-    func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> AuthenticateResponse
+    func resetByEmail(parameters: StytchClient.Passwords.ResetByEmailParameters) async throws -> StytchClient.Passwords.PasswordsEmailResetResponse
     func strengthCheck(parameters: StytchClient.Passwords.StrengthCheckParameters) async throws -> StytchClient.Passwords.StrengthCheckResponse
-    func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> AuthenticateResponse
-    func resetByExistingPassword(parameters: StytchClient.Passwords.ResetByExistingPasswordParameters) async throws -> AuthenticateResponse
+    func resetBySession(parameters: StytchClient.Passwords.ResetBySessionParameters) async throws -> StytchClient.Passwords.PasswordsSessionResetResponse
+    func resetByExistingPassword(parameters: StytchClient.Passwords.ResetByExistingPasswordParameters) async throws -> StytchClient.Passwords.PasswordsExistingPasswordResetResponse
 }
 
 public extension StytchClient {
@@ -35,8 +35,8 @@ public extension StytchClient {
         ///   a. We force a password reset to ensure that the user is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
         /// 2. The user used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
         ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account takeover attack.
-        public func authenticate(parameters: PasswordParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+        public func authenticate(parameters: PasswordParameters) async throws -> PasswordsAuthenticateResponse {
+            let authenticateResponse: PasswordsAuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .passwords
             return authenticateResponse
         }
@@ -61,7 +61,7 @@ public extension StytchClient {
         /// Reset the user’s password and authenticate them. This endpoint checks that the magic link token is valid, hasn’t expired, or already been used – and can optionally require additional security settings, such as the IP address and user agent matching the initial reset request.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
-        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> AuthenticateResponse {
+        public func resetByEmail(parameters: ResetByEmailParameters) async throws -> PasswordsEmailResetResponse {
             defer {
                 try? pkcePairManager.clearPKCECodePair()
             }
@@ -70,7 +70,7 @@ public extension StytchClient {
                 throw StytchSDKError.missingPKCE
             }
 
-            let authenticateResponse: AuthenticateResponse = try await router.post(
+            let authenticateResponse: PasswordsEmailResetResponse = try await router.post(
                 to: .resetByEmail(.complete),
                 parameters: CodeVerifierParameters(codeVerifier: pkcePair.codeVerifier, wrapped: parameters),
                 useDFPPA: true
@@ -99,8 +99,8 @@ public extension StytchClient {
         /// This method resets the user’s password using their existing session. The endpoint will error if the session does not have a password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the token and password are accepted, the password is securely stored for future authentication and the user is authenticated.
-        public func resetBySession(parameters: ResetBySessionParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .resetBySession, parameters: parameters, useDFPPA: true)
+        public func resetBySession(parameters: ResetBySessionParameters) async throws -> PasswordsSessionResetResponse {
+            let authenticateResponse: PasswordsSessionResetResponse = try await router.post(to: .resetBySession, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .passwords
             return authenticateResponse
         }
@@ -109,8 +109,8 @@ public extension StytchClient {
         /// This method resets the user’s password using their existing password. This endpoint checks that the existing password matches the stored value.
         ///
         /// The provided password needs to meet our password strength requirements, which can be checked in advance with the password strength endpoint. If the password and accompanying parameters are accepted, the password is securely stored for future authentication and the user is authenticated.
-        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .resetByExistingPassword, parameters: parameters, useDFPPA: true)
+        public func resetByExistingPassword(parameters: ResetByExistingPasswordParameters) async throws -> PasswordsExistingPasswordResetResponse {
+            let authenticateResponse: PasswordsExistingPasswordResetResponse = try await router.post(to: .resetByExistingPassword, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .passwords
             return authenticateResponse
         }
@@ -134,6 +134,7 @@ public extension StytchClient.Passwords {
         public let sessionToken: String
         public let sessionJwt: String
         public let session: Session
+        public let userDevice: SDKDeviceHistory?
     }
 
     /// The dedicated parameters type for password `create` and `authenticate` calls.
@@ -151,6 +152,18 @@ public extension StytchClient.Passwords {
             self.password = password
             self.sessionDurationMinutes = sessionDurationMinutes
         }
+    }
+
+    typealias PasswordsAuthenticateResponse = Response<PasswordsWithUserDeviceData>
+    typealias PasswordsEmailResetResponse = Response<PasswordsWithUserDeviceData>
+    typealias PasswordsExistingPasswordResetResponse = Response<PasswordsWithUserDeviceData>
+    typealias PasswordsSessionResetResponse = Response<PasswordsWithUserDeviceData>
+    struct PasswordsWithUserDeviceData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }
 

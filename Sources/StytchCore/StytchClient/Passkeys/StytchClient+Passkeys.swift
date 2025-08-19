@@ -50,7 +50,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Provides second-factor authentication for the authenticated-user via an existing passkey.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> WebAuthNAuthenticateResponse {
             let destination: PasskeysRoute
             if sessionManager.hasValidSessionToken {
                 destination = .authenticateStartSecondary
@@ -68,7 +68,7 @@ public extension StytchClient {
                 requestBehavior: parameters.requestBehavior
             )
 
-            let authenticateResponse: AuthenticateResponse = try await router.post(
+            let authenticateResponse: WebAuthNAuthenticateResponse = try await router.post(
                 to: .authenticate,
                 parameters: Credential<AssertionResponse>(
                     id: credential.credentialID,
@@ -174,6 +174,15 @@ public extension StytchClient.Passkeys {
             self.id = id
             self.name = name
         }
+    }
+
+    typealias WebAuthNAuthenticateResponse = Response<WebAuthNAuthenticateResponseData>
+    struct WebAuthNAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }
 

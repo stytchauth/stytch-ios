@@ -158,7 +158,7 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// If a valid biometric registration exists, this method confirms the current device owner via the device's built-in biometric reader and returns an updated session object by either starting a new session or adding a the biometric factor to an existing session.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> BiometricsAuthenticateResponse {
             guard let privateKeyRegistrationQueryResult: KeychainQueryResult = try keychainClient.getQueryResults(item: .privateKeyRegistration).first else {
                 throw StytchSDKError.noBiometricRegistration
             }
@@ -180,7 +180,7 @@ public extension StytchClient {
             )
 
             // NOTE: - We could return separate concrete type which deserializes/contains biometric_registration_id, but this doesn't currently add much value
-            let authenticateResponse: AuthenticateResponse = try await router.post(
+            let authenticateResponse: BiometricsAuthenticateResponse = try await router.post(
                 to: .authenticate(.complete),
                 parameters: authenticateCompleteParameters,
                 useDFPPA: true
@@ -282,6 +282,15 @@ public extension StytchClient.Biometrics {
         public let session: Session
         public let sessionToken: String
         public let sessionJwt: String
+    }
+
+    typealias BiometricsAuthenticateResponse = Response<BiometricsAuthenticateResponseData>
+    struct BiometricsAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }
 

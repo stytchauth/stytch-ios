@@ -2,7 +2,7 @@ import Foundation
 
 public protocol CryptoWalletsProtocol {
     func authenticateStart(parameters: StytchClient.CryptoWallets.AuthenticateStartParameters) async throws -> StytchClient.CryptoWallets.AuthenticateStartResponse
-    func authenticate(parameters: StytchClient.CryptoWallets.AuthenticateParameters) async throws -> AuthenticateResponse
+    func authenticate(parameters: StytchClient.CryptoWallets.AuthenticateParameters) async throws -> StytchClient.CryptoWallets.CryptoAuthenticateResponse
 }
 
 public extension StytchClient {
@@ -21,8 +21,8 @@ public extension StytchClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's Crypto wallet [authenticate](https://stytch.com/docs/api/crypto-wallet-authenticate) endpoint. Call this method after the user signs the challenge to validate the signature.
-        public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
-            let authenticateResponse: AuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
+        public func authenticate(parameters: AuthenticateParameters) async throws -> CryptoAuthenticateResponse {
+            let authenticateResponse: CryptoAuthenticateResponse = try await router.post(to: .authenticate, parameters: parameters, useDFPPA: true)
             sessionManager.consumerLastAuthMethodUsed = .crypto
             return authenticateResponse
         }
@@ -80,6 +80,15 @@ public extension StytchClient.CryptoWallets {
         public init(challenge: String) {
             self.challenge = challenge
         }
+    }
+
+    typealias CryptoAuthenticateResponse = Response<CryptoAuthenticateResponseData>
+    struct CryptoAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let user: User
+        public let session: Session
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let userDevice: SDKDeviceHistory?
     }
 }
 

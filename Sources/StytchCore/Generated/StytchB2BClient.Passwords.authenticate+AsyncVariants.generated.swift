@@ -11,7 +11,7 @@ public extension StytchB2BClient.Passwords {
     ///   a. We force a password reset to ensure that the member is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
     /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
     ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
-    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BMFAAuthenticateResponse>) {
+    func authenticate(parameters: AuthenticateParameters, completion: @escaping Completion<B2BPasswordAuthenticateResponse>) {
         Task {
             do {
                 completion(.success(try await authenticate(parameters: parameters)))
@@ -28,7 +28,7 @@ public extension StytchB2BClient.Passwords {
     ///   a. We force a password reset to ensure that the member is the legitimate owner of the email address, and not a malicious actor abusing the compromised credentials.
     /// 2. The member used email based authentication (e.g. Magic Links, Google OAuth) for the first time, and had not previously verified their email address for password based login.
     ///   a. We force a password reset in this instance in order to safely deduplicate the account by email address, without introducing the risk of a pre-hijack account-takeover attack.
-    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BMFAAuthenticateResponse, Error> {
+    func authenticate(parameters: AuthenticateParameters) -> AnyPublisher<B2BPasswordAuthenticateResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

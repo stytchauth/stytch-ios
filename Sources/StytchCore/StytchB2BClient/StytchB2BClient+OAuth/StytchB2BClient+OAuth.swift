@@ -115,6 +115,7 @@ public extension StytchB2BClient.OAuth {
         /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
         /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.
         public let providerValues: OAuthProviderValues
+        public let memberDevice: SDKDeviceHistory?
     }
 }
 

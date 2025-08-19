@@ -30,7 +30,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants
         /// Authenticate a TOTP for a member
-        public func authenticate(parameters: AuthenticateParameters) async throws -> B2BAuthenticateResponse {
+        public func authenticate(parameters: AuthenticateParameters) async throws -> TOTPAuthenticateResponse {
             try await router.post(
                 to: .authenticate,
                 parameters: IntermediateSessionTokenParameters(
@@ -78,6 +78,16 @@ public extension StytchB2BClient.TOTP {
 
         /// The recovery codes used to authenticate the member without an authenticator app.
         public let recoveryCodes: [String]
+    }
+
+    typealias TOTPAuthenticateResponse = Response<TOTPAuthenticateResponseData>
+    struct TOTPAuthenticateResponseData: Codable, Sendable, B2BAuthenticateResponseDataType {
+        public let memberSession: MemberSession
+        public let member: Member
+        public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let memberDevice: SDKDeviceHistory?
     }
 }
 
