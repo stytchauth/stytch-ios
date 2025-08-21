@@ -54,7 +54,10 @@ extension AuthHomeViewModel: AuthHomeViewModelProtocol {
         try await EventsClient.logEvent(
             parameters: .init(
                 eventName: "render_login_screen",
-                details: ["options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? ""]
+                details: [
+                    "options": String(data: JSONEncoder().encode(state.config), encoding: .utf8) ?? "",
+                    "bootstrap": String(data: JSONEncoder().encode(StytchClient.bootstrapData), encoding: .utf8) ?? "",
+                ]
             )
         )
     }
