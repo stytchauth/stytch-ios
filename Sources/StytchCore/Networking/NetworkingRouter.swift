@@ -30,6 +30,8 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.keychainClient) private var keychainClient
 
+    @Dependency(\.userDefaultsClient) private var userDefaultsClient
+
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> StytchClientConfiguration?) {
         self.getConfiguration = getConfiguration
         self.pathForRoute = pathForRoute
@@ -166,10 +168,12 @@ public extension NetworkingRouter {
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
-                userStorage.update(sessionResponse.user)
                 #if !os(tvOS) && !os(watchOS)
-                StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+                let lastAuthenticatedUserId: String? = try? userDefaultsClient.getStringValue(.lastAuthenticatedUserId)
+                sessionManager.processPotentialBiometricRegistrationCleanups(currentUser: sessionResponse.user, lastAuthenticatedUserId: lastAuthenticatedUserId)
                 #endif
+                try? userDefaultsClient.setStringValue(sessionResponse.user.id.rawValue, for: .lastAuthenticatedUserId)
+                userStorage.update(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionManager.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
