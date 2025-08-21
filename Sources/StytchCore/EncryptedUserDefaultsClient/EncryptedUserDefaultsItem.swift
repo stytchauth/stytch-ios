@@ -39,8 +39,4 @@ extension EncryptedUserDefaultsItem {
     static func lastValidatedAtDate(_ prefix: String) -> Self {
         .init(name: "\(prefix)_last_validated_at_date")
     }
-
-    static func biometricPendingDeleteFor(_ userId: String) -> Self {
-        .init(name: "stytch_biometric_registration_pending_delete_for_\(userId)")
-    }
 }
