@@ -284,6 +284,7 @@ extension HTTPCookieStorage {
 
 extension SessionManager {
     func processPotentialBiometricRegistrationCleanups(currentUser: User, lastAuthenticatedUserId: String?) {
+        #if !os(tvOS) && !os(watchOS)
         guard let previousUserId = lastAuthenticatedUserId else {
             // if we have no previous user, just clean up any local registrations that don't exist on the server
             return StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
@@ -299,5 +300,6 @@ extension SessionManager {
                 try? keychainClient.removeItem(item: .biometricKeyRegistration)
             }
         }
+        #endif
     }
 }
