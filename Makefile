@@ -63,20 +63,20 @@ test tests test-macos: codegen
 test-ios: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) iphonesimulator18.2 -destination "OS=18.4,name=iPhone 16 Pro" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) iphonesimulator18.2 -destination "OS=18.4,name=iPhone 16 Pro" | $(XCPRETTY)
+	$(TEST) iphonesimulator18.4 -destination "OS=18.4,name=iPhone 16 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator18.4 -destination "OS=18.4,name=iPhone 16 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) appletvsimulator18.2 -destination "OS=18.2,name=Apple TV" | $(XCPRETTY)
+	$(TEST) appletvsimulator18.4 -destination "OS=18.4,name=Apple TV 4K (3rd generation)" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) watchsimulator11.2 -destination "OS=11.1,name=Apple Watch Ultra 2 (49mm)" | $(XCPRETTY)
+	$(TEST) watchsimulator11.4 -destination "OS=11.4,name=Apple Watch Ultra 2 (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:
