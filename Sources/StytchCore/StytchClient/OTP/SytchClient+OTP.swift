@@ -69,7 +69,9 @@ public extension StytchClient.OTP {
             self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
+}
 
+public extension StytchClient.OTP {
     typealias OTPAuthenticateResponse = Response<OTPAuthenticateResponseData>
     struct OTPAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let user: User

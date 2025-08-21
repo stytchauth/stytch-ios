@@ -153,7 +153,9 @@ public extension StytchClient.Passwords {
             self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
+}
 
+public extension StytchClient.Passwords {
     typealias PasswordsAuthenticateResponse = Response<PasswordsWithUserDeviceData>
     typealias PasswordsEmailResetResponse = Response<PasswordsWithUserDeviceData>
     typealias PasswordsExistingPasswordResetResponse = Response<PasswordsWithUserDeviceData>

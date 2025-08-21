@@ -1,5 +1,7 @@
 import Foundation
 
+// swiftlint:disable file_length
+
 public extension StytchB2BClient {
     /// The interface for interacting with passwords products.
     static var passwords: Passwords {
@@ -160,7 +162,9 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     typealias B2BPasswordAuthenticateResponse = Response<B2BPasswordAuthenticateResponseData>
     struct B2BPasswordAuthenticateResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
         public let memberSession: MemberSession?
@@ -248,7 +252,9 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     typealias B2BPasswordEmailResetResponse = Response<B2BPasswordEmailResetResponseData>
     struct B2BPasswordEmailResetResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
         public let memberSession: MemberSession?
@@ -299,7 +305,9 @@ public extension StytchB2BClient.Passwords {
             self.locale = locale
         }
     }
+}
 
+public extension StytchB2BClient.Passwords {
     typealias B2BPasswordExistingPasswordResetResponse = Response<B2BPasswordExistingPasswordResetResponseData>
     struct B2BPasswordExistingPasswordResetResponseData: Sendable, Codable, B2BMFAAuthenticateResponseDataType {
         public let memberSession: MemberSession?

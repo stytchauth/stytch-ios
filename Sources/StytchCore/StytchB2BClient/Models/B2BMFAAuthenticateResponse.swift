@@ -1,7 +1,7 @@
 import Foundation
 
 /// The concrete response type for B2B MFA `authenticate` calls.
-public typealias B2BMFAAuthenticateResponse = Response<B2BMFAAuthenticateResponseData>
+public typealias B2BMFAAuthenticateResponse<T: B2BMFAAuthenticateResponseDataType> = Response<T>
 
 /// Represents the interface of responses for B2B MFA `authenticate` calls.
 public typealias B2BMFAAuthenticateResponseType = BasicResponseType & B2BMFAAuthenticateResponseDataType
@@ -31,7 +31,7 @@ public struct B2BMFAAuthenticateResponseData: Codable, Sendable, B2BMFAAuthentic
 }
 
 /// The interface which a data type must conform to for all underlying data in B2B MFA `authenticate` responses.
-public protocol B2BMFAAuthenticateResponseDataType {
+public protocol B2BMFAAuthenticateResponseDataType: Decodable {
     /// The ``MemberSession`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     var memberSession: MemberSession? { get }
     /// The current member's ID.

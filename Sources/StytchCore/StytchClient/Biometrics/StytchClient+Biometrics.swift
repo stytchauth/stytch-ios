@@ -283,7 +283,9 @@ public extension StytchClient.Biometrics {
         public let sessionToken: String
         public let sessionJwt: String
     }
+}
 
+public extension StytchClient.Biometrics {
     typealias BiometricsAuthenticateResponse = Response<BiometricsAuthenticateResponseData>
     struct BiometricsAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let user: User

@@ -175,7 +175,10 @@ public extension StytchClient.Passkeys {
             self.name = name
         }
     }
+}
 
+@available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
+public extension StytchClient.Passkeys {
     typealias WebAuthNAuthenticateResponse = Response<WebAuthNAuthenticateResponseData>
     struct WebAuthNAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let user: User

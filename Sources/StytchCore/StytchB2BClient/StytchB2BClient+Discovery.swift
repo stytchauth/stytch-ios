@@ -33,7 +33,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [exchange intermediate session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-        public func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func exchangeIntermediateSession(parameters: ExchangeIntermediateSessionParameters) async throws -> B2BMFAAuthenticateResponse<B2BMFAAuthenticateResponseData> {
             try await router.post(
                 to: .intermediateSessionsExchange,
                 parameters: IntermediateSessionTokenParameters(
@@ -45,7 +45,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Wraps Stytch's [create Organization via discovery](https://stytch.com/docs/b2b/api/create-organization-via-discovery) endpoint. This operation consumes the `intermediate_session_token`. If this method succeeds, the Member will be logged in, and granted an active session.
-        public func createOrganization(parameters: CreateOrganizationParameters) async throws -> B2BMFAAuthenticateResponse {
+        public func createOrganization(parameters: CreateOrganizationParameters) async throws -> B2BMFAAuthenticateResponse<B2BMFAAuthenticateResponseData> {
             try await router.post(
                 to: .organizationsCreate,
                 parameters: IntermediateSessionTokenParameters(

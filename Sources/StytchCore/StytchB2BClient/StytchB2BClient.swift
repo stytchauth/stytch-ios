@@ -109,8 +109,9 @@ public extension StytchB2BClient {
     }
 
     /// Wrapper around the possible types returned from the `handle(url:sessionDurationMinutes:)` function.
-    enum DeeplinkResponse<T: Decodable & Sendable>: Sendable {
-        case mfauth(Response<T>)
+    enum DeeplinkResponse: Sendable {
+        case mfAuthMagicLinks(StytchB2BClient.MagicLinks.MagicLinksAuthenticateResponse)
+        case mfAuthSSO(StytchB2BClient.SSO.SSOAuthenticateResponse)
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
@@ -131,7 +132,7 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse<B2BMFAAuthenticateResponseDataType>, DeeplinkTokenType, DeeplinkRedirectType> {
+    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
         guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))
@@ -157,7 +158,7 @@ public extension StytchB2BClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .mfauth(magicLinks.authenticate(parameters: .init(magicLinksToken: token, sessionDurationMinutes: sessionDurationMinutes))))
+            return try await .handled(response: .mfAuthMagicLinks(magicLinks.authenticate(parameters: .init(magicLinksToken: token, sessionDurationMinutes: sessionDurationMinutes))))
         case .multiTenantPasswords:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
@@ -168,7 +169,7 @@ public extension StytchB2BClient {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))
             }
-            return try await .handled(response: .mfauth(sso.authenticate(parameters: .init(ssoToken: token, sessionDurationMinutes: sessionDurationMinutes))))
+            return try await .handled(response: .mfAuthSSO(sso.authenticate(parameters: .init(ssoToken: token, sessionDurationMinutes: sessionDurationMinutes))))
         case .oauth:
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_success", details: ["token_type": tokenType.rawValue]))

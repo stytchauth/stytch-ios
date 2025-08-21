@@ -81,7 +81,9 @@ public extension StytchClient.CryptoWallets {
             self.challenge = challenge
         }
     }
+}
 
+public extension StytchClient.CryptoWallets {
     typealias CryptoAuthenticateResponse = Response<CryptoAuthenticateResponseData>
     struct CryptoAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let user: User

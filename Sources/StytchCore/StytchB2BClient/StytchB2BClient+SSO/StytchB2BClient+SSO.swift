@@ -171,7 +171,9 @@ public extension StytchB2BClient.SSO {
             self.locale = locale
         }
     }
+}
 
+public extension StytchB2BClient.SSO {
     typealias SSOAuthenticateResponse = Response<SSOAuthenticateResponseData>
     struct SSOAuthenticateResponseData: Codable, Sendable, B2BMFAAuthenticateResponseDataType {
         public let memberSession: MemberSession?

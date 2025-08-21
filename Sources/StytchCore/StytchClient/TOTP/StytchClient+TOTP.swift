@@ -118,7 +118,9 @@ public extension StytchClient.TOTP {
     struct RecoveryCodes: Codable, Sendable {
         public let recoveryCodes: [String]
     }
+}
 
+public extension StytchClient.TOTP {
     typealias TOTPAuthenticateResponse = Response<TOTPAuthenticateResponseData>
     struct TOTPAuthenticateResponseData: Codable, Sendable, AuthenticateResponseDataType {
         public let user: User

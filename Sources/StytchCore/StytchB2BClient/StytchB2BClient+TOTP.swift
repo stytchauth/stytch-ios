@@ -79,7 +79,9 @@ public extension StytchB2BClient.TOTP {
         /// The recovery codes used to authenticate the member without an authenticator app.
         public let recoveryCodes: [String]
     }
+}
 
+public extension StytchB2BClient.TOTP {
     typealias TOTPAuthenticateResponse = Response<TOTPAuthenticateResponseData>
     struct TOTPAuthenticateResponseData: Codable, Sendable, B2BAuthenticateResponseDataType {
         public let memberSession: MemberSession
