@@ -28,7 +28,8 @@ final class BiometricsTestCase: BaseTestCase {
                     user: .mock(userId: userId),
                     session: .mock(userId: userId),
                     sessionToken: sessionToken,
-                    sessionJwt: "session_jwt"
+                    sessionJwt: "session_jwt",
+                    userDevice: nil
                 )
             )
         }
@@ -71,7 +72,13 @@ final class BiometricsTestCase: BaseTestCase {
             AuthenticateResponse(
                 requestId: "req_123",
                 statusCode: 200,
-                wrapped: .init(user: .mock(userId: userId), sessionToken: "session_token_123", sessionJwt: "session_jwt_123", session: .mock(userId: userId))
+                wrapped: .init(
+                    user: .mock(userId: userId),
+                    sessionToken: "session_token_123",
+                    sessionJwt: "session_jwt_123",
+                    session: .mock(userId: userId),
+                    userDevice: nil
+                )
             )
         }
 

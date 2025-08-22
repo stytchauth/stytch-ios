@@ -102,7 +102,8 @@ extension AuthenticateResponse {
                 user: .mock(userId: userId),
                 sessionToken: "hello_session",
                 sessionJwt: "jwt_for_me",
-                session: .mock(userId: userId)
+                session: .mock(userId: userId),
+                userDevice: nil
             )
         )
     }
