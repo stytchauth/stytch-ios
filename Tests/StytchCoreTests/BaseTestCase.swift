@@ -108,6 +108,25 @@ extension AuthenticateResponse {
     }
 }
 
+extension B2BMFAAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            memberSession: .mock,
+            memberId: "member_id_123",
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
+            memberAuthenticated: false,
+            mfaRequired: nil,
+            primaryRequired: nil
+        )
+    )
+}
+
 extension Session {
     static func mock(userId: User.ID) -> Self {
         let refDate = Date()

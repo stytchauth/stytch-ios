@@ -1,7 +1,7 @@
 import Foundation
 
 /// The concrete response type for B2B MFA `authenticate` calls.
-public typealias B2BMFAAuthenticateResponse<T: B2BMFAAuthenticateResponseDataType> = Response<T>
+public typealias B2BMFAAuthenticateResponse = Response<B2BMFAAuthenticateResponseData>
 
 /// Represents the interface of responses for B2B MFA `authenticate` calls.
 public typealias B2BMFAAuthenticateResponseType = BasicResponseType & B2BMFAAuthenticateResponseDataType

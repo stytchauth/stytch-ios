@@ -278,12 +278,12 @@ public extension StytchB2BClient.MagicLinks {
         public let memberId: Member.ID
         public let member: Member
         public let organization: Organization
+        public let sessionToken: String
+        public let sessionJwt: String
         public let intermediateSessionToken: String?
         public let memberAuthenticated: Bool
         public let mfaRequired: StytchB2BClient.MFARequired?
         public let primaryRequired: StytchB2BClient.PrimaryRequired?
-        public let sessionToken: String
-        public let sessionJwt: String
         public let memberDevice: SDKDeviceHistory?
     }
 }

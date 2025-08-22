@@ -111,10 +111,10 @@ public extension StytchB2BClient {
     /// Wrapper around the possible types returned from the `handle(url:sessionDurationMinutes:)` function.
     enum DeeplinkResponse: Sendable {
         case mfAuthMagicLinks(StytchB2BClient.MagicLinks.MagicLinksAuthenticateResponse)
-        case mfAuthSSO(StytchB2BClient.SSO.SSOAuthenticateResponse)
         case mfaOAuth(StytchB2BClient.OAuth.OAuthAuthenticateResponse)
         case discovery(StytchB2BClient.DiscoveryAuthenticateResponse)
         #if !os(watchOS)
+        case mfAuthSSO(StytchB2BClient.SSO.SSOAuthenticateResponse)
         case discoveryOauth(StytchB2BClient.DiscoveryAuthenticateResponse)
         #endif
     }

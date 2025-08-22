@@ -66,7 +66,7 @@ public extension StytchB2BClient {
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Use this endpoint to exchange a Member's existing session for another session in a different Organization.
-        public func exchange(parameters: ExchangeParameters) async throws -> B2BMFAAuthenticateResponse<B2BMFAAuthenticateResponseData> {
+        public func exchange(parameters: ExchangeParameters) async throws -> B2BMFAAuthenticateResponse {
             try await router.post(to: .exchange, parameters: parameters)
         }
     }

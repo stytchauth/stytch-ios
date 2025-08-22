@@ -15,7 +15,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             sessionDurationMinutes: 26,
             locale: .en
         )
-        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
+        networkInterceptor.responses { StytchB2BClient.Passwords.B2BPasswordAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
@@ -79,7 +79,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
 
         networkInterceptor.responses {
             BasicResponse(requestId: "123", statusCode: 200)
-            B2BMFAAuthenticateResponse.mock
+            StytchB2BClient.Passwords.B2BPasswordAuthenticateResponse.mock
         }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
@@ -142,7 +142,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
     }
 
     func testResetByExistingPassword() async throws {
-        networkInterceptor.responses { B2BMFAAuthenticateResponse.mock }
+        networkInterceptor.responses { StytchB2BClient.Passwords.B2BPasswordAuthenticateResponse.mock }
         Current.timer = { _, _, _ in .init() }
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
@@ -179,7 +179,7 @@ final class B2BPasswordsTestCase: BaseTestCase {
             StytchB2BClient.Passwords.ResetBySessionResponse(
                 requestId: "",
                 statusCode: 200,
-                wrapped: .init(memberSession: .mock, member: .mock, organization: .mock)
+                wrapped: .init(memberSession: .mock, member: .mock, organization: .mock, memberDevice: nil)
             )
         }
         Current.timer = { _, _, _ in .init() }
@@ -286,4 +286,24 @@ final class B2BPasswordsTestCase: BaseTestCase {
             ])
         )
     }
+}
+
+extension StytchB2BClient.Passwords.B2BPasswordAuthenticateResponse {
+    static let mock: Self = .init(
+        requestId: "req_123",
+        statusCode: 200,
+        wrapped: .init(
+            memberSession: .mock,
+            memberId: "member_id_123",
+            member: .mock,
+            organization: .mock,
+            sessionToken: "xyzasdf",
+            sessionJwt: "i'mvalidjson",
+            intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
+            memberAuthenticated: false,
+            mfaRequired: nil,
+            primaryRequired: nil,
+            memberDevice: nil
+        )
+    )
 }

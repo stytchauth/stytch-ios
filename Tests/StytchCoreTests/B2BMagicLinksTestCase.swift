@@ -97,7 +97,7 @@ final class B2BMagicLinksTestCase: BaseTestCase {
     }
 
     func testAuthenticate() async throws {
-        let authResponse: B2BMFAAuthenticateResponse = .mock
+        let authResponse: StytchB2BClient.MagicLinks.MagicLinksAuthenticateResponse = .mock
         networkInterceptor.responses { authResponse }
         let parameters: StytchB2BClient.MagicLinks.AuthenticateParameters = .init(
             magicLinksToken: "12345",
@@ -195,7 +195,7 @@ extension B2BAuthenticateResponse {
     )
 }
 
-extension B2BMFAAuthenticateResponse {
+extension StytchB2BClient.MagicLinks.MagicLinksAuthenticateResponse {
     static let mock: Self = .init(
         requestId: "req_123",
         statusCode: 200,
@@ -209,7 +209,8 @@ extension B2BMFAAuthenticateResponse {
             intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
             memberAuthenticated: false,
             mfaRequired: nil,
-            primaryRequired: nil
+            primaryRequired: nil,
+            memberDevice: nil
         )
     )
 }

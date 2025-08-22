@@ -91,7 +91,8 @@ extension StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverResponseData {
             organization: .mock,
             sessionToken: "xyzasdf",
             sessionJwt: "i'mvalidjson",
-            recoveryCodesRemaining: 99
+            recoveryCodesRemaining: 99,
+            memberDevice: nil
         )
     }
 }
