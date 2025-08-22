@@ -34,6 +34,8 @@ extension EncryptedUserDefaultsItem {
     static let b2bLastAuthMethodUsed: Self = .init(name: "b2b_last_auth_method_used")
     static let consumerLastAuthMethodUsed: Self = .init(name: "consumer_last_auth_method_used")
 
+    static let lastAuthenticatedUserId: Self = .init(name: "stytch_last_authenticated_user_id")
+
     static func lastValidatedAtDate(_ prefix: String) -> Self {
         .init(name: "\(prefix)_last_validated_at_date")
     }

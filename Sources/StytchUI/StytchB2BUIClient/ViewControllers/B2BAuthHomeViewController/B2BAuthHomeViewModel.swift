@@ -11,8 +11,11 @@ final class B2BAuthHomeViewModel {
     func logRenderScreen() async throws {
         try await EventsClient.logEvent(
             parameters: .init(
-                eventName: "render_login_screen",
-                details: ["options": String(data: JSONEncoder().encode(state.configuration), encoding: .utf8) ?? ""]
+                eventName: "render_b2b_login_screen",
+                details: [
+                    "options": String(data: JSONEncoder().encode(state.configuration), encoding: .utf8) ?? "",
+                    "bootstrap": String(data: JSONEncoder().encode(StytchB2BClient.bootstrapData), encoding: .utf8) ?? "",
+                ]
             )
         )
     }
