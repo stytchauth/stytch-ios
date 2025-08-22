@@ -11,7 +11,7 @@ final class PasswordsTestCase: BaseTestCase {
         networkInterceptor.responses {
             StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am", userId: userId, user: .mock(userId: userId), sessionToken: "session_token_431", sessionJwt: "jwt_8534", session: .mock(userId: userId)))
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)
 
         try XCTAssertRequest(
@@ -27,7 +27,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.authenticate(parameters: passwordParams)
 
         try XCTAssertRequest(
@@ -106,7 +106,7 @@ final class PasswordsTestCase: BaseTestCase {
             ])
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
@@ -130,7 +130,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testResetBySession() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.resetBySession(parameters: passwordResetBySessionParams)
 
         try XCTAssertRequest(
@@ -147,7 +147,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testResetByExistingPassword() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.passwords.resetByExistingPassword(parameters: passwordResetByExistingPasswordParams)
 
