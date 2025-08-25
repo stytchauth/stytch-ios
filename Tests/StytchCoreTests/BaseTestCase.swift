@@ -110,7 +110,7 @@ extension AuthenticateResponse {
 }
 
 extension Session {
-    static func mock(userId: User.ID) -> Self {
+    static func mock(userId: User.ID, sessionId: Session.ID = "im_a_session_id") -> Self {
         let refDate = Date()
 
         return .init(
@@ -127,7 +127,7 @@ extension Session {
             ],
             expiresAt: refDate.addingTimeInterval(30),
             lastAccessedAt: refDate.addingTimeInterval(-30),
-            sessionId: "im_a_session_id",
+            sessionId: sessionId,
             startedAt: refDate.addingTimeInterval(-30),
             userId: userId
         )

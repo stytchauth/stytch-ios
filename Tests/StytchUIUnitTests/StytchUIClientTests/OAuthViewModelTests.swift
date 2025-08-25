@@ -22,7 +22,7 @@ final class OAuthViewModelTests: BaseTestCase {
                 sessionDurationMinutes: 123
             )
         )
-        let viewModel = OAuthViewModel(state: state)
+        _ = OAuthViewModel(state: state)
         XCTAssert(state.config.sessionDurationMinutes == 123)
     }
 
@@ -33,7 +33,7 @@ final class OAuthViewModelTests: BaseTestCase {
                 products: []
             )
         )
-        let viewModel = OAuthViewModel(state: state)
+        _ = OAuthViewModel(state: state)
         XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
     }
 

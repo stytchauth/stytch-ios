@@ -47,7 +47,7 @@ final class NetworkingClientTestCase: XCTestCase {
         networkingClient.setup(onPerformRequest: onPerformRequest)
 
         _ = try await networkingClient.performRequest(
-            method,
+            method: method,
             url: try url ?? XCTUnwrap(URL(string: "https://www.stytch.com")),
             useDFPPA: false
         )
