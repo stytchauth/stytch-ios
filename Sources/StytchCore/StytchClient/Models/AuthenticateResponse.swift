@@ -14,7 +14,7 @@ public protocol AuthenticateResponseDataType {
     var sessionJwt: String { get }
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     var session: Session { get }
-    /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the user_device response field will contain information about the user's device attributes.
+    /// If Protected Auth is enabled and returned fingerprinting results, the userDevice response field will contain information about the user's device attributes
     var userDevice: DeviceHistory? { get }
 }
 
@@ -28,6 +28,6 @@ public struct AuthenticateResponseData: Codable, Sendable, AuthenticateResponseD
     public let sessionJwt: String
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     public let session: Session
-    /// The visitor_id (a unique identifier) of the user's device. See the Device Fingerprinting documentation for more details on the visitor_id.
+    /// If Protected Auth is enabled and returned fingerprinting results, the userDevice response field will contain information about the user's device attributes
     public let userDevice: DeviceHistory?
 }

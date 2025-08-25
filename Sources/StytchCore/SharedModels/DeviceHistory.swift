@@ -1,8 +1,6 @@
 import Foundation
 
 public struct DeviceHistory: Codable, Sendable {
-    let visitorId: String?
-    let visitorIdDetails: DeviceAttributeDetails?
     let ipAddress: String?
     let ipAddressDetails: DeviceAttributeDetails?
     let ipGeoCountry: String?
@@ -12,7 +10,7 @@ public struct DeviceHistory: Codable, Sendable {
 }
 
 public struct DeviceAttributeDetails: Codable, Sendable {
-    let isNew: Bool?
+    let isNew: Bool
     let firstSeenAt: String?
     let lastSeenAt: String?
 }
