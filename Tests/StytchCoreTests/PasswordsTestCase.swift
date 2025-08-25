@@ -9,7 +9,19 @@ final class PasswordsTestCase: BaseTestCase {
     func testCreate() async throws {
         let userId: User.ID = ""
         networkInterceptor.responses {
-            StytchClient.Passwords.CreateResponse(requestId: "321", statusCode: 200, wrapped: .init(emailId: "email_id_that's_what_i_am", userId: userId, user: .mock(userId: userId), sessionToken: "session_token_431", sessionJwt: "jwt_8534", session: .mock(userId: userId)))
+            StytchClient.Passwords.CreateResponse(
+                requestId: "321",
+                statusCode: 200,
+                wrapped: .init(
+                    emailId: "email_id_that's_what_i_am",
+                    userId: userId,
+                    user: .mock(userId: userId),
+                    sessionToken: "session_token_431",
+                    sessionJwt: "jwt_8534",
+                    session: .mock(userId: userId),
+                    userDevice: nil
+                )
+            )
         }
         Current.timer = { _, _, _ in .init() }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)

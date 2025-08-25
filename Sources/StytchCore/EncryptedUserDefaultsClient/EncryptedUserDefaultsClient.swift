@@ -26,6 +26,7 @@ extension EncryptedUserDefaultsClient {
         }
     }
 
+    // TODO: check if this is silencing an error here.
     func getStringValue(_ item: EncryptedUserDefaultsItem) throws -> String? {
         do {
             return try getItem(item: item)?.stringValue

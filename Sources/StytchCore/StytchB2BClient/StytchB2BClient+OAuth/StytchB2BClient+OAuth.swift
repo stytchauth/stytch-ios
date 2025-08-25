@@ -111,6 +111,8 @@ public extension StytchB2BClient.OAuth {
         public let mfaRequired: StytchB2BClient.MFARequired?
         /// Information about the primary authentication requirements of the Organization.
         public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the member_device response field will contain information about the member's device attributes.
+        public let memberDevice: DeviceHistory?
         /// The provider_values object lists relevant identifiers, values, and scopes for a given OAuth provider.
         /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
         /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.

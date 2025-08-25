@@ -105,6 +105,7 @@ public extension StytchClient.TOTP {
         public let session: Session
         public let sessionToken: String
         public let sessionJwt: String
+        public let userDevice: DeviceHistory?
     }
 
     /// The underlying data for TOTP ``StytchClient/TOTP/recoveryCodes()-mbxc`` responses.
