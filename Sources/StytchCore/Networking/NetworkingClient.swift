@@ -31,7 +31,7 @@ extension NetworkingClient {
         ]
     }
 
-    func performRequest(_ method: HTTPMethod, url: URL, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
+    func performRequest(method: HTTPMethod, url: URL, useDFPPA: Bool) async throws -> (Data, HTTPURLResponse) {
         let request = urlRequest(url: url, method: method)
         return try await handleRequest(request: request, useDFPPA: useDFPPA)
     }
@@ -87,8 +87,9 @@ final class NetworkingClientImplementation: NetworkingClient {
         } else {
             return try await networkRequestHandler.defaultRequestHandler(request: request)
         }
-        #endif
+        #else
         return try await networkRequestHandler.defaultRequestHandler(request: request)
+        #endif
     }
 
     static var live = NetworkingClientImplementation(networkRequestHandler: NetworkRequestHandlerImplementation(urlSession: .init(configuration: .default)))

@@ -52,7 +52,7 @@ public extension StytchClient {
         /// Wraps Stytch's [authenticate](https://stytch.com/docs/api/session-auth) Session endpoint and validates that the session issued to the user is still valid, returning both an opaque sessionToken and sessionJwt for this session. The sessionJwt will have a fixed lifetime of five minutes regardless of the underlying session duration, though it will be refreshed automatically in the background after a successful authentication.
         public func authenticate(parameters: AuthenticateParameters) async throws -> AuthenticateResponse {
             do {
-                return try await router.post(to: .authenticate, parameters: parameters)
+                return try await router.performSessionRequest(to: .authenticate, parameters: parameters)
             } catch {
                 sessionManager.resetSessionForUnrecoverableError(error)
                 throw error
@@ -70,7 +70,7 @@ public extension StytchClient {
         /// Wraps Stytch's [revoke](https://stytch.com/docs/api/session-revoke) Session endpoint and revokes the user's current session. This method should be used to log out a user. A successful revocation will terminate session-refresh polling.
         public func revoke(parameters: RevokeParameters = .init()) async throws -> BasicResponse {
             do {
-                let response: BasicResponse = try await router.post(to: .revoke, parameters: EmptyCodable())
+                let response: BasicResponse = try await router.performSessionRequest(to: .revoke, parameters: EmptyCodable())
                 sessionManager.resetSession()
                 return response
             } catch {

@@ -26,7 +26,7 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let viewModel = PasswordViewModel(state: state)
+        _ = PasswordViewModel(state: state)
         XCTAssert(state.config.sessionDurationMinutes == 123)
     }
 
@@ -40,7 +40,7 @@ final class PasswordViewModelTests: BaseTestCase {
             email: "",
             magicLinksEnabled: true
         )
-        let viewModel = PasswordViewModel(state: state)
+        _ = PasswordViewModel(state: state)
         XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
     }
 
