@@ -65,7 +65,8 @@ extension AuthenticateResponse {
                 user: .mock(userId: userId),
                 sessionToken: "hello_session",
                 sessionJwt: "jwt_for_me",
-                session: .mock(userId: userId)
+                session: .mock(userId: userId),
+                userDevice: nil
             )
         )
     }
@@ -90,7 +91,8 @@ extension StytchClient.Passwords.CreateResponse {
                 user: mockUser,
                 sessionToken: "mock-session-token",
                 sessionJwt: "mock-session-jwt",
-                session: mockSession
+                session: mockSession,
+                userDevice: nil
             )
         )
     }
@@ -128,6 +130,7 @@ extension StytchClient.OAuth.Apple.AuthenticateResponse {
                 sessionToken: "session-token",
                 sessionJwt: "session-jwt",
                 session: mockSession,
+                userDevice: nil,
                 userCreated: true
             )
         )
@@ -143,6 +146,7 @@ extension StytchClient.OAuth.OAuthAuthenticateResponse {
             sessionToken: "123",
             sessionJwt: "123",
             session: .mock(userId: "123"),
+            userDevice: nil,
             oauthUserRegistrationId: "123",
             providerSubject: "123",
             providerType: "123",

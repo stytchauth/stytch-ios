@@ -190,7 +190,8 @@ extension B2BAuthenticateResponse {
             member: .mock,
             organization: .mock,
             sessionToken: "xyzasdf",
-            sessionJwt: "i'mvalidjson"
+            sessionJwt: "i'mvalidjson",
+            memberDevice: nil
         )
     )
 }
@@ -209,7 +210,8 @@ extension B2BMFAAuthenticateResponse {
             intermediateSessionToken: "cccccbgkvlhvciffckuevcevtrkjfkeiklvulgrrgvke",
             memberAuthenticated: false,
             mfaRequired: nil,
-            primaryRequired: nil
+            primaryRequired: nil,
+            memberDevice: nil
         )
     )
 }

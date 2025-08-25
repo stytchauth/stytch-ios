@@ -88,6 +88,8 @@ public extension StytchB2BClient.OTP.Email {
         public let mfaRequired: StytchB2BClient.MFARequired?
         /// Information about the primary authentication requirements of the Organization.
         public let primaryRequired: StytchB2BClient.PrimaryRequired?
+        /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the member_device response field will contain information about the member's device attributes.
+        public let memberDevice: DeviceHistory?
         /// The ID of the email used to send an OTP.
         public let methodId: String
     }

@@ -72,6 +72,8 @@ public extension StytchClient.OAuth.Apple {
         public let sessionJwt: String
         /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
         public let session: Session
+        /// The visitor_id (a unique identifier) of the user's device. See the Device Fingerprinting documentation for more details on the visitor_id.
+        public let userDevice: DeviceHistory?
         /// Indicates if this is a new or returning user
         public let userCreated: Bool
     }

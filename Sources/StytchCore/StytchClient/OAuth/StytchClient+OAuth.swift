@@ -144,6 +144,8 @@ public extension StytchClient.OAuth {
         public let sessionJwt: String
         /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
         public let session: Session
+        /// The visitor_id (a unique identifier) of the user's device. See the Device Fingerprinting documentation for more details on the visitor_id.
+        public let userDevice: DeviceHistory?
         /// The unique ID for an OAuth registration.
         public let oauthUserRegistrationId: String
         /// The unique identifier for the User within a given OAuth provider. Also commonly called the "sub" or "Subject field" in OAuth protocols.

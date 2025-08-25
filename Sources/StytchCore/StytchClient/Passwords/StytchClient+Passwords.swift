@@ -134,6 +134,7 @@ public extension StytchClient.Passwords {
         public let sessionToken: String
         public let sessionJwt: String
         public let session: Session
+        public let userDevice: DeviceHistory?
     }
 
     /// The dedicated parameters type for password `create` and `authenticate` calls.

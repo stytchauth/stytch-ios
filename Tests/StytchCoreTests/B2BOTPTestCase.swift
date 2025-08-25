@@ -253,6 +253,7 @@ extension StytchB2BClient.OTP.Email.AuthenticateResponse {
             memberAuthenticated: false,
             mfaRequired: nil,
             primaryRequired: nil,
+            memberDevice: nil,
             methodId: ""
         )
     )

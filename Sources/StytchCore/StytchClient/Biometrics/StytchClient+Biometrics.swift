@@ -282,6 +282,7 @@ public extension StytchClient.Biometrics {
         public let session: Session
         public let sessionToken: String
         public let sessionJwt: String
+        public let userDevice: DeviceHistory?
     }
 }
 

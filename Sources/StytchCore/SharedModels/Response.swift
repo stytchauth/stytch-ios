@@ -76,6 +76,7 @@ extension Response: AuthenticateResponseDataType where Wrapped: AuthenticateResp
     public var sessionToken: String { wrapped.sessionToken }
     public var sessionJwt: String { wrapped.sessionJwt }
     public var session: Session { wrapped.session }
+    public var userDevice: DeviceHistory? { wrapped.userDevice }
 }
 
 extension Response: B2BAuthenticateResponseDataType where Wrapped: B2BAuthenticateResponseDataType {
@@ -84,6 +85,7 @@ extension Response: B2BAuthenticateResponseDataType where Wrapped: B2BAuthentica
     public var organization: Organization { wrapped.organization }
     public var sessionToken: String { wrapped.sessionToken }
     public var sessionJwt: String { wrapped.sessionJwt }
+    public var memberDevice: DeviceHistory? { wrapped.memberDevice }
 }
 
 extension Response: B2BMFAAuthenticateResponseDataType where Wrapped: B2BMFAAuthenticateResponseDataType {
@@ -97,6 +99,7 @@ extension Response: B2BMFAAuthenticateResponseDataType where Wrapped: B2BMFAAuth
     public var memberAuthenticated: Bool { wrapped.memberAuthenticated }
     public var mfaRequired: StytchB2BClient.MFARequired? { wrapped.mfaRequired }
     public var primaryRequired: StytchB2BClient.PrimaryRequired? { wrapped.primaryRequired }
+    public var memberDevice: DeviceHistory? { wrapped.memberDevice }
 }
 
 extension Response: DiscoveryIntermediateSessionTokenDataType where Wrapped: DiscoveryIntermediateSessionTokenDataType {

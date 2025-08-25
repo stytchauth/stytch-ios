@@ -7,7 +7,14 @@ final class OAuthTestCase: BaseTestCase {
             StytchClient.OAuth.Apple.AuthenticateResponse(
                 requestId: "",
                 statusCode: 200,
-                wrapped: .init(user: .mock(userId: ""), sessionToken: "", sessionJwt: "", session: .mock(userId: ""), userCreated: false)
+                wrapped: .init(
+                    user: .mock(userId: ""),
+                    sessionToken: "",
+                    sessionJwt: "",
+                    session: .mock(userId: ""),
+                    userDevice: nil,
+                    userCreated: false
+                )
             )
             UserResponse(requestId: "", statusCode: 200, wrapped: .mock(userId: ""))
         }
@@ -171,6 +178,7 @@ extension StytchClient.OAuth.OAuthAuthenticateResponse {
             sessionToken: "123",
             sessionJwt: "123",
             session: .mock(userId: "123"),
+            userDevice: nil,
             oauthUserRegistrationId: "123",
             providerSubject: "123",
             providerType: "123",

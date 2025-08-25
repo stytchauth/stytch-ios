@@ -104,6 +104,7 @@ extension StytchB2BClient.OAuth.OAuthAuthenticateResponse {
             memberAuthenticated: false,
             mfaRequired: nil,
             primaryRequired: nil,
+            memberDevice: nil,
             providerValues: .mock
         )
     )

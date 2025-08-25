@@ -154,6 +154,7 @@ public extension NetworkingRouter {
 
         let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
 
+        // TODO: Make this logic only valid for sessions authenticate
         if isSessionStale(initialSessionId) {
             // The session was updated out from under us while the request was in flight; discard the response and retry
             return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
@@ -203,6 +204,7 @@ public extension NetworkingRouter {
             }
             return dataContainer.data
         } catch {
+            // TODO: Make this logic only valid for sessions authenticate
             if isSessionStale(initialSessionId) {
                 // The session was updated out from under us while the request was in flight; discard the response and retry
                 return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
