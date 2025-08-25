@@ -28,7 +28,7 @@ public struct B2BMFAAuthenticateResponseData: Codable, Sendable, B2BMFAAuthentic
     public let mfaRequired: StytchB2BClient.MFARequired?
     /// Information about the primary authentication requirements of the Organization.
     public let primaryRequired: StytchB2BClient.PrimaryRequired?
-    /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the member_device response field will contain information about the member's device attributes.
+    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the members's device attributes.
     public let memberDevice: DeviceHistory?
 }
 
@@ -54,7 +54,7 @@ public protocol B2BMFAAuthenticateResponseDataType {
     var mfaRequired: StytchB2BClient.MFARequired? { get }
     /// Information about the primary authentication requirements of the Organization.
     var primaryRequired: StytchB2BClient.PrimaryRequired? { get }
-    /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the member_device response field will contain information about the member's device attributes.
+    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the members's device attributes.
     var memberDevice: DeviceHistory? { get }
 }
 
