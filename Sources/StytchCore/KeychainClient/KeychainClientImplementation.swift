@@ -19,9 +19,10 @@ final class KeychainClientImplementation: KeychainClient {
     private init() {
         queue = DispatchQueue(label: "StytchKeychainClientQueue")
         queue.setSpecific(key: queueKey, value: ())
+        loadEncryptionKey()
     }
 
-    func onProtectedDataDidBecomeAvailable() {
+    func loadEncryptionKey() {
         try? safelyEnqueue {
             encryptionKey = try? getEncryptionKey()
         }

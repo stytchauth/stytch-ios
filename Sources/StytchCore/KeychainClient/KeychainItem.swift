@@ -13,13 +13,17 @@ struct KeychainItem {
     }
 
     var getQuery: [CFString: Any] {
-        baseQuery
-            .merging([
-                kSecReturnData: true,
-                kSecReturnAttributes: true,
-                kSecMatchLimit: kSecMatchLimitAll,
-                kSecAttrSynchronizable: kSecAttrSynchronizableAny,
-            ]) { $1 }
+        var query = baseQuery.merging([
+            kSecReturnData: true,
+            kSecReturnAttributes: true,
+            kSecMatchLimit: kSecMatchLimitAll,
+            kSecAttrSynchronizable: kSecAttrSynchronizableAny,
+        ]) { $1 }
+
+        if kind == .encryptionKey {
+            query[kSecUseAuthenticationUI] = kSecUseAuthenticationUISkip
+        }
+        return query
     }
 
     func insertQuery(value: Value) -> CFDictionary {
@@ -42,6 +46,13 @@ struct KeychainItem {
         if let accessControl = try? value.accessPolicy?.accessControl {
             querySegment[kSecAttrAccessControl] = accessControl
         }
+
+        // Make the encryption key available after first unlock
+        if kind == .encryptionKey {
+            querySegment[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
+            // or use kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly if you do not want sync
+        }
+
         return querySegment
     }
 }

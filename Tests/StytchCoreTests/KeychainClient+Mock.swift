@@ -6,8 +6,6 @@ import Foundation
 public var keychainDateCreatedOffsetInMinutes = 0
 
 class KeychainClientMock: KeychainClient {
-    func onProtectedDataDidBecomeAvailable() {}
-
     var encryptionKey: SymmetricKey? {
         do {
             return SymmetricKey(data: try Current.cryptoClient.dataWithRandomBytesOfCount(256))
