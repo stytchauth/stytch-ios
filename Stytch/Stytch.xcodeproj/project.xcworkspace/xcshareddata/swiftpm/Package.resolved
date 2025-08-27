@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk",
         "state": {
           "branch": null,
-          "revision": "5ec74256124faa7e7814c574509723f49e1fccfb",
-          "version": "18.7.0"
+          "revision": "b5c630a14acf1c8c4284015858e02377bfc99d63",
+          "version": "18.8.0-beta01"
         }
       },
       {
