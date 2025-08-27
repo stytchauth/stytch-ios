@@ -1,6 +1,6 @@
 import Foundation
 
-private final class MockDefaults: UserDefaults {
+private final class MockDefaults: UserDefaults, @unchecked Sendable {
     private var values: [String: Any] = [:]
 
     override func object(forKey defaultName: String) -> Any? {

@@ -14,7 +14,7 @@ extension PasskeysClient {
             )
 
             let controller = ASAuthorizationController(authorizationRequests: [request])
-            let delegate = Delegate()
+            let delegate = await Delegate()
             controller.delegate = delegate
             // controller.presentationContextProvider = parameters.presentationContextProvider // TODO: consider passing this in as optional param
 
@@ -35,7 +35,7 @@ extension PasskeysClient {
             let request = platformProvider.createCredentialAssertionRequest(challenge: challenge)
 
             let controller = ASAuthorizationController(authorizationRequests: [request])
-            let delegate = Delegate()
+            let delegate = await Delegate()
             controller.delegate = delegate
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
