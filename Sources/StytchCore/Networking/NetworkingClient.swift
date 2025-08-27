@@ -87,8 +87,9 @@ final class NetworkingClientImplementation: NetworkingClient {
         } else {
             return try await networkRequestHandler.defaultRequestHandler(request: request)
         }
-        #endif
+        #else
         return try await networkRequestHandler.defaultRequestHandler(request: request)
+        #endif
     }
 
     static var live = NetworkingClientImplementation(networkRequestHandler: NetworkRequestHandlerImplementation(urlSession: .init(configuration: .default)))
