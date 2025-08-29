@@ -14,6 +14,16 @@ public extension StytchB2BClient {
         @Dependency(\.memberSessionStorage) var memberSessionStorage
         @Dependency(\.sessionManager) var sessionManager
 
+        /// A publisher that emits changes to the current `MemberSession`.
+        ///
+        /// - Publishes `.available(MemberSession, Date)` when a valid session is present, along with the last validation timestamp.
+        /// - Publishes `.unavailable(EncryptedUserDefaultsError?)` when no valid session exists.
+        ///
+        /// This allows subscribers to react to session availability without handling `nil` `MemberSession` values directly.
+        public var onMemberSessionChange: AnyPublisher<StytchObjectInfo<MemberSession>, Never> {
+            memberSessionStorage.onChange
+        }
+
         public var memberSession: MemberSession? {
             memberSessionStorage.object
         }
@@ -26,11 +36,6 @@ public extension StytchB2BClient {
         /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
         public var sessionJwt: SessionToken? {
             sessionManager.sessionJwt
-        }
-
-        /// A publisher which emits following a change in authentication status and returns either the opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onMemberSessionChange: AnyPublisher<StytchObjectInfo<MemberSession>, Never> {
-            memberSessionStorage.onChange
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

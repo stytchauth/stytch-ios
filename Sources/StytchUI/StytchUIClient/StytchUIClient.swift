@@ -8,11 +8,26 @@ public enum StytchUIClient {
     /// The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     public private(set) static var configuration = Self.Configuration.empty
 
-    private static let dismissUIPublisher = PassthroughSubject<Void, Never>()
+    /// A publisher that emits when Stytch prebuilt UI components are ready to be dismissed.
+    ///
+    /// This is primarily useful when integrating the prebuilt UI with SwiftUI.
+    /// The publisher fires once the user has successfully authenticated.
+    ///
+    /// - Publishes a `Void` value each time a dismissal event occurs.
+    /// - Never completes with a failure, so subscribers can safely remain attached for the lifetime of the application.
     public static var dismissUI: AnyPublisher<Void, Never> {
-        dismissUIPublisher.eraseToAnyPublisher()
+        B2BAuthenticationManager.dismissUI
     }
 
+    private static let dismissUIPublisher = PassthroughSubject<Void, Never>()
+
+    /// A publisher that emits errors from Stytch prebuilt UI components.
+    ///
+    /// These UI components make network calls to the Stytch API, and since that logic is handled internally,
+    /// this publisher provides a way to observe and log those errors externally.
+    ///
+    /// - Publishes `Error` values for any failures that occur within Stytch prebuilt UI components.
+    /// - Never completes with a failure, so subscribers can safely remain attached for the lifetime of the application.
     public static var errorPublisher: AnyPublisher<Error, Never> {
         ErrorPublisher.publisher
     }
