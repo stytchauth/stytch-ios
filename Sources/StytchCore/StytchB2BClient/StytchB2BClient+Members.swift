@@ -15,7 +15,12 @@ public extension StytchB2BClient {
 
         @Dependency(\.memberStorage) private var memberStorage
 
-        /// A publisher which emits following a change in member status and returns either the member object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
+        /// A publisher that emits changes to the current `Member`.
+        ///
+        /// - Publishes `.available(Member, Date)` when a valid member is present, along with the last validation timestamp.
+        /// - Publishes `.unavailable(EncryptedUserDefaultsError?)` when no valid member exists.
+        ///
+        /// This allows subscribers to react to member availability without handling `nil` `Member` values directly.
         public var onMemberChange: AnyPublisher<StytchObjectInfo<Member>, Never> {
             memberStorage.onChange
         }
