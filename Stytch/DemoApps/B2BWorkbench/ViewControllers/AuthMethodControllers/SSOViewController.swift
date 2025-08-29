@@ -220,7 +220,8 @@ final class SSOViewController: UIViewController {
         guard let connectionId = connectionIdTextField.text, !connectionId.isEmpty else { return }
         Task {
             do {
-                guard let text = try await presentTextFieldAlertWithTitle(alertTitle: "Enter Metadata Url") else {
+                let text = try await presentTextFieldAlertWithTitle(alertTitle: "Enter Metadata Url")
+                guard text != nil else {
                     throw TextFieldAlertError.emptyString
                 }
 
