@@ -295,7 +295,7 @@ extension SessionManager {
         } else {
             // if there is an existing biometric registration on the device, delete the local registration to enable the new user to
             // create their own biometric registration
-            if let existingBiometricRegistrationId = try? userDefaultsClient.getStringValue(.biometricKeyRegistration) {
+            if (try? userDefaultsClient.getStringValue(.biometricKeyRegistration)) != nil {
                 try? keychainClient.removeItem(item: .privateKeyRegistration)
                 try? keychainClient.removeItem(item: .biometricKeyRegistration)
             }

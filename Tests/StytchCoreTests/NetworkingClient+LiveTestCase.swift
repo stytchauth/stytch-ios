@@ -48,7 +48,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.configureDFP(dfpEnabled: false, dfpAuthMode: .observation)
 
-        _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
+        _ = try await client.performRequest(method: .get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else
@@ -61,7 +61,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.configureDFP(dfpEnabled: true, dfpAuthMode: .observation)
 
-        _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
+        _ = try await client.performRequest(method: .get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else
@@ -74,7 +74,7 @@ final class NetworkingClientLiveTestCase: XCTestCase {
         let client = NetworkingClientImplementation(networkRequestHandler: handler)
         client.configureDFP(dfpEnabled: true, dfpAuthMode: .decisioning)
 
-        _ = try await client.performRequest(.get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
+        _ = try await client.performRequest(method: .get, url: XCTUnwrap(URL(string: "https://www.stytch.com")), useDFPPA: true)
         #if !os(iOS)
         XCTAssert(handler.methodCalled == nil)
         #else

@@ -36,7 +36,7 @@ public enum EventsClient {
                 error: parameters.error
             )
         )
-        try await router.post(to: .logEvents, parameters: [params])
+        try await router.performEventsRequest(to: .logEvents, parameters: [params])
     }
 }
 
