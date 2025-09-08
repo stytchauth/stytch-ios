@@ -14,6 +14,8 @@ public protocol AuthenticateResponseDataType {
     var sessionJwt: String { get }
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     var session: Session { get }
+    /// If Protected Auth is enabled and returned fingerprinting results, the userDevice response field will contain information about the user's device attributes
+    var userDevice: DeviceHistory? { get }
 }
 
 /// The underlying data for `authenticate` calls.
@@ -26,4 +28,6 @@ public struct AuthenticateResponseData: Codable, Sendable, AuthenticateResponseD
     public let sessionJwt: String
     /// The ``Session`` object, which includes information about the session's validity, expiry, factors associated with this session, and more.
     public let session: Session
+    /// If Protected Auth is enabled and returned fingerprinting results, the userDevice response field will contain information about the user's device attributes
+    public let userDevice: DeviceHistory?
 }

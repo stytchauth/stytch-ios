@@ -94,6 +94,8 @@ public extension StytchB2BClient.RecoveryCodes {
         public let sessionToken: String
         /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
         public let sessionJwt: String
+        /// If a valid telemetry_id was passed in the request and the Fingerprint Lookup API returned results, the member_device response field will contain information about the member's device attributes.
+        public let memberDevice: DeviceHistory?
         /// Number of recovery codes remaining for the member.
         public let recoveryCodesRemaining: Int
     }

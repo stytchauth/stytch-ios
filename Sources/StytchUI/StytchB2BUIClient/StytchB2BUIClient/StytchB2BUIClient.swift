@@ -7,10 +7,25 @@ public enum StytchB2BUIClient {
     // The UI configuration to determine which kinds of auth are needed, defaults to empty, must be overridden in configure
     public private(set) static var configuration = Self.Configuration.empty
 
+    /// A publisher that emits when Stytch prebuilt UI components are ready to be dismissed.
+    ///
+    /// This is primarily useful when integrating the prebuilt UI with SwiftUI.
+    /// The publisher typically fires once the user has successfully authenticated.
+    /// In cases where TOTP is being set up, it will not emit until the user has saved their recovery codes.
+    ///
+    /// - Publishes a `Void` value each time a dismissal event occurs.
+    /// - Never completes with a failure, so subscribers can safely remain attached for the lifetime of the application.
     public static var dismissUI: AnyPublisher<Void, Never> {
         B2BAuthenticationManager.dismissUI
     }
 
+    /// A publisher that emits errors from Stytch prebuilt UI components.
+    ///
+    /// These UI components make network calls to the Stytch API, and since that logic is handled internally,
+    /// this publisher provides a way to observe and log those errors externally.
+    ///
+    /// - Publishes `Error` values for any failures that occur within Stytch prebuilt UI components.
+    /// - Never completes with a failure, so subscribers can safely remain attached for the lifetime of the application.
     public static var errorPublisher: AnyPublisher<Error, Never> {
         ErrorPublisher.publisher
     }

@@ -56,20 +56,71 @@ final class KeychainClientTestCase: BaseTestCase {
     func testKeychainEncryptionKeyItem() {
         let item: KeychainItem = .init(kind: .encryptionKey, name: "encryptionKey")
 
+        // Helper to create a KeychainItem.Value for a given string
         let itemValueForKey: (String) -> KeychainItem.Value = { value in
-            .init(data: .init(value.utf8), account: ENCRYPTEDUSERDEFAULTSKEYNAME, label: nil, generic: nil, accessPolicy: nil)
+            .init(
+                data: .init(value.utf8),
+                account: ENCRYPTEDUSERDEFAULTSKEYNAME,
+                label: nil,
+                generic: nil,
+                accessPolicy: nil
+            )
         }
+
+        // Verify the base query used to fetch the encryption key.
+        // Expected fields:
+        // - service ("svce") set to "encryptionKey"
+        // - class ("genp") for generic password
+        // - return data and attributes
+        // - match limit all
+        // - synchronizable any
+        // - no authentication UI (skip prompts)
         XCTAssertEqual(
             item.getQuery as CFDictionary,
-            ["svce": "encryptionKey", "class": "genp", "m_Limit": "m_LimitAll", "r_Data": 1, "r_Attributes": 1, "nleg": 1, "sync": "syna"] as CFDictionary
+            [
+                "svce": "encryptionKey",
+                "class": "genp",
+                "m_Limit": "m_LimitAll",
+                "r_Data": 1,
+                "r_Attributes": 1,
+                "nleg": 1,
+                "sync": "syna",
+                "u_AuthUI": "u_AuthUIS",
+            ] as CFDictionary
         )
+
+        // Verify the update segment for an existing encryption key value.
+        // Expected fields:
+        // - account set to ENCRYPTEDUSERDEFAULTSKEYNAME
+        // - value data stored as bytes
+        // - pdmn = "ck", meaning kSecAttrAccessibleAfterFirstUnlock
         XCTAssertEqual(
             item.updateQuerySegment(for: itemValueForKey("value")) as CFDictionary,
-            ["acct": ENCRYPTEDUSERDEFAULTSKEYNAME, "v_Data": Data("value".utf8)] as CFDictionary
+            [
+                "acct": ENCRYPTEDUSERDEFAULTSKEYNAME,
+                "v_Data": Data("value".utf8),
+                "pdmn": "ck",
+            ] as CFDictionary
         )
+
+        // Verify the insert query for a new encryption key value.
+        // Expected fields:
+        // - account set to ENCRYPTEDUSERDEFAULTSKEYNAME
+        // - service set to "encryptionKey"
+        // - class = generic password
+        // - value data stored as bytes
+        // - nleg = 1 (data protection keychain)
+        // - pdmn = "ck" (AfterFirstUnlock accessibility)
         XCTAssertEqual(
             item.insertQuery(value: itemValueForKey("new_value")) as CFDictionary,
-            ["acct": ENCRYPTEDUSERDEFAULTSKEYNAME, "svce": "encryptionKey", "class": "genp", "v_Data": Data("new_value".utf8), "nleg": 1] as CFDictionary
+            [
+                "acct": ENCRYPTEDUSERDEFAULTSKEYNAME,
+                "svce": "encryptionKey",
+                "class": "genp",
+                "v_Data": Data("new_value".utf8),
+                "nleg": 1,
+                "pdmn": "ck", // AfterFirstUnlock
+            ] as CFDictionary
         )
     }
 

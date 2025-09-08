@@ -26,6 +26,7 @@ class SessionManager {
     @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
     @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
     @Dependency(\.date) private var date
+    @Dependency(\.keychainClient) private var keychainClient
 
     var hasValidSessionToken: Bool {
         sessionToken != nil && sessionToken?.value.isEmpty == false
@@ -173,6 +174,14 @@ extension SessionManager {
             }
         }
     }
+
+    var sessionId: Session.ID? {
+        try? userDefaultsClient.getObject(Session.self, for: .session)?.sessionId
+    }
+
+    var memberSessionId: MemberSession.ID? {
+        try? userDefaultsClient.getObject(MemberSession.self, for: .memberSession)?.memberSessionId
+    }
 }
 
 // Intermediate Session Token
@@ -270,5 +279,27 @@ extension HTTPCookieStorage {
         }
 
         return cookieValue
+    }
+}
+
+extension SessionManager {
+    func processPotentialBiometricRegistrationCleanups(currentUser: User, lastAuthenticatedUserId: String?) {
+        #if !os(tvOS) && !os(watchOS)
+        guard let previousUserId = lastAuthenticatedUserId else {
+            // if we have no previous user, just clean up any local registrations that don't exist on the server
+            return StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+        }
+        if previousUserId == currentUser.userId.rawValue {
+            // if the previous and current user are the same, only clean up any local registrations that don't exist on the server
+            StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+        } else {
+            // if there is an existing biometric registration on the device, delete the local registration to enable the new user to
+            // create their own biometric registration
+            if let existingBiometricRegistrationId = try? userDefaultsClient.getStringValue(.biometricKeyRegistration) {
+                try? keychainClient.removeItem(item: .privateKeyRegistration)
+                try? keychainClient.removeItem(item: .biometricKeyRegistration)
+            }
+        }
+        #endif
     }
 }

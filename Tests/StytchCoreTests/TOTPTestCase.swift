@@ -26,7 +26,19 @@ final class TOTPTestCase: BaseTestCase {
 
     func testRecover() async throws {
         networkInterceptor.responses {
-            StytchClient.TOTP.RecoverResponse(requestId: "", statusCode: 200, wrapped: .init(userId: "", totpId: "", user: .mock(userId: ""), session: .mock(userId: ""), sessionToken: "", sessionJwt: ""))
+            StytchClient.TOTP.RecoverResponse(
+                requestId: "",
+                statusCode: 200,
+                wrapped: .init(
+                    userId: "",
+                    totpId: "",
+                    user: .mock(userId: ""),
+                    session: .mock(userId: ""),
+                    sessionToken: "",
+                    sessionJwt: "",
+                    userDevice: nil
+                )
+            )
         }
 
         Current.timer = { _, _, _ in .init() }

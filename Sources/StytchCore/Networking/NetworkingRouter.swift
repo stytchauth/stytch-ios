@@ -30,6 +30,8 @@ public struct NetworkingRouter<Route: RouteType> {
 
     @Dependency(\.keychainClient) private var keychainClient
 
+    @Dependency(\.userDefaultsClient) private var userDefaultsClient
+
     private init(_ pathForRoute: @escaping (Route) -> Path, getConfiguration: @escaping () -> StytchClientConfiguration?) {
         self.getConfiguration = getConfiguration
         self.pathForRoute = pathForRoute
@@ -92,6 +94,28 @@ public extension NetworkingRouter {
 }
 
 public extension NetworkingRouter {
+    private func isSessionStale(_ initialSessionId: String?) -> Bool {
+        switch StartupClient.expectedClientType {
+        case .b2b:
+            return initialSessionId != sessionManager.memberSessionId?.rawValue
+        case .consumer:
+            return initialSessionId != sessionManager.sessionId?.rawValue
+        default:
+            return false
+        }
+    }
+
+    private func getExistingSessionIdAsString() -> String? {
+        switch StartupClient.expectedClientType {
+        case .b2b:
+            return sessionManager.memberSessionId?.rawValue
+        case .consumer:
+            return sessionManager.sessionId?.rawValue
+        default:
+            return nil
+        }
+    }
+
     private func performRequest(
         _ method: HTTPMethod,
         route: Route,
@@ -120,7 +144,7 @@ public extension NetworkingRouter {
         guard let configuration = getConfiguration() else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
-
+        let initialSessionId = getExistingSessionIdAsString()
         var components = URLComponents(url: configuration.baseUrl, resolvingAgainstBaseURL: false)
         components?.path += path(for: route).rawValue
         components?.queryItems = queryItems
@@ -129,6 +153,12 @@ public extension NetworkingRouter {
         }
 
         let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
+
+        // TODO: Make this logic only valid for sessions authenticate
+        if isSessionStale(initialSessionId) {
+            // The session was updated out from under us while the request was in flight; discard the response and retry
+            return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
+        }
 
         do {
             try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
@@ -139,10 +169,12 @@ public extension NetworkingRouter {
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
-                userStorage.update(sessionResponse.user)
                 #if !os(tvOS) && !os(watchOS)
-                StytchClient.biometrics.cleanupPotentiallyOrphanedBiometricRegistrations()
+                let lastAuthenticatedUserId: String? = try? userDefaultsClient.getStringValue(.lastAuthenticatedUserId)
+                sessionManager.processPotentialBiometricRegistrationCleanups(currentUser: sessionResponse.user, lastAuthenticatedUserId: lastAuthenticatedUserId)
                 #endif
+                try? userDefaultsClient.setStringValue(sessionResponse.user.id.rawValue, for: .lastAuthenticatedUserId)
+                userStorage.update(sessionResponse.user)
             } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
                 sessionManager.updateSession(
                     sessionType: .member(sessionResponse.memberSession),
@@ -172,6 +204,11 @@ public extension NetworkingRouter {
             }
             return dataContainer.data
         } catch {
+            // TODO: Make this logic only valid for sessions authenticate
+            if isSessionStale(initialSessionId) {
+                // The session was updated out from under us while the request was in flight; discard the response and retry
+                return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
+            }
             throw error
         }
     }

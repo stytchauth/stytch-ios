@@ -6,9 +6,9 @@ import Foundation
 /// StytchObjectInfo provides a generic way to unify the publishing of Stytch object types.
 /// If there is an object to publish you will get `case available(T, Date)`, which will publish the object
 /// and the date is was last validated at. The receiver of the event if the object is within their time tolerance for use.
-/// If there is no object to publish you will get `case unavailable(KeychainError?)`. So the publisher will never have to publish a nil value.
+/// If there is no object to publish you will get `case unavailable(EncryptedUserDefaultsError?)`. So the publisher will never have to publish a nil value.
 public enum StytchObjectInfo<T: Equatable>: Equatable {
-    case unavailable(KeychainError?)
+    case unavailable(EncryptedUserDefaultsError?)
     case available(T, Date)
 }
 
@@ -24,6 +24,7 @@ protocol ObjectStorageWrapper {
     var item: EncryptedUserDefaultsItem { get }
     func setObject(object: ObjectType?)
     func getObject() throws -> ObjectType?
+    var dataWasExpected: Bool { get set }
 }
 
 extension ObjectStorageWrapper {
@@ -73,12 +74,42 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
             if let object = try objectWrapper.getObject(), let lastValidatedAtDate = objectWrapper.lastValidatedAtDate {
                 _onChange.send(.available(object, lastValidatedAtDate))
             } else {
-                _onChange.send(.unavailable(nil))
+                // because getObject() throws, except for session fetching, there are only two reasons we would be in here:
+                // 1. it's a session that is expired, meaning getObject did NOT throw, but returned a nil value
+                // 2. lastValidatedAt returned nil
+                // so we need to figure out which one it is
+                if objectWrapper.lastValidatedAtDate == nil {
+                    throw EncryptedUserDefaultsError.metadataIsMissing
+                } else {
+                    throw EncryptedUserDefaultsError.dataIsExpired
+                }
             }
-        } catch let error as KeychainError {
-            _onChange.send(.unavailable(error))
+        } catch let error as EncryptedUserDefaultsError {
+            if error == .noDataFound {
+                // if the underlying error was that no data could be found, check if we were _expecting_ there to be data
+                if objectWrapper.dataWasExpected {
+                    // if it was expected to exist, send the error that was encountered. This is an exceptional .unavailable case
+                    _onChange.send(.unavailable(error))
+                    logExceptionalUnavailableCase(error: error)
+                } else {
+                    // if it wasn't expected to exist, we can indicate that by sending no errors. This is an unexceptional .unavailable case
+                    _onChange.send(.unavailable(nil))
+                }
+            } else {
+                // if there was any other error other than data not being available, something went wrong, so this is an exceptional case
+                _onChange.send(.unavailable(error))
+                logExceptionalUnavailableCase(error: error)
+            }
         } catch {
+            // if there was any other error other than an EncryptedUserDefaultsError, something REALLY went wrong so this is an exceptional case
             _onChange.send(.unavailable(nil))
+            logExceptionalUnavailableCase(error: error)
+        }
+    }
+
+    private func logExceptionalUnavailableCase(error: Error) {
+        Task {
+            try? await EventsClient.logEvent(parameters: .init(eventName: "unavailable_data_with_error", error: error))
         }
     }
 }
@@ -86,8 +117,10 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
 class SessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
     let item = EncryptedUserDefaultsItem.session
+    var dataWasExpected = false
 
     func setObject(object: Session?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -104,8 +137,10 @@ class SessionStorageWrapper: ObjectStorageWrapper {
 class MemberSessionStorageWrapper: ObjectStorageWrapper {
     @Dependency(\.sessionManager) var sessionManager
     let item = EncryptedUserDefaultsItem.memberSession
+    var dataWasExpected = false
 
     func setObject(object: MemberSession?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -121,8 +156,10 @@ class MemberSessionStorageWrapper: ObjectStorageWrapper {
 
 class UserStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.user
+    var dataWasExpected = false
 
     func setObject(object: User?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -133,8 +170,10 @@ class UserStorageWrapper: ObjectStorageWrapper {
 
 class MemberStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.member
+    var dataWasExpected = false
 
     func setObject(object: Member?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
@@ -145,8 +184,10 @@ class MemberStorageWrapper: ObjectStorageWrapper {
 
 class OrganizationStorageWrapper: ObjectStorageWrapper {
     let item = EncryptedUserDefaultsItem.organization
+    var dataWasExpected = false
 
     func setObject(object: Organization?) {
+        dataWasExpected = object != nil
         try? userDefaultsClient.setObjectValue(object, for: item)
     }
 
