@@ -3,9 +3,9 @@ import Foundation
 
 public extension StytchB2BClient.Organizations {
     struct SearchParameters: Codable, Sendable {
-        let query: SearchQuery
+        let query: SearchQuery?
         let cursor: String?
-        let limit: String?
+        let limit: Int?
 
         /// * Data class used for wrapping the parameters necessary to search members
         /// - Parameters:
@@ -23,9 +23,9 @@ public extension StytchB2BClient.Organizations {
         ///   The default limit is 100. A maximum of 1000 results can be returned by a single search request.
         ///   If the total size of your result set is greater than one page size, you must paginate the response. See the cursor field.
         public init(
-            query: SearchQuery,
+            query: SearchQuery? = nil,
             cursor: String? = nil,
-            limit: String? = nil
+            limit: Int? = nil
         ) {
             self.query = query
             self.cursor = cursor
@@ -49,7 +49,8 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         ///   - searchOperands: An array of SearchQueryOperand(s) created via 'SearchParameters.searchQueryOperand(...)'
         public init(searchOperator: SearchOperator, searchOperands: [any SearchQueryOperand]) {
             self.searchOperator = searchOperator
-            searchOperandsJSON = JSON(arrayLiteral: searchOperands.map(\.json))
+            let searchOperandsJSONArray = searchOperands.map(\.json)
+            searchOperandsJSON = JSON(searchOperandsJSONArray)
         }
     }
 }
@@ -80,11 +81,8 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         let filterValue: [String]
 
         public var filterValueJSON: JSON {
-            var filterValueJSON = [JSON]()
-            for string in filterValue {
-                filterValueJSON.append(JSON(stringLiteral: string))
-            }
-            return JSON(arrayLiteral: filterValueJSON)
+            let filterValues = filterValue.map { JSON(stringLiteral: $0) }
+            return JSON(filterValues)
         }
 
         init(filterName: String, filterValue: [String]) {
@@ -132,7 +130,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         case memberIsBreakglass = "member_is_breakglass"
         case statuses
         case memberMfaPhoneNumbers = "member_mfa_phone_numbers"
-        case memberMfaPhoneNumbeFuzzy = "member_mfa_phone_number_fuzzy"
+        case memberMfaPhoneNumberFuzzy = "member_mfa_phone_number_fuzzy"
         case memberPasswordExists = "member_password_exists"
         case memberRoles = "member_roles"
 
@@ -141,7 +139,7 @@ public extension StytchB2BClient.Organizations.SearchParameters {
         }
 
         var isSearchQueryOperandString: Bool {
-            self == .memberEmailFuzzy || self == .memberMfaPhoneNumbeFuzzy
+            self == .memberEmailFuzzy || self == .memberMfaPhoneNumberFuzzy
         }
 
         var isSearchQueryOperandBool: Bool {
