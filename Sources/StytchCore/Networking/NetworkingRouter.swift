@@ -48,15 +48,13 @@ public struct NetworkingRouter<Route: RouteType> {
     }
 }
 
-public extension NetworkingRouter {
-    func post<Parameters: Encodable>(
-        to route: Route,
-        parameters: Parameters,
-        useDFPPA: Bool = false
-    ) async throws {
-        try await performRequest(.post(jsonEncoder.encode(parameters)), route: route, useDFPPA: useDFPPA)
+extension NetworkingRouter where Route: BaseRouteType {
+    init(getConfiguration: @escaping () -> StytchClientConfiguration?) {
+        self.init { $0.path } getConfiguration: { getConfiguration() }
     }
+}
 
+public extension NetworkingRouter {
     func post<Response: Decodable>(
         to route: Route,
         useDFPPA: Bool = false
@@ -93,7 +91,94 @@ public extension NetworkingRouter {
     }
 }
 
-public extension NetworkingRouter {
+extension NetworkingRouter {
+    func performRequest<Response: Decodable>(
+        _ method: HTTPMethod,
+        route: Route,
+        queryItems: [URLQueryItem]? = nil,
+        useDFPPA: Bool = false
+    ) async throws -> Response {
+        guard let configuration = getConfiguration() else {
+            throw StytchSDKError.consumerSDKNotConfigured
+        }
+
+        var components = URLComponents(url: configuration.baseUrl, resolvingAgainstBaseURL: false)
+        components?.path += path(for: route).rawValue
+        components?.queryItems = queryItems
+        guard let url = components?.url else {
+            throw StytchSDKError.invalidURL
+        }
+
+        let (data, response) = try await networkingClient.performRequest(
+            method: method,
+            url: url,
+            useDFPPA: useDFPPA
+        )
+
+        return try await handleResponse(data: data, response: response, configuration: configuration)
+    }
+}
+
+extension NetworkingRouter {
+    func performEventsRequest<Parameters: Encodable>(
+        to route: Route,
+        parameters: Parameters
+    ) async throws {
+        guard let configuration = getConfiguration() else {
+            throw StytchSDKError.consumerSDKNotConfigured
+        }
+
+        let body = try jsonEncoder.encode(parameters)
+
+        let (data, response) = try await networkingClient.performRequest(
+            method: .post(body),
+            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue),
+            useDFPPA: false
+        )
+
+        try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
+    }
+}
+
+extension NetworkingRouter {
+    func performSessionRequest<Parameters: Encodable, Response: Decodable>(
+        to route: Route,
+        parameters: Parameters
+    ) async throws -> Response {
+        guard let configuration = getConfiguration() else {
+            throw StytchSDKError.consumerSDKNotConfigured
+        }
+
+        let initialSessionId = getExistingSessionIdAsString()
+
+        var components = URLComponents(url: configuration.baseUrl, resolvingAgainstBaseURL: false)
+        components?.path += path(for: route).rawValue
+        guard let url = components?.url else {
+            throw StytchSDKError.invalidURL
+        }
+
+        let body = try jsonEncoder.encode(parameters)
+
+        let (data, response) = try await networkingClient.performRequest(
+            method: .post(body),
+            url: url,
+            useDFPPA: false
+        )
+
+        if isSessionStale(initialSessionId) {
+            return try await performSessionRequest(to: route, parameters: parameters)
+        }
+
+        do {
+            return try await handleResponse(data: data, response: response, configuration: configuration)
+        } catch {
+            if isSessionStale(initialSessionId) {
+                return try await performSessionRequest(to: route, parameters: parameters)
+            }
+            throw error
+        }
+    }
+
     private func isSessionStale(_ initialSessionId: String?) -> Bool {
         switch StartupClient.expectedClientType {
         case .b2b:
@@ -115,112 +200,68 @@ public extension NetworkingRouter {
             return nil
         }
     }
+}
 
-    private func performRequest(
-        _ method: HTTPMethod,
-        route: Route,
-        useDFPPA: Bool = false
-    ) async throws {
-        guard let configuration = getConfiguration() else {
-            throw StytchSDKError.consumerSDKNotConfigured
-        }
-
-        let (data, response) = try await networkingClient.performRequest(
-            method,
-            url: configuration.baseUrl.appendingPathComponent(path(for: route).rawValue),
-            useDFPPA: useDFPPA
-        )
-
-        try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
-    }
-
-    // swiftlint:disable function_body_length
-    private func performRequest<Response: Decodable>(
-        _ method: HTTPMethod,
-        route: Route,
-        queryItems: [URLQueryItem]? = nil,
-        useDFPPA: Bool = false
+extension NetworkingRouter {
+    func handleResponse<Response: Decodable>(
+        data: Data,
+        response: HTTPURLResponse,
+        configuration: StytchClientConfiguration
     ) async throws -> Response {
-        guard let configuration = getConfiguration() else {
-            throw StytchSDKError.consumerSDKNotConfigured
-        }
-        let initialSessionId = getExistingSessionIdAsString()
-        var components = URLComponents(url: configuration.baseUrl, resolvingAgainstBaseURL: false)
-        components?.path += path(for: route).rawValue
-        components?.queryItems = queryItems
-        guard let url = components?.url else {
-            throw StytchSDKError.invalidURL
-        }
+        try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
+        let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
+        if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
+            // Update the user so that all values are current when the session publisher fires
+            userStorage.update(sessionResponse.user)
 
-        let (data, response) = try await networkingClient.performRequest(method, url: url, useDFPPA: useDFPPA)
+            sessionManager.updateSession(
+                sessionType: .user(sessionResponse.session),
+                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
+                hostUrl: configuration.hostUrl
+            )
 
-        // TODO: Make this logic only valid for sessions authenticate
-        if isSessionStale(initialSessionId) {
-            // The session was updated out from under us while the request was in flight; discard the response and retry
-            return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
-        }
+            #if !os(tvOS) && !os(watchOS)
+            let lastAuthenticatedUserId: String? = try? userDefaultsClient.getStringValue(.lastAuthenticatedUserId)
+            sessionManager.processPotentialBiometricRegistrationCleanups(currentUser: sessionResponse.user, lastAuthenticatedUserId: lastAuthenticatedUserId)
+            #endif
 
-        do {
-            try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
-            let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
-            if let sessionResponse = dataContainer.data as? AuthenticateResponseType {
+            try? userDefaultsClient.setStringValue(sessionResponse.user.id.rawValue, for: .lastAuthenticatedUserId)
+        } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
+            // Update the member and organization so that all values are current when the session publisher fires
+            memberStorage.update(sessionResponse.member)
+            organizationStorage.update(sessionResponse.organization)
+
+            sessionManager.updateSession(
+                sessionType: .member(sessionResponse.memberSession),
+                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
+                hostUrl: configuration.hostUrl
+            )
+        } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
+            // Update the member and organization so that all values are current when the session publisher fires
+            memberStorage.update(sessionResponse.member)
+            organizationStorage.update(sessionResponse.organization)
+
+            if let memberSession = sessionResponse.memberSession {
                 sessionManager.updateSession(
-                    sessionType: .user(sessionResponse.session),
+                    sessionType: .member(memberSession),
                     tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
                     hostUrl: configuration.hostUrl
                 )
-                #if !os(tvOS) && !os(watchOS)
-                let lastAuthenticatedUserId: String? = try? userDefaultsClient.getStringValue(.lastAuthenticatedUserId)
-                sessionManager.processPotentialBiometricRegistrationCleanups(currentUser: sessionResponse.user, lastAuthenticatedUserId: lastAuthenticatedUserId)
-                #endif
-                try? userDefaultsClient.setStringValue(sessionResponse.user.id.rawValue, for: .lastAuthenticatedUserId)
-                userStorage.update(sessionResponse.user)
-            } else if let sessionResponse = dataContainer.data as? B2BAuthenticateResponseType {
-                sessionManager.updateSession(
-                    sessionType: .member(sessionResponse.memberSession),
-                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
-                    hostUrl: configuration.hostUrl
-                )
-                memberStorage.update(sessionResponse.member)
-                organizationStorage.update(sessionResponse.organization)
-            } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
-                if let memberSession = sessionResponse.memberSession {
-                    sessionManager.updateSession(
-                        sessionType: .member(memberSession),
-                        tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
-                        hostUrl: configuration.hostUrl
-                    )
-                } else {
-                    sessionManager.updateSession(
-                        intermediateSessionToken: sessionResponse.intermediateSessionToken
-                    )
-                }
-                memberStorage.update(sessionResponse.member)
-                organizationStorage.update(sessionResponse.organization)
-            } else if let sessionResponse = dataContainer.data as? DiscoveryIntermediateSessionTokenDataType {
+            } else {
                 sessionManager.updateSession(
                     intermediateSessionToken: sessionResponse.intermediateSessionToken
                 )
             }
-            return dataContainer.data
-        } catch {
-            // TODO: Make this logic only valid for sessions authenticate
-            if isSessionStale(initialSessionId) {
-                // The session was updated out from under us while the request was in flight; discard the response and retry
-                return try await performRequest(method, route: route, queryItems: queryItems, useDFPPA: useDFPPA)
-            }
-            throw error
+        } else if let sessionResponse = dataContainer.data as? DiscoveryIntermediateSessionTokenDataType {
+            sessionManager.updateSession(
+                intermediateSessionToken: sessionResponse.intermediateSessionToken
+            )
         }
+        return dataContainer.data
     }
 }
 
-extension NetworkingRouter where Route: BaseRouteType {
-    init(getConfiguration: @escaping () -> StytchClientConfiguration?) {
-        self.init { $0.path } getConfiguration: { getConfiguration() }
-    }
-}
-
-private extension HTTPURLResponse {
+extension HTTPURLResponse {
     func verifyStatusCode(data: Data, jsonDecoder: JSONDecoder) throws {
         let isErrorCode = (400..<600).contains(statusCode)
         guard isErrorCode == true else {
