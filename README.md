@@ -105,12 +105,15 @@ Full reference documentation is available for [StytchCore](https://stytchauth.gi
 ## Navigating the Project and Running the Sample Apps
 [Instructions can be found here!](./tutorials/NavigatingTheProject.md)
 
-
 ## Get Help And Join The Community
 
 Join the discussion, ask questions, and suggest new features in our ​[Slack community](https://stytch.com/docs/resources/support/overview)!
 
 Check out the [Stytch Forum](https://forum.stytch.com/) or email us at [support@stytch.com](mailto:support@stytch.com).
+
+## Talk to a Stytch iOS Engineer
+
+[Nidal](https://www.linkedin.com/in/nidal-fakhouri/) is our Stytch iOS lead and he is available to answer any questions you have about the Stytch iOS SDK and can help you get started. You can book time with him [here](https://calendly.com/nfakhouri-stytch/30min).
 
 ## License
 

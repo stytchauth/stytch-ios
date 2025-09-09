@@ -10,14 +10,19 @@ public extension StytchClient {
 
         @Dependency(\.userStorage) private var userStorage
 
+        /// A publisher that emits changes to the current `User`.
+        ///
+        /// - Publishes `.available(User, Date)` when a valid user is present, along with the last validation timestamp.
+        /// - Publishes `.unavailable(EncryptedUserDefaultsError?)` when no valid user exists.
+        ///
+        /// This allows subscribers to react to user availability without handling `nil` `User` values directly.
+        public var onUserChange: AnyPublisher<StytchObjectInfo<User>, Never> {
+            userStorage.onChange
+        }
+
         /// Returns the most-recent cached copy of the user object, if it has already been fetched via another method, else nil.
         public func getSync() -> User? {
             userStorage.object
-        }
-
-        /// A publisher which emits following a change in user status and returns either the user object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onUserChange: AnyPublisher<StytchObjectInfo<User>, Never> {
-            userStorage.onChange
         }
 
         // sourcery: AsyncVariants

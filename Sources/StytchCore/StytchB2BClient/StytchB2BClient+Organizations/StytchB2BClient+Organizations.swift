@@ -14,7 +14,12 @@ public extension StytchB2BClient {
 
         @Dependency(\.organizationStorage) private var organizationStorage
 
-        /// A publisher which emits following a change in organization status and returns either the organization object or nil. You can use this as an indicator to set up or tear down your UI accordingly.
+        /// A publisher that emits changes to the current `Organization`.
+        ///
+        /// - Publishes `.available(Organization, Date)` when a valid organization is present, along with the last validation timestamp.
+        /// - Publishes `.unavailable(EncryptedUserDefaultsError?)` when no valid organization exists.
+        ///
+        /// This allows subscribers to react to organization availability without handling `nil` `Organization` values directly.
         public var onOrganizationChange: AnyPublisher<StytchObjectInfo<Organization>, Never> {
             organizationStorage.onChange
         }

@@ -23,6 +23,16 @@ public extension StytchClient {
         @Dependency(\.sessionStorage) var sessionStorage
         @Dependency(\.sessionManager) var sessionManager
 
+        /// A publisher that emits changes to the current `Session`.
+        ///
+        /// - Publishes `.available(Session, Date)` when a valid session is present, along with the last validation timestamp.
+        /// - Publishes `.unavailable(EncryptedUserDefaultsError?)` when no valid session exists.
+        ///
+        /// This allows subscribers to react to session availability without handling `nil` `Session` values directly.
+        public var onSessionChange: AnyPublisher<StytchObjectInfo<Session>, Never> {
+            sessionStorage.onChange
+        }
+
         /// If logged in, returns the cached session object.
         public var session: Session? {
             sessionStorage.object
@@ -36,11 +46,6 @@ public extension StytchClient {
         /// A session JWT (JSON Web Token), which your servers can check locally to verify your session status.
         public var sessionJwt: SessionToken? {
             sessionManager.sessionJwt
-        }
-
-        /// A publisher which emits following a change in authentication status and returns either the opaque session token or nil. You can use this as an indicator to set up or tear down your UI accordingly.
-        public var onSessionChange: AnyPublisher<StytchObjectInfo<Session>, Never> {
-            sessionStorage.onChange
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)

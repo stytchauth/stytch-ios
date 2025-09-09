@@ -40,6 +40,8 @@ struct StartupClient {
         _ = try await (auth, bootstrap)
 
         isInitializedPublisher.send(true)
+
+        StytchConsoleLogger.log(message: "Stytch SDK initialized for client type: \(clientType)")
     }
 
     private static func authenticateSessionIfNeeded(for clientType: ClientType) async {

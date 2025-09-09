@@ -27,7 +27,7 @@ final class OrganizationViewController: UIViewController {
     })
 
     lazy var searchMembersButton: UIButton = .init(title: "Search Members", primaryAction: .init { [weak self] _ in
-        self?.searchMembers()
+        self?.navigationController?.pushViewController(OrganizationMemberSearchViewController(), animated: true)
     })
 
     override func viewDidLoad() {
@@ -124,36 +124,6 @@ final class OrganizationViewController: UIViewController {
                 presentAlertAndLogMessage(description: "update organization success", object: response)
             } catch {
                 presentAlertAndLogMessage(description: "update organization error", object: error)
-            }
-        }
-    }
-
-    func searchMembers() {
-        Task {
-            do {
-                var operands = [any SearchQueryOperand]()
-                if let operand = StytchB2BClient.Organizations.SearchParameters.searchQueryOperand(
-                    filterName: .memberEmails,
-                    filterValue: ["foo@stytch.com"]
-                ) {
-                    operands.append(operand)
-                }
-
-                let query = StytchB2BClient.Organizations.SearchParameters.SearchQuery(
-                    searchOperator: .AND,
-                    searchOperands: operands
-                )
-
-                let parameters = StytchB2BClient.Organizations.SearchParameters(
-                    query: query,
-                    cursor: nil,
-                    limit: nil
-                )
-
-                let response = try await StytchB2BClient.organizations.searchMembers(parameters: parameters)
-                presentAlertAndLogMessage(description: "search organization member success!", object: response)
-            } catch {
-                presentAlertAndLogMessage(description: "search organization members error", object: error)
             }
         }
     }
