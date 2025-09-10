@@ -47,7 +47,7 @@ final class B2BOrganizationsMembersTestCase: BaseTestCase {
         XCTAssertEqual(updateOrganizationMemberResponse.member.name, name)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
-            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/update/\(memberId)",
+            urlString: "https://api.stytch.com/sdk/v1/b2b/organizations/members/\(memberId)",
             method: .put(["member_id": JSON(stringLiteral: memberId), "name": JSON(stringLiteral: name)])
         )
     }
