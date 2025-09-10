@@ -18,7 +18,7 @@ public struct B2BAuthenticateResponseData: Codable, Sendable, B2BAuthenticateRes
     public let sessionToken: String
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
     public let sessionJwt: String
-    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the members's device attributes.
+    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the member's device attributes.
     public let memberDevice: DeviceHistory?
 }
 
@@ -34,6 +34,6 @@ public protocol B2BAuthenticateResponseDataType {
     var sessionToken: String { get }
     /// The JWT for the session. Can be used by your server to verify the validity of your session either by checking the data included in the JWT, or by verifying with Stytch's servers as needed.
     var sessionJwt: String { get }
-    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the members's device attributes.
+    /// If Protected Auth is enabled and returned fingerprinting results, the memberDevice response field will contain information about the member's device attributes.
     var memberDevice: DeviceHistory? { get }
 }

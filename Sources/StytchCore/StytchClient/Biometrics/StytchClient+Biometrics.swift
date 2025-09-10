@@ -291,7 +291,7 @@ extension LAPolicy {
         switch self {
         case .deviceOwnerAuthentication:
             return .deviceOwnerAuthentication
-        case .deviceOwnerAuthenticationWithBiometrics:
+        case .deviceOwnerAuthenticationWithBiometrics, .deviceOwnerAuthenticationWithCompanion, .deviceOwnerAuthenticationWithBiometricsOrCompanion:
             return .deviceOwnerAuthenticationWithBiometrics
         #if os(macOS)
         case .deviceOwnerAuthenticationWithBiometricsOrWatch:

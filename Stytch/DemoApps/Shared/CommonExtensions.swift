@@ -108,3 +108,17 @@ extension UITextField {
         }
     }
 }
+
+extension UIStackView {
+    static let padding: CGFloat = 16
+    static let insets: UIEdgeInsets = .init(top: padding, left: padding, bottom: padding, right: padding)
+    static func stytchStackView() -> UIStackView {
+        let stytchStackView = UIStackView()
+        stytchStackView.layoutMargins = insets
+        stytchStackView.isLayoutMarginsRelativeArrangement = true
+        stytchStackView.axis = .vertical
+        stytchStackView.distribution = .fill
+        stytchStackView.spacing = 8
+        return stytchStackView
+    }
+}

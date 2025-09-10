@@ -109,7 +109,7 @@ class ContentViewModel: ObservableObject {
     }
 
     let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "public-token-test-81b5f118-b6d3-49ff-9f56-a037a6e65176"),
+        stytchClientConfiguration: .init(publicToken: "public-token-test-..."),
         products: [.otp, .oauth, .passwords, .emailMagicLinks, .biometrics],
         navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],

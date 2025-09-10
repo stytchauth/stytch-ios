@@ -43,7 +43,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = EmailConfirmationViewModel(
+        _ = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
@@ -65,7 +65,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
             actionComponents: [],
             secondaryAction: nil
         ) {}
-        let viewModel = EmailConfirmationViewModel(
+        _ = EmailConfirmationViewModel(
             state: state,
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)

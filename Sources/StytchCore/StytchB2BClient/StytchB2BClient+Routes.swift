@@ -222,7 +222,7 @@ extension StytchB2BClient {
                 case .create:
                     return Path(rawValue: "")
                 case let .update(memberId):
-                    return Path(rawValue: "update/\(memberId)")
+                    return Path(rawValue: "\(memberId)")
                 case let .delete(memberId):
                     return Path(rawValue: "\(memberId)")
                 case let .reactivate(memberId):
