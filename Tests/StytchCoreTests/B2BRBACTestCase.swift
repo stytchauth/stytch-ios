@@ -35,7 +35,7 @@ final class B2BRBACTestCase: BaseTestCase {
             BootstrapResponse(requestId: "1234", statusCode: 200, wrapped: .mockWithoutDefaultRBACRole)
         }
 
-        // Then we can confrim that the new boostrap data is loaded with new permissions
+        // Then we can confirm that the new bootstrap data is loaded with new permissions
         let isAuthorized = try await StytchB2BClient.rbac.isAuthorized(resourceId: "documents", action: "admin-create")
         XCTAssertTrue(isAuthorized)
     }
