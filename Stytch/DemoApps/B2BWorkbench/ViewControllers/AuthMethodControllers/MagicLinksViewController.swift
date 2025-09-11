@@ -77,7 +77,10 @@ final class MagicLinksViewController: UIViewController {
     func submitDiscovery() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
-        guard let orgId = organizationId else { return }
+
+        guard organizationId != nil else {
+            return
+        }
 
         UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
@@ -101,7 +104,10 @@ final class MagicLinksViewController: UIViewController {
     func submitInvite() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
         guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
-        guard let orgId = organizationId else { return }
+
+        guard organizationId != nil else {
+            return
+        }
 
         UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
         UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)

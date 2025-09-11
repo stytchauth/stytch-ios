@@ -9,12 +9,14 @@ extension AppleOAuthClient {
 
         let controller = ASAuthorizationController(authorizationRequests: [request])
         configureController(controller)
-        let delegate: Self.Delegate = .init()
+        let delegate: Self.Delegate = await .init()
         controller.delegate = delegate
 
         return try await withCheckedThrowingContinuation { continuation in
-            delegate.continuation = continuation
-            controller.performRequests()
+            Task { @MainActor in
+                delegate.continuation = continuation
+                controller.performRequests()
+            }
         }
     }
 }

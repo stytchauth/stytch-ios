@@ -76,7 +76,7 @@ struct LoggedInView: View {
     func logOut() {
         Task {
             do {
-                let response = try await StytchClient.sessions.revoke()
+                _ = try await StytchClient.sessions.revoke()
                 didLogOut = true
             } catch {
                 showErrorAlert(error)
