@@ -79,7 +79,7 @@ final class B2BOTPTestCase: BaseTestCase {
             B2BAuthenticateResponse.mock
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let organizationId = "orgid1234"
         let memberId = "memberid1234"
@@ -148,7 +148,7 @@ final class B2BOTPTestCase: BaseTestCase {
             StytchB2BClient.OTP.Email.AuthenticateResponse.mock
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let code = "code1234"
         let organizationId = "orgid1234"

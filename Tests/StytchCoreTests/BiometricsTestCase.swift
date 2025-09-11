@@ -34,7 +34,7 @@ final class BiometricsTestCase: BaseTestCase {
             )
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.biometrics.register(parameters: .init(identifier: email))
 
@@ -82,7 +82,7 @@ final class BiometricsTestCase: BaseTestCase {
             )
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.biometrics.authenticate(parameters: .init())
 
