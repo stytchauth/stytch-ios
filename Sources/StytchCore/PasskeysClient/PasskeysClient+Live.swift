@@ -19,8 +19,10 @@ extension PasskeysClient {
             // controller.presentationContextProvider = parameters.presentationContextProvider // TODO: consider passing this in as optional param
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
-                delegate.continuation = continuation
-                controller.performRequests()
+                Task { @MainActor in
+                    delegate.continuation = continuation
+                    controller.performRequests()
+                }
             }
 
             guard let credential = credential as? ASAuthorizationPublicKeyCredentialRegistration else {
@@ -39,17 +41,19 @@ extension PasskeysClient {
             controller.delegate = delegate
 
             let credential: ASAuthorizationCredential = try await withCheckedThrowingContinuation { continuation in
-                delegate.continuation = continuation
-                #if os(iOS) && !targetEnvironment(macCatalyst)
-                switch requestBehavior {
-                case .autoFill:
-                    controller.performAutoFillAssistedRequests()
-                case let .default(preferLocalCredentials):
-                    controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
+                Task { @MainActor in
+                    delegate.continuation = continuation
+                    #if os(iOS) && !targetEnvironment(macCatalyst)
+                    switch requestBehavior {
+                    case .autoFill:
+                        controller.performAutoFillAssistedRequests()
+                    case let .default(preferLocalCredentials):
+                        controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
+                    }
+                    #else
+                    controller.performRequests()
+                    #endif
                 }
-                #else
-                controller.performRequests()
-                #endif
             }
 
             guard let credential = credential as? ASAuthorizationPublicKeyCredentialAssertion else {

@@ -13,8 +13,10 @@ extension AppleOAuthClient {
         controller.delegate = delegate
 
         return try await withCheckedThrowingContinuation { continuation in
-            delegate.continuation = continuation
-            controller.performRequests()
+            Task { @MainActor in
+                delegate.continuation = continuation
+                controller.performRequests()
+            }
         }
     }
 }
