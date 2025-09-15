@@ -260,6 +260,7 @@ extension MemberSession {
             authenticationFactors: [],
             customClaims: nil,
             roles: ["reader"],
+            organizationSlug: "org_slug_123",
             memberSessionId: "mem_session_123"
         )
     }()
@@ -275,6 +276,7 @@ extension MemberSession {
             authenticationFactors: [],
             customClaims: nil,
             roles: ["organization_admin"],
+            organizationSlug: "org_slug_123",
             memberSessionId: "mem_session_123"
         )
     }()
@@ -289,6 +291,7 @@ extension MemberSession {
             authenticationFactors: [],
             customClaims: nil,
             roles: ["organization_admin"],
+            organizationSlug: "org_slug_123",
             memberSessionId: "mem_session_123"
         )
     }()
