@@ -56,13 +56,9 @@ class ContentViewModel: ObservableObject {
     @Published var stytchB2BUIConfig: StytchB2BUIClient.Configuration = .empty
 
     private var cancellables = Set<AnyCancellable>()
-    var date = Date()
 
     init() {
         startObservables()
-
-        // Used to measure time until StytchB2BClient.isInitialized fires
-        date = Date()
 
         // To start the underlying client’s observables before displaying the UI, call configure separately.
         StytchB2BUIClient.configure(configuration: stytchB2BUIConfig)
@@ -87,44 +83,23 @@ class ContentViewModel: ObservableObject {
         StytchB2BClient.isInitialized
             .receive(on: DispatchQueue.main)
             .sink { isInitialized in
-                print(String(format: "StytchClient.isInitialized took %.2f seconds to fire.", Date().timeIntervalSince(self.date)))
                 print("isInitialized: \(isInitialized)")
             }.store(in: &cancellables)
 
         StytchB2BClient.sessions.onMemberSessionChange
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionInfo in
-                switch sessionInfo {
-                case let .available(session, lastValidatedAtDate):
-                    print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                    print("StytchB2BClient.sessions.sessionToken: \(StytchB2BClient.sessions.sessionToken?.value ?? "no sessionToken")")
-                    print("StytchB2BClient.sessions.sessionJwt: \(StytchB2BClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
+            .sink { [weak self] memberSessionInfo in
+                switch memberSessionInfo {
+                case let .available(memberSession, lastValidatedAtDate):
+                    print("Session Available: \(memberSession.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
+                    // The member and organization are updated before the session.
+                    // Printing the values here will show the ones returned in the same session authentication response.
+                    print("member: \(String(describing: StytchB2BClient.member.getSync()))")
+                    print("organization: \(String(describing: StytchB2BClient.organizations.getSync()))")
                     self?.isAuthenticated = true
                 case .unavailable:
                     print("Session Unavailable\n")
                     self?.isAuthenticated = false
-                }
-            }.store(in: &cancellables)
-
-        StytchB2BClient.organizations.onOrganizationChange
-            .receive(on: DispatchQueue.main)
-            .sink { organizationInfo in
-                switch organizationInfo {
-                case let .available(organization, lastValidatedAtDate):
-                    print("Organization Available: \(organization.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                case .unavailable:
-                    print("Organization Unavailable\n")
-                }
-            }.store(in: &cancellables)
-
-        StytchB2BClient.member.onMemberChange
-            .receive(on: DispatchQueue.main)
-            .sink { memberInfo in
-                switch memberInfo {
-                case let .available(member, lastValidatedAtDate):
-                    print("Member Available: \(member.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                case .unavailable:
-                    print("Member Unavailable\n")
                 }
             }.store(in: &cancellables)
     }

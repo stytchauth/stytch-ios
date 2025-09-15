@@ -23,6 +23,8 @@ public struct MemberSession: Codable, Sendable {
     public let customClaims: JSON?
     /// A list of the Roles explicitly or implicitly assigned to this Member that are valid for this Member Session. This may differ from the Roles you see on the Member object - Roles that are implicitly assigned by SSO connection or SSO group will only be valid for a Member Session if there is at least one authentication factor on the Member Session from the specified SSO connection.
     public let roles: [String]?
+    /// The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved characters: - . _ ~. Must be between 2 and 128 characters in length.
+    public let organizationSlug: String?
 
     let memberSessionId: ID
 }
