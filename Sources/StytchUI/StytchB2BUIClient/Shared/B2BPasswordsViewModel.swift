@@ -69,7 +69,6 @@ final class B2BPasswordsViewModel {
                         organizationId: Organization.ID(rawValue: organizationId),
                         emailAddress: emailAddress,
                         password: password,
-                        sessionDurationMinutes: state.configuration.sessionDurationMinutes,
                         locale: state.configuration.locale
                     )
                     let response = try await StytchB2BClient.passwords.authenticate(parameters: parameters)

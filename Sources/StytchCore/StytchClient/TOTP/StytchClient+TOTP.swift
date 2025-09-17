@@ -45,7 +45,7 @@ public extension StytchClient.TOTP {
         let expirationMinutes: Minutes
 
         /// - Parameter expirationMinutes: The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
-        public init(expirationMinutes: Minutes = .defaultSessionDuration) {
+        public init(expirationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.expirationMinutes = expirationMinutes
         }
     }
@@ -58,7 +58,7 @@ public extension StytchClient.TOTP {
         /// - Parameters:
         ///   - totpCode: The TOTP code to authenticate. The TOTP code should consist of 6 digits.
         ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(totpCode: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(totpCode: String, sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.totpCode = totpCode
             self.sessionDurationMinutes = sessionDurationMinutes
         }
@@ -72,7 +72,7 @@ public extension StytchClient.TOTP {
         /// - Parameters:
         ///   - recoveryCode: The recovery code to authenticate.
         ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(recoveryCode: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(recoveryCode: String, sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.recoveryCode = recoveryCode
             self.sessionDurationMinutes = sessionDurationMinutes
         }

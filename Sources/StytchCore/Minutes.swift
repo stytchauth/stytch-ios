@@ -17,16 +17,14 @@ public struct Minutes: Codable, Equatable, Sendable {
     }
 }
 
-extension Minutes: ExpressibleByIntegerLiteral {
-    public init(integerLiteral value: UInt) {
-        rawValue = value
+public extension Minutes {
+    static func == (lhs: Minutes, rhs: Minutes) -> Bool {
+        lhs.rawValue == rhs.rawValue
     }
 }
 
-public extension Minutes {
-    static let defaultSessionDuration: Self = 5
-
-    static func == (lhs: Minutes, rhs: Minutes) -> Bool {
-        lhs.rawValue == rhs.rawValue
+extension Minutes: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt) {
+        rawValue = value
     }
 }

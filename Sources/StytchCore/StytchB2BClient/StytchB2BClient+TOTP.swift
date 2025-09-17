@@ -103,7 +103,7 @@ public extension StytchB2BClient.TOTP {
         ///     If not set, does not affect the member's MFA enrollment.
         ///   - setDefaultMfa: If set to true, sets TOTP as the member's default MFA method.
         public init(
-            sessionDurationMinutes: Minutes,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             organizationId: String,
             memberId: String,
             code: String,

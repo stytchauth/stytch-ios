@@ -82,6 +82,16 @@ public struct StytchB2BClient: StytchClientType {
 }
 
 public extension StytchB2BClient {
+    static var defaultSessionDuration: Minutes {
+        if let defaultSessionDuration = configuration?.defaultSessionDuration {
+            return defaultSessionDuration
+        } else {
+            return 5
+        }
+    }
+}
+
+public extension StytchB2BClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `discovery` or `sso`.
     enum DeeplinkTokenType: String, Sendable {
         case discovery
@@ -131,7 +141,7 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
+    static func handle(url: URL, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
         guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {
                 try? await EventsClient.logEvent(parameters: .init(eventName: "deeplink_handled_failure", details: ["token_type": "UNKNOWN"]))

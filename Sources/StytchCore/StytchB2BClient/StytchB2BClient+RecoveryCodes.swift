@@ -67,7 +67,7 @@ public extension StytchB2BClient.RecoveryCodes {
         ///   - memberId: The ID of the member creating a TOTP
         ///   - recoveryCode: The recovery code to authenticate.
         public init(
-            sessionDurationMinutes: Minutes,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             organizationId: String,
             memberId: String,
             recoveryCode: String

@@ -32,7 +32,8 @@ final class StytchB2BSessionsViewController: UIViewController {
 
         title = "B2B"
 
-        StytchB2BClient.configure(configuration: .init(publicToken: ""))
+        let stytchClientConfiguration = StytchClientConfiguration(publicToken: "your-public-token", defaultSessionDuration: 5)
+        StytchB2BClient.configure(configuration: stytchClientConfiguration)
 
         view.backgroundColor = .systemBackground
 
@@ -89,8 +90,7 @@ final class StytchB2BSessionsViewController: UIViewController {
                 let authenticateParameters = StytchB2BClient.OTP.Email.AuthenticateParameters(
                     code: code,
                     organizationId: organizationId,
-                    emailAddress: emailAddress,
-                    sessionDurationMinutes: .defaultSessionDuration
+                    emailAddress: emailAddress
                 )
                 _ = try await StytchB2BClient.otp.email.authenticate(parameters: authenticateParameters)
                 presentAlertWithTitle(alertTitle: "Authetication Success!")

@@ -38,7 +38,8 @@ Before using any part of the Stytch SDK, you must call configure to set the publ
 ``` swift
 import StytchCore
 
-StytchClient.configure(configuration: .init(publicToken: "your-public-token"))
+let stytchClientConfiguration = StytchClientConfiguration(publicToken: "your-public-token", defaultSessionDuration: 5)
+StytchClient.configure(configuration: stytchClientConfiguration)
 ```
 
 ## Stytch Core Usage

@@ -147,7 +147,7 @@ public extension StytchClient.Passwords {
         ///    - email: The user's email address.
         ///    - password: The user's password.
         ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(email: String, password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(email: String, password: String, sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.email = email
             self.password = password
             self.sessionDurationMinutes = sessionDurationMinutes
@@ -215,7 +215,7 @@ public extension StytchClient.Passwords {
         ///   - token: The reset token as parsed from the resulting reset deeplink. NOTE: - You must parse this manually.
         ///   - password: The user's updated password.
         ///   - sessionDurationMinutes: The duration of the requested session.
-        public init(token: String, password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(token: String, password: String, sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.token = token
             self.password = password
             self.sessionDurationMinutes = sessionDurationMinutes
@@ -232,7 +232,7 @@ public extension StytchClient.Passwords {
         /// - Parameters:
         ///   - password: The user's updated password.
         ///   - sessionDurationMinutes: The duration of the requested session.
-        public init(password: String, sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(password: String, sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.password = password
             self.sessionDurationMinutes = sessionDurationMinutes
         }
@@ -256,7 +256,7 @@ public extension StytchClient.Passwords {
             emailAddress: String,
             existingPassword: String,
             newPassword: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
         ) {
             self.emailAddress = emailAddress
             self.existingPassword = existingPassword

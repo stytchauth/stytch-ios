@@ -109,7 +109,7 @@ public extension StytchB2BClient.Sessions {
         /// The locale will be used if an OTP code is sent to the member's phone number as part of a secondary authentication requirement.
         public let locale: StytchLocale
 
-        public init(organizationID: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
+        public init(organizationID: String, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration, locale: StytchLocale = .en) {
             self.organizationID = organizationID
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale

@@ -71,7 +71,6 @@ final class RecoveryCodesViewController: UIViewController {
 
             do {
                 let parameters = StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverParameters(
-                    sessionDurationMinutes: .defaultSessionDuration,
                     organizationId: organizationId,
                     memberId: memberId,
                     recoveryCode: recoveryCode

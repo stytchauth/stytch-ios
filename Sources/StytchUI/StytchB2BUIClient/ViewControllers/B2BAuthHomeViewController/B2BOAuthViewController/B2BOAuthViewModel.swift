@@ -29,7 +29,6 @@ extension B2BOAuthViewModel {
 
         let authenticateParameters = StytchB2BClient.OAuth.AuthenticateParameters(
             oauthToken: token,
-            sessionDurationMinutes: state.configuration.sessionDurationMinutes,
             locale: state.configuration.locale
         )
         let response = try await StytchB2BClient.oauth.authenticate(parameters: authenticateParameters)

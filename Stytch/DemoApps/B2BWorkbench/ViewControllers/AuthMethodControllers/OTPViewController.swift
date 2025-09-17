@@ -89,7 +89,6 @@ final class OTPViewController: UIViewController {
                 }
 
                 let parameters = StytchB2BClient.OTP.SMS.AuthenticateParameters(
-                    sessionDurationMinutes: .defaultSessionDuration,
                     organizationId: organizationId,
                     memberId: memberId,
                     code: code,
@@ -149,8 +148,7 @@ final class OTPViewController: UIViewController {
                     code: code,
                     organizationId: organizationId,
                     emailAddress: emailAddress,
-                    locale: .en,
-                    sessionDurationMinutes: .defaultSessionDuration
+                    locale: .en
                 )
                 let response = try await StytchB2BClient.otp.email.authenticate(parameters: parameters)
                 presentAlertAndLogMessage(description: "authenticate otp email success!", object: response)

@@ -86,7 +86,7 @@ final class B2BOTPTestCase: BaseTestCase {
         let code = "code1234"
 
         let parameters = StytchB2BClient.OTP.SMS.AuthenticateParameters(
-            sessionDurationMinutes: .defaultSessionDuration,
+            sessionDurationMinutes: 5,
             organizationId: organizationId,
             memberId: memberId,
             code: code
@@ -160,7 +160,7 @@ final class B2BOTPTestCase: BaseTestCase {
             organizationId: organizationId,
             emailAddress: emailAddress,
             locale: locale,
-            sessionDurationMinutes: .defaultSessionDuration
+            sessionDurationMinutes: 5
         )
 
         _ = try await StytchB2BClient.otp.email.authenticate(parameters: parameters)

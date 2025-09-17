@@ -40,6 +40,7 @@ class BaseTestCase: XCTestCase {
 
         StytchClient.configure(configuration: .init(
             publicToken: "xyz",
+            defaultSessionDuration: 5,
             hostUrl: try XCTUnwrap(URL(string: "https://myapp.com"))
         ))
 

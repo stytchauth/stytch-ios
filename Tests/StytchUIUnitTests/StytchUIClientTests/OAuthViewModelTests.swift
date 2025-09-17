@@ -17,30 +17,18 @@ final class OAuthViewModelTests: BaseTestCase {
     func testSessionDurationMinutesReadsFromConfig() {
         let state = OAuthState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
-                products: [],
-                sessionDurationMinutes: 123
-            )
-        )
-        _ = OAuthViewModel(state: state)
-        XCTAssert(state.config.sessionDurationMinutes == 123)
-    }
-
-    func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
-        let state = OAuthState(
-            config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: []
             )
         )
         _ = OAuthViewModel(state: state)
-        XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
+        XCTAssert(state.config.stytchClientConfiguration.defaultSessionDuration == 5)
     }
 
     func testStartOAuthCallsAppleProviderAndCallsAuthCallbackWhenProviderIsApple() async throws {
         let state = OAuthState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: [.oauth],
                 oauthProviders: [.apple]
             )
@@ -55,7 +43,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthDoesNothingIfOAuthIsNotConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: [],
                 oauthProviders: []
             )
@@ -71,7 +59,7 @@ final class OAuthViewModelTests: BaseTestCase {
     func testStartOAuthCallsThirdPartyStartAndAuthenticateFlowAndReportsToUIIfOAuthIsConfiguredAndProviderIsThirdParty() async throws {
         let state = OAuthState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: [.oauth],
                 oauthProviders: [.thirdParty(.amazon)]
             )

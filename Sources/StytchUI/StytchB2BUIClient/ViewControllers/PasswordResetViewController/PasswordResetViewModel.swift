@@ -22,7 +22,6 @@ final class PasswordResetViewModel {
             parameters: .init(
                 passwordResetToken: state.token,
                 password: newPassword,
-                sessionDurationMinutes: state.configuration.sessionDurationMinutes,
                 locale: state.configuration.locale
             )
         )

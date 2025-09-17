@@ -11,7 +11,7 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDurationMinutes: Minutes, completion: @escaping Completion<DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>>) {
+    static func handle(url: URL, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration, completion: @escaping Completion<DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>>) {
         Task {
             do {
                 completion(.success(try await handle(url: url, sessionDurationMinutes: sessionDurationMinutes)))
@@ -28,7 +28,7 @@ public extension StytchB2BClient {
     ///  - Parameters:
     ///    - url: A `URL` passed to your application as a deeplink.
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-    static func handle(url: URL, sessionDurationMinutes: Minutes) -> AnyPublisher<DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>, Error> {
+    static func handle(url: URL, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration) -> AnyPublisher<DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>, Error> {
         return Deferred {
             Future({ promise in
                 Task {

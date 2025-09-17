@@ -152,7 +152,6 @@ extension AuthenticationOperations {
             emailAddress: emailAddress,
             discoveryRedirectUrl: configuration.redirectUrl,
             resetPasswordRedirectUrl: configuration.redirectUrl,
-            resetPasswordExpirationMinutes: configuration.sessionDurationMinutes,
             resetPasswordTemplateId: configuration.passwordOptions?.resetPasswordTemplateId,
             verifyEmailTemplateId: configuration.passwordOptions?.verifyEmailTemplateId,
             locale: configuration.locale
@@ -177,7 +176,6 @@ extension AuthenticationOperations {
 
         let authenticateParameters = StytchB2BClient.SSO.AuthenticateParameters(
             ssoToken: token,
-            sessionDurationMinutes: configuration.sessionDurationMinutes,
             locale: configuration.locale
         )
         let response = try await StytchB2BClient.sso.authenticate(parameters: authenticateParameters)

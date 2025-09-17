@@ -89,7 +89,7 @@ public extension StytchB2BClient.OTP.SMS {
         ///     If set to 'unenroll', unenrolls the member in MFA by setting the "mfa_enrolled" boolean to false.
         ///     If not set, does not affect the member's MFA enrollment.
         public init(
-            sessionDurationMinutes: Minutes,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             organizationId: String,
             memberId: String,
             code: String,

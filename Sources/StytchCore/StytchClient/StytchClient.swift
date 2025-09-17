@@ -52,6 +52,10 @@ public struct StytchClient: StytchClientType {
         Current.localStorage.bootstrapData
     }
 
+    public static var configuration: StytchClientConfiguration? {
+        instance.configuration
+    }
+
     public static var clientType: ClientType {
         .consumer
     }
@@ -77,6 +81,16 @@ public struct StytchClient: StytchClientType {
     /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
+    }
+}
+
+public extension StytchClient {
+    static var defaultSessionDuration: Minutes {
+        if let defaultSessionDuration = configuration?.defaultSessionDuration {
+            return defaultSessionDuration
+        } else {
+            return 5
+        }
     }
 }
 
@@ -113,7 +127,7 @@ public extension StytchClient {
     ///    - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
     static func handle(
         url: URL,
-        sessionDurationMinutes: Minutes = .defaultSessionDuration
+        sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
     ) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType> {
         guard let (tokenType, redirectType, token) = try tokenValues(for: url) else {
             Task {

@@ -4,7 +4,7 @@ struct StytchUI_Previews: PreviewProvider {
     static var previews: some View {
         AuthRootViewController(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: ""),
+                stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5),
                 products: [.oauth, .emailMagicLinks, .otp],
                 oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
                 otpOptions: .init(methods: [.sms, .email, .whatsapp])
@@ -16,7 +16,7 @@ struct StytchUI_Previews: PreviewProvider {
         EmailConfirmationViewController(
             state: .forgotPassword(
                 config: .init(
-                    stytchClientConfiguration: .init(publicToken: ""),
+                    stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5),
                     products: [.oauth, .emailMagicLinks, .otp],
                     oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
                     otpOptions: .init(methods: [.sms, .email, .whatsapp])
@@ -31,7 +31,7 @@ struct StytchUI_Previews: PreviewProvider {
         PasswordViewController(
             state: .init(
                 config: .init(
-                    stytchClientConfiguration: .init(publicToken: ""),
+                    stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5),
                     products: [.oauth, .emailMagicLinks, .otp],
                     oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
                     otpOptions: .init(methods: [.sms, .email, .whatsapp])
@@ -48,7 +48,7 @@ struct StytchUI_Previews: PreviewProvider {
         OTPCodeViewController(
             state: .init(
                 config: .init(
-                    stytchClientConfiguration: .init(publicToken: ""),
+                    stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5),
                     products: [.oauth, .emailMagicLinks, .otp],
                     oauthProviders: [.apple, .thirdParty(.google), .thirdParty(.twitter)],
                     otpOptions: .init(methods: [.sms, .email, .whatsapp])

@@ -113,7 +113,7 @@ public extension StytchB2BClient.OTP.Email {
             organizationId: String,
             emailAddress: String,
             locale: StytchLocale = .en,
-            sessionDurationMinutes: Minutes
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration
         ) {
             self.code = code
             self.organizationId = organizationId

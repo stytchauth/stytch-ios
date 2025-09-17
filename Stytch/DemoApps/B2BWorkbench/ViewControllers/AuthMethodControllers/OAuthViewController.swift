@@ -81,7 +81,6 @@ final class OAuthViewController: UIViewController {
                 let response = try await StytchB2BClient.oauth.authenticate(
                     parameters: .init(
                         oauthToken: token,
-                        sessionDurationMinutes: .defaultSessionDuration,
                         locale: .en
                     )
                 )

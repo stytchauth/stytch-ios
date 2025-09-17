@@ -30,30 +30,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testSessionDurationMinutesReadsFromConfig() {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
-            products: [.emailMagicLinks],
-            sessionDurationMinutes: 123
-        )
-
-        let state: EmailConfirmationState = .init(
-            config: config,
-            email: "test@stytch.com",
-            title: "Some ATitle",
-            infoComponents: [],
-            actionComponents: [],
-            secondaryAction: nil
-        ) {}
-        _ = EmailConfirmationViewModel(
-            state: state,
-            passwordClient: PasswordsSpy(callback: calledMethodCallback),
-            magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
-        )
-        XCTAssert(state.config.sessionDurationMinutes == 123)
-    }
-
-    func testSessionDurationMinutesReadsFromDefaultWhenNotConfigured() {
-        let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.emailMagicLinks]
         )
 
@@ -70,12 +47,12 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
             passwordClient: PasswordsSpy(callback: calledMethodCallback),
             magicLinksClient: MagicLinksSpy(callback: calledMethodCallback)
         )
-        XCTAssert(state.config.sessionDurationMinutes == Minutes.defaultSessionDuration)
+        XCTAssert(state.config.stytchClientConfiguration.defaultSessionDuration == 5)
     }
 
     func testCreatesCorrectResetByEmailStartParams() {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -107,7 +84,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testCreatesCorrectMagicLinkParams() {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.emailMagicLinks],
             magicLinkOptions: magicLinkConfig
         )
@@ -140,7 +117,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testLoginWithoutPasswordDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: []
         )
 
@@ -163,7 +140,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testLoginWithoutPasswordCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.emailMagicLinks],
             magicLinkOptions: magicLinkConfig
         )
@@ -187,7 +164,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testForgotPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: []
         )
 
@@ -210,7 +187,7 @@ final class EmailConfirmationViewModelTests: BaseTestCase {
 
     func testForgotPasswordCallsPasswordResetByEmailStartAndSetsPendingEmailIfPasswordsAreConfigured() async throws {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.passwords, .emailMagicLinks],
             passwordOptions: passwordConfig,
             magicLinkOptions: magicLinkConfig

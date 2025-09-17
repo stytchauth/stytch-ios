@@ -20,7 +20,7 @@ func showStytchConsumerUI() {
 }
 
 let stytchConsumerUIConfig: StytchUIClient.Configuration = .init(
-    stytchClientConfiguration: .init(publicToken: "your-public-token"),
+    stytchClientConfiguration: .init(publicToken: "your-public-token", defaultSessionDuration: 5),
     products: [.passwords, .emailMagicLinks, .otp, .oauth],
     oauthProviders: [.apple, .thirdParty(.google)],
     otpOptions: .init(methods: [.sms])

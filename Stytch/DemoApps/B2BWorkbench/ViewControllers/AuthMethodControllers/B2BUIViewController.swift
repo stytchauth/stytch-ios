@@ -28,7 +28,7 @@ class B2BUIViewController: UIViewController {
         let publicToken = UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey) ?? ""
 
         let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: publicToken),
+            stytchClientConfiguration: .init(publicToken: publicToken, defaultSessionDuration: 5),
             products: [.emailMagicLinks, .sso, .passwords, .oauth],
             authFlowType: .organization(slug: "no-mfa"),
             // authFlowType: .discovery,

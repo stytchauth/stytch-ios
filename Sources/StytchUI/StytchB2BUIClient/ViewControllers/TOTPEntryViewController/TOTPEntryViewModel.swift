@@ -19,7 +19,6 @@ final class TOTPEntryViewModel {
         }
 
         let parameters = StytchB2BClient.TOTP.AuthenticateParameters(
-            sessionDurationMinutes: state.configuration.sessionDurationMinutes,
             organizationId: organizationId,
             memberId: memberId,
             code: code,

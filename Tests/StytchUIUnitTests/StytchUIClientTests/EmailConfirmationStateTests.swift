@@ -4,7 +4,7 @@ import XCTest
 
 final class EmailConfirmationStateTests: BaseTestCase {
     let config: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "publicToken"),
+        stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
         products: [.emailMagicLinks]
     )
 
