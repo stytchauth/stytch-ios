@@ -82,6 +82,18 @@ public struct StytchB2BClient: StytchClientType {
 }
 
 public extension StytchB2BClient {
+    static var sessionDurationMinutes: Minutes {
+        if let sessionDurationMinutes = configuration?.sessionDurationMinutes {
+            return sessionDurationMinutes
+        } else if let sessionDurationMinutes = bootstrapData?.maxSessionDurationMinutes {
+            return sessionDurationMinutes
+        } else {
+            return 5
+        }
+    }
+}
+
+public extension StytchB2BClient {
     /// Represents the type of deeplink token which has been parsed. e.g. `discovery` or `sso`.
     enum DeeplinkTokenType: String, Sendable {
         case discovery

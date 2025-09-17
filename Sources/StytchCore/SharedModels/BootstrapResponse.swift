@@ -22,6 +22,9 @@ protocol BootstrapResponseDataType {
     var passwordConfig: PasswordConfig? { get }
     var vertical: ClientType? { get }
     var clientType: ClientType? { get }
+
+    // potential
+    var maxSessionDurationMinutes: Minutes { get }
 }
 
 /// The underlying data for `bootstrap` calls.
@@ -41,6 +44,7 @@ public struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataTyp
     let rbacPolicy: RBACPolicy?
     let passwordConfig: PasswordConfig?
     let vertical: ClientType?
+    let maxSessionDurationMinutes: Minutes
 
     var clientType: ClientType? {
         vertical
@@ -64,7 +68,8 @@ extension BootstrapResponseData {
             dfpProtectedAuthMode: .observation,
             rbacPolicy: nil,
             passwordConfig: nil,
-            vertical: nil
+            vertical: nil,
+            maxSessionDurationMinutes: 5
         )
     }
 }

@@ -9,6 +9,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
         case dfppaDomain = "StytchDfppaDomain"
         case testDomain = "StytchTestDomain"
         case liveDomain = "StytchLiveDomain"
+        case sessionDurationMinutes
     }
 
     public let publicToken: String
@@ -16,6 +17,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     public let dfppaDomain: String?
     public let testDomain: String
     public let liveDomain: String
+    public let sessionDurationMinutes: Minutes?
 
     /**
      Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
@@ -26,12 +28,13 @@ public struct StytchClientConfiguration: Equatable, Codable {
        - testDomain: The custom domain to use for Stytch API calls for test projects
        - liveDomain: The custom domain to use for Stytch API calls for live projects
      */
-    public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil, testDomain: String = "test.stytch.com", liveDomain: String = "api.stytch.com") {
+    public init(publicToken: String, hostUrl: URL? = nil, dfppaDomain: String? = nil, testDomain: String = "test.stytch.com", liveDomain: String = "api.stytch.com", sessionDurationMinutes: Minutes? = nil) {
         self.publicToken = publicToken
         self.hostUrl = hostUrl
         self.dfppaDomain = dfppaDomain
         self.testDomain = testDomain
         self.liveDomain = liveDomain
+        self.sessionDurationMinutes = sessionDurationMinutes
     }
 
     public var baseUrl: URL {
@@ -59,6 +62,7 @@ public extension StytchClientConfiguration {
         dfppaDomain = try container.decode(key: .dfppaDomain)
         testDomain = try container.decode(key: .testDomain)
         liveDomain = try container.decode(key: .liveDomain)
+        sessionDurationMinutes = try container.decode(key: .sessionDurationMinutes)
         do {
             hostUrl = try container.decode(key: .hostUrl)
         } catch {

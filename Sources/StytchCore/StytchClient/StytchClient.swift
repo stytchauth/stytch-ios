@@ -52,6 +52,10 @@ public struct StytchClient: StytchClientType {
         Current.localStorage.bootstrapData
     }
 
+    public static var configuration: StytchClientConfiguration? {
+        instance.configuration
+    }
+
     public static var clientType: ClientType {
         .consumer
     }
@@ -77,6 +81,18 @@ public struct StytchClient: StytchClientType {
     /// Retrieve the most recently created PKCE code pair from the device, if available
     public static func getPKCECodePair() -> PKCECodePair? {
         Self.instance.pkcePairManager.getPKCECodePair()
+    }
+}
+
+public extension StytchClient {
+    static var sessionDurationMinutes: Minutes {
+        if let sessionDurationMinutes = configuration?.sessionDurationMinutes {
+            return sessionDurationMinutes
+        } else if let sessionDurationMinutes = bootstrapData?.maxSessionDurationMinutes {
+            return sessionDurationMinutes
+        } else {
+            return 5
+        }
     }
 }
 
