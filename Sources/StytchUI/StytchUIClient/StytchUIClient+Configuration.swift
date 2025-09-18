@@ -6,12 +6,11 @@ import UIKit
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        static let empty = Self(stytchClientConfiguration: .init(publicToken: ""), products: [])
+        static let empty = Self(stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5), products: [])
 
         public let stytchClientConfiguration: StytchClientConfiguration
         public let products: [Products]
         public let navigation: Navigation?
-        public let sessionDurationMinutes: Minutes
         public let oauthProviders: [OAuthProvider]
         public let passwordOptions: PasswordOptions?
         public let magicLinkOptions: MagicLinkOptions?
@@ -57,7 +56,6 @@ public extension StytchUIClient {
         ///   - products: The products array allows you to specify the authentication methods that you would like to expose to your users.
         ///   - navigation: A configureable way to control the appearance of the dismiss button if you wish to show one.
         ///     Without a navigation configuration the UI can only be dismissed by completing authentication or manually calling StytchUIClient.dismiss().
-        ///   - sessionDurationMinutes: The session duration you would like the authentication endpoints to use.
         ///   - oauthProviders: The array of OAuth providers. If you have .oauth in your products array you must specify the list of providers.
         ///   - passwordOptions: The password options to use if you have a custom configuration.
         ///   - magicLinkOptions: The email magic link options to use if you have a custom configuration.
@@ -70,7 +68,6 @@ public extension StytchUIClient {
             stytchClientConfiguration: StytchClientConfiguration,
             products: [Products],
             navigation: Navigation? = nil,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
             oauthProviders: [OAuthProvider] = [],
             passwordOptions: PasswordOptions? = nil,
             magicLinkOptions: MagicLinkOptions? = nil,
@@ -82,7 +79,6 @@ public extension StytchUIClient {
             self.stytchClientConfiguration = stytchClientConfiguration
             self.products = products
             self.navigation = navigation
-            self.sessionDurationMinutes = sessionDurationMinutes
             self.oauthProviders = oauthProviders
             self.passwordOptions = passwordOptions
             self.magicLinkOptions = magicLinkOptions

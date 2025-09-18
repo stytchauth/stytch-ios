@@ -123,7 +123,7 @@ public extension StytchClient.OAuth {
         ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
         public init(
             token: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
         ) {
             self.token = token
             self.sessionDurationMinutes = sessionDurationMinutes

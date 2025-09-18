@@ -18,7 +18,7 @@ final class B2BTOTPTestCase: BaseTestCase {
         let parameters = StytchB2BClient.TOTP.CreateParameters(
             organizationId: organizationId,
             memberId: memberId,
-            expirationMinutes: .defaultSessionDuration
+            expirationMinutes: 5
         )
 
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
@@ -49,7 +49,7 @@ final class B2BTOTPTestCase: BaseTestCase {
         let code = "code1234"
 
         let parameters = StytchB2BClient.TOTP.AuthenticateParameters(
-            sessionDurationMinutes: .defaultSessionDuration,
+            sessionDurationMinutes: 5,
             organizationId: organizationId,
             memberId: memberId,
             code: code

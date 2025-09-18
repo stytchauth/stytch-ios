@@ -32,15 +32,15 @@ extension PasswordViewModel: PasswordViewModelProtocol {
     }
 
     func setPassword(token: String, password: String) async throws {
-        _ = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
+        _ = try await passwordClient.resetByEmail(parameters: .init(token: token, password: password))
     }
 
     func signup(email: String, password: String) async throws {
-        _ = try await passwordClient.create(parameters: .init(email: email, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
+        _ = try await passwordClient.create(parameters: .init(email: email, password: password))
     }
 
     func login(email: String, password: String) async throws {
-        _ = try await passwordClient.authenticate(parameters: .init(email: email, password: password, sessionDurationMinutes: state.config.sessionDurationMinutes))
+        _ = try await passwordClient.authenticate(parameters: .init(email: email, password: password))
     }
 
     func loginWithEmail(email: String) async throws {

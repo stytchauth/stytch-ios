@@ -30,7 +30,8 @@ final class StytchConsumerSessionsViewController: UIViewController {
 
         title = "Consumer"
 
-        StytchClient.configure(configuration: .init(publicToken: ""))
+        let stytchClientConfiguration = StytchClientConfiguration(publicToken: "your-public-token", defaultSessionDuration: 5)
+        StytchClient.configure(configuration: stytchClientConfiguration)
 
         view.backgroundColor = .systemBackground
 

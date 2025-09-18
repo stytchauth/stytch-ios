@@ -72,7 +72,6 @@ final class TOTPViewController: UIViewController {
         Task {
             do {
                 let parameters = StytchB2BClient.TOTP.AuthenticateParameters(
-                    sessionDurationMinutes: .defaultSessionDuration,
                     organizationId: organizationId,
                     memberId: memberId,
                     code: code,

@@ -19,7 +19,6 @@ final class RecoveryCodeEntryViewModel {
         }
 
         let parameters = StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverParameters(
-            sessionDurationMinutes: state.configuration.sessionDurationMinutes,
             organizationId: organizationId,
             memberId: memberId,
             recoveryCode: recoveryCode

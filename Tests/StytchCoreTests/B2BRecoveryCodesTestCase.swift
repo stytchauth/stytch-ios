@@ -55,7 +55,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
         Current.sessionManager.updateSession(intermediateSessionToken: intermediateSessionToken)
 
         let parameters = StytchB2BClient.RecoveryCodes.RecoveryCodesRecoverParameters(
-            sessionDurationMinutes: .defaultSessionDuration,
+            sessionDurationMinutes: 5,
             organizationId: organizationId,
             memberId: memberId,
             recoveryCode: recoveryCode

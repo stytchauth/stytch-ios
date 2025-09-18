@@ -155,7 +155,7 @@ public extension StytchClient.Passkeys {
         public init(
             domain: String,
             requestBehavior: RequestBehavior = .defaultPlatformValue,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
         ) {
             self.domain = domain
             self.sessionDurationMinutes = sessionDurationMinutes

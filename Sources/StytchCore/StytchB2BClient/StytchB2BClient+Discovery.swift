@@ -84,7 +84,7 @@ public extension StytchB2BClient.Discovery {
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             organizationId: Organization.ID,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
@@ -120,7 +120,7 @@ public extension StytchB2BClient.Discovery {
         ///   - authMethods: The setting that controls which authentication methods can be used by Members of an Organization.
         ///   - allowedAuthMethods: An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
         public init(
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             organizationName: String? = nil,
             organizationSlug: String? = nil,
             organizationLogoUrl: URL? = nil,

@@ -31,12 +31,12 @@ extension OAuthViewModel: OAuthViewModelProtocol {
         guard state.config.supportsOauth else { return }
         switch provider {
         case .apple:
-            _ = try await appleOauthProvider.start(parameters: .init(sessionDurationMinutes: state.config.sessionDurationMinutes))
+            _ = try await appleOauthProvider.start(parameters: .init())
         case let .thirdParty(provider):
             let (token, _) = try await (thirdPartyClientForTesting ?? provider.client).start(
                 configuration: .init(loginRedirectUrl: state.config.redirectUrl, signupRedirectUrl: state.config.redirectUrl)
             )
-            _ = try await oAuthProvider.authenticate(parameters: .init(token: token, sessionDurationMinutes: state.config.sessionDurationMinutes))
+            _ = try await oAuthProvider.authenticate(parameters: .init(token: token))
         }
     }
 }

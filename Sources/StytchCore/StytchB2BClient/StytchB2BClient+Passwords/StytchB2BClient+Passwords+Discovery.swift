@@ -109,7 +109,7 @@ public extension StytchB2BClient.Passwords.Discovery {
             emailAddress: String,
             discoveryRedirectUrl: URL? = nil,
             resetPasswordRedirectUrl: URL? = nil,
-            resetPasswordExpirationMinutes: Minutes = .defaultSessionDuration,
+            resetPasswordExpirationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             resetPasswordTemplateId: String? = nil,
             verifyEmailTemplateId: String? = nil,
             locale: StytchLocale = .en

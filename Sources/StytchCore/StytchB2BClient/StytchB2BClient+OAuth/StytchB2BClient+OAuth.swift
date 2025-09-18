@@ -76,7 +76,7 @@ public extension StytchB2BClient.OAuth {
         ///     Request support for additional languages here (https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link%22)!
         public init(
             oauthToken: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.oauthToken = oauthToken

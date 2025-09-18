@@ -48,10 +48,7 @@ extension BaseViewController {
     func selectDiscoveredOrganization(configuration: StytchB2BUIClient.Configuration, discoveredOrganization: StytchB2BClient.DiscoveredOrganization) {
         Task {
             do {
-                try await DiscoveryManager.selectDiscoveredOrganization(
-                    configuration: configuration,
-                    discoveredOrganization: discoveredOrganization
-                )
+                try await DiscoveryManager.selectDiscoveredOrganization(discoveredOrganization: discoveredOrganization)
                 startMFAFlowIfNeeded(configuration: configuration)
             } catch {
                 ErrorPublisher.publishError(error)

@@ -8,11 +8,10 @@ struct DiscoveryManager {
         discoveredOrganizations = newDiscoveredOrganizations
     }
 
-    static func selectDiscoveredOrganization(configuration: StytchB2BUIClient.Configuration, discoveredOrganization: StytchB2BClient.DiscoveredOrganization) async throws {
+    static func selectDiscoveredOrganization(discoveredOrganization: StytchB2BClient.DiscoveredOrganization) async throws {
         let response = try await StytchB2BClient.discovery.exchangeIntermediateSession(
             parameters: .init(
-                organizationId: discoveredOrganization.organization.organizationId,
-                sessionDurationMinutes: configuration.sessionDurationMinutes
+                organizationId: discoveredOrganization.organization.organizationId
             )
         )
         B2BAuthenticationManager.handlePrimaryMFAReponse(b2bMFAAuthenticateResponse: response)

@@ -165,7 +165,7 @@ public extension StytchB2BClient.SSO {
         ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - locale: The locale is used to determine which language to use in the email. Parameter is a https://www.w3.org/International/articles/language-tags/ IETF BCP 47 language tag, e.g. "en".
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
-        public init(ssoToken: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
+        public init(ssoToken: String, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration, locale: StytchLocale = .en) {
             self.ssoToken = ssoToken
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale

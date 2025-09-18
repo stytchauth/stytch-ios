@@ -249,7 +249,7 @@ public extension StytchClient.Biometrics {
 
         /// Initializes the parameters struct
         /// - Parameter sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        public init(sessionDurationMinutes: Minutes = .defaultSessionDuration) {
+        public init(sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
             self.sessionDurationMinutes = sessionDurationMinutes
         }
     }
@@ -268,7 +268,7 @@ public extension StytchClient.Biometrics {
         public init(
             identifier: String,
             accessPolicy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
         ) {
             self.identifier = identifier
             self.accessPolicy = accessPolicy

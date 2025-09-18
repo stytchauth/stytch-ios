@@ -20,7 +20,6 @@ final class SMSOTPEntryViewModel {
         }
 
         let parameters = StytchB2BClient.OTP.SMS.AuthenticateParameters(
-            sessionDurationMinutes: state.configuration.sessionDurationMinutes,
             organizationId: organizationId,
             memberId: memberId,
             code: code,

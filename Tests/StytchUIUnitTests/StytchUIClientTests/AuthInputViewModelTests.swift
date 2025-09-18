@@ -29,7 +29,7 @@ final class AuthInputViewModelTests: BaseTestCase {
 
     func testCreatesCorrectResetByEmailStartParams() {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -51,7 +51,7 @@ final class AuthInputViewModelTests: BaseTestCase {
 
     func testCreatesCorrectMagicLinkParams() {
         let config: StytchUIClient.Configuration = .init(
-            stytchClientConfiguration: .init(publicToken: "publicToken"),
+            stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
             products: [.passwords],
             passwordOptions: passwordConfig
         )
@@ -75,7 +75,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkDoesNothingIfMagicLinksAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: []
             )
         )
@@ -91,7 +91,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testSendMagicLinkCallsMagicLinksLoginOrCreateIfMagicLinksAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: [.emailMagicLinks],
                 magicLinkOptions: magicLinkConfig
             )
@@ -107,7 +107,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordDoesNothingIfPasswordsAreNotConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: []
             )
         )
@@ -122,7 +122,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testResetPasswordCallsPasswordsResetByEmailStartIfPasswordsAreConfigured() async throws {
         let state = AuthInputState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: [.passwords],
                 passwordOptions: passwordConfig
             )
@@ -138,7 +138,7 @@ final class AuthInputViewModelTests: BaseTestCase {
     func testContinueWithPhoneCallsOTPLoginOrCreate() async throws {
         let state = AuthInputState(
             config: .init(
-                stytchClientConfiguration: .init(publicToken: "publicToken"),
+                stytchClientConfiguration: .init(publicToken: "publicToken", defaultSessionDuration: 5),
                 products: []
             )
         )

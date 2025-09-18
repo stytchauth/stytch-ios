@@ -98,7 +98,7 @@ public extension StytchB2BClient.MagicLinks {
            - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
            - locale: Used to determine which language to use when sending the user this delivery method. Parameter is a IETF BCP 47 language tag, e.g. "en". Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
          */
-        public init(magicLinksToken: String, sessionDurationMinutes: Minutes = .defaultSessionDuration, locale: StytchLocale = .en) {
+        public init(magicLinksToken: String, sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration, locale: StytchLocale = .en) {
             self.magicLinksToken = magicLinksToken
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale

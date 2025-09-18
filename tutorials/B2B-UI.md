@@ -20,7 +20,7 @@ func showStytchB2BUI() {
 }
 
 let stytchB2BUIConfig: StytchB2BUIClient.Configuration = .init(
-    stytchClientConfiguration: .init(publicToken: "your-public-token"),
+    stytchClientConfiguration: .init(publicToken: "your-public-token", defaultSessionDuration: 5),
     products: [.emailMagicLinks, .sso, .passwords, .oauth],
     authFlowType: .organization(slug: "no-mfa"),
     //authFlowType: .discovery,

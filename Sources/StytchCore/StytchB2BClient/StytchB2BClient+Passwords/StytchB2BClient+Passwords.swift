@@ -150,7 +150,7 @@ public extension StytchB2BClient.Passwords {
             organizationId: Organization.ID,
             emailAddress: String,
             password: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId
@@ -224,7 +224,7 @@ public extension StytchB2BClient.Passwords {
         public init(
             passwordResetToken: String,
             password: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.passwordResetToken = passwordResetToken
@@ -258,7 +258,7 @@ public extension StytchB2BClient.Passwords {
             emailAddress: String,
             existingPassword: String,
             newPassword: String,
-            sessionDurationMinutes: Minutes = .defaultSessionDuration,
+            sessionDurationMinutes: Minutes = StytchB2BClient.defaultSessionDuration,
             locale: StytchLocale = .en
         ) {
             self.organizationId = organizationId

@@ -21,7 +21,10 @@ struct ContentView: View {
         .task {
             // Set up your observations before calling configure
             setUpObservations()
-            StytchClient.configure(configuration: .init(publicToken: "your-public-token"))
+
+            // configure the StytchClient
+            let stytchClientConfiguration = StytchClientConfiguration(publicToken: "your-public-token", defaultSessionDuration: 5)
+            StytchClient.configure(configuration: stytchClientConfiguration)
         }
     }
 
