@@ -12,7 +12,7 @@ enum EventsClientRoute: BaseRouteType {
 }
 
 public enum EventsClient {
-    static let router: NetworkingRouter<EventsClientRoute> = .init { Current.localStorage.configuration }
+    static let router: NetworkingRouter<EventsClientRoute> = .init { Current.localStorage.stytchClientConfiguration }
 
     static let appSessionId: String = UUID().uuidString
 
@@ -30,7 +30,7 @@ public enum EventsClient {
                 device: Current.clientInfo.device
             ),
             event: .init(
-                publicToken: Current.localStorage.configuration?.publicToken ?? "",
+                publicToken: Current.localStorage.stytchClientConfiguration?.publicToken ?? "",
                 eventName: parameters.eventName,
                 details: parameters.details,
                 error: parameters.error

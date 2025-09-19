@@ -34,6 +34,16 @@ public extension StytchClient {
         }
 
         // sourcery: AsyncVariants
+        /// Searches for a user by their email address
+        public func searchUser(email: String) async throws -> UserSearchResponse {
+            let response: UserSearchResponse = try await router.post(
+                to: .userSearch,
+                parameters: JSON(dictionaryLiteral: ("email", email))
+            )
+            return response
+        }
+
+        // sourcery: AsyncVariants
         public func update(parameters: UpdateParameters) async throws -> NestedUserResponse {
             let response: NestedUserResponse = try await router.put(to: .index, parameters: parameters)
             userStorage.update(response.wrapped.user)
@@ -77,15 +87,33 @@ public extension StytchClient {
     static var user: UserManagement { .init(router: router.scopedRouter { $0.users }) }
 }
 
-public struct UserResponseData: Codable, Sendable {
-    /// The current user object.
-    public let user: User
+public extension StytchClient.UserManagement {
+    /// The response type for user-management calls.
+    typealias UserResponse = Response<User>
 }
 
-/// The response type for user-management calls.
-public typealias UserResponse = Response<User>
+public extension StytchClient.UserManagement {
+    typealias NestedUserResponse = Response<UserResponseData>
 
-public typealias NestedUserResponse = Response<UserResponseData>
+    struct UserResponseData: Codable, Sendable {
+        /// The current user object.
+        public let user: User
+    }
+}
+
+public extension StytchClient.UserManagement {
+    typealias UserSearchResponse = Response<UserSearchResponseData>
+
+    enum UserType: String, Codable, Sendable {
+        case new
+        case password
+        case passwordless
+    }
+
+    struct UserSearchResponseData: Codable, Sendable {
+        public let userType: UserType
+    }
+}
 
 public extension StytchClient.UserManagement {
     /// The authentication factors which are able to be managed via user-management calls.

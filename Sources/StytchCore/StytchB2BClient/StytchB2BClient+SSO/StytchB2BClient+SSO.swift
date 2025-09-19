@@ -115,7 +115,7 @@ public extension StytchB2BClient.SSO {
         }
 
         public func startUrl(_: String) throws -> URL {
-            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
+            guard let publicToken = StytchB2BClient.stytchClientConfiguration?.publicToken else {
                 throw StytchSDKError.B2BSDKNotConfigured
             }
 

@@ -4,6 +4,8 @@ import Foundation
 import UIKit
 #endif
 
+// swiftlint:disable prefer_self_in_static_references
+
 /**
  The entrypoint for all Stytch-related interaction.
 
@@ -12,48 +14,15 @@ import UIKit
  **Async Options**: Async function calls for Stytch products are available via various
  mechanisms (Async/Await, Combine, callbacks) so you can use whatever best suits your needs.
  */
-public struct StytchClient: StytchClientType {
-    static var instance: StytchClient = .init()
+public struct StytchClient: StytchClientCommonInternal {
+    internal static var shared = StytchClient()
 
     static var router: NetworkingRouter<BaseRoute> = .init {
-        instance.configuration
-    }
-
-    /**
-     Signals that the SDK is fully initialized and ready for use.
-     This is sent after two parallel tasks complete:
-     1. Attempting to call sessions.authenticate (if there's a session token cached on the device).
-     2. Bootstrapping configuration, including DFP and captcha setup.
-     */
-    public static var isInitialized: AnyPublisher<Bool, Never> {
-        StartupClient.isInitialized
-    }
-
-    // swiftlint:disable:next identifier_name
-    public static var _uiRouter: NetworkingRouter<UIRoute> {
-        router.scopedRouter {
-            $0.ui
-        }
+        stytchClientConfiguration
     }
 
     public static var lastAuthMethodUsed: ConsumerAuthMethod {
         Current.sessionManager.consumerLastAuthMethodUsed
-    }
-
-    public static var disableSdkWatermark: Bool {
-        Current.localStorage.bootstrapData?.disableSdkWatermark ?? true
-    }
-
-    public static var passwordConfig: PasswordConfig? {
-        Current.localStorage.bootstrapData?.passwordConfig
-    }
-
-    public static var bootstrapData: BootstrapResponseData? {
-        Current.localStorage.bootstrapData
-    }
-
-    public static var configuration: StytchClientConfiguration? {
-        instance.configuration
     }
 
     public static var clientType: ClientType {
@@ -66,31 +35,22 @@ public struct StytchClient: StytchClientType {
        - configuration: A flexible and extensible object requiring at least a public token, with optional additional settings.
      */
     public static func configure(configuration: StytchClientConfiguration) {
-        instance.configure(newConfiguration: configuration)
+        shared.configure(newConfiguration: configuration)
     }
 
     // swiftlint:disable:next orphaned_doc_comment
     ///  A helper function for parsing out the Stytch token types and values from a given deeplink
     // swiftlint:disable:next large_tuple
     public static func tokenValues(for url: URL) throws -> (DeeplinkTokenType, DeeplinkRedirectType, String)? {
-        guard let (type, _, token) = try _tokenValues(for: url) else { return nil }
-        guard let tokenType = DeeplinkTokenType(rawValue: type) else { throw StytchSDKError.deeplinkUnknownTokenType }
-        return (tokenType, .unknown, token)
-    }
-
-    /// Retrieve the most recently created PKCE code pair from the device, if available
-    public static func getPKCECodePair() -> PKCECodePair? {
-        Self.instance.pkcePairManager.getPKCECodePair()
-    }
-}
-
-public extension StytchClient {
-    static var defaultSessionDuration: Minutes {
-        if let defaultSessionDuration = configuration?.defaultSessionDuration {
-            return defaultSessionDuration
-        } else {
-            return 5
+        guard let (type, _, token) = try _tokenValues(for: url) else {
+            return nil
         }
+
+        guard let tokenType = DeeplinkTokenType(rawValue: type) else {
+            throw StytchSDKError.deeplinkUnknownTokenType
+        }
+
+        return (tokenType, .unknown, token)
     }
 }
 

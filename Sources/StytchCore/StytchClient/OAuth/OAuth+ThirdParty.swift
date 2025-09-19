@@ -65,7 +65,7 @@ public extension StytchClient.OAuth.ThirdParty {
         }
 
         public func startUrl(_ providerName: String) throws -> URL {
-            guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+            guard let publicToken = StytchClient.stytchClientConfiguration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
 

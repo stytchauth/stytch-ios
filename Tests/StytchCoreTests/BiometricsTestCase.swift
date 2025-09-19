@@ -121,7 +121,7 @@ final class BiometricsTestCase: BaseTestCase {
         XCTAssertTrue(StytchClient.biometrics.registrationAvailable)
 
         networkInterceptor.responses {
-            UserResponseData(
+            StytchClient.UserManagement.UserResponseData(
                 user: .mock(userId: "user_63823")
             )
         }

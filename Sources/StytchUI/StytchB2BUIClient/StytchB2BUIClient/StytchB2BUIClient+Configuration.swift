@@ -77,13 +77,17 @@ public extension StytchB2BUIClient {
             }
         }
 
+        public var createOrganizationEnabled: Bool {
+            StytchB2BClient.bootstrapData?.createOrganizationEnabled ?? false
+        }
+
         // swiftlint:disable:next identifier_name
         public var allowsDirectCreateOrganizationIfNoneExist: Bool {
-            StytchB2BClient.createOrganizationEnabled && directCreateOrganizationForNoMembership
+            createOrganizationEnabled && directCreateOrganizationForNoMembership
         }
 
         public var allowsUserCreateOrganizations: Bool {
-            StytchB2BClient.createOrganizationEnabled && allowCreateOrganization
+            createOrganizationEnabled && allowCreateOrganization
         }
 
         /// - Parameters:

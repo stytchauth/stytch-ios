@@ -92,7 +92,7 @@ public extension StytchB2BClient.OAuth.ThirdParty {
         }
 
         public func startUrl(_ providerName: String) throws -> URL {
-            guard let publicToken = StytchB2BClient.instance.configuration?.publicToken else {
+            guard let publicToken = StytchB2BClient.stytchClientConfiguration?.publicToken else {
                 throw StytchSDKError.consumerSDKNotConfigured
             }
 

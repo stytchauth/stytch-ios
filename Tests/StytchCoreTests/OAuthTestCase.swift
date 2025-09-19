@@ -16,7 +16,7 @@ final class OAuthTestCase: BaseTestCase {
                     userCreated: false
                 )
             )
-            UserResponse(requestId: "", statusCode: 200, wrapped: .mock(userId: ""))
+            StytchClient.UserManagement.UserResponse(requestId: "", statusCode: 200, wrapped: .mock(userId: ""))
         }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
         Current.timer = { _, _, _ in .init() }

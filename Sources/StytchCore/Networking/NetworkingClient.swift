@@ -9,7 +9,7 @@ protocol NetworkingClient {
 
 extension NetworkingClient {
     var headers: [String: String] {
-        guard let configuration = Current.localStorage.configuration else {
+        guard let configuration = Current.localStorage.stytchClientConfiguration else {
             return [:]
         }
 

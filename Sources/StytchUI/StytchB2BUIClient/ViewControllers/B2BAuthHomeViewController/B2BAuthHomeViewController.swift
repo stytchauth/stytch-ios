@@ -64,7 +64,7 @@ final class B2BAuthHomeViewController: BaseViewController<B2BAuthHomeState, B2BA
 
         layoutProductComponents(productComponents)
 
-        if StytchB2BClient.disableSdkWatermark == false {
+        if StytchB2BClient.bootstrapData?.disableSdkWatermark == false {
             setupPoweredByStytchView()
         }
 

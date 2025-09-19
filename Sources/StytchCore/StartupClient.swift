@@ -13,7 +13,10 @@ struct StartupClient {
         }
     }
 
-    static let router: NetworkingRouter<BootstrapRoute> = .init { Current.localStorage.configuration }
+    static let router: NetworkingRouter<BootstrapRoute> = .init {
+        Current.localStorage.stytchClientConfiguration
+    }
+
     static var expectedClientType: ClientType?
 
     static var isInitialized: AnyPublisher<Bool, Never> {
@@ -80,7 +83,7 @@ struct StartupClient {
     }
 
     @discardableResult static func bootstrap() async throws -> BootstrapResponseData {
-        guard let publicToken = StytchClient.instance.configuration?.publicToken else {
+        guard let publicToken = StytchClient.stytchClientConfiguration?.publicToken else {
             throw StytchSDKError.consumerSDKNotConfigured
         }
 
