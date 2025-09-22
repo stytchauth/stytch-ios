@@ -10,8 +10,6 @@ extension StytchClient {
         case sessions(SessionsRoute)
         case totp(TOTPRoute)
         case users(UsersRoute)
-        // swiftlint:disable:next identifier_name
-        case ui(UIRoute)
 
         var path: Path {
             switch self {
@@ -35,8 +33,6 @@ extension StytchClient {
                 return "totps".appendingPath(route.path)
             case let .users(route):
                 return "users".appendingPath(route.path)
-            case let .ui(route):
-                return route.path
             }
         }
     }
@@ -48,18 +44,4 @@ enum TaskStageRoute: String, RouteType {
     case complete = ""
 
     var path: Path { .init(rawValue: rawValue) }
-}
-
-public enum UIRoute: RouteType {
-    case bootstrap(publicToken: String)
-    case userSearch
-
-    public var path: Path {
-        switch self {
-        case let .bootstrap(publicToken):
-            return "projects/bootstrap".appendingPath(.init(rawValue: publicToken))
-        case .userSearch:
-            return "users/search"
-        }
-    }
 }

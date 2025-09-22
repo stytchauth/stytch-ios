@@ -278,7 +278,7 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 let response = try await viewModel.checkStrength(email: email, password: password)
 
                 if let luds = response.feedback?.ludsRequirements {
-                    passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.passwordConfig)
+                    passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.bootstrapData?.passwordConfig)
                 } else if let warning = response.feedback?.warning, let suggestions = response.feedback?.suggestions {
                     passwordInput.setZXCVBNFeedback(suggestions: suggestions, warning: warning, score: Int(response.score))
                 } else {

@@ -14,7 +14,13 @@ final class UserManagementTestCase: BaseTestCase {
     }
 
     func testGet() async throws {
-        networkInterceptor.responses { UserResponse(requestId: "123", statusCode: 200, wrapped: .mock(userId: "mock-user-id-123")) }
+        networkInterceptor.responses {
+            StytchClient.UserManagement.UserResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .mock(userId: "mock-user-id-123")
+            )
+        }
         XCTAssertNil(StytchClient.user.getSync())
         let getUserResponse = try await StytchClient.user.get()
         XCTAssertNotNil(StytchClient.user.getSync())
@@ -23,7 +29,15 @@ final class UserManagementTestCase: BaseTestCase {
     }
 
     func testUpdate() async throws {
-        networkInterceptor.responses { NestedUserResponse(requestId: "123", statusCode: 200, wrapped: UserResponseData(user: .mock(userId: "mock-user-id-123"))) }
+        networkInterceptor.responses {
+            StytchClient.UserManagement.NestedUserResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: StytchClient.UserManagement.UserResponseData(
+                    user: .mock(userId: "mock-user-id-123")
+                )
+            )
+        }
         XCTAssertNil(StytchClient.user.getSync())
         let updateUserResponse = try await StytchClient.user.update(parameters: .init(name: .init(firstName: "Dan"), untrustedMetadata: ["blah": 1]))
         XCTAssertNotNil(StytchClient.user.getSync())
@@ -35,8 +49,27 @@ final class UserManagementTestCase: BaseTestCase {
         )
     }
 
+    func testSearchUserByEmail() async throws {
+        let email = "someone@example.com"
+        networkInterceptor.responses {
+            StytchClient.UserManagement.UserSearchResponse(
+                requestId: "123",
+                statusCode: 200,
+                wrapped: .init(userType: StytchClient.UserManagement.UserType.new)
+            )
+        }
+
+        _ = try await StytchClient.user.searchUser(email: email)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/users/search",
+            method: .post(["email": email])
+        )
+    }
+
     func testDeleteFactor() async throws {
-        let response: UserResponseData = .init(user: .mock(userId: "mock-user-id-123"))
+        let response: StytchClient.UserManagement.UserResponseData = .init(user: .mock(userId: "mock-user-id-123"))
         networkInterceptor.responses {
             response
             response

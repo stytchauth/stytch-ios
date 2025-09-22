@@ -26,23 +26,23 @@ protocol BootstrapResponseDataType {
 
 /// The underlying data for `bootstrap` calls.
 public struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataType {
-    let disableSdkWatermark: Bool
-    let cnameDomain: String?
-    let emailDomains: [String]
-    let captchaSettings: CaptchaSettings
-    let pkceRequiredForEmailMagicLinks: Bool
-    let pkceRequiredForPasswordResets: Bool
-    let pkceRequiredForOauth: Bool
-    let pkceRequiredForSso: Bool
-    let slugPattern: String?
-    let createOrganizationEnabled: Bool
-    let dfpProtectedAuthEnabled: Bool
-    let dfpProtectedAuthMode: DFPProtectedAuthMode?
-    let rbacPolicy: RBACPolicy?
-    let passwordConfig: PasswordConfig?
-    let vertical: ClientType?
+    public let disableSdkWatermark: Bool
+    public let cnameDomain: String?
+    public let emailDomains: [String]
+    public let captchaSettings: CaptchaSettings
+    public let pkceRequiredForEmailMagicLinks: Bool
+    public let pkceRequiredForPasswordResets: Bool
+    public let pkceRequiredForOauth: Bool
+    public let pkceRequiredForSso: Bool
+    public let slugPattern: String?
+    public let createOrganizationEnabled: Bool
+    public let dfpProtectedAuthEnabled: Bool
+    public let dfpProtectedAuthMode: DFPProtectedAuthMode?
+    public let rbacPolicy: RBACPolicy?
+    public let passwordConfig: PasswordConfig?
+    public let vertical: ClientType?
 
-    var clientType: ClientType? {
+    public var clientType: ClientType? {
         vertical
     }
 }
@@ -74,12 +74,12 @@ public struct PasswordConfig: Codable, Sendable {
     public let ludsMinimumCount: Int
 }
 
-struct CaptchaSettings: Codable {
+public struct CaptchaSettings: Codable, Sendable {
     let enabled: Bool
     let siteKey: String?
 }
 
-enum DFPProtectedAuthMode: String, Codable {
+public enum DFPProtectedAuthMode: String, Codable, Sendable {
     case observation = "OBSERVATION"
     case decisioning = "DECISIONING"
 }

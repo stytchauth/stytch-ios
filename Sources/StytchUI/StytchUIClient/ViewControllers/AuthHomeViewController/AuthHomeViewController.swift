@@ -60,7 +60,7 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
             }
         }
 
-        if StytchClient.disableSdkWatermark == false {
+        if StytchClient.bootstrapData?.disableSdkWatermark == false {
             setupPoweredByStytchView()
         }
 

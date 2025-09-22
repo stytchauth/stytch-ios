@@ -1,60 +1,45 @@
 import Foundation
 
-protocol LocalStorageKey<Value>: Sendable {
-    associatedtype Value: Sendable
-}
-
 final class LocalStorage {
-    private var storage: [ObjectIdentifier: Any] = [:]
-
     private let lock: NSLock = .init()
 
-    subscript<T: LocalStorageKey>(storageKey: T.Type) -> T.Value? {
+    private var _bootstrapData: BootstrapResponseData?
+    var bootstrapData: BootstrapResponseData? {
         get {
             lock.withLock {
-                storage[ObjectIdentifier(storageKey)] as? T.Value
+                _bootstrapData
             }
         }
         set {
             lock.withLock {
-                storage[ObjectIdentifier(storageKey)] = newValue
+                _bootstrapData = newValue
             }
         }
     }
-}
 
-extension LocalStorage {
+    private var _stytchClientConfiguration: StytchClientConfiguration?
+    var stytchClientConfiguration: StytchClientConfiguration? {
+        get {
+            lock.withLock {
+                _stytchClientConfiguration
+            }
+        }
+        set {
+            lock.withLock {
+                _stytchClientConfiguration = newValue
+            }
+        }
+    }
+
     func stytchDomain(_ publicToken: String) -> String {
         let domain: String
         if let cnameDomain = bootstrapData?.cnameDomain {
             domain = cnameDomain
         } else if publicToken.hasPrefix("public-token-test") {
-            domain = configuration?.testDomain ?? "test.stytch.com"
+            domain = stytchClientConfiguration?.testDomain ?? "test.stytch.com"
         } else {
-            domain = configuration?.liveDomain ?? "api.stytch.com"
+            domain = stytchClientConfiguration?.liveDomain ?? "api.stytch.com"
         }
         return domain
-    }
-}
-
-extension LocalStorage {
-    private enum BootstrapDataStorageKey: LocalStorageKey {
-        typealias Value = BootstrapResponseData
-    }
-
-    var bootstrapData: BootstrapResponseData? {
-        get { self[BootstrapDataStorageKey.self] }
-        set { self[BootstrapDataStorageKey.self] = newValue }
-    }
-}
-
-extension LocalStorage {
-    private enum ConfigurationStorageKey: LocalStorageKey {
-        typealias Value = StytchClientConfiguration
-    }
-
-    var configuration: StytchClientConfiguration? {
-        get { self[ConfigurationStorageKey.self] }
-        set { self[ConfigurationStorageKey.self] = newValue }
     }
 }

@@ -1,11 +1,14 @@
 enum UsersRoute: RouteType {
     case index
+    case userSearch
     case factors(FactorsRoute)
 
     var path: Path {
         switch self {
         case .index:
             return "me"
+        case .userSearch:
+            return "search"
         case let .factors(route):
             return route.path
         }

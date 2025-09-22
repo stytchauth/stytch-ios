@@ -127,7 +127,11 @@ final class PasswordResetViewController: BaseViewController<PasswordResetState, 
                     }
                 case .luds:
                     if let ludsFeedback = response.ludsFeedback {
-                        passwordInput.setLUDSFeedback(ludsRequirement: ludsFeedback, breached: response.breachedPassword, passwordConfig: StytchB2BClient.passwordConfig)
+                        passwordInput.setLUDSFeedback(
+                            ludsRequirement: ludsFeedback,
+                            breached: response.breachedPassword,
+                            passwordConfig: StytchB2BClient.bootstrapData?.passwordConfig
+                        )
                     } else {
                         passwordInput.setFeedback(nil)
                     }

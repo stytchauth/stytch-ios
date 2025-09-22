@@ -170,7 +170,6 @@
 		74BCCBD22D2C2A97001A1C0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		74BCCBD42D2C2A97001A1C0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		74BCCBD52D2C2A97001A1C0A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		74BF2AFB2CF4EF7200798DCE /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		74C427982C9A25E700EFA1A1 /* SCIMViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCIMViewController.swift; sourceTree = "<group>"; };
 		74D1157E2BFBDFFD002EAB79 /* B2BWorkbench-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "B2BWorkbench-Bridging-Header.h"; sourceTree = "<group>"; };
 		74DC4C792E6F5570008D0152 /* OrganizationMemberSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrganizationMemberSearchViewController.swift; sourceTree = "<group>"; };
@@ -288,7 +287,6 @@
 				22E4346D280A174100FB45F0 /* Stytch */,
 				229B82192809EA3F007BC3F1 /* Products */,
 				745BAB772C88C96800771497 /* Frameworks */,
-				74BF2AFB2CF4EF7200798DCE /* Navigation.swift */,
 			);
 			sourceTree = "<group>";
 		};

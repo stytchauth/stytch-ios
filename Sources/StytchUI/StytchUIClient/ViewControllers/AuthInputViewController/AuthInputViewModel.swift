@@ -48,7 +48,7 @@ extension AuthInputViewModel: AuthInputViewModelProtocol {
     }
 
     func getUserIntent(email: String) async throws -> PasswordState.Intent? {
-        let userSearch: UserSearchResponse = try await StytchClient._uiRouter.post(to: .userSearch, parameters: JSON(dictionaryLiteral: ("email", email)))
+        let userSearch: StytchClient.UserManagement.UserSearchResponse = try await StytchClient.user.searchUser(email: email)
         return userSearch.userType.passwordIntent
     }
 
@@ -102,17 +102,7 @@ struct AuthInputState {
     let config: StytchUIClient.Configuration
 }
 
-internal struct UserSearchResponse: Decodable {
-    enum UserType: String, Decodable {
-        case new
-        case password
-        case passwordless
-    }
-
-    let userType: UserType
-}
-
-internal extension UserSearchResponse.UserType {
+internal extension StytchClient.UserManagement.UserType {
     var passwordIntent: PasswordState.Intent? {
         switch self {
         case .new:
