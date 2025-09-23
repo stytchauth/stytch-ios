@@ -20,7 +20,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     public let liveDomain: String
 
     /**
-     Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken` and `defaultSessionDuration`.
+     Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
      - Parameters:
        - publicToken: Available via the Stytch dashboard in the `Project Overview->Project ID & API keys` section
        - defaultSessionDuration: The defaultSessionDuration must be configured to start the client.
@@ -35,7 +35,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
      */
     public init(
         publicToken: String,
-        defaultSessionDuration: Minutes,
+        defaultSessionDuration: Minutes = 5,
         hostUrl: URL? = nil,
         dfppaDomain: String? = nil,
         testDomain: String = "test.stytch.com",
