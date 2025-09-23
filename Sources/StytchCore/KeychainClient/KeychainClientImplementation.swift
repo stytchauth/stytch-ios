@@ -56,7 +56,7 @@ final class KeychainClientImplementation: KeychainClient {
         try safelyEnqueue {
             var result: CFTypeRef?
             var query = item.getQuery
-            #if !os(tvOS)
+            #if !os(tvOS) && !os(watchOS)
             try updateQueryWithLAContext(&query)
             #endif
             var status: OSStatus?
@@ -134,7 +134,7 @@ final class KeychainClientImplementation: KeychainClient {
         let exists = try? safelyEnqueue {
             var result: CFTypeRef?
             var query = item.getQuery
-            #if !os(tvOS)
+            #if !os(tvOS) && !os(watchOS)
             let context = try updateQueryWithLAContext(&query)
             context.interactionNotAllowed = true
             #endif
@@ -148,7 +148,7 @@ final class KeychainClientImplementation: KeychainClient {
         try safelyEnqueue {
             let status: OSStatus
             var query = item.baseQuery
-            #if !os(tvOS)
+            #if !os(tvOS) && !os(watchOS)
             _ = try updateQueryWithLAContext(&query)
             #endif
             if valueExistsForItem(item: item) {
@@ -206,19 +206,12 @@ final class KeychainClientImplementation: KeychainClient {
 }
 
 extension KeychainClientImplementation {
-    #if !os(tvOS)
+    #if !os(tvOS) && !os(watchOS)
     @discardableResult
     func updateQueryWithLAContext(_ query: inout [CFString: Any]) throws -> LAContext {
         try safelyEnqueue {
-            let context = LAContext()
-            #if !os(watchOS)
-            context.localizedReason = NSLocalizedString(
-                "keychain_client.la_context_reason",
-                value: "Authenticate with biometrics",
-                comment: "The user-presented reason for biometric authentication prompts"
-            )
-            #endif
             // This could potentially cause prompting for secured items, so we'll pass in a reusable authentication context to minimize prompting
+            let context = LocalAuthenticationContextManager.laContext
             query[kSecUseAuthenticationContext] = context
             return context
         }

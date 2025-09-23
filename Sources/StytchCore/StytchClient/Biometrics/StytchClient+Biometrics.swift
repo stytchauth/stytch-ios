@@ -49,8 +49,6 @@ public extension StytchClient {
 
         @Dependency(\.jsonDecoder) private var jsonDecoder
 
-        @Dependency(\.localAuthenticationContext) private var localAuthenticationContext
-
         /// Indicates if there is an existing biometric registration on device.
         public var registrationAvailable: Bool {
             keychainClient.valueExistsForItem(item: .privateKeyRegistration)
@@ -63,7 +61,7 @@ public extension StytchClient {
         /// Indicates if biometrics are available
         public var availability: Availability {
             var error: NSError?
-            switch (localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {
+            switch (LocalAuthenticationContextManager.localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error), registrationAvailable) {
             case (false, _):
                 return .systemUnavailable((error as? LAError)?.code)
             case (true, false):
@@ -75,8 +73,8 @@ public extension StytchClient {
 
         /// Returns the type of biometric authentication available on the device. touchID or faceID
         public var biometryType: LABiometryType {
-            _ = localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-            return localAuthenticationContext.biometryType
+            _ = LocalAuthenticationContextManager.localAuthenticationContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            return LocalAuthenticationContextManager.localAuthenticationContext.biometryType
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -110,11 +108,13 @@ public extension StytchClient {
                 throw StytchSDKError.biometricsAlreadyEnrolled
             }
 
-            guard localAuthenticationContext.canEvaluatePolicy(parameters.accessPolicy, error: nil) else {
+            LocalAuthenticationContextManager.updateLaContextStrings(strings: parameters.promptStrings)
+
+            guard LocalAuthenticationContextManager.localAuthenticationContext.canEvaluatePolicy(parameters.accessPolicy, error: nil) else {
                 throw StytchSDKError.biometricsUnavailable
             }
 
-            guard try await localAuthenticationContext.evaluatePolicy(parameters.accessPolicy, localizedReason: "Authenticate to register biometrics") else {
+            guard try await LocalAuthenticationContextManager.localAuthenticationContext.evaluatePolicy(parameters.accessPolicy, localizedReason: parameters.promptStrings.localizedReason) else {
                 throw StytchSDKError.biometricAuthenticationFailed
             }
 
@@ -162,6 +162,8 @@ public extension StytchClient {
             guard let privateKeyRegistrationQueryResult: KeychainQueryResult = try keychainClient.getQueryResults(item: .privateKeyRegistration).first else {
                 throw StytchSDKError.noBiometricRegistration
             }
+
+            LocalAuthenticationContextManager.updateLaContextStrings(strings: parameters.promptStrings)
 
             try copyBiometricRegistrationIDToKeychainIfNeeded(privateKeyRegistrationQueryResult)
 
@@ -246,11 +248,18 @@ public extension StytchClient.Biometrics {
     /// A dedicated parameters type for biometrics `authenticate` calls.
     struct AuthenticateParameters: Sendable {
         let sessionDurationMinutes: Minutes
+        let promptStrings: LAContextPromptStrings
 
         /// Initializes the parameters struct
-        /// - Parameter sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
-        public init(sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
+        /// - Parameters:
+        ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - promptStrings: The localized prompt strings for an `LAContext`.
+        public init(
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration,
+            promptStrings: LAContextPromptStrings = .defaultPromptStrings
+        ) {
             self.sessionDurationMinutes = sessionDurationMinutes
+            self.promptStrings = promptStrings
         }
     }
 
@@ -259,20 +268,24 @@ public extension StytchClient.Biometrics {
         let identifier: String
         let accessPolicy: LAPolicy
         let sessionDurationMinutes: Minutes
+        let promptStrings: LAContextPromptStrings
 
         /// Initializes the parameters struct
         /// - Parameters:
         ///   - identifier: An id used to easily identify the account associated with the biometric registration, generally an email or phone number.
         ///   - accessPolicy: Defines the policy as to how the user must confirm their ownership.
         ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
+        ///   - promptStrings: The localized prompt strings for an `LAContext`.
         public init(
             identifier: String,
             accessPolicy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics,
-            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration,
+            promptStrings: LAContextPromptStrings = .defaultPromptStrings
         ) {
             self.identifier = identifier
             self.accessPolicy = accessPolicy
             self.sessionDurationMinutes = sessionDurationMinutes
+            self.promptStrings = promptStrings
         }
     }
 
