@@ -6,6 +6,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     private enum CodingKeys: String, CodingKey {
         case publicToken = "StytchPublicToken"
         case defaultSessionDuration
+        case enableAutomaticSessionExtension
         case hostUrl = "StytchHostURL"
         case dfppaDomain = "StytchDfppaDomain"
         case testDomain = "StytchTestDomain"
@@ -14,6 +15,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
 
     public let publicToken: String
     public let defaultSessionDuration: Minutes
+    public let enableAutomaticSessionExtension: Bool
     public let hostUrl: URL?
     public let dfppaDomain: String?
     public let testDomain: String
@@ -26,6 +28,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
        - defaultSessionDuration: The defaultSessionDuration must be configured to start the client.
          This value must be less than or equal to the session duration set in the Stytch Dashboard under `Frontend SDKs -> Session duration`.
          `defaultSessionDuration` will be applied to all authentication calls unless explicitly overridden per call.
+       - enableAutomaticSessionExtension: If true, the session heartbeat will attempt to extend the session duration instead of only checking the validity.
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
          This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
          If not passed here, no cookies will be set on your behalf.
@@ -36,6 +39,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     public init(
         publicToken: String,
         defaultSessionDuration: Minutes = 5,
+        enableAutomaticSessionExtension: Bool = false,
         hostUrl: URL? = nil,
         dfppaDomain: String? = nil,
         testDomain: String = "test.stytch.com",
@@ -43,6 +47,7 @@ public struct StytchClientConfiguration: Equatable, Codable {
     ) {
         self.publicToken = publicToken
         self.defaultSessionDuration = defaultSessionDuration
+        self.enableAutomaticSessionExtension = enableAutomaticSessionExtension
         self.hostUrl = hostUrl
         self.dfppaDomain = dfppaDomain
         self.testDomain = testDomain
@@ -71,10 +76,11 @@ public extension StytchClientConfiguration {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         publicToken = try container.decode(key: .publicToken)
+        defaultSessionDuration = try container.decode(key: .defaultSessionDuration)
+        enableAutomaticSessionExtension = try container.decode(key: .enableAutomaticSessionExtension)
         dfppaDomain = try container.decode(key: .dfppaDomain)
         testDomain = try container.decode(key: .testDomain)
         liveDomain = try container.decode(key: .liveDomain)
-        defaultSessionDuration = try container.decode(key: .defaultSessionDuration)
         do {
             hostUrl = try container.decode(key: .hostUrl)
         } catch {
