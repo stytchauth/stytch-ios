@@ -4,6 +4,11 @@ import XCTest
 
 #if !os(tvOS) && !os(watchOS)
 final class BiometricsTestCase: BaseTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        LocalAuthenticationContextManager.setLocalAuthenticationContext(context: MockLocalAuthenticationContext())
+    }
+
     func testRegistration() async throws {
         XCTAssertFalse(StytchClient.biometrics.registrationAvailable)
 

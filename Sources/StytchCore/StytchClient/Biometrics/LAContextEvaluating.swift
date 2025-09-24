@@ -7,7 +7,7 @@ import LocalAuthentication
 /// and `evaluatePolicy` depend on actual device hardware and biometric configuration.
 /// By conforming `LAContext` to this protocol and providing a mock implementation,
 /// we can inject a controllable context into our biometric flow for reliable testing.
-protocol LAContextEvaluating {
+public protocol LAContextEvaluating {
     var biometryType: LABiometryType { get }
 
     func canEvaluatePolicy(_ policy: LAPolicy, error: NSErrorPointer) -> Bool

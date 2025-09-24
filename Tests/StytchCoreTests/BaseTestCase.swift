@@ -48,10 +48,6 @@ class BaseTestCase: XCTestCase {
 
         Current.sessionManager.consumerLastAuthMethodUsed = StytchClient.ConsumerAuthMethod.unknown
         Current.sessionManager.b2bLastAuthMethodUsed = StytchB2BClient.B2BAuthMethod.unknown
-
-        #if !os(tvOS) && !os(watchOS)
-        Current.localAuthenticationContext = MockLocalAuthenticationContext()
-        #endif
     }
 }
 
