@@ -46,7 +46,7 @@ jobs:
         Scripts/version increment ${{ github.event.inputs.release_type }}
         branch_name="version-increment/$(Scripts/version show-current)"
         git checkout -b "$branch_name"
-        git add 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
+        git add 'Sources/StytchCore/SharedModels/ClientInfo+Version.swift'
         git commit -m "[version] Increment to $(Scripts/version show-current)" --author "CI <ci@stytch.com>"
         git push --set-upstream origin "$branch_name"
         gh pr create --body 'As titled' --fill
