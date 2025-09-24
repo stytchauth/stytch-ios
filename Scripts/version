@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 #
-VERSION_FILE_PATH = 'Sources/StytchCore/ClientInfo/ClientInfo+Version.swift'
+VERSION_FILE_PATH = 'Sources/StytchCore/SharedModels/ClientInfo+Version.swift'
 
 def project_root
   File.expand_path('../../', __FILE__)
