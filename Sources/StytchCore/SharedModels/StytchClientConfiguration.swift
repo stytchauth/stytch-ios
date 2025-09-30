@@ -25,9 +25,8 @@ public struct StytchClientConfiguration: Equatable, Codable {
      Creates the configuration object to configure the `StytchClient` and `StytchB2BClient`, you must set the `publicToken`.
      - Parameters:
        - publicToken: Available via the Stytch dashboard in the `Project Overview->Project ID & API keys` section
-       - defaultSessionDuration: The defaultSessionDuration must be configured to start the client.
-         This value must be less than or equal to the session duration set in the Stytch Dashboard under `Frontend SDKs -> Session duration`.
-         `defaultSessionDuration` will be applied to all authentication calls unless explicitly overridden per call.
+       - defaultSessionDuration:  The default session length in minutes, must be less than or equal to the value set in the Stytch Dashboard (Frontend SDKs > Session duration).
+         Applies to all authentication calls unless explicitly overridden, defaults to 5 minutes.
        - enableAutomaticSessionExtension: If true, the session heartbeat will attempt to extend the session duration instead of only checking the validity.
        - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
          This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.

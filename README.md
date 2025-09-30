@@ -3,7 +3,6 @@
 ![Stytch iOS SDK](Resources/Assets/stytch-dark.png#gh-dark-mode-only)
 ![Stytch iOS SDK](Resources/Assets/stytch-light.png#gh-light-mode-only)
 
-![Test Status](https://github.com/stytchauth/stytch-ios/actions/workflows/test.yml/badge.svg)
 ![iOS](https://img.shields.io/badge/iOS-15.0-blue) ![macOS](https://img.shields.io/badge/macOS-12.0-green) ![tvOS](https://img.shields.io/badge/tvOS-15.0-orange) ![watchOS](https://img.shields.io/badge/watchOS-8.0-purple)
 ![Swift Package Manager](https://img.shields.io/badge/Swift_Package_Manager-compatible-4BC51D)
 
@@ -52,7 +51,7 @@ Stytch provides two ways to add authentication to your iOS app:
 - **🛠️ Stytch**: A headless API integration that gives you complete control over the authentication experience.  
 - **📱 StytchUI**: A reusable UI layer built on top of Stytch. It provides a configurable user flow that you can launch from SwiftUI or UIKit to handle authentication quickly without building every screen yourself.
 
-ℹ️ When using **StytchUI**, you can still use the full underlying client for both consumer and B2B integrations. This is useful for 👤 observing changes in the user or member, 🔐 managing the session, and 🧩 calling other headless methods relevant to your integration.
+*ℹ️ When using **StytchUI**, you can still use the full underlying client for both consumer and B2B integrations. This is useful for 👤 observing changes in the user or member, 🔐 managing the session, and 🧩 calling other headless methods relevant to your integration.*
 
 | Option   | Consumer             | B2B                  |
 |:--------:|:--------------------:|:--------------------:|
@@ -115,7 +114,11 @@ public class OTPAuthenticationManager {
 }
 ```
 
-### ⚡️ Concurrency Options
+#### Finding Authentication Methods in the SDK
+
+Authentication methods in the iOS SDK are namespaced by type. For example, `StytchClient` includes a type called `OTP` and a static instance called `otps`. The same pattern applies to other authentication methods, making it easy to discover and use the available functionality in a consistent way.
+
+#### ⚡️ Concurrency Options
 
 `StytchCore` is written using `async/await` 🦅 but we use [Sourcery](https://github.com/krzysztofzablocki/Sourcery) 🧪 to generate versions of the API that can be used with `Combine` 🔗 or called with a completion handler.  
 
@@ -123,25 +126,24 @@ If you look in the [generated](/Sources/StytchCore/Generated/) directory 📂 yo
 
 
 
-## 🔧 Further Stytch Usage
+## 🔧 Additional Stytch Guides
 
-For further information and tutorials on some of our more common implementations, see the following:
+Explore examples for some of the most common use cases in the SDK:
+
 * [Deeplinks](./READMEs/Deeplinks.md)
 * [Email Magic Links](./READMEs/EmailMagicLinks.md)
 * [OAuth](./READMEs/OAuth.md)
 * [Passwords](./READMEs/Passwords.md)
 * [Sessions](./READMEs/Sessions.md)
-
-### Using The Prebuilt UI for Authentication
-* [Stytch UI - Consumer](./READMEs/UI.md)
-* [Stytch UI - B2B](./READMEs/B2B-UI.md)
-* [Localization](./READMEs/Localization.md)
+* [Stytch UI (Consumer)](./READMEs/UI.md)
+* [Stytch UI (B2B)](./READMEs/B2B-UI.md)
+* [Localization in the Prebuilt UI](./READMEs/Localization.md)
 
 
 
 ## 🗂 Navigating the Project and 📱 Running the Sample Apps
 
-[Instructions can be found here!](./READMEs/NavigatingTheProject.md)
+In addition to installing the Swift package, it is highly recommended to clone this repo and explore the sample apps, which provide context and example code to help expedite your integration. [More details and Instructions can be found here!](./READMEs/NavigatingTheProject.md)
 
 
 

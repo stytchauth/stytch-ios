@@ -20,21 +20,17 @@ For each app you would like to run you must first ensure you have added your [pu
 
 * **StytchDemo**    
 Bundle ID: `com.stytch.StytchDemo`  
-[Configure the public token](../Stytch/DemoApps/StytchDemo/ContentView.swift#L24)    
+[Configure the public token](../Stytch/DemoApps/StytchDemo/ContentView.swift#L26)    
 
 * **StytchUIDemo**  
 Bundle ID: `com.stytch.StytchUIDemo`  
-[Configure the public token](../Stytch/DemoApps/StytchUIDemo/ContentView.swift#L10)  
+[Configure the public token](../Stytch/DemoApps/StytchUIDemo/ContentView.swift#L112)  
 [Configure the URL Scheme](../Stytch/DemoApps/StytchUIDemo/Info.plist#L14)  
 
 * **StytchB2BUIDemo**  
 Bundle ID: `com.stytch.StytchB2BUIDemo`  
-[Configure the public token](../Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L53)  
+[Configure the public token](../Stytch/DemoApps/StytchB2BUIDemo/ContentView.swift#L51)  
 [Configure the URL Scheme](../Stytch/DemoApps/StytchB2BUIDemo/Info.plist#L12)  
-
-* **ConsumerWorkbench**  
-Bundle ID: `com.stytch.ConsumerWorkbench`  
-[Configure the public token](../Stytch/DemoApps/ConsumerWorkbench/Shared/StytchDemoApp.swift#L6)  
 
 * **B2BWorkbench**  
 Bundle ID: `com.stytch.B2BWorkbench`  
@@ -42,7 +38,12 @@ Bundle ID: `com.stytch.B2BWorkbench`
 
 * **StytchBiometrics**  
 Bundle ID: `com.stytch.StytchBiometrics`  
-[Configure the public token](../Stytch/DemoApps/StytchBiometrics/ViewController.swift#L18)  
+[Configure the public token](../Stytch/DemoApps/StytchBiometrics/ViewController.swift#L19)  
+
+* **StytchSessions**  
+Bundle ID: `com.stytch.StytchSessions`  
+[Configure the public token for consumer sessions](../Stytch/DemoApps/StytchSessions/StytchConsumerSessionsViewController.swift#L33)  
+[Configure the public token for B2B sessions](../Stytch/DemoApps/StytchSessions/StytchB2BSessionsViewController.swift#L35)    
 
 ## 5. Running the Sample Apps
 
