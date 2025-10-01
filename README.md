@@ -58,11 +58,61 @@ Stytch provides two ways to add authentication to your iOS app:
 | 🛠️ Stytch   | `StytchClient`       | `StytchB2BClient`    |
 | 📱 StytchUI | `StytchUIClient`     | `StytchB2BUIClient`  |
 
-🚀 We recommend starting with [StytchUI](./READMEs/UI.md) or [Stytch UI - B2B](./READMEs/B2B-UI.md), since it greatly speeds up integration.
+
+## ⚙️ Stytch Usage
+
+Below are examples of authenticating with SMS OTP using both the Prebuilt UI and Headless methods. 🚀 We recommend starting with StytchUI to speed up integration.
+
+### 📱 StytchUI Usage
+``` swift
+import Combine
+import StytchCore
+import StytchUI
+import SwiftUI
+
+struct ContentView: View {
+    @StateObject var viewModel = ContentViewModel()
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Button("Log In With Stytch!") {
+                    viewModel.shouldShowB2CUI = true
+                }.font(.title).bold()
+            }
+            .authenticationSheet(configuration: viewModel.configuration, isPresented: $viewModel.shouldShowB2CUI)
+        }
+    }
+}
+
+class ContentViewModel: ObservableObject {
+    @Published var shouldShowB2CUI: Bool = false
+
+    private var cancellables = Set<AnyCancellable>()
+
+    let configuration = StytchUIClient.Configuration.init(
+        stytchClientConfiguration: .init(publicToken: "public-token-test-a9c3f1e2-b7d8-4g5h-9i2j-3k4l5m6n7o8p"),
+        products: [.otp],
+        otpOptions: .init(methods: [.sms])
+    )
+    
+    init() {
+        StytchUIClient.configure(configuration: configuration)
+        
+        StytchUIClient.dismissUI
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.shouldShowB2CUI = false
+            }
+            .store(in: &cancellables)
+    }
+}
+```
+
+*Here is a more detailed example of using [StytchUI](./READMEs/UI.md).* 
 
 
-
-## 🛠️ Stytch Core Usage
+### 🛠️ StytchCore Usage
 
 #### Headless Consumer Configuration
 
@@ -114,11 +164,11 @@ public class OTPAuthenticationManager {
 }
 ```
 
-#### Finding Authentication Methods in the SDK
+### 🔍 Finding Authentication Methods in the SDK
 
 Authentication methods in the iOS SDK are namespaced by type. For example, `StytchClient` includes a type called `OTP` and a static instance called `otps`. The same pattern applies to other authentication methods, making it easy to discover and use the available functionality in a consistent way.
 
-#### ⚡️ Concurrency Options
+### ⚡️ Concurrency Options
 
 `StytchCore` is written using `async/await` 🦅 but we use [Sourcery](https://github.com/krzysztofzablocki/Sourcery) 🧪 to generate versions of the API that can be used with `Combine` 🔗 or called with a completion handler.  
 

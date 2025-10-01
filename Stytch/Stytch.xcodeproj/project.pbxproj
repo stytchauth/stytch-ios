@@ -44,6 +44,16 @@
 		74234D512C21EB770001DA69 /* SwiftOTP in Frameworks */ = {isa = PBXBuildFile; productRef = 74234D502C21EB770001DA69 /* SwiftOTP */; };
 		7437F8252CF4F78E00701EF0 /* Launch Screen B2B.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7437F8242CF4F78E00701EF0 /* Launch Screen B2B.storyboard */; };
 		743C612B2DC947C800F21D06 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 743C612A2DC947C800F21D06 /* Localizable.xcstrings */; };
+		7441662F2E8D718B00C25966 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744166262E8D718B00C25966 /* Assets.xcassets */; };
+		744166312E8D718B00C25966 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 744166292E8D718B00C25966 /* LaunchScreen.storyboard */; };
+		744166322E8D718B00C25966 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7441662B2E8D718B00C25966 /* Main.storyboard */; };
+		744166332E8D718B00C25966 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744166252E8D718B00C25966 /* AppDelegate.swift */; };
+		744166342E8D718B00C25966 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441662C2E8D718B00C25966 /* SceneDelegate.swift */; };
+		744166352E8D718B00C25966 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7441662D2E8D718B00C25966 /* ViewController.swift */; };
+		744166362E8D729100C25966 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478F7DA2BF6467900BCB233 /* CommonExtensions.swift */; };
+		744166382E8D737100C25966 /* AuthHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744166372E8D736F00C25966 /* AuthHomeViewController.swift */; };
+		7441663A2E8D740D00C25966 /* StytchCore in Frameworks */ = {isa = PBXBuildFile; productRef = 744166392E8D740D00C25966 /* StytchCore */; };
+		7441663C2E8D741100C25966 /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7441663B2E8D741100C25966 /* StytchUI */; };
 		7447F58D2CF108E90006F181 /* StytchUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7447F58C2CF108E90006F181 /* StytchUI */; };
 		745BAB6A2C88C27600771497 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745BAB692C88C27600771497 /* ContentView.swift */; };
 		745BAB6C2C88C27700771497 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 745BAB6B2C88C27700771497 /* Assets.xcassets */; };
@@ -137,6 +147,15 @@
 		7425CEF12C518A260068B33E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7437F8242CF4F78E00701EF0 /* Launch Screen B2B.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen B2B.storyboard"; sourceTree = "<group>"; };
 		743C612A2DC947C800F21D06 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		744166102E8D718000C25966 /* ConsumerWorkbench.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConsumerWorkbench.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		744166252E8D718B00C25966 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		744166262E8D718B00C25966 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		744166272E8D718B00C25966 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		744166282E8D718B00C25966 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7441662A2E8D718B00C25966 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7441662C2E8D718B00C25966 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7441662D2E8D718B00C25966 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		744166372E8D736F00C25966 /* AuthHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHomeViewController.swift; sourceTree = "<group>"; };
 		745BAB652C88C27600771497 /* StytchDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StytchDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		745BAB672C88C27600771497 /* StytchDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StytchDemoApp.swift; sourceTree = "<group>"; };
 		745BAB692C88C27600771497 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -210,6 +229,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				7447F58D2CF108E90006F181 /* StytchUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7441660D2E8D718000C25966 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7441663A2E8D740D00C25966 /* StytchCore in Frameworks */,
+				7441663C2E8D741100C25966 /* StytchUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +328,7 @@
 				741827002CF0D8A600A475CB /* StytchB2BUIDemo.app */,
 				74BCCBB82D2C2A8D001A1C0A /* StytchBiometrics.app */,
 				74615C472E707D7000938602 /* StytchSessions.app */,
+				744166102E8D718000C25966 /* ConsumerWorkbench.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -361,6 +390,21 @@
 			path = StytchB2BUIDemo;
 			sourceTree = "<group>";
 		};
+		7441662E2E8D718B00C25966 /* ConsumerWorkbench */ = {
+			isa = PBXGroup;
+			children = (
+				744166252E8D718B00C25966 /* AppDelegate.swift */,
+				744166262E8D718B00C25966 /* Assets.xcassets */,
+				744166272E8D718B00C25966 /* Info.plist */,
+				744166292E8D718B00C25966 /* LaunchScreen.storyboard */,
+				7441662B2E8D718B00C25966 /* Main.storyboard */,
+				7441662C2E8D718B00C25966 /* SceneDelegate.swift */,
+				7441662D2E8D718B00C25966 /* ViewController.swift */,
+				744166372E8D736F00C25966 /* AuthHomeViewController.swift */,
+			);
+			path = ConsumerWorkbench;
+			sourceTree = "<group>";
+		};
 		745BAB662C88C27600771497 /* StytchDemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -404,10 +448,11 @@
 			isa = PBXGroup;
 			children = (
 				740F147F2D2C33F90028180F /* Shared */,
+				22315319299EE16D00BA9126 /* B2BWorkbench */,
+				7441662E2E8D718B00C25966 /* ConsumerWorkbench */,
 				745BAB662C88C27600771497 /* StytchDemo */,
 				53E128232B50092E00976CAC /* StytchUIDemo */,
 				741827132CF0FF1E00A475CB /* StytchB2BUIDemo */,
-				22315319299EE16D00BA9126 /* B2BWorkbench */,
 				74BCCBD62D2C2A97001A1C0A /* StytchBiometrics */,
 				74615C652E707D8A00938602 /* StytchSessions */,
 				53E1283E2B50092F00976CAC /* StytchUITests */,
@@ -523,6 +568,27 @@
 			productReference = 741827002CF0D8A600A475CB /* StytchB2BUIDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7441660F2E8D718000C25966 /* ConsumerWorkbench */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 744166242E8D718100C25966 /* Build configuration list for PBXNativeTarget "ConsumerWorkbench" */;
+			buildPhases = (
+				7441660C2E8D718000C25966 /* Sources */,
+				7441660D2E8D718000C25966 /* Frameworks */,
+				7441660E2E8D718000C25966 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ConsumerWorkbench;
+			packageProductDependencies = (
+				744166392E8D740D00C25966 /* StytchCore */,
+				7441663B2E8D741100C25966 /* StytchUI */,
+			);
+			productName = ConsumerWorkbench;
+			productReference = 744166102E8D718000C25966 /* ConsumerWorkbench.app */;
+			productType = "com.apple.product-type.application";
+		};
 		745BAB642C88C27600771497 /* StytchDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 745BAB702C88C27700771497 /* Build configuration list for PBXNativeTarget "StytchDemo" */;
@@ -590,7 +656,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					22315317299EE16D00BA9126 = {
@@ -606,6 +672,9 @@
 					};
 					741826FF2CF0D8A600A475CB = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					7441660F2E8D718000C25966 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 					745BAB642C88C27600771497 = {
 						CreatedOnToolsVersion = 15.4;
@@ -643,6 +712,7 @@
 				53E1283A2B50092F00976CAC /* StytchUITests */,
 				74BCCBB72D2C2A8D001A1C0A /* StytchBiometrics */,
 				74615C462E707D7000938602 /* StytchSessions */,
+				7441660F2E8D718000C25966 /* ConsumerWorkbench */,
 			);
 		};
 /* End PBXProject section */
@@ -683,6 +753,16 @@
 				741827142CF0FF1E00A475CB /* Preview Assets.xcassets in Resources */,
 				743C612B2DC947C800F21D06 /* Localizable.xcstrings in Resources */,
 				741827152CF0FF1E00A475CB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7441660E2E8D718000C25966 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7441662F2E8D718B00C25966 /* Assets.xcassets in Resources */,
+				744166312E8D718B00C25966 /* LaunchScreen.storyboard in Resources */,
+				744166322E8D718B00C25966 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,6 +859,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7441660C2E8D718000C25966 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				744166332E8D718B00C25966 /* AppDelegate.swift in Sources */,
+				744166342E8D718B00C25966 /* SceneDelegate.swift in Sources */,
+				744166362E8D729100C25966 /* CommonExtensions.swift in Sources */,
+				744166352E8D718B00C25966 /* ViewController.swift in Sources */,
+				744166382E8D737100C25966 /* AuthHomeViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		745BAB612C88C27600771497 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -841,6 +933,22 @@
 				22315326299EE16E00BA9126 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		744166292E8D718B00C25966 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				744166282E8D718B00C25966 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		7441662B2E8D718B00C25966 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7441662A2E8D718B00C25966 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		74615C602E707D8A00938602 /* LaunchScreen.storyboard */ = {
@@ -1285,6 +1393,86 @@
 			};
 			name = Release;
 		};
+		744166212E8D718100C25966 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DemoApps/ConsumerWorkbench/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.ConsumerWorkbench;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		744166222E8D718100C25966 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 22B584A5Q6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DemoApps/ConsumerWorkbench/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stytch.ConsumerWorkbench;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		745BAB712C88C27700771497 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1555,6 +1743,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		744166242E8D718100C25966 /* Build configuration list for PBXNativeTarget "ConsumerWorkbench" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				744166212E8D718100C25966 /* Debug */,
+				744166222E8D718100C25966 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		745BAB702C88C27700771497 /* Build configuration list for PBXNativeTarget "StytchDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1624,6 +1821,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 74234D4F2C21EB6D0001DA69 /* XCRemoteSwiftPackageReference "SwiftOTP" */;
 			productName = SwiftOTP;
+		};
+		744166392E8D740D00C25966 /* StytchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchCore;
+		};
+		7441663B2E8D741100C25966 /* StytchUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StytchUI;
 		};
 		7447F58C2CF108E90006F181 /* StytchUI */ = {
 			isa = XCSwiftPackageProductDependency;
