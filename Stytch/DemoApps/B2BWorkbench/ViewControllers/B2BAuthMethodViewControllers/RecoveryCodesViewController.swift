@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class RecoveryCodesViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var getButton: UIButton = .init(title: "Get", primaryAction: .init { [weak self] _ in
         self?.get()

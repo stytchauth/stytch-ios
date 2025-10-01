@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class SCIMViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var createConnectionButton: UIButton = .init(title: "Create Connection", primaryAction: .init { [weak self] _ in
         self?.createConnection()

@@ -3,7 +3,7 @@ import SwiftOTP
 import UIKit
 
 final class TOTPViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var createButton: UIButton = .init(title: "Create TOTP", primaryAction: .init { [weak self] _ in
         self?.create()

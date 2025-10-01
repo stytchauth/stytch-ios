@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class SessionsViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var authenticateButton: UIButton = .init(title: "Authenticate", primaryAction: .init { [weak self] _ in
         self?.authenticate()
@@ -72,7 +72,7 @@ final class SessionsViewController: UIViewController {
             do {
                 let parameters = StytchB2BClient.Sessions.ExchangeParameters(organizationID: organizationID)
                 let response = try await StytchB2BClient.sessions.exchange(parameters: parameters)
-                UserDefaults.standard.set(organizationID, forKey: Constants.orgIdDefaultsKey)
+                UserDefaults.standard.set(organizationID, forKey: orgIdDefaultsKey)
                 orgIdTextField.text = ""
                 presentAlertAndLogMessage(description: "exchange session success!", object: response)
             } catch {

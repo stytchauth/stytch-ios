@@ -3,7 +3,7 @@ import StytchCore
 import UIKit
 
 final class MemberViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
     var cancellable: AnyCancellable?
 
     lazy var getButton: UIButton = .init(title: "Get", primaryAction: .init { [weak self] _ in

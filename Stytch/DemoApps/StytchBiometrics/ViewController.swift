@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let stytchClientConfiguration = StytchClientConfiguration(publicToken: "your-public-token", defaultSessionDuration: 5)
+        let stytchClientConfiguration = StytchClientConfiguration(publicToken: "public-token-test-62b690ae-e211-4d45-9a6b-2073d4ed850b", defaultSessionDuration: 5)
         StytchClient.configure(configuration: stytchClientConfiguration)
 
         StytchClient.sessions.onSessionChange

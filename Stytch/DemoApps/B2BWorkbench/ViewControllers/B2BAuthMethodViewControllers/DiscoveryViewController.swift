@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class DiscoveryViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var orgNameTextField: UITextField = .init(title: "Org Name", primaryAction: submitAction)
 

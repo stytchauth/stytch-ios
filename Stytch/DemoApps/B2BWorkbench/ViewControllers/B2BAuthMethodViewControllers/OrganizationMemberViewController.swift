@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 class OrganizationMemberViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var memberIdTextField: UITextField = .init(title: "Member ID", primaryAction: .init { _ in })
 

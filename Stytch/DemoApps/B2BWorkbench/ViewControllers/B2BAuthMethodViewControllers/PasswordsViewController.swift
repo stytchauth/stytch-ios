@@ -1,12 +1,12 @@
 import StytchCore
 import UIKit
 
+let discoveryRedirectUrlDefaultsKey = "StytchDiscoveryRedirectUrl"
+
 final class PasswordsViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var emailTextField: UITextField = .init(title: "Email", primaryAction: submitAction, keyboardType: .emailAddress)
-
-    lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: submitAction, keyboardType: .URL)
 
     lazy var discoveryRedirectUrlTextField: UITextField = .init(title: "Discovery Redirect URL", primaryAction: submitAction, keyboardType: .URL)
 
@@ -70,7 +70,6 @@ final class PasswordsViewController: UIViewController {
 
         stackView.addArrangedSubview(emailTextField)
         stackView.addArrangedSubview(discoveryRedirectUrlTextField)
-        stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(passwordTextField)
         stackView.addArrangedSubview(toggleStackView)
         stackView.addArrangedSubview(authenticateButton)
@@ -81,16 +80,14 @@ final class PasswordsViewController: UIViewController {
         stackView.addArrangedSubview(discoveryAuthenticateButton)
         stackView.addArrangedSubview(discoveryResetByEmailStartButton)
 
-        emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
-        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
-        discoveryRedirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.discoveryRedirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        emailTextField.text = UserDefaults.standard.string(forKey: emailDefaultsKey)
+        discoveryRedirectUrlTextField.text = UserDefaults.standard.string(forKey: discoveryRedirectUrlDefaultsKey) ?? "b2bworkbench://auth"
 
         if StytchB2BClient.sessions.memberSession == nil {
             resetBySessionButton.isHidden = true
         }
 
         emailTextField.delegate = self
-        redirectUrlTextField.delegate = self
         discoveryRedirectUrlTextField.delegate = self
         passwordTextField.delegate = self
     }
@@ -127,7 +124,7 @@ final class PasswordsViewController: UIViewController {
         }
 
         if let email = emailTextField.text, !email.isEmpty {
-            UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
+            UserDefaults.standard.set(email, forKey: emailDefaultsKey)
         }
 
         Task {
@@ -328,18 +325,13 @@ final class PasswordsViewController: UIViewController {
             orgizationID = orgID
         }
 
-        let redirectUrl = redirectUrlTextField.text.flatMap(URL.init(string:))
-        if let redirectUrl {
-            UserDefaults.standard.set(redirectUrl.absoluteString, forKey: Constants.redirectUrlDefaultsKey)
-        }
-
         let discoveryRedirectUrl = discoveryRedirectUrlTextField.text.flatMap(URL.init(string:))
         if let discoveryRedirectUrl {
-            UserDefaults.standard.set(discoveryRedirectUrl.absoluteString, forKey: Constants.discoveryRedirectUrlDefaultsKey)
+            UserDefaults.standard.set(discoveryRedirectUrl.absoluteString, forKey: discoveryRedirectUrlDefaultsKey)
         }
 
         if let email = emailTextField.text, !email.isEmpty {
-            UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
+            UserDefaults.standard.set(email, forKey: emailDefaultsKey)
         }
 
         return (.init(rawValue: orgizationID), passwordTextField.text ?? "", emailTextField.text ?? "", redirectUrl, discoveryRedirectUrl)

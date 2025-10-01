@@ -3,7 +3,7 @@ import StytchCore
 import UIKit
 
 final class OrganizationViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
     var cancellable: AnyCancellable?
 
     lazy var getButton: UIButton = .init(title: "Get", primaryAction: .init { [weak self] _ in
@@ -92,7 +92,7 @@ final class OrganizationViewController: UIViewController {
         Task {
             do {
                 let response = try await StytchB2BClient.organizations.delete()
-                UserDefaults.standard.set(nil, forKey: Constants.orgIdDefaultsKey)
+                UserDefaults.standard.set(nil, forKey: orgIdDefaultsKey)
                 presentAlertAndLogMessage(description: "delete organization success!", object: response)
             } catch {
                 presentAlertAndLogMessage(description: "delete organization error", object: error)
