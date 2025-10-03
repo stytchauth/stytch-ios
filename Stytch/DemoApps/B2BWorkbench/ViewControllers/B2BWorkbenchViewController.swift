@@ -2,8 +2,13 @@ import StytchCore
 import StytchUI
 import UIKit
 
-final class AuthHomeViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+let publicToken = ""
+let redirectUrl = URL(string: "b2bworkbench://auth")!
+let emailDefaultsKey = "emailDefaultsKey"
+let orgIdDefaultsKey = "orgIdDefaultsKey"
+
+final class B2BWorkbenchViewController: UIViewController {
+    let stackView = UIStackView.stytchStackView()
 
     lazy var orgIdTextField: UITextField = .init(title: "Organization ID", primaryAction: .init { [weak self] _ in
         self?.saveOrgID()
@@ -66,7 +71,7 @@ final class AuthHomeViewController: UIViewController {
     })
 
     func saveOrgID() {
-        UserDefaults.standard.set(orgIdTextField.text, forKey: Constants.orgIdDefaultsKey)
+        UserDefaults.standard.set(orgIdTextField.text, forKey: orgIdDefaultsKey)
     }
 
     override func viewDidLoad() {
@@ -110,15 +115,21 @@ final class AuthHomeViewController: UIViewController {
         super.viewWillDisappear(animated)
         saveOrgID()
     }
-
-    static var publicToken: String {
-        UserDefaults.standard.string(forKey: Constants.publicTokenDefaultsKey) ?? ""
-    }
 }
 
-extension AuthHomeViewController: UITextFieldDelegate {
+extension B2BWorkbenchViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension UIViewController {
+    var organizationId: String? {
+        UserDefaults.standard.string(forKey: orgIdDefaultsKey)
+    }
+
+    var memberId: String? {
+        StytchB2BClient.member.getSync()?.id.rawValue
     }
 }

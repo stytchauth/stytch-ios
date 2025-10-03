@@ -3,7 +3,7 @@ import StytchCore
 import UIKit
 
 final class OrganizationMemberSearchViewController: UIViewController {
-    private let stackView = UIStackView.stytchB2BStackView()
+    private let stackView = UIStackView.stytchStackView()
 
     private lazy var searchAllMembersButton: UIButton = .init(title: "Search all members", primaryAction: .init { [weak self] _ in
         self?.searchAllMembers()

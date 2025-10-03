@@ -2,11 +2,9 @@ import StytchCore
 import UIKit
 
 final class MagicLinksViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var emailTextField: UITextField = .init(title: "Email", primaryAction: submitAction, keyboardType: .emailAddress)
-
-    lazy var redirectUrlTextField: UITextField = .init(title: "Redirect URL", primaryAction: submitAction, keyboardType: .URL)
 
     lazy var sendButton: UIButton = .init(title: "Submit", primaryAction: submitAction)
 
@@ -36,25 +34,20 @@ final class MagicLinksViewController: UIViewController {
         ])
 
         stackView.addArrangedSubview(emailTextField)
-        stackView.addArrangedSubview(redirectUrlTextField)
         stackView.addArrangedSubview(sendButton)
         stackView.addArrangedSubview(discoverySendButton)
         stackView.addArrangedSubview(inviteSendButton)
 
-        emailTextField.text = UserDefaults.standard.string(forKey: Constants.emailDefaultsKey)
-        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.redirectUrlDefaultsKey) ?? "b2bworkbench://auth"
+        emailTextField.text = UserDefaults.standard.string(forKey: emailDefaultsKey)
 
         emailTextField.delegate = self
-        redirectUrlTextField.delegate = self
     }
 
     func submit() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
-        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
         guard let orgId = organizationId else { return }
 
-        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
-        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: emailDefaultsKey)
 
         Task {
             do {
@@ -76,14 +69,12 @@ final class MagicLinksViewController: UIViewController {
 
     func submitDiscovery() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
-        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
 
         guard organizationId != nil else {
             return
         }
 
-        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
-        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: emailDefaultsKey)
 
         Task {
             do {
@@ -103,14 +94,12 @@ final class MagicLinksViewController: UIViewController {
 
     func submitInvite() {
         guard let email = emailTextField.text, !email.isEmpty else { return }
-        guard let redirectUrl = redirectUrlTextField.text.map(URL.init(string:)) else { return }
 
         guard organizationId != nil else {
             return
         }
 
-        UserDefaults.standard.set(email, forKey: Constants.emailDefaultsKey)
-        UserDefaults.standard.set(redirectUrl?.absoluteURL, forKey: Constants.redirectUrlDefaultsKey)
+        UserDefaults.standard.set(email, forKey: emailDefaultsKey)
 
         Task {
             do {

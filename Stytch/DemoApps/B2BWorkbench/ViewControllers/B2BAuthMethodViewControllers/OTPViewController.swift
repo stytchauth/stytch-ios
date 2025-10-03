@@ -3,7 +3,7 @@ import SwiftOTP
 import UIKit
 
 final class OTPViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var smsSendButton: UIButton = .init(title: "Send SMS OTP", primaryAction: .init { [weak self] _ in
         self?.smsSend()

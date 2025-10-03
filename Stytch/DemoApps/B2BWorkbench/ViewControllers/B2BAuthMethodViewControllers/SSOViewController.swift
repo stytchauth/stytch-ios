@@ -1,8 +1,11 @@
 import StytchCore
 import UIKit
 
+let ssoConnectionIdDefaultsKey = "ssoConnectionIdDefaultsKey"
+let ssoRedirectURLDefaultsKey = "ssoRedirectURLDefaultsKey"
+
 final class SSOViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var connectionIdTextField: UITextField = .init(title: "Connection Id", primaryAction: startAction)
 
@@ -71,8 +74,8 @@ final class SSOViewController: UIViewController {
         stackView.addArrangedSubview(updateSAMLConnectionByURLButton)
         stackView.addArrangedSubview(deleteSAMLVerificationCertificateButton)
 
-        redirectUrlTextField.text = UserDefaults.standard.string(forKey: Constants.ssoRedirectURLDefaultsKey)
-        connectionIdTextField.text = UserDefaults.standard.string(forKey: Constants.ssoConnectionIdDefaultsKey)
+        redirectUrlTextField.text = UserDefaults.standard.string(forKey: ssoRedirectURLDefaultsKey)
+        connectionIdTextField.text = UserDefaults.standard.string(forKey: ssoConnectionIdDefaultsKey)
 
         connectionIdTextField.delegate = self
         redirectUrlTextField.delegate = self
@@ -82,8 +85,8 @@ final class SSOViewController: UIViewController {
         guard let connectionId = connectionIdTextField.text, !connectionId.isEmpty else { return }
         guard let redirectUrlString = redirectUrlTextField.text else { return }
 
-        UserDefaults.standard.set(redirectUrlString, forKey: Constants.ssoRedirectURLDefaultsKey)
-        UserDefaults.standard.set(connectionId, forKey: Constants.ssoConnectionIdDefaultsKey)
+        UserDefaults.standard.set(redirectUrlString, forKey: ssoRedirectURLDefaultsKey)
+        UserDefaults.standard.set(connectionId, forKey: ssoConnectionIdDefaultsKey)
 
         guard let redirectUrl = URL(string: redirectUrlString) else {
             return

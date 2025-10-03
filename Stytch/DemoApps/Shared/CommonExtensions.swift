@@ -122,3 +122,53 @@ extension UIStackView {
         return stytchStackView
     }
 }
+
+extension UIView {
+    static func spacer(height: CGFloat = 16, width: CGFloat = 0) -> UIView {
+        let spacer = UIView()
+        if height > 0 {
+            spacer.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+        if width > 0 {
+            spacer.widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        return spacer
+    }
+
+    static var flexibleSpacer: UIView {
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .vertical)
+        spacer.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        return spacer
+    }
+}
+
+extension UIApplication {
+    // Find the topmost view controller in the app window
+    static func topViewController(base: UIViewController? = UIApplication.shared.connectedScenes
+        .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+        .first?.rootViewController) -> UIViewController?
+    {
+        if let nav = base as? UINavigationController {
+            return topViewController(base: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return tab.selectedViewController.flatMap { topViewController(base: $0) }
+        }
+        if let presented = base?.presentedViewController {
+            return topViewController(base: presented)
+        }
+        return base
+    }
+
+    static func showAlert(message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+
+            if let topVC = UIApplication.topViewController() {
+                topVC.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+}

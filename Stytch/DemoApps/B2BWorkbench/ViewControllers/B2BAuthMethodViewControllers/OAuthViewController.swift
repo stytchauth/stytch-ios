@@ -2,7 +2,7 @@ import StytchCore
 import UIKit
 
 final class OAuthViewController: UIViewController {
-    let stackView = UIStackView.stytchB2BStackView()
+    let stackView = UIStackView.stytchStackView()
 
     lazy var startButton: UIButton = .init(title: "Start", primaryAction: .init { [weak self] _ in
         self?.start()
