@@ -11,7 +11,7 @@
 			<string>com.stytch.ConsumerWorkbench</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>workbench</string>
+				<string>consumerworkbench</string>
 			</array>
 		</dict>
 	</array>
