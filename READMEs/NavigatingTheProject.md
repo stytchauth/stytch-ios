@@ -34,7 +34,13 @@ Bundle ID: `com.stytch.StytchB2BUIDemo`
 
 * **B2BWorkbench**  
 Bundle ID: `com.stytch.B2BWorkbench`  
-[Configure the public token](../Stytch/DemoApps/B2BWorkbench/ViewControllers/RootViewController.swift#L43)
+[Configure the public token](../Stytch/DemoApps/B2BWorkbench/ViewControllers/B2BWorkbenchViewController.swift#L5)  
+URL Scheme to add to your [dashboard](https://stytch.com/dashboard/redirect-urls): b2bworkbench://auth
+
+* **ConsumerWorkbench**  
+Bundle ID: `com.stytch.ConsumerWorkbench`  
+[Configure the public token](../Stytch/DemoApps/ConsumerWorkbench/ViewControllers/ConsumerWorkbenchViewController.swift#L5)  
+URL Scheme to add to your [dashboard](https://stytch.com/dashboard/redirect-urls): consumerworkbench://auth
 
 * **StytchBiometrics**  
 Bundle ID: `com.stytch.StytchBiometrics`  
