@@ -16,7 +16,7 @@ public enum StytchUIClient {
     /// - Publishes a `Void` value each time a dismissal event occurs.
     /// - Never completes with a failure, so subscribers can safely remain attached for the lifetime of the application.
     public static var dismissUI: AnyPublisher<Void, Never> {
-        B2BAuthenticationManager.dismissUI
+        dismissUIPublisher.eraseToAnyPublisher()
     }
 
     private static let dismissUIPublisher = PassthroughSubject<Void, Never>()

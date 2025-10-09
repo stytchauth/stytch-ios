@@ -43,7 +43,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
     private lazy var inputs: [Input] = {
         var inputs: [Input] = []
 
-        if let otpMethods = viewModel.state.config.otpOptions?.methods {
+        if viewModel.state.config.supportsOTP == true, let otpMethods = viewModel.state.config.otpOptions?.methods {
             for method in otpMethods {
                 switch method {
                 case .sms:
