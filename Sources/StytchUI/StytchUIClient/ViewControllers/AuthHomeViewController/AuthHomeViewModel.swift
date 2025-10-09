@@ -26,16 +26,22 @@ extension AuthHomeViewModel {
                 if state.config.supportsBiometricsAndOAuth {
                     productComponents.appendIfNotPresent(.oAuthButtons)
                     productComponents.appendIfNotPresent(.biometrics)
+                } else {
+                    productComponents.appendIfNotPresent(.oAuthButtons)
                 }
             case .biometrics:
                 if state.config.supportsBiometricsAndOAuth {
                     productComponents.appendIfNotPresent(.biometrics)
                     productComponents.appendIfNotPresent(.oAuthButtons)
+                } else {
+                    productComponents.appendIfNotPresent(.biometrics)
                 }
             }
         }
 
-        if state.config.supportsInputProducts, state.config.supportsOauth || state.config.supportsBiometrics {
+        let shouldShowBiometrics = StytchClient.biometrics.availability.isAvailableRegistered && state.config.supportsBiometrics
+
+        if state.config.supportsInputProducts, state.config.supportsOauth || shouldShowBiometrics {
             if let index = productComponents.firstIndex(of: .inputProducts) {
                 if index == 0 {
                     productComponents.insert(.divider, at: 1)
