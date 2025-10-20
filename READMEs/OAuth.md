@@ -33,19 +33,43 @@ Task {
 ```
 
 ## Native (Sign In With Apple)
-Native OAuth is a little bit different from, and quite a bit simpler than, Third Party OAuth, in which we use [Sign In With Apple](https://developer.apple.com/sign-in-with-apple/get-started/) to launch and authenticate an "OAuth ID Token" flow.
+
+Native OAuth with Stytch is simpler than other OAuth providers because the entire flow is handled by a single call. With Sign In With Apple, you only need to call `StytchClient.oauth.apple.start()`.
+
+**Two step flow for other providers:**  
+Call `start()` to launch the provider UI and receive an intermediate token.  
+Call `authenticate()` with that token to complete sign in.
+
+With native Sign In With Apple, you do not call `authenticate()` yourself. The implementation performs the token exchange and completes authentication when you call `start()`.
+This method presents the native Sign In With Apple UI, handles user consent, performs the token exchange, and returns a Stytch session. 
 ```swift
 import StytchCore
 
 Task {
     do {
         let response = try await StytchClient.oauth.apple.start(parameters: .init())
-        print(response.userCreated)
+        print(response.session)
     } catch {
         print(error.errorInfo)
     }
 }
 ```
+
+### Configuring Your App for Sign In With Apple
+
+Before using `StytchClient.oauth.apple`, your Xcode project and Apple Developer account must be configured for Sign In With Apple. The following official Apple resources provide detailed guidance:
+
+[Getting Started – Sign In With Apple](https://developer.apple.com/sign-in-with-apple/get-started/)  
+Overview of the Sign In With Apple flow and setup process.
+
+[Configuring your environment for Sign In With Apple](https://developer.apple.com/documentation/signinwithapple/configuring-your-environment-for-sign-in-with-apple)  
+Step by step instructions for setting up your environment, including creating an App ID, Service ID, and private key.
+
+[Create a Sign In With Apple private key](https://developer.apple.com/help/account/configure-app-capabilities/create-a-sign-in-with-apple-private-key/)  
+Instructions for generating and linking the private key used for secure token exchange.
+
+[Configuring Sign In With Apple support in Xcode](https://developer.apple.com/documentation/xcode/configuring-sign-in-with-apple)  
+Guide for enabling the Sign In With Apple capability in your Xcode project.
 
 ## Further Reading
 For more information on the Stytch OAuth product, consult our [OAuth guide](https://stytch.com/docs/guides/oauth/idp-overview).
