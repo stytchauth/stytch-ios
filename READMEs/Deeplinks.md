@@ -55,7 +55,7 @@ func handle(url: URL) {
         do {
             switch try await StytchClient.handle(url: url, sessionDurationMinutes: 5) {
             case let .handled(response):
-                switch responseData {
+                switch response {
                 case let .auth(response):
                     print("handled .auth: \(response.session) - \(response.user)")
                 case let .oauth(response):
@@ -63,7 +63,7 @@ func handle(url: URL) {
                 }
             case .notHandled:
                 print("not handled")
-            case let .manualHandlingRequired(tokenType, token):
+            case let .manualHandlingRequired(tokenType, token, _):
                 print("manualHandlingRequired: tokenType: \(tokenType) - token: \(token)")
             }
         } catch {
