@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
         "state": {
           "branch": null,
-          "revision": "c107075aa8d394be7aced273a46e944afe8b321b",
-          "version": "3.8.0"
+          "revision": "8cba2258060e356d5fc4836d4ff8549faa2409dd",
+          "version": "4.1.4"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk",
         "state": {
           "branch": null,
-          "revision": "b5c630a14acf1c8c4284015858e02377bfc99d63",
-          "version": "18.8.0-beta01"
+          "revision": "c6ce6a5790f0e0b70e66025ec1aa3c4aced13cc6",
+          "version": "18.8.1"
         }
       },
       {

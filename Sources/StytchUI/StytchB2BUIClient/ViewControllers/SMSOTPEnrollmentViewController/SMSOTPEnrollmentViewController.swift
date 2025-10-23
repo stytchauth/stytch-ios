@@ -51,7 +51,7 @@ final class SMSOTPEnrollmentViewController: BaseViewController<SMSOTPEnrollmentS
     private func setupPhoneNumberInput(input: PhoneNumberInput) {
         input.onButtonPressed = { [weak self] _ in
             guard let self else { return }
-            let countryPickerViewController = CountryCodePickerViewController(phoneNumberKit: input.phoneNumberKit, options: .init())
+            let countryPickerViewController = CountryCodePickerViewController(utility: input.phoneNumberUtility, options: .init())
             countryPickerViewController.delegate = input
             let navigationController = UINavigationController(rootViewController: countryPickerViewController)
             present(navigationController, animated: true)
