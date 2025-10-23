@@ -29,16 +29,16 @@ struct MemberManager {
     }
 
     static var formattedPhoneNumber: String {
-        let phoneNumberKit = PhoneNumberKit()
+        let phoneNumberUtility = PhoneNumberUtility()
         guard let memberPhoneNumber = phoneNumber else {
             return ""
         }
 
-        guard let parsedPhoneNumber = try? phoneNumberKit.parse(memberPhoneNumber) else {
+        guard let parsedPhoneNumber = try? phoneNumberUtility.parse(memberPhoneNumber) else {
             return memberPhoneNumber
         }
 
-        let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .international)
+        let formattedPhoneNumber = phoneNumberUtility.format(parsedPhoneNumber, toType: .international)
         return formattedPhoneNumber
     }
 

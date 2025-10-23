@@ -2,7 +2,7 @@ import PhoneNumberKit
 import UIKit
 
 final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
-    var onButtonPressed: (PhoneNumberKit) -> Void = { _ in }
+    var onButtonPressed: (PhoneNumberUtility) -> Void = { _ in }
 
     var onReturn: (Bool) -> Void = { _ in }
 
@@ -14,7 +14,7 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
         isValid ? textField.phoneNumber.map { "+\($0.countryCode) \($0.numberString)" } : nil
     }
 
-    var phoneNumberKit: PhoneNumberKit { textField.phoneNumberKit }
+    var phoneNumberUtility: PhoneNumberUtility { textField.utility }
 
     private var textField: PhoneNumberTextField { textInput.textField }
 
@@ -31,7 +31,7 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
     }
 
     @objc private func didTapButton(sender _: UIButton) {
-        onButtonPressed(textField.phoneNumberKit)
+        onButtonPressed(textField.utility)
     }
 
     func setReturnKeyType(returnKeyType: UIReturnKeyType) {
@@ -139,7 +139,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
     }
 
     private func updateButtonTitle() {
-        guard let countryCode = textField.phoneNumberKit.countryCode(for: textField.currentRegion) else { return }
+        guard let countryCode = textField.utility.countryCode(for: textField.currentRegion) else { return }
 
         let attributedText = NSMutableAttributedString(string: "+ \(countryCode)  ")
         if let image = UIImage(systemName: "chevron.down") {
