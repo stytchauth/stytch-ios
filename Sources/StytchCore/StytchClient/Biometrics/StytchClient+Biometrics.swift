@@ -114,8 +114,10 @@ public extension StytchClient {
                 throw StytchSDKError.biometricsUnavailable
             }
 
-            guard try await LocalAuthenticationContextManager.localAuthenticationContext.evaluatePolicy(parameters.accessPolicy, localizedReason: parameters.promptStrings.localizedReason) else {
-                throw StytchSDKError.biometricAuthenticationFailed
+            if parameters.shouldEvaluatePolicyOnRegister == true {
+                guard try await LocalAuthenticationContextManager.localAuthenticationContext.evaluatePolicy(parameters.accessPolicy, localizedReason: parameters.promptStrings.localizedReason) else {
+                    throw StytchSDKError.biometricAuthenticationFailed
+                }
             }
 
             let (privateKey, publicKey) = cryptoClient.generateKeyPair()
@@ -269,6 +271,7 @@ public extension StytchClient.Biometrics {
         let accessPolicy: LAPolicy
         let sessionDurationMinutes: Minutes
         let promptStrings: LAContextPromptStrings
+        let shouldEvaluatePolicyOnRegister: Bool
 
         /// Initializes the parameters struct
         /// - Parameters:
@@ -276,16 +279,23 @@ public extension StytchClient.Biometrics {
         ///   - accessPolicy: Defines the policy as to how the user must confirm their ownership.
         ///   - sessionDurationMinutes: The duration, in minutes, for the requested session. Defaults to 5 minutes.
         ///   - promptStrings: The localized prompt strings for an `LAContext`.
+        ///   - shouldEvaluatePolicyOnRegister: Indicates whether the biometric policy should be evaluated when registering.
+        ///     For example, if this is true you will see the Face ID prompt during registration.
+        ///     It is not explicitly necessary to show Face ID on register, because the private key for biometric authentication can be written to the keychain without showing a biometric prompt,
+        ///     with the stipulation that reading the private key from the keychain will require evaluating a biometric policy.
+        ///     You can optionally show the prompt if it makes sense for your flow.
         public init(
             identifier: String,
             accessPolicy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics,
             sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration,
-            promptStrings: LAContextPromptStrings = .defaultPromptStrings
+            promptStrings: LAContextPromptStrings = .defaultPromptStrings,
+            shouldEvaluatePolicyOnRegister: Bool = true
         ) {
             self.identifier = identifier
             self.accessPolicy = accessPolicy
             self.sessionDurationMinutes = sessionDurationMinutes
             self.promptStrings = promptStrings
+            self.shouldEvaluatePolicyOnRegister = shouldEvaluatePolicyOnRegister
         }
     }
 
