@@ -63,8 +63,6 @@ struct Environment {
 
     var localStorage: LocalStorage = .init()
 
-    var cookieClient: CookieClient = .live
-
     var keychainClient: KeychainClient = KeychainClientImplementation.shared
 
     var userDefaultsClient: EncryptedUserDefaultsClient = EncryptedUserDefaultsClientImplementation.shared
