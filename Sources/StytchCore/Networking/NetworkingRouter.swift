@@ -115,7 +115,7 @@ extension NetworkingRouter {
             useDFPPA: useDFPPA
         )
 
-        return try await handleResponse(data: data, response: response, configuration: configuration)
+        return try await handleResponse(data: data, response: response)
     }
 }
 
@@ -170,7 +170,7 @@ extension NetworkingRouter {
         }
 
         do {
-            return try await handleResponse(data: data, response: response, configuration: configuration)
+            return try await handleResponse(data: data, response: response)
         } catch {
             if isSessionStale(initialSessionId) {
                 return try await performSessionRequest(to: route, parameters: parameters)
@@ -205,8 +205,7 @@ extension NetworkingRouter {
 extension NetworkingRouter {
     func handleResponse<Response: Decodable>(
         data: Data,
-        response: HTTPURLResponse,
-        configuration: StytchClientConfiguration
+        response: HTTPURLResponse
     ) async throws -> Response {
         try response.verifyStatusCode(data: data, jsonDecoder: jsonDecoder)
         let dataContainer = try jsonDecoder.decode(DataContainer<Response>.self, from: data)
@@ -216,8 +215,7 @@ extension NetworkingRouter {
 
             sessionManager.updateSession(
                 sessionType: .user(sessionResponse.session),
-                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
-                hostUrl: configuration.hostUrl
+                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
             )
 
             #if !os(tvOS) && !os(watchOS)
@@ -233,8 +231,7 @@ extension NetworkingRouter {
 
             sessionManager.updateSession(
                 sessionType: .member(sessionResponse.memberSession),
-                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
-                hostUrl: configuration.hostUrl
+                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
             )
         } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
             // Update the member and organization so that all values are current when the session publisher fires
@@ -244,8 +241,7 @@ extension NetworkingRouter {
             if let memberSession = sessionResponse.memberSession {
                 sessionManager.updateSession(
                     sessionType: .member(memberSession),
-                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken)),
-                    hostUrl: configuration.hostUrl
+                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
                 )
             } else {
                 sessionManager.updateSession(

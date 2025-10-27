@@ -21,7 +21,6 @@ class SessionManager {
     @Dependency(\.userStorage) private var userStorage
     @Dependency(\.memberStorage) private var memberStorage
     @Dependency(\.organizationStorage) private var organizationStorage
-    @Dependency(\.cookieClient) private var cookieClient
     @Dependency(\.userDefaultsClient) private var userDefaultsClient
     @Dependency(\.sessionsPollingClient) private var sessionsPollingClient
     @Dependency(\.memberSessionsPollingClient) private var memberSessionsPollingClient
@@ -40,26 +39,15 @@ class SessionManager {
         intermediateSessionToken != nil && intermediateSessionToken?.isEmpty == false
     }
 
-    init() {
-        NotificationCenter.default
-            .addObserver(
-                self,
-                selector: #selector(cookiesDidUpdate(notification:)),
-                name: .NSHTTPCookieManagerCookiesChanged,
-                object: nil
-            )
-    }
-
     func updateSession(
         sessionType: SessionType? = nil,
         tokens: SessionTokens? = nil,
-        intermediateSessionToken: String? = nil,
-        hostUrl: URL? = nil
+        intermediateSessionToken: String? = nil
     ) {
         self.intermediateSessionToken = intermediateSessionToken
 
         // If there is no session, it means that we are in MFA and all we need is the IST
-        guard let sessionType else {
+        guard let sessionType = sessionType else {
             resetSession()
             return
         }
@@ -69,8 +57,6 @@ class SessionManager {
 
         if let tokens = tokens {
             updatePersistentStorage(tokens: tokens)
-            tokens.jwt?.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
-            tokens.opaque.updateCookie(cookieClient: cookieClient, expiresAt: sessionType.expiresAt, hostUrl: hostUrl)
         }
 
         switch sessionType {
@@ -155,7 +141,6 @@ extension SessionManager {
                 try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
             } else {
                 try? userDefaultsClient.removeItem(item: userDefaultsItem)
-                cookieClient.deleteCookie(named: userDefaultsItem.name)
             }
         }
     }
@@ -170,7 +155,6 @@ extension SessionManager {
                 try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
             } else {
                 try? userDefaultsClient.removeItem(item: userDefaultsItem)
-                cookieClient.deleteCookie(named: userDefaultsItem.name)
             }
         }
     }
@@ -230,7 +214,6 @@ extension SessionManager {
     private func removeIntermediateSessionToken() {
         let userDefaultsItem: EncryptedUserDefaultsItem = .intermediateSessionToken
         try? userDefaultsClient.removeItem(item: userDefaultsItem)
-        cookieClient.deleteCookie(named: userDefaultsItem.name)
     }
 }
 

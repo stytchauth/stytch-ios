@@ -42,32 +42,6 @@ public struct SessionToken: Equatable, Sendable {
     public static func opaque(_ value: String) -> Self {
         .init(kind: .opaque, value: value)
     }
-
-    internal func cookie(expiresAt: Date, hostUrl: URL?) -> HTTPCookie? {
-        guard let hostUrl = hostUrl, let urlComponents = URLComponents(url: hostUrl, resolvingAgainstBaseURL: true) else {
-            return nil
-        }
-
-        var properties: [HTTPCookiePropertyKey: Any] = [
-            .name: name,
-            .value: value,
-            .path: "/",
-            .domain: hostUrl.host ?? hostUrl.absoluteString,
-            .expires: expiresAt,
-            .sameSitePolicy: HTTPCookieStringPolicy.sameSiteLax,
-        ]
-        if !urlComponents.isLocalHost {
-            properties[.secure] = true
-        }
-
-        return HTTPCookie(properties: properties)
-    }
-
-    internal func updateCookie(cookieClient: CookieClient, expiresAt: Date, hostUrl: URL?) {
-        if let cookie = cookie(expiresAt: expiresAt, hostUrl: hostUrl) {
-            cookieClient.set(cookie: cookie)
-        }
-    }
 }
 
 /// A public interface to require the caller to explicitly pass one of each type of non nil token in order to update a session.
