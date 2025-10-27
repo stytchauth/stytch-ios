@@ -113,7 +113,8 @@ class ContentViewModel: ObservableObject {
         products: [.otp, .oauth, .passwords, .emailMagicLinks, .biometrics],
         navigation: Navigation(closeButtonStyle: .close(.right)),
         oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms, .whatsapp])
+        otpOptions: .init(methods: [.sms, .whatsapp]),
+        logo: CodableImage(image: UIImage(named: "logo"))
     )
 }
 

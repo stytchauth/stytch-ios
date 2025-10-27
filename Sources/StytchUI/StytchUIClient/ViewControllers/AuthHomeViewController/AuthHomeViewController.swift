@@ -39,6 +39,19 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         attachStackViewToScrollView()
 
+        if let image = viewModel.state.config.logo?.image {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+
+            stackView.addArrangedSubview(imageView)
+
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 48),
+                imageView.heightAnchor.constraint(equalToConstant: 48),
+            ])
+        }
+
         stackView.addArrangedSubview(titleLabel)
 
         for productComponent in viewModel.productComponents {

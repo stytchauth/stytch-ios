@@ -18,6 +18,7 @@ public extension StytchUIClient {
         public let biometricsOptions: BiometricsOptions
         public let theme: StytchTheme
         public let locale: StytchLocale
+        public let logo: CodableImage?
 
         public var redirectUrl: URL? {
             URL(string: "stytchui-\(stytchClientConfiguration.publicToken)://deeplink")
@@ -74,7 +75,8 @@ public extension StytchUIClient {
             otpOptions: OTPOptions? = nil,
             biometricsOptions: BiometricsOptions = BiometricsOptions(showBiometricRegistrationOnLogin: true),
             theme: StytchTheme = StytchTheme(),
-            locale: StytchLocale = .en
+            locale: StytchLocale = .en,
+            logo: CodableImage? = nil
         ) {
             self.stytchClientConfiguration = stytchClientConfiguration
             self.products = products
@@ -86,6 +88,7 @@ public extension StytchUIClient {
             self.biometricsOptions = biometricsOptions
             self.theme = theme
             self.locale = locale
+            self.logo = logo
         }
     }
 
@@ -187,5 +190,34 @@ public extension StytchUIClient {
         case sms
         case email
         case whatsapp
+    }
+}
+
+public struct CodableImage: Codable {
+    let image: UIImage?
+
+    public init(image: UIImage?) {
+        self.image = image
+    }
+
+    enum CodingKeys: CodingKey {
+        case data
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        guard let data = image?.pngData() else {
+            throw EncodingError.invalidValue(image, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unable to encode image"))
+        }
+        try container.encode(data)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let data = try container.decode(Data.self)
+        guard let img = UIImage(data: data) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid image data")
+        }
+        image = img
     }
 }
