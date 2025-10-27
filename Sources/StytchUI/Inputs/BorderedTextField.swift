@@ -35,8 +35,8 @@ class BorderedTextField: UITextField {
 
 extension UITextField {
     func applyBorderedStyle() {
-        layer.borderColor = UIColor.placeholderText.cgColor
-        layer.borderWidth = 1
+        layer.borderColor = UIColor.customGray.cgColor
+        layer.borderWidth = 0.5
         layer.cornerRadius = .cornerRadius
         leftView = .init(frame: .init(origin: .zero, size: .init(width: 10, height: 10)))
         leftViewMode = .always

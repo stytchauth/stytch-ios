@@ -63,6 +63,7 @@ class Button: UIButton {
     func updateColors(for kind: Kind) {
         switch kind {
         case .primary:
+            print(UIColor.primaryButton)
             setBackgroundImage(UIColor.primaryButtonDisabled.image(), for: .disabled)
             setBackgroundImage(UIColor.primaryButton.image(), for: .normal)
             setBackgroundImage(UIColor.primaryButton.withAlphaComponent(0.7).image(), for: .highlighted)
@@ -84,6 +85,7 @@ extension Button {
         button.onTap = onTap
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .IBMPlexSansSemiBold(size: 18)
+        button.layer.cornerRadius = .cornerRadius
         return button
     }
 
@@ -111,6 +113,18 @@ extension Button {
         button.onTap = onTap
         button.layer.borderWidth = 2 / 3
         button.layer.cornerRadius = .cornerRadius
+        return button
+    }
+
+    static func oauth(image asset: ImageAsset?, onTap: @escaping () -> Void) -> Button {
+        let button = Button(type: .custom)
+        button.kind = .secondary
+        button.setImage(asset?.image, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.onTap = onTap
+        button.layer.borderWidth = 0.5
+        button.layer.cornerRadius = .cornerRadius
+        button.layer.borderColor = UIColor.customGray.cgColor
         return button
     }
 

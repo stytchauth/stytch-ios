@@ -32,7 +32,7 @@ extension RecoveryCodesListView {
     private func setupView(codes: [String]) {
         // Set up self
         backgroundColor = UIColor.systemGray6
-        layer.cornerRadius = 8
+        layer.cornerRadius = .cornerRadius
         translatesAutoresizingMaskIntoConstraints = false
 
         // Create a stack view

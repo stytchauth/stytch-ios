@@ -78,24 +78,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
         return field
     }()
 
-    fileprivate lazy var countrySelectorButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.title = "" // Set dynamically as needed
-        config.baseForegroundColor = .label
-        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-
-        let button = UIButton(configuration: config, primaryAction: nil)
-        button.titleLabel?.font = .IBMPlexSansRegular(size: 18)
-        button.translatesAutoresizingMaskIntoConstraints = false
-
-        // Custom border & corner styling since UIButton.Configuration doesn’t support it directly
-        button.layer.borderColor = UIColor.placeholderText.cgColor
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = .cornerRadius
-        button.layer.masksToBounds = true
-
-        return button
-    }()
+    var countrySelectorButton = CountrySelectorButton()
 
     private let stackView: UIStackView = {
         let view = UIStackView()
@@ -107,6 +90,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+
         countrySelectorButton.setContentHuggingPriority(.required, for: .horizontal)
 
         stackView.addArrangedSubview(countrySelectorButton)
@@ -114,16 +98,18 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
-        NSLayoutConstraint.activate(
-            [
-                stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                stackView.topAnchor.constraint(equalTo: topAnchor),
-                stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ] + stackView.arrangedSubviews.map { view in
-                view.heightAnchor.constraint(equalToConstant: 42)
-            }
-        )
+
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            // Fixed width for the country selector button
+            countrySelectorButton.widthAnchor.constraint(equalToConstant: 100),
+        ] + stackView.arrangedSubviews.map { view in
+            view.heightAnchor.constraint(equalToConstant: 42)
+        })
 
         updateButtonTitle()
     }
@@ -140,14 +126,7 @@ final class PhoneNumberInputContainer: UIView, TextInputType {
 
     private func updateButtonTitle() {
         guard let countryCode = textField.utility.countryCode(for: textField.currentRegion) else { return }
-
-        let attributedText = NSMutableAttributedString(string: "+ \(countryCode)  ")
-        if let image = UIImage(systemName: "chevron.down") {
-            let attachment = NSTextAttachment(image: image)
-            attachment.setImageHeight(height: 10)
-            attributedText.append(NSAttributedString(attachment: attachment))
-        }
-        countrySelectorButton.setAttributedTitle(attributedText, for: .normal)
+        countrySelectorButton.updateCountryCode(countryCode)
     }
 }
 
@@ -157,5 +136,53 @@ private extension NSTextAttachment {
         let ratio = image.size.width / image.size.height
 
         bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: ratio * height, height: height)
+    }
+}
+
+final class CountrySelectorButton: UIButton {
+    private let titleLabelContainer = UILabel()
+    private let chevronImageView = UIImageView()
+
+    init() {
+        super.init(frame: .zero)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        titleLabelContainer.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        titleLabelContainer.textColor = .label
+
+        chevronImageView.image = UIImage(systemName: "chevron.down")
+        chevronImageView.tintColor = .secondaryLabel
+        chevronImageView.contentMode = .scaleAspectFit
+
+        addSubview(titleLabelContainer)
+        addSubview(chevronImageView)
+
+        titleLabelContainer.translatesAutoresizingMaskIntoConstraints = false
+        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            titleLabelContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabelContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            chevronImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            chevronImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            chevronImageView.widthAnchor.constraint(equalToConstant: 16),
+            chevronImageView.heightAnchor.constraint(equalToConstant: 16),
+        ])
+
+        layer.cornerRadius = .cornerRadius
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.systemGray4.cgColor
+    }
+
+    func updateCountryCode(_ code: UInt64) {
+        titleLabelContainer.text = "+\(code)"
     }
 }

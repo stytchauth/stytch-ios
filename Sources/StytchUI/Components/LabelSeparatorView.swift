@@ -1,5 +1,9 @@
 import UIKit
 
+extension UIColor {
+    static let customGray = UIColor(red: 116 / 255, green: 116 / 255, blue: 116 / 255, alpha: 1.0)
+}
+
 final class LabelSeparatorView: UIView {
     var text: String? {
         get { label.text }
@@ -25,14 +29,14 @@ final class LabelSeparatorView: UIView {
 
         subviews.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
 
-        label.textColor = .placeholderText
+        label.textColor = .customGray
 
         NSLayoutConstraint.activate([
             leadingBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-            leadingBar.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -30),
+            leadingBar.trailingAnchor.constraint(equalTo: label.leadingAnchor, constant: -10),
             leadingBar.centerYAnchor.constraint(equalTo: centerYAnchor),
             leadingBar.heightAnchor.constraint(equalToConstant: 1),
-            trailingBar.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 30),
+            trailingBar.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 10),
             trailingBar.trailingAnchor.constraint(equalTo: trailingAnchor),
             trailingBar.centerYAnchor.constraint(equalTo: centerYAnchor),
             trailingBar.heightAnchor.constraint(equalToConstant: 1),
@@ -49,7 +53,7 @@ final class LabelSeparatorView: UIView {
 
     private static func makeSeparatorBar() -> UIView {
         let view = UIView()
-        view.backgroundColor = .placeholderText
+        view.backgroundColor = UIColor.lightGray
         return view
     }
 }

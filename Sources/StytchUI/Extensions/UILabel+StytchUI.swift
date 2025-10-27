@@ -7,6 +7,7 @@ extension UILabel {
         label.numberOfLines = 0
         label.font = .IBMPlexSansSemiBold(size: 24)
         label.textColor = .primaryText
+        label.textAlignment = .center
         return label
     }
 

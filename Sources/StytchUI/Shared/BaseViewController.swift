@@ -13,13 +13,7 @@ protocol BaseViewControllerProtocol {
 class BaseViewController<State, ViewModel>: UIViewController, BaseViewControllerProtocol {
     var viewModel: ViewModel
 
-    private(set) lazy var stackView: UIStackView = {
-        let view = UIStackView()
-        view.alignment = .center
-        view.axis = .vertical
-        view.spacing = .spacingRegular
-        return view
-    }()
+    var stackView = UIStackView()
 
     lazy var poweredByStytchView: UIView = {
         let containerView = UIView()
@@ -48,6 +42,11 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
 
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
+
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = .spacingLarge
+
         super.init(nibName: nil, bundle: nil)
     }
 

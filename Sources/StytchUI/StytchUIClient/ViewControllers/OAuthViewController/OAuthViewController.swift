@@ -10,22 +10,21 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
     override func configureView() {
         super.configureView()
 
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        stackView.spacing = 12
+
         view.layoutMargins = .zero
 
         viewModel.state.config.oauthProviders.enumerated().forEach { index, provider in
-            let button = Self.makeOauthButton(provider: provider)
+            let button = makeOauthButton(provider: provider)
             button.tag = index
             button.addTarget(self, action: #selector(didTapOAuthButton(sender:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
         }
 
         attachStackView(within: view)
-
-        NSLayoutConstraint.activate(
-            stackView.arrangedSubviews.map {
-                $0.widthAnchor.constraint(equalTo: stackView.widthAnchor)
-            }
-        )
     }
 
     @objc private func didTapOAuthButton(sender: UIControl) {
@@ -43,33 +42,15 @@ final class OAuthViewController: BaseViewController<OAuthState, OAuthViewModel> 
             }
         }
     }
-}
 
-private extension OAuthViewController {
-    static func makeOauthButton(provider: StytchUIClient.OAuthProvider) -> UIControl {
+    func makeOauthButton(provider: StytchUIClient.OAuthProvider) -> UIControl {
+        let button: Button
         switch provider {
         case .apple:
-            return makeAppleButton()
+            button = Button.oauth(image: .appleOauthIcon) {}
         case let .thirdParty(provider):
-            return makeThirdPartyButton(provider: provider)
+            button = Button.oauth(image: provider.imageAsset) {}
         }
-    }
-
-    static func makeAppleButton() -> ASAuthorizationAppleIDButton {
-        let button = ASAuthorizationAppleIDButton(type: .continue, style: .whiteOutline)
-        button.removeConstraints(button.constraints)
-        button.heightAnchor.constraint(equalToConstant: .buttonHeight).isActive = true
-        button.cornerRadius = .cornerRadius
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .primaryText
-        return button
-    }
-
-    static func makeThirdPartyButton(provider: StytchClient.OAuth.ThirdParty.Provider) -> UIButton {
-        let button = Button.secondary(
-            image: provider.imageAsset,
-            title: LocalizationManager.stytch_oauth_third_party_title(providerName: provider.rawValue.capitalized)
-        ) {}
         button.removeTarget(nil, action: nil, for: .touchUpInside)
         return button
     }

@@ -1,12 +1,12 @@
 import CoreGraphics
 
 extension CGFloat {
-    static var cornerRadius: CGFloat { StytchUIClient.configuration.theme.cornerRadius }
-    static var verticalMargin: CGFloat { StytchUIClient.configuration.theme.verticalMargin }
-    static var horizontalMargin: CGFloat { StytchUIClient.configuration.theme.horizontalMargin }
-    static var buttonHeight: CGFloat { StytchUIClient.configuration.theme.buttonHeight }
-    static var spacingTiny: CGFloat { StytchUIClient.configuration.theme.spacingTiny }
-    static var spacingRegular: CGFloat { StytchUIClient.configuration.theme.spacingRegular }
-    static var spacingLarge: CGFloat { StytchUIClient.configuration.theme.spacingLarge }
-    static var spacingHuge: CGFloat { StytchUIClient.configuration.theme.spacingHuge }
+    static var cornerRadius: CGFloat { 8 }
+    static var verticalMargin: CGFloat { 0 }
+    static var horizontalMargin: CGFloat { 32 }
+    static var buttonHeight: CGFloat { 45 }
+    static var spacingTiny: CGFloat { 4 }
+    static var spacingRegular: CGFloat { 12 }
+    static var spacingLarge: CGFloat { 24 }
+    static var spacingHuge: CGFloat { 32 }
 }

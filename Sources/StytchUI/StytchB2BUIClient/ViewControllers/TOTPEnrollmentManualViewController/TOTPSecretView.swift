@@ -26,7 +26,7 @@ class TOTPSecretView: UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = .systemGray6
-        containerView.layer.cornerRadius = 8
+        containerView.layer.cornerRadius = .cornerRadius
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.systemGray4.cgColor
         addSubview(containerView)

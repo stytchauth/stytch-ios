@@ -39,7 +39,7 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate, BackspaceDetectingTextField
             textField.layer.borderWidth = 1
             textField.layer.borderColor = UIColor.gray.cgColor
             textField.font = UIFont.systemFont(ofSize: 24)
-            textField.layer.cornerRadius = 8
+            textField.layer.cornerRadius = .cornerRadius
             textField.clipsToBounds = true
             textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 

@@ -9,8 +9,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         case whatsapp
     }
 
-    private lazy var segmentedControl: UISegmentedControl? = {
-        guard inputs.count > 1 else { return nil }
+    private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
         for input in inputs {
             switch input {
@@ -34,6 +33,8 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
                 )
             }
         }
+
+        segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
 
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.accessibilityLabel = "emailTextSegmentedControl"
@@ -116,10 +117,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
         view.layoutMargins = .zero
 
-        if let segmentedControl = segmentedControl {
-            segmentedControl.addTarget(self, action: #selector(segmentDidUpdate(sender:)), for: .primaryActionTriggered)
-            stackView.addArrangedSubview(segmentedControl)
-        }
+        stackView.addArrangedSubview(segmentedControl)
 
         if inputs.contains(.email) {
             stackView.addArrangedSubview(emailInput)

@@ -91,22 +91,6 @@ public class StytchTheme: Codable {
     let progressSuccess: UIColorPair
     /// The `UIColorPair` describing the error background color of the ZXCVBN password strength indicator bar
     let progressDanger: UIColorPair
-    /// A `CGFloat` describing the radius of corners where applied. Defaults to 4
-    let cornerRadius: CGFloat
-    /// A `CGFloat` describing the vertical margins where applied. Defaults to 32
-    let verticalMargin: CGFloat
-    /// A `CGFloat` describing the horizontal margins where applied. Defaults to 32
-    let horizontalMargin: CGFloat
-    /// A `CGFloat` describing the height of buttons. Defaults to 45
-    let buttonHeight: CGFloat
-    /// A `CGFloat` describing the tiny spacing unit. Defaults to 4
-    let spacingTiny: CGFloat
-    /// A `CGFloat` describing the regular spacing unit. Defaults to 12
-    let spacingRegular: CGFloat
-    /// A `CGFloat` describing the large spacing unit. Defaults to 24
-    let spacingLarge: CGFloat
-    /// A `CGFloat` describing the huge spacing unit. Defaults to 32
-    let spacingHuge: CGFloat
 
     public init(
         background: UIColorPair = .init(dark: .charcoal, light: .white),
@@ -127,15 +111,7 @@ public class StytchTheme: Codable {
         textfieldDisabledBorder: UIColorPair = .init(dark: .ink, light: .fog),
         progressDefault: UIColorPair = .init(dark: .cement, light: .cement),
         progressSuccess: UIColorPair = .init(dark: .mint, light: .pine),
-        progressDanger: UIColorPair = .init(dark: .peach, light: .maroon),
-        cornerRadius: CGFloat = 4,
-        verticalMargin: CGFloat = 32,
-        horizontalMargin: CGFloat = 32,
-        buttonHeight: CGFloat = 45,
-        spacingTiny: CGFloat = 4,
-        spacingRegular: CGFloat = 12,
-        spacingLarge: CGFloat = 24,
-        spacingHuge: CGFloat = 32
+        progressDanger: UIColorPair = .init(dark: .peach, light: .maroon)
     ) {
         self.background = background
         self.primaryText = primaryText
@@ -156,13 +132,5 @@ public class StytchTheme: Codable {
         self.progressDefault = progressDefault
         self.progressSuccess = progressSuccess
         self.progressDanger = progressDanger
-        self.cornerRadius = cornerRadius
-        self.verticalMargin = verticalMargin
-        self.horizontalMargin = horizontalMargin
-        self.buttonHeight = buttonHeight
-        self.spacingTiny = spacingTiny
-        self.spacingRegular = spacingRegular
-        self.spacingLarge = spacingLarge
-        self.spacingHuge = spacingHuge
     }
 }

@@ -2,7 +2,7 @@ import UIKit
 
 public extension UIColor {
     // #19303D greyscale, dark.text.contrast
-    static let charcoal: UIColor = .init(red: 0.10, green: 0.19, blue: 0.24, alpha: 1.00)
+    static let charcoal: UIColor = .black // .init(red: 0.10, green: 0.19, blue: 0.24, alpha: 1.00)
     // #8296A1 dark.text.disabled, light.text.disabled
     static let steel: UIColor = .init(red: 0.51, green: 0.59, blue: 0.63, alpha: 1.00)
     // #5C727D greyscale, light.text.secondary, dark.border.active
@@ -59,7 +59,7 @@ extension UIColor {
         size: CGSize? = nil,
         cornerRadius: CGFloat? = nil
     ) -> UIImage {
-        let cornerRadius: CGFloat = cornerRadius ?? StytchUIClient.configuration.theme.cornerRadius
+        let cornerRadius: CGFloat = cornerRadius ?? .cornerRadius
         let size: CGSize = size ?? CGSize(width: 2 * cornerRadius, height: 2 * cornerRadius)
         return UIGraphicsImageRenderer(size: size)
             .image { context in
