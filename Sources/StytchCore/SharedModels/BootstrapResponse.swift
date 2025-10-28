@@ -109,11 +109,17 @@ public struct OAuthProvider: Codable, Sendable {
 }
 
 public enum ProductType: String, Codable, Sendable {
-    case emailOtp
-    case smsOtp
-    case oauth
-    case biometrics
     case emailMagicLinks
+    case oauth
+    case crypto
+    case emailOtp
+    case passwords
+    case passkeys
+    case sso
+    case smsOtp
+    case whatsappOtp
+    case totp
+    case biometrics
 }
 
 public enum DFPProtectedAuthMode: String, Codable, Sendable {

@@ -143,6 +143,19 @@ public enum StytchUIClient {
                         uiProducts.appendIfNotPresent(.biometrics)
                     case .emailMagicLinks:
                         uiProducts.appendIfNotPresent(.emailMagicLinks)
+                    case .whatsappOtp:
+                        uiProducts.appendIfNotPresent(.otp)
+                        otpMethods.appendIfNotPresent(.whatsapp)
+                    case .passwords:
+                        uiProducts.appendIfNotPresent(.passwords)
+                    case .crypto:
+                        break
+                    case .passkeys:
+                        break
+                    case .sso:
+                        break
+                    case .totp:
+                        break
                     }
                 }
 

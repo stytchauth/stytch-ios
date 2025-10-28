@@ -209,7 +209,7 @@ public struct CodableImage: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         guard let data = image?.pngData() else {
-            throw EncodingError.invalidValue(image, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unable to encode image"))
+            throw EncodingError.invalidValue(image as Any, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unable to encode image"))
         }
         try container.encode(data)
     }
