@@ -39,10 +39,11 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         attachStackViewToScrollView()
 
+        var logoView: UIView?
+
         if let image = viewModel.state.config.logo?.image {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFit
-
             stackView.addArrangedSubview(imageView)
 
             imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,6 +51,8 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
                 imageView.widthAnchor.constraint(equalToConstant: 48),
                 imageView.heightAnchor.constraint(equalToConstant: 48),
             ])
+
+            logoView = imageView
         }
 
         stackView.addArrangedSubview(titleLabel)
@@ -79,14 +82,12 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         stackView.addArrangedSubview(SpacerView())
 
+        let viewsToPin = stackView.arrangedSubviews.filter { $0 !== logoView }
         NSLayoutConstraint.activate(
-            stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
+            viewsToPin.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
 
-        Task {
-            try await viewModel.logRenderScreen()
-        }
-
+        Task { try await viewModel.logRenderScreen() }
         configureCloseButton(viewModel.state.config.navigation)
     }
 }

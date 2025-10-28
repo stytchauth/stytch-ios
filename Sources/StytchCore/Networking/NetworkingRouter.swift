@@ -117,7 +117,7 @@ extension NetworkingRouter {
             useDFPPA: useDFPPA
         )
 
-        print("response: \(String(describing: response.url!)) - \(String(describing: response.statusCode))\n\(String(describing: String(data: data, encoding: .utf8)!))\n")
+        // print("response: \(String(describing: response.url!)) - \(String(describing: response.statusCode))\n\(String(describing: String(data: data, encoding: .utf8)!))\n")
 
         return try await handleResponse(data: data, response: response)
     }
