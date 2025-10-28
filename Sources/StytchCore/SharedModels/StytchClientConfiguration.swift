@@ -41,8 +41,8 @@ public struct StytchClientConfiguration: Equatable, Codable {
         enableAutomaticSessionExtension: Bool = false,
         hostUrl: URL? = nil,
         dfppaDomain: String? = nil,
-        testDomain: String = "test.stytch.com",
-        liveDomain: String = "api.stytch.com"
+        testDomain: String = "api.api-jennifer-stytch-8196.dev.stytch.com",
+        liveDomain: String = "api.api-jennifer-stytch-8196.dev.stytch.com"
     ) {
         self.publicToken = publicToken
         self.defaultSessionDuration = defaultSessionDuration

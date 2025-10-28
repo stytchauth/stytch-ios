@@ -109,11 +109,15 @@ extension NetworkingRouter {
             throw StytchSDKError.invalidURL
         }
 
+        print(url)
+
         let (data, response) = try await networkingClient.performRequest(
             method: method,
             url: url,
             useDFPPA: useDFPPA
         )
+
+        print("response: \(String(describing: response.url!)) - \(String(describing: response.statusCode))\n\(String(describing: String(data: data, encoding: .utf8)!))\n")
 
         return try await handleResponse(data: data, response: response)
     }

@@ -119,6 +119,12 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
 
         stackView.addArrangedSubview(segmentedControl)
 
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.layer.cornerRadius = .cornerRadius
+        NSLayoutConstraint.activate([
+            segmentedControl.heightAnchor.constraint(equalToConstant: 44),
+        ])
+
         if inputs.contains(.email) {
             stackView.addArrangedSubview(emailInput)
         }

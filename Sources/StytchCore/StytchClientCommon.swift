@@ -75,7 +75,10 @@ extension StytchClientCommonInternal {
             do {
                 try await StartupClient.start(clientType: Self.clientType)
                 try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_success"))
+                print("START SUCCESS")
             } catch {
+                print("START ERROR")
+                print(error.errorInfo)
                 try? await EventsClient.logEvent(parameters: .init(eventName: "client_initialization_failure"))
             }
         }

@@ -10,6 +10,13 @@ protocol BootstrapResponseDataType {
     var cnameDomain: String? { get }
     var emailDomains: [String] { get }
     var captchaSettings: CaptchaSettings { get }
+    var oauthOptions: OAuthOptions? { get }
+    var opaqueErrors: Bool { get }
+    var products: [ProductType] { get }
+    var projectName: String? { get }
+    var requestId: String? { get }
+    var siweRequiredForCryptoWallets: Bool { get }
+    var statusCode: Int? { get }
     var pkceRequiredForEmailMagicLinks: Bool { get }
     var pkceRequiredForPasswordResets: Bool { get }
     var pkceRequiredForOauth: Bool { get }
@@ -30,6 +37,13 @@ public struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataTyp
     public let cnameDomain: String?
     public let emailDomains: [String]
     public let captchaSettings: CaptchaSettings
+    public let oauthOptions: OAuthOptions?
+    public let opaqueErrors: Bool
+    public let products: [ProductType]
+    public let projectName: String?
+    public let requestId: String?
+    public let siweRequiredForCryptoWallets: Bool
+    public let statusCode: Int?
     public let pkceRequiredForEmailMagicLinks: Bool
     public let pkceRequiredForPasswordResets: Bool
     public let pkceRequiredForOauth: Bool
@@ -53,7 +67,14 @@ extension BootstrapResponseData {
             disableSdkWatermark: false,
             cnameDomain: nil,
             emailDomains: [],
-            captchaSettings: .init(enabled: false, siteKey: nil),
+            captchaSettings: .init(enabled: false, providerType: nil),
+            oauthOptions: nil,
+            opaqueErrors: false,
+            products: [],
+            projectName: nil,
+            requestId: nil,
+            siweRequiredForCryptoWallets: false,
+            statusCode: nil,
             pkceRequiredForEmailMagicLinks: false,
             pkceRequiredForPasswordResets: false,
             pkceRequiredForOauth: false,
@@ -75,8 +96,24 @@ public struct PasswordConfig: Codable, Sendable {
 }
 
 public struct CaptchaSettings: Codable, Sendable {
-    let enabled: Bool
-    let siteKey: String?
+    public let enabled: Bool
+    public let providerType: String?
+}
+
+public struct OAuthOptions: Codable, Sendable {
+    public let providers: [OAuthProvider]
+}
+
+public struct OAuthProvider: Codable, Sendable {
+    public let type: String
+}
+
+public enum ProductType: String, Codable, Sendable {
+    case emailOtp
+    case smsOtp
+    case oauth
+    case biometrics
+    case emailMagicLinks
 }
 
 public enum DFPProtectedAuthMode: String, Codable, Sendable {

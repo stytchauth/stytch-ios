@@ -76,9 +76,9 @@ struct StartupClient {
             dfpAuthMode: bootstrapData.dfpProtectedAuthMode
         )
 
-        if let siteKey = bootstrapData.captchaSettings.siteKey, !siteKey.isEmpty {
-            await Current.captcha.setCaptchaClient(siteKey: siteKey)
-        }
+//        if let siteKey = bootstrapData.captchaSettings.siteKey, !siteKey.isEmpty {
+//            await Current.captcha.setCaptchaClient(siteKey: siteKey)
+//        }
         #endif
     }
 
