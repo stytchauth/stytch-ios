@@ -85,6 +85,13 @@ public extension StytchUIClient {
             self.locale = locale
             self.logo = logo
         }
+
+        public init(publicToken: String, logo: UIImage?) {
+            self.init(
+                stytchClientConfiguration: .init(publicToken: publicToken),
+                logo: CodableImage(image: logo)
+            )
+        }
     }
 
     enum Products: String, Codable {
