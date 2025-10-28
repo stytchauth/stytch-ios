@@ -170,6 +170,8 @@ public enum StytchUIClient {
                     }
                 }
 
+                uiOauthProviders.append(.apple)
+
                 Self.configuration.products = uiProducts
                 Self.configuration.oauthProviders = uiOauthProviders
                 Self.configuration.otpOptions = StytchUIClient.OTPOptions(methods: otpMethods)

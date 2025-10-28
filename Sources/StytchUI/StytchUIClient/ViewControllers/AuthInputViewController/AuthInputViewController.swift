@@ -118,6 +118,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         view.layoutMargins = .zero
 
         stackView.addArrangedSubview(segmentedControl)
+        stackView.spacing = .spacingRegular
 
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.layer.cornerRadius = .cornerRadius

@@ -7,6 +7,6 @@ extension CGFloat {
     static var buttonHeight: CGFloat { 45 }
     static var spacingTiny: CGFloat { 4 }
     static var spacingRegular: CGFloat { 12 }
-    static var spacingLarge: CGFloat { 24 }
+    static var spacingLarge: CGFloat { 32 }
     static var spacingHuge: CGFloat { 32 }
 }

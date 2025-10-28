@@ -39,8 +39,28 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         attachStackViewToScrollView()
 
-        addLogoIfNeeded()
-        stackView.addArrangedSubview(titleLabel)
+        let headerStack = UIStackView()
+        headerStack.axis = .vertical
+        headerStack.alignment = .center
+        headerStack.spacing = .spacingRegular
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
+
+        if let image = viewModel.state.config.logo?.image {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            headerStack.addArrangedSubview(imageView)
+            NSLayoutConstraint.activate([
+                imageView.heightAnchor.constraint(equalToConstant: 80),
+            ])
+        }
+
+        headerStack.addArrangedSubview(titleLabel)
+        NSLayoutConstraint.activate(
+            headerStack.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: headerStack.widthAnchor) }
+        )
+
+        stackView.addArrangedSubview(headerStack)
 
         for productComponent in viewModel.productComponents {
             switch productComponent {
@@ -73,18 +93,6 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         Task { try await viewModel.logRenderScreen() }
         configureCloseButton(viewModel.state.config.navigation)
-    }
-
-    func addLogoIfNeeded() {
-        if let image = viewModel.state.config.logo?.image {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            stackView.addArrangedSubview(imageView)
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                imageView.heightAnchor.constraint(equalToConstant: 80),
-            ])
-        }
     }
 }
 
