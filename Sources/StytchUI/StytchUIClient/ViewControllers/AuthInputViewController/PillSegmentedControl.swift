@@ -72,7 +72,17 @@ public final class PillSegmentedControl: UIControl {
         setup()
     }
 
-    // MARK: Public API
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        layoutSelection(animated: false)
+    }
+
+    public override func didMoveToWindow() {
+        super.didMoveToWindow()
+        setNeedsLayout()
+        layoutIfNeeded()
+        layoutSelection(animated: false)
+    }
 
     public func setSegments(_ titles: [String], selected index: Int = 0, sendEvent: Bool = true) {
         clearSegments()
@@ -112,7 +122,35 @@ public final class PillSegmentedControl: UIControl {
         }
     }
 
-    // MARK: Setup
+    public func insertSegment(withTitle title: String, at index: Int, animated _: Bool = false) {
+        let button = makeButton(title: title, index: index)
+        if index >= segmentButtons.count {
+            segmentButtons.append(button)
+            segmentsStackView.addArrangedSubview(button)
+        } else {
+            segmentsStackView.insertArrangedSubview(button, at: index * 2)
+            segmentButtons.insert(button, at: index)
+        }
+
+        if segmentButtons.count > 1 {
+            let dividerView = makeDivider()
+            segmentDividers.append(dividerView)
+
+            let arrangedIndex: Int
+            if index >= segmentButtons.count - 1 {
+                arrangedIndex = max(0, segmentsStackView.arrangedSubviews.count - 1)
+            } else {
+                arrangedIndex = index * 2 + 1
+            }
+
+            segmentsStackView.insertArrangedSubview(dividerView, at: arrangedIndex)
+            applyDividerConstraints(dividerView)
+        }
+
+        updateEqualButtonWidths()
+        applyStyle()
+        setNeedsLayout()
+    }
 
     private func setup() {
         isAccessibilityElement = false
@@ -128,6 +166,7 @@ public final class PillSegmentedControl: UIControl {
 
         containerView.addSubview(selectionHighlightView)
         selectionHighlightView.translatesAutoresizingMaskIntoConstraints = false
+        selectionHighlightView.isUserInteractionEnabled = false
         selectionHighlightView.isHidden = false
 
         segmentsStackView.axis = .horizontal
@@ -137,17 +176,18 @@ public final class PillSegmentedControl: UIControl {
         containerView.addSubview(segmentsStackView)
         segmentsStackView.translatesAutoresizingMaskIntoConstraints = false
 
-        let leading = segmentsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: style.contentInsets.leading)
-        let trailing = segmentsStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -style.contentInsets.trailing)
-        let top = segmentsStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: style.contentInsets.top)
-        let bottom = segmentsStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -style.contentInsets.bottom)
-
-        leading.priority = UILayoutPriority(999)
-        trailing.priority = UILayoutPriority(999)
-        top.priority = UILayoutPriority(999)
-        bottom.priority = UILayoutPriority(999)
-
-        NSLayoutConstraint.activate([leading, trailing, top, bottom])
+        func activateStackToContainerConstraints() {
+            let leading = segmentsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: style.contentInsets.leading)
+            let trailing = segmentsStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -style.contentInsets.trailing)
+            let top = segmentsStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: style.contentInsets.top)
+            let bottom = segmentsStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -style.contentInsets.bottom)
+            leading.priority = UILayoutPriority(999)
+            trailing.priority = UILayoutPriority(999)
+            top.priority = UILayoutPriority(999)
+            bottom.priority = UILayoutPriority(999)
+            NSLayoutConstraint.activate([leading, trailing, top, bottom])
+        }
+        activateStackToContainerConstraints()
 
         applyStyle()
     }
@@ -168,7 +208,14 @@ public final class PillSegmentedControl: UIControl {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = style.font
         button.setTitleColor(style.textColor, for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: style.horizontalPaddingPerSegment, bottom: 0, right: style.horizontalPaddingPerSegment)
+        // Configure using shared helpers
+        applyConfiguration(to: button)
+
+        // Keep the configuration in sync for all control states
+        button.configurationUpdateHandler = { [weak self] btn in
+            guard let self = self else { return }
+            self.applyConfiguration(to: btn)
+        }
         button.addTarget(self, action: #selector(tapSegment(_:)), for: .touchUpInside)
         button.accessibilityTraits = .button
         button.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -220,7 +267,7 @@ public final class PillSegmentedControl: UIControl {
         for button in segmentButtons {
             button.titleLabel?.font = style.font
             button.setTitleColor(style.textColor, for: .normal)
-            button.contentEdgeInsets = UIEdgeInsets(top: 0, left: style.horizontalPaddingPerSegment, bottom: 0, right: style.horizontalPaddingPerSegment)
+            applyConfiguration(to: button)
         }
         for dividerView in segmentDividers {
             dividerView.backgroundColor = style.dividerColor
@@ -267,12 +314,7 @@ public final class PillSegmentedControl: UIControl {
         selectionFrame.origin.y = centeredY
         selectionFrame.size.height = desiredHeight
 
-        if let displayScale = window?.screen.scale {
-            selectionFrame.origin.x = round(selectionFrame.origin.x * displayScale) / displayScale
-            selectionFrame.origin.y = round(selectionFrame.origin.y * displayScale) / displayScale
-            selectionFrame.size.width = round(selectionFrame.size.width * displayScale) / displayScale
-            selectionFrame.size.height = round(selectionFrame.size.height * displayScale) / displayScale
-        }
+        selectionFrame = pixelAligned(selectionFrame)
 
         return selectionFrame
     }
@@ -294,64 +336,54 @@ public final class PillSegmentedControl: UIControl {
     }
 
     private func layoutSelection(animated: Bool) {
+        let duration: TimeInterval = 0.22
         let newSelectionFrame = frameForSegment(at: selectedIndex)
         if selectionHighlightView.frame == .zero || !animated {
             selectionHighlightView.frame = newSelectionFrame
         } else {
-            UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseInOut]) {
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveEaseInOut]) {
                 self.selectionHighlightView.frame = newSelectionFrame
             }
         }
         updateSelectionCorners()
-        layoutDividers()
     }
 
-    private func layoutDividers() {}
-
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        layoutSelection(animated: false)
+    private func pixelAligned(_ rect: CGRect) -> CGRect {
+        guard let scale = window?.screen.scale, scale > 0 else { return rect }
+        var result = rect
+        result.origin.x = round(result.origin.x * scale) / scale
+        result.origin.y = round(result.origin.y * scale) / scale
+        result.size.width = round(result.size.width * scale) / scale
+        result.size.height = round(result.size.height * scale) / scale
+        return result
     }
 
-    public override func didMoveToWindow() {
-        super.didMoveToWindow()
-        setNeedsLayout()
-        layoutIfNeeded()
-        layoutSelection(animated: false)
+    private func makeConfiguration(from base: UIButton.Configuration? = nil) -> UIButton.Configuration {
+        var configuration = base ?? .plain()
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: style.horizontalPaddingPerSegment, bottom: 0, trailing: style.horizontalPaddingPerSegment)
+        configuration.titleAlignment = .center
+        configuration.baseForegroundColor = style.textColor
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var attrs = incoming
+            attrs.font = self.style.font
+            attrs.foregroundColor = self.style.textColor
+            return attrs
+        }
+        var background = UIBackgroundConfiguration.clear()
+        background.backgroundColor = .clear
+        background.strokeColor = .clear
+        background.cornerRadius = 0
+        configuration.background = background
+        return configuration
+    }
+
+    private func applyConfiguration(to button: UIButton) {
+        button.backgroundColor = .clear
+        button.configuration = makeConfiguration(from: button.configuration)
     }
 
     @objc private func tapSegment(_ sender: UIButton) {
         guard let tappedIndex = segmentButtons.firstIndex(of: sender) else { return }
         setSelectedIndex(tappedIndex, animated: true, sendEvent: true)
-    }
-
-    public func insertSegment(withTitle title: String, at index: Int, animated _: Bool = false) {
-        let button = makeButton(title: title, index: index)
-        if index >= segmentButtons.count {
-            segmentButtons.append(button)
-            segmentsStackView.addArrangedSubview(button)
-        } else {
-            segmentsStackView.insertArrangedSubview(button, at: index * 2)
-            segmentButtons.insert(button, at: index)
-        }
-
-        if segmentButtons.count > 1 {
-            let dividerView = makeDivider()
-            segmentDividers.append(dividerView)
-
-            let arrangedIndex: Int
-            if index >= segmentButtons.count - 1 {
-                arrangedIndex = max(0, segmentsStackView.arrangedSubviews.count - 1)
-            } else {
-                arrangedIndex = index * 2 + 1
-            }
-
-            segmentsStackView.insertArrangedSubview(dividerView, at: arrangedIndex)
-            applyDividerConstraints(dividerView)
-        }
-
-        updateEqualButtonWidths()
-        applyStyle()
-        setNeedsLayout()
     }
 }
