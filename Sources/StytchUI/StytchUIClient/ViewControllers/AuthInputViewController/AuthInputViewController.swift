@@ -9,8 +9,8 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         case whatsapp
     }
 
-    private lazy var segmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl()
+    private lazy var segmentedControl: PillSegmentedControl = {
+        let segmentedControl = PillSegmentedControl()
         for input in inputs {
             switch input {
             case .email:
@@ -201,7 +201,7 @@ final class AuthInputViewController: BaseViewController<AuthInputState, AuthInpu
         }
     }
 
-    @objc private func segmentDidUpdate(sender: UISegmentedControl) {
+    @objc private func segmentDidUpdate(sender: PillSegmentedControl) {
         activeInput = inputs[sender.selectedSegmentIndex]
         continueButton.isEnabled = isCurrentInputValid
     }
