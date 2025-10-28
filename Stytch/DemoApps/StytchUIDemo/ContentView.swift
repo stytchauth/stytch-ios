@@ -4,12 +4,13 @@ import StytchUI
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = ContentViewModel()
+    @State var shouldShowB2CUI: Bool = false
+    @State var isAuthenticated: Bool = false
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                if viewModel.isAuthenticated == true {
+                if isAuthenticated == true {
                     Text("You have logged in with Stytch!")
                         .font(.largeTitle)
                         .bold()
@@ -17,19 +18,36 @@ struct ContentView: View {
 
                     Button("Log Out") {
                         logOut()
-                    }.font(.title).bold()
+                    }
+                    .font(.title)
+                    .bold()
                 } else {
                     Button("Log In With Stytch!") {
-                        viewModel.shouldShowB2CUI = true
-                    }.font(.title).bold()
+                        shouldShowB2CUI = true
+                    }
+                    .font(.title)
+                    .bold()
                 }
             }
-            .authenticationSheet(configuration: viewModel.configuration, isPresented: $viewModel.shouldShowB2CUI)
-            .padding()
+            .authenticationSheet(isPresented: $shouldShowB2CUI)
             .onOpenURL { url in
-                viewModel.shouldShowB2CUI = true
+                shouldShowB2CUI = true
                 let didHandle = StytchUIClient.handle(url: url)
                 print("StytchUIClient didHandle: \(didHandle) - url: \(url)")
+            }
+            .task {
+                for await _ in StytchUIClient.dismissUI.values {
+                    shouldShowB2CUI = false
+                }
+
+                for await sessionInfo in StytchClient.sessions.onSessionChange.values {
+                    switch sessionInfo {
+                    case .available:
+                        isAuthenticated = true
+                    case .unavailable:
+                        isAuthenticated = false
+                    }
+                }
             }
         }
     }
@@ -44,78 +62,6 @@ struct ContentView: View {
             }
         }
     }
-}
-
-class ContentViewModel: ObservableObject {
-    @Published var shouldShowB2CUI: Bool = false
-    @Published var isAuthenticated: Bool = false
-
-    private var cancellables = Set<AnyCancellable>()
-
-    init() {
-        startObservables()
-
-        // To start the underlying client’s observables before displaying the UI, call configure separately.
-        StytchUIClient.configure(configuration: configuration)
-    }
-
-    func startObservables() {
-        StytchUIClient.dismissUI
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.shouldShowB2CUI = false
-            }
-            .store(in: &cancellables)
-
-        StytchClient.sessions.onSessionChange
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sessionInfo in
-                switch sessionInfo {
-                case let .available(session, lastValidatedAtDate):
-                    print("Session Available: \(session.expiresAt) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                    print("StytchClient.sessions.sessionToken: \(StytchClient.sessions.sessionToken?.value ?? "no sessionToken")")
-                    print("StytchClient.sessions.sessionJwt: \(StytchClient.sessions.sessionJwt?.value ?? "no sessionJwt")")
-                    self?.isAuthenticated = true
-                case .unavailable:
-                    print("Session Unavailable\n")
-                    self?.isAuthenticated = false
-                }
-            }.store(in: &cancellables)
-
-        StytchClient.user.onUserChange
-            .receive(on: DispatchQueue.main)
-            .sink { userInfo in
-                switch userInfo {
-                case let .available(user, lastValidatedAtDate):
-                    print("User Available: \(user.name) - lastValidatedAtDate: \(lastValidatedAtDate)\n")
-                case .unavailable:
-                    print("User Unavailable\n")
-                }
-            }.store(in: &cancellables)
-
-        StytchClient.isInitialized
-            .receive(on: DispatchQueue.main)
-            .sink { isInitialized in
-                print("isInitialized: \(isInitialized)")
-            }.store(in: &cancellables)
-
-        StytchUIClient.errorPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { error in
-                print("Error from StytchUIClient:")
-                print(error.errorInfo)
-            }
-            .store(in: &cancellables)
-    }
-
-    let configuration: StytchUIClient.Configuration = .init(
-        stytchClientConfiguration: .init(publicToken: "public-token-live-5691c5a7-863e-4241-be93-056ee0756672", defaultSessionDuration: 5),
-        products: [.otp, .oauth, .passwords, .emailMagicLinks, .biometrics],
-        navigation: Navigation(closeButtonStyle: .close(.right)),
-        oauthProviders: [.apple, .thirdParty(.google)],
-        otpOptions: .init(methods: [.sms, .whatsapp]),
-        logo: CodableImage(image: UIImage(named: "logo"))
-    )
 }
 
 #Preview {

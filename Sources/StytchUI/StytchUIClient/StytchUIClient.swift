@@ -47,6 +47,10 @@ public enum StytchUIClient {
         StytchClient.configure(configuration: configuration.stytchClientConfiguration)
         FontLoader.loadFonts()
         Self.configuration = configuration
+
+        Task {
+            await assignProducts()
+        }
     }
 
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onAuthChange` to observe auth changes.
@@ -116,16 +120,58 @@ public enum StytchUIClient {
     static func stopLoading() {
         currentController?.stopLoading()
     }
+
+    static func assignProducts() async {
+        for await _ in StytchClient.isInitialized.values {
+            if let bootstrapData = StytchClient.bootstrapData {
+                var uiProducts = [StytchUIClient.Products]()
+                var uiOauthProviders = [StytchUIClient.OAuthProvider]()
+                var otpMethods = [StytchUIClient.OTPMethod]()
+
+                for product in bootstrapData.products {
+                    switch product {
+                    case .emailOtp:
+                        // uiProducts.appendIfNotPresent(.otp)
+                        // otpMethods.appendIfNotPresent(.email)
+                        break
+                    case .smsOtp:
+                        uiProducts.appendIfNotPresent(.otp)
+                        otpMethods.appendIfNotPresent(.sms)
+                    case .oauth:
+                        uiProducts.appendIfNotPresent(.oauth)
+                    case .biometrics:
+                        uiProducts.appendIfNotPresent(.biometrics)
+                    case .emailMagicLinks:
+                        uiProducts.appendIfNotPresent(.emailMagicLinks)
+                    }
+                }
+
+                if uiProducts.contains(.oauth) == true, let bootstrapDataOAuthProviders = bootstrapData.oauthOptions?.providers {
+                    for provider in bootstrapDataOAuthProviders {
+                        let type = provider.type.lowercased()
+                        if type == "apple" {
+                            uiOauthProviders.append(.apple)
+                        } else if let thirdPartyProvider = StytchClient.OAuth.ThirdParty.Provider(rawValue: type) {
+                            uiOauthProviders.append(StytchUIClient.OAuthProvider.thirdParty(thirdPartyProvider))
+                        }
+                    }
+                }
+
+                Self.configuration.products = uiProducts
+                Self.configuration.oauthProviders = uiOauthProviders
+                Self.configuration.otpOptions = StytchUIClient.OTPOptions(methods: otpMethods)
+            }
+        }
+    }
 }
 
 public extension View {
     /// Presents Stytch's authentication UI, which will self dismiss after successful authentication. Use `StytchClient.sessions.onSessionChange` to observe auth changes.
     func authenticationSheet(
-        configuration: StytchUIClient.Configuration,
         isPresented: Binding<Bool>
     ) -> some View {
         sheet(isPresented: isPresented) {
-            AuthenticationView(configuration)
+            AuthenticationView()
                 .interactiveDismissDisabled(true)
                 .background(Color(.background).edgesIgnoringSafeArea(.all))
         }
@@ -135,15 +181,8 @@ public extension View {
 public struct AuthenticationView: UIViewControllerRepresentable {
     public typealias UIViewControllerType = UIViewController
 
-    public let configuration: StytchUIClient.Configuration
-
-    public init(_ configuration: StytchUIClient.Configuration) {
-        self.configuration = configuration
-    }
-
     public func makeUIViewController(context _: Context) -> UIViewController {
-        StytchUIClient.configure(configuration: configuration)
-        let controller = AuthRootViewController(config: configuration)
+        let controller = AuthRootViewController(config: StytchUIClient.configuration)
         StytchUIClient.currentController = controller
         StytchUIClient.setUpDismissAuthListener()
         return UINavigationController(rootViewController: controller)

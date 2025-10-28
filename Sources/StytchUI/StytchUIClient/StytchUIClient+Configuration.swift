@@ -6,19 +6,20 @@ import UIKit
 public extension StytchUIClient {
     /// Configures the Stytch UI client
     struct Configuration: Codable {
-        static let empty = Self(stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5), products: [])
+        static let empty = Self(stytchClientConfiguration: .init(publicToken: "", defaultSessionDuration: 5))
 
         public let stytchClientConfiguration: StytchClientConfiguration
-        public let products: [Products]
         public let navigation: Navigation?
-        public let oauthProviders: [OAuthProvider]
         public let passwordOptions: PasswordOptions?
         public let magicLinkOptions: MagicLinkOptions?
-        public let otpOptions: OTPOptions?
         public let biometricsOptions: BiometricsOptions
         public let theme: StytchTheme
         public let locale: StytchLocale
         public let logo: CodableImage?
+
+        public var products = [Products]()
+        public var oauthProviders = [OAuthProvider]()
+        public var otpOptions: OTPOptions? = nil
 
         public var redirectUrl: URL? {
             URL(string: "stytchui-\(stytchClientConfiguration.publicToken)://deeplink")
@@ -67,24 +68,18 @@ public extension StytchUIClient {
         ///     Currently supported languages are English ("en"), Spanish ("es"), and Brazilian Portuguese ("pt-br"); if no value is provided, the copy defaults to English.
         public init(
             stytchClientConfiguration: StytchClientConfiguration,
-            products: [Products],
-            navigation: Navigation? = nil,
-            oauthProviders: [OAuthProvider] = [],
+            navigation: Navigation? = Navigation(closeButtonStyle: .close(.right)),
             passwordOptions: PasswordOptions? = nil,
             magicLinkOptions: MagicLinkOptions? = nil,
-            otpOptions: OTPOptions? = nil,
             biometricsOptions: BiometricsOptions = BiometricsOptions(showBiometricRegistrationOnLogin: true),
             theme: StytchTheme = StytchTheme(),
             locale: StytchLocale = .en,
             logo: CodableImage? = nil
         ) {
             self.stytchClientConfiguration = stytchClientConfiguration
-            self.products = products
             self.navigation = navigation
-            self.oauthProviders = oauthProviders
             self.passwordOptions = passwordOptions
             self.magicLinkOptions = magicLinkOptions
-            self.otpOptions = otpOptions
             self.biometricsOptions = biometricsOptions
             self.theme = theme
             self.locale = locale
