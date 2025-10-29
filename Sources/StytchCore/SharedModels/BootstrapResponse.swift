@@ -23,6 +23,7 @@ protocol BootstrapResponseDataType {
     var pkceRequiredForSso: Bool { get }
     var slugPattern: String? { get }
     var createOrganizationEnabled: Bool { get }
+    var defaultSessionDurationMinutes: UInt { get }
     var dfpProtectedAuthEnabled: Bool { get }
     var dfpProtectedAuthMode: DFPProtectedAuthMode? { get }
     var rbacPolicy: RBACPolicy? { get }
@@ -50,6 +51,7 @@ public struct BootstrapResponseData: Codable, Sendable, BootstrapResponseDataTyp
     public let pkceRequiredForSso: Bool
     public let slugPattern: String?
     public let createOrganizationEnabled: Bool
+    public let defaultSessionDurationMinutes: UInt
     public let dfpProtectedAuthEnabled: Bool
     public let dfpProtectedAuthMode: DFPProtectedAuthMode?
     public let rbacPolicy: RBACPolicy?
@@ -70,7 +72,7 @@ extension BootstrapResponseData {
             captchaSettings: .init(enabled: false, providerType: nil),
             oauthOptions: nil,
             opaqueErrors: false,
-            products: [],
+            products: [.emailMagicLinks],
             projectName: nil,
             requestId: nil,
             siweRequiredForCryptoWallets: false,
@@ -81,6 +83,7 @@ extension BootstrapResponseData {
             pkceRequiredForSso: false,
             slugPattern: nil,
             createOrganizationEnabled: false,
+            defaultSessionDurationMinutes: 5,
             dfpProtectedAuthEnabled: false,
             dfpProtectedAuthMode: .observation,
             rbacPolicy: nil,

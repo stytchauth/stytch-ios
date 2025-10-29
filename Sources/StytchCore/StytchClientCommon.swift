@@ -161,7 +161,9 @@ public extension StytchClientCommonPublic {
     /// If the client configuration specifies a value, that value is returned.
     /// Defaults to 5.
     static var defaultSessionDuration: Minutes {
-        if let defaultSessionDuration = stytchClientConfiguration?.defaultSessionDuration {
+        if let bootstrapDefaultSessionDuration = bootstrapData?.defaultSessionDurationMinutes {
+            return Minutes(integerLiteral: bootstrapDefaultSessionDuration)
+        } else if let defaultSessionDuration = stytchClientConfiguration?.defaultSessionDuration {
             return defaultSessionDuration
         } else {
             return 5
