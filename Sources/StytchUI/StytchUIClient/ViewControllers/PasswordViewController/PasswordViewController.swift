@@ -6,25 +6,6 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
 
     private let titleLabel: UILabel = .makeTitleLabel()
 
-    private lazy var emailLoginLinkPrimaryButton: Button = .primary(
-        title: .emailLoginLink
-    ) { [weak self] in
-        guard let email = self?.emailInput.text else { return }
-        Task {
-            do {
-                try await self?.viewModel.loginWithEmail(email: email)
-                DispatchQueue.main.async {
-                    self?.launchCheckYourEmail(email: email)
-                }
-            } catch {
-                ErrorPublisher.publishError(error)
-                self?.presentErrorAlert(error: error)
-            }
-        }
-    }
-
-    private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
-
     private lazy var finishCreatingLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -34,11 +15,17 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         return label
     }()
 
-    private let emailInputLabel = UILabel.makeEmailInputLabel()
+    private lazy var upperSeparator: LabelSeparatorView = .orSeparator()
+    private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
 
     private lazy var emailInput: EmailInput = .init()
 
-    private let passwordInputLabel = UILabel.makePasswordInputLabel()
+    private lazy var emailLoginLinkPrimaryButton: Button = .hollowPrimary(
+        title: LocalizationManager.stytch_b2c_password_email_login_link,
+        onTap: { [weak self] in
+            self?.handleEmailLoginLinkPrimaryTap()
+        }
+    )
 
     private lazy var passwordInput: SecureTextInput = {
         let input: SecureTextInput = .init(frame: .zero)
@@ -49,43 +36,23 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
 
     private lazy var continueButton: Button = .primary(
         title: LocalizationManager.stytch_b2c_password_continue_title
-    ) { [weak self] in self?.submit() }
+    ) { [weak self] in
+        self?.submit()
+    }
 
     private lazy var forgotPasswordButton: Button = .tertiary(
-        title: LocalizationManager.stytch_b2c_password_forgot
-    ) { [weak self] in
-        guard let email = self?.emailInput.text else { return }
-        Task {
-            do {
-                try await self?.viewModel.forgotPassword(email: email)
-                DispatchQueue.main.async {
-                    self?.launchForgotPassword(email: email)
-                }
-            } catch {
-                ErrorPublisher.publishError(error)
-                self?.presentErrorAlert(error: error)
-            }
+        title: LocalizationManager.stytch_b2c_password_forgot,
+        onTap: { [weak self] in
+            self?.handleForgotPasswordTap()
         }
-    }
+    )
 
-    private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
-
-    private lazy var emailLoginLinkTertiaryButton: Button = .tertiary(
-        title: .emailLoginLink
-    ) { [weak self] in
-        guard let email = self?.emailInput.text else { return }
-        Task {
-            do {
-                try await self?.viewModel.loginWithEmail(email: email)
-                DispatchQueue.main.async {
-                    self?.launchCheckYourEmail(email: email)
-                }
-            } catch {
-                ErrorPublisher.publishError(error)
-                self?.presentErrorAlert(error: error)
-            }
+    private lazy var emailLoginLinkTertiaryButton: Button = .hollowPrimary(
+        title: LocalizationManager.stytch_b2c_password_email_login_link,
+        onTap: { [weak self] in
+            self?.handleEmailLoginLinkTap()
         }
-    }
+    )
 
     private var strengthCheckWorkItem: DispatchWorkItem?
 
@@ -96,9 +63,39 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
     override func configureView() {
         super.configureView()
 
+        stackView.spacing = .spacingRegular
+
+        forgotPasswordButton.contentHorizontalAlignment = .right
+        forgotPasswordButton.titleLabel?.textAlignment = .right
+
         emailInput.textInput.placeholder = nil
         continueButton.isEnabled = false
         forgotPasswordButton.setTitleColor(.secondaryText, for: .normal)
+
+        setupPasswordInput()
+        setupStackView()
+
+        attachStackViewToScrollView()
+
+        emailLoginLinkPrimaryButton.isHidden = true
+        upperSeparator.isHidden = true
+        finishCreatingLabel.isHidden = true
+        forgotPasswordButton.isHidden = true
+        lowerSeparator.isHidden = true
+        emailLoginLinkTertiaryButton.isHidden = true
+        emailLoginLinkPrimaryButton.isHidden = true
+        passwordInput.feedback.isHidden = true
+
+        emailInput.textInput.text = viewModel.state.email
+        emailInput.isEnabled = true
+        passwordInput.textInput.textContentType = .newPassword
+        passwordInput.textInput.placeholder = "Password"
+
+        handleIntent(intent: viewModel.state.intent)
+    }
+
+    func setupPasswordInput() {
+        passwordInput.textInput.becomeFirstResponder()
 
         passwordInput.onTextChanged = { [weak self] isValid in
             switch self?.viewModel.state.intent {
@@ -114,26 +111,6 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
             guard isValid else { return }
             self?.submit()
         }
-
-        setupStackView()
-        setupScrollView()
-
-        passwordInput.textInput.becomeFirstResponder()
-
-        emailLoginLinkPrimaryButton.isHidden = true
-        upperSeparator.isHidden = true
-        finishCreatingLabel.isHidden = true
-        forgotPasswordButton.isHidden = true
-        lowerSeparator.isHidden = true
-        emailLoginLinkTertiaryButton.isHidden = true
-        emailLoginLinkPrimaryButton.isHidden = true
-        passwordInput.feedback.isHidden = true
-
-        emailInput.textInput.text = viewModel.state.email
-        emailInput.isEnabled = true
-        passwordInput.textInput.textContentType = .newPassword
-
-        handleIntent(intent: viewModel.state.intent)
     }
 
     private func handleIntent(intent: PasswordState.Intent) {
@@ -148,15 +125,18 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
                 titleLabel.text = LocalizationManager.stytch_b2c_password_create_account
             }
             passwordInput.feedback.isHidden = false
+
         case .enterNewPassword:
             passwordInput.feedback.isHidden = false
             emailInput.isEnabled = false
             titleLabel.text = LocalizationManager.stytch_b2c_password_set_new_password
+
         case .login:
             titleLabel.text = LocalizationManager.stytch_b2c_password_log_in
             forgotPasswordButton.isHidden = false
             passwordInput.textInput.textContentType = .password
             emailInput.isEnabled = false
+
             if viewModel.state.magicLinksEnabled {
                 lowerSeparator.isHidden = false
                 emailLoginLinkTertiaryButton.isHidden = false
@@ -164,55 +144,89 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         }
     }
 
-    private func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.clipsToBounds = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-        ])
-
-        attachStackView(within: scrollView, usingLayoutMarginsGuide: false)
-    }
-
     private func setupStackView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(emailLoginLinkPrimaryButton)
         stackView.addArrangedSubview(upperSeparator)
         stackView.addArrangedSubview(finishCreatingLabel)
-        stackView.addArrangedSubview(emailInputLabel)
         stackView.addArrangedSubview(emailInput)
-        stackView.addArrangedSubview(passwordInputLabel)
         stackView.addArrangedSubview(passwordInput)
+
+        let forgotPasswordButtonRightAlignedStack = UIStackView(arrangedSubviews: [forgotPasswordButton])
+        forgotPasswordButtonRightAlignedStack.axis = .horizontal
+        forgotPasswordButtonRightAlignedStack.alignment = .trailing
+        forgotPasswordButtonRightAlignedStack.distribution = .fill
+        stackView.addArrangedSubview(forgotPasswordButtonRightAlignedStack)
+
         stackView.addArrangedSubview(continueButton)
-        stackView.addArrangedSubview(forgotPasswordButton)
         stackView.addArrangedSubview(lowerSeparator)
         stackView.addArrangedSubview(emailLoginLinkTertiaryButton)
         stackView.addArrangedSubview(SpacerView())
 
         stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
-        stackView.setCustomSpacing(.spacingHuge, after: emailLoginLinkPrimaryButton)
-        stackView.setCustomSpacing(.spacingHuge, after: upperSeparator)
-        stackView.setCustomSpacing(.spacingHuge, after: finishCreatingLabel)
-        stackView.setCustomSpacing(.spacingHuge, after: passwordInput)
-        stackView.setCustomSpacing(.spacingTiny, after: emailInputLabel)
-        stackView.setCustomSpacing(.spacingTiny, after: passwordInputLabel)
-        [continueButton, forgotPasswordButton, lowerSeparator].forEach {
-            stackView.setCustomSpacing(38, after: $0)
-        }
+        stackView.setCustomSpacing(0, after: passwordInput)
+        stackView.setCustomSpacing(32, after: continueButton)
+        stackView.setCustomSpacing(32, after: lowerSeparator)
 
         NSLayoutConstraint.activate(
             stackView.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: stackView.widthAnchor) }
         )
     }
 
+    private func setNeedsStrengthCheck() {
+        guard passwordInput.isValid else {
+            passwordInput.setFeedback(nil)
+            return
+        }
+        strengthCheckWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            DispatchQueue.main.async {
+                self?.checkStrength()
+            }
+        }
+
+        strengthCheckWorkItem = workItem
+
+        DispatchQueue.global().asyncAfter(
+            deadline: .now().advanced(by: .milliseconds(250)),
+            execute: workItem
+        )
+    }
+
+    private func checkStrength() {
+        guard let password = passwordInput.text, password.isEmpty == false else {
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let email = emailInput.text
+                let response = try await viewModel.checkStrength(email: email, password: password)
+
+                if let luds = response.feedback?.ludsRequirements {
+                    passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.bootstrapData?.passwordConfig)
+                } else if let warning = response.feedback?.warning, let suggestions = response.feedback?.suggestions {
+                    passwordInput.setZXCVBNFeedback(suggestions: suggestions, warning: warning, score: Int(response.score))
+                } else {
+                    passwordInput.feedback.isHidden = true
+                    passwordInput.setFeedback(nil)
+                }
+            } catch {
+                ErrorPublisher.publishError(error)
+                presentErrorAlert(error: error)
+            }
+        }
+    }
+}
+
+extension PasswordViewController {
     private func submit() {
-        guard let email = emailInput.text, let password = passwordInput.text else { return }
+        guard let email = emailInput.text,
+              let password = passwordInput.text
+        else {
+            return
+        }
 
         switch viewModel.state.intent {
         case let .enterNewPassword(token):
@@ -248,46 +262,47 @@ final class PasswordViewController: BaseViewController<PasswordState, PasswordVi
         }
     }
 
-    private func setNeedsStrengthCheck() {
-        guard passwordInput.isValid else {
-            passwordInput.setFeedback(nil)
-            return
-        }
-        strengthCheckWorkItem?.cancel()
-
-        let workItem = DispatchWorkItem { [weak self] in
-            DispatchQueue.main.async {
-                self?.checkStrength()
-            }
-        }
-
-        strengthCheckWorkItem = workItem
-
-        DispatchQueue.global().asyncAfter(
-            deadline: .now().advanced(by: .milliseconds(250)),
-            execute: workItem
-        )
-    }
-
-    private func checkStrength() {
-        guard let password = passwordInput.text, !password.isEmpty else { return }
-
-        Task { @MainActor in
+    private func handleForgotPasswordTap() {
+        guard let email = emailInput.text else { return }
+        Task {
             do {
-                let email = emailInput.text
-                let response = try await viewModel.checkStrength(email: email, password: password)
-
-                if let luds = response.feedback?.ludsRequirements {
-                    passwordInput.setLUDSFeedback(ludsRequirement: luds, breached: response.breachedPassword, passwordConfig: StytchClient.bootstrapData?.passwordConfig)
-                } else if let warning = response.feedback?.warning, let suggestions = response.feedback?.suggestions {
-                    passwordInput.setZXCVBNFeedback(suggestions: suggestions, warning: warning, score: Int(response.score))
-                } else {
-                    passwordInput.feedback.isHidden = true
-                    passwordInput.setFeedback(nil)
+                try await viewModel.forgotPassword(email: email)
+                DispatchQueue.main.async {
+                    self.launchForgotPassword(email: email)
                 }
             } catch {
                 ErrorPublisher.publishError(error)
-                presentErrorAlert(error: error)
+                self.presentErrorAlert(error: error)
+            }
+        }
+    }
+
+    private func handleEmailLoginLinkTap() {
+        guard let email = emailInput.text else { return }
+        Task {
+            do {
+                try await viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self.launchCheckYourEmail(email: email)
+                }
+            } catch {
+                ErrorPublisher.publishError(error)
+                self.presentErrorAlert(error: error)
+            }
+        }
+    }
+
+    private func handleEmailLoginLinkPrimaryTap() {
+        guard let email = emailInput.text else { return }
+        Task {
+            do {
+                try await viewModel.loginWithEmail(email: email)
+                DispatchQueue.main.async {
+                    self.launchCheckYourEmail(email: email)
+                }
+            } catch {
+                ErrorPublisher.publishError(error)
+                self.presentErrorAlert(error: error)
             }
         }
     }
@@ -316,8 +331,4 @@ extension PasswordViewController: PasswordViewModelDelegate {
         )
         navigationController?.pushViewController(controller, animated: true)
     }
-}
-
-private extension String {
-    static let emailLoginLink: String = LocalizationManager.stytch_b2c_password_email_login_link
 }

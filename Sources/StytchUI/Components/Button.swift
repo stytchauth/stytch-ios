@@ -5,6 +5,7 @@ class Button: UIButton {
         case primary
         case secondary
         case tertiary
+        case hollowPrimary
     }
 
     private let feedback = UIImpactFeedbackGenerator(style: .light)
@@ -63,7 +64,6 @@ class Button: UIButton {
     func updateColors(for kind: Kind) {
         switch kind {
         case .primary:
-            print(UIColor.primaryButton)
             setBackgroundImage(UIColor.primaryButtonDisabled.image(), for: .disabled)
             setBackgroundImage(UIColor.primaryButton.image(), for: .normal)
             setBackgroundImage(UIColor.primaryButton.withAlphaComponent(0.7).image(), for: .highlighted)
@@ -74,6 +74,14 @@ class Button: UIButton {
             layer.borderColor = UIColor.secondaryButtonText.cgColor
         case .tertiary:
             setTitleColor(.tertiaryButton, for: .normal)
+        case .hollowPrimary:
+            setBackgroundImage(UIColor.white.image(), for: .disabled)
+            setBackgroundImage(UIColor.white.image(), for: .normal)
+            setBackgroundImage(UIColor.white.withAlphaComponent(0.7).image(), for: .highlighted)
+            setTitleColor(.black, for: .normal)
+            setTitleColor(.darkGray, for: .disabled)
+            layer.borderColor = UIColor.systemGray4.cgColor
+            layer.borderWidth = 1.0
         }
     }
 }
@@ -82,6 +90,16 @@ extension Button {
     static func primary(title: String, onTap: @escaping () -> Void) -> Button {
         let button = Button(type: .custom)
         button.kind = .primary
+        button.onTap = onTap
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = .IBMPlexSansSemiBold(size: 18)
+        button.layer.cornerRadius = .cornerRadius
+        return button
+    }
+
+    static func hollowPrimary(title: String, onTap: @escaping () -> Void) -> Button {
+        let button = Button(type: .custom)
+        button.kind = .hollowPrimary
         button.onTap = onTap
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .IBMPlexSansSemiBold(size: 18)

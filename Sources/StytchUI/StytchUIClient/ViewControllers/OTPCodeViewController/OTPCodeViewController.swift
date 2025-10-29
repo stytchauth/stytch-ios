@@ -25,7 +25,7 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     }()
 
     private lazy var resendCodeButton: UIButton = {
-        let button = Button.primary(
+        let button = Button.hollowPrimary(
             title: "Resend Code"
         ) { [weak self] in
             self?.resendCode()
@@ -66,8 +66,6 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
 
     override func configureView() {
         super.configureView()
-
-        view.layoutMargins = .init(top: .verticalMargin, left: 48, bottom: .verticalMargin, right: 48)
 
         stackView.spacing = .spacingLarge
 

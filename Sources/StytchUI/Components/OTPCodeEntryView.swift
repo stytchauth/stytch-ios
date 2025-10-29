@@ -37,7 +37,7 @@ class OTPCodeEntryView: UIView, UITextFieldDelegate, BackspaceDetectingTextField
             textField.textAlignment = .center
             textField.keyboardType = .numberPad
             textField.layer.borderWidth = 1
-            textField.layer.borderColor = UIColor.gray.cgColor
+            textField.layer.borderColor = UIColor.systemGray4.cgColor
             textField.font = UIFont.systemFont(ofSize: 24)
             textField.layer.cornerRadius = .cornerRadius
             textField.clipsToBounds = true
