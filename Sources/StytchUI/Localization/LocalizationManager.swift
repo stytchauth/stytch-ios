@@ -89,12 +89,12 @@ extension LocalizationManager {
     }
 
     static var stytch_otp_code_expired: String {
-        NSLocalizedString("stytch.otp.code.expired", value: "Your code has expired. Didn't get it? Resend it.", comment: "Message displayed on OTP entry screens when the code has expired, prompting the user to resend.")
+        NSLocalizedString("stytch.otp.code.expired", value: "Your code has expired.", comment: "Message displayed on OTP entry screens when the code has expired, prompting the user to resend.")
     }
 
     static func stytch_otp_code_expires_in(timeString: String) -> String {
         String.localizedStringWithFormat(
-            NSLocalizedString("stytch.otp.code.expires.in", value: "Your code expires in %@. Didn't get it? Resend it.", comment: "Message displayed on OTP entry screens indicating how much time is left before the code expires, with a prompt to resend."),
+            NSLocalizedString("stytch.otp.code.expires.in", value: "Expires in %@", comment: "Message displayed on OTP entry screens indicating how much time is left before the code expires, with a prompt to resend."),
             timeString
         )
     }
@@ -234,7 +234,7 @@ extension LocalizationManager {
     }
 
     static var stytch_b2c_otp_message: String {
-        NSLocalizedString("stytch.b2c.otp.message", value: "A 6-digit passcode was sent to you at ", comment: "")
+        NSLocalizedString("stytch.b2c.otp.message", value: "A 6-digit passcode was sent to you at", comment: "")
     }
 
     static var stytch_b2c_otp_title: String {

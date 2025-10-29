@@ -15,6 +15,24 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
         return label
     }()
 
+    private let phoneNumberLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = .IBMPlexSansSemiBold(size: 18)
+        label.textColor = .primaryText
+        label.accessibilityLabel = "phoneNumberLabel"
+        return label
+    }()
+
+    private lazy var resendCodeButton: UIButton = {
+        let button = Button.primary(
+            title: "Resend Code"
+        ) { [weak self] in
+            self?.resendCode()
+        }
+        return button
+    }()
+
     private let otpView = OTPCodeEntryView(frame: .zero)
 
     lazy var expiryButton: Button = makeExpiryButton()
@@ -24,8 +42,6 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     var expirationDate: Date {
         viewModel.state.codeExpiry
     }
-
-    private lazy var lowerSeparator: LabelSeparatorView = .orSeparator()
 
     private lazy var passwordTertiaryButton: Button = .tertiary(
         title: .createPasswordInstead
@@ -51,14 +67,21 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
     override func configureView() {
         super.configureView()
 
+        view.layoutMargins = .init(top: .verticalMargin, left: 48, bottom: .verticalMargin, right: 48)
+
         stackView.spacing = .spacingLarge
 
         stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(inputLabel)
-        stackView.addArrangedSubview(otpView)
-        stackView.addArrangedSubview(expiryButton)
-        stackView.addArrangedSubview(lowerSeparator)
-        stackView.addArrangedSubview(passwordTertiaryButton)
+
+        let inputStack = makeVerticalStack(with: [inputLabel, phoneNumberLabel], spacing: .spacingTiny)
+        stackView.addArrangedSubview(inputStack)
+
+        let otpStack = makeVerticalStack(with: [otpView, expiryButton], spacing: .spacingTiny)
+        stackView.addArrangedSubview(otpStack)
+
+        let buttonStack = makeVerticalStack(with: [resendCodeButton, passwordTertiaryButton], spacing: .spacingTiny)
+        stackView.addArrangedSubview(buttonStack)
+
         stackView.addArrangedSubview(SpacerView())
 
         stackView.setCustomSpacing(.spacingHuge, after: titleLabel)
@@ -73,16 +96,8 @@ final class OTPCodeViewController: BaseViewController<OTPCodeState, OTPCodeViewM
             otpView.heightAnchor.constraint(equalToConstant: 50),
         ])
 
-        let attributedText = NSMutableAttributedString(string: LocalizationManager.stytch_b2c_otp_message)
-        let attributedPhone = NSAttributedString(
-            string: viewModel.state.formattedInput,
-            attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 18)]
-        )
-        attributedText.append(attributedPhone)
-        attributedText.append(.init(string: "."))
-        inputLabel.attributedText = attributedText
-
-        lowerSeparator.isHidden = !viewModel.state.passwordsEnabled
+        inputLabel.text = LocalizationManager.stytch_b2c_otp_message
+        phoneNumberLabel.text = viewModel.state.formattedInput
         passwordTertiaryButton.isHidden = !viewModel.state.passwordsEnabled
 
         otpView.delegate = self

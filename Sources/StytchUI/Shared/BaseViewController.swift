@@ -151,4 +151,18 @@ class BaseViewController<State, ViewModel>: UIViewController, BaseViewController
         tap.cancelsTouchesInView = false
         return tap
     }
+
+    func makeVerticalStack(with views: [UIView], spacing: CGFloat) -> UIStackView {
+        let stack = UIStackView(arrangedSubviews: views)
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = spacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate(
+            views.map { $0.widthAnchor.constraint(equalTo: stack.widthAnchor) }
+        )
+
+        return stack
+    }
 }

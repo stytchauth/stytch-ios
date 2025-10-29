@@ -39,27 +39,21 @@ final class AuthHomeViewController: BaseViewController<AuthHomeState, AuthHomeVi
 
         attachStackViewToScrollView()
 
-        let headerStack = UIStackView()
-        headerStack.axis = .vertical
-        headerStack.alignment = .center
-        headerStack.spacing = .spacingRegular
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        var headerViews: [UIView] = []
 
         if let image = viewModel.state.config.logo?.image {
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFit
             imageView.translatesAutoresizingMaskIntoConstraints = false
-            headerStack.addArrangedSubview(imageView)
             NSLayoutConstraint.activate([
                 imageView.heightAnchor.constraint(equalToConstant: 80),
             ])
+            headerViews.append(imageView)
         }
 
-        headerStack.addArrangedSubview(titleLabel)
-        NSLayoutConstraint.activate(
-            headerStack.arrangedSubviews.map { $0.widthAnchor.constraint(equalTo: headerStack.widthAnchor) }
-        )
+        headerViews.append(titleLabel)
 
+        let headerStack = makeVerticalStack(with: headerViews, spacing: .spacingRegular)
         stackView.addArrangedSubview(headerStack)
 
         for productComponent in viewModel.productComponents {

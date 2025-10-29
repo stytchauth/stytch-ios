@@ -49,9 +49,11 @@ extension OTPEntryViewControllerProtocol {
         if case let currentDate = Date(), expirationDate > currentDate, let dateString = dateFormatter.string(from: currentDate, to: expirationDate) {
             let attributedString = NSAttributedString(string: LocalizationManager.stytch_otp_code_expires_in(timeString: dateString), attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)])
             expiryButton.setAttributedTitle(attributedString, for: .normal)
+            expiryButton.isUserInteractionEnabled = false
         } else {
             let attributedString = NSAttributedString(string: LocalizationManager.stytch_otp_code_expired, attributes: [.font: UIFont.IBMPlexSansSemiBold(size: 16)])
             expiryButton.setAttributedTitle(attributedString, for: .normal)
+            expiryButton.isUserInteractionEnabled = false
             timer?.invalidate()
             return
         }
