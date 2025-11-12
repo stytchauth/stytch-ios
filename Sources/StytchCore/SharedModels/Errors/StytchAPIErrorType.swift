@@ -323,6 +323,7 @@ public enum StytchAPIErrorType: String, Codable {
     case invalidSessionToken = "invalid_session_token"
     case invalidSessionTokenDocs = "invalid_session_token_docs"
     case invalidSha1Hash = "invalid_sha_1_hash"
+    case invalidSha512Hash = "invalid_sha_512_hash"
     case invalidSignature = "invalid_signature"
     case invalidSignatureSamlResponse = "invalid_signature_saml_response"
     case invalidSignupMagicLinkUrl = "invalid_signup_magic_link_url"
