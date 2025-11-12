@@ -49,6 +49,14 @@ public extension StytchB2BClient {
             }
         }
 
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Exchange an auth token issued by a trusted identity provider for a Stytch session.
+        /// You must first register a Trusted Auth Token profile in the Stytch dashboard (https://stytch.com/dashboard/trusted-auth-tokens).
+        /// If a session token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing session.
+        public func attest(parameters: AttestParameters) async throws -> B2BAuthenticateResponse {
+            try await router.performSessionRequest(to: .attest, parameters: parameters)
+        }
+
         /// If your app has cookies disabled or simply receives updated session tokens from your backend via means other than
         /// `Set-Cookie` headers, you must call this method after receiving the updated tokens to ensure the `StytchClient`
         /// and persistent storage are kept up-to-date. You are required to include both the opaque token and the jwt.
@@ -113,6 +121,37 @@ public extension StytchB2BClient.Sessions {
             self.organizationID = organizationID
             self.sessionDurationMinutes = sessionDurationMinutes
             self.locale = locale
+        }
+    }
+}
+
+public extension StytchB2BClient.Sessions {
+    /// The dedicated parameters type for sessions `attest` calls.
+    struct AttestParameters: Codable, Sendable {
+        let profileId: String
+        let token: String
+        let organizationId: String?
+        let sessionJwt: String?
+        let sessionToken: String?
+
+        /// - Parameters:
+        ///   - profileId: The member profile identifier to attest.
+        ///   - token: The attestation token issued by the platform.
+        ///   - organizationId: Optional organization ID associated with the session.
+        ///   - sessionJwt: Optional current session JWT.
+        ///   - sessionToken: Optional current session token.
+        public init(
+            profileId: String,
+            token: String,
+            organizationId: String? = nil,
+            sessionJwt: String? = nil,
+            sessionToken: String? = nil
+        ) {
+            self.profileId = profileId
+            self.token = token
+            self.organizationId = organizationId
+            self.sessionJwt = sessionJwt
+            self.sessionToken = sessionToken
         }
     }
 }
