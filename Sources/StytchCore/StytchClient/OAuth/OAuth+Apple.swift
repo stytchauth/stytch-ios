@@ -59,6 +59,21 @@ public extension StytchClient.OAuth {
 
             return authenticateResponse
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// This function is intended for rare cases where you must authenticate with Apple only and collect the JWT.
+        /// This function will not create a Stytch user.
+        public func authenticateWithApple() async throws -> String {
+            let rawNonce = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
+
+            let authenticateResult = try await appleOAuthClient.authenticate(
+                configureController: { _ in },
+                nonce: cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
+            )
+
+            // the idToken is the JWT
+            return authenticateResult.idToken
+        }
     }
 }
 
