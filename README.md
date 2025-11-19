@@ -197,15 +197,6 @@ In addition to installing the Swift package, it is highly recommended to clone t
 
 
 
-## 💬 Talk to a Stytch iOS Engineer
-
-[Nidal](https://www.linkedin.com/in/nidal-fakhouri/) 👨‍💻 is our Stytch iOS lead 🍎 and is available to answer any questions about the Stytch iOS SDK 📱. He can also help you get started quickly 🚀.  
-
-You can book time with him [here](https://calendly.com/nfakhouri-stytch/30min) 📅.
-
-
-
-
 ## 🤝 Get Help And Join The Community
 
 Join the discussion, ask questions, and suggest new features in our ​[Slack community](https://stytch.com/docs/resources/support/overview)!

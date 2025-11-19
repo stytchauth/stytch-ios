@@ -33,6 +33,7 @@ public extension StytchClient.OAuth {
                 parameters: AuthenticateParameters(
                     idToken: authenticateResult.idToken,
                     nonce: rawNonce,
+                    oauthAttachToken: parameters.oauthAttachToken,
                     sessionDurationMinutes: parameters.sessionDurationMinutes
                 )
             )
@@ -58,21 +59,6 @@ public extension StytchClient.OAuth {
             sessionManager.consumerLastAuthMethodUsed = .oauthApple
 
             return authenticateResponse
-        }
-
-        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// This function is intended for rare cases where you must authenticate with Apple only and collect the JWT.
-        /// This function will not create a Stytch user.
-        public func authenticateWithApple() async throws -> String {
-            let rawNonce = try cryptoClient.dataWithRandomBytesOfCount(32).toHexString()
-
-            let authenticateResult = try await appleOAuthClient.authenticate(
-                configureController: { _ in },
-                nonce: cryptoClient.sha256(Data(rawNonce.utf8)).base64EncodedString()
-            )
-
-            // the idToken is the JWT
-            return authenticateResult.idToken
         }
     }
 }
@@ -100,6 +86,7 @@ public extension StytchClient.OAuth.Apple {
     /// The dedicated parameters type for ``StytchClient/OAuth-swift.struct/Apple-swift.struct/start(parameters:)-5rxqg`` calls.
     struct StartParameters {
         let sessionDurationMinutes: Minutes
+        let oauthAttachToken: String?
 
         #if !os(watchOS)
         let presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
@@ -108,12 +95,15 @@ public extension StytchClient.OAuth.Apple {
         #if !os(watchOS)
         /// - Parameters:
         ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        ///   - oauthAttachToken: A single-use token for connecting the Stytch User selection from an OAuth Attach request to the corresponding OAuth Start request.
         ///   - presentationContextProvider: This native Apple authorization type allows you to present Sign In With Apple in the window of your choosing.
         public init(
             sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration,
+            oauthAttachToken: String? = nil,
             presentationContextProvider: ASAuthorizationControllerPresentationContextProviding? = nil
         ) {
             self.sessionDurationMinutes = sessionDurationMinutes
+            self.oauthAttachToken = oauthAttachToken
             self.presentationContextProvider = presentationContextProvider
         }
 
@@ -121,8 +111,13 @@ public extension StytchClient.OAuth.Apple {
 
         /// - Parameters:
         ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration) {
+        ///   - oauthAttachToken: A single-use token for connecting the Stytch User selection from an OAuth Attach request to the corresponding OAuth Start request.
+        public init(
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration,
+            oauthAttachToken: String? = nil,
+        ) {
             self.sessionDurationMinutes = sessionDurationMinutes
+            self.oauthAttachToken = oauthAttachToken
         }
         #endif
     }
@@ -132,6 +127,7 @@ extension StytchClient.OAuth.Apple {
     struct AuthenticateParameters: Codable, Sendable {
         let idToken: String
         let nonce: String
+        let oauthAttachToken: String?
         let sessionDurationMinutes: Minutes
     }
 
