@@ -42,6 +42,39 @@ final class SessionManagerTestCase: BaseTestCase {
         XCTAssertNotNil(StytchClient.sessions.session)
     }
 
+    func testSessionsAttest() async throws {
+        networkInterceptor.responses { AuthenticateResponse.mock }
+        let parameters = StytchClient.Sessions.AttestParameters(
+            profileId: "profile_123",
+            token: "attestation_token",
+            sessionDurationMinutes: 30,
+            sessionJwt: "existing_jwt",
+            sessionToken: "existing_token"
+        )
+
+        Current.timer = { _, _, _ in .init() }
+
+        XCTAssertNil(StytchClient.sessions.session)
+
+        _ = try await StytchClient.sessions.attest(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/sessions/attest",
+            method: .post([
+                "profile_id": "profile_123",
+                "token": "attestation_token",
+                "session_duration_minutes": 30,
+                "session_jwt": "existing_jwt",
+                "session_token": "existing_token",
+            ])
+        )
+
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+        XCTAssertNotNil(StytchClient.sessions.session)
+    }
+
     func testSessionsRevoke() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         Current.timer = { _, _, _ in Self.mockTimer }

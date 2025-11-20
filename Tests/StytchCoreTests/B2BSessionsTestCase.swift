@@ -34,6 +34,40 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertNotNil(StytchB2BClient.sessions.memberSession)
     }
 
+    func testSessionsAttest() async throws {
+        networkInterceptor.responses { B2BAuthenticateResponse.mock }
+
+        let parameters = StytchB2BClient.Sessions.AttestParameters(
+            profileId: "profile_123",
+            token: "attestation_token",
+            organizationId: "org_123",
+            sessionJwt: "existing_jwt",
+            sessionToken: "existing_token"
+        )
+
+        Current.timer = { _, _, _ in .init() }
+
+        XCTAssertNil(StytchB2BClient.sessions.memberSession)
+
+        _ = try await StytchB2BClient.sessions.attest(parameters: parameters)
+
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/b2b/sessions/attest",
+            method: .post([
+                "profile_id": "profile_123",
+                "token": "attestation_token",
+                "organization_id": "org_123",
+                "session_jwt": "existing_jwt",
+                "session_token": "existing_token",
+            ])
+        )
+
+        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("i'mvalidjson"))
+        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("xyzasdf"))
+        XCTAssertNotNil(StytchB2BClient.sessions.memberSession)
+    }
+
     func testSessionsRevoke() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         Current.timer = { _, _, _ in Self.mockTimer }

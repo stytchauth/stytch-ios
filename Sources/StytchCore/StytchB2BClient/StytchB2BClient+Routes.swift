@@ -389,6 +389,7 @@ extension StytchB2BClient {
         case authenticate
         case revoke
         case exchange
+        case attest
 
         var path: Path {
             .init(rawValue: rawValue)

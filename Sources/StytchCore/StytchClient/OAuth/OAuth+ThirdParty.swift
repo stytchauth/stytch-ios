@@ -37,6 +37,7 @@ public extension StytchClient.OAuth.ThirdParty {
     struct WebAuthenticationConfiguration: WebAuthenticationSessionClientConfiguration {
         let loginRedirectUrl: URL?
         let signupRedirectUrl: URL?
+        let oauthAttachToken: String?
         let customScopes: [String]?
         let providerParams: [String: String]?
         public let clientType: ClientType = .consumer
@@ -50,16 +51,19 @@ public extension StytchClient.OAuth.ThirdParty {
         /// - Parameters:
         ///   - loginRedirectUrl: The url an existing user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
         ///   - signupRedirectUrl: The url a new user is redirected to after authenticating with the identity provider. This url **must** use a custom scheme and be added to your Stytch Dashboard.
+        ///   - oauthAttachToken: A single-use token for connecting the Stytch User selection from an OAuth Attach request to the corresponding OAuth Start request.
         ///   - customScopes: Any additional scopes to be requested from the identity provider.
         ///   - providerParams: An optional mapping of provider specific values to pass through to the OAuth provider
         public init(
             loginRedirectUrl: URL? = nil,
             signupRedirectUrl: URL? = nil,
+            oauthAttachToken: String? = nil,
             customScopes: [String]? = nil,
             providerParams: [String: String]? = nil
         ) {
             self.loginRedirectUrl = loginRedirectUrl
             self.signupRedirectUrl = signupRedirectUrl
+            self.oauthAttachToken = oauthAttachToken
             self.customScopes = customScopes
             self.providerParams = providerParams
         }
@@ -89,6 +93,10 @@ public extension StytchClient.OAuth.ThirdParty {
 
             if let signupRedirectUrl = signupRedirectUrl?.absoluteString {
                 queryParameters["signup_redirect_url"] = signupRedirectUrl
+            }
+
+            if let oauthAttachToken = oauthAttachToken, oauthAttachToken.isEmpty == false {
+                queryParameters["oauth_attach_token"] = oauthAttachToken
             }
 
             let domain = Current.localStorage.stytchDomain(publicToken)
