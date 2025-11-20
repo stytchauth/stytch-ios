@@ -46,7 +46,7 @@ final class B2BRecoveryCodesTestCase: BaseTestCase {
             )
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         let organizationId = "orgid1234"
         let memberId = "memberid1234"

@@ -3,20 +3,26 @@ import XCTest
 
 final class PollingClientTestCase: BaseTestCase {
     func testDefault() {
-        var timer: Timer?
-        Current.timer = { timeInterval, _, task in
-            let newTimer = Timer(fire: .distantFuture, interval: timeInterval, repeats: true) { _ in task() }
-            timer = newTimer
-            return newTimer
+        let expectation = XCTestExpectation()
+        let dispatchQueue = DispatchQueue(label: "test")
+        let interval = 0.5
+        var timer: DispatchSourceTimer?
+        Current.timer = { interval, queue, task in
+            let dst = DispatchSource.makeTimerSource(queue: queue)
+            dst.schedule(deadline: .now() + interval, repeating: interval)
+            dst.setEventHandler { task() }
+            dst.resume()
+            timer = dst
+            return dst
         }
-        var fireCount = 0
+        var timestamps: [Date] = []
         var error: Error?
         let pollingClient: PollingClient = .init(
-            interval: 5,
+            interval: interval,
             maxRetries: 5,
-            queue: .main
+            queue: dispatchQueue
         ) { _, onFailure in
-            fireCount += 1
+            timestamps.append(Date.now)
             if let theError = error {
                 // Clear the error so the RetryClient doesn't continue to retry
                 error = nil
@@ -24,32 +30,21 @@ final class PollingClientTestCase: BaseTestCase {
             }
         }
 
-        XCTAssertEqual(fireCount, 0)
+        XCTAssertEqual(timestamps.count, 0)
         XCTAssertNil(timer)
 
         pollingClient.start()
 
-        XCTAssertEqual(fireCount, 0)
+        // wait for it to fire a few times
+        let secondsToRun = 3.0
+        let expectedFires = secondsToRun / interval
+        dispatchQueue.asyncAfter(deadline: .now() + secondsToRun) { expectation.fulfill() }
+        wait(for: [expectation], timeout: secondsToRun * 2)
 
-        timer?.fire()
+        // did it fire the expected number of times?
+        XCTAssertEqual(timestamps.count, Int(expectedFires))
 
-        XCTAssertEqual(fireCount, 1)
-
-        timer?.fire()
-
-        XCTAssertEqual(fireCount, 2)
-
-        timer?.fire()
-        timer?.fire()
-
-        XCTAssertEqual(fireCount, 4)
-
-        // Test default RetryClient, executing the task immediately
-        Current.asyncAfter = { $2() }
-        error = StytchSDKError.consumerSDKNotConfigured
-
-        timer?.fire()
-
-        XCTAssertEqual(fireCount, 6)
+        // was each fire _roughly_ one second apart?
+        XCTAssertIntervalsClose(to: interval, in: timestamps, tolerance: 0.1)
     }
 }

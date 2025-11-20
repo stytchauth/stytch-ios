@@ -19,7 +19,7 @@ final class OAuthTestCase: BaseTestCase {
             StytchClient.UserManagement.UserResponse(requestId: "", statusCode: 200, wrapped: .mock(userId: ""))
         }
         Current.appleOAuthClient = .init { _, _ in .init(idToken: "id_token_123", name: .init(firstName: "user", lastName: nil)) }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.oauth.apple.start(parameters: .init())
 
         try XCTAssertRequest(
@@ -45,7 +45,7 @@ final class OAuthTestCase: BaseTestCase {
 
     func testAuthenticate() async throws {
         networkInterceptor.responses { StytchClient.OAuth.OAuthAuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         await XCTAssertThrowsErrorAsync(
             try await StytchClient.oauth.authenticate(parameters: .init(token: "i-am-token", sessionDurationMinutes: 12)),

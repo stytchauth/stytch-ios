@@ -244,3 +244,22 @@ private extension CollectionDifference.Change {
         }
     }
 }
+
+func XCTAssertIntervalsClose(to expected: TimeInterval, in timestamps: [Date], tolerance: TimeInterval = 0.1, file: StaticString = #file, line: UInt = #line) {
+    guard timestamps.count > 1 else {
+        XCTFail("Not enough timestamps to compare", file: file, line: line)
+        return
+    }
+
+    for i in 1..<timestamps.count {
+        let delta = timestamps[i].timeIntervalSince(timestamps[i - 1])
+        let diff = abs(delta - expected)
+        XCTAssertLessThanOrEqual(
+            diff,
+            tolerance,
+            "Interval \(i) was \(delta)s, expected ~\(expected)s (tolerance \(tolerance)s)",
+            file: file,
+            line: line
+        )
+    }
+}

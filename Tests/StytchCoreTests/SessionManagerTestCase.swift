@@ -20,7 +20,7 @@ final class SessionManagerTestCase: BaseTestCase {
         networkInterceptor.responses { AuthenticateResponse.mock }
         let parameters: StytchClient.Sessions.AuthenticateParameters = .init(sessionDurationMinutes: 15)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNil(StytchClient.sessions.session)
 
@@ -52,7 +52,7 @@ final class SessionManagerTestCase: BaseTestCase {
             sessionToken: "existing_token"
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNil(StytchClient.sessions.session)
 
@@ -77,7 +77,7 @@ final class SessionManagerTestCase: BaseTestCase {
 
     func testSessionsRevoke() async throws {
         networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
@@ -100,7 +100,7 @@ final class SessionManagerTestCase: BaseTestCase {
             StytchError(name: "fake_error", message: "I'm a mock error")
             StytchError(name: "fake_error", message: "I'm a mock error")
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
@@ -147,7 +147,7 @@ final class SessionManagerTestCase: BaseTestCase {
     }
 
     func testIntermediateSessionToken() {
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         // Given we call update session with valid member session and tokens
         Current.sessionManager.updateSession(
@@ -187,7 +187,7 @@ final class SessionManagerTestCase: BaseTestCase {
             }
         }.store(in: &subscriptions)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
@@ -210,7 +210,7 @@ final class SessionManagerTestCase: BaseTestCase {
             }
         }.store(in: &subscriptions)
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: nil,
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
@@ -221,7 +221,7 @@ final class SessionManagerTestCase: BaseTestCase {
     }
 
     func testGetExpiredSessionReturnsNil() throws {
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .user(.mockWithExpiredSession(userId: "i_am_user")),
             tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
@@ -237,7 +237,7 @@ final class SessionManagerTestCase: BaseTestCase {
             error
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
@@ -267,7 +267,7 @@ final class SessionManagerTestCase: BaseTestCase {
             error
         }
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),

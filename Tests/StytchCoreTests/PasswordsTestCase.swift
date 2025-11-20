@@ -23,7 +23,7 @@ final class PasswordsTestCase: BaseTestCase {
                 )
             )
         }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.create(parameters: passwordParams)
 
         try XCTAssertRequest(
@@ -39,7 +39,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testAuthenticate() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.authenticate(parameters: passwordParams)
 
         try XCTAssertRequest(
@@ -118,7 +118,7 @@ final class PasswordsTestCase: BaseTestCase {
             ])
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNotNil(Current.pkcePairManager.getPKCECodePair())
 
@@ -142,7 +142,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testResetBySession() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
         _ = try await StytchClient.passwords.resetBySession(parameters: passwordResetBySessionParams)
 
         try XCTAssertRequest(
@@ -159,7 +159,7 @@ final class PasswordsTestCase: BaseTestCase {
 
     func testResetByExistingPassword() async throws {
         networkInterceptor.responses { AuthenticateResponse.mock }
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         _ = try await StytchClient.passwords.resetByExistingPassword(parameters: passwordResetByExistingPasswordParams)
 
