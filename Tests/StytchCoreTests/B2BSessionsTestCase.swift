@@ -37,6 +37,8 @@ final class B2BSessionsTestCase: BaseTestCase {
     func testSessionsAttest() async throws {
         networkInterceptor.responses { B2BAuthenticateResponse.mock }
 
+        Current.timer = { _, _, _ in Self.mockTimer }
+
         let parameters = StytchB2BClient.Sessions.AttestParameters(
             profileId: "profile_123",
             token: "attestation_token",
@@ -44,8 +46,6 @@ final class B2BSessionsTestCase: BaseTestCase {
             sessionJwt: "existing_jwt",
             sessionToken: "existing_token"
         )
-
-        Current.timer = { _, _, _ in .init() }
 
         XCTAssertNil(StytchB2BClient.sessions.memberSession)
 

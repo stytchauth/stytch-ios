@@ -52,7 +52,7 @@ final class SessionManagerTestCase: BaseTestCase {
             sessionToken: "existing_token"
         )
 
-        Current.timer = { _, _, _ in .init() }
+        Current.timer = { _, _, _ in Self.mockTimer }
 
         XCTAssertNil(StytchClient.sessions.session)
 
