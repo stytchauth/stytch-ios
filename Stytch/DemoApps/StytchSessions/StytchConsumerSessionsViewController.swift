@@ -71,9 +71,16 @@ final class StytchConsumerSessionsViewController: UIViewController {
     func sendAndAuthenticateSmsOtp() {
         Task {
             do {
-                guard let phoneNumber = try await presentTextFieldAlertWithTitle(alertTitle: "Enter Your Phone Number In The Format xxxxxxxxxx", keyboardType: .numberPad) else {
+                // so you can hard code a number if needed
+                var phoneNumber: String?
+                if phoneNumber?.isEmpty == true {
+                    phoneNumber = try await presentTextFieldAlertWithTitle(alertTitle: "Enter Your Phone Number In The Format xxxxxxxxxx", keyboardType: .numberPad)
+                }
+
+                guard let phoneNumber else {
                     throw TextFieldAlertError.emptyString
                 }
+
                 let loginOrCreateResponse = try await StytchClient.otps.loginOrCreate(parameters: .init(deliveryMethod: .sms(phoneNumber: "+1\(phoneNumber)", enableAutofill: false)))
 
                 guard let code = try await presentTextFieldAlertWithTitle(alertTitle: "Enter The OTP Code", keyboardType: .numberPad) else {

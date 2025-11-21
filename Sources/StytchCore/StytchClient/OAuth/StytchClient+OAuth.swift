@@ -38,6 +38,14 @@ public extension StytchClient {
                 throw error
             }
         }
+
+        // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
+        /// Generate an OAuth Attach Token to pre-associate an OAuth flow with an existing Stytch User.
+        /// You must have an active Stytch session to use this endpoint.
+        /// Pass the returned oauth_attach_token to the same provider's OAuth Start endpoint to treat this OAuth flow as a login for that user instead of a signup for a new user.
+        public func attach(parameters: AttachParameters) async throws -> OAuthAttachResponse {
+            try await router.post(to: .attach, parameters: parameters)
+        }
     }
 }
 
@@ -113,25 +121,6 @@ public extension StytchClient.OAuth {
 #endif
 
 public extension StytchClient.OAuth {
-    /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
-    struct AuthenticateParameters: Encodable, Sendable {
-        let token: String
-        let sessionDurationMinutes: Minutes
-
-        /// - Parameters:
-        ///   - token: The token returned from the identity provider as parsed from the final/complete redirect URL.
-        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
-        public init(
-            token: String,
-            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
-        ) {
-            self.token = token
-            self.sessionDurationMinutes = sessionDurationMinutes
-        }
-    }
-}
-
-public extension StytchClient.OAuth {
     /// The concrete response type for OAuth `authenticate` calls.
     typealias OAuthAuthenticateResponse = Response<OAuthAuthenticateResponseData>
 
@@ -156,5 +145,38 @@ public extension StytchClient.OAuth {
         /// For example this object will include a provider's access_token that you can use to access the provider's API for a given user.
         /// Note that these values will vary based on the OAuth provider in question, e.g. id_token is only returned by OIDC compliant identity providers.
         public let providerValues: OAuthProviderValues
+    }
+
+    /// The dedicated parameters type for ``authenticate(parameters:)-3tjwd`` calls.
+    struct AuthenticateParameters: Encodable, Sendable {
+        let token: String
+        let sessionDurationMinutes: Minutes
+
+        /// - Parameters:
+        ///   - token: The token returned from the identity provider as parsed from the final/complete redirect URL.
+        ///   - sessionDurationMinutes: The duration, in minutes, of the requested session. Defaults to 5 minutes.
+        public init(
+            token: String,
+            sessionDurationMinutes: Minutes = StytchClient.defaultSessionDuration
+        ) {
+            self.token = token
+            self.sessionDurationMinutes = sessionDurationMinutes
+        }
+    }
+}
+
+public extension StytchClient.OAuth {
+    typealias OAuthAttachResponse = Response<OAuthAttachResponseData>
+
+    struct OAuthAttachResponseData: Codable, Sendable {
+        public let oauthAttachToken: String
+    }
+
+    struct AttachParameters: Encodable, Sendable {
+        public let provider: String
+
+        public init(provider: String) {
+            self.provider = provider
+        }
     }
 }
