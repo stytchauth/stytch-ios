@@ -49,6 +49,8 @@ extension PasskeysClient {
                         controller.performAutoFillAssistedRequests()
                     case let .default(preferLocalCredentials):
                         controller.performRequests(options: preferLocalCredentials ? .preferImmediatelyAvailableCredentials : [])
+                    case let .options(requestOptions):
+                        controller.performRequests(options: requestOptions)
                     }
                     #else
                     controller.performRequests()

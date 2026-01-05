@@ -2,6 +2,8 @@
 import Foundation
 
 #if !os(watchOS)
+import AuthenticationServices
+
 public extension StytchClient {
     /// Passkeys are an extremely simple authentication mechanism which securely syncs key sets across your devices — access-controlled via FaceID/TouchID — ultimately enabling WebAuthN-powered public-key authentication with Stytch's servers.
     ///
@@ -127,7 +129,10 @@ public extension StytchClient.Passkeys {
         public enum RequestBehavior: Sendable {
             #if os(iOS)
             /// Uses the default request behavior with a boolean flag to determine whether credentials are limited to those local on device or whether a passkey on a nearby device can be used
+            @available(*, deprecated, renamed: "options(requestOptions:)", message: "Deprecated in favor of explicitly passing the desired ASAuthorizationController.RequestOptions")
             case `default`(preferLocalCredentials: Bool)
+            /// Explicitly pass the desired `ASAuthorizationController.RequestOptions` to the authenticate request, for instance `[.preferImmediatelyAvailableCredentials]`
+            case options(_: ASAuthorizationController.RequestOptions = [])
             /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
             case autoFill
             #else
@@ -136,8 +141,8 @@ public extension StytchClient.Passkeys {
             #endif
 
             #if os(iOS)
-            /// The RequestBehavior parameter's default value for this platform — `.default(prefersLocalCredentials: false)`
-            public static let defaultPlatformValue: RequestBehavior = .default(preferLocalCredentials: false)
+            /// The RequestBehavior parameter's default value for this platform — `.options([])`
+            public static let defaultPlatformValue: RequestBehavior = .options([])
             #else
             /// The RequestBehavior parameter's default value for this platform — `.default`
             public static let defaultPlatformValue: RequestBehavior = .default

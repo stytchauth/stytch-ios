@@ -53,10 +53,14 @@ final class PasskeysTestCase: BaseTestCase {
             AuthenticateResponse.mock
         }
         var requestBehaviorIsAutoFill = false
+        var requestBehaviorIsPreferLocallyAvailableCredentials = false
         Current.passkeysClient.assertCredential = { _, _, requestBehavior in
             #if os(iOS)
             if case .autoFill = requestBehavior {
                 requestBehaviorIsAutoFill = true
+            }
+            if case .options([.preferImmediatelyAvailableCredentials]) = requestBehavior {
+                requestBehaviorIsPreferLocallyAvailableCredentials = true
             }
             #endif
             return MockAssertion(
@@ -69,13 +73,13 @@ final class PasskeysTestCase: BaseTestCase {
         }
         Current.timer = { _, _, _ in Self.mockTimer }
         #if os(iOS)
-        let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .autoFill)
+        let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com", requestBehavior: .options([.preferImmediatelyAvailableCredentials]))
         #else
         let parameters: Base.AuthenticateParameters = .init(domain: "something.blah.com")
         #endif
         _ = try await StytchClient.passkeys.authenticate(parameters: parameters)
         #if os(iOS)
-        XCTAssertTrue(requestBehaviorIsAutoFill)
+        XCTAssertTrue(requestBehaviorIsPreferLocallyAvailableCredentials)
         #else
         XCTAssertFalse(requestBehaviorIsAutoFill)
         #endif
