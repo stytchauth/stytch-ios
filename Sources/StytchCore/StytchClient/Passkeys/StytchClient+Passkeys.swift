@@ -132,7 +132,7 @@ public extension StytchClient.Passkeys {
             @available(*, deprecated, renamed: "options(requestOptions:)", message: "Deprecated in favor of explicitly passing the desired ASAuthorizationController.RequestOptions")
             case `default`(preferLocalCredentials: Bool)
             /// Explicitly pass the desired `ASAuthorizationController.RequestOptions` to the authenticate request, for instance `[.preferImmediatelyAvailableCredentials]`
-            case `options`(_: ASAuthorizationController.RequestOptions = [])
+            case options(_: ASAuthorizationController.RequestOptions = [])
             /// When a user selects a textfield with the `.username` textContentType, an existing local passkey will be suggested to the user.
             case autoFill
             #else
