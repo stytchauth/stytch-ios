@@ -215,7 +215,7 @@ extension NetworkingRouter {
 
             sessionManager.updateSession(
                 sessionType: .user(sessionResponse.session),
-                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
+                tokens: SessionTokens(jwt: sessionResponse.sessionJwt, opaque: sessionResponse.sessionToken)
             )
 
             #if !os(tvOS) && !os(watchOS)
@@ -231,7 +231,7 @@ extension NetworkingRouter {
 
             sessionManager.updateSession(
                 sessionType: .member(sessionResponse.memberSession),
-                tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
+                tokens: SessionTokens(jwt: sessionResponse.sessionJwt, opaque: sessionResponse.sessionToken)
             )
         } else if let sessionResponse = dataContainer.data as? B2BMFAAuthenticateResponseType {
             // Update the member and organization so that all values are current when the session publisher fires
@@ -241,7 +241,7 @@ extension NetworkingRouter {
             if let memberSession = sessionResponse.memberSession {
                 sessionManager.updateSession(
                     sessionType: .member(memberSession),
-                    tokens: SessionTokens(jwt: .jwt(sessionResponse.sessionJwt), opaque: .opaque(sessionResponse.sessionToken))
+                    tokens: SessionTokens(jwt: sessionResponse.sessionJwt, opaque: sessionResponse.sessionToken)
                 )
             } else {
                 sessionManager.updateSession(

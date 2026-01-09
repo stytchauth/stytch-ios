@@ -18,7 +18,7 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         _ = try await StytchB2BClient.sessions.authenticate(parameters: parameters)
@@ -29,8 +29,8 @@ final class B2BSessionsTestCase: BaseTestCase {
             method: .post(["session_duration_minutes": 15])
         )
 
-        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("i'mvalidjson"))
-        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("xyzasdf"))
+        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, "i'mvalidjson")
+        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, "xyzasdf")
         XCTAssertNotNil(StytchB2BClient.sessions.memberSession)
     }
 
@@ -63,8 +63,8 @@ final class B2BSessionsTestCase: BaseTestCase {
             ])
         )
 
-        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("i'mvalidjson"))
-        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("xyzasdf"))
+        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, "i'mvalidjson")
+        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, "xyzasdf")
         XCTAssertNotNil(StytchB2BClient.sessions.memberSession)
     }
 
@@ -74,11 +74,11 @@ final class B2BSessionsTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
-        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("opaque_all_day"))
-        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("i'm_jwt"))
+        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, "opaque_all_day")
+        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, "i'm_jwt")
 
         _ = try await StytchB2BClient.sessions.revoke()
 
@@ -94,13 +94,10 @@ final class B2BSessionsTestCase: BaseTestCase {
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
         XCTAssertNil(StytchB2BClient.sessions.sessionJwt)
 
-        if let tokens = SessionTokens(jwt: .jwt("jwt"), opaque: .opaque("token")) {
-            StytchB2BClient.sessions.update(sessionTokens: tokens)
-            XCTAssertEqual(StytchB2BClient.sessions.sessionToken, .opaque("token"))
-            XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, .jwt("jwt"))
-        } else {
-            XCTFail("SessionTokens should not be nil")
-        }
+        let tokens = SessionTokens(jwt: "jwt", opaque: "token")
+        StytchB2BClient.sessions.update(sessionTokens: tokens)
+        XCTAssertEqual(StytchB2BClient.sessions.sessionToken, "token")
+        XCTAssertEqual(StytchB2BClient.sessions.sessionJwt, "jwt")
     }
 
     func testSessionExchange() async throws {
@@ -144,7 +141,7 @@ final class B2BSessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         wait(for: [expectation], timeout: 1.0)
@@ -167,7 +164,7 @@ final class B2BSessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: nil,
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         wait(for: [expectation], timeout: 1.0)
@@ -178,7 +175,7 @@ final class B2BSessionsTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .member(.mockWithExpiredMemberSession),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         XCTAssertNil(StytchB2BClient.sessions.memberSession)
