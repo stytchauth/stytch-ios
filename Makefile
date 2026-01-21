@@ -76,7 +76,7 @@ test-tvos: codegen
 test-watchos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) watchsimulator11.5 -destination "OS=11.5,name=Apple Watch Ultra 2 (49mm)" | $(XCPRETTY)
+	$(TEST) watchsimulator11.4 -destination "OS=11.5,name=Apple Watch Ultra 2 (49mm)" | $(XCPRETTY)
 
 .PHONY: tools
 tools:
