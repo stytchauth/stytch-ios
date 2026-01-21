@@ -63,8 +63,8 @@ test tests test-macos: codegen
 test-ios: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) iphonesimulator18.5 -destination "OS=18.5,name=iPhone 16 Pro" | $(XCPRETTY)
-	$(UI_UNIT_TESTS) iphonesimulator18.5 -destination "OS=18.5,name=iPhone 16 Pro" | $(XCPRETTY)
+	$(TEST) iphonesimulator18.4 -destination "OS=18.5,name=iPhone 16 Pro" | $(XCPRETTY)
+	$(UI_UNIT_TESTS) iphonesimulator18.4 -destination "OS=18.5,name=iPhone 16 Pro" | $(XCPRETTY)
 
 .PHONY: test-tvos
 test-tvos: codegen
