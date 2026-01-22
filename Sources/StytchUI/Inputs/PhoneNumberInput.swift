@@ -60,7 +60,6 @@ extension PhoneNumberInput: CountryCodePickerDelegate {
     }
 
     func countryCodePickerViewControllerDidDissmiss() {
-
     }
 
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
