@@ -70,7 +70,7 @@ test-ios: codegen
 test-tvos: codegen
 	@xcodebuild -showsdks
 	@xcrun simctl list devices
-	$(TEST) appletvsimulator18.4 -destination "OS=18.5,name=Apple TV 4K (3rd generation)" | $(XCPRETTY)
+	$(TEST) appletvsimulator18.5 -destination "OS=18.5,name=Apple TV 4K (3rd generation)" | $(XCPRETTY)
 
 .PHONY: test-watchos
 test-watchos: codegen
