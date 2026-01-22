@@ -164,7 +164,9 @@ public extension StytchClient {
             guard let privateKeyRegistrationQueryResult: KeychainQueryResult = try keychainClient.getQueryResults(item: .privateKeyRegistration).first else {
                 throw StytchSDKError.noBiometricRegistration
             }
-
+            guard try await LocalAuthenticationContextManager.localAuthenticationContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: parameters.promptStrings.localizedReason) else {
+                throw StytchSDKError.biometricAuthenticationFailed
+            }
             LocalAuthenticationContextManager.updateLaContextStrings(strings: parameters.promptStrings)
 
             try copyBiometricRegistrationIDToKeychainIfNeeded(privateKeyRegistrationQueryResult)
