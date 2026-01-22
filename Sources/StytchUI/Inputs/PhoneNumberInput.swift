@@ -56,6 +56,14 @@ extension PhoneNumberInput: UITextFieldDelegate {
 }
 
 extension PhoneNumberInput: CountryCodePickerDelegate {
+    func countryCodePickerViewControllerWillDissmiss(_ controller: PhoneNumberKit.CountryCodePickerViewController) {
+        
+    }
+    
+    func countryCodePickerViewControllerDidDissmiss() {
+        
+    }
+    
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
         textInput.countryCodePickerViewControllerDidPickCountry(country)
     }
