@@ -55,8 +55,8 @@ final class CryptoWalletsTestCase: BaseTestCase {
 
         _ = try await StytchClient.cryptoWallets.authenticate(parameters: .init(cryptoWalletType: .solana, cryptoWalletAddress: "mock-crypto-address", signature: "mock-signature"))
 
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "hello_session")
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "jwt_for_me")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],

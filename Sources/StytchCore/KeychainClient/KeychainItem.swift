@@ -122,8 +122,8 @@ extension KeychainItem {
 
     // The following key types are deprecated, but exist for backwards compatibility with migrations
     static let biometricKeyRegistration: Self = .init(kind: .deprecated, name: "stytch_biometric_key_registration")
-    static let sessionToken: Self = .init(kind: .deprecated, name: SessionToken.Kind.opaque.name)
-    static let sessionJwt: Self = .init(kind: .deprecated, name: SessionToken.Kind.jwt.name)
+    static let sessionToken: Self = .init(kind: .deprecated, name: "stytch_session")
+    static let sessionJwt: Self = .init(kind: .deprecated, name: "stytch_session_jwt")
     static let intermediateSessionToken: Self = .init(kind: .deprecated, name: "stytch_intermediate_session_token")
     static let codeVerifierPKCE: Self = .init(kind: .deprecated, name: "stytch_code_verifier_pkce")
     static let codeChallengePKCE: Self = .init(kind: .deprecated, name: "stytch_code_challenge_pkce")

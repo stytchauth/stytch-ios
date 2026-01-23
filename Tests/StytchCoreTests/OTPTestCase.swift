@@ -158,8 +158,8 @@ final class OTPTestCase: BaseTestCase {
 
         _ = try await StytchClient.otps.authenticate(parameters: parameters)
 
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "hello_session")
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "jwt_for_me")
 
         try XCTAssertRequest(
             networkInterceptor.requests[0],
