@@ -6,7 +6,7 @@ public enum InitializationStatus: Sendable {
     case failure(errors: [Error])
 }
 
-struct StartupClient {
+enum StartupClient {
     enum BootstrapRoute: BaseRouteType {
         case fetch(Path)
 
@@ -29,8 +29,8 @@ struct StartupClient {
     }
 
     private static let isInitializedPublisher = PassthroughSubject<InitializationStatus, Never>()
-    private static var bootstrapError: Error? = nil
-    private static var sessionHydrationError: Error? = nil
+    private static var bootstrapError: Error?
+    private static var sessionHydrationError: Error?
 
     static func start() async throws {
         if let expectedClientType {
@@ -56,7 +56,7 @@ struct StartupClient {
             } else {
                 isInitializedPublisher.send(.success)
             }
-        } catch (let error) {
+        } catch {
             isInitializedPublisher.send(.failure(errors: [error]))
         }
 
@@ -72,14 +72,14 @@ struct StartupClient {
             do {
                 _ = try await StytchClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
                 sessionHydrationError = nil
-            } catch (let error) {
+            } catch {
                 sessionHydrationError = error
             }
         case .b2b:
             do {
                 _ = try await StytchB2BClient.sessions.authenticate(parameters: .init(sessionDurationMinutes: nil))
                 sessionHydrationError = nil
-            } catch (let error) {
+            } catch {
                 sessionHydrationError = error
             }
         }
@@ -121,7 +121,7 @@ struct StartupClient {
             bootstrapError = nil
             Current.localStorage.bootstrapData = updatedBootstrapData.wrapped
             return updatedBootstrapData.wrapped
-        } catch (let error) {
+        } catch {
             bootstrapError = error
             if let currentBootstrapData = Current.localStorage.bootstrapData {
                 return currentBootstrapData
