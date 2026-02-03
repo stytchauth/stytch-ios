@@ -27,7 +27,7 @@ protocol StytchClientCommonInternal: StytchClientCommonPublic {
     static var shared: Self { get }
     static var clientType: ClientType { get }
 
-    static var isInitialized: AnyPublisher<Bool, Never> { get }
+    static var isInitialized: AnyPublisher<InitializationStatus, Never> { get }
 
     static func handle(url: URL, sessionDurationMinutes: Minutes) async throws -> DeeplinkHandledStatus<DeeplinkResponse, DeeplinkTokenType, DeeplinkRedirectType>
 }
@@ -135,7 +135,7 @@ public extension StytchClientCommonPublic {
      1. Attempting to call sessions.authenticate (if there's a session token cached on the device).
      2. Bootstrapping configuration, including DFP and captcha setup.
      */
-    static var isInitialized: AnyPublisher<Bool, Never> {
+    static var isInitialized: AnyPublisher<InitializationStatus, Never> {
         StartupClient.isInitialized
     }
 
