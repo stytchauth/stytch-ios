@@ -26,7 +26,7 @@ final class SessionManagerTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         _ = try await StytchClient.sessions.authenticate(parameters: parameters)
@@ -37,8 +37,8 @@ final class SessionManagerTestCase: BaseTestCase {
             method: .post(["session_duration_minutes": 15])
         )
 
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "jwt_for_me")
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "hello_session")
         XCTAssertNotNil(StytchClient.sessions.session)
     }
 
@@ -70,8 +70,8 @@ final class SessionManagerTestCase: BaseTestCase {
             ])
         )
 
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt_for_me"))
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("hello_session"))
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "jwt_for_me")
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "hello_session")
         XCTAssertNotNil(StytchClient.sessions.session)
     }
 
@@ -81,11 +81,11 @@ final class SessionManagerTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("opaque_all_day"))
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("i'm_jwt"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "opaque_all_day")
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "i'm_jwt")
 
         _ = try await StytchClient.sessions.revoke()
 
@@ -104,11 +104,11 @@ final class SessionManagerTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
-        XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("opaque_all_day"))
-        XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("i'm_jwt"))
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "opaque_all_day")
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "i'm_jwt")
 
         await XCTAssertThrowsErrorAsync(
             try await StytchClient.sessions.revoke(),
@@ -137,13 +137,10 @@ final class SessionManagerTestCase: BaseTestCase {
         XCTAssertNil(StytchClient.sessions.sessionToken)
         XCTAssertNil(StytchClient.sessions.sessionJwt)
 
-        if let tokens = SessionTokens(jwt: .jwt("jwt"), opaque: .opaque("token")) {
-            StytchClient.sessions.update(sessionTokens: tokens)
-            XCTAssertEqual(StytchClient.sessions.sessionToken, .opaque("token"))
-            XCTAssertEqual(StytchClient.sessions.sessionJwt, .jwt("jwt"))
-        } else {
-            XCTFail("SessionTokens should not be nil")
-        }
+        let tokens = SessionTokens(jwt: "jwt", opaque: "token")
+        StytchClient.sessions.update(sessionTokens: tokens)
+        XCTAssertEqual(StytchClient.sessions.sessionToken, "token")
+        XCTAssertEqual(StytchClient.sessions.sessionJwt, "jwt")
     }
 
     func testIntermediateSessionToken() {
@@ -152,7 +149,7 @@ final class SessionManagerTestCase: BaseTestCase {
         // Given we call update session with valid member session and tokens
         Current.sessionManager.updateSession(
             sessionType: .member(.mock),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         // And it correctly applies the values
@@ -190,7 +187,7 @@ final class SessionManagerTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         wait(for: [expectation], timeout: 1.0)
@@ -213,7 +210,7 @@ final class SessionManagerTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: nil,
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         wait(for: [expectation], timeout: 1.0)
@@ -224,7 +221,7 @@ final class SessionManagerTestCase: BaseTestCase {
         Current.timer = { _, _, _ in Self.mockTimer }
         Current.sessionManager.updateSession(
             sessionType: .user(.mockWithExpiredSession(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         XCTAssertNil(StytchClient.sessions.session)
@@ -241,7 +238,7 @@ final class SessionManagerTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         XCTAssertNotNil(Current.sessionManager.sessionToken)
@@ -271,7 +268,7 @@ final class SessionManagerTestCase: BaseTestCase {
 
         Current.sessionManager.updateSession(
             sessionType: .user(.mock(userId: "i_am_user")),
-            tokens: SessionTokens(jwt: .jwt("i'm_jwt"), opaque: .opaque("opaque_all_day"))
+            tokens: SessionTokens(jwt: "i'm_jwt", opaque: "opaque_all_day")
         )
 
         XCTAssertNotNil(Current.sessionManager.sessionToken)
