@@ -11,7 +11,16 @@ final class KeychainClientImplementation: KeychainClient {
     static let shared = KeychainClientImplementation()
     private let queue: DispatchQueue
     private let queueKey = DispatchSpecificKey<Void>()
-    var encryptionKey: SymmetricKey?
+    private var cachedEncryptionKey: SymmetricKey?
+    var encryptionKey: SymmetricKey? {
+        (try? safelyEnqueue {
+            if let cachedEncryptionKey {
+                return cachedEncryptionKey
+            }
+            cachedEncryptionKey = try? getEncryptionKey()
+            return cachedEncryptionKey
+        }) ?? nil
+    }
     private var isOnQueue: Bool {
         DispatchQueue.getSpecific(key: queueKey) != nil
     }
@@ -25,7 +34,6 @@ final class KeychainClientImplementation: KeychainClient {
     private init() {
         queue = DispatchQueue(label: "StytchKeychainClientQueue")
         queue.setSpecific(key: queueKey, value: ())
-        loadEncryptionKey()
         #if !os(tvOS) && !os(watchOS)
         contextWithoutUI.interactionNotAllowed = true
         #endif
@@ -33,7 +41,7 @@ final class KeychainClientImplementation: KeychainClient {
 
     func loadEncryptionKey() {
         try? safelyEnqueue {
-            encryptionKey = try? getEncryptionKey()
+            cachedEncryptionKey = try? getEncryptionKey()
         }
     }
 
