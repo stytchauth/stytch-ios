@@ -36,7 +36,7 @@ public struct Session: Sendable {
         authenticationFactors: [AuthenticationFactor],
         expiresAt: Date,
         lastAccessedAt: Date,
-        sessionId: Session.ID,
+        sessionId: Self.ID,
         startedAt: Date,
         userId: User.ID
     ) {
