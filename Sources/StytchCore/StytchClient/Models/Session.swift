@@ -30,6 +30,24 @@ public struct Session: Sendable {
     public let startedAt: Date
     /// The user id associated with this session.
     public let userId: User.ID
+
+    public init(
+        attributes: Attributes,
+        authenticationFactors: [AuthenticationFactor],
+        expiresAt: Date,
+        lastAccessedAt: Date,
+        sessionId: Self.ID,
+        startedAt: Date,
+        userId: User.ID
+    ) {
+        self.attributes = attributes
+        self.authenticationFactors = authenticationFactors
+        self.expiresAt = expiresAt
+        self.lastAccessedAt = lastAccessedAt
+        self.sessionId = sessionId
+        self.startedAt = startedAt
+        self.userId = userId
+    }
 }
 
 extension Session: Equatable {
@@ -77,6 +95,11 @@ public extension Session {
         public let ipAddress: String
         /// The user agent associated with a session.
         public let userAgent: String
+
+        public init(ipAddress: String, userAgent: String) {
+            self.ipAddress = ipAddress
+            self.userAgent = userAgent
+        }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.ipAddress == rhs.ipAddress &&

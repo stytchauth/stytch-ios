@@ -34,6 +34,38 @@ public struct User: Sendable {
     public let untrustedMetadata: JSON?
     /// The user's trusted metadata
     public let trustedMetadata: JSON?
+
+    public init(
+        createdAt: Date,
+        cryptoWallets: [CryptoWallet],
+        emails: [Email],
+        userId: Self.ID,
+        name: Name,
+        password: Password?,
+        phoneNumbers: [PhoneNumber],
+        providers: [Provider],
+        status: UserStatus,
+        totps: [TOTP],
+        webauthnRegistrations: [WebAuthNRegistration],
+        biometricRegistrations: [BiometricRegistration],
+        untrustedMetadata: JSON?,
+        trustedMetadata: JSON?
+    ) {
+        self.createdAt = createdAt
+        self.cryptoWallets = cryptoWallets
+        self.emails = emails
+        self.userId = userId
+        self.name = name
+        self.password = password
+        self.phoneNumbers = phoneNumbers
+        self.providers = providers
+        self.status = status
+        self.totps = totps
+        self.webauthnRegistrations = webauthnRegistrations
+        self.biometricRegistrations = biometricRegistrations
+        self.untrustedMetadata = untrustedMetadata
+        self.trustedMetadata = trustedMetadata
+    }
 }
 
 extension User: Equatable {
@@ -83,6 +115,11 @@ public extension User {
         let passwordId: ID
         let requiresReset: Bool
 
+        public init(passwordId: Self.ID, requiresReset: Bool) {
+            self.passwordId = passwordId
+            self.requiresReset = requiresReset
+        }
+
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.passwordId == rhs.passwordId &&
                 lhs.requiresReset == rhs.requiresReset
@@ -103,6 +140,13 @@ public extension User {
         /// The verification status of the cryptowallet.
         public let verified: Bool
 
+        public init(cryptoWalletId: Self.ID, cryptoWalletAddress: String, cryptoWalletType: String, verified: Bool) {
+            self.cryptoWalletId = cryptoWalletId
+            self.cryptoWalletAddress = cryptoWalletAddress
+            self.cryptoWalletType = cryptoWalletType
+            self.verified = verified
+        }
+
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.cryptoWalletId == rhs.cryptoWalletId &&
                 lhs.cryptoWalletAddress == rhs.cryptoWalletAddress &&
@@ -120,6 +164,12 @@ public extension User {
         let emailId: ID
         /// The verification status of the email.
         public let verified: Bool
+
+        public init(email: String, emailId: Self.ID, verified: Bool) {
+            self.email = email
+            self.emailId = emailId
+            self.verified = verified
+        }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.email == rhs.email &&
@@ -161,6 +211,13 @@ public extension User {
         public var id: ID { oauthUserRegistrationId }
         let oauthUserRegistrationId: ID
 
+        public init(providerSubject: String, providerType: String, profilePictureUrl: String?, oauthUserRegistrationId: Self.ID) {
+            self.providerSubject = providerSubject
+            self.providerType = providerType
+            self.profilePictureUrl = profilePictureUrl
+            self.oauthUserRegistrationId = oauthUserRegistrationId
+        }
+
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.providerSubject == rhs.providerSubject &&
                 lhs.providerType == rhs.providerType &&
@@ -178,6 +235,12 @@ public extension User {
         let phoneId: ID
         /// The verification status of the phone number.
         public let verified: Bool
+
+        public init(phoneNumber: String, phoneId: Self.ID, verified: Bool) {
+            self.phoneNumber = phoneNumber
+            self.phoneId = phoneId
+            self.verified = verified
+        }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.phoneNumber == rhs.phoneNumber &&
@@ -201,6 +264,11 @@ public extension User {
         /// The verification status of the TOTP.
         public let verified: Bool
 
+        public init(totpId: Self.ID, verified: Bool) {
+            self.totpId = totpId
+            self.verified = verified
+        }
+
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.totpId == rhs.totpId &&
                 lhs.verified == rhs.verified
@@ -219,6 +287,13 @@ public extension User {
         public var id: ID { webauthnRegistrationId }
         let webauthnRegistrationId: ID
 
+        public init(domain: String, userAgent: String, verified: Bool, webauthnRegistrationId: Self.ID) {
+            self.domain = domain
+            self.userAgent = userAgent
+            self.verified = verified
+            self.webauthnRegistrationId = webauthnRegistrationId
+        }
+
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.domain == rhs.domain &&
                 lhs.userAgent == rhs.userAgent &&
@@ -234,6 +309,11 @@ public extension User {
         /// The id of the registration.
         public var id: ID { biometricRegistrationId }
         let biometricRegistrationId: ID
+
+        public init(verified: Bool, biometricRegistrationId: Self.ID) {
+            self.verified = verified
+            self.biometricRegistrationId = biometricRegistrationId
+        }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.verified == rhs.verified &&
