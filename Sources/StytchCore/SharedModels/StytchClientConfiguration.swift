@@ -7,7 +7,6 @@ public struct StytchClientConfiguration: Equatable, Codable {
         case publicToken = "StytchPublicToken"
         case defaultSessionDuration
         case enableAutomaticSessionExtension
-        case hostUrl = "StytchHostURL"
         case dfppaDomain = "StytchDfppaDomain"
         case testDomain = "StytchTestDomain"
         case liveDomain = "StytchLiveDomain"
@@ -16,7 +15,6 @@ public struct StytchClientConfiguration: Equatable, Codable {
     public let publicToken: String
     public let defaultSessionDuration: Minutes
     public let enableAutomaticSessionExtension: Bool
-    public let hostUrl: URL?
     public let dfppaDomain: String?
     public let testDomain: String
     public let liveDomain: String
@@ -28,9 +26,6 @@ public struct StytchClientConfiguration: Equatable, Codable {
        - defaultSessionDuration:  The default session length in minutes, must be less than or equal to the value set in the Stytch Dashboard (Frontend SDKs > Session duration).
          Applies to all authentication calls unless explicitly overridden, defaults to 5 minutes.
        - enableAutomaticSessionExtension: If true, the session heartbeat will attempt to extend the session duration instead of only checking the validity.
-       - hostUrl: Generally this is your backend's base url, where your apple-app-site-association file is hosted.
-         This is an https url which will be used as the domain for setting session-token cookies to be sent to your servers on subsequent requests.
-         If not passed here, no cookies will be set on your behalf.
        - dfppaDomain: The domain that should be used for DFPPA
        - testDomain: The custom domain to use for Stytch API calls for test projects
        - liveDomain: The custom domain to use for Stytch API calls for live projects
@@ -39,7 +34,6 @@ public struct StytchClientConfiguration: Equatable, Codable {
         publicToken: String,
         defaultSessionDuration: Minutes = 5,
         enableAutomaticSessionExtension: Bool = false,
-        hostUrl: URL? = nil,
         dfppaDomain: String? = nil,
         testDomain: String = "test.stytch.com",
         liveDomain: String = "api.stytch.com"
@@ -47,7 +41,6 @@ public struct StytchClientConfiguration: Equatable, Codable {
         self.publicToken = publicToken
         self.defaultSessionDuration = defaultSessionDuration
         self.enableAutomaticSessionExtension = enableAutomaticSessionExtension
-        self.hostUrl = hostUrl
         self.dfppaDomain = dfppaDomain
         self.testDomain = testDomain
         self.liveDomain = liveDomain
@@ -80,17 +73,5 @@ public extension StytchClientConfiguration {
         dfppaDomain = try container.decode(key: .dfppaDomain)
         testDomain = try container.decode(key: .testDomain)
         liveDomain = try container.decode(key: .liveDomain)
-        do {
-            hostUrl = try container.decode(key: .hostUrl)
-        } catch {
-            guard let urlString: String = try? container.decode(key: .hostUrl) else {
-                hostUrl = nil
-                return
-            }
-            guard let url = URL(string: urlString) else {
-                throw DecodingError.dataCorruptedError(forKey: .hostUrl, in: container, debugDescription: "Not a valid hostUrl URL")
-            }
-            hostUrl = url
-        }
     }
 }

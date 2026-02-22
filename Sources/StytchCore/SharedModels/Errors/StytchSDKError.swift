@@ -173,7 +173,7 @@ public class StytchSDKNotConfiguredError: StytchSDKError {
     init(clientName: String) {
         self.clientName = clientName
         super.init(
-            message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:hostUrl:)` prior to other \(clientName) calls.",
+            message: "\(clientName) not yet configured. Must include a `StytchConfiguration.plist` in your main bundle or call `\(clientName).configure(publicToken:)` prior to other \(clientName) calls.",
             options: .init(
                 errorType: "sdk_not_configured",
                 url: .readmeUrl(withFragment: "configuration")
