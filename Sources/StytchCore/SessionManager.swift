@@ -189,7 +189,6 @@ extension SessionManager {
                     return nil
                 }
             } catch {
-                print("Error getting IST: \(error)")
                 return nil
             }
         }
@@ -201,7 +200,7 @@ extension SessionManager {
                     removeIntermediateSessionToken()
                 }
             } catch {
-                print("Error setting IST: \(error)")
+                // Do Nothing
             }
         }
     }
