@@ -4,6 +4,7 @@ import Foundation
 protocol KeychainClient: AnyObject {
     var encryptionKey: SymmetricKey? { get }
     var didInitializeKeychainData: Bool { get }
+
     func getEncryptionKey() throws
     func getQueryResults(item: KeychainItem) throws -> [KeychainQueryResult]
     func valueExistsForItem(item: KeychainItem) -> Bool

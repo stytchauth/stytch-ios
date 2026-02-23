@@ -34,8 +34,9 @@ final class KeychainClientImplementation: KeychainClient {
             try? getEncryptionKey()
             #endif
             return cachedEncryptionKey
-        }) ?? nil
+        })
     }
+
     private var isOnQueue: Bool {
         DispatchQueue.getSpecific(key: queueKey) != nil
     }
