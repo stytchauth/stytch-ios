@@ -18,7 +18,7 @@ extension NetworkingClient {
         let publicToken = configuration.publicToken
 
         let authToken: String
-        if let sessionToken = Current.sessionManager.sessionToken?.value, sessionToken.isEmpty == false {
+        if let sessionToken = Current.sessionManager.sessionToken, sessionToken.isEmpty == false {
             authToken = "\(publicToken):\(sessionToken)".base64Encoded()
         } else {
             authToken = "\(publicToken):\(publicToken)".base64Encoded()

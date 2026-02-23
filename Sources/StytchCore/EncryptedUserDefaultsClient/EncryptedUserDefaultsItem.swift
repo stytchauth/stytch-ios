@@ -18,8 +18,8 @@ extension EncryptedUserDefaultsItem {
 extension EncryptedUserDefaultsItem {
     static let biometricKeyRegistration: Self = .init(name: "stytch_biometric_key_registration")
 
-    static let sessionToken: Self = .init(name: SessionToken.Kind.opaque.name)
-    static let sessionJwt: Self = .init(name: SessionToken.Kind.jwt.name)
+    static let sessionToken: Self = .init(name: "stytch_session")
+    static let sessionJwt: Self = .init(name: "stytch_session_jwt")
     static let intermediateSessionToken: Self = .init(name: "stytch_intermediate_session_token")
 
     static let codeVerifierPKCE: Self = .init(name: "stytch_code_verifier_pkce")

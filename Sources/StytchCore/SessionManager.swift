@@ -28,11 +28,11 @@ class SessionManager {
     @Dependency(\.keychainClient) private var keychainClient
 
     var hasValidSessionToken: Bool {
-        sessionToken != nil && sessionToken?.value.isEmpty == false
+        sessionToken != nil && sessionToken?.isEmpty == false
     }
 
     var hasValidSessionJwt: Bool {
-        sessionJwt != nil && sessionJwt?.value.isEmpty == false
+        sessionJwt != nil && sessionJwt?.isEmpty == false
     }
 
     var hasValidIntermediateSessionToken: Bool {
@@ -95,10 +95,10 @@ class SessionManager {
 
     func clearEmptyTokens() {
         // Clear any successfully cached empty string on startup
-        if let value = sessionToken?.value, value.isEmpty == true {
+        if let value = sessionToken, value.isEmpty == true {
             sessionToken = nil
         }
-        if let value = sessionJwt?.value, value.isEmpty == true {
+        if let value = sessionJwt, value.isEmpty == true {
             sessionJwt = nil
         }
         if let value = intermediateSessionToken, value.isEmpty == true {
@@ -115,30 +115,18 @@ class SessionManager {
             resetSession()
         }
     }
-
-    @objc func cookiesDidUpdate(notification: Notification) {
-        let storage = (notification.object as? HTTPCookieStorage) ?? .shared
-
-        if let jwtCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.jwt.name, date: date()) {
-            sessionJwt = .jwt(jwtCookieValue)
-        }
-
-        if let opaqueCookieValue = storage.cookieValue(cookieName: SessionToken.Kind.opaque.name, date: date()) {
-            sessionToken = .opaque(opaqueCookieValue)
-        }
-    }
 }
 
 // Session Tokens
 extension SessionManager {
     private(set) var sessionToken: SessionToken? {
         get {
-            try? userDefaultsClient.getStringValue(.sessionToken).map(SessionToken.opaque)
+            try? userDefaultsClient.getStringValue(.sessionToken)
         }
         set {
             let userDefaultsItem: EncryptedUserDefaultsItem = .sessionToken
             if let newValue = newValue {
-                try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
+                try? userDefaultsClient.setStringValue(newValue, for: userDefaultsItem)
             } else {
                 try? userDefaultsClient.removeItem(item: userDefaultsItem)
             }
@@ -147,12 +135,12 @@ extension SessionManager {
 
     private(set) var sessionJwt: SessionToken? {
         get {
-            try? userDefaultsClient.getStringValue(.sessionJwt).map(SessionToken.jwt)
+            try? userDefaultsClient.getStringValue(.sessionJwt)
         }
         set {
             let userDefaultsItem: EncryptedUserDefaultsItem = .sessionJwt
             if let newValue = newValue {
-                try? userDefaultsClient.setStringValue(newValue.value, for: userDefaultsItem)
+                try? userDefaultsClient.setStringValue(newValue, for: userDefaultsItem)
             } else {
                 try? userDefaultsClient.removeItem(item: userDefaultsItem)
             }

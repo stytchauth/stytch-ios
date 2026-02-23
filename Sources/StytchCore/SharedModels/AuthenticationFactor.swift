@@ -17,6 +17,12 @@ public struct AuthenticationFactor: Sendable {
     public let kind: String
     /// The date this factor was last used to authenticate.
     public let lastAuthenticatedAt: Date
+
+    public init(rawData: JSON, kind: String, lastAuthenticatedAt: Date) {
+        self.rawData = rawData
+        self.kind = kind
+        self.lastAuthenticatedAt = lastAuthenticatedAt
+    }
 }
 
 extension AuthenticationFactor: Equatable {
