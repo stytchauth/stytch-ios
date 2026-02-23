@@ -69,6 +69,13 @@ extension StytchClientCommonInternal {
                 }
             }
         }
+        NotificationCenter.default.addObserver(forName: UIApplication.protectedDataDidBecomeAvailableNotification, object: nil, queue: nil) { _ in
+            Task {
+                if (!Current.keychainClient.didInitializeKeychainData) {
+                    try? Current.keychainClient.getEncryptionKey()
+                }
+            }
+        }
         #endif
 
         Task {

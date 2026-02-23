@@ -4,6 +4,9 @@ import Security
 #if !os(tvOS)
 import LocalAuthentication
 #endif
+#if os(iOS)
+import UIKit
+#endif
 
 let ENCRYPTEDUSERDEFAULTSKEYNAME = "EncryptedUserDefaultsKey"
 
@@ -12,12 +15,24 @@ final class KeychainClientImplementation: KeychainClient {
     private let queue: DispatchQueue
     private let queueKey = DispatchSpecificKey<Void>()
     private var cachedEncryptionKey: SymmetricKey?
+    var didInitializeKeychainData = false
     var encryptionKey: SymmetricKey? {
         (try? safelyEnqueue {
             if let cachedEncryptionKey {
                 return cachedEncryptionKey
             }
-            cachedEncryptionKey = try? getEncryptionKey()
+            #if os(iOS)
+            if UIApplication.shared.isProtectedDataAvailable {
+                try? getEncryptionKey()
+                didInitializeKeychainData = true
+            } else {
+                // For some reason, we are trying to read the encryption key before protected data became available
+                // Log that this happened (which it hopefully won't?), but leave the behavior up to the caller (EncryptedUserDefaultsClient) to handle a missing key (throw an error)
+                StytchConsoleLogger.error(message: "Attempted to read encryption key but UIApplication.shared.isProtectedDataAvailable was false")
+            }
+            #else
+            try? getEncryptionKey()
+            #endif
             return cachedEncryptionKey
         }) ?? nil
     }
@@ -39,12 +54,6 @@ final class KeychainClientImplementation: KeychainClient {
         #endif
     }
 
-    func loadEncryptionKey() {
-        try? safelyEnqueue {
-            cachedEncryptionKey = try? getEncryptionKey()
-        }
-    }
-
     func safelyEnqueue<T>(_ block: () throws -> T) throws -> T {
         if isOnQueue {
             return try block()
@@ -53,18 +62,19 @@ final class KeychainClientImplementation: KeychainClient {
         }
     }
 
-    private func getEncryptionKey() throws -> SymmetricKey {
+    func getEncryptionKey() throws {
         try safelyEnqueue {
             let result = try getFirstQueryResult(KeychainItem.encryptionKey)
             guard let result else {
-                // Key doesn't exist so create it
+                // At this point, we know that protected data IS available, so if the keychain returned nil, then it means the key TRULY doesn't exist, and so we should create a new one
                 let data = SymmetricKey(size: .bits256).withUnsafeBytes {
                     Data(Array($0))
                 }
                 try setValueForItem(value: .init(data: data, account: ENCRYPTEDUSERDEFAULTSKEYNAME, label: nil, generic: nil, accessPolicy: nil), item: .encryptionKey)
-                return SymmetricKey(data: data)
+                cachedEncryptionKey = SymmetricKey(data: data)
+                return
             }
-            return SymmetricKey(data: result.data)
+            cachedEncryptionKey = SymmetricKey(data: result.data)
         }
     }
 
