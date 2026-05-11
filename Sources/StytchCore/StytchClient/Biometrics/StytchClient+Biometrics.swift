@@ -168,9 +168,6 @@ public extension StytchClient {
             }
             LocalAuthenticationContextManager.laContext = LAContext()
             LocalAuthenticationContextManager.updateLaContextStrings(strings: parameters.promptStrings)
-            guard try await LocalAuthenticationContextManager.localAuthenticationContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: parameters.promptStrings.localizedReason) else {
-                throw StytchSDKError.biometricAuthenticationFailed
-            }
 
             try copyBiometricRegistrationIDToKeychainIfNeeded(privateKeyRegistrationQueryResult)
 
