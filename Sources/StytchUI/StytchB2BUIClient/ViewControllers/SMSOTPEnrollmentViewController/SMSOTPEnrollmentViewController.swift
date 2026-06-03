@@ -1,5 +1,6 @@
 import AuthenticationServices
 import PhoneNumberKit
+import PhoneNumberKitUI
 import StytchCore
 import UIKit
 

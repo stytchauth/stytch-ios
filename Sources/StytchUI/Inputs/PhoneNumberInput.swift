@@ -1,4 +1,5 @@
 import PhoneNumberKit
+import PhoneNumberKitUI
 import UIKit
 
 final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
@@ -25,7 +26,7 @@ final class PhoneNumberInput: TextInputView<PhoneNumberInputContainer> {
         }
 
         textInput.countrySelectorButton.addTarget(self, action: #selector(didTapButton(sender:)), for: .primaryActionTriggered)
-        PhoneNumberKit.CountryCodePicker.forceModalPresentation = true
+        CountryCodePicker.forceModalPresentation = true
         textInput.textField.delegate = self
         textInput.textField.returnKeyType = .done
     }
@@ -56,7 +57,7 @@ extension PhoneNumberInput: UITextFieldDelegate {
 }
 
 extension PhoneNumberInput: CountryCodePickerDelegate {
-    func countryCodePickerViewControllerWillDissmiss(_ _: PhoneNumberKit.CountryCodePickerViewController) {}
+    func countryCodePickerViewControllerWillDissmiss(_ _: CountryCodePickerViewController) {}
 
     func countryCodePickerViewControllerDidDissmiss() {}
 

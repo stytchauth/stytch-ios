@@ -15,7 +15,8 @@ let package = Package(
         .library(name: "StytchUI", targets: ["StytchUI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "4.1.4"),
+        .package(url: "https://github.com/PhoneNumberKit/PhoneNumberKit", from: "5.0.0"),
+        .package(url: "https://github.com/PhoneNumberKit/PhoneNumberKitUI", from: "1.0.0"),
         .package(url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk", from: "18.8.1"),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.2"),
         .package(url: "https://github.com/stytchauth/stytch-ios-dfp.git", from: "1.0.5"),
@@ -26,6 +27,7 @@ let package = Package(
             dependencies: [
                 .target(name: "StytchCore"),
                 .product(name: "PhoneNumberKit", package: "PhoneNumberKit"),
+                .product(name: "PhoneNumberKitUI", package: "PhoneNumberKitUI"),
             ],
             resources: [
                 .process("PrivacyInfo.xcprivacy"),

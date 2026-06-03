@@ -54,3 +54,4 @@ Stytch/DemoApps/StytchDemo/macOS/macOS.entitlements
 .mint/
 .bundle/
 vendor/
+/.intent

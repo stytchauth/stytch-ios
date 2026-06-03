@@ -12,11 +12,20 @@
       },
       {
         "package": "PhoneNumberKit",
-        "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit",
+        "repositoryURL": "https://github.com/PhoneNumberKit/PhoneNumberKit",
         "state": {
           "branch": null,
-          "revision": "8c369005948985d1c6fb396716a3f883d30639ab",
-          "version": "4.2.3"
+          "revision": "52bd68dffa07ec7fc42b9851911c59e9d57fc906",
+          "version": "5.0.0"
+        }
+      },
+      {
+        "package": "PhoneNumberKitUI",
+        "repositoryURL": "https://github.com/PhoneNumberKit/PhoneNumberKitUI",
+        "state": {
+          "branch": null,
+          "revision": "94b6237c1d046a649d390729b8c0dd1d80a8bf1a",
+          "version": "1.0.0"
         }
       },
       {
