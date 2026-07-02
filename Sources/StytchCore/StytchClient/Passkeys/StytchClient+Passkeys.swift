@@ -320,24 +320,11 @@ extension StytchClient.Passkeys {
 }
 
 public struct PasskeysUpdateResponseData: Codable, Sendable {
-    private enum CodingKeys: CodingKey {
-        case webauthnRegistrationId
-    }
+    /// The updated WebAuthN registration.
+    public let webauthnRegistration: User.WebAuthNRegistration
 
-    let webauthnRegistrationId: User.WebAuthNRegistration.ID
-
-    init(webauthnRegistrationId: User.WebAuthNRegistration.ID) {
-        self.webauthnRegistrationId = webauthnRegistrationId
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(webauthnRegistrationId, forKey: .webauthnRegistrationId)
+    init(webauthnRegistration: User.WebAuthNRegistration) {
+        self.webauthnRegistration = webauthnRegistration
     }
 }
 
