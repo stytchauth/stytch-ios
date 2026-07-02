@@ -115,7 +115,7 @@ extension Session {
                         "type": "magic_link",
                         "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: refDate.addingTimeInterval(-30))),
                     ],
-                    kind: "magic_link",
+                    kind: .magicLink,
                     lastAuthenticatedAt: refDate.addingTimeInterval(-30)
                 ),
             ],
@@ -136,7 +136,7 @@ extension Session {
                         "type": "magic_link",
                         "last_authenticated_at": JSON(stringLiteral: ISO8601DateFormatter().string(from: Date.distantPast)),
                     ],
-                    kind: "magic_link",
+                    kind: .magicLink,
                     lastAuthenticatedAt: Date.distantPast
                 ),
             ],
