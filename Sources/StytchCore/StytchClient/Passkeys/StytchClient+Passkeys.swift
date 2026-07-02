@@ -324,20 +324,22 @@ public struct PasskeysUpdateResponseData: Codable, Sendable {
         case webauthnRegistrationId
     }
 
-    let webauthnRegistrationId: User.WebAuthNRegistration.ID
+    /// The server does not include this field in the update response, so it is
+    /// decoded optionally to keep a successful update from throwing a `DecodingError`.
+    let webauthnRegistrationId: User.WebAuthNRegistration.ID?
 
-    init(webauthnRegistrationId: User.WebAuthNRegistration.ID) {
+    init(webauthnRegistrationId: User.WebAuthNRegistration.ID?) {
         self.webauthnRegistrationId = webauthnRegistrationId
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
+        webauthnRegistrationId = try container.optionalDecode(key: .webauthnRegistrationId)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(webauthnRegistrationId, forKey: .webauthnRegistrationId)
+        try container.encodeIfPresent(webauthnRegistrationId, forKey: .webauthnRegistrationId)
     }
 }
 

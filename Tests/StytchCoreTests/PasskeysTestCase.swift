@@ -119,6 +119,23 @@ final class PasskeysTestCase: BaseTestCase {
             method: .put(["name": "Cool new name"])
         )
     }
+
+    // The live update endpoint does not return `webauthn_registration_id`, so a
+    // successful update must decode without it.
+    func testUpdateWithoutRegistrationIdInResponse() async throws {
+        let updateResponse: PasskeysUpdateResponseData = .init(
+            webauthnRegistrationId: nil
+        )
+        networkInterceptor.responses {
+            Response(requestId: "", statusCode: 200, wrapped: updateResponse)
+        }
+        let parameters: Base.UpdateParameters = .init(
+            id: "webauthn-registration-id",
+            name: "Cool new name"
+        )
+        let response = try await StytchClient.passkeys.update(parameters: parameters)
+        XCTAssertNil(response.wrapped.webauthnRegistrationId)
+    }
 }
 
 extension PasskeysUpdateResponse {
