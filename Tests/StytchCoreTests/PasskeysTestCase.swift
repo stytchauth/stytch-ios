@@ -101,40 +101,44 @@ final class PasskeysTestCase: BaseTestCase {
     }
 
     func testUpdate() async throws {
-        let updateResponse: PasskeysUpdateResponseData = .init(
-            webauthnRegistrationId: "webauthn-registration-id"
-        )
         networkInterceptor.responses {
-            Response(requestId: "", statusCode: 200, wrapped: updateResponse)
             PasskeysUpdateResponse.mock
         }
         let parameters: Base.UpdateParameters = .init(
             id: "webauthn-registration-id",
             name: "Cool new name"
         )
-        _ = try await StytchClient.passkeys.update(parameters: parameters)
+        let response = try await StytchClient.passkeys.update(parameters: parameters)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/update/webauthn-registration-id",
             method: .put(["name": "Cool new name"])
         )
+        XCTAssertEqual(response.wrapped.webauthnRegistration.name, "Cool new name")
     }
 
-    // The live update endpoint does not return `webauthn_registration_id`, so a
-    // successful update must decode without it.
-    func testUpdateWithoutRegistrationIdInResponse() async throws {
-        let updateResponse: PasskeysUpdateResponseData = .init(
-            webauthnRegistrationId: nil
-        )
-        networkInterceptor.responses {
-            Response(requestId: "", statusCode: 200, wrapped: updateResponse)
+    // Pins the live response shape: the updated registration is returned nested
+    // under `webauthn_registration`, not as a top-level `webauthn_registration_id`.
+    func testUpdateResponseDecoding() throws {
+        let json = """
+        {
+            "request_id": "request-id-test-1234",
+            "status_code": 200,
+            "webauthn_registration": {
+                "authenticator_type": "",
+                "domain": "example.com",
+                "name": "My passkey",
+                "user_agent": "",
+                "verified": true,
+                "webauthn_registration_id": "webauthn-registration-id"
+            }
         }
-        let parameters: Base.UpdateParameters = .init(
-            id: "webauthn-registration-id",
-            name: "Cool new name"
-        )
-        let response = try await StytchClient.passkeys.update(parameters: parameters)
-        XCTAssertNil(response.wrapped.webauthnRegistrationId)
+        """
+        let response = try Current.jsonDecoder.decode(PasskeysUpdateResponse.self, from: Data(json.utf8))
+        XCTAssertEqual(response.wrapped.webauthnRegistration.id, "webauthn-registration-id")
+        XCTAssertEqual(response.wrapped.webauthnRegistration.name, "My passkey")
+        XCTAssertEqual(response.wrapped.webauthnRegistration.domain, "example.com")
+        XCTAssertTrue(response.wrapped.webauthnRegistration.verified)
     }
 }
 
@@ -144,7 +148,13 @@ extension PasskeysUpdateResponse {
             requestId: "1234",
             statusCode: 200,
             wrapped: .init(
-                webauthnRegistrationId: "webauthn-registration-id"
+                webauthnRegistration: .init(
+                    domain: "example.com",
+                    userAgent: "",
+                    verified: true,
+                    name: "Cool new name",
+                    webauthnRegistrationId: "webauthn-registration-id"
+                )
             )
         )
     }

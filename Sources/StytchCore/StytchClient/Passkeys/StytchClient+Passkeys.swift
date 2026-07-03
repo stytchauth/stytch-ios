@@ -320,26 +320,11 @@ extension StytchClient.Passkeys {
 }
 
 public struct PasskeysUpdateResponseData: Codable, Sendable {
-    private enum CodingKeys: CodingKey {
-        case webauthnRegistrationId
-    }
+    /// The updated WebAuthN registration.
+    public let webauthnRegistration: User.WebAuthNRegistration
 
-    /// The server does not include this field in the update response, so it is
-    /// decoded optionally to keep a successful update from throwing a `DecodingError`.
-    let webauthnRegistrationId: User.WebAuthNRegistration.ID?
-
-    init(webauthnRegistrationId: User.WebAuthNRegistration.ID?) {
-        self.webauthnRegistrationId = webauthnRegistrationId
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        webauthnRegistrationId = try container.optionalDecode(key: .webauthnRegistrationId)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(webauthnRegistrationId, forKey: .webauthnRegistrationId)
+    init(webauthnRegistration: User.WebAuthNRegistration) {
+        self.webauthnRegistration = webauthnRegistration
     }
 }
 

@@ -283,14 +283,17 @@ public extension User {
         public let userAgent: String
         /// The verification status of the registration.
         public let verified: Bool
+        /// The user-provided name of the registration, if one has been set.
+        public let name: String?
         /// The id of the registration.
         public var id: ID { webauthnRegistrationId }
         let webauthnRegistrationId: ID
 
-        public init(domain: String, userAgent: String, verified: Bool, webauthnRegistrationId: Self.ID) {
+        public init(domain: String, userAgent: String, verified: Bool, name: String? = nil, webauthnRegistrationId: Self.ID) {
             self.domain = domain
             self.userAgent = userAgent
             self.verified = verified
+            self.name = name
             self.webauthnRegistrationId = webauthnRegistrationId
         }
 
@@ -298,6 +301,7 @@ public extension User {
             lhs.domain == rhs.domain &&
                 lhs.userAgent == rhs.userAgent &&
                 lhs.verified == rhs.verified &&
+                lhs.name == rhs.name &&
                 lhs.webauthnRegistrationId == rhs.webauthnRegistrationId
         }
     }
