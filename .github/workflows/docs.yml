@@ -52,7 +52,7 @@ jobs:
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   generate-docs:
-    runs-on: depot-macos-15
+    runs-on: osx
 
     needs: set-matrix
 
