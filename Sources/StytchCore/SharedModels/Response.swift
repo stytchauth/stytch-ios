@@ -10,7 +10,7 @@ public struct Response<Wrapped: Decodable & Sendable>: Decodable, Sendable {
     }
 
     /// The underlying wrapped value. It can be accessed directly or via the subscript.
-    public let wrapped: Wrapped
+    public internal(set) var wrapped: Wrapped
 
     /// The id for the request.
     public let requestId: String

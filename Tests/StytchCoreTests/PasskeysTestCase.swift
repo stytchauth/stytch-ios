@@ -59,9 +59,13 @@ final class PasskeysTestCase: BaseTestCase {
                 )
             }
         }
+        let attestationObject = AttestationObjectFixture.attestationObject(
+            flags: AttestationObjectFixture.syncedPasskeyFlags,
+            aaguid: AttestationObjectFixture.iCloudKeychainAAGUIDBytes
+        )
         Current.passkeysClient.registerCredential = { _, _, _, _ in
             MockRegistration(
-                rawAttestationObject: .init("fake_attestation_data".utf8),
+                rawAttestationObject: attestationObject,
                 rawClientDataJSON: .init("fake_json".utf8),
                 credentialID: .init("fake_id".utf8)
             )
@@ -71,6 +75,9 @@ final class PasskeysTestCase: BaseTestCase {
         XCTAssertEqual(response.webauthnRegistrationId, webauthnRegistrationId)
         XCTAssertEqual(response.user.webauthnRegistrations.first?.authenticatorType, "platform")
         XCTAssertEqual(response.user.webauthnRegistrations.first?.name, "My device passkey")
+        XCTAssertEqual(response.wrapped.authenticatorInfo?.aaguid, AttestationObjectFixture.iCloudKeychainAAGUID)
+        XCTAssertEqual(response.wrapped.authenticatorInfo?.isBackupEligible, true)
+        XCTAssertEqual(response.wrapped.authenticatorInfo?.isBackedUp, true)
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
@@ -80,7 +87,7 @@ final class PasskeysTestCase: BaseTestCase {
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register",
             method: .post([
-                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\"},\"type\":\"public-key\"}",
+                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"\(attestationObject.base64UrlEncoded())\"},\"type\":\"public-key\"}",
             ])
         )
     }
