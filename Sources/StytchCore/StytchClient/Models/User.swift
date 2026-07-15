@@ -279,29 +279,40 @@ public extension User {
         public typealias ID = Identifier<Self, String>
         /// The domain of the WebAuthN registration.
         public let domain: String
+        /// The requested authenticator type of the Passkey or WebAuthn device.
+        public let authenticatorType: String?
+        /// The user-friendly name of the Passkey or WebAuthn registration.
+        public let name: String?
         /// The user agent of the registration.
         public let userAgent: String
         /// The verification status of the registration.
         public let verified: Bool
-        /// The user-provided name of the registration, if one has been set.
-        public let name: String?
         /// The id of the registration.
         public var id: ID { webauthnRegistrationId }
         let webauthnRegistrationId: ID
 
-        public init(domain: String, userAgent: String, verified: Bool, name: String? = nil, webauthnRegistrationId: Self.ID) {
+        public init(
+            domain: String,
+            authenticatorType: String? = nil,
+            name: String? = nil,
+            userAgent: String,
+            verified: Bool,
+            webauthnRegistrationId: Self.ID
+        ) {
             self.domain = domain
+            self.authenticatorType = authenticatorType
+            self.name = name
             self.userAgent = userAgent
             self.verified = verified
-            self.name = name
             self.webauthnRegistrationId = webauthnRegistrationId
         }
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.domain == rhs.domain &&
+                lhs.authenticatorType == rhs.authenticatorType &&
+                lhs.name == rhs.name &&
                 lhs.userAgent == rhs.userAgent &&
                 lhs.verified == rhs.verified &&
-                lhs.name == rhs.name &&
                 lhs.webauthnRegistrationId == rhs.webauthnRegistrationId
         }
     }
