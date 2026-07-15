@@ -10,15 +10,53 @@ final class PasskeysTestCase: BaseTestCase {
     private typealias Base = StytchClient.Passkeys
 
     func testRegister() async throws {
+        let userId: User.ID = "user_id_123"
+        let webauthnRegistrationId: User.WebAuthNRegistration.ID = "webauthn-registration-id"
         let startResponse: Base.RegisterStartResponseData = .init(
-            userId: "user_id_123",
+            userId: userId,
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
             user: StytchClient.Passkeys.PasskeysUser(displayName: "My Stytch Username")
         )
         networkInterceptor.responses {
             Success {
                 Response(requestId: "", statusCode: 200, wrapped: startResponse)
-                BasicResponse(requestId: "request_id_123", statusCode: 200)
+                Base.RegisterResponse(
+                    requestId: "request_id_123",
+                    statusCode: 200,
+                    wrapped: .init(
+                        userId: userId,
+                        webauthnRegistrationId: webauthnRegistrationId,
+                        user: .init(
+                            createdAt: Current.date(),
+                            cryptoWallets: [],
+                            emails: [],
+                            userId: userId,
+                            name: .init(firstName: "first", lastName: "last", middleName: nil),
+                            password: nil,
+                            phoneNumbers: [],
+                            providers: [],
+                            status: .active,
+                            totps: [],
+                            webauthnRegistrations: [
+                                .init(
+                                    domain: "something.blah.com",
+                                    authenticatorType: "platform",
+                                    name: "My device passkey",
+                                    userAgent: "iOS",
+                                    verified: true,
+                                    webauthnRegistrationId: webauthnRegistrationId
+                                ),
+                            ],
+                            biometricRegistrations: [],
+                            untrustedMetadata: nil,
+                            trustedMetadata: nil
+                        ),
+                        sessionToken: "hello_session",
+                        sessionJwt: "jwt_for_me",
+                        session: .mock(userId: userId),
+                        userDevice: nil
+                    )
+                )
             }
         }
         Current.passkeysClient.registerCredential = { _, _, _, _ in
@@ -28,7 +66,11 @@ final class PasskeysTestCase: BaseTestCase {
                 credentialID: .init("fake_id".utf8)
             )
         }
-        _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        let response = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        XCTAssertEqual(response.userId, userId)
+        XCTAssertEqual(response.webauthnRegistrationId, webauthnRegistrationId)
+        XCTAssertEqual(response.user.webauthnRegistrations.first?.authenticatorType, "platform")
+        XCTAssertEqual(response.user.webauthnRegistrations.first?.name, "My device passkey")
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
@@ -150,9 +192,9 @@ extension PasskeysUpdateResponse {
             wrapped: .init(
                 webauthnRegistration: .init(
                     domain: "example.com",
+                    name: "Cool new name",
                     userAgent: "",
                     verified: true,
-                    name: "Cool new name",
                     webauthnRegistrationId: "webauthn-registration-id"
                 )
             )
