@@ -6,8 +6,8 @@ import Foundation
 #if !os(watchOS)
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
-    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns client-parsed authenticator info (AAGUID and backup flags) from the ceremony's attestation object — data Stytch does not store, so it is only available at this moment.
-    func register(parameters: RegisterParameters, completion: @escaping Completion<(response: RegisterResponse, authenticatorInfo: PasskeyAuthenticatorInfo?)>) {
+    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns the ceremony's raw CBOR attestation object, whose attested credential data (e.g. the AAGUID identifying the passkey provider) exists only at registration time and is not stored by Stytch — callers may parse it to power passkey-management UIs.
+    func register(parameters: RegisterParameters, completion: @escaping Completion<(response: RegisterResponse, attestationObject: Data)>) {
         Task {
             do {
                 completion(.success(try await register(parameters: parameters)))
@@ -17,8 +17,8 @@ public extension StytchClient.Passkeys {
         }
     }
 
-    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns client-parsed authenticator info (AAGUID and backup flags) from the ceremony's attestation object — data Stytch does not store, so it is only available at this moment.
-    func register(parameters: RegisterParameters) -> AnyPublisher<(response: RegisterResponse, authenticatorInfo: PasskeyAuthenticatorInfo?), Error> {
+    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns the ceremony's raw CBOR attestation object, whose attested credential data (e.g. the AAGUID identifying the passkey provider) exists only at registration time and is not stored by Stytch — callers may parse it to power passkey-management UIs.
+    func register(parameters: RegisterParameters) -> AnyPublisher<(response: RegisterResponse, attestationObject: Data), Error> {
         return Deferred {
             Future({ promise in
                 Task {

@@ -59,25 +59,19 @@ final class PasskeysTestCase: BaseTestCase {
                 )
             }
         }
-        let attestationObject = AttestationObjectFixture.attestationObject(
-            flags: AttestationObjectFixture.syncedPasskeyFlags,
-            aaguid: AttestationObjectFixture.iCloudKeychainAAGUIDBytes
-        )
         Current.passkeysClient.registerCredential = { _, _, _, _ in
             MockRegistration(
-                rawAttestationObject: attestationObject,
+                rawAttestationObject: .init("fake_attestation_data".utf8),
                 rawClientDataJSON: .init("fake_json".utf8),
                 credentialID: .init("fake_id".utf8)
             )
         }
-        let (response, authenticatorInfo) = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        let (response, attestationObject) = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
         XCTAssertEqual(response.userId, userId)
         XCTAssertEqual(response.webauthnRegistrationId, webauthnRegistrationId)
         XCTAssertEqual(response.user.webauthnRegistrations.first?.authenticatorType, "platform")
         XCTAssertEqual(response.user.webauthnRegistrations.first?.name, "My device passkey")
-        XCTAssertEqual(authenticatorInfo?.aaguid, AttestationObjectFixture.iCloudKeychainAAGUID)
-        XCTAssertEqual(authenticatorInfo?.isBackupEligible, true)
-        XCTAssertEqual(authenticatorInfo?.isBackedUp, true)
+        XCTAssertEqual(attestationObject, Data("fake_attestation_data".utf8))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
@@ -87,7 +81,7 @@ final class PasskeysTestCase: BaseTestCase {
             networkInterceptor.requests[1],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register",
             method: .post([
-                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"\(attestationObject.base64UrlEncoded())\"},\"type\":\"public-key\"}",
+                "public_key_credential": "{\"rawId\":\"ZmFrZV9pZA\",\"id\":\"ZmFrZV9pZA\",\"response\":{\"clientDataJSON\":\"ZmFrZV9qc29u\",\"attestationObject\":\"ZmFrZV9hdHRlc3RhdGlvbl9kYXRh\"},\"type\":\"public-key\"}",
             ])
         )
     }
