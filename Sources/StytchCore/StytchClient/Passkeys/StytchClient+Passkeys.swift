@@ -20,8 +20,8 @@ public extension StytchClient {
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-        public func register(parameters: RegisterParameters) async throws -> RegisterResponse {
+        /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns client-parsed authenticator info (AAGUID and backup flags) from the ceremony's attestation object — data Stytch does not store, so it is only available at this moment.
+        public func register(parameters: RegisterParameters) async throws -> (response: RegisterResponse, authenticatorInfo: PasskeyAuthenticatorInfo?) {
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
                 parameters: parameters
@@ -36,7 +36,7 @@ public extension StytchClient {
 
             guard let attestationObject = credential.rawAttestationObject else { throw StytchSDKError.missingAttestationObject }
 
-            var response: RegisterResponse = try await router.post(
+            let response: RegisterResponse = try await router.post(
                 to: .register,
                 parameters: Credential<AttestationResponse>(
                     id: credential.credentialID,
@@ -47,8 +47,7 @@ public extension StytchClient {
                     )
                 ).wrapped()
             )
-            response.wrapped.authenticatorInfo = PasskeyAuthenticatorInfo(attestationObject: attestationObject)
-            return response
+            return (response, PasskeyAuthenticatorInfo(attestationObject: attestationObject))
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
@@ -127,16 +126,6 @@ public extension StytchClient.Passkeys {
     }
 
     struct RegisterResponseData: Codable, Sendable, AuthenticateResponseDataType {
-        private enum CodingKeys: String, CodingKey {
-            case userId
-            case webauthnRegistrationId
-            case user
-            case sessionToken
-            case sessionJwt
-            case session
-            case userDevice
-        }
-
         public let userId: User.ID
         public let webauthnRegistrationId: User.WebAuthNRegistration.ID
         public let user: User
@@ -144,43 +133,6 @@ public extension StytchClient.Passkeys {
         public let sessionJwt: String
         public let session: Session
         public let userDevice: DeviceHistory?
-        /// Information about the authenticator which created this passkey, parsed on the client
-        /// from the registration ceremony's attestation object. Not part of the Stytch API response
-        /// and not persisted anywhere — read it at registration time or not at all.
-        public internal(set) var authenticatorInfo: PasskeyAuthenticatorInfo?
-
-        // Not synthesized: the custom init(from:) below suppresses the memberwise initializer.
-        init(
-            userId: User.ID,
-            webauthnRegistrationId: User.WebAuthNRegistration.ID,
-            user: User,
-            sessionToken: String,
-            sessionJwt: String,
-            session: Session,
-            userDevice: DeviceHistory?,
-            authenticatorInfo: PasskeyAuthenticatorInfo? = nil
-        ) {
-            self.userId = userId
-            self.webauthnRegistrationId = webauthnRegistrationId
-            self.user = user
-            self.sessionToken = sessionToken
-            self.sessionJwt = sessionJwt
-            self.session = session
-            self.userDevice = userDevice
-            self.authenticatorInfo = authenticatorInfo
-        }
-
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            userId = try container.decode(key: .userId)
-            webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
-            user = try container.decode(key: .user)
-            sessionToken = try container.decode(key: .sessionToken)
-            sessionJwt = try container.decode(key: .sessionJwt)
-            session = try container.decode(key: .session)
-            userDevice = try container.decodeIfPresent(DeviceHistory.self, forKey: .userDevice)
-            authenticatorInfo = nil
-        }
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
