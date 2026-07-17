@@ -6,8 +6,8 @@ import Foundation
 #if !os(watchOS)
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
-    /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-    func register(parameters: RegisterParameters, completion: @escaping Completion<RegisterResponse>) {
+    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns the ceremony's raw CBOR attestation object, whose attested credential data (e.g. the AAGUID identifying the passkey provider) exists only at registration time and is not stored by Stytch — callers may parse it to power passkey-management UIs.
+    func register(parameters: RegisterParameters, completion: @escaping Completion<(response: RegisterResponse, attestationObject: Data)>) {
         Task {
             do {
                 completion(.success(try await register(parameters: parameters)))
@@ -17,8 +17,8 @@ public extension StytchClient.Passkeys {
         }
     }
 
-    /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-    func register(parameters: RegisterParameters) -> AnyPublisher<RegisterResponse, Error> {
+    /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns the ceremony's raw CBOR attestation object, whose attested credential data (e.g. the AAGUID identifying the passkey provider) exists only at registration time and is not stored by Stytch — callers may parse it to power passkey-management UIs.
+    func register(parameters: RegisterParameters) -> AnyPublisher<(response: RegisterResponse, attestationObject: Data), Error> {
         return Deferred {
             Future({ promise in
                 Task {

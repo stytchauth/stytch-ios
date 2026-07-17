@@ -66,11 +66,12 @@ final class PasskeysTestCase: BaseTestCase {
                 credentialID: .init("fake_id".utf8)
             )
         }
-        let response = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        let (response, attestationObject) = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
         XCTAssertEqual(response.userId, userId)
         XCTAssertEqual(response.webauthnRegistrationId, webauthnRegistrationId)
         XCTAssertEqual(response.user.webauthnRegistrations.first?.authenticatorType, "platform")
         XCTAssertEqual(response.user.webauthnRegistrations.first?.name, "My device passkey")
+        XCTAssertEqual(attestationObject, Data("fake_attestation_data".utf8))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
