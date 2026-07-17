@@ -28,7 +28,8 @@ final class PasskeysTestCase: BaseTestCase {
                 credentialID: .init("fake_id".utf8)
             )
         }
-        _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        let (_, attestationObject) = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        XCTAssertEqual(attestationObject, Data("fake_attestation_data".utf8))
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",

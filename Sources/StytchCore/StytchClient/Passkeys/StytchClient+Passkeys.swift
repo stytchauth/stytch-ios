@@ -20,8 +20,8 @@ public extension StytchClient {
 
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
-        /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-        public func register(parameters: RegisterParameters) async throws -> BasicResponse {
+        /// Registers a passkey with the device and with Stytch's servers for the authenticated user. Alongside the Stytch response, returns the ceremony's raw CBOR attestation object, whose attested credential data (e.g. the AAGUID identifying the passkey provider) exists only at registration time and is not stored by Stytch — callers may parse it to power passkey-management UIs.
+        public func register(parameters: RegisterParameters) async throws -> (response: BasicResponse, attestationObject: Data) {
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
                 parameters: parameters
@@ -47,7 +47,7 @@ public extension StytchClient {
                     )
                 ).wrapped()
             )
-            return response
+            return (response, attestationObject)
         }
 
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
