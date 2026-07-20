@@ -43,7 +43,7 @@ jobs:
           echo "matrix={\"include\":[${matrix_values}]}" >> $GITHUB_OUTPUT
 
   test:
-    runs-on: osx
+    runs-on: depot-macos-15
 
     needs: set-matrix
 

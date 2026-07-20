@@ -9,7 +9,7 @@ on:
 jobs:
   analyze-stytch-core:
     name: Analyze (swift-StytchCore)
-    runs-on: osx
+    runs-on: depot-macos-15
     timeout-minutes: 120
     permissions:
       security-events: write
@@ -58,7 +58,7 @@ jobs:
 
   analyze-stytch-ui:
     name: Analyze (swift-StytchUI)
-    runs-on: osx
+    runs-on: depot-macos-15
     timeout-minutes: 120
     permissions:
       security-events: write
