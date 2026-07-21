@@ -86,15 +86,43 @@ final class PasskeysTestCase: BaseTestCase {
     }
 
     func testRegisterWithNameOverrides() async throws {
+        let userId: User.ID = "user_id_123"
         let startResponse: Base.RegisterStartResponseData = .init(
-            userId: "user_id_123",
+            userId: userId,
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
             user: StytchClient.Passkeys.PasskeysUser(displayName: "user@example.com")
         )
         networkInterceptor.responses {
             Success {
                 Response(requestId: "", statusCode: 200, wrapped: startResponse)
-                BasicResponse(requestId: "request_id_123", statusCode: 200)
+                Base.RegisterResponse(
+                    requestId: "request_id_123",
+                    statusCode: 200,
+                    wrapped: .init(
+                        userId: userId,
+                        webauthnRegistrationId: "webauthn-registration-id",
+                        user: .init(
+                            createdAt: Current.date(),
+                            cryptoWallets: [],
+                            emails: [],
+                            userId: userId,
+                            name: .init(firstName: "first", lastName: "last", middleName: nil),
+                            password: nil,
+                            phoneNumbers: [],
+                            providers: [],
+                            status: .active,
+                            totps: [],
+                            webauthnRegistrations: [],
+                            biometricRegistrations: [],
+                            untrustedMetadata: nil,
+                            trustedMetadata: nil
+                        ),
+                        sessionToken: "hello_session",
+                        sessionJwt: "jwt_for_me",
+                        session: .mock(userId: userId),
+                        userDevice: nil
+                    )
+                )
             }
         }
         var registeredUsername: String?
