@@ -43,6 +43,47 @@ final class PasskeysTestCase: BaseTestCase {
         )
     }
 
+    func testRegisterWithNameOverrides() async throws {
+        let startResponse: Base.RegisterStartResponseData = .init(
+            userId: "user_id_123",
+            challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
+            user: StytchClient.Passkeys.PasskeysUser(displayName: "user@example.com")
+        )
+        networkInterceptor.responses {
+            Success {
+                Response(requestId: "", statusCode: 200, wrapped: startResponse)
+                BasicResponse(requestId: "request_id_123", statusCode: 200)
+            }
+        }
+        var registeredUsername: String?
+        Current.passkeysClient.registerCredential = { _, _, username, _ in
+            registeredUsername = username
+            return MockRegistration(
+                rawAttestationObject: .init("fake_attestation_data".utf8),
+                rawClientDataJSON: .init("fake_json".utf8),
+                credentialID: .init("fake_id".utf8)
+            )
+        }
+        _ = try await StytchClient.passkeys.register(
+            parameters: .init(
+                domain: "something.blah.com",
+                overrideName: "user@example.com",
+                overrideDisplayName: "user@example.com"
+            )
+        )
+        XCTAssertEqual(registeredUsername, "user@example.com")
+        try XCTAssertRequest(
+            networkInterceptor.requests[0],
+            urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
+            method: .post([
+                "domain": "something.blah.com",
+                "return_passkey_credential_options": true,
+                "override_name": "user@example.com",
+                "override_display_name": "user@example.com",
+            ])
+        )
+    }
+
     func testAuthenticate() async throws {
         let startResponse: Base.AuthenticateStartResponseData = .init(
             userId: "user_id_123",

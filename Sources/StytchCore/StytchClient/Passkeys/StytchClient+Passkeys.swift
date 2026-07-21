@@ -115,11 +115,24 @@ public extension StytchClient.Passkeys {
     struct RegisterParameters: Encodable, Sendable {
         let domain: String
         let returnPasskeyCredentialOptions: Bool = true
+        let overrideName: String?
+        let overrideDisplayName: String?
 
         /// - Parameters:
         ///   - domain: The domain for which your passkey is to be registered.
-        public init(domain: String) {
+        ///   - overrideName: The desired `user.name` for the credential creation options — the label password managers
+        ///     store for the passkey at creation time. When nil, Stytch defaults to the user's name, email, or phone number.
+        ///   - overrideDisplayName: The desired `user.displayName` for the credential creation options. This is the value
+        ///     the SDK hands to the authenticator during registration. When nil, Stytch defaults to the user's name,
+        ///     email, or phone number.
+        public init(
+            domain: String,
+            overrideName: String? = nil,
+            overrideDisplayName: String? = nil
+        ) {
             self.domain = domain
+            self.overrideName = overrideName
+            self.overrideDisplayName = overrideDisplayName
         }
     }
 
