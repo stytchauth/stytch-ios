@@ -334,10 +334,6 @@ extension StytchClient.Passkeys {
 public struct PasskeysUpdateResponseData: Codable, Sendable {
     /// The updated WebAuthN registration.
     public let webauthnRegistration: User.WebAuthNRegistration
-
-    init(webauthnRegistration: User.WebAuthNRegistration) {
-        self.webauthnRegistration = webauthnRegistration
-    }
 }
 
 public struct PasskeysUpdateRequest: Codable, Sendable {
