@@ -10,10 +10,12 @@ final class PasskeysTestCase: BaseTestCase {
     private typealias Base = StytchClient.Passkeys
 
     func testRegister() async throws {
+        let existingCredentialId = Data("existing_credential_id".utf8)
         let startResponse: Base.RegisterStartResponseData = .init(
             userId: "user_id_123",
             challenge: try Current.cryptoClient.dataWithRandomBytesOfCount(32),
-            user: StytchClient.Passkeys.PasskeysUser(displayName: "My Stytch Username")
+            user: StytchClient.Passkeys.PasskeysUser(displayName: "My Stytch Username"),
+            excludeCredentialIds: [existingCredentialId]
         )
         networkInterceptor.responses {
             Success {
@@ -21,14 +23,17 @@ final class PasskeysTestCase: BaseTestCase {
                 BasicResponse(requestId: "request_id_123", statusCode: 200)
             }
         }
-        Current.passkeysClient.registerCredential = { _, _, _, _ in
-            MockRegistration(
+        var receivedExcludedCredentialIds: [Data]?
+        Current.passkeysClient.registerCredential = { _, _, _, _, excludedCredentialIds in
+            receivedExcludedCredentialIds = excludedCredentialIds
+            return MockRegistration(
                 rawAttestationObject: .init("fake_attestation_data".utf8),
                 rawClientDataJSON: .init("fake_json".utf8),
                 credentialID: .init("fake_id".utf8)
             )
         }
         _ = try await StytchClient.passkeys.register(parameters: .init(domain: "something.blah.com"))
+        XCTAssertEqual(receivedExcludedCredentialIds, [existingCredentialId])
         try XCTAssertRequest(
             networkInterceptor.requests[0],
             urlString: "https://api.stytch.com/sdk/v1/webauthn/register/start",
@@ -56,7 +61,7 @@ final class PasskeysTestCase: BaseTestCase {
             }
         }
         var registeredUsername: String?
-        Current.passkeysClient.registerCredential = { _, _, username, _ in
+        Current.passkeysClient.registerCredential = { _, _, username, _, _ in
             registeredUsername = username
             return MockRegistration(
                 rawAttestationObject: .init("fake_attestation_data".utf8),
@@ -82,6 +87,32 @@ final class PasskeysTestCase: BaseTestCase {
                 "override_display_name": "user@example.com",
             ])
         )
+    }
+
+    // Pins the live response shape: `excludeCredentials` lives inside the JSON-string
+    // `public_key_credential_creation_options`, and the server encodes credential ids
+    // as padded standard base64 (unlike the base64url challenge).
+    func testRegisterStartResponseDecodesExcludeCredentials() throws {
+        let json = """
+        {
+            "user_id": "user-test-1234",
+            "public_key_credential_creation_options": "{\\"challenge\\":\\"KeCOE4Yt-JRCCTKqLHQL4pEIYvHThIB8fa65OuOFRFDD\\",\\"excludeCredentials\\":[{\\"id\\":\\"OddU8QGULlaQC9nCup3ZIYpaJOk=\\",\\"type\\":\\"public-key\\"}],\\"user\\":{\\"displayName\\":\\"user@example.com\\",\\"id\\":\\"dXNlcg==\\",\\"name\\":\\"user@example.com\\"}}"
+        }
+        """
+        let response = try Current.jsonDecoder.decode(Base.RegisterStartResponseData.self, from: Data(json.utf8))
+        XCTAssertEqual(response.excludeCredentialIds, [Data(base64Encoded: "OddU8QGULlaQC9nCup3ZIYpaJOk=")])
+    }
+
+    // The server omits `excludeCredentials` when the user has no existing registrations.
+    func testRegisterStartResponseDecodesMissingExcludeCredentials() throws {
+        let json = """
+        {
+            "user_id": "user-test-1234",
+            "public_key_credential_creation_options": "{\\"challenge\\":\\"KeCOE4Yt-JRCCTKqLHQL4pEIYvHThIB8fa65OuOFRFDD\\",\\"user\\":{\\"displayName\\":\\"user@example.com\\",\\"id\\":\\"dXNlcg==\\",\\"name\\":\\"user@example.com\\"}}"
+        }
+        """
+        let response = try Current.jsonDecoder.decode(Base.RegisterStartResponseData.self, from: Data(json.utf8))
+        XCTAssertEqual(response.excludeCredentialIds, [])
     }
 
     func testAuthenticate() async throws {
