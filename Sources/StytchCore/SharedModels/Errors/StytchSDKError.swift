@@ -93,6 +93,12 @@ public extension StytchSDKError {
             errorType: "passkeys_unsupported"
         )
     )
+    static let passkeyAlreadyRegistered = StytchSDKError(
+        message: "A passkey for this user already exists on this device.",
+        options: .init(
+            errorType: "passkey_already_registered"
+        )
+    )
     static let randomNumberGenerationFailed = StytchSDKError(
         message: "System unable to generate a random data. Typically used for PKCE.",
         options: .init(
