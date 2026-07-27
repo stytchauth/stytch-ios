@@ -51,7 +51,7 @@ public enum AuthenticationFactorType: Sendable, Equatable {
     }
 
     public static var secondaryFactors: [AuthenticationFactorType] {
-        [.otp]
+        [.otp, .webauthn]
     }
 
     public static var fullFactors: [AuthenticationFactorType] {
