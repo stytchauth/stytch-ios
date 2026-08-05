@@ -31,10 +31,19 @@ extension PasskeysClient {
 
             return credential
         },
-        assertCredential: { domain, challenge, requestBehavior in
+        assertCredential: { domain, challenge, allowedCredentialIds, requestBehavior in
             let platformProvider: ASAuthorizationPlatformPublicKeyCredentialProvider = .init(relyingPartyIdentifier: domain)
 
             let request = platformProvider.createCredentialAssertionRequest(challenge: challenge)
+
+            // Honoring allowCredentials restricts the sheet to the credentials the server issued the
+            // challenge for — without it, a second-factor prompt offers every passkey on the device
+            // for this domain, including ones belonging to other accounts.
+            if !allowedCredentialIds.isEmpty {
+                request.allowedCredentials = allowedCredentialIds.map { credentialId in
+                    ASAuthorizationPlatformPublicKeyCredentialDescriptor(credentialID: credentialId)
+                }
+            }
 
             let controller = ASAuthorizationController(authorizationRequests: [request])
             let delegate = await Delegate()
