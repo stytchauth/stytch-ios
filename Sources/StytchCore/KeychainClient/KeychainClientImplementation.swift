@@ -21,18 +21,16 @@ final class KeychainClientImplementation: KeychainClient {
             if let cachedEncryptionKey {
                 return cachedEncryptionKey
             }
-            #if os(iOS)
-            if UIApplication.shared.isProtectedDataAvailable {
-                try? getEncryptionKey()
-                didInitializeKeychainData = true
-            } else {
-                // For some reason, we are trying to read the encryption key before protected data became available
-                // Log that this happened (which it hopefully won't?), but leave the behavior up to the caller (EncryptedUserDefaultsClient) to handle a missing key (throw an error)
-                StytchConsoleLogger.error(message: "Attempted to read encryption key but UIApplication.shared.isProtectedDataAvailable was false")
-            }
-            #else
+            // Don't gate this on UIApplication.shared.isProtectedDataAvailable - it is a main-thread-only
+            // API and this getter runs on the keychain queue, where it can spuriously return false and
+            // leave the key unread even though the keychain is accessible. The keychain read itself is
+            // the reliable availability check: while protected data is unavailable, reading the key fails
+            // with errSecInteractionNotAllowed (it does not report the key as missing), so getEncryptionKey()
+            // throws instead of creating a replacement key.
             try? getEncryptionKey()
-            #endif
+            if cachedEncryptionKey != nil {
+                didInitializeKeychainData = true
+            }
             return cachedEncryptionKey
         })
     }
@@ -67,7 +65,7 @@ final class KeychainClientImplementation: KeychainClient {
         try safelyEnqueue {
             let result = try getFirstQueryResult(KeychainItem.encryptionKey)
             guard let result else {
-                // At this point, we know that protected data IS available, so if the keychain returned nil, then it means the key TRULY doesn't exist, and so we should create a new one
+                // A nil result means the keychain answered errSecItemNotFound - a locked keychain would have thrown errSecInteractionNotAllowed above - so the key TRULY doesn't exist and we should create a new one
                 let data = SymmetricKey(size: .bits256).withUnsafeBytes {
                     Data(Array($0))
                 }
