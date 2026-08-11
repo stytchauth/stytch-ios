@@ -7,7 +7,7 @@ import Foundation
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
     /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-    func register(parameters: RegisterParameters, completion: @escaping Completion<BasicResponse>) {
+    func register(parameters: RegisterParameters, completion: @escaping Completion<RegisterResponse>) {
         Task {
             do {
                 completion(.success(try await register(parameters: parameters)))
@@ -18,7 +18,7 @@ public extension StytchClient.Passkeys {
     }
 
     /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-    func register(parameters: RegisterParameters) -> AnyPublisher<BasicResponse, Error> {
+    func register(parameters: RegisterParameters) -> AnyPublisher<RegisterResponse, Error> {
         return Deferred {
             Future({ promise in
                 Task {

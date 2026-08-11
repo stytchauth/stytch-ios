@@ -21,7 +21,7 @@ public extension StytchClient {
         // If we use webauthn current web-backend implementation, this will only be allowed as a secondary factor, and mfa will be required
         // sourcery: AsyncVariants, (NOTE: - must use /// doc comment styling)
         /// Registers a passkey with the device and with Stytch's servers for the authenticated user.
-        public func register(parameters: RegisterParameters) async throws -> BasicResponse {
+        public func register(parameters: RegisterParameters) async throws -> RegisterResponse {
             let startResp: Response<RegisterStartResponseData> = try await router.post(
                 to: .registerStart,
                 parameters: parameters
@@ -36,7 +36,7 @@ public extension StytchClient {
 
             guard let attestationObject = credential.rawAttestationObject else { throw StytchSDKError.missingAttestationObject }
 
-            let response: BasicResponse = try await router.post(
+            let response: RegisterResponse = try await router.post(
                 to: .register,
                 parameters: Credential<AttestationResponse>(
                     id: credential.credentialID,
@@ -111,6 +111,8 @@ public extension StytchClient {
 
 @available(macOS 12.0, iOS 16.0, tvOS 16.0, *)
 public extension StytchClient.Passkeys {
+    typealias RegisterResponse = Response<RegisterResponseData>
+
     /// A dedicated parameters type for passkeys `register` calls.
     struct RegisterParameters: Encodable, Sendable {
         let domain: String
@@ -134,6 +136,16 @@ public extension StytchClient.Passkeys {
             self.overrideName = overrideName
             self.overrideDisplayName = overrideDisplayName
         }
+    }
+
+    struct RegisterResponseData: Codable, Sendable, AuthenticateResponseDataType {
+        public let userId: User.ID
+        public let webauthnRegistrationId: User.WebAuthNRegistration.ID
+        public let user: User
+        public let sessionToken: String
+        public let sessionJwt: String
+        public let session: Session
+        public let userDevice: DeviceHistory?
     }
 
     /// A dedicated parameters type for passkeys `authenticate` calls.
@@ -333,25 +345,8 @@ extension StytchClient.Passkeys {
 }
 
 public struct PasskeysUpdateResponseData: Codable, Sendable {
-    private enum CodingKeys: CodingKey {
-        case webauthnRegistrationId
-    }
-
-    let webauthnRegistrationId: User.WebAuthNRegistration.ID
-
-    init(webauthnRegistrationId: User.WebAuthNRegistration.ID) {
-        self.webauthnRegistrationId = webauthnRegistrationId
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        webauthnRegistrationId = try container.decode(key: .webauthnRegistrationId)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(webauthnRegistrationId, forKey: .webauthnRegistrationId)
-    }
+    /// The updated WebAuthN registration.
+    public let webauthnRegistration: User.WebAuthNRegistration
 }
 
 public struct PasskeysUpdateRequest: Codable, Sendable {
