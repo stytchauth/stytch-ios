@@ -154,6 +154,32 @@ final class PasskeysTestCase: BaseTestCase {
         )
     }
 
+    // Pins the live response shape: `allowCredentials` lives inside the JSON-string
+    // `public_key_credential_request_options`, and the server encodes credential ids
+    // as padded standard base64 (unlike the base64url challenge).
+    func testAuthenticateStartResponseDecodesAllowCredentials() throws {
+        let json = """
+        {
+            "user_id": "user-test-1234",
+            "public_key_credential_request_options": "{\\"challenge\\":\\"KeCOE4Yt-JRCCTKqLHQL4pEIYvHThIB8fa65OuOFRFDD\\",\\"allowCredentials\\":[{\\"id\\":\\"OddU8QGULlaQC9nCup3ZIYpaJOk=\\",\\"type\\":\\"public-key\\"}]}"
+        }
+        """
+        let response = try Current.jsonDecoder.decode(Base.AuthenticateStartResponseData.self, from: Data(json.utf8))
+        XCTAssertEqual(response.allowCredentialIds, [Data(base64Encoded: "OddU8QGULlaQC9nCup3ZIYpaJOk=")])
+    }
+
+    // The server omits `allowCredentials` when the user isn't yet known (primary authentication).
+    func testAuthenticateStartResponseDecodesMissingAllowCredentials() throws {
+        let json = """
+        {
+            "user_id": "user-test-1234",
+            "public_key_credential_request_options": "{\\"challenge\\":\\"KeCOE4Yt-JRCCTKqLHQL4pEIYvHThIB8fa65OuOFRFDD\\"}"
+        }
+        """
+        let response = try Current.jsonDecoder.decode(Base.AuthenticateStartResponseData.self, from: Data(json.utf8))
+        XCTAssertEqual(response.allowCredentialIds, [])
+    }
+
     func testAuthenticate() async throws {
         let startResponse: Base.AuthenticateStartResponseData = .init(
             userId: "user_id_123",
@@ -165,7 +191,8 @@ final class PasskeysTestCase: BaseTestCase {
         }
         var requestBehaviorIsAutoFill = false
         var requestBehaviorIsPreferLocallyAvailableCredentials = false
-        Current.passkeysClient.assertCredential = { _, _, requestBehavior in
+        Current.passkeysClient.assertCredential = { _, _, allowedCredentialIds, requestBehavior in
+            XCTAssertEqual(allowedCredentialIds, [])
             #if os(iOS)
             if case .autoFill = requestBehavior {
                 requestBehaviorIsAutoFill = true

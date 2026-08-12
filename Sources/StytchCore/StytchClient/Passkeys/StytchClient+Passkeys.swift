@@ -67,6 +67,7 @@ public extension StytchClient {
             let credential = try await passkeysClient.assertCredential(
                 domain: parameters.domain,
                 challenge: startResp.challenge,
+                allowedCredentialIds: startResp.allowCredentialIds,
                 requestBehavior: parameters.requestBehavior
             )
 
@@ -252,15 +253,48 @@ extension StytchClient.Passkeys {
         }
     }
 
+    private struct CredentialDescriptor: Codable, Sendable {
+        enum CodingKeys: CodingKey {
+            case type
+            case id
+        }
+
+        let id: Data
+
+        init(id: Data) {
+            self.id = id
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let idString: String = try container.decode(key: .id)
+
+            guard let id: Data = .init(base64UrlEncoded: idString) else {
+                throw DecodingError.dataCorruptedError(forKey: .id, in: container, debugDescription: "credential id not base64 url encoded")
+            }
+
+            self.id = id
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode("public-key", forKey: .type)
+            try container.encode(id.base64UrlEncoded(), forKey: .id)
+        }
+    }
+
     private struct CredentialOptions: Codable, Sendable {
         enum CodingKeys: CodingKey {
             case challenge
+            case allowCredentials
         }
 
         let challenge: Data
+        let allowCredentials: [CredentialDescriptor]
 
-        init(challenge: Data) {
+        init(challenge: Data, allowCredentials: [CredentialDescriptor]) {
             self.challenge = challenge
+            self.allowCredentials = allowCredentials
         }
 
         init(from decoder: Decoder) throws {
@@ -272,11 +306,19 @@ extension StytchClient.Passkeys {
             }
 
             self.challenge = challenge
+
+            let descriptors: [CredentialDescriptor]? = try container.optionalDecode(key: .allowCredentials)
+            if let descriptors = descriptors {
+                allowCredentials = descriptors
+            } else {
+                allowCredentials = []
+            }
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(challenge.base64UrlEncoded(), forKey: .challenge)
+            try container.encode(allowCredentials, forKey: .allowCredentials)
         }
     }
 
@@ -321,10 +363,12 @@ extension StytchClient.Passkeys {
 
         let userId: User.ID
         let challenge: Data
+        let allowCredentialIds: [Data]
 
-        init(userId: User.ID, challenge: Data) {
+        init(userId: User.ID, challenge: Data, allowCredentialIds: [Data] = []) {
             self.userId = userId
             self.challenge = challenge
+            self.allowCredentialIds = allowCredentialIds
         }
 
         init(from decoder: Decoder) throws {
@@ -333,12 +377,14 @@ extension StytchClient.Passkeys {
             let optionsString: String = try container.decode(key: .publicKeyCredentialRequestOptions)
             let options = try JSONDecoder().decode(CredentialOptions.self, from: Data(optionsString.utf8))
             challenge = options.challenge
+            allowCredentialIds = options.allowCredentials.map(\.id)
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(userId, forKey: .userId)
-            let credentialOptions = try JSONEncoder().encode(CredentialOptions(challenge: challenge))
+            let allowCredentials = allowCredentialIds.map(CredentialDescriptor.init(id:))
+            let credentialOptions = try JSONEncoder().encode(CredentialOptions(challenge: challenge, allowCredentials: allowCredentials))
             try container.encode(String(data: credentialOptions, encoding: .utf8), forKey: .publicKeyCredentialRequestOptions)
         }
     }
