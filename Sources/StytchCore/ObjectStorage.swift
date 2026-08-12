@@ -1,5 +1,8 @@
 import Combine
 import Foundation
+#if os(iOS)
+import UIKit
+#endif
 
 // swiftlint:disable type_contents_order let_var_whitespace
 
@@ -45,6 +48,7 @@ extension ObjectStorageWrapper {
 class ObjectStorage<WrapperType: ObjectStorageWrapper> {
     private let objectWrapper: WrapperType
     private var cancellable: AnyCancellable?
+    private var protectedDataCancellable: AnyCancellable?
 
     private let _onChange = PassthroughSubject<StytchObjectInfo<WrapperType.ObjectType>, Never>()
     var onChange: AnyPublisher<StytchObjectInfo<WrapperType.ObjectType>, Never> {
@@ -58,6 +62,16 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
         cancellable = StartupClient.isInitialized.first().sink { [weak self] _ in
             self?.publish()
         }
+
+        #if os(iOS)
+        // If the encryption key was unreadable at startup (locked keychain / prewarming), publish again
+        // once protected data becomes available so the cached object can be recovered.
+        protectedDataCancellable = NotificationCenter.default
+            .publisher(for: UIApplication.protectedDataDidBecomeAvailableNotification)
+            .sink { [weak self] _ in
+                self?.publish()
+            }
+        #endif
     }
 
     var object: WrapperType.ObjectType? {
@@ -85,7 +99,12 @@ class ObjectStorage<WrapperType: ObjectStorageWrapper> {
                 }
             }
         } catch let error as EncryptedUserDefaultsError {
-            if error == .noDataFound {
+            if error == .encryptionKeyNotAvailable {
+                // The encryption key is transiently unreadable (locked keychain / prewarming) but the cached
+                // object may still be fully intact, so don't report it as unavailable - consumers treat that
+                // as a logout signal. We publish again when protected data becomes available.
+                logExceptionalUnavailableCase(error: error)
+            } else if error == .noDataFound {
                 // if the underlying error was that no data could be found, check if we were _expecting_ there to be data
                 if objectWrapper.dataWasExpected {
                     // if it was expected to exist, send the error that was encountered. This is an exceptional .unavailable case
