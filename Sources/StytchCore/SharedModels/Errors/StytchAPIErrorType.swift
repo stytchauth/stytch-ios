@@ -521,6 +521,7 @@ public enum StytchAPIErrorType: String, Codable {
     case oidcConnectionUserinfoUrlInvalidFormat = "oidc_connection_userinfo_url_invalid_format"
     case oidcCsrfCookieMismatch = "oidc_csrf_cookie_mismatch"
     case oidcInvalidCallbackRequest = "oidc_invalid_callback_request"
+    case oidcInvalidIdToken = "oidc_invalid_id_token"
     case oidcInvalidUserinfo = "oidc_invalid_userinfo"
     case oidcPromptNoneMustBeExclusive = "oidc_prompt_none_must_be_exclusive"
     case oidcResponseEmailMissing = "oidc_response_email_missing"
