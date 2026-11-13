@@ -39,18 +39,16 @@ jobs:
           
           # Build for iOS
           xcodebuild clean build \
-            -project Stytch.xcodeproj \
             -scheme StytchCore \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
             GCC_OPTIMIZATION_LEVEL=0 \
-            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
-            | xcpretty
+            SWIFT_OPTIMIZATION_LEVEL="-Onone"
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
@@ -88,18 +86,16 @@ jobs:
           
           # Build for iOS
           xcodebuild clean build \
-            -project Stytch.xcodeproj \
             -scheme StytchUI \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
             GCC_OPTIMIZATION_LEVEL=0 \
-            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
-            | xcpretty
+            SWIFT_OPTIMIZATION_LEVEL="-Onone"
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:

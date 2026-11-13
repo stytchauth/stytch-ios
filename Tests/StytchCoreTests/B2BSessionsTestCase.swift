@@ -89,6 +89,7 @@ final class B2BSessionsTestCase: BaseTestCase {
     }
 
     func testExternalSessionsUpdate() async {
+        networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         _ = try? await StytchB2BClient.sessions.revoke(parameters: .init(forceClear: true))
 
         XCTAssertNil(StytchB2BClient.sessions.sessionToken)
