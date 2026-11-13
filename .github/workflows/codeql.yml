@@ -39,10 +39,9 @@ jobs:
           
           # Build for iOS
           xcodebuild clean build \
-            -project Stytch.xcodeproj \
             -scheme StytchCore \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_REQUIRED=NO \
@@ -88,10 +87,9 @@ jobs:
           
           # Build for iOS
           xcodebuild clean build \
-            -project Stytch.xcodeproj \
             -scheme StytchUI \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_REQUIRED=NO \
