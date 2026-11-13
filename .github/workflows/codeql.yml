@@ -48,8 +48,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
             GCC_OPTIMIZATION_LEVEL=0 \
-            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
-            | xcpretty
+            SWIFT_OPTIMIZATION_LEVEL="-Onone"
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
@@ -96,8 +95,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_ALLOWED=NO \
             GCC_OPTIMIZATION_LEVEL=0 \
-            SWIFT_OPTIMIZATION_LEVEL="-Onone" \
-            | xcpretty
+            SWIFT_OPTIMIZATION_LEVEL="-Onone"
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
