@@ -10,10 +10,21 @@ final class NetworkingClientInterceptor: NetworkingClient {
     func configureDFP(dfpEnabled _: Bool, dfpAuthMode _: DFPProtectedAuthMode?) {}
 
     func handleRequest(request: URLRequest, useDFPPA _: Bool) async throws -> (Data, HTTPURLResponse) {
-        if request.url?.absoluteString.contains("/v1/events") != nil {
-            responses.append(.success(try Current.jsonEncoder.encode(AuthenticateResponse.mock)).map { $0.surroundInDataJSONContainer() })
-        }
         requests.append(request)
+
+        // Analytics events are often unawaited, so they must not consume responses queued for the request under test.
+        if request.url?.absoluteString.contains("/v1/events") == true {
+            let data = try Current.jsonEncoder.encode(AuthenticateResponse.mock).surroundInDataJSONContainer()
+            return try (
+                data,
+                XCTUnwrap(.init(url: XCTUnwrap(request.url), statusCode: 200, httpVersion: "HTTP/1.1", headerFields: [:]))
+            )
+        }
+
+        guard !responses.isEmpty else {
+            XCTFail("Unexpected request with no queued response: \(request.url?.absoluteString ?? "nil")")
+            throw URLError(.unknown)
+        }
 
         switch responses.removeFirst() {
         case let .success(data):

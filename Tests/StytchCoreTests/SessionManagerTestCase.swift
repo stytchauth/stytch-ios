@@ -132,6 +132,7 @@ final class SessionManagerTestCase: BaseTestCase {
     }
 
     func testExternalSessionsUpdate() async {
+        networkInterceptor.responses { BasicResponse(requestId: "request_id", statusCode: 200) }
         _ = try? await StytchClient.sessions.revoke(parameters: .init(forceClear: true))
 
         XCTAssertNil(StytchClient.sessions.sessionToken)
